@@ -461,6 +461,7 @@ public class Main {
         fileCommands7.add("tag @a remove DontMakeTraitor");
         fileCommands7.add("worldborder set "+worldSize+" 1");
         fileCommands7.add("team leave @a");
+        fileCommands7.add("function uhc:display_rank");
 
         for (CarePackage carepackage : carePackages) {
             fileCommands7.add("forceload add " + carepackage.getX() + " " + carepackage.getZ() + " " + carepackage.getX() + " " + carepackage.getZ());
