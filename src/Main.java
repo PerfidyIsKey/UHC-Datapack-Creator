@@ -12,7 +12,7 @@ public class Main {
     private static int uhcNumber = 40;
     private static String version = "2.0";
 
-    private static String userFolder = "Wouter Baltus";
+    private static String userFolder = "bthem";
     private static String worldName = "big-test";
     private static String dataPackLocation = "C:\\Users\\" + userFolder + "\\AppData\\Roaming\\.minecraft\\saves\\" + worldName + "\\datapacks\\";
     private static String dataPackLocationServer = "D:\\Documents\\Gaming\\MinecraftServers\\MinecraftServers\\world\\datapacks\\";
@@ -31,8 +31,11 @@ public class Main {
     private ArrayList<ControlPoint> controlPoints = new ArrayList<>();
     private ArrayList<CarePackage> carePackages = new ArrayList<>();
     private ArrayList<ScoreboardObjective> scoreboardObjectives = new ArrayList<>();
-    private ArrayList<String> playerNames = new ArrayList<>();
+    //private ArrayList<String> playerNames = new ArrayList<>();
+    private ArrayList<String> communityName = new ArrayList<>();
+    private ArrayList<Player> players = new ArrayList<>();
     private static int worldSize = 1500;
+    private static int minTraitorRank = 30;
     //GameData>
 
 
@@ -205,9 +208,44 @@ public class Main {
         scoreboardObjectives.add(new ScoreboardObjective("Kills", "playerKillCount"));
         scoreboardObjectives.add(new ScoreboardObjective("Crystal", "dummy"));
         scoreboardObjectives.add(new ScoreboardObjective("Quits", "minecraft.custom:minecraft.leave_game"));
+        scoreboardObjectives.add(new ScoreboardObjective("Rank", "dummy"));
 
 
-        playerNames.add("Snodog627");
+        players.add(new Player("Snodog627",116));
+        players.add(new Player("Mr9Madness",65));
+        players.add(new Player("PR0BA",14));
+        players.add(new Player("Tiba101",9));
+        players.add(new Player("W0omy",26));
+        players.add(new Player("P_Earl_",0));
+        players.add(new Player("naaktgeboren",1));
+        players.add(new Player("MissTutuPrincess",28));
+        players.add(new Player("Mr8Madness",9));
+        players.add(new Player("k3hba",7));
+        players.add(new Player("Kalazniq",32));
+        players.add(new Player("Vladik71",33));
+        players.add(new Player("Smashking242",29));
+        players.add(new Player("Xytaes",0));
+        players.add(new Player("lilskrut",10));
+        players.add(new Player("Pfalz_",21));
+        players.add(new Player("ThurianBohan",64));
+        players.add(new Player("PerfidyIsKey",52,true));
+        players.add(new Player("deuce__",37));
+        players.add(new Player("jonmo0105",82));
+        players.add(new Player("TheDinoGame",178));
+        players.add(new Player("BAAPABUGGETS",14));
+        players.add(new Player("Kakarot057",51));
+        players.add(new Player("viccietors",56));
+        players.add(new Player("Rayqson",18));
+        players.add(new Player("Xx__HexGamer__xX",57));
+        players.add(new Player("Bobdafish",174));
+        players.add(new Player("Alanaenae",0));
+        players.add(new Player("jk20028",5));
+        players.add(new Player("N_G0n",8));
+        players.add(new Player("SpookySpiker",0));
+        players.add(new Player("Clockweiz",13));
+        players.add(new Player("Eason950116",20));
+
+        /*playerNames.add("Snodog627");
         playerNames.add("Mr9Madness");
         playerNames.add("PerfidyIsKey");
         playerNames.add("Kalazniq");
@@ -234,7 +272,9 @@ public class Main {
         playerNames.add("Clockweiz");
         playerNames.add("Eason950116");
         playerNames.add("acccrux");
-        playerNames.add("SpookySpiker");
+        playerNames.add("SpookySpiker");*/
+
+        String communityName = "THE DIORITE EXPERTS";
     }
 
     private void makeRecipeFiles() {
@@ -350,8 +390,11 @@ public class Main {
         fileCommands2.add("scoreboard players set @p[scores={Admin=1}] Highscore2 1");
 
         fileCommands2.add("execute if entity @p[scores={Deaths=1},tag=Traitor] run tellraw @a [\"\",{\"text\":\" | \",\"bold\":true,\"color\":\"dark_gray\"},{\"text\":\"A TRAITOR HAS BEEN ELIMINATED\",\"bold\":true,\"color\":\"red\"},{\"text\":\" | \",\"bold\":true,\"color\":\"dark_gray\"},{\"text\":\"WELL DONE\",\"bold\":true,\"color\":\"gold\"},{\"text\":\" | \",\"bold\":true,\"color\":\"dark_gray\"}]");
-        for (String playerName : playerNames) {
+        /*for (String playerName : playerNames) {
             fileCommands2.add("execute at @p[name=" + playerName + ",scores={Deaths=1}] run summon minecraft:item ~ ~ ~ {Item:{id:player_head,Count:1,tag:{SkullOwner:" + playerName + "}}}");
+        }*/
+        for (Player p : players) {
+            fileCommands2.add("execute at @p[name=" + p.getPlayerName() + ",scores={Deaths=1}] run summon minecraft:item ~ ~ ~ {Item:{id:player_head,Count:1,tag:{SkullOwner:" + p.getPlayerName() + "}}}");
         }
         fileCommands2.add("scoreboard players reset @a[scores={Deaths=1}] Deaths");
 
@@ -474,9 +517,13 @@ public class Main {
         ArrayList<String> fileCommands9 = new ArrayList<>();
         fileCommands9.add("effect clear @a");
         fileCommands9.add("tp @a 0 -100 0");
-        fileCommands9.add("tellraw @a [\"\",{\"text\":\" ｜ \",\"color\":\"gray\"},{\"text\":\"THE DIORITE EXPERTS" +
+        /*fileCommands9.add("tellraw @a [\"\",{\"text\":\" ｜ \",\"color\":\"gray\"},{\"text\":\"THE DIORITE EXPERTS" +
                 " UHC\",\"color\":\"gold\"},{\"text\":\" ｜ \",\"color\":\"gray\"},{\"text\":\"PREDICTIONS COMPLETED" +
-                "\",\"color\":\"light_purple\"},{\"text\":\" ｜ \",\"color\":\"gray\"}]");
+                "\",\"color\":\"light_purple\"},{\"text\":\" ｜ \",\"color\":\"gray\"}]");*/
+        for(String communityNames : communityName){
+        fileCommands9.add("tellraw @a [\"\",{\"text\":\" ｜ \",\"color\":\"gray\"},{\"text\":\"" + communityName +
+                " UHC\",\"color\":\"gold\"},{\"text\":\" ｜ \",\"color\":\"gray\"},{\"text\":\"PREDICTIONS COMPLETED" +
+                "\",\"color\":\"light_purple\"},{\"text\":\" ｜ \",\"color\":\"gray\"}]");}
 
         FileData file9 = new FileData("predictions", fileCommands9);
         files.add(file9);
@@ -601,7 +648,10 @@ public class Main {
         ArrayList<String> fileCommands16 = new ArrayList<>();
         fileCommands16.add("setblock 7 2 0 minecraft:bedrock replace");
         fileCommands16.add("setblock 8 2 0 minecraft:redstone_block replace");
-        fileCommands16.add("tellraw @a [\"\",{\"text\":\" ⎜ \",\"color\":\"gray\"},{\"text\":\"THE DIORITE EXPERTS UHC\",\"color\":\"gold\"},{\"text\":\" ⎜ \",\"color\":\"gray\"},{\"text\":\"CONTROL POINT 2 IS NOW AVAILABLE! ETERNAL DAY ENABLED!\",\"color\":\"light_purple\"},{\"text\":\" ⎜ \",\"color\":\"gray\"}]");
+        //fileCommands16.add("tellraw @a [\"\",{\"text\":\" ⎜ \",\"color\":\"gray\"},{\"text\":\"THE DIORITE EXPERTS UHC\",\"color\":\"gold\"},{\"text\":\" ⎜ \",\"color\":\"gray\"},{\"text\":\"CONTROL POINT 2 IS NOW AVAILABLE! ETERNAL DAY ENABLED!\",\"color\":\"light_purple\"},{\"text\":\" ⎜ \",\"color\":\"gray\"}]");
+        for (String communityNames : communityName) {
+            fileCommands16.add("tellraw @a [\"\",{\"text\":\" ⎜ \",\"color\":\"gray\"},{\"text\":\"" + communityName + " UHC\",\"color\":\"gold\"},{\"text\":\" ⎜ \",\"color\":\"gray\"},{\"text\":\"CONTROL POINT 2 IS NOW AVAILABLE! ETERNAL DAY ENABLED!\",\"color\":\"light_purple\"},{\"text\":\" ⎜ \",\"color\":\"gray\"}]");
+        }
         fileCommands16.add("setblock 15 2 11 minecraft:redstone_block replace");
         fileCommands16.add("forceload add " + cp2.getX() + " " + cp2.getZ() + " " + cp2.getX() + " " + cp2.getZ());
         fileCommands16.add("setblock " + cp2.getX() + " " + (cp2.getY() + 3) + " " + cp2.getZ() + " minecraft:air replace");
@@ -616,7 +666,10 @@ public class Main {
 
         ArrayList<String> fileCommands17 = new ArrayList<>();
         fileCommands17.add("setblock 8 2 0 minecraft:bedrock replace");
-        fileCommands17.add("tellraw @a [\"\",{\"text\":\" ⎜ \",\"color\":\"gray\"},{\"text\":\"THE DIORITE EXPERTS UHC\",\"color\":\"gold\"},{\"text\":\" ⎜ \",\"color\":\"gray\"},{\"text\":\"TIME VICTORY HAS BEEN ACHIEVED! 3 MINUTES UNTIL THE FINAL DEATHMATCH\",\"color\":\"light_purple\"},{\"text\":\" ⎜ \",\"color\":\"gray\"}]");
+        //fileCommands17.add("tellraw @a [\"\",{\"text\":\" ⎜ \",\"color\":\"gray\"},{\"text\":\"THE DIORITE EXPERTS UHC\",\"color\":\"gold\"},{\"text\":\" ⎜ \",\"color\":\"gray\"},{\"text\":\"TIME VICTORY HAS BEEN ACHIEVED! 3 MINUTES UNTIL THE FINAL DEATHMATCH\",\"color\":\"light_purple\"},{\"text\":\" ⎜ \",\"color\":\"gray\"}]");
+        for (String communityNames : communityName) {
+            fileCommands17.add("tellraw @a [\"\",{\"text\":\" ⎜ \",\"color\":\"gray\"},{\"text\":\"" + communityName + " UHC\",\"color\":\"gold\"},{\"text\":\" ⎜ \",\"color\":\"gray\"},{\"text\":\"TIME VICTORY HAS BEEN ACHIEVED! 3 MINUTES UNTIL THE FINAL DEATHMATCH\",\"color\":\"light_purple\"},{\"text\":\" ⎜ \",\"color\":\"gray\"}]");
+        }
         fileCommands17.add("fill 15 2 3 15 2 4 minecraft:bedrock");
         fileCommands17.add("title @a subtitle {\"text\":\"has been achieved!\", \"bold\":true, \"italic\":true, \"color\":\"light_purple\"}");
         fileCommands17.add("title @a title {\"text\":\"Time Victory\", \"bold\":true, \"italic\":true, \"color\":\"gold\"}");
@@ -652,11 +705,17 @@ public class Main {
                 fileCommands19.add("execute if score @r[limit=1,gamemode=!spectator,team=" + team.getName() + "] ControlPoint"+ i +" > @p[scores={Admin=1}] Highscore" + i +" run setblock " + controlPoints.get(i - 1).getX() + " " + (controlPoints.get(i - 1).getY() + 1) + " " + controlPoints.get(i - 1).getZ() + " minecraft:"+team.getBossbarColor()+"_stained_glass replace");
             }
             fileCommands19.add("execute if entity @p[x=" + (controlPoints.get(i - 1).getX() - 6) + ",y=" + (controlPoints.get(i - 1).getY() - 1) + ",z=" + (controlPoints.get(i - 1).getZ() - 6) + ",dx=12,dy=12,dz=12,gamemode=!spectator] run scoreboard players add @a[x=" + (controlPoints.get(i - 1).getX() - 6) + ",y=" + (controlPoints.get(i - 1).getY() - 1) + ",z=" + (controlPoints.get(i - 1).getZ() - 6) + ",dx=12,dy=12,dz=12,gamemode=!spectator] MSGDum1CP" + i + " 1");
-            fileCommands19.add("execute if entity @p[x=" + (controlPoints.get(i - 1).getX() - 6) + ",y=" + (controlPoints.get(i - 1).getY() - 1) + ",z=" + (controlPoints.get(i - 1).getZ() - 6) + ",dx=12,dy=12,dz=12,gamemode=!spectator,scores={MSGDum1CP" + i + "=200}] run tellraw @a [\"\",{\"text\":\" ⎜ \",\"color\":\"gray\"},{\"text\":\"THE DIORITE EXPERTS UHC\",\"color\":\"gold\"},{\"text\":\" ⎜ \",\"color\":\"gray\"},{\"text\":\"CONTROL POINT " + i + " IS UNDER ATTACK!\",\"color\":\"light_purple\"},{\"text\":\" ⎜ \",\"color\":\"gray\"}]");
+            //fileCommands19.add("execute if entity @p[x=" + (controlPoints.get(i - 1).getX() - 6) + ",y=" + (controlPoints.get(i - 1).getY() - 1) + ",z=" + (controlPoints.get(i - 1).getZ() - 6) + ",dx=12,dy=12,dz=12,gamemode=!spectator,scores={MSGDum1CP" + i + "=200}] run tellraw @a [\"\",{\"text\":\" ⎜ \",\"color\":\"gray\"},{\"text\":\"THE DIORITE EXPERTS UHC\",\"color\":\"gold\"},{\"text\":\" ⎜ \",\"color\":\"gray\"},{\"text\":\"CONTROL POINT " + i + " IS UNDER ATTACK!\",\"color\":\"light_purple\"},{\"text\":\" ⎜ \",\"color\":\"gray\"}]");
+            for (String communityNames : communityName) {
+                fileCommands19.add("execute if entity @p[x=" + (controlPoints.get(i - 1).getX() - 6) + ",y=" + (controlPoints.get(i - 1).getY() - 1) + ",z=" + (controlPoints.get(i - 1).getZ() - 6) + ",dx=12,dy=12,dz=12,gamemode=!spectator,scores={MSGDum1CP" + i + "=200}] run tellraw @a [\"\",{\"text\":\" ⎜ \",\"color\":\"gray\"},{\"text\":\"" + communityName + " UHC\",\"color\":\"gold\"},{\"text\":\" ⎜ \",\"color\":\"gray\"},{\"text\":\"CONTROL POINT " + i + " IS UNDER ATTACK!\",\"color\":\"light_purple\"},{\"text\":\" ⎜ \",\"color\":\"gray\"}]");
+            }
             fileCommands19.add("execute if entity @p[x=" + (controlPoints.get(i - 1).getX() - 6) + ",y=" + (controlPoints.get(i - 1).getY() - 1) + ",z=" + (controlPoints.get(i - 1).getZ() - 6) + ",dx=12,dy=12,dz=12,gamemode=!spectator,scores={MSGDum1CP" + i + "=200}] run scoreboard players reset @a[x=" + (controlPoints.get(i - 1).getX() - 6) + ",y=" + (controlPoints.get(i - 1).getY() - 1) + ",z=" + (controlPoints.get(i - 1).getZ() - 6) + ",dx=12,dy=12,dz=12,gamemode=!spectator] MSGDum2CP" + i);
 
             fileCommands19.add("execute positioned " + controlPoints.get(i - 1).getX() + " " + (controlPoints.get(i - 1).getY() + 5) + " " + controlPoints.get(i - 1).getZ() + " if entity @p[distance=9..,gamemode=!spectator, scores={MSGDum1CP" + i + "=200..}] run scoreboard players add @a[distance=9..,gamemode=!spectator, scores={MSGDum1CP" + i + "=200..}] MSGDum2CP" + i + " 1");
-            fileCommands19.add("execute positioned " + controlPoints.get(i - 1).getX() + " " + (controlPoints.get(i - 1).getY() + 5) + " " + controlPoints.get(i - 1).getZ() + " if entity @p[distance=9..,gamemode=!spectator,scores={MSGDum2CP" + i + "=200,MSGDum1CP" + i + "=200..}] run tellraw @a [\"\",{\"text\":\" ⎜ \",\"color\":\"gray\"},{\"text\":\"THE DIORITE EXPERTS UHC\",\"color\":\"gold\"},{\"text\":\" ⎜ \",\"color\":\"gray\"},{\"text\":\"CONTROL POINT " + i + " HAS BEEN ABANDONED\",\"color\":\"light_purple\"},{\"text\":\" ⎜ \",\"color\":\"gray\"}]");
+            //fileCommands19.add("execute positioned " + controlPoints.get(i - 1).getX() + " " + (controlPoints.get(i - 1).getY() + 5) + " " + controlPoints.get(i - 1).getZ() + " if entity @p[distance=9..,gamemode=!spectator,scores={MSGDum2CP" + i + "=200,MSGDum1CP" + i + "=200..}] run tellraw @a [\"\",{\"text\":\" ⎜ \",\"color\":\"gray\"},{\"text\":\"THE DIORITE EXPERTS UHC\",\"color\":\"gold\"},{\"text\":\" ⎜ \",\"color\":\"gray\"},{\"text\":\"CONTROL POINT " + i + " HAS BEEN ABANDONED\",\"color\":\"light_purple\"},{\"text\":\" ⎜ \",\"color\":\"gray\"}]");
+            for (String communityNames : communityName) {
+                fileCommands19.add("execute positioned " + controlPoints.get(i - 1).getX() + " " + (controlPoints.get(i - 1).getY() + 5) + " " + controlPoints.get(i - 1).getZ() + " if entity @p[distance=9..,gamemode=!spectator,scores={MSGDum2CP" + i + "=200,MSGDum1CP" + i + "=200..}] run tellraw @a [\"\",{\"text\":\" ⎜ \",\"color\":\"gray\"},{\"text\":\"" + communityName + " UHC\",\"color\":\"gold\"},{\"text\":\" ⎜ \",\"color\":\"gray\"},{\"text\":\"CONTROL POINT " + i + " HAS BEEN ABANDONED\",\"color\":\"light_purple\"},{\"text\":\" ⎜ \",\"color\":\"gray\"}]");
+            }
             fileCommands19.add("execute positioned " + controlPoints.get(i - 1).getX() + " " + (controlPoints.get(i - 1).getY() + 5) + " " + controlPoints.get(i - 1).getZ() + " if entity @p[distance=9..,gamemode=!spectator,scores={MSGDum2CP" + i + "=200,MSGDum1CP" + i + "=200..}] run scoreboard players reset @a[distance=9..,gamemode=!spectator] MSGDum1CP" + i);
 
 
@@ -730,11 +789,13 @@ public class Main {
         files.add(file26);
 
         ArrayList<String> fileCommands27 = new ArrayList<>();
-        fileCommands27.add("tag @r[limit=1,tag=!DontMakeTraitor] add Traitor");
+        //fileCommands27.add("tag @r[limit=1,tag=!DontMakeTraitor] add Traitor");
+        fileCommands27.add("tag @r[limit=1,tag=!DontMakeTraitor,scores={Rank=" + minTraitorRank + "..}] add Traitor");
         for (Team t : teams) {
             fileCommands27.add("execute if entity @p[tag=Traitor,team=" + t.getName() + "] run tag @a[team=" + t.getName() + "] add DontMakeTraitor");
         }
-        fileCommands27.add("tag @r[limit=1,tag=!DontMakeTraitor] add Traitor");
+        //fileCommands27.add("tag @r[limit=1,tag=!DontMakeTraitor] add Traitor");
+        fileCommands27.add("tag @r[limit=1,tag=!DontMakeTraitor,scores={Rank="  + minTraitorRank + "..}] add Traitor");
         fileCommands27.add("execute as @a[tag=Traitor] run tellraw @s [\"\",{\"text\":\"You feel like betrayal today. You have become a Traitor. Your faction consists of: \",\"italic\":true,\"color\":\"red\"},{\"selector\":\"@a[tag=Traitor]\",\"italic\":true,\"color\":\"red\"},{\"text\":\".\",\"italic\":true,\"color\":\"red\"}]");
         fileCommands27.add("title @a title [\"\",{\"text\":\"A Traitor Faction\",\"bold\":true,\"color\":\"red\"}]");
         fileCommands27.add("title @a subtitle [\"\",{\"text\":\"has been founded!\",\"bold\":true,\"color\":\"dark_red\"}]");
@@ -787,6 +848,16 @@ public class Main {
 
         FileData file30 = new FileData("spawn_controlpoints", fileCommands30);
         files.add(file30);
+
+        ArrayList<String> fileCommands31 = new ArrayList<>();
+
+        for (Player p : players) {
+            fileCommands31.add("scoreboard players set " + p.getPlayerName() + " Rank " + p.getRank());
+        }
+        fileCommands31.add("scoreboard objectives setdisplay sidebar Rank");
+
+        FileData file31 = new FileData("display_rank", fileCommands31);
+        files.add(file31);
 
     }
 
