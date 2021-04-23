@@ -818,6 +818,7 @@ public class Main {
             fileCommands30.add("setblock " + cp.getX() + " " + (cp.getY() + 11) + " " + cp.getZ() + " " + "minecraft:structure_block[mode=load]{metadata:\"\",mirror:\"NONE\",ignoreEntities:1b,powered:0b,seed:0L,author:\"?\",rotation:\"NONE\",posX:-6,mode:\"LOAD\",posY:-13,sizeX:13,posZ:-6,integrity:1.0f,showair:0b,name:\"minecraft:controlpoint\",sizeY:14,sizeZ:13,showboundingbox:1b} replace");
             fileCommands30.add("setblock " + cp.getX() + " " + (cp.getY() + 10) + " " + cp.getZ() + " " + "minecraft:redstone_block replace");
             fileCommands30.add("forceload remove " + cp.getX() + " " + cp.getZ() + " " + cp.getX() + " " + cp.getZ());
+            fileCommands30.add("fill " + cp.getX() + " " + (cp.getY() + 12) + " "  + cp.getZ() + " " + cp.getX() + " 235 " + cp.getZ() + " minecraft:air");
         }
 
         FileData file30 = new FileData("spawn_controlpoints", fileCommands30);
