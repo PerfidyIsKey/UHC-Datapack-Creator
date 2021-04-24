@@ -34,7 +34,7 @@ public class Main {
     private ArrayList<ScoreboardObjective> scoreboardObjectives = new ArrayList<>();
     private ArrayList<Player> players = new ArrayList<>();
     private static int worldSize = 1500;
-    private static int minTraitorRank = 30;
+    private static int minTraitorRank = 55;
     private static String communityName = "THE DIORITE EXPERTS";
     //GameData>
 
@@ -320,7 +320,8 @@ public class Main {
         //end scoreboard
         //bossbar
 
-
+        fileCommands.add("bossbar remove minecraft:cp1");
+        fileCommands.add("bossbar remove minecraft:cp2");
         fileCommands.add("bossbar add minecraft:cp1 \"" + cp1.getName() + ": " + cp1.getX() + ", " + cp1.getY() + ", " + cp1.getZ() + "\"");
         fileCommands.add("bossbar set minecraft:cp1 max " + cp1.getMaxVal());
         fileCommands.add("bossbar add minecraft:cp2 \"" + cp2.getName() + " soon: " + cp2.getX() + ", " + cp2.getY() + ", " + cp2.getZ() + "\"");
