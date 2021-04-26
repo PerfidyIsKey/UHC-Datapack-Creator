@@ -9,13 +9,13 @@ public class Main {
     }
 
     //DatapackData<
-    private static int uhcNumber = 40;
+    private static String uhcNumber = "URE3";
     private static String version = "2.0";
 
     private static String userFolder = "bthem";
     private static String worldName = "big-test";
     //private static String dataPackLocation = "C:\\Users\\" + userFolder + "\\AppData\\Roaming\\.minecraft\\saves\\" + worldName + "\\datapacks\\";
-    private static String dataPackLocation = "C:\\Users\\bthem\\Desktop\\Server\\world\\datapacks";
+    private static String dataPackLocation = "C:\\Users\\bthem\\Desktop\\Server\\world\\datapacks\\";
     private static String dataPackLocationServer = "D:\\Documents\\Gaming\\MinecraftServers\\MinecraftServers\\world\\datapacks\\";
     private static String dataPackName = "uhc-datapack-s" + uhcNumber + "v" + version;
     private static String fileLocation = dataPackLocation + dataPackName + "\\data\\uhc\\";
@@ -23,19 +23,18 @@ public class Main {
 
     //DatapackData>
 
-
     //GameData<
     private static int chestSize = 27;
-    private static String admin = "PerfidyIsKey";
-    private static String startCoordinates = "0 66 -4";
+    private static String admin = "Snodog627";
+    private static String startCoordinates = "-4 73 0";
     private ArrayList<Team> teams = new ArrayList<>();
     private ArrayList<ControlPoint> controlPoints = new ArrayList<>();
     private ArrayList<CarePackage> carePackages = new ArrayList<>();
     private ArrayList<ScoreboardObjective> scoreboardObjectives = new ArrayList<>();
     private ArrayList<Player> players = new ArrayList<>();
     private static int worldSize = 1500;
-    private static int minTraitorRank = 55;
-    private static String communityName = "THE DIORITE EXPERTS";
+    private static int minTraitorRank = 15;
+    private static String communityName = "UNIVERSITY RACING EINDHOVEN";
     //GameData>
 
 
@@ -171,8 +170,8 @@ public class Main {
             teams.add(team);
         }
 
-        ControlPoint cp1 = new ControlPoint("CP1", 48000, 2, -122, 64, 77);
-        ControlPoint cp2 = new ControlPoint("CP2", 48000, 3, 38, 63, 180);
+        ControlPoint cp1 = new ControlPoint("CP1", 48000, 2, 116, 63, -40);
+        ControlPoint cp2 = new ControlPoint("CP2", 48000, 3, -237, 69, 45);
         controlPoints.add(cp1);
         controlPoints.add(cp2);
 
@@ -183,7 +182,7 @@ public class Main {
 
         CarePackage carePackage2 = new CarePackage("anti_cp", "Anti Controlpoint Drop",
                 "[{Slot:1b,id:\"minecraft:gunpowder\",Count:1b},{Slot:2b,id:\"minecraft:gunpowder\",Count:1b},{Slot:3b,id:\"minecraft:tnt\",Count:1b},{Slot:4b,id:\"minecraft:flint_and_steel\",Count:1b},{Slot:5b,id:\"minecraft:tnt\",Count:1b},{Slot:6b,id:\"minecraft:sand\",Count:1b},{Slot:7b,id:\"minecraft:sand\",Count:1b},{Slot:11b,id:\"minecraft:enchanted_book\",Count:1b,tag:{StoredEnchantments:[{lvl:4s,id:\"minecraft:blast_protection\"}]}},{Slot:12b,id:\"minecraft:lava_bucket\",Count:1b},{Slot:13b,id:\"minecraft:tnt\",Count:1b},{Slot:14b,id:\"minecraft:lava_bucket\",Count:1b},{Slot:15b,id:\"minecraft:enchanted_book\",Count:1b,tag:{StoredEnchantments:[{lvl:4s,id:\"minecraft:blast_protection\"}]}},{Slot:19b,id:\"minecraft:sand\",Count:1b},{Slot:20b,id:\"minecraft:sand\",Count:1b},{Slot:21b,id:\"minecraft:tnt\",Count:1b},{Slot:22b,id:\"minecraft:flint_and_steel\",Count:1b},{Slot:23b,id:\"minecraft:tnt\",Count:1b},{Slot:24b,id:\"minecraft:gunpowder\",Count:1b},{Slot:25b,id:\"minecraft:gunpowder\",Count:1b}]",
-                -116, 63, 141);
+                -23, 71, 166);
         carePackages.add(carePackage2);
 
         scoreboardObjectives.add(new ScoreboardObjective("Admin", "dummy"));
@@ -210,37 +209,22 @@ public class Main {
         scoreboardObjectives.add(new ScoreboardObjective("Quits", "minecraft.custom:minecraft.leave_game"));
         scoreboardObjectives.add(new ScoreboardObjective("Rank", "dummy"));
 
-
-        players.add(new Player("Snodog627",102));
-        players.add(new Player("Mr9Madness",58));
-        players.add(new Player("PR0BA",9));
-        players.add(new Player("Tiba101",8));
-        players.add(new Player("W0omy",22));
-        players.add(new Player("MissTutuPrincess",24));
-        players.add(new Player("Mr8Madness",4));
-        players.add(new Player("k3hba",3));
-        players.add(new Player("Kalazniq",35));
-        players.add(new Player("Vladik71",34));
-        players.add(new Player("Smashking242",21));
-        players.add(new Player("lilskrut",6));
-        players.add(new Player("Pfalz_",21));
-        players.add(new Player("ThurianBohan",59));
-        players.add(new Player("PerfidyIsKey",57,true));
-        players.add(new Player("deuce__",32));
-        players.add(new Player("jonmo0105",79));
-        players.add(new Player("TheDinoGame",191));
-        players.add(new Player("BAAPABUGGETS",13));
-        players.add(new Player("Kakarot057",50));
-        players.add(new Player("viccietors",49));
-        players.add(new Player("Rayqson",17));
-        players.add(new Player("Xx__HexGamer__xX",80));
-        players.add(new Player("Bobdafish",168));
-        players.add(new Player("Alanaenae",0));
-        players.add(new Player("jk20028",5));
-        players.add(new Player("N_G0n",7));
-        players.add(new Player("SpookySpiker",35));
-        players.add(new Player("Clockweiz",12));
-        players.add(new Player("Eason950116",14));
+        players.add(new Player("Bertje13",0));
+        players.add(new Player("Lefke67",7));
+        players.add(new Player("SpookySpiker",14));
+        players.add(new Player("joep359",30));
+        players.add(new Player("Snodog627",119,true));
+        players.add(new Player("Mafkees__10",110));
+        players.add(new Player("woutje33",89));
+        players.add(new Player("CorruptUncle",0));
+        players.add(new Player("Luuk",2));
+        players.add(new Player("sepertibos",7));
+        players.add(new Player("Clik_clak",11));
+        players.add(new Player("HumblesBumblesV2",13));
+        players.add(new Player("RoyalGub",15));
+        players.add(new Player("Chrissah58",18));
+        players.add(new Player("TNTbuilder21",20));
+        players.add(new Player("Pimmie36",71));
 
     }
 

@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="29ea8b6e-275d-4362-ac9d-03b61e76e2c7" name="Default" comment="Added bossbar fixes + updated minimum traitor rank" />
+    <list default="true" id="29ea8b6e-275d-4362-ac9d-03b61e76e2c7" name="Default" comment="Created URE mode">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/UHC-Datapack-Creator/Main.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/UHC-Datapack-Creator/Main.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -33,7 +37,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="master" />
+        <entry key="$PROJECT_DIR$" value="test" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -110,6 +114,7 @@
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
+    <property name="last_opened_file_path" value="$USER_HOME$/Downloads/UHC-Datapack-Creator-URE" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="settings.editor.selected.configurable" value="configurable.group.appearance" />
@@ -230,21 +235,28 @@
       <option name="project" value="LOCAL" />
       <updated>1616091256632</updated>
     </task>
-    <task id="LOCAL-00002" summary="Updated coordinates for UHC S40">
-      <created>1619203584612</created>
+    <task id="LOCAL-00002" summary="Changed communityName bug">
+      <created>1616092502586</created>
       <option name="number" value="00002" />
       <option name="presentableId" value="LOCAL-00002" />
       <option name="project" value="LOCAL" />
-      <updated>1619203584612</updated>
+      <updated>1616092502586</updated>
     </task>
-    <task id="LOCAL-00003" summary="Added bossbar fixes + updated minimum traitor rank">
-      <created>1619268233899</created>
+    <task id="LOCAL-00003" summary="Display rank in developer">
+      <created>1616092683109</created>
       <option name="number" value="00003" />
       <option name="presentableId" value="LOCAL-00003" />
       <option name="project" value="LOCAL" />
-      <updated>1619268233899</updated>
+      <updated>1616092683109</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="Created URE mode">
+      <created>1616347204103</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1616347204103</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
@@ -343,9 +355,10 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="I am the test" />
-    <MESSAGE value="Updated coordinates for UHC S40" />
-    <MESSAGE value="Added bossbar fixes + updated minimum traitor rank" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added bossbar fixes + updated minimum traitor rank" />
+    <MESSAGE value="Changed communityName bug" />
+    <MESSAGE value="Display rank in developer" />
+    <MESSAGE value="Created URE mode" />
+    <option name="LAST_COMMIT_MESSAGE" value="Created URE mode" />
   </component>
   <component name="antWorkspaceConfiguration">
     <option name="IS_AUTOSCROLL_TO_SOURCE" value="false" />
