@@ -211,39 +211,36 @@ public class Main {
         scoreboardObjectives.add(new ScoreboardObjective("Rank", "dummy"));
 
 
-        players.add(new Player("Snodog627",116));
-        players.add(new Player("Mr9Madness",65));
-        players.add(new Player("PR0BA",14));
-        players.add(new Player("Tiba101",9));
-        players.add(new Player("W0omy",26));
-        players.add(new Player("P_Earl_",0));
-        players.add(new Player("naaktgeboren",1));
-        players.add(new Player("MissTutuPrincess",28));
-        players.add(new Player("Mr8Madness",9));
-        players.add(new Player("k3hba",7));
-        players.add(new Player("Kalazniq",32));
-        players.add(new Player("Vladik71",33));
-        players.add(new Player("Smashking242",29));
-        players.add(new Player("Xytaes",0));
-        players.add(new Player("lilskrut",10));
+        players.add(new Player("Snodog627",102));
+        players.add(new Player("Mr9Madness",58));
+        players.add(new Player("PR0BA",9));
+        players.add(new Player("Tiba101",8));
+        players.add(new Player("W0omy",22));
+        players.add(new Player("MissTutuPrincess",24));
+        players.add(new Player("Mr8Madness",4));
+        players.add(new Player("k3hba",3));
+        players.add(new Player("Kalazniq",35));
+        players.add(new Player("Vladik71",34));
+        players.add(new Player("Smashking242",21));
+        players.add(new Player("lilskrut",6));
         players.add(new Player("Pfalz_",21));
-        players.add(new Player("ThurianBohan",64));
-        players.add(new Player("PerfidyIsKey",52,true));
-        players.add(new Player("deuce__",37));
-        players.add(new Player("jonmo0105",82));
-        players.add(new Player("TheDinoGame",178));
-        players.add(new Player("BAAPABUGGETS",14));
-        players.add(new Player("Kakarot057",51));
-        players.add(new Player("viccietors",56));
-        players.add(new Player("Rayqson",18));
-        players.add(new Player("Xx__HexGamer__xX",57));
-        players.add(new Player("Bobdafish",174));
+        players.add(new Player("ThurianBohan",59));
+        players.add(new Player("PerfidyIsKey",57,true));
+        players.add(new Player("deuce__",32));
+        players.add(new Player("jonmo0105",79));
+        players.add(new Player("TheDinoGame",191));
+        players.add(new Player("BAAPABUGGETS",13));
+        players.add(new Player("Kakarot057",50));
+        players.add(new Player("viccietors",49));
+        players.add(new Player("Rayqson",17));
+        players.add(new Player("Xx__HexGamer__xX",80));
+        players.add(new Player("Bobdafish",168));
         players.add(new Player("Alanaenae",0));
         players.add(new Player("jk20028",5));
-        players.add(new Player("N_G0n",8));
-        players.add(new Player("SpookySpiker",0));
-        players.add(new Player("Clockweiz",13));
-        players.add(new Player("Eason950116",20));
+        players.add(new Player("N_G0n",7));
+        players.add(new Player("SpookySpiker",35));
+        players.add(new Player("Clockweiz",12));
+        players.add(new Player("Eason950116",14));
 
     }
 
