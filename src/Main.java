@@ -210,21 +210,22 @@ public class Main {
         scoreboardObjectives.add(new ScoreboardObjective("Rank", "dummy"));
 
         players.add(new Player("Bertje13",0));
-        players.add(new Player("Lefke67",7));
-        players.add(new Player("SpookySpiker",14));
-        players.add(new Player("joep359",30));
-        players.add(new Player("Snodog627",119,true));
-        players.add(new Player("Mafkees__10",110));
-        players.add(new Player("woutje33",89));
-        players.add(new Player("CorruptUncle",0));
+        players.add(new Player("Lefke67",8));
+        players.add(new Player("SpookySpiker",17));
+        players.add(new Player("joep359",29));
+        players.add(new Player("Snodog627",133,true));
+        players.add(new Player("Mafkees__10",97));
+        players.add(new Player("woutje33",86));
+        players.add(new Player("Mozzarella739",56));
         players.add(new Player("Luuk",2));
-        players.add(new Player("sepertibos",7));
+        players.add(new Player("sepertibos",6));
         players.add(new Player("Clik_clak",11));
         players.add(new Player("HumblesBumblesV2",13));
-        players.add(new Player("RoyalGub",15));
-        players.add(new Player("Chrissah58",18));
-        players.add(new Player("TNTbuilder21",20));
-        players.add(new Player("Pimmie36",71));
+        players.add(new Player("RoyalGub",26));
+        players.add(new Player("Chrissah58",17));
+        players.add(new Player("TNTbuilder21",19));
+        players.add(new Player("Pimmie36",104));
+        players.add(new Player("lenschoenie98",0));
 
     }
 
