@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="29ea8b6e-275d-4362-ac9d-03b61e76e2c7" name="Default" comment="Added TDE S40 code">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
-    </list>
+    <list default="true" id="29ea8b6e-275d-4362-ac9d-03b61e76e2c7" name="Default" comment="Updated players after URE3" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -262,7 +259,14 @@
       <option name="project" value="LOCAL" />
       <updated>1619466426772</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="Updated players after URE3">
+      <created>1619554307324</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1619554307324</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
@@ -365,7 +369,8 @@
     <MESSAGE value="Display rank in developer" />
     <MESSAGE value="Created URE mode" />
     <MESSAGE value="Added TDE S40 code" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added TDE S40 code" />
+    <MESSAGE value="Updated players after URE3" />
+    <option name="LAST_COMMIT_MESSAGE" value="Updated players after URE3" />
   </component>
   <component name="antWorkspaceConfiguration">
     <option name="IS_AUTOSCROLL_TO_SOURCE" value="false" />
