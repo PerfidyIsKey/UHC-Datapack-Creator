@@ -9,7 +9,7 @@ public class Main {
     }
 
     //DatapackData<
-    private static String uhcNumber = "URE3";
+    private static String uhcNumber = "URE4";
     private static String version = "2.0";
 
     private static String userFolder = "bthem";
@@ -26,7 +26,7 @@ public class Main {
     //GameData<
     private static int chestSize = 27;
     private static String admin = "Snodog627";
-    private static String startCoordinates = "-4 73 0";
+    private static String startCoordinates = "-4 74 0";
     private ArrayList<Team> teams = new ArrayList<>();
     private ArrayList<ControlPoint> controlPoints = new ArrayList<>();
     private ArrayList<CarePackage> carePackages = new ArrayList<>();
@@ -170,8 +170,8 @@ public class Main {
             teams.add(team);
         }
 
-        ControlPoint cp1 = new ControlPoint("CP1", 48000, 2, 116, 63, -40);
-        ControlPoint cp2 = new ControlPoint("CP2", 48000, 3, -237, 69, 45);
+        ControlPoint cp1 = new ControlPoint("CP1", 48000, 2, 125, 84, -140);
+        ControlPoint cp2 = new ControlPoint("CP2", 48000, 3, -91, 64, 212);
         controlPoints.add(cp1);
         controlPoints.add(cp2);
 
@@ -182,7 +182,7 @@ public class Main {
 
         CarePackage carePackage2 = new CarePackage("anti_cp", "Anti Controlpoint Drop",
                 "[{Slot:1b,id:\"minecraft:gunpowder\",Count:1b},{Slot:2b,id:\"minecraft:gunpowder\",Count:1b},{Slot:3b,id:\"minecraft:tnt\",Count:1b},{Slot:4b,id:\"minecraft:flint_and_steel\",Count:1b},{Slot:5b,id:\"minecraft:tnt\",Count:1b},{Slot:6b,id:\"minecraft:sand\",Count:1b},{Slot:7b,id:\"minecraft:sand\",Count:1b},{Slot:11b,id:\"minecraft:enchanted_book\",Count:1b,tag:{StoredEnchantments:[{lvl:4s,id:\"minecraft:blast_protection\"}]}},{Slot:12b,id:\"minecraft:lava_bucket\",Count:1b},{Slot:13b,id:\"minecraft:tnt\",Count:1b},{Slot:14b,id:\"minecraft:lava_bucket\",Count:1b},{Slot:15b,id:\"minecraft:enchanted_book\",Count:1b,tag:{StoredEnchantments:[{lvl:4s,id:\"minecraft:blast_protection\"}]}},{Slot:19b,id:\"minecraft:sand\",Count:1b},{Slot:20b,id:\"minecraft:sand\",Count:1b},{Slot:21b,id:\"minecraft:tnt\",Count:1b},{Slot:22b,id:\"minecraft:flint_and_steel\",Count:1b},{Slot:23b,id:\"minecraft:tnt\",Count:1b},{Slot:24b,id:\"minecraft:gunpowder\",Count:1b},{Slot:25b,id:\"minecraft:gunpowder\",Count:1b}]",
-                -23, 71, 166);
+                155, 69, -50);
         carePackages.add(carePackage2);
 
         scoreboardObjectives.add(new ScoreboardObjective("Admin", "dummy"));
