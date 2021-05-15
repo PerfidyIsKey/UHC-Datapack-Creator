@@ -33,6 +33,7 @@ public class Main {
     private ArrayList<ScoreboardObjective> scoreboardObjectives = new ArrayList<>();
     private ArrayList<Player> players = new ArrayList<>();
     private static int worldSize = 1500;
+    private static int worldHeight = 257;
     private static int minTraitorRank = 15;
     private static String communityName = "UNIVERSITY RACING EINDHOVEN";
     //GameData>
@@ -784,6 +785,9 @@ public class Main {
             fileCommands30.add("forceload add " + cp.getX() + " " + cp.getZ() + " " + cp.getX() + " " + cp.getZ());
             fileCommands30.add("setblock " + cp.getX() + " " + (cp.getY() + 11) + " " + cp.getZ() + " " + "minecraft:structure_block[mode=load]{metadata:\"\",mirror:\"NONE\",ignoreEntities:1b,powered:0b,seed:0L,author:\"?\",rotation:\"NONE\",posX:-6,mode:\"LOAD\",posY:-13,sizeX:13,posZ:-6,integrity:1.0f,showair:0b,name:\"minecraft:controlpoint\",sizeY:14,sizeZ:13,showboundingbox:1b} replace");
             fileCommands30.add("setblock " + cp.getX() + " " + (cp.getY() + 10) + " " + cp.getZ() + " " + "minecraft:redstone_block replace");
+            for (int i = cp.getY() + 11; i < worldHeight; i++) {
+                fileCommands30.add("execute unless block " + cp.getX() + " " + i + " " + cp.getZ() + " minecraft:air run setblock " + cp.getX() + " " + i + " " + cp.getZ() + " minecraft:glass");
+            }
             fileCommands30.add("forceload remove " + cp.getX() + " " + cp.getZ() + " " + cp.getX() + " " + cp.getZ());
         }
 
