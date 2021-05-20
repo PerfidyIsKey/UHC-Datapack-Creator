@@ -9,7 +9,7 @@ public class Main {
     }
 
     //DatapackData<
-    private static String uhcNumber = "URE4";
+    private static String uhcNumber = "S41";
     private static String version = "2.0";
 
     private static String userFolder = "bthem";
@@ -25,7 +25,7 @@ public class Main {
 
     //GameData<
     private static int chestSize = 27;
-    private static String admin = "Snodog627";
+    private static String admin = "PerfidyIsKey";
     private static String startCoordinates = "-4 74 0";
     private ArrayList<Team> teams = new ArrayList<>();
     private ArrayList<ControlPoint> controlPoints = new ArrayList<>();
@@ -35,7 +35,7 @@ public class Main {
     private static int worldSize = 1500;
     private static int worldHeight = 257;
     private static int minTraitorRank = 15;
-    private static String communityName = "UNIVERSITY RACING EINDHOVEN";
+    private static String communityName = "THE DIORITE EXPERTS";
     //GameData>
 
 
@@ -210,23 +210,36 @@ public class Main {
         scoreboardObjectives.add(new ScoreboardObjective("Quits", "minecraft.custom:minecraft.leave_game"));
         scoreboardObjectives.add(new ScoreboardObjective("Rank", "dummy"));
 
-        players.add(new Player("Bertje13",0));
-        players.add(new Player("Lefke67",8));
-        players.add(new Player("SpookySpiker",17));
-        players.add(new Player("joep359",29));
-        players.add(new Player("Snodog627",133,true));
-        players.add(new Player("Mafkees__10",97));
-        players.add(new Player("woutje33",86));
-        players.add(new Player("Mozzarella739",56));
-        players.add(new Player("Luuk",2));
-        players.add(new Player("sepertibos",6));
-        players.add(new Player("Clik_clak",11));
-        players.add(new Player("HumblesBumblesV2",13));
-        players.add(new Player("RoyalGub",26));
-        players.add(new Player("Chrissah58",17));
-        players.add(new Player("TNTbuilder21",19));
-        players.add(new Player("Pimmie36",104));
-        players.add(new Player("lenschoenie98",0));
+        players.add(new Player("Snodog627",102));
+        players.add(new Player("Mr9Madness",58));
+        players.add(new Player("PR0BA",9));
+        players.add(new Player("Tiba101",8));
+        players.add(new Player("W0omy",22));
+        players.add(new Player("MissTutuPrincess",24));
+        players.add(new Player("Mr8Madness",4));
+        players.add(new Player("k3hba",3));
+        players.add(new Player("Kalazniq",35));
+        players.add(new Player("Vladik71",34));
+        players.add(new Player("Smashking242",21));
+        players.add(new Player("lilskrut",6));
+        players.add(new Player("Pfalz_",21));
+        players.add(new Player("ThurianBohan",59));
+        players.add(new Player("PerfidyIsKey",57,true));
+        players.add(new Player("deuce__",32));
+        players.add(new Player("jonmo0105",79));
+        players.add(new Player("TheDinoGame",191));
+        players.add(new Player("BAAPABUGGETS",13));
+        players.add(new Player("Kakarot057",50));
+        players.add(new Player("viccietors",49));
+        players.add(new Player("Rayqson",17));
+        players.add(new Player("Xx__HexGamer__xX",80));
+        players.add(new Player("Bobdafish",168));
+        players.add(new Player("Alanaenae",0));
+        players.add(new Player("jk20028",5));
+        players.add(new Player("N_G0n",7));
+        players.add(new Player("SpookySpiker",35));
+        players.add(new Player("Clockweiz",12));
+        players.add(new Player("Eason950116",14));
 
     }
 
