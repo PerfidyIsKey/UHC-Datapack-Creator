@@ -32,6 +32,7 @@ public class Main {
     private ArrayList<CarePackage> carePackages = new ArrayList<>();
     private ArrayList<ScoreboardObjective> scoreboardObjectives = new ArrayList<>();
     private ArrayList<Player> players = new ArrayList<>();
+    private ArrayList<StatusEffect> effect = new ArrayList<>();
     private static int worldSize = 1500;
     private static int worldHeight = 257;
     private static int minTraitorRank = 15;
@@ -240,6 +241,12 @@ public class Main {
         players.add(new Player("SpookySpiker",35));
         players.add(new Player("Clockweiz",12));
         players.add(new Player("Eason950116",14));
+
+        // Status effects
+        effect.add(new StatusEffect("glowing",30,1));
+        effect.add(new StatusEffect("fire_resistance",20,1));
+        effect.add(new StatusEffect("nausea",10,1));
+        effect.add(new StatusEffect("speed",20,1));
 
     }
 
@@ -816,6 +823,20 @@ public class Main {
 
         FileData file31 = new FileData("display_rank", fileCommands31);
         files.add(file31);
+
+        // Effects given when the target blocks are hit on the Control Point
+        for (int i = 0; i < 4; i++) {
+            ArrayList<String> fileCommands32 = new ArrayList<>();
+
+            for (ControlPoint cp : controlPoints) {
+                fileCommands32.add("execute positioned " + cp.getX() + " " + cp.getY() + " " + cp.getZ() + " run effect give @p[gamemode=!spectator] minecraft:" + effect.get(i).getEffectName() + " " + effect.get(i).getDuration() + " " + effect.get(i).getAmplification());
+            }
+
+
+            FileData file32 = new FileData("give_status_effect" + i, fileCommands32);
+            files.add(file32);
+
+        }
 
     }
 

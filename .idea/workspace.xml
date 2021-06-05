@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="29ea8b6e-275d-4362-ac9d-03b61e76e2c7" name="Default" comment="Created URE mode">
+    <list default="true" id="29ea8b6e-275d-4362-ac9d-03b61e76e2c7" name="Default" comment="Don't smash my fokkin door">
+      <change afterPath="$PROJECT_DIR$/src/StatusEffect.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
     </list>
