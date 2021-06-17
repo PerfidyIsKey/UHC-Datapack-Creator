@@ -1,9 +1,7 @@
 public class Player {
 
     private String playerName;
-
     private int rank;
-
     private boolean admin;
 
     public Player(String playerName, int rank) {
