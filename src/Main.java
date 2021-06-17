@@ -9,13 +9,13 @@ public class Main {
     }
 
     //DatapackData<
-    private static int uhcNumber = 40;
+    private static String uhcNumber = "S41";
     private static String version = "2.0";
 
     private static String userFolder = "bthem";
     private static String worldName = "big-test";
     //private static String dataPackLocation = "C:\\Users\\" + userFolder + "\\AppData\\Roaming\\.minecraft\\saves\\" + worldName + "\\datapacks\\";
-    private static String dataPackLocation = "C:\\Users\\bthem\\Desktop\\Server\\world\\datapacks";
+    private static String dataPackLocation = "C:\\Users\\bthem\\Desktop\\Server\\world\\datapacks\\";
     private static String dataPackLocationServer = "D:\\Documents\\Gaming\\MinecraftServers\\MinecraftServers\\world\\datapacks\\";
     private static String dataPackName = "uhc-datapack-s" + uhcNumber + "v" + version;
     private static String fileLocation = dataPackLocation + dataPackName + "\\data\\uhc\\";
@@ -23,18 +23,19 @@ public class Main {
 
     //DatapackData>
 
-
     //GameData<
     private static int chestSize = 27;
     private static String admin = "PerfidyIsKey";
-    private static String startCoordinates = "-3 72 5";
+    private static String startCoordinates = "2 64 -4";
     private ArrayList<Team> teams = new ArrayList<>();
     private ArrayList<ControlPoint> controlPoints = new ArrayList<>();
     private ArrayList<CarePackage> carePackages = new ArrayList<>();
     private ArrayList<ScoreboardObjective> scoreboardObjectives = new ArrayList<>();
     private ArrayList<Player> players = new ArrayList<>();
+    private ArrayList<StatusEffect> effect = new ArrayList<>();
     private static int worldSize = 1500;
-    private static int minTraitorRank = 30;
+    private static int worldHeight = 257;
+    private static int minTraitorRank = 45;
     private static String communityName = "THE DIORITE EXPERTS";
     //GameData>
 
@@ -171,8 +172,8 @@ public class Main {
             teams.add(team);
         }
 
-        ControlPoint cp1 = new ControlPoint("CP1", 48000, 2, 112, 63, 90);
-        ControlPoint cp2 = new ControlPoint("CP2", 48000, 3, -23, 63, -158);
+        ControlPoint cp1 = new ControlPoint("CP1", 48000, 2, -85, 64, 183);
+        ControlPoint cp2 = new ControlPoint("CP2", 48000, 3, 115, 64, 94);
         controlPoints.add(cp1);
         controlPoints.add(cp2);
 
@@ -183,7 +184,7 @@ public class Main {
 
         CarePackage carePackage2 = new CarePackage("anti_cp", "Anti Controlpoint Drop",
                 "[{Slot:1b,id:\"minecraft:gunpowder\",Count:1b},{Slot:2b,id:\"minecraft:gunpowder\",Count:1b},{Slot:3b,id:\"minecraft:tnt\",Count:1b},{Slot:4b,id:\"minecraft:flint_and_steel\",Count:1b},{Slot:5b,id:\"minecraft:tnt\",Count:1b},{Slot:6b,id:\"minecraft:sand\",Count:1b},{Slot:7b,id:\"minecraft:sand\",Count:1b},{Slot:11b,id:\"minecraft:enchanted_book\",Count:1b,tag:{StoredEnchantments:[{lvl:4s,id:\"minecraft:blast_protection\"}]}},{Slot:12b,id:\"minecraft:lava_bucket\",Count:1b},{Slot:13b,id:\"minecraft:tnt\",Count:1b},{Slot:14b,id:\"minecraft:lava_bucket\",Count:1b},{Slot:15b,id:\"minecraft:enchanted_book\",Count:1b,tag:{StoredEnchantments:[{lvl:4s,id:\"minecraft:blast_protection\"}]}},{Slot:19b,id:\"minecraft:sand\",Count:1b},{Slot:20b,id:\"minecraft:sand\",Count:1b},{Slot:21b,id:\"minecraft:tnt\",Count:1b},{Slot:22b,id:\"minecraft:flint_and_steel\",Count:1b},{Slot:23b,id:\"minecraft:tnt\",Count:1b},{Slot:24b,id:\"minecraft:gunpowder\",Count:1b},{Slot:25b,id:\"minecraft:gunpowder\",Count:1b}]",
-                -158, 64, -23);
+                62, 63, 242);
         carePackages.add(carePackage2);
 
         scoreboardObjectives.add(new ScoreboardObjective("Admin", "dummy"));
@@ -210,40 +211,42 @@ public class Main {
         scoreboardObjectives.add(new ScoreboardObjective("Quits", "minecraft.custom:minecraft.leave_game"));
         scoreboardObjectives.add(new ScoreboardObjective("Rank", "dummy"));
 
-
-        players.add(new Player("Snodog627",116));
-        players.add(new Player("Mr9Madness",65));
-        players.add(new Player("PR0BA",14));
-        players.add(new Player("Tiba101",9));
-        players.add(new Player("W0omy",26));
-        players.add(new Player("P_Earl_",0));
-        players.add(new Player("naaktgeboren",1));
-        players.add(new Player("MissTutuPrincess",28));
-        players.add(new Player("Mr8Madness",9));
-        players.add(new Player("k3hba",7));
-        players.add(new Player("Kalazniq",32));
-        players.add(new Player("Vladik71",33));
-        players.add(new Player("Smashking242",29));
-        players.add(new Player("Xytaes",0));
-        players.add(new Player("lilskrut",10));
+        players.add(new Player("Snodog627",102));
+        players.add(new Player("Mr9Madness",58));
+        players.add(new Player("PR0BA",9));
+        players.add(new Player("Tiba101",8));
+        players.add(new Player("W0omy",22));
+        players.add(new Player("MissTutuPrincess",24));
+        players.add(new Player("Mr8Madness",4));
+        players.add(new Player("k3hba",3));
+        players.add(new Player("Kalazniq",35));
+        players.add(new Player("Vladik71",34));
+        players.add(new Player("Smashking242",21));
+        players.add(new Player("lilskrut",6));
         players.add(new Player("Pfalz_",21));
-        players.add(new Player("ThurianBohan",64));
-        players.add(new Player("PerfidyIsKey",52,true));
-        players.add(new Player("deuce__",37));
-        players.add(new Player("jonmo0105",82));
-        players.add(new Player("TheDinoGame",178));
-        players.add(new Player("BAAPABUGGETS",14));
-        players.add(new Player("Kakarot057",51));
-        players.add(new Player("viccietors",56));
-        players.add(new Player("Rayqson",18));
-        players.add(new Player("Xx__HexGamer__xX",57));
-        players.add(new Player("Bobdafish",174));
+        players.add(new Player("ThurianBohan",59));
+        players.add(new Player("PerfidyIsKey",57,true));
+        players.add(new Player("deuce__",32));
+        players.add(new Player("jonmo0105",79));
+        players.add(new Player("TheDinoGame",191));
+        players.add(new Player("BAAPABUGGETS",13));
+        players.add(new Player("Kakarot057",50));
+        players.add(new Player("viccietors",49));
+        players.add(new Player("Rayqson",17));
+        players.add(new Player("Xx__HexGamer__xX",80));
+        players.add(new Player("Bobdafish",168));
         players.add(new Player("Alanaenae",0));
         players.add(new Player("jk20028",5));
-        players.add(new Player("N_G0n",8));
-        players.add(new Player("SpookySpiker",0));
-        players.add(new Player("Clockweiz",13));
-        players.add(new Player("Eason950116",20));
+        players.add(new Player("N_G0n",7));
+        players.add(new Player("SpookySpiker",35));
+        players.add(new Player("Clockweiz",12));
+        players.add(new Player("Eason950116",14));
+
+        // Status effects
+        effect.add(new StatusEffect("glowing",30,1));
+        effect.add(new StatusEffect("fire_resistance",20,1));
+        effect.add(new StatusEffect("nausea",10,1));
+        effect.add(new StatusEffect("speed",20,1));
 
     }
 
@@ -320,7 +323,8 @@ public class Main {
         //end scoreboard
         //bossbar
 
-
+        fileCommands.add("bossbar remove minecraft:cp1");
+        fileCommands.add("bossbar remove minecraft:cp2");
         fileCommands.add("bossbar add minecraft:cp1 \"" + cp1.getName() + ": " + cp1.getX() + ", " + cp1.getY() + ", " + cp1.getZ() + "\"");
         fileCommands.add("bossbar set minecraft:cp1 max " + cp1.getMaxVal());
         fileCommands.add("bossbar add minecraft:cp2 \"" + cp2.getName() + " soon: " + cp2.getX() + ", " + cp2.getY() + ", " + cp2.getZ() + "\"");
@@ -748,12 +752,12 @@ public class Main {
 
         ArrayList<String> fileCommands27 = new ArrayList<>();
         //fileCommands27.add("tag @r[limit=1,tag=!DontMakeTraitor] add Traitor");
-        fileCommands27.add("tag @r[limit=1,tag=!DontMakeTraitor,scores={Rank=" + minTraitorRank + "..}] add Traitor");
+        fileCommands27.add("tag @r[limit=1,tag=!DontMakeTraitor,scores={Rank=" + minTraitorRank + "..},gamemode=!spectator] add Traitor");
         for (Team t : teams) {
             fileCommands27.add("execute if entity @p[tag=Traitor,team=" + t.getName() + "] run tag @a[team=" + t.getName() + "] add DontMakeTraitor");
         }
         //fileCommands27.add("tag @r[limit=1,tag=!DontMakeTraitor] add Traitor");
-        fileCommands27.add("tag @r[limit=1,tag=!DontMakeTraitor,scores={Rank="  + minTraitorRank + "..}] add Traitor");
+        fileCommands27.add("tag @r[limit=1,tag=!DontMakeTraitor,scores={Rank="  + minTraitorRank + "..},gamemode=!spectator] add Traitor");
         fileCommands27.add("execute as @a[tag=Traitor] run tellraw @s [\"\",{\"text\":\"You feel like betrayal today. You have become a Traitor. Your faction consists of: \",\"italic\":true,\"color\":\"red\"},{\"selector\":\"@a[tag=Traitor]\",\"italic\":true,\"color\":\"red\"},{\"text\":\".\",\"italic\":true,\"color\":\"red\"}]");
         fileCommands27.add("title @a title [\"\",{\"text\":\"A Traitor Faction\",\"bold\":true,\"color\":\"red\"}]");
         fileCommands27.add("title @a subtitle [\"\",{\"text\":\"has been founded!\",\"bold\":true,\"color\":\"dark_red\"}]");
@@ -801,6 +805,9 @@ public class Main {
             fileCommands30.add("forceload add " + cp.getX() + " " + cp.getZ() + " " + cp.getX() + " " + cp.getZ());
             fileCommands30.add("setblock " + cp.getX() + " " + (cp.getY() + 11) + " " + cp.getZ() + " " + "minecraft:structure_block[mode=load]{metadata:\"\",mirror:\"NONE\",ignoreEntities:1b,powered:0b,seed:0L,author:\"?\",rotation:\"NONE\",posX:-6,mode:\"LOAD\",posY:-13,sizeX:13,posZ:-6,integrity:1.0f,showair:0b,name:\"minecraft:controlpoint\",sizeY:14,sizeZ:13,showboundingbox:1b} replace");
             fileCommands30.add("setblock " + cp.getX() + " " + (cp.getY() + 10) + " " + cp.getZ() + " " + "minecraft:redstone_block replace");
+            for (int i = cp.getY() + 11; i < worldHeight; i++) {
+                fileCommands30.add("execute unless block " + cp.getX() + " " + i + " " + cp.getZ() + " minecraft:air run setblock " + cp.getX() + " " + i + " " + cp.getZ() + " minecraft:glass");
+            }
             fileCommands30.add("forceload remove " + cp.getX() + " " + cp.getZ() + " " + cp.getX() + " " + cp.getZ());
         }
 
@@ -816,6 +823,20 @@ public class Main {
 
         FileData file31 = new FileData("display_rank", fileCommands31);
         files.add(file31);
+
+        // Effects given when the target blocks are hit on the Control Point
+        for (int i = 0; i < 4; i++) {
+            ArrayList<String> fileCommands32 = new ArrayList<>();
+
+            for (ControlPoint cp : controlPoints) {
+                fileCommands32.add("execute positioned " + cp.getX() + " " + cp.getY() + " " + cp.getZ() + " run effect give @p[gamemode=!spectator] minecraft:" + effect.get(i).getEffectName() + " " + effect.get(i).getDuration() + " " + effect.get(i).getAmplification());
+            }
+
+
+            FileData file32 = new FileData("give_status_effect" + i, fileCommands32);
+            files.add(file32);
+
+        }
 
     }
 
