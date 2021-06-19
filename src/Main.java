@@ -241,6 +241,7 @@ public class Main {
         players.add(new Player("SpookySpiker",35));
         players.add(new Player("Clockweiz",12));
         players.add(new Player("Eason950116",14));
+        players.add(new Player("CorruptUncle",56));
 
         // Status effects
         effect.add(new StatusEffect("glowing",30,1));
