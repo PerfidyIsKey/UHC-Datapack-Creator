@@ -16,7 +16,7 @@ close all
 
 %% Information
 addpath('Data','Functions','Figures')
-load('DataURE3.mat')
+load('DataS41.mat')
 
 %% Visualization
 NoP = size(Players,2);
@@ -35,4 +35,4 @@ for i = 1:NoP
     plot(1:NoS,Players(i).RankHistory,'LineWidth',LineSize,'Color',Col)
     hold on
 end
-legend(legdata,'location','best','Interpreter','none')
+legend(legdata,'location','eastoutside','Interpreter','none')

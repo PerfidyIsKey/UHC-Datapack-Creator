@@ -1,0 +1,15 @@
+
+*.sfk
+*.mp4
+*.mp3
+*.bak
+*.veg
+*.tmp
+Data/
+!Data/Data.mat
+Documents/
+Emotes/
+Figures/
+Misc/
+Non-git/
+Server/

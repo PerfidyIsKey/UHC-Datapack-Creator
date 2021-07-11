@@ -16,18 +16,18 @@ addpath('Data','Functions')
 % out of the mat file anyways.
 Players             = struct;       % Preallocation
 PlayerConnectivity	= zeros(1,3); % Preallocation
-load('DataURE2.mat')                    % Load data
+load('DataS40.mat')                    % Load data
 
 %% Define season data
 %%% Season data
 NoS                     = size(Seasons,2) + 1;  % New season index
-Seasons(NoS).Season     = 'URE3';    % Season name
-Seasons(NoS).Players    = 8;                    % Total number of players
-Seasons(NoS).Date       = datetime(2021,4,27); % Date of the season
+Seasons(NoS).Season     = 'S41';    % Season name
+Seasons(NoS).Players    = 13;                    % Total number of players
+Seasons(NoS).Date       = datetime(2021,6,19); % Date of the season
 Seasons(NoS).TeamAmount = 2;	% Needs to be equal to the amount of members in the winning team
 
 %%% New Players
-PlayersNew = {'lenschoenie98'};     % Define the username of new players
+PlayersNew = {'CorruptUncle'};     % Define the username of new players
 
 NoN     = size(PlayersNew,1);	% Number of new players
 NoP     = size(Players,2);      % Old total number of players
@@ -39,16 +39,19 @@ for i = 1:NoN
 end
 
 %%% Player data
-ParticipantIndex	= [2,3,5,6,8,13,16,NewIndex'];    % Define index of the participants
-Kills               = [0;0;1;0;2;0;3;0];                  % Indicate amount of kills per player
-Position            = [7;6;1;5;1;4;3;8];                  % Indicate final position
-Winner              = [0;0;1;0;1;0;0;0];                  % Indicate whether the player won the season
+ParticipantIndex	= [1,2,17,24,25,27,28,31,33,34,36,38,NewIndex'];    % Define index of the participants
+Kills               = [0;1;1;0;0;0;3;0;1;0;0;0;1];                  % Indicate amount of kills per player
+Position            = [12;1;5;13;1;5;5;11;8;9;7;10;6];                  % Indicate final position
+Winner              = [0;1;0;0;1;0;0;0;0;0;0;0;0];                  % Indicate whether the player won the season
 NoPar               = size(ParticipantIndex,2);             % Indicate number of participants
 
 PC = [      % Indicate which players were in a team together
-    5 8
-    6 13
-    16 17
+    1 31
+    2 25
+    17 28
+    27 33
+    34 38
+    36 41
     ];
 
 %% Update data

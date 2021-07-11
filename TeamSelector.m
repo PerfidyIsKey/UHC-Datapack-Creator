@@ -16,16 +16,16 @@ close all
 
 %% Information
 addpath('Data','Functions','Documents')
-load('DataS40.mat')
+load('DataS41.mat')
 
 % Enter the players that are participating (corresponding numbers with
 % PlayerName variable in Players struct)
-ParticipantIndex = [1,2,5,17,18,24,25,27,28,31,33,34,38,40];
+ParticipantIndex = [1,2,17,18,24,25,27,28,31,33,34,36,38,39,40,41];
 % ParticipantIndex = [2,3,5,6,8,10,13,16,17];
 
 % Enter the names of new players
-NewPlayers = {'Pimmie36','Lefke67'};
-EstimatedRank = [104,8];
+NewPlayers = {};
+EstimatedRank = [];
 
 NoN = size(NewPlayers,2);
 NoP = size(Players,2) + NoN;
@@ -69,12 +69,12 @@ MeanScore = nansum(Ranks)/NoP;    % Mean score among the current set of players
 
 %% Team selection
 % Team criteria
-ScoreRange = 3;        % Allowed deviation from the mean score
+ScoreRange = 13;        % Allowed deviation from the mean score
 MaxLoops = 1000;        % Maximum number of loops before the interval is increased
 LoopBreak = 0;          % Break the loop if the minimum value of the score interval subceeds this value
 TeamSize = 2;           % Amount of players in one team
-TotPairing = [0 1];     % Threshold of how many times players in a team can have teamed up
-ScoreTol = 34;          % Tolerance of the final mean score
+TotPairing = [1 4];     % Threshold of how many times players in a team can have teamed up
+ScoreTol = 43;          % Tolerance of the final mean score
 ScoreNoise = 60;
 TeamAmount = floor(NoP/TeamSize); % Amount of teams
 
@@ -112,7 +112,7 @@ while LoopFail
         || max(TeamWeight) > MeanScore + ScoreTol;  % Check whether all team scores are within the tolerance
     WhileCount = WhileCount + 1; % Increase loop iteration
     if WhileCount > MaxCount    % Display an error if the maximum number of loops is exceeded
-        error('Teams could not be generated, please increase the score tolerance.')
+        error('Teams could not be generated within the constraints, please increase the score tolerance.')
     end
     
     
