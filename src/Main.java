@@ -32,6 +32,7 @@ public class Main {
     private ArrayList<CarePackage> carePackages = new ArrayList<>();
     private ArrayList<ScoreboardObjective> scoreboardObjectives = new ArrayList<>();
     private ArrayList<Player> players = new ArrayList<>();
+    private ArrayList<StatusEffect> effect = new ArrayList<>();
     private static int worldSize = 1500;
     private static int worldHeight = 257;
     private static int minTraitorRank = 15;
@@ -214,7 +215,7 @@ public class Main {
         players.add(new Player("Lefke67",8));
         players.add(new Player("SpookySpiker",17));
         players.add(new Player("joep359",29));
-        players.add(new Player("Snodog627",133,true));
+        players.add(new Player("Snodog627",133));
         players.add(new Player("Mafkees__10",97));
         players.add(new Player("woutje33",86));
         players.add(new Player("Mozzarella739",56));
@@ -225,8 +226,14 @@ public class Main {
         players.add(new Player("RoyalGub",26));
         players.add(new Player("Chrissah58",17));
         players.add(new Player("TNTbuilder21",19));
-        players.add(new Player("Pimmie36",104));
+        players.add(new Player("Pimmie36",104,true));
         players.add(new Player("lenschoenie98",0));
+
+        // Status effects
+        effect.add(new StatusEffect("glowing",30,1));
+        effect.add(new StatusEffect("fire_resistance",20,1));
+        effect.add(new StatusEffect("nausea",10,1));
+        effect.add(new StatusEffect("speed",20,1));
 
     }
 
@@ -730,9 +737,17 @@ public class Main {
         FileData file26 = new FileData("instruction_handout_loop", fileCommands26);
         files.add(file26);
 
+        // Assign players to Traitor Faction
         ArrayList<String> fileCommands27 = new ArrayList<>();
         //fileCommands27.add("tag @r[limit=1,tag=!DontMakeTraitor] add Traitor");
+        for (Player p : players) {
+            if (p.getIgnoreTraitor()) {
+                fileCommands27.add("tag " + p.getPlayerName() + " add DontMakeTraitor");
+            }
+        }
+
         fileCommands27.add("tag @r[limit=1,tag=!DontMakeTraitor,scores={Rank=" + minTraitorRank + "..},gamemode=!spectator] add Traitor");
+
         for (Team t : teams) {
             fileCommands27.add("execute if entity @p[tag=Traitor,team=" + t.getName() + "] run tag @a[team=" + t.getName() + "] add DontMakeTraitor");
         }
@@ -803,6 +818,20 @@ public class Main {
 
         FileData file31 = new FileData("display_rank", fileCommands31);
         files.add(file31);
+
+        // Effects given when the target blocks are hit on the Control Point
+        for (int i = 0; i < 4; i++) {
+            ArrayList<String> fileCommands32 = new ArrayList<>();
+
+            for (ControlPoint cp : controlPoints) {
+                fileCommands32.add("execute positioned " + cp.getX() + " " + cp.getY() + " " + cp.getZ() + " run effect give @p[gamemode=!spectator] minecraft:" + effect.get(i).getEffectName() + " " + effect.get(i).getDuration() + " " + effect.get(i).getAmplification());
+            }
+
+
+            FileData file32 = new FileData("give_status_effect" + i, fileCommands32);
+            files.add(file32);
+
+        }
 
     }
 
