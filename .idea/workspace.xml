@@ -4,6 +4,7 @@
     <list default="true" id="29ea8b6e-275d-4362-ac9d-03b61e76e2c7" name="Default" comment="Changed coordinates for S41">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Player.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Player.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -306,7 +307,14 @@
       <option name="project" value="LOCAL" />
       <updated>1624099195195</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="Updated player ranks after UHC 41">
+      <created>1624148876010</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1624148876010</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
@@ -415,7 +423,8 @@
     <MESSAGE value="Added status effects for when a target block is hit on the Control Point" />
     <MESSAGE value="Changed coordinates for S41" />
     <MESSAGE value="Added new players for UHC 41" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added new players for UHC 41" />
+    <MESSAGE value="Updated player ranks after UHC 41" />
+    <option name="LAST_COMMIT_MESSAGE" value="Updated player ranks after UHC 41" />
   </component>
   <component name="antWorkspaceConfiguration">
     <option name="IS_AUTOSCROLL_TO_SOURCE" value="false" />

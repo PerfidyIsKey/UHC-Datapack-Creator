@@ -4,17 +4,17 @@ public class Player {
 
     private int rank;
 
-    private boolean admin;
+    private boolean ignoreTraitor;
 
     public Player(String playerName, int rank) {
         this.playerName = playerName;
         this.rank = rank;
     }
 
-    public Player(String playerName, int rank, boolean admin) {
+    public Player(String playerName, int rank, boolean ignoreTraitor) {
         this.playerName = playerName;
         this.rank = rank;
-        this.admin = admin;
+        this.ignoreTraitor = ignoreTraitor;
     }
 
     public String getPlayerName() {
@@ -31,11 +31,11 @@ public class Player {
         this.rank = rank;
     }
 
-    public boolean getAdmin() {
-        return admin;
+    public boolean getIgnoreTraitor() {
+        return ignoreTraitor;
     }
 
-    public void setAdmin(boolean admin) {
-        this.admin = admin;
+    public void setIgnoreTraitor(boolean admin) {
+        this.ignoreTraitor = ignoreTraitor;
     }
 }

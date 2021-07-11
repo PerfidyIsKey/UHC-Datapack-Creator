@@ -212,7 +212,7 @@ public class Main {
         scoreboardObjectives.add(new ScoreboardObjective("Rank", "dummy"));
 
         players.add(new Player("Snodog627",92));
-        players.add(new Player("Mr9Madness",71));
+        players.add(new Player("Mr9Madness",71,true));
         players.add(new Player("PR0BA",8));
         players.add(new Player("Tiba101",7));
         players.add(new Player("W0omy",22));
@@ -223,7 +223,7 @@ public class Main {
         players.add(new Player("lilskrut",5));
         players.add(new Player("Pfalz_",20));
         players.add(new Player("ThurianBohan",51));
-        players.add(new Player("PerfidyIsKey",65,true));
+        players.add(new Player("PerfidyIsKey",65));
         players.add(new Player("deuce__",29));
         players.add(new Player("jonmo0105",77));
         players.add(new Player("TheDinoGame",199));
@@ -749,9 +749,17 @@ public class Main {
         FileData file26 = new FileData("instruction_handout_loop", fileCommands26);
         files.add(file26);
 
+        // Assign players to Traitor Faction
         ArrayList<String> fileCommands27 = new ArrayList<>();
         //fileCommands27.add("tag @r[limit=1,tag=!DontMakeTraitor] add Traitor");
+        for (Player p : players) {
+            if (p.getIgnoreTraitor()) {
+                fileCommands27.add("tag " + p.getPlayerName() + " add DontMakeTraitor");
+            }
+        }
+
         fileCommands27.add("tag @r[limit=1,tag=!DontMakeTraitor,scores={Rank=" + minTraitorRank + "..},gamemode=!spectator] add Traitor");
+
         for (Team t : teams) {
             fileCommands27.add("execute if entity @p[tag=Traitor,team=" + t.getName() + "] run tag @a[team=" + t.getName() + "] add DontMakeTraitor");
         }
