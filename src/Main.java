@@ -845,6 +845,14 @@ public class Main {
 
         }
 
+        // World pre-loading
+        ArrayList<String> fileCommands33 = new ArrayList<>();
+        fileCommands33.add("scoreboard players add WorldLoad 1");
+        fileCommands33.add("execute if entity @p[scores={WorldLoad=400..}] run spreadplayers 0 0 5 " + worldSize + " false @a");
+        fileCommands33.add("execute if entity @p[scores={WorldLoad=400..}] run scoreboard players reset @a WorldLoad");
+
+        FileData file33 = new FileData("world_pre_load",fileCommands33);
+        files.add(file33);
     }
 
 }
