@@ -296,7 +296,14 @@
       <option name="project" value="LOCAL" />
       <updated>1626037192845</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="Initial changes for S42">
+      <created>1627640453914</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1627640453914</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
@@ -403,7 +410,8 @@
     <MESSAGE value="Changed traitor handout to alive players only." />
     <MESSAGE value="Changed locations to URE4" />
     <MESSAGE value="Merged changes onto URE branch" />
-    <option name="LAST_COMMIT_MESSAGE" value="Merged changes onto URE branch" />
+    <MESSAGE value="Initial changes for S42" />
+    <option name="LAST_COMMIT_MESSAGE" value="Initial changes for S42" />
   </component>
   <component name="antWorkspaceConfiguration">
     <option name="IS_AUTOSCROLL_TO_SOURCE" value="false" />
