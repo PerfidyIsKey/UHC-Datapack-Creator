@@ -35,7 +35,7 @@ public class Main {
     private ArrayList<StatusEffect> effect = new ArrayList<>();
     private static int worldSize = 1500;
     private static int worldHeight = 257;
-    private static int minTraitorRank = 45;
+    private static int minTraitorRank = 50;
     private static String communityName = "THE DIORITE EXPERTS";
     //GameData>
 
@@ -210,6 +210,7 @@ public class Main {
         scoreboardObjectives.add(new ScoreboardObjective("Crystal", "dummy"));
         scoreboardObjectives.add(new ScoreboardObjective("Quits", "minecraft.custom:minecraft.leave_game"));
         scoreboardObjectives.add(new ScoreboardObjective("Rank", "dummy"));
+        scoreboardObjectives.add(new ScoreboardObjective("WorldLoad","dummy"));
 
         players.add(new Player("Snodog627",92));
         players.add(new Player("Mr9Madness",71,true));
@@ -240,6 +241,7 @@ public class Main {
         players.add(new Player("Clockweiz",12));
         players.add(new Player("Eason950116",14));
         players.add(new Player("CorruptUncle",37));
+        players.add(new Player("Pimmie36",104));
 
         // Status effects
         effect.add(new StatusEffect("glowing",30,1));
@@ -259,12 +261,14 @@ public class Main {
         Recipe recipe = new Recipe("crafting_shaped", grid, keys, "dragon_head", 1);
         recipes.add(recipe);
 
+        /*
         String[] grid2 = {" ", "1", " ", "1", "2", "1", " ", "1", " "};
         ArrayList<String> keys2 = new ArrayList<>();
         keys2.add("gold_ingot");
         keys2.add("player_head");
         Recipe recipe2 = new Recipe("crafting_shaped", grid2, keys2, "golden_apple", 1);
         recipes.add(recipe2);
+        */
 
         for (Recipe r : recipes) {
             ArrayList<String> fileCommands = new ArrayList<>();
