@@ -303,7 +303,14 @@
       <option name="project" value="LOCAL" />
       <updated>1627640453914</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="Updated coordinates for S42 (provisionally)">
+      <created>1627653655100</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1627653655100</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
@@ -411,7 +418,8 @@
     <MESSAGE value="Changed locations to URE4" />
     <MESSAGE value="Merged changes onto URE branch" />
     <MESSAGE value="Initial changes for S42" />
-    <option name="LAST_COMMIT_MESSAGE" value="Initial changes for S42" />
+    <MESSAGE value="Updated coordinates for S42 (provisionally)" />
+    <option name="LAST_COMMIT_MESSAGE" value="Updated coordinates for S42 (provisionally)" />
   </component>
   <component name="antWorkspaceConfiguration">
     <option name="IS_AUTOSCROLL_TO_SOURCE" value="false" />

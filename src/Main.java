@@ -35,7 +35,7 @@ public class Main {
     private ArrayList<StatusEffect> effect = new ArrayList<>();
     private static int worldSize = 1500;
     private static int worldHeight = 257;
-    private static int minTraitorRank = 50;
+    private static int minTraitorRank = 45;
     private static String communityName = "THE DIORITE EXPERTS";
     //GameData>
 
@@ -172,8 +172,8 @@ public class Main {
             teams.add(team);
         }
 
-        ControlPoint cp1 = new ControlPoint("CP1", 48000, 2, 253, 88, 77);
-        ControlPoint cp2 = new ControlPoint("CP2", 48000, 3, 8, 8, 254);
+        ControlPoint cp1 = new ControlPoint("CP1", 48000, 2, -107, 64, -128);
+        ControlPoint cp2 = new ControlPoint("CP2", 48000, 3, 253, 88, 77);
         controlPoints.add(cp1);
         controlPoints.add(cp2);
 
@@ -212,36 +212,36 @@ public class Main {
         scoreboardObjectives.add(new ScoreboardObjective("Rank", "dummy"));
         scoreboardObjectives.add(new ScoreboardObjective("WorldLoad","dummy"));
 
-        players.add(new Player("Snodog627",92));
+        players.add(new Player("Snodog627",98));
         players.add(new Player("Mr9Madness",71,true));
-        players.add(new Player("PR0BA",8));
+        players.add(new Player("PR0BA",6));
         players.add(new Player("Tiba101",7));
-        players.add(new Player("W0omy",22));
-        players.add(new Player("MissTutuPrincess",22));
-        players.add(new Player("Kalazniq",44));
+        players.add(new Player("W0omy",21));
+        players.add(new Player("MissTutuPrincess",21));
+        players.add(new Player("Kalazniq",42));
         players.add(new Player("Vladik71",32));
-        players.add(new Player("Smashking242",20));
-        players.add(new Player("lilskrut",5));
-        players.add(new Player("Pfalz_",20));
-        players.add(new Player("ThurianBohan",51));
-        players.add(new Player("PerfidyIsKey",65));
-        players.add(new Player("deuce__",29));
-        players.add(new Player("jonmo0105",77));
-        players.add(new Player("TheDinoGame",199));
-        players.add(new Player("BAAPABUGGETS",13));
-        players.add(new Player("Kakarot057",49));
-        players.add(new Player("viccietors",45));
+        players.add(new Player("Smashking242",19));
+        players.add(new Player("lilskrut",2));
+        players.add(new Player("Pfalz_",19));
+        players.add(new Player("ThurianBohan",49));
+        players.add(new Player("PerfidyIsKey",65,true));
+        players.add(new Player("deuce__",27));
+        players.add(new Player("jonmo0105",68));
+        players.add(new Player("TheDinoGame",222));
+        players.add(new Player("BAAPABUGGETS",12));
+        players.add(new Player("Kakarot057",47));
+        players.add(new Player("viccietors",44));
         players.add(new Player("Rayqson",17));
         players.add(new Player("Xx__HexGamer__xX",83));
-        players.add(new Player("Bobdafish",146));
+        players.add(new Player("Bobdafish",126));
         players.add(new Player("Alanaenae",0));
-        players.add(new Player("jk20028",13));
+        players.add(new Player("jk20028",22));
         players.add(new Player("N_G0n",7));
-        players.add(new Player("SpookySpiker",33));
+        players.add(new Player("SpookySpiker",32));
         players.add(new Player("Clockweiz",12));
         players.add(new Player("Eason950116",14));
-        players.add(new Player("CorruptUncle",37));
-        players.add(new Player("Pimmie36",104));
+        players.add(new Player("CorruptUncle",36));
+        players.add(new Player("Pimmie36",14));
 
         // Status effects
         effect.add(new StatusEffect("glowing",30,1));
