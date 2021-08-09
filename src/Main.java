@@ -50,6 +50,7 @@ public class Main {
         initGameData();
         makeFunctionFiles();
         makeRecipeFiles();
+        makeLootTableFiles();
         System.out.println("Files available:\n");
         for (FileData data : files) {
             System.out.println(data.getName());
@@ -145,7 +146,10 @@ public class Main {
         File file;
         if (fileData.getType().equals("recipe")) {
             file = new File(fileLocation + "recipes\\" + fileData.getName() + ".json");
-        } else {
+        } else if (fileData.getType().equals("loot_tables")) {
+            file = new File(fileLocation + "loot_tables\\" + fileData.getName() + ".json");
+        }
+        else {
             file = new File(fileLocation + "functions\\" + fileData.getName() + ".mcfunction");
         }
         BufferedWriter writer = new BufferedWriter(new FileWriter(file));
@@ -248,7 +252,99 @@ public class Main {
         effect.add(new StatusEffect("fire_resistance",20,1));
         effect.add(new StatusEffect("nausea",10,1));
         effect.add(new StatusEffect("speed",20,1));
+    }
 
+    private void makeLootTableFiles() {
+        ArrayList<LootTableEntry> lootEntry = new ArrayList<>();
+
+        // Loot table items
+        lootEntry.add(new LootTableEntry(30,"egg"));
+        lootEntry.add(new LootTableEntry(1,"saddle"));
+        lootEntry.add(new LootTableEntry(1,"diamond_hoe"));
+        lootEntry.add(new LootTableEntry(30,"ladder"));
+        lootEntry.add(new LootTableEntry(3,"spectral_arrow", new LootTableFunction(2,0.3)));
+        lootEntry.add(new LootTableEntry(1,"trident"));
+        lootEntry.add(new LootTableEntry(1,"horse_spawn_egg"));
+        lootEntry.add(new LootTableEntry(1,"diamond_horse_armor"));
+        lootEntry.add(new LootTableEntry(3,"experience_bottle", new LootTableFunction(3,0.2)));
+        lootEntry.add(new LootTableEntry(1,"wolf_spawn_egg", new LootTableFunction(2,0.01)));
+        lootEntry.add(new LootTableEntry(4,"lapis_lazuli", new LootTableFunction(2)));
+        lootEntry.add(new LootTableEntry(7,"glass", new LootTableFunction(3)));
+        lootEntry.add(new LootTableEntry(2,"nether_wart", new LootTableFunction(5)));
+        lootEntry.add(new LootTableEntry(2,"blaz_rod",new LootTableFunction(2,0.1)));
+        lootEntry.add(new LootTableEntry(8,"melon_slice",new LootTableFunction(3,0.4)));
+        lootEntry.add(new LootTableEntry(10,"bone",new LootTableFunction(3,0.4)));
+        lootEntry.add(new LootTableEntry(5,"book"));
+        lootEntry.add(new LootTableEntry(5,"fishing_rod"));
+        lootEntry.add(new LootTableEntry(3,"obsidian",new LootTableFunction(4)));
+        lootEntry.add(new LootTableEntry(4,"lava_bucket"));
+        lootEntry.add(new LootTableEntry(2,"golden_apple"));
+        lootEntry.add(new LootTableEntry(20,"stick",new LootTableFunction(8)));
+        lootEntry.add(new LootTableEntry(5,"golden_ingot",new LootTableFunction(3,0.3)));
+        lootEntry.add(new LootTableEntry(5,"arrow",new LootTableFunction(4)));
+        lootEntry.add(new LootTableEntry(4,"apple",new LootTableFunction(2,0.3)));
+        lootEntry.add(new LootTableEntry(1,"netherite_ingot"));
+        lootEntry.add(new LootTableEntry(2,"anvil"));
+        lootEntry.add(new LootTableEntry(25,"diorite",new LootTableFunction(16)));
+        lootEntry.add(new LootTableEntry(2,"cobweb",new LootTableFunction(2,0.4)));
+        lootEntry.add(new LootTableEntry(3,"diamond",new LootTableFunction(2,0.3)));
+        lootEntry.add(new LootTableEntry(15,"iron_ingot",new LootTableFunction(2,0.5)));
+        lootEntry.add(new LootTableEntry(1,"diamond_chestplate"));
+        lootEntry.add(new LootTableEntry(1,"diamond_leggings"));
+
+        ArrayList<String> fileCommands = new ArrayList<>();
+
+        fileCommands.add("{");
+        fileCommands.add("  \"type\": \"minecraft:chest\",");
+        fileCommands.add("  \"pools\": [");
+        fileCommands.add("      {");
+        fileCommands.add("          \"rolls\": {");
+        fileCommands.add("              \"min\": 3,");
+        fileCommands.add("              \"max\": 5");
+        fileCommands.add("          },");
+        fileCommands.add("          \"bonus_rolls\": 5,");
+        fileCommands.add("          \"entries\": [");
+
+        int counter = 1;
+
+        for (LootTableEntry l : lootEntry)
+        {
+            fileCommands.add("          {");
+            fileCommands.add("              \"type\": \"minecraft:item\",");
+            fileCommands.add("              \"weight\": " + l.getWeight() + ",");
+            fileCommands.add("              \"name\": \"minecraft:" + l.getName() + "\",");
+            if (l.getFunction() != null) {
+                fileCommands.add("              \"functions\": [");
+                fileCommands.add("                  {");
+                fileCommands.add("                      \"function\": \"minecraft:set_count\",");
+                fileCommands.add("                      \"count\": " + l.getFunction().getCount() + ",");
+                if (l.getFunction().getChance() > 0) {
+                    fileCommands.add("                      \"conditions\": [");
+                    fileCommands.add("                          {");
+                    fileCommands.add("                              \"condition\": \"minecraft:random_chance\",");
+                    fileCommands.add("                              \"chance\": " + l.getFunction().getChance());
+                    fileCommands.add("                          }");
+                }
+                fileCommands.add("                      ]");
+                fileCommands.add("                  }");
+            }
+            fileCommands.add("              ]");
+            if (counter < lootEntry.size()) {
+                fileCommands.add("          },");
+                counter++;
+            }
+            else {
+                fileCommands.add("          }");
+            }
+        }
+
+        fileCommands.add("          ]");
+        fileCommands.add("      }");
+        fileCommands.add("  ]");
+        fileCommands.add("}");
+
+        FileData fileData = new FileData("supply_drop_test", fileCommands, "loot_tables");
+        files.add(fileData);
     }
 
     private void makeRecipeFiles() {

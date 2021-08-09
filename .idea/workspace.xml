@@ -2,8 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="29ea8b6e-275d-4362-ac9d-03b61e76e2c7" name="Default" comment="Merged URE branch into test branch">
+      <change afterPath="$PROJECT_DIR$/src/LootTableEntry.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/LootTableFunction.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/UHC-Datapack-Creator/Main.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/UHC-Datapack-Creator/Main.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -310,7 +311,14 @@
       <option name="project" value="LOCAL" />
       <updated>1627653655100</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="Changed ranks after S42">
+      <created>1628288319098</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1628288319098</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
@@ -419,7 +427,18 @@
     <MESSAGE value="Merged changes onto URE branch" />
     <MESSAGE value="Initial changes for S42" />
     <MESSAGE value="Updated coordinates for S42 (provisionally)" />
-    <option name="LAST_COMMIT_MESSAGE" value="Updated coordinates for S42 (provisionally)" />
+    <MESSAGE value="Changed ranks after S42" />
+    <option name="LAST_COMMIT_MESSAGE" value="Changed ranks after S42" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <breakpoint enabled="true" type="java-exception">
+          <properties class="java.lang.NullPointerException" package="java.lang" />
+          <option name="timeStamp" value="2" />
+        </breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
   <component name="antWorkspaceConfiguration">
     <option name="IS_AUTOSCROLL_TO_SOURCE" value="false" />
