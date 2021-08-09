@@ -297,53 +297,53 @@ public class Main {
         fileCommands.add("{");
         fileCommands.add("  \"type\": \"minecraft:chest\",");
         fileCommands.add("  \"pools\": [");
-        fileCommands.add("      {");
-        fileCommands.add("          \"rolls\": {");
-        fileCommands.add("              \"min\": 3,");
-        fileCommands.add("              \"max\": 5");
-        fileCommands.add("          },");
-        fileCommands.add("          \"bonus_rolls\": 5,");
-        fileCommands.add("          \"entries\": [");
+        fileCommands.add("    {");
+        fileCommands.add("      \"rolls\": {");
+        fileCommands.add("        \"min\": 3,");
+        fileCommands.add("        \"max\": 5");
+        fileCommands.add("      },");
+        fileCommands.add("      \"bonus_rolls\": 5,");
+        fileCommands.add("      \"entries\": [");
 
         int counter = 1;
 
         for (LootTableEntry l : lootEntry)
         {
-            fileCommands.add("          {");
-            fileCommands.add("              \"type\": \"minecraft:item\",");
-            fileCommands.add("              \"weight\": " + l.getWeight() + ",");
-            fileCommands.add("              \"name\": \"minecraft:" + l.getName() + "\",");
+            fileCommands.add("        {");
+            fileCommands.add("          \"type\": \"minecraft:item\",");
+            fileCommands.add("          \"weight\": " + l.getWeight() + ",");
+            fileCommands.add("          \"name\": \"minecraft:" + l.getName() + "\",");
             if (l.getFunction() != null) {
-                fileCommands.add("              \"functions\": [");
-                fileCommands.add("                  {");
-                fileCommands.add("                      \"function\": \"minecraft:set_count\",");
-                fileCommands.add("                      \"count\": " + l.getFunction().getCount() + ",");
+                fileCommands.add("          \"functions\": [");
+                fileCommands.add("            {");
+                fileCommands.add("              \"function\": \"minecraft:set_count\",");
+                fileCommands.add("              \"count\": " + l.getFunction().getCount() + ",");
                 if (l.getFunction().getChance() > 0) {
-                    fileCommands.add("                      \"conditions\": [");
-                    fileCommands.add("                          {");
-                    fileCommands.add("                              \"condition\": \"minecraft:random_chance\",");
-                    fileCommands.add("                              \"chance\": " + l.getFunction().getChance());
-                    fileCommands.add("                          }");
+                    fileCommands.add("              \"conditions\": [");
+                    fileCommands.add("                {");
+                    fileCommands.add("                  \"condition\": \"minecraft:random_chance\",");
+                    fileCommands.add("                  \"chance\": " + l.getFunction().getChance());
+                    fileCommands.add("                }");
+                    fileCommands.add("              ]");
                 }
-                fileCommands.add("                      ]");
-                fileCommands.add("                  }");
+                fileCommands.add("            }");
+                fileCommands.add("          ]");
             }
-            fileCommands.add("              ]");
             if (counter < lootEntry.size()) {
-                fileCommands.add("          },");
+                fileCommands.add("        },");
                 counter++;
             }
             else {
-                fileCommands.add("          }");
+                fileCommands.add("        }");
             }
         }
 
-        fileCommands.add("          ]");
-        fileCommands.add("      }");
+        fileCommands.add("      ]");
+        fileCommands.add("    }");
         fileCommands.add("  ]");
         fileCommands.add("}");
 
-        FileData fileData = new FileData("supply_drop_test", fileCommands, "loot_tables");
+        FileData fileData = new FileData("supply_drop", fileCommands, "loot_tables");
         files.add(fileData);
     }
 
