@@ -953,6 +953,13 @@ public class Main {
 
         FileData file33 = new FileData("world_pre_load",fileCommands33);
         files.add(file33);
+
+        // Horse frost walker
+        ArrayList<String> fileCommands34 = new ArrayList<>();
+        fileCommands34.add("execute at @a[nbt={RootVehicle:{Entity:{id:\"minecraft:horse\"}}}] run fill ~-2 ~-2 ~-2 ~2 ~2 ~2 ice replace water");
+
+        FileData file34 = new FileData("horse_frost_walker",fileCommands34);
+        files.add(file34);
     }
 
 }
