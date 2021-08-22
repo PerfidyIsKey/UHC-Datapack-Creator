@@ -9,7 +9,7 @@ public class Main {
     }
 
     //DatapackData<
-    private static String uhcNumber = "S41";
+    private static String uhcNumber = "S42";
     private static String version = "2.0";
 
     private static String userFolder = "bthem";
@@ -26,7 +26,7 @@ public class Main {
     //GameData<
     private static int chestSize = 27;
     private static String admin = "PerfidyIsKey";
-    private static String startCoordinates = "2 64 -4";
+    private static String startCoordinates = "-5 70 -4";
     private ArrayList<Team> teams = new ArrayList<>();
     private ArrayList<ControlPoint> controlPoints = new ArrayList<>();
     private ArrayList<CarePackage> carePackages = new ArrayList<>();
@@ -50,6 +50,7 @@ public class Main {
         initGameData();
         makeFunctionFiles();
         makeRecipeFiles();
+        makeLootTableFiles();
         System.out.println("Files available:\n");
         for (FileData data : files) {
             System.out.println(data.getName());
@@ -145,7 +146,10 @@ public class Main {
         File file;
         if (fileData.getType().equals("recipe")) {
             file = new File(fileLocation + "recipes\\" + fileData.getName() + ".json");
-        } else {
+        } else if (fileData.getType().equals("loot_tables")) {
+            file = new File(fileLocation + "loot_tables\\" + fileData.getName() + ".json");
+        }
+        else {
             file = new File(fileLocation + "functions\\" + fileData.getName() + ".mcfunction");
         }
         BufferedWriter writer = new BufferedWriter(new FileWriter(file));
@@ -172,8 +176,8 @@ public class Main {
             teams.add(team);
         }
 
-        ControlPoint cp1 = new ControlPoint("CP1", 48000, 2, -85, 64, 183);
-        ControlPoint cp2 = new ControlPoint("CP2", 48000, 3, 115, 64, 94);
+        ControlPoint cp1 = new ControlPoint("CP1", 48000, 2, -107, 64, -128);
+        ControlPoint cp2 = new ControlPoint("CP2", 48000, 3, 253, 88, 77);
         controlPoints.add(cp1);
         controlPoints.add(cp2);
 
@@ -184,7 +188,7 @@ public class Main {
 
         CarePackage carePackage2 = new CarePackage("anti_cp", "Anti Controlpoint Drop",
                 "[{Slot:1b,id:\"minecraft:gunpowder\",Count:1b},{Slot:2b,id:\"minecraft:gunpowder\",Count:1b},{Slot:3b,id:\"minecraft:tnt\",Count:1b},{Slot:4b,id:\"minecraft:flint_and_steel\",Count:1b},{Slot:5b,id:\"minecraft:tnt\",Count:1b},{Slot:6b,id:\"minecraft:sand\",Count:1b},{Slot:7b,id:\"minecraft:sand\",Count:1b},{Slot:11b,id:\"minecraft:enchanted_book\",Count:1b,tag:{StoredEnchantments:[{lvl:4s,id:\"minecraft:blast_protection\"}]}},{Slot:12b,id:\"minecraft:lava_bucket\",Count:1b},{Slot:13b,id:\"minecraft:tnt\",Count:1b},{Slot:14b,id:\"minecraft:lava_bucket\",Count:1b},{Slot:15b,id:\"minecraft:enchanted_book\",Count:1b,tag:{StoredEnchantments:[{lvl:4s,id:\"minecraft:blast_protection\"}]}},{Slot:19b,id:\"minecraft:sand\",Count:1b},{Slot:20b,id:\"minecraft:sand\",Count:1b},{Slot:21b,id:\"minecraft:tnt\",Count:1b},{Slot:22b,id:\"minecraft:flint_and_steel\",Count:1b},{Slot:23b,id:\"minecraft:tnt\",Count:1b},{Slot:24b,id:\"minecraft:gunpowder\",Count:1b},{Slot:25b,id:\"minecraft:gunpowder\",Count:1b}]",
-                62, 63, 242);
+                284, 69, -16);
         carePackages.add(carePackage2);
 
         scoreboardObjectives.add(new ScoreboardObjective("Admin", "dummy"));
@@ -210,44 +214,137 @@ public class Main {
         scoreboardObjectives.add(new ScoreboardObjective("Crystal", "dummy"));
         scoreboardObjectives.add(new ScoreboardObjective("Quits", "minecraft.custom:minecraft.leave_game"));
         scoreboardObjectives.add(new ScoreboardObjective("Rank", "dummy"));
+        scoreboardObjectives.add(new ScoreboardObjective("WorldLoad","dummy"));
 
-        players.add(new Player("Snodog627",102));
-        players.add(new Player("Mr9Madness",58));
-        players.add(new Player("PR0BA",9));
-        players.add(new Player("Tiba101",8));
-        players.add(new Player("W0omy",22));
-        players.add(new Player("MissTutuPrincess",24));
-        players.add(new Player("Mr8Madness",4));
-        players.add(new Player("k3hba",3));
-        players.add(new Player("Kalazniq",35));
-        players.add(new Player("Vladik71",34));
-        players.add(new Player("Smashking242",21));
-        players.add(new Player("lilskrut",6));
-        players.add(new Player("Pfalz_",21));
-        players.add(new Player("ThurianBohan",59));
-        players.add(new Player("PerfidyIsKey",57,true));
-        players.add(new Player("deuce__",32));
-        players.add(new Player("jonmo0105",79));
-        players.add(new Player("TheDinoGame",191));
-        players.add(new Player("BAAPABUGGETS",13));
-        players.add(new Player("Kakarot057",50));
-        players.add(new Player("viccietors",49));
+        players.add(new Player("Snodog627",98));
+        players.add(new Player("Mr9Madness",71,true));
+        players.add(new Player("PR0BA",6));
+        players.add(new Player("Tiba101",7));
+        players.add(new Player("W0omy",21));
+        players.add(new Player("MissTutuPrincess",21));
+        players.add(new Player("Kalazniq",42));
+        players.add(new Player("Vladik71",32));
+        players.add(new Player("Smashking242",19));
+        players.add(new Player("lilskrut",2));
+        players.add(new Player("Pfalz_",19));
+        players.add(new Player("ThurianBohan",49));
+        players.add(new Player("PerfidyIsKey",65,true));
+        players.add(new Player("deuce__",27));
+        players.add(new Player("jonmo0105",68));
+        players.add(new Player("TheDinoGame",222));
+        players.add(new Player("BAAPABUGGETS",12));
+        players.add(new Player("Kakarot057",47));
+        players.add(new Player("viccietors",44));
         players.add(new Player("Rayqson",17));
-        players.add(new Player("Xx__HexGamer__xX",80));
-        players.add(new Player("Bobdafish",168));
+        players.add(new Player("Xx__HexGamer__xX",83));
+        players.add(new Player("Bobdafish",126));
         players.add(new Player("Alanaenae",0));
-        players.add(new Player("jk20028",5));
+        players.add(new Player("jk20028",22));
         players.add(new Player("N_G0n",7));
-        players.add(new Player("SpookySpiker",35));
+        players.add(new Player("SpookySpiker",32));
         players.add(new Player("Clockweiz",12));
         players.add(new Player("Eason950116",14));
+        players.add(new Player("CorruptUncle",36));
+        players.add(new Player("Pimmie36",14));
 
         // Status effects
         effect.add(new StatusEffect("glowing",30,1));
         effect.add(new StatusEffect("fire_resistance",20,1));
         effect.add(new StatusEffect("nausea",10,1));
         effect.add(new StatusEffect("speed",20,1));
+    }
 
+    private void makeLootTableFiles() {
+        ArrayList<LootTableEntry> lootEntry = new ArrayList<>();
+
+        // Loot table items
+        lootEntry.add(new LootTableEntry(30,"egg"));
+        lootEntry.add(new LootTableEntry(1,"saddle"));
+        lootEntry.add(new LootTableEntry(1,"diamond_hoe"));
+        lootEntry.add(new LootTableEntry(30,"ladder"));
+        lootEntry.add(new LootTableEntry(3,"spectral_arrow", new LootTableFunction(2,0.3)));
+        lootEntry.add(new LootTableEntry(1,"trident"));
+        lootEntry.add(new LootTableEntry(1,"horse_spawn_egg"));
+        lootEntry.add(new LootTableEntry(1,"diamond_horse_armor"));
+        lootEntry.add(new LootTableEntry(3,"experience_bottle", new LootTableFunction(3,0.2)));
+        lootEntry.add(new LootTableEntry(1,"wolf_spawn_egg", new LootTableFunction(2,0.01)));
+        lootEntry.add(new LootTableEntry(4,"lapis_lazuli", new LootTableFunction(2)));
+        lootEntry.add(new LootTableEntry(7,"glass", new LootTableFunction(3)));
+        lootEntry.add(new LootTableEntry(2,"nether_wart", new LootTableFunction(5)));
+        lootEntry.add(new LootTableEntry(2,"blaz_rod",new LootTableFunction(2,0.1)));
+        lootEntry.add(new LootTableEntry(8,"melon_slice",new LootTableFunction(3,0.4)));
+        lootEntry.add(new LootTableEntry(10,"bone",new LootTableFunction(3,0.4)));
+        lootEntry.add(new LootTableEntry(5,"book"));
+        lootEntry.add(new LootTableEntry(5,"fishing_rod"));
+        lootEntry.add(new LootTableEntry(3,"obsidian",new LootTableFunction(4)));
+        lootEntry.add(new LootTableEntry(4,"lava_bucket"));
+        lootEntry.add(new LootTableEntry(2,"golden_apple"));
+        lootEntry.add(new LootTableEntry(20,"stick",new LootTableFunction(8)));
+        lootEntry.add(new LootTableEntry(5,"golden_ingot",new LootTableFunction(3,0.3)));
+        lootEntry.add(new LootTableEntry(5,"arrow",new LootTableFunction(4)));
+        lootEntry.add(new LootTableEntry(4,"apple",new LootTableFunction(2,0.3)));
+        lootEntry.add(new LootTableEntry(1,"netherite_ingot"));
+        lootEntry.add(new LootTableEntry(2,"anvil"));
+        lootEntry.add(new LootTableEntry(25,"diorite",new LootTableFunction(16)));
+        lootEntry.add(new LootTableEntry(2,"cobweb",new LootTableFunction(2,0.4)));
+        lootEntry.add(new LootTableEntry(3,"diamond",new LootTableFunction(2,0.3)));
+        lootEntry.add(new LootTableEntry(15,"iron_ingot",new LootTableFunction(2,0.5)));
+        lootEntry.add(new LootTableEntry(1,"diamond_chestplate"));
+        lootEntry.add(new LootTableEntry(1,"diamond_leggings"));
+
+        ArrayList<String> fileCommands = new ArrayList<>();
+
+        fileCommands.add("{");
+        fileCommands.add("  \"type\": \"minecraft:chest\",");
+        fileCommands.add("  \"pools\": [");
+        fileCommands.add("    {");
+        fileCommands.add("      \"rolls\": {");
+        fileCommands.add("        \"min\": 3,");
+        fileCommands.add("        \"max\": 5");
+        fileCommands.add("      },");
+        fileCommands.add("      \"bonus_rolls\": 5,");
+        fileCommands.add("      \"entries\": [");
+
+        int counter = 1;
+
+        for (LootTableEntry l : lootEntry)
+        {
+            fileCommands.add("        {");
+            fileCommands.add("          \"type\": \"minecraft:item\",");
+            fileCommands.add("          \"weight\": " + l.getWeight() + ",");
+            fileCommands.add("          \"name\": \"minecraft:" + l.getName() + "\",");
+            if (l.getFunction() != null) {
+                fileCommands.add("          \"functions\": [");
+                fileCommands.add("            {");
+                fileCommands.add("              \"function\": \"minecraft:set_count\",");
+                fileCommands.add("              \"count\": " + l.getFunction().getCount() + ",");
+                if (l.getFunction().getChance() > 0) {
+                    fileCommands.add("              \"conditions\": [");
+                    fileCommands.add("                {");
+                    fileCommands.add("                  \"condition\": \"minecraft:random_chance\",");
+                    fileCommands.add("                  \"chance\": " + l.getFunction().getChance());
+                    fileCommands.add("                }");
+                    fileCommands.add("              ]");
+                }
+                fileCommands.add("            }");
+                fileCommands.add("          ]");
+            }
+            if (counter < lootEntry.size()) {
+                fileCommands.add("        },");
+                counter++;
+            }
+            else {
+                fileCommands.add("        }");
+            }
+        }
+
+        fileCommands.add("      ]");
+        fileCommands.add("    }");
+        fileCommands.add("  ]");
+        fileCommands.add("}");
+
+        FileData fileData = new FileData("supply_drop", fileCommands, "loot_tables");
+        files.add(fileData);
     }
 
     private void makeRecipeFiles() {
@@ -260,12 +357,14 @@ public class Main {
         Recipe recipe = new Recipe("crafting_shaped", grid, keys, "dragon_head", 1);
         recipes.add(recipe);
 
+        /*
         String[] grid2 = {" ", "1", " ", "1", "2", "1", " ", "1", " "};
         ArrayList<String> keys2 = new ArrayList<>();
         keys2.add("gold_ingot");
         keys2.add("player_head");
         Recipe recipe2 = new Recipe("crafting_shaped", grid2, keys2, "golden_apple", 1);
         recipes.add(recipe2);
+        */
 
         for (Recipe r : recipes) {
             ArrayList<String> fileCommands = new ArrayList<>();
@@ -750,9 +849,17 @@ public class Main {
         FileData file26 = new FileData("instruction_handout_loop", fileCommands26);
         files.add(file26);
 
+        // Assign players to Traitor Faction
         ArrayList<String> fileCommands27 = new ArrayList<>();
         //fileCommands27.add("tag @r[limit=1,tag=!DontMakeTraitor] add Traitor");
+        for (Player p : players) {
+            if (p.getIgnoreTraitor()) {
+                fileCommands27.add("tag " + p.getPlayerName() + " add DontMakeTraitor");
+            }
+        }
+
         fileCommands27.add("tag @r[limit=1,tag=!DontMakeTraitor,scores={Rank=" + minTraitorRank + "..},gamemode=!spectator] add Traitor");
+
         for (Team t : teams) {
             fileCommands27.add("execute if entity @p[tag=Traitor,team=" + t.getName() + "] run tag @a[team=" + t.getName() + "] add DontMakeTraitor");
         }
@@ -838,6 +945,21 @@ public class Main {
 
         }
 
+        // World pre-loading
+        ArrayList<String> fileCommands33 = new ArrayList<>();
+        fileCommands33.add("scoreboard players add WorldLoad 1");
+        fileCommands33.add("execute if entity @p[scores={WorldLoad=400..}] run spreadplayers 0 0 5 " + worldSize + " false @a");
+        fileCommands33.add("execute if entity @p[scores={WorldLoad=400..}] run scoreboard players reset @a WorldLoad");
+
+        FileData file33 = new FileData("world_pre_load",fileCommands33);
+        files.add(file33);
+
+        // Horse frost walker
+        ArrayList<String> fileCommands34 = new ArrayList<>();
+        fileCommands34.add("execute at @a[nbt={RootVehicle:{Entity:{id:\"minecraft:horse\"}}}] run fill ~-2 ~-2 ~-2 ~2 ~2 ~2 ice replace water");
+
+        FileData file34 = new FileData("horse_frost_walker",fileCommands34);
+        files.add(file34);
     }
 
 }
