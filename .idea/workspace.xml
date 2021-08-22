@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="29ea8b6e-275d-4362-ac9d-03b61e76e2c7" name="Default" comment="Changes for Season 40.">
+    <list default="true" id="29ea8b6e-275d-4362-ac9d-03b61e76e2c7" name="Default" comment="mandatory commit">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/UHC-Datapack-Creator/Main.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/UHC-Datapack-Creator/Main.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Player.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Player.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -288,6 +288,9 @@
       <workItem from="1618261231366" duration="1475000" />
       <workItem from="1618920134373" duration="208000" />
       <workItem from="1618920715855" duration="1422000" />
+      <workItem from="1623933239149" duration="1213000" />
+      <workItem from="1629376896586" duration="18000" />
+      <workItem from="1629659324246" duration="3298000" />
     </task>
     <task id="LOCAL-00001" summary="Changes for Season 40.">
       <created>1616006523861</created>
@@ -296,7 +299,14 @@
       <option name="project" value="LOCAL" />
       <updated>1616006523861</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="mandatory commit">
+      <created>1623933377304</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1623933377304</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
@@ -384,7 +394,8 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Changes for Season 40." />
-    <option name="LAST_COMMIT_MESSAGE" value="Changes for Season 40." />
+    <MESSAGE value="mandatory commit" />
+    <option name="LAST_COMMIT_MESSAGE" value="mandatory commit" />
   </component>
   <component name="antWorkspaceConfiguration">
     <option name="IS_AUTOSCROLL_TO_SOURCE" value="false" />

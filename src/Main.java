@@ -10,12 +10,12 @@ public class Main {
 
     //DatapackData<
     private static String uhcNumber = "S42";
-    private static String version = "2.0";
+    private static String version = "3.0";
 
-    private static String userFolder = "bthem";
+    private static String userFolder = "Wouter Baltus";
     private static String worldName = "big-test";
-    //private static String dataPackLocation = "C:\\Users\\" + userFolder + "\\AppData\\Roaming\\.minecraft\\saves\\" + worldName + "\\datapacks\\";
-    private static String dataPackLocation = "C:\\Users\\bthem\\Desktop\\Server\\world\\datapacks\\";
+    private static String dataPackLocation = "C:\\Users\\" + userFolder + "\\AppData\\Roaming\\.minecraft\\saves\\" + worldName + "\\datapacks\\";
+    //private static String dataPackLocation = "C:\\Users\\bthem\\Desktop\\Server\\world\\datapacks\\";
     private static String dataPackLocationServer = "D:\\Documents\\Gaming\\MinecraftServers\\MinecraftServers\\world\\datapacks\\";
     private static String dataPackName = "uhc-datapack-s" + uhcNumber + "v" + version;
     private static String fileLocation = dataPackLocation + dataPackName + "\\data\\uhc\\";
@@ -70,8 +70,8 @@ public class Main {
                     for (FileData f : files) {
                         if (f.getNameWithoutExtension().equals(command)) {
                             try {
-                                writeFile(f, fileLocation);
-                                //writeFile(f, fileLocationServer);
+                                //writeFile(f, fileLocation);
+                                writeFile(f, fileLocationServer);
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
@@ -80,8 +80,8 @@ public class Main {
                 }
             } else if (input.equals("create datapack")) {
                 try {
-                    createDatapack(dataPackLocation);
-                    //createDatapack(dataPackLocationServer);
+                    //createDatapack(dataPackLocation);
+                    createDatapack(dataPackLocationServer);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -94,8 +94,8 @@ public class Main {
     private void updateAllFiles() {
         for (FileData f : files) {
             try {
-                writeFile(f, fileLocation);
-                //writeFile(f, fileLocationServer);
+                //writeFile(f, fileLocation);
+                writeFile(f, fileLocationServer);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -129,15 +129,19 @@ public class Main {
                         System.out.println("Something went wrong creating Datapack 1");
                     }
                     File recipes = new File(dataPackLocation + dataPackName + "\\data\\uhc\\recipes");
-                    if (recipes.mkdir()) {
+                    if (!recipes.mkdir()) {
+                        System.out.println("Something went wrong creating Datapack 2");
+                    }
+                    File lootTables = new File(dataPackLocation + dataPackName + "\\data\\uhc\\loot_tables");
+                    if (lootTables.mkdir()) {
                         updateAllFiles();
                     } else {
-                        System.out.println("Something went wrong creating Datapack 2");
+                        System.out.println("Something went wrong creating Datapack 3");
                     }
                 }
             }
         } else {
-            System.out.println("Something went wrong creating Datapack 3");
+            System.out.println("Something went wrong creating Datapack 4");
         }
     }
 
@@ -259,38 +263,44 @@ public class Main {
 
         // Loot table items
         lootEntry.add(new LootTableEntry(30,"egg"));
-        lootEntry.add(new LootTableEntry(1,"saddle"));
+        lootEntry.add(new LootTableEntry(3,"saddle"));
         lootEntry.add(new LootTableEntry(1,"diamond_hoe"));
         lootEntry.add(new LootTableEntry(30,"ladder"));
         lootEntry.add(new LootTableEntry(3,"spectral_arrow", new LootTableFunction(2,0.3)));
         lootEntry.add(new LootTableEntry(1,"trident"));
-        lootEntry.add(new LootTableEntry(1,"horse_spawn_egg"));
-        lootEntry.add(new LootTableEntry(1,"diamond_horse_armor"));
-        lootEntry.add(new LootTableEntry(3,"experience_bottle", new LootTableFunction(3,0.2)));
+        lootEntry.add(new LootTableEntry(3,"horse_spawn_egg"));
+        lootEntry.add(new LootTableEntry(2,"diamond_horse_armor"));
+        lootEntry.add(new LootTableEntry(5,"experience_bottle", new LootTableFunction(3,0.2)));
         lootEntry.add(new LootTableEntry(1,"wolf_spawn_egg", new LootTableFunction(2,0.01)));
         lootEntry.add(new LootTableEntry(4,"lapis_lazuli", new LootTableFunction(2)));
         lootEntry.add(new LootTableEntry(7,"glass", new LootTableFunction(3)));
         lootEntry.add(new LootTableEntry(2,"nether_wart", new LootTableFunction(5)));
-        lootEntry.add(new LootTableEntry(2,"blaz_rod",new LootTableFunction(2,0.1)));
+        lootEntry.add(new LootTableEntry(2,"blaze_rod",new LootTableFunction(2,0.1)));
         lootEntry.add(new LootTableEntry(8,"melon_slice",new LootTableFunction(3,0.4)));
-        lootEntry.add(new LootTableEntry(10,"bone",new LootTableFunction(3,0.4)));
+        lootEntry.add(new LootTableEntry(12,"bone",new LootTableFunction(3,0.4)));
         lootEntry.add(new LootTableEntry(5,"book"));
-        lootEntry.add(new LootTableEntry(5,"fishing_rod"));
-        lootEntry.add(new LootTableEntry(3,"obsidian",new LootTableFunction(4)));
+        lootEntry.add(new LootTableEntry(5,"redstone",new LootTableFunction(16)));
+        lootEntry.add(new LootTableEntry(5,"gunpowder",new LootTableFunction(16)));
+        lootEntry.add(new LootTableEntry(3,"glowstone",new LootTableFunction(6)));
+        lootEntry.add(new LootTableEntry(15,"fishing_rod"));
+        lootEntry.add(new LootTableEntry(8,"obsidian",new LootTableFunction(4)));
         lootEntry.add(new LootTableEntry(4,"lava_bucket"));
         lootEntry.add(new LootTableEntry(2,"golden_apple"));
-        lootEntry.add(new LootTableEntry(20,"stick",new LootTableFunction(8)));
+        lootEntry.add(new LootTableEntry(25,"stick",new LootTableFunction(8)));
         lootEntry.add(new LootTableEntry(5,"golden_ingot",new LootTableFunction(3,0.3)));
-        lootEntry.add(new LootTableEntry(5,"arrow",new LootTableFunction(4)));
+        lootEntry.add(new LootTableEntry(15,"arrow",new LootTableFunction(4)));
         lootEntry.add(new LootTableEntry(4,"apple",new LootTableFunction(2,0.3)));
-        lootEntry.add(new LootTableEntry(1,"netherite_ingot"));
         lootEntry.add(new LootTableEntry(2,"anvil"));
-        lootEntry.add(new LootTableEntry(25,"diorite",new LootTableFunction(16)));
+        lootEntry.add(new LootTableEntry(30,"diorite",new LootTableFunction(16)));
         lootEntry.add(new LootTableEntry(2,"cobweb",new LootTableFunction(2,0.4)));
         lootEntry.add(new LootTableEntry(3,"diamond",new LootTableFunction(2,0.3)));
-        lootEntry.add(new LootTableEntry(15,"iron_ingot",new LootTableFunction(2,0.5)));
+        lootEntry.add(new LootTableEntry(20,"iron_ingot",new LootTableFunction(2,0.5)));
         lootEntry.add(new LootTableEntry(1,"diamond_chestplate"));
         lootEntry.add(new LootTableEntry(1,"diamond_leggings"));
+        lootEntry.add(new LootTableEntry(1,"netherite_scrap",new LootTableFunction(4,0.001)));
+        lootEntry.add(new LootTableEntry(2,"spyglass"));
+        lootEntry.add(new LootTableEntry(30,"amethyst_block",new LootTableFunction(16)));
+        lootEntry.add(new LootTableEntry(30,"copper_block",new LootTableFunction(16)));
 
         ArrayList<String> fileCommands = new ArrayList<>();
 
@@ -306,7 +316,7 @@ public class Main {
         fileCommands.add("      \"entries\": [");
 
         int counter = 1;
-
+        int totalWeight = 0;
         for (LootTableEntry l : lootEntry)
         {
             fileCommands.add("        {");
@@ -336,12 +346,14 @@ public class Main {
             else {
                 fileCommands.add("        }");
             }
+            totalWeight += l.getWeight();
         }
 
         fileCommands.add("      ]");
         fileCommands.add("    }");
         fileCommands.add("  ]");
         fileCommands.add("}");
+        fileCommands.add("#Total weight = "+ totalWeight);
 
         FileData fileData = new FileData("supply_drop", fileCommands, "loot_tables");
         files.add(fileData);
