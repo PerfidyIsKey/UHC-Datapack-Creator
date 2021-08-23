@@ -9,15 +9,16 @@ public class Main {
     }
 
     //DatapackData<
-    private static String uhcNumber = "S42";
+    //private static String uhcNumber = "S42";
+    private static String uhcNumber = "URE4";
     private static String version = "3.0";
 
     private static String userFolder = "Wouter Baltus";
     private static String worldName = "big-test";
-    private static String dataPackLocation = "C:\\Users\\" + userFolder + "\\AppData\\Roaming\\.minecraft\\saves\\" + worldName + "\\datapacks\\";
-    //private static String dataPackLocation = "C:\\Users\\bthem\\Desktop\\Server\\world\\datapacks\\";
+    //private static String dataPackLocation = "C:\\Users\\" + userFolder + "\\AppData\\Roaming\\.minecraft\\saves\\" + worldName + "\\datapacks\\";
+    private static String dataPackLocation = "C:\\Users\\bthem\\Desktop\\Server\\world\\datapacks\\";
     private static String dataPackLocationServer = "D:\\Documents\\Gaming\\MinecraftServers\\MinecraftServers\\world\\datapacks\\";
-    private static String dataPackName = "uhc-datapack-s" + uhcNumber + "v" + version;
+    private static String dataPackName = "uhc-datapack-" + uhcNumber + "v" + version;
     private static String fileLocation = dataPackLocation + dataPackName + "\\data\\uhc\\";
     private static String fileLocationServer = dataPackLocationServer + dataPackName + "\\data\\uhc\\";
 
@@ -25,8 +26,10 @@ public class Main {
 
     //GameData<
     private static int chestSize = 27;
-    private static String admin = "PerfidyIsKey";
-    private static String startCoordinates = "-5 70 -4";
+    //private static String admin = "PerfidyIsKey";
+    private static String admin = "Snodog627";
+    //private static String startCoordinates = "-5 70 -4";
+    private static String startCoordinates = "-4 74 0";
     private ArrayList<Team> teams = new ArrayList<>();
     private ArrayList<ControlPoint> controlPoints = new ArrayList<>();
     private ArrayList<CarePackage> carePackages = new ArrayList<>();
@@ -35,8 +38,10 @@ public class Main {
     private ArrayList<StatusEffect> effect = new ArrayList<>();
     private static int worldSize = 1500;
     private static int worldHeight = 257;
-    private static int minTraitorRank = 45;
-    private static String communityName = "THE DIORITE EXPERTS";
+    //private static int minTraitorRank = 45;
+    private static int minTraitorRank = 15;
+    //private static String communityName = "THE DIORITE EXPERTS";
+    private static String communityName = "UNIVERSITY RACING EINDHOVEN";
     //GameData>
 
 
@@ -180,8 +185,16 @@ public class Main {
             teams.add(team);
         }
 
+        /*  // The Diorite Experts
         ControlPoint cp1 = new ControlPoint("CP1", 48000, 2, -107, 64, -128);
         ControlPoint cp2 = new ControlPoint("CP2", 48000, 3, 253, 88, 77);
+        controlPoints.add(cp1);
+        controlPoints.add(cp2);
+        */
+
+        // University Racing Eindhoven
+        ControlPoint cp1 = new ControlPoint("CP1", 48000, 2, 125, 84, -140);
+        ControlPoint cp2 = new ControlPoint("CP2", 48000, 3, -91, 64, 212);
         controlPoints.add(cp1);
         controlPoints.add(cp2);
 
@@ -190,9 +203,17 @@ public class Main {
                 16, 70, 236);
         carePackages.add(carePackage1);
 
+        /*  // The Diorite Experts
         CarePackage carePackage2 = new CarePackage("anti_cp", "Anti Controlpoint Drop",
                 "[{Slot:1b,id:\"minecraft:gunpowder\",Count:1b},{Slot:2b,id:\"minecraft:gunpowder\",Count:1b},{Slot:3b,id:\"minecraft:tnt\",Count:1b},{Slot:4b,id:\"minecraft:flint_and_steel\",Count:1b},{Slot:5b,id:\"minecraft:tnt\",Count:1b},{Slot:6b,id:\"minecraft:sand\",Count:1b},{Slot:7b,id:\"minecraft:sand\",Count:1b},{Slot:11b,id:\"minecraft:enchanted_book\",Count:1b,tag:{StoredEnchantments:[{lvl:4s,id:\"minecraft:blast_protection\"}]}},{Slot:12b,id:\"minecraft:lava_bucket\",Count:1b},{Slot:13b,id:\"minecraft:tnt\",Count:1b},{Slot:14b,id:\"minecraft:lava_bucket\",Count:1b},{Slot:15b,id:\"minecraft:enchanted_book\",Count:1b,tag:{StoredEnchantments:[{lvl:4s,id:\"minecraft:blast_protection\"}]}},{Slot:19b,id:\"minecraft:sand\",Count:1b},{Slot:20b,id:\"minecraft:sand\",Count:1b},{Slot:21b,id:\"minecraft:tnt\",Count:1b},{Slot:22b,id:\"minecraft:flint_and_steel\",Count:1b},{Slot:23b,id:\"minecraft:tnt\",Count:1b},{Slot:24b,id:\"minecraft:gunpowder\",Count:1b},{Slot:25b,id:\"minecraft:gunpowder\",Count:1b}]",
                 284, 69, -16);
+        carePackages.add(carePackage2);
+        */
+
+        // University Racing Eindhoven
+        CarePackage carePackage2 = new CarePackage("anti_cp", "Anti Controlpoint Drop",
+                "[{Slot:1b,id:\"minecraft:gunpowder\",Count:1b},{Slot:2b,id:\"minecraft:gunpowder\",Count:1b},{Slot:3b,id:\"minecraft:tnt\",Count:1b},{Slot:4b,id:\"minecraft:flint_and_steel\",Count:1b},{Slot:5b,id:\"minecraft:tnt\",Count:1b},{Slot:6b,id:\"minecraft:sand\",Count:1b},{Slot:7b,id:\"minecraft:sand\",Count:1b},{Slot:11b,id:\"minecraft:enchanted_book\",Count:1b,tag:{StoredEnchantments:[{lvl:4s,id:\"minecraft:blast_protection\"}]}},{Slot:12b,id:\"minecraft:lava_bucket\",Count:1b},{Slot:13b,id:\"minecraft:tnt\",Count:1b},{Slot:14b,id:\"minecraft:lava_bucket\",Count:1b},{Slot:15b,id:\"minecraft:enchanted_book\",Count:1b,tag:{StoredEnchantments:[{lvl:4s,id:\"minecraft:blast_protection\"}]}},{Slot:19b,id:\"minecraft:sand\",Count:1b},{Slot:20b,id:\"minecraft:sand\",Count:1b},{Slot:21b,id:\"minecraft:tnt\",Count:1b},{Slot:22b,id:\"minecraft:flint_and_steel\",Count:1b},{Slot:23b,id:\"minecraft:tnt\",Count:1b},{Slot:24b,id:\"minecraft:gunpowder\",Count:1b},{Slot:25b,id:\"minecraft:gunpowder\",Count:1b}]",
+                155, 69, -50);
         carePackages.add(carePackage2);
 
         scoreboardObjectives.add(new ScoreboardObjective("Admin", "dummy"));
@@ -220,7 +241,8 @@ public class Main {
         scoreboardObjectives.add(new ScoreboardObjective("Rank", "dummy"));
         scoreboardObjectives.add(new ScoreboardObjective("WorldLoad","dummy"));
 
-        players.add(new Player("Snodog627",98));
+        /*  // The Diorite Experts
+        players.add(new Player("Snodog627",98,true));
         players.add(new Player("Mr9Madness",71,true));
         players.add(new Player("PR0BA",6));
         players.add(new Player("Tiba101",7));
@@ -250,6 +272,26 @@ public class Main {
         players.add(new Player("Eason950116",14));
         players.add(new Player("CorruptUncle",36));
         players.add(new Player("Pimmie36",14));
+                 */
+
+        // University Racing Eindhoven
+        players.add(new Player("Bertje13",0));
+        players.add(new Player("Lefke67",8));
+        players.add(new Player("SpookySpiker",17));
+        players.add(new Player("joep359",29));
+        players.add(new Player("Snodog627",133));
+        players.add(new Player("Mafkees__10",97));
+        players.add(new Player("woutje33",86));
+        players.add(new Player("CorruptUncle",56));
+        players.add(new Player("Luuk",2));
+        players.add(new Player("sepertibos",6));
+        players.add(new Player("Clik_clak",11));
+        players.add(new Player("HumblesBumblesV2",13));
+        players.add(new Player("RoyalGub",26));
+        players.add(new Player("Chrissah58",17));
+        players.add(new Player("TNTbuilder21",19));
+        players.add(new Player("Pimmie36",104,true));
+        players.add(new Player("lenschoenie98",0));
 
         // Status effects
         effect.add(new StatusEffect("glowing",30,1));
@@ -959,9 +1001,7 @@ public class Main {
 
         // World pre-loading
         ArrayList<String> fileCommands33 = new ArrayList<>();
-        fileCommands33.add("scoreboard players add WorldLoad 1");
-        fileCommands33.add("execute if entity @p[scores={WorldLoad=400..}] run spreadplayers 0 0 5 " + worldSize + " false @a");
-        fileCommands33.add("execute if entity @p[scores={WorldLoad=400..}] run scoreboard players reset @a WorldLoad");
+        fileCommands33.add("setblock 6 2 15 minecraft:redstone_block");
 
         FileData file33 = new FileData("world_pre_load",fileCommands33);
         files.add(file33);
