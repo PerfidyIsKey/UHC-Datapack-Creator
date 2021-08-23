@@ -75,8 +75,8 @@ public class Main {
                     for (FileData f : files) {
                         if (f.getNameWithoutExtension().equals(command)) {
                             try {
-                                //writeFile(f, fileLocation);
-                                writeFile(f, fileLocationServer);
+                                writeFile(f, fileLocation);
+                                //writeFile(f, fileLocationServer);
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
@@ -85,8 +85,8 @@ public class Main {
                 }
             } else if (input.equals("create datapack")) {
                 try {
-                    //createDatapack(dataPackLocation);
-                    createDatapack(dataPackLocationServer);
+                    createDatapack(dataPackLocation);
+                    //createDatapack(dataPackLocationServer);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -99,8 +99,8 @@ public class Main {
     private void updateAllFiles() {
         for (FileData f : files) {
             try {
-                //writeFile(f, fileLocation);
-                writeFile(f, fileLocationServer);
+                writeFile(f, fileLocation);
+                //writeFile(f, fileLocationServer);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -323,13 +323,13 @@ public class Main {
         lootEntry.add(new LootTableEntry(5,"book"));
         lootEntry.add(new LootTableEntry(5,"redstone",new LootTableFunction(16)));
         lootEntry.add(new LootTableEntry(5,"gunpowder",new LootTableFunction(16)));
-        lootEntry.add(new LootTableEntry(3,"glowstone",new LootTableFunction(6)));
+        lootEntry.add(new LootTableEntry(3,"glowstone_dust",new LootTableFunction(6)));
         lootEntry.add(new LootTableEntry(15,"fishing_rod"));
         lootEntry.add(new LootTableEntry(8,"obsidian",new LootTableFunction(4)));
         lootEntry.add(new LootTableEntry(4,"lava_bucket"));
         lootEntry.add(new LootTableEntry(2,"golden_apple"));
         lootEntry.add(new LootTableEntry(25,"stick",new LootTableFunction(8)));
-        lootEntry.add(new LootTableEntry(5,"golden_ingot",new LootTableFunction(3,0.3)));
+        lootEntry.add(new LootTableEntry(5,"gold_ingot",new LootTableFunction(3,0.3)));
         lootEntry.add(new LootTableEntry(15,"arrow",new LootTableFunction(4)));
         lootEntry.add(new LootTableEntry(4,"apple",new LootTableFunction(2,0.3)));
         lootEntry.add(new LootTableEntry(2,"anvil"));
@@ -364,13 +364,13 @@ public class Main {
             fileCommands.add("        {");
             fileCommands.add("          \"type\": \"minecraft:item\",");
             fileCommands.add("          \"weight\": " + l.getWeight() + ",");
-            fileCommands.add("          \"name\": \"minecraft:" + l.getName() + "\",");
             if (l.getFunction() != null) {
+                fileCommands.add("          \"name\": \"minecraft:" + l.getName() + "\",");
                 fileCommands.add("          \"functions\": [");
                 fileCommands.add("            {");
                 fileCommands.add("              \"function\": \"minecraft:set_count\",");
-                fileCommands.add("              \"count\": " + l.getFunction().getCount() + ",");
                 if (l.getFunction().getChance() > 0) {
+                    fileCommands.add("              \"count\": " + l.getFunction().getCount() + ",");
                     fileCommands.add("              \"conditions\": [");
                     fileCommands.add("                {");
                     fileCommands.add("                  \"condition\": \"minecraft:random_chance\",");
@@ -378,8 +378,16 @@ public class Main {
                     fileCommands.add("                }");
                     fileCommands.add("              ]");
                 }
+                else
+                {
+                    fileCommands.add("              \"count\": " + l.getFunction().getCount());
+                }
                 fileCommands.add("            }");
                 fileCommands.add("          ]");
+            }
+            else
+            {
+                fileCommands.add("          \"name\": \"minecraft:" + l.getName() + "\"");
             }
             if (counter < lootEntry.size()) {
                 fileCommands.add("        },");
@@ -395,7 +403,7 @@ public class Main {
         fileCommands.add("    }");
         fileCommands.add("  ]");
         fileCommands.add("}");
-        fileCommands.add("#Total weight = "+ totalWeight);
+        //fileCommands.add("#Total weight = "+ totalWeight);
 
         FileData fileData = new FileData("supply_drop", fileCommands, "loot_tables");
         files.add(fileData);
@@ -964,7 +972,7 @@ public class Main {
 
         for (ControlPoint cp : controlPoints) {
             fileCommands30.add("forceload add " + cp.getX() + " " + cp.getZ() + " " + cp.getX() + " " + cp.getZ());
-            fileCommands30.add("setblock " + cp.getX() + " " + (cp.getY() + 11) + " " + cp.getZ() + " " + "minecraft:structure_block[mode=load]{metadata:\"\",mirror:\"NONE\",ignoreEntities:1b,powered:0b,seed:0L,author:\"?\",rotation:\"NONE\",posX:-6,mode:\"LOAD\",posY:-13,sizeX:13,posZ:-6,integrity:1.0f,showair:0b,name:\"minecraft:controlpoint\",sizeY:14,sizeZ:13,showboundingbox:1b} replace");
+            fileCommands30.add("setblock " + cp.getX() + " " + (cp.getY() + 11) + " " + cp.getZ() + " " + "minecraft:structure_block[mode=load]{metadata:\"\",mirror:\"NONE\",ignoreEntities:1b,powered:0b,seed:0L,author:\"?\",rotation:\"NONE\",posX:-6,mode:\"LOAD\",posY:-13,sizeX:13,posZ:-6,integrity:1.0f,showair:0b,name:\"minecraft:control_point\",sizeY:14,sizeZ:13,showboundingbox:1b} replace");
             fileCommands30.add("setblock " + cp.getX() + " " + (cp.getY() + 10) + " " + cp.getZ() + " " + "minecraft:redstone_block replace");
             for (int i = cp.getY() + 11; i < worldHeight; i++) {
                 fileCommands30.add("execute unless block " + cp.getX() + " " + i + " " + cp.getZ() + " minecraft:air run setblock " + cp.getX() + " " + i + " " + cp.getZ() + " minecraft:glass");
