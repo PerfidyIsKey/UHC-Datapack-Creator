@@ -9,27 +9,32 @@ public class Main {
     }
 
     //DatapackData<
-    //private static String uhcNumber = "S42";
-    private static String uhcNumber = "URE4";
-    private static String version = "3.0";
+    private static int gameMode = 2;
+    /*
+    * 1: The Diorite Experts
+    * 2: University Racing Eindhoven
+     */
 
-    private static String userFolder = "Wouter Baltus";
-    private static String worldName = "big-test";
-    //private static String dataPackLocation = "C:\\Users\\" + userFolder + "\\AppData\\Roaming\\.minecraft\\saves\\" + worldName + "\\datapacks\\";
-    private static String dataPackLocation = "C:\\Users\\bthem\\Desktop\\Server\\world\\datapacks\\";
-    private static String dataPackLocationServer = "D:\\Documents\\Gaming\\MinecraftServers\\MinecraftServers\\world\\datapacks\\";
-    private static String dataPackName = "uhc-datapack-" + uhcNumber + "v" + version;
-    private static String fileLocation = dataPackLocation + dataPackName + "\\data\\uhc\\";
-    private static String fileLocationServer = dataPackLocationServer + dataPackName + "\\data\\uhc\\";
+    private static int adminMode = 2;
+    /*
+    * 1: Wouter
+    * 2: Bas
+     */
+
+    private String uhcNumber;
+    private static String version = "3.0";
+    private String userFolder;
+    private String worldName;
+    private String dataPackLocation;
+    private String dataPackName;
+    private String fileLocation;
 
     //DatapackData>
 
     //GameData<
     private static int chestSize = 27;
-    //private static String admin = "PerfidyIsKey";
-    private static String admin = "Snodog627";
-    //private static String startCoordinates = "-5 70 -4";
-    private static String startCoordinates = "-4 74 0";
+    private String admin;
+    private String startCoordinates;
     private ArrayList<Team> teams = new ArrayList<>();
     private ArrayList<ControlPoint> controlPoints = new ArrayList<>();
     private ArrayList<CarePackage> carePackages = new ArrayList<>();
@@ -38,10 +43,8 @@ public class Main {
     private ArrayList<StatusEffect> effect = new ArrayList<>();
     private static int worldSize = 1500;
     private static int worldHeight = 257;
-    //private static int minTraitorRank = 45;
-    private static int minTraitorRank = 15;
-    //private static String communityName = "THE DIORITE EXPERTS";
-    private static String communityName = "UNIVERSITY RACING EINDHOVEN";
+    private int minTraitorRank;
+    private String communityName;
     //GameData>
 
 
@@ -52,6 +55,7 @@ public class Main {
         boolean menuRunning = true;
         Scanner scanner = new Scanner(System.in);
         String input;
+        initSaveDir();
         initGameData();
         makeFunctionFiles();
         makeRecipeFiles();
@@ -76,7 +80,6 @@ public class Main {
                         if (f.getNameWithoutExtension().equals(command)) {
                             try {
                                 writeFile(f, fileLocation);
-                                //writeFile(f, fileLocationServer);
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
@@ -86,7 +89,6 @@ public class Main {
             } else if (input.equals("create datapack")) {
                 try {
                     createDatapack(dataPackLocation);
-                    //createDatapack(dataPackLocationServer);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -100,7 +102,6 @@ public class Main {
         for (FileData f : files) {
             try {
                 writeFile(f, fileLocation);
-                //writeFile(f, fileLocationServer);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -177,6 +178,38 @@ public class Main {
         System.out.println("File \"" + fileData.getName() + "\" Updated.");
     }
 
+    private void initSaveDir() {
+        switch (gameMode) {
+            case 1:
+                uhcNumber = "S43";
+                break;
+            case 2:
+                uhcNumber = "URE4";
+                break;
+        }
+
+        switch(adminMode){
+            case 1:
+                userFolder = "Wouter Baltus";
+                worldName = "big-test";
+                dataPackLocation = "C:\\Users\\" + userFolder + "\\AppData\\Roaming\\.minecraft\\saves\\" + worldName + "\\datapacks\\";
+
+                admin = "PerfidyIsKey";
+                break;
+            case 2:
+                userFolder = "bthem";
+                worldName = "world";
+                dataPackLocation = "C:\\Users\\" + userFolder + "\\Desktop\\Server\\" + worldName + "\\datapacks\\";
+
+                admin = "Snodog627";
+                break;
+        }
+
+        dataPackName = "uhc-datapack-" + uhcNumber + "v" + version;
+        fileLocation = dataPackLocation + dataPackName + "\\data\\uhc\\";
+
+    }
+
     private void initGameData() {
         String[] colors = {"yellow", "blue", "red", "dark_purple", "dark_green", "light_purple", "black", "gold", "gray", "aqua", "dark_red", "dark_blue", "dark_aqua"};
         String[] bossbarColors = {"yellow", "blue", "red", "purple", "green", "pink", "white", "white", "white", "white", "white", "white", "white"};
@@ -185,44 +218,123 @@ public class Main {
             teams.add(team);
         }
 
-        /*  // The Diorite Experts
-        ControlPoint cp1 = new ControlPoint("CP1", 48000, 2, -107, 64, -128);
-        ControlPoint cp2 = new ControlPoint("CP2", 48000, 3, 253, 88, 77);
-        controlPoints.add(cp1);
-        controlPoints.add(cp2);
-        */
+        ControlPoint cp1 = new ControlPoint("CP1", 48000, 2, 0, 0, 0);
+        ControlPoint cp2 = new ControlPoint("CP2", 48000, 3, 0, 0, 0);
 
-        // University Racing Eindhoven
-        ControlPoint cp1 = new ControlPoint("CP1", 48000, 2, 125, 84, -140);
-        ControlPoint cp2 = new ControlPoint("CP2", 48000, 3, -91, 64, 212);
-        controlPoints.add(cp1);
-        controlPoints.add(cp2);
+        CarePackage carePackage2 = new CarePackage("anti_cp", "Anti Controlpoint Drop",
+                "[{Slot:1b,id:\"minecraft:gunpowder\",Count:1b},{Slot:2b,id:\"minecraft:gunpowder\",Count:1b},{Slot:3b,id:\"minecraft:tnt\",Count:1b},{Slot:4b,id:\"minecraft:flint_and_steel\",Count:1b},{Slot:5b,id:\"minecraft:tnt\",Count:1b},{Slot:6b,id:\"minecraft:sand\",Count:1b},{Slot:7b,id:\"minecraft:sand\",Count:1b},{Slot:11b,id:\"minecraft:enchanted_book\",Count:1b,tag:{StoredEnchantments:[{lvl:4s,id:\"minecraft:blast_protection\"}]}},{Slot:12b,id:\"minecraft:lava_bucket\",Count:1b},{Slot:13b,id:\"minecraft:tnt\",Count:1b},{Slot:14b,id:\"minecraft:lava_bucket\",Count:1b},{Slot:15b,id:\"minecraft:enchanted_book\",Count:1b,tag:{StoredEnchantments:[{lvl:4s,id:\"minecraft:blast_protection\"}]}},{Slot:19b,id:\"minecraft:sand\",Count:1b},{Slot:20b,id:\"minecraft:sand\",Count:1b},{Slot:21b,id:\"minecraft:tnt\",Count:1b},{Slot:22b,id:\"minecraft:flint_and_steel\",Count:1b},{Slot:23b,id:\"minecraft:tnt\",Count:1b},{Slot:24b,id:\"minecraft:gunpowder\",Count:1b},{Slot:25b,id:\"minecraft:gunpowder\",Count:1b}]",
+                0, 0, 0);
+
+        switch (gameMode) {
+            case 1:
+                startCoordinates = "-5 70 -4";
+                minTraitorRank = 45;
+                communityName = "THE DIORITE EXPERTS";
+
+                // Control point
+                cp1.setX(-107);
+                cp1.setY(64);
+                cp1.setZ(-128);
+
+                cp2.setX(253);
+                cp2.setY(88);
+                cp2.setZ(77);
+                controlPoints.add(cp1);
+                controlPoints.add(cp2);
+
+                // Care Packages
+                carePackage2.setX(284);
+                carePackage2.setY(69);
+                carePackage2.setZ(-16);
+                carePackages.add(carePackage2);
+
+                // Players
+                players.add(new Player("Snodog627",98,true));
+                players.add(new Player("Mr9Madness",71,true));
+                players.add(new Player("PR0BA",6));
+                players.add(new Player("Tiba101",7));
+                players.add(new Player("W0omy",21));
+                players.add(new Player("MissTutuPrincess",21));
+                players.add(new Player("Kalazniq",42));
+                players.add(new Player("Vladik71",32));
+                players.add(new Player("Smashking242",19));
+                players.add(new Player("lilskrut",2));
+                players.add(new Player("Pfalz_",19));
+                players.add(new Player("ThurianBohan",49));
+                players.add(new Player("PerfidyIsKey",65,true));
+                players.add(new Player("deuce__",27));
+                players.add(new Player("jonmo0105",68));
+                players.add(new Player("TheDinoGame",222));
+                players.add(new Player("BAAPABUGGETS",12));
+                players.add(new Player("Kakarot057",47));
+                players.add(new Player("viccietors",44));
+                players.add(new Player("Rayqson",17));
+                players.add(new Player("Xx__HexGamer__xX",83));
+                players.add(new Player("Bobdafish",126));
+                players.add(new Player("Alanaenae",0));
+                players.add(new Player("jk20028",22));
+                players.add(new Player("N_G0n",7));
+                players.add(new Player("SpookySpiker",32));
+                players.add(new Player("Clockweiz",12));
+                players.add(new Player("Eason950116",14));
+                players.add(new Player("CorruptUncle",36));
+                players.add(new Player("Pimmie36",14));
+
+                break;
+            case 2:
+                startCoordinates = "-4 74 0";
+                minTraitorRank = 15;
+                communityName = "UNIVERSITY RACING EINDHOVEN";
+
+                // Control point
+                cp1.setX(125);
+                cp1.setY(84);
+                cp1.setZ(-140);
+
+                cp2.setX(-91);
+                cp2.setY(64);
+                cp2.setZ(212);
+                controlPoints.add(cp1);
+                controlPoints.add(cp2);
+
+                // Care package
+                carePackage2.setX(155);
+                carePackage2.setY(69);
+                carePackage2.setZ(-50);
+                carePackages.add(carePackage2);
+
+                // Players
+                players.add(new Player("Bertje13",0));
+                players.add(new Player("Lefke67",8));
+                players.add(new Player("SpookySpiker",17));
+                players.add(new Player("joep359",29));
+                players.add(new Player("Snodog627",133));
+                players.add(new Player("Mafkees__10",97));
+                players.add(new Player("woutje33",86));
+                players.add(new Player("CorruptUncle",56));
+                players.add(new Player("Luuk",2));
+                players.add(new Player("sepertibos",6));
+                players.add(new Player("Clik_clak",11));
+                players.add(new Player("HumblesBumblesV2",13));
+                players.add(new Player("RoyalGub",26));
+                players.add(new Player("Chrissah58",17));
+                players.add(new Player("TNTbuilder21",19));
+                players.add(new Player("Pimmie36",104,true));
+                players.add(new Player("lenschoenie98",0));
+
+                break;
+        }
 
         CarePackage carePackage1 = new CarePackage("enchanting", "Enchanting Drop",
                 "[{Slot:3b,id:\"minecraft:enchanted_book\",Count:1b,tag:{StoredEnchantments:[{lvl:1s,id:\"minecraft:power\"}]}},{Slot:4b,id:\"minecraft:golden_apple\",Count:1b},{Slot:5b,id:\"minecraft:enchanted_book\",Count:1b,tag:{StoredEnchantments:[{lvl:2s,id:\"minecraft:sharpness\"}]}},{Slot:12b,id:\"minecraft:apple\",Count:1b},{Slot:13b,id:\"minecraft:anvil\",Count:1b},{Slot:14b,id:\"minecraft:apple\",Count:1b},{Slot:21b,id:\"minecraft:enchanted_book\",Count:1b,tag:{StoredEnchantments:[{lvl:2s,id:\"minecraft:sharpness\"}]}},{Slot:22b,id:\"minecraft:book\",Count:1b},{Slot:23b,id:\"minecraft:enchanted_book\",Count:1b,tag:{StoredEnchantments:[{lvl:1s,id:\"minecraft:protection\"}]}}]",
                 16, 70, 236);
         carePackages.add(carePackage1);
 
-        /*  // The Diorite Experts
-        CarePackage carePackage2 = new CarePackage("anti_cp", "Anti Controlpoint Drop",
-                "[{Slot:1b,id:\"minecraft:gunpowder\",Count:1b},{Slot:2b,id:\"minecraft:gunpowder\",Count:1b},{Slot:3b,id:\"minecraft:tnt\",Count:1b},{Slot:4b,id:\"minecraft:flint_and_steel\",Count:1b},{Slot:5b,id:\"minecraft:tnt\",Count:1b},{Slot:6b,id:\"minecraft:sand\",Count:1b},{Slot:7b,id:\"minecraft:sand\",Count:1b},{Slot:11b,id:\"minecraft:enchanted_book\",Count:1b,tag:{StoredEnchantments:[{lvl:4s,id:\"minecraft:blast_protection\"}]}},{Slot:12b,id:\"minecraft:lava_bucket\",Count:1b},{Slot:13b,id:\"minecraft:tnt\",Count:1b},{Slot:14b,id:\"minecraft:lava_bucket\",Count:1b},{Slot:15b,id:\"minecraft:enchanted_book\",Count:1b,tag:{StoredEnchantments:[{lvl:4s,id:\"minecraft:blast_protection\"}]}},{Slot:19b,id:\"minecraft:sand\",Count:1b},{Slot:20b,id:\"minecraft:sand\",Count:1b},{Slot:21b,id:\"minecraft:tnt\",Count:1b},{Slot:22b,id:\"minecraft:flint_and_steel\",Count:1b},{Slot:23b,id:\"minecraft:tnt\",Count:1b},{Slot:24b,id:\"minecraft:gunpowder\",Count:1b},{Slot:25b,id:\"minecraft:gunpowder\",Count:1b}]",
-                284, 69, -16);
-        carePackages.add(carePackage2);
-        */
-
-        // University Racing Eindhoven
-        CarePackage carePackage2 = new CarePackage("anti_cp", "Anti Controlpoint Drop",
-                "[{Slot:1b,id:\"minecraft:gunpowder\",Count:1b},{Slot:2b,id:\"minecraft:gunpowder\",Count:1b},{Slot:3b,id:\"minecraft:tnt\",Count:1b},{Slot:4b,id:\"minecraft:flint_and_steel\",Count:1b},{Slot:5b,id:\"minecraft:tnt\",Count:1b},{Slot:6b,id:\"minecraft:sand\",Count:1b},{Slot:7b,id:\"minecraft:sand\",Count:1b},{Slot:11b,id:\"minecraft:enchanted_book\",Count:1b,tag:{StoredEnchantments:[{lvl:4s,id:\"minecraft:blast_protection\"}]}},{Slot:12b,id:\"minecraft:lava_bucket\",Count:1b},{Slot:13b,id:\"minecraft:tnt\",Count:1b},{Slot:14b,id:\"minecraft:lava_bucket\",Count:1b},{Slot:15b,id:\"minecraft:enchanted_book\",Count:1b,tag:{StoredEnchantments:[{lvl:4s,id:\"minecraft:blast_protection\"}]}},{Slot:19b,id:\"minecraft:sand\",Count:1b},{Slot:20b,id:\"minecraft:sand\",Count:1b},{Slot:21b,id:\"minecraft:tnt\",Count:1b},{Slot:22b,id:\"minecraft:flint_and_steel\",Count:1b},{Slot:23b,id:\"minecraft:tnt\",Count:1b},{Slot:24b,id:\"minecraft:gunpowder\",Count:1b},{Slot:25b,id:\"minecraft:gunpowder\",Count:1b}]",
-                155, 69, -50);
-        carePackages.add(carePackage2);
-
         scoreboardObjectives.add(new ScoreboardObjective("Admin", "dummy"));
         scoreboardObjectives.add(new ScoreboardObjective("TimDum", "dummy"));
         scoreboardObjectives.add(new ScoreboardObjective("Time", "dummy", "\"Elapsed Time\""));
         scoreboardObjectives.add(new ScoreboardObjective("Time2", "dummy", "\"Elapsed Time\""));
         scoreboardObjectives.add(new ScoreboardObjective("SideDum", "dummy"));
-//        scoreboardObjectives.add(new ScoreboardObjective("CPDum1", "dummy"));
-//        scoreboardObjectives.add(new ScoreboardObjective("CPDum2", "dummy"));
         scoreboardObjectives.add(new ScoreboardObjective("ControlPoint1", "dummy"));
         scoreboardObjectives.add(new ScoreboardObjective("ControlPoint2", "dummy"));
         scoreboardObjectives.add(new ScoreboardObjective("MSGDum1CP1", "dummy"));
@@ -240,58 +352,6 @@ public class Main {
         scoreboardObjectives.add(new ScoreboardObjective("Quits", "minecraft.custom:minecraft.leave_game"));
         scoreboardObjectives.add(new ScoreboardObjective("Rank", "dummy"));
         scoreboardObjectives.add(new ScoreboardObjective("WorldLoad","dummy"));
-
-        /*  // The Diorite Experts
-        players.add(new Player("Snodog627",98,true));
-        players.add(new Player("Mr9Madness",71,true));
-        players.add(new Player("PR0BA",6));
-        players.add(new Player("Tiba101",7));
-        players.add(new Player("W0omy",21));
-        players.add(new Player("MissTutuPrincess",21));
-        players.add(new Player("Kalazniq",42));
-        players.add(new Player("Vladik71",32));
-        players.add(new Player("Smashking242",19));
-        players.add(new Player("lilskrut",2));
-        players.add(new Player("Pfalz_",19));
-        players.add(new Player("ThurianBohan",49));
-        players.add(new Player("PerfidyIsKey",65,true));
-        players.add(new Player("deuce__",27));
-        players.add(new Player("jonmo0105",68));
-        players.add(new Player("TheDinoGame",222));
-        players.add(new Player("BAAPABUGGETS",12));
-        players.add(new Player("Kakarot057",47));
-        players.add(new Player("viccietors",44));
-        players.add(new Player("Rayqson",17));
-        players.add(new Player("Xx__HexGamer__xX",83));
-        players.add(new Player("Bobdafish",126));
-        players.add(new Player("Alanaenae",0));
-        players.add(new Player("jk20028",22));
-        players.add(new Player("N_G0n",7));
-        players.add(new Player("SpookySpiker",32));
-        players.add(new Player("Clockweiz",12));
-        players.add(new Player("Eason950116",14));
-        players.add(new Player("CorruptUncle",36));
-        players.add(new Player("Pimmie36",14));
-                 */
-
-        // University Racing Eindhoven
-        players.add(new Player("Bertje13",0));
-        players.add(new Player("Lefke67",8));
-        players.add(new Player("SpookySpiker",17));
-        players.add(new Player("joep359",29));
-        players.add(new Player("Snodog627",133));
-        players.add(new Player("Mafkees__10",97));
-        players.add(new Player("woutje33",86));
-        players.add(new Player("CorruptUncle",56));
-        players.add(new Player("Luuk",2));
-        players.add(new Player("sepertibos",6));
-        players.add(new Player("Clik_clak",11));
-        players.add(new Player("HumblesBumblesV2",13));
-        players.add(new Player("RoyalGub",26));
-        players.add(new Player("Chrissah58",17));
-        players.add(new Player("TNTbuilder21",19));
-        players.add(new Player("Pimmie36",104,true));
-        players.add(new Player("lenschoenie98",0));
 
         // Status effects
         effect.add(new StatusEffect("glowing",30,1));
