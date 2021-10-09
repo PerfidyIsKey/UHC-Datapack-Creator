@@ -9,7 +9,7 @@ public class Main {
     }
 
     //DatapackData<
-    private static int gameMode = 2;
+    private static int gameMode = 1;
     /*
     * 1: The Diorite Experts
     * 2: University Racing Eindhoven
@@ -182,9 +182,13 @@ public class Main {
         switch (gameMode) {
             case 1:
                 uhcNumber = "S43";
+
+                admin = "PerfidyIsKey";
                 break;
             case 2:
                 uhcNumber = "URE4";
+
+                admin = "Snodog627";
                 break;
         }
 
@@ -194,14 +198,12 @@ public class Main {
                 worldName = "big-test";
                 dataPackLocation = "C:\\Users\\" + userFolder + "\\AppData\\Roaming\\.minecraft\\saves\\" + worldName + "\\datapacks\\";
 
-                admin = "PerfidyIsKey";
                 break;
             case 2:
                 userFolder = "bthem";
                 worldName = "world";
                 dataPackLocation = "C:\\Users\\" + userFolder + "\\Desktop\\Server\\" + worldName + "\\datapacks\\";
 
-                admin = "Snodog627";
                 break;
         }
 
@@ -320,7 +322,7 @@ public class Main {
                 players.add(new Player("Chrissah58",17));
                 players.add(new Player("TNTbuilder21",19));
                 players.add(new Player("Pimmie36",104,true));
-                players.add(new Player("lenschoenie98",0));
+                players.add(new Player("lenschoenie98",0,true));
 
                 break;
         }
@@ -621,20 +623,20 @@ public class Main {
 
         ArrayList<String> fileCommands4 = new ArrayList<>();
         for (int i = 0; i < chestSize; i++) {
-            fileCommands4.add("replaceitem entity @a enderchest." + i + " air 1");
+            fileCommands4.add("item replace entity @a enderchest." + i + " with air 1");
         }
 
         FileData file4 = new FileData("clear_enderchest", fileCommands4);
         files.add(file4);
 
         ArrayList<String> fileCommands5 = new ArrayList<>();
-        fileCommands5.add("replaceitem entity @a armor.chest minecraft:iron_chestplate");
-        fileCommands5.add("replaceitem entity @a armor.feet minecraft:iron_boots");
-        fileCommands5.add("replaceitem entity @a armor.head minecraft:iron_helmet");
-        fileCommands5.add("replaceitem entity @a armor.legs minecraft:iron_leggings");
-        fileCommands5.add("replaceitem entity @a weapon.offhand minecraft:shield");
-        fileCommands5.add("replaceitem entity @a weapon.mainhand minecraft:iron_axe");
-        fileCommands5.add("replaceitem entity @a inventory.0 minecraft:iron_sword");
+        fileCommands5.add("item replace entity @a armor.chest with minecraft:iron_chestplate");
+        fileCommands5.add("item replace entity @a armor.feet with minecraft:iron_boots");
+        fileCommands5.add("item replace entity @a armor.head with minecraft:iron_helmet");
+        fileCommands5.add("item replace entity @a armor.legs with minecraft:iron_leggings");
+        fileCommands5.add("item replace entity @a weapon.offhand with minecraft:shield");
+        fileCommands5.add("item replace entity @a weapon.mainhand with minecraft:iron_axe");
+        fileCommands5.add("item replace entity @a inventory.0 with minecraft:iron_sword");
         fileCommands5.add("effect give @a minecraft:regeneration 1 255 true");
 
         FileData file5 = new FileData("equip_gear", fileCommands5);
@@ -642,7 +644,7 @@ public class Main {
 
         ArrayList<String> fileCommands6 = new ArrayList<>();
         fileCommands6.add("effect give @s minecraft:resistance 99999 4 true");
-        fileCommands6.add("replaceitem entity @s weapon.mainhand trident{display:{Name:\"{\\\"text\\\":\\\"The Impaler\\\"}\"}, Enchantments:[{id:sharpness,lvl:999999},{id:fire_aspect,lvl:999999},{id:unbreaking,lvl:999999},{id:loyalty,lvl:999999},{id:impaling,lvl:999999}]}");
+        fileCommands6.add("item replace entity @s weapon.mainhand with trident{display:{Name:\"{\\\"text\\\":\\\"The Impaler\\\"}\"}, Enchantments:[{id:sharpness,lvl:999999},{id:fire_aspect,lvl:999999},{id:unbreaking,lvl:999999},{id:loyalty,lvl:999999},{id:impaling,lvl:999999}]}");
 
         FileData file6 = new FileData("god_mode", fileCommands6);
         files.add(file6);
