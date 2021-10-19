@@ -7,6 +7,9 @@
 *.tmp
 Data/
 !Data/Data.mat
+!Data/DataS41.mat
+!Data/DataS42.mat
+!Data/DataURE3.mat
 Documents/
 Emotes/
 Figures/
