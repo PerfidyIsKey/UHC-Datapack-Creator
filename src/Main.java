@@ -182,9 +182,13 @@ public class Main {
         switch (gameMode) {
             case 1:
                 uhcNumber = "S43";
+
+                admin = "PerfidyIsKey";
                 break;
             case 2:
                 uhcNumber = "URE4";
+
+                admin = "Snodog627";
                 break;
         }
 
@@ -193,15 +197,11 @@ public class Main {
                 userFolder = "Wouter Baltus";
                 worldName = "big-test";
                 dataPackLocation = "C:\\Users\\" + userFolder + "\\AppData\\Roaming\\.minecraft\\saves\\" + worldName + "\\datapacks\\";
-
-                admin = "PerfidyIsKey";
                 break;
             case 2:
                 userFolder = "bthem";
                 worldName = "world";
                 dataPackLocation = "C:\\Users\\" + userFolder + "\\Desktop\\Server\\" + worldName + "\\datapacks\\";
-
-                admin = "Snodog627";
                 break;
         }
 
