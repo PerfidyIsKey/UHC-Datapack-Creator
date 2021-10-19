@@ -13,9 +13,7 @@ Data/*
 !Data/DataURE1.mat
 !Data/DataURE2.mat
 !Data/DataURE3.mat
-Documents/
-Emotes/
-Figures/
-Misc/
-Non-git/
-Server/
+Documents/*
+!Documents/190608UHC_Documentation.pdf
+Emotes/*
+Figures/*
