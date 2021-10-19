@@ -9,7 +9,7 @@ public class Main {
     }
 
     //DatapackData<
-    private static int gameMode = 1;
+    private static int gameMode = 2;
     /*
     * 1: The Diorite Experts
     * 2: University Racing Eindhoven
@@ -182,13 +182,9 @@ public class Main {
         switch (gameMode) {
             case 1:
                 uhcNumber = "S43";
-
-                admin = "PerfidyIsKey";
                 break;
             case 2:
                 uhcNumber = "URE4";
-
-                admin = "Snodog627";
                 break;
         }
 
@@ -198,12 +194,14 @@ public class Main {
                 worldName = "big-test";
                 dataPackLocation = "C:\\Users\\" + userFolder + "\\AppData\\Roaming\\.minecraft\\saves\\" + worldName + "\\datapacks\\";
 
+                admin = "PerfidyIsKey";
                 break;
             case 2:
                 userFolder = "bthem";
                 worldName = "world";
                 dataPackLocation = "C:\\Users\\" + userFolder + "\\Desktop\\Server\\" + worldName + "\\datapacks\\";
 
+                admin = "Snodog627";
                 break;
         }
 
@@ -215,8 +213,9 @@ public class Main {
     private void initGameData() {
         String[] colors = {"yellow", "blue", "red", "dark_purple", "dark_green", "light_purple", "black", "gold", "gray", "aqua", "dark_red", "dark_blue", "dark_aqua"};
         String[] bossbarColors = {"yellow", "blue", "red", "purple", "green", "pink", "white", "white", "white", "white", "white", "white", "white"};
+        String[] collarColors = {"4", "3", "14", "10", "13", "6", "15", "1", "7", "9", "2", "11", "9"};
         for (int i = 0; i < colors.length; i++) {
-            Team team = new Team("Team" + i, colors[i], bossbarColors[i]);
+            Team team = new Team("Team" + i, colors[i], bossbarColors[i], collarColors[i]);
             teams.add(team);
         }
 
@@ -354,6 +353,8 @@ public class Main {
         scoreboardObjectives.add(new ScoreboardObjective("Quits", "minecraft.custom:minecraft.leave_game"));
         scoreboardObjectives.add(new ScoreboardObjective("Rank", "dummy"));
         scoreboardObjectives.add(new ScoreboardObjective("WorldLoad","dummy"));
+        scoreboardObjectives.add(new ScoreboardObjective("CollarCheck0","dummy"));
+        scoreboardObjectives.add(new ScoreboardObjective("CollarCheck1","dummy"));
 
         // Status effects
         effect.add(new StatusEffect("glowing",30,1));
@@ -366,10 +367,10 @@ public class Main {
         ArrayList<LootTableEntry> lootEntry = new ArrayList<>();
 
         // Loot table items
-        lootEntry.add(new LootTableEntry(30,"egg"));
+        lootEntry.add(new LootTableEntry(20,"egg"));
         lootEntry.add(new LootTableEntry(3,"saddle"));
         lootEntry.add(new LootTableEntry(1,"diamond_hoe"));
-        lootEntry.add(new LootTableEntry(30,"ladder"));
+        lootEntry.add(new LootTableEntry(20,"ladder"));
         lootEntry.add(new LootTableEntry(3,"spectral_arrow", new LootTableFunction(2,0.3)));
         lootEntry.add(new LootTableEntry(1,"trident"));
         lootEntry.add(new LootTableEntry(3,"horse_spawn_egg"));
@@ -386,25 +387,25 @@ public class Main {
         lootEntry.add(new LootTableEntry(5,"redstone",new LootTableFunction(16)));
         lootEntry.add(new LootTableEntry(5,"gunpowder",new LootTableFunction(16)));
         lootEntry.add(new LootTableEntry(3,"glowstone_dust",new LootTableFunction(6)));
-        lootEntry.add(new LootTableEntry(15,"fishing_rod"));
+        lootEntry.add(new LootTableEntry(10,"fishing_rod"));
         lootEntry.add(new LootTableEntry(8,"obsidian",new LootTableFunction(4)));
         lootEntry.add(new LootTableEntry(4,"lava_bucket"));
         lootEntry.add(new LootTableEntry(2,"golden_apple"));
-        lootEntry.add(new LootTableEntry(25,"stick",new LootTableFunction(8)));
+        lootEntry.add(new LootTableEntry(20,"stick",new LootTableFunction(8)));
         lootEntry.add(new LootTableEntry(5,"gold_ingot",new LootTableFunction(3,0.3)));
         lootEntry.add(new LootTableEntry(15,"arrow",new LootTableFunction(4)));
         lootEntry.add(new LootTableEntry(4,"apple",new LootTableFunction(2,0.3)));
         lootEntry.add(new LootTableEntry(2,"anvil"));
-        lootEntry.add(new LootTableEntry(30,"diorite",new LootTableFunction(16)));
+        lootEntry.add(new LootTableEntry(18,"diorite",new LootTableFunction(16)));
         lootEntry.add(new LootTableEntry(2,"cobweb",new LootTableFunction(2,0.4)));
-        lootEntry.add(new LootTableEntry(3,"diamond",new LootTableFunction(2,0.3)));
-        lootEntry.add(new LootTableEntry(20,"iron_ingot",new LootTableFunction(2,0.5)));
+        lootEntry.add(new LootTableEntry(4,"diamond",new LootTableFunction(2,0.3)));
+        lootEntry.add(new LootTableEntry(12,"iron_ingot",new LootTableFunction(2,0.5)));
         lootEntry.add(new LootTableEntry(1,"diamond_chestplate"));
         lootEntry.add(new LootTableEntry(1,"diamond_leggings"));
         lootEntry.add(new LootTableEntry(1,"netherite_scrap",new LootTableFunction(4,0.001)));
         lootEntry.add(new LootTableEntry(2,"spyglass"));
-        lootEntry.add(new LootTableEntry(30,"amethyst_block",new LootTableFunction(16)));
-        lootEntry.add(new LootTableEntry(30,"copper_block",new LootTableFunction(16)));
+        lootEntry.add(new LootTableEntry(18,"amethyst_block",new LootTableFunction(16)));
+        lootEntry.add(new LootTableEntry(15,"copper_block",new LootTableFunction(16)));
 
         ArrayList<String> fileCommands = new ArrayList<>();
 
@@ -1082,6 +1083,21 @@ public class Main {
 
         FileData file34 = new FileData("horse_frost_walker",fileCommands34);
         files.add(file34);
+
+        // Update wolf collar color
+        ArrayList<String> fileCommands35 = new ArrayList<>();
+        fileCommands35.add("execute as @e[type=minecraft:wolf] store result score @s CollarCheck0 run data get entity @s Owner[0]");
+        fileCommands35.add("execute as @e[type=minecraft:wolf] store result score @s CollarCheck1 run data get entity @s Owner[1]");
+        for (Team t: teams) {
+            fileCommands35.add("execute as @a[team=" + t.getName() + "] store result score @s CollarCheck0 run data get entity @s UUID[0]");
+            fileCommands35.add("execute as @a[team=" + t.getName() + "] store result score @s CollarCheck1 run data get entity @s UUID[1]");
+            fileCommands35.add("tag @a[team=" + t.getName() + "] add CollarCheck");
+            fileCommands35.add("execute as @e[type=wolf] if score @s CollarCheck0 = @p[tag=CollarCheck] CollarCheck0 if score @s CollarCheck1 = @p[tag=CollarCheck] CollarCheck1 run data modify entity @s CollarColor set value " + t.getCollarColor() + "b");
+            fileCommands35.add("tag @a[team=" + t.getName() + "] remove CollarCheck");
+        }
+
+        FileData file35 = new FileData("wolf_collar_execute",fileCommands35);
+        files.add(file35);
     }
 
 }

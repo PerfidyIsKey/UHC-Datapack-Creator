@@ -3,11 +3,13 @@ public class Team {
     private String name;
     private String color;
     private String bossbarColor;
+    private String collarColor;
 
-    public Team(String name, String color, String bossbarColor) {
+    public Team(String name, String color, String bossbarColor, String collarColor) {
         this.name = name;
         this.color = color;
         this.bossbarColor = bossbarColor;
+        this.collarColor = collarColor;
     }
 
     public String getName() {
@@ -32,5 +34,13 @@ public class Team {
 
     public void setBossbarColor(String color2) {
         this.bossbarColor = color2;
+    }
+
+    public String getCollarColor() {
+        return collarColor;
+    }
+
+    public void setCollarColor(String collarColor) {
+        this.collarColor = collarColor;
     }
 }
