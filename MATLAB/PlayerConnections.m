@@ -9,7 +9,7 @@ close all
 
 %% Load data
 addpath('Data','Emotes')	% Add playerhead directory
-load('DataS42.mat')            % Load data
+load('DataURE4.mat')            % Load data
 ActiveOnly = 1;           % Only display active players
 
 %% Create adjacency matrix

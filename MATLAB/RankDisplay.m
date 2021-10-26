@@ -16,7 +16,7 @@ close all
 
 %% Information
 addpath('Data','Functions','Figures')
-load('DataS41.mat')
+load('DataURE4.mat')
 
 %% Visualization
 NoP = size(Players,2);

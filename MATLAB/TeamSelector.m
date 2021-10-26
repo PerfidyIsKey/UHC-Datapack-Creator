@@ -16,12 +16,12 @@ close all
 
 %% Information
 addpath('Data','Functions','Documents')
-load('DataURE3.mat')
+load('DataURE4.mat')
 
 % Enter the players that are participating (corresponding numbers with
 % PlayerName variable in Players struct)
-ParticipantIndex = [1,2,17,18,24,25,27,28,30,31,33,34,36,38,39,40,41,42];
-ParticipantIndex = [1,2,4:8,10,14:17];
+% ParticipantIndex = [1,2,17,18,24,25,27,28,30,31,33,34,36,38,39,40,41,42];
+ParticipantIndex = [4,5,6,15,17,18:26];
 
 % Enter the names of new players
 NewPlayers = {};
@@ -72,9 +72,9 @@ MeanScore = nansum(Ranks)/NoP;    % Mean score among the current set of players
 ScoreRange = 10;        % Allowed deviation from the mean score
 MaxLoops = 1000;        % Maximum number of loops before the interval is increased
 LoopBreak = 0;          % Break the loop if the minimum value of the score interval subceeds this value
-TeamSize = 3;           % Amount of players in one team
+TeamSize = 2;           % Amount of players in one team
 TotPairing = [0 1];     % Threshold of how many times players in a team can have teamed up
-ScoreTol = 58;          % Tolerance of the final mean score
+ScoreTol = 35;          % Tolerance of the final mean score
 ScoreNoise = 60;
 TeamAmount = floor(NoP/TeamSize); % Amount of teams
 

@@ -5,6 +5,7 @@
 *.bak
 *.veg
 *.tmp
+*.asv
 Data/*
 !Data/DataS39.mat
 !Data/DataS40.mat
@@ -13,6 +14,7 @@ Data/*
 !Data/DataURE1.mat
 !Data/DataURE2.mat
 !Data/DataURE3.mat
+!Data/DataURE4.mat
 Documents/*
 !Documents/190608UHC_Documentation.pdf
 Emotes/*

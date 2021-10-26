@@ -284,7 +284,7 @@ public class Main {
                 break;
             case 2:
                 startCoordinates = "-4 74 0";
-                minTraitorRank = 15;
+                minTraitorRank = 25;
                 communityName = "UNIVERSITY RACING EINDHOVEN";
 
                 // Control point
@@ -307,21 +307,30 @@ public class Main {
                 // Players
                 players.add(new Player("Bertje13",0));
                 players.add(new Player("Lefke67",8));
-                players.add(new Player("SpookySpiker",17));
-                players.add(new Player("joep359",29));
-                players.add(new Player("Snodog627",133));
-                players.add(new Player("Mafkees__10",97));
-                players.add(new Player("woutje33",86));
-                players.add(new Player("CorruptUncle",56));
+                players.add(new Player("SpookySpiker",16));
+                players.add(new Player("joep359",32));
+                players.add(new Player("Snodog627",174,true));
+                players.add(new Player("Mafkees__10",91));
+                players.add(new Player("woutje33",78));
+                players.add(new Player("CorruptUncle",52));
                 players.add(new Player("Luuk",2));
                 players.add(new Player("sepertibos",6));
-                players.add(new Player("Clik_clak",11));
-                players.add(new Player("HumblesBumblesV2",13));
-                players.add(new Player("RoyalGub",26));
-                players.add(new Player("Chrissah58",17));
-                players.add(new Player("TNTbuilder21",19));
-                players.add(new Player("Pimmie36",104,true));
-                players.add(new Player("lenschoenie98",0,true));
+                players.add(new Player("Clik_clak",10));
+                players.add(new Player("HumblesBumblesV2",12));
+                players.add(new Player("RoyalGub",23));
+                players.add(new Player("Chrissah58",16));
+                players.add(new Player("TNTbuilder21",31));
+                players.add(new Player("Pimmie36",96));
+                players.add(new Player("lenschoenie98",69));
+                players.add(new Player("PbQuinn",0));
+                players.add(new Player("Luc_B21",2));
+                players.add(new Player("Captain_Kills",5));
+                players.add(new Player("PeterBeTripin",7));
+                players.add(new Player("Jayroon123",20,true));
+                players.add(new Player("JD329",12));
+                players.add(new Player("maxim_rongen",17));
+                players.add(new Player("ThurianBohan",19));
+                players.add(new Player("Jobbo2002",111));
 
                 break;
         }
@@ -329,7 +338,7 @@ public class Main {
         CarePackage carePackage1 = new CarePackage("enchanting", "Enchanting Drop",
                 "[{Slot:3b,id:\"minecraft:enchanted_book\",Count:1b,tag:{StoredEnchantments:[{lvl:1s,id:\"minecraft:power\"}]}},{Slot:4b,id:\"minecraft:golden_apple\",Count:1b},{Slot:5b,id:\"minecraft:enchanted_book\",Count:1b,tag:{StoredEnchantments:[{lvl:2s,id:\"minecraft:sharpness\"}]}},{Slot:12b,id:\"minecraft:apple\",Count:1b},{Slot:13b,id:\"minecraft:anvil\",Count:1b},{Slot:14b,id:\"minecraft:apple\",Count:1b},{Slot:21b,id:\"minecraft:enchanted_book\",Count:1b,tag:{StoredEnchantments:[{lvl:2s,id:\"minecraft:sharpness\"}]}},{Slot:22b,id:\"minecraft:book\",Count:1b},{Slot:23b,id:\"minecraft:enchanted_book\",Count:1b,tag:{StoredEnchantments:[{lvl:1s,id:\"minecraft:protection\"}]}}]",
                 16, 70, 236);
-        carePackages.add(carePackage1);
+        //carePackages.add(carePackage1);
 
         scoreboardObjectives.add(new ScoreboardObjective("Admin", "dummy"));
         scoreboardObjectives.add(new ScoreboardObjective("TimDum", "dummy"));
@@ -853,7 +862,7 @@ public class Main {
         fileCommands16.add("forceload remove " + cp2.getX() + " " + cp2.getZ() + " " + cp2.getX() + " " + cp2.getZ());
         fileCommands16.add("bossbar set minecraft:cp2 name \"CP2: " + cp2.getX() + ", " + cp2.getY() + ", " + cp2.getZ() + " (faster capping!)\"");
         fileCommands16.add("give @a[scores={ControlPoint1=14400..}] minecraft:splash_potion{CustomPotionEffects:[{Id:11,Duration:1200},{Id:24,Duration:1200}],CustomPotionColor:15462415,display:{Name:\"\\\"Hero of the First Control Point\\\"\",Lore:[\"Thank you for enabling the second Control Point! Good luck with winning the match!\"]}}");
-        fileCommands16.add("function uhc:carepackage_" + carePackages.get(1).getName());
+        fileCommands16.add("function uhc:carepackage_" + carePackages.get(0).getName());
 
 
         FileData file16 = new FileData("second_controlpoint", fileCommands16);
