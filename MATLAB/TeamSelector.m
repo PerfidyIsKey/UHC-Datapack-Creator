@@ -16,12 +16,11 @@ close all
 
 %% Information
 addpath('Data','Functions','Documents')
-load('DataURE4.mat')
+load('DataS43.mat')
 
 % Enter the players that are participating (corresponding numbers with
 % PlayerName variable in Players struct)
-% ParticipantIndex = [1,2,17,18,24,25,27,28,30,31,33,34,36,38,39,40,41,42];
-ParticipantIndex = [4,5,6,15,17,18:26];
+ParticipantIndex = [1,2,17,18,25,31,33,38,41,42,43,44];
 
 % Enter the names of new players
 NewPlayers = {};
@@ -69,12 +68,12 @@ MeanScore = nansum(Ranks)/NoP;    % Mean score among the current set of players
 
 %% Team selection
 % Team criteria
-ScoreRange = 10;        % Allowed deviation from the mean score
+ScoreRange = 8;        % Allowed deviation from the mean score
 MaxLoops = 1000;        % Maximum number of loops before the interval is increased
 LoopBreak = 0;          % Break the loop if the minimum value of the score interval subceeds this value
 TeamSize = 2;           % Amount of players in one team
-TotPairing = [0 1];     % Threshold of how many times players in a team can have teamed up
-ScoreTol = 35;          % Tolerance of the final mean score
+TotPairing = [2 6];     % Threshold of how many times players in a team can have teamed up
+ScoreTol = 10;          % Tolerance of the final mean score
 ScoreNoise = 60;
 TeamAmount = floor(NoP/TeamSize); % Amount of teams
 
@@ -121,16 +120,16 @@ end
 %% Reveal Data
 % Display the data in the Command Window
 ColVec = ["Yellow";"Blue";"Red";"Purple";"Green";"Pink";"Black";"Orange";"Gray";...
-    "Aqua";"D.Red";"D.Blue";"D.Aqua"];
+    "Aqua";"D.Red";"D.Blue";"D.Aqua";"D.Green";"D.Gray";"White"];
 fprintf('The mean score of all players is %3.0f.\n',MeanScore)
 for ii = 1:TeamAmount
     if TeamSize == 2
-        fprintf('Team %s\tconsists of ',ColVec{ii})
+        fprintf('Team %7s\tconsists of ',ColVec{ii})
         fprintf('%16s and ',TeamData(ii).Teams{1})
         fprintf('%16s. ',TeamData(ii).Teams{2})
         fprintf('Their weighted team score is %3.0f (%+2.0f)\n',[TeamData(ii).TeamWeight ScoreDeviation(ii)])
     elseif TeamSize == 3
-        fprintf('Team %s\tconsists of ',ColVec{ii})
+        fprintf('Team %7s\tconsists of ',ColVec{ii})
         fprintf('%16s, ',TeamData(ii).Teams{1})
         fprintf('%16s and ',TeamData(ii).Teams{2})
         fprintf('%16s. ',TeamData(ii).Teams{3})

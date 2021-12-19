@@ -9,7 +9,7 @@ public class Main {
     }
 
     //DatapackData<
-    private static int gameMode = 2;
+    private static int gameMode = 1;
     /*
     * 1: The Diorite Experts
     * 2: University Racing Eindhoven
@@ -33,6 +33,7 @@ public class Main {
 
     //GameData<
     private static int chestSize = 27;
+    private String commandCenter = "s43";
     private String admin;
     private String startCoordinates;
     private ArrayList<Team> teams = new ArrayList<>();
@@ -213,9 +214,10 @@ public class Main {
     private void initGameData() {
         String[] colors = {"yellow", "blue", "red", "dark_purple", "dark_green", "light_purple", "black", "gold", "gray", "aqua", "dark_red", "dark_blue", "dark_aqua"};
         String[] bossbarColors = {"yellow", "blue", "red", "purple", "green", "pink", "white", "white", "white", "white", "white", "white", "white"};
+        String[] glassColors = {"yellow", "light_blue", "red", "purple", "green", "pink", "black", "orange", "gray", "cyan", "red", "blue", "blue"};
         String[] collarColors = {"4", "3", "14", "10", "13", "6", "15", "1", "7", "9", "2", "11", "9"};
         for (int i = 0; i < colors.length; i++) {
-            Team team = new Team("Team" + i, colors[i], bossbarColors[i], collarColors[i]);
+            Team team = new Team("Team" + i, colors[i], bossbarColors[i], glassColors[i], collarColors[i]);
             teams.add(team);
         }
 
@@ -228,58 +230,59 @@ public class Main {
 
         switch (gameMode) {
             case 1:
-                startCoordinates = "-5 70 -4";
-                minTraitorRank = 45;
+                startCoordinates = "-1 63 6";
+                minTraitorRank = 40;
                 communityName = "THE DIORITE EXPERTS";
 
                 // Control point
-                cp1.setX(-107);
-                cp1.setY(64);
-                cp1.setZ(-128);
+                cp1.setX(105);
+                cp1.setY(65);
+                cp1.setZ(3);
 
-                cp2.setX(253);
-                cp2.setY(88);
-                cp2.setZ(77);
+                cp2.setX(152);
+                cp2.setY(48);
+                cp2.setZ(277);
                 controlPoints.add(cp1);
                 controlPoints.add(cp2);
 
                 // Care Packages
-                carePackage2.setX(284);
+                carePackage2.setX(89);
                 carePackage2.setY(69);
-                carePackage2.setZ(-16);
+                carePackage2.setZ(315);
                 carePackages.add(carePackage2);
 
                 // Players
-                players.add(new Player("Snodog627",98,true));
-                players.add(new Player("Mr9Madness",71,true));
-                players.add(new Player("PR0BA",6));
-                players.add(new Player("Tiba101",7));
-                players.add(new Player("W0omy",21));
-                players.add(new Player("MissTutuPrincess",21));
-                players.add(new Player("Kalazniq",42));
-                players.add(new Player("Vladik71",32));
-                players.add(new Player("Smashking242",19));
-                players.add(new Player("lilskrut",2));
-                players.add(new Player("Pfalz_",19));
-                players.add(new Player("ThurianBohan",49));
-                players.add(new Player("PerfidyIsKey",65,true));
-                players.add(new Player("deuce__",27));
-                players.add(new Player("jonmo0105",68));
-                players.add(new Player("TheDinoGame",222));
-                players.add(new Player("BAAPABUGGETS",12));
-                players.add(new Player("Kakarot057",47));
-                players.add(new Player("viccietors",44));
-                players.add(new Player("Rayqson",17));
-                players.add(new Player("Xx__HexGamer__xX",83));
-                players.add(new Player("Bobdafish",126));
+                players.add(new Player("Snodog627",94,true));
+                players.add(new Player("Mr9Madness",88));
+                players.add(new Player("PR0BA",1));
+                players.add(new Player("Tiba101",5));
+                players.add(new Player("W0omy",20));
+                players.add(new Player("MissTutuPrincess",17));
+                players.add(new Player("Kalazniq",43));
+                players.add(new Player("Vladik71",38));
+                players.add(new Player("Smashking242",16));
+                players.add(new Player("Pfalz_",18));
+                players.add(new Player("ThurianBohan",44));
+                players.add(new Player("PerfidyIsKey",69,true));
+                players.add(new Player("deuce__",20));
+                players.add(new Player("jonmo0105",64));
+                players.add(new Player("TheDinoGame",216));
+                players.add(new Player("BAAPABUGGETS",11));
+                players.add(new Player("Kakarot057",45));
+                players.add(new Player("viccietors",41));
+                players.add(new Player("Rayqson",16));
+                players.add(new Player("Xx__HexGamer__xX",72));
+                players.add(new Player("Bobdafish",120));
                 players.add(new Player("Alanaenae",0));
                 players.add(new Player("jk20028",22));
-                players.add(new Player("N_G0n",7));
-                players.add(new Player("SpookySpiker",32));
-                players.add(new Player("Clockweiz",12));
-                players.add(new Player("Eason950116",14));
-                players.add(new Player("CorruptUncle",36));
-                players.add(new Player("Pimmie36",14));
+                players.add(new Player("N_G0n",6));
+                players.add(new Player("SpookySpiker",64));
+                players.add(new Player("Clockweiz",11));
+                players.add(new Player("Eason950116",13));
+                players.add(new Player("CorruptUncle",38));
+                players.add(new Player("Pimmie36",3));
+                players.add(new Player("PbQuinn",0));
+                players.add(new Player("Jayroon123",0));
 
                 break;
             case 2:
@@ -309,7 +312,7 @@ public class Main {
                 players.add(new Player("Lefke67",8));
                 players.add(new Player("SpookySpiker",16));
                 players.add(new Player("joep359",32));
-                players.add(new Player("Snodog627",174,true));
+                players.add(new Player("Snodog627",156,true));
                 players.add(new Player("Mafkees__10",91));
                 players.add(new Player("woutje33",78));
                 players.add(new Player("CorruptUncle",52));
@@ -321,16 +324,16 @@ public class Main {
                 players.add(new Player("Chrissah58",16));
                 players.add(new Player("TNTbuilder21",31));
                 players.add(new Player("Pimmie36",96));
-                players.add(new Player("lenschoenie98",69));
+                players.add(new Player("lenschoenie98",52));
                 players.add(new Player("PbQuinn",0));
                 players.add(new Player("Luc_B21",2));
                 players.add(new Player("Captain_Kills",5));
                 players.add(new Player("PeterBeTripin",7));
-                players.add(new Player("Jayroon123",20,true));
+                players.add(new Player("Jayroon123",16,true));
                 players.add(new Player("JD329",12));
                 players.add(new Player("maxim_rongen",17));
                 players.add(new Player("ThurianBohan",19));
-                players.add(new Player("Jobbo2002",111));
+                players.add(new Player("Jobbo2002",88));
 
                 break;
         }
@@ -378,7 +381,7 @@ public class Main {
         // Loot table items
         lootEntry.add(new LootTableEntry(20,"egg"));
         lootEntry.add(new LootTableEntry(3,"saddle"));
-        lootEntry.add(new LootTableEntry(1,"diamond_hoe"));
+        lootEntry.add(new LootTableEntry(1,"netherite_hoe"));
         lootEntry.add(new LootTableEntry(20,"ladder"));
         lootEntry.add(new LootTableEntry(3,"spectral_arrow", new LootTableFunction(2,0.3)));
         lootEntry.add(new LootTableEntry(1,"trident"));
@@ -581,7 +584,8 @@ public class Main {
         fileCommands.add("setblock 0 150 0 minecraft:air");
         fileCommands.add("setblock -2 0 -2 minecraft:structure_block[mode=load]{metadata:\"\",mirror:\"NONE\",ignoreEnti" +
                 "ties:0b,powered:0b,seed:0L,author:\"?\",rotation:\"NONE\",posX:1,mode:\"LOAD\",posY:1,sizeX:18,posZ:1," +
-                "integrity:1.0f,showair:0b,name:\"minecraft:commandcenter_s" + uhcNumber + "\",sizeY:31,sizeZ:18,showboundingbox:1b}");
+                "integrity:1.0f,showair:0b,name:\"minecraft:commandcenter_" + commandCenter + "\",sizeY:31,sizeZ:18,showboundingbox:1b}");
+        fileCommands.add("setblock -2 1 -2 minecraft:redstone_block");
         //end structure
         //
 
@@ -725,9 +729,6 @@ public class Main {
         ArrayList<String> fileCommands9 = new ArrayList<>();
         fileCommands9.add("effect clear @a");
         fileCommands9.add("tp @a 0 -100 0");
-        /*fileCommands9.add("tellraw @a [\"\",{\"text\":\" ｜ \",\"color\":\"gray\"},{\"text\":\"THE DIORITE EXPERTS" +
-                " UHC\",\"color\":\"gold\"},{\"text\":\" ｜ \",\"color\":\"gray\"},{\"text\":\"PREDICTIONS COMPLETED" +
-                "\",\"color\":\"light_purple\"},{\"text\":\" ｜ \",\"color\":\"gray\"}]");*/
         fileCommands9.add("tellraw @a [\"\",{\"text\":\" ｜ \",\"color\":\"gray\"},{\"text\":\"" + communityName +
                 " UHC\",\"color\":\"gold\"},{\"text\":\" ｜ \",\"color\":\"gray\"},{\"text\":\"PREDICTIONS COMPLETED" +
                 "\",\"color\":\"light_purple\"},{\"text\":\" ｜ \",\"color\":\"gray\"}]");
@@ -903,7 +904,7 @@ public class Main {
             ArrayList<String> fileCommands19 = new ArrayList<>();
             for (Team team : teams) {
                 fileCommands19.add("execute as @a[gamemode=!spectator,team=" + team.getName() + "] if entity @a[gamemode=!spectator,x=" + (controlPoints.get(i - 1).getX() - 6) + ",y=" + (controlPoints.get(i - 1).getY() - 1) + ",z=" + (controlPoints.get(i - 1).getZ() - 6) + ",dx=12,dy=12,dz=12] at @s unless entity @a[gamemode=!spectator,x=" + (controlPoints.get(i - 1).getX() - 6) + ",y=" + (controlPoints.get(i - 1).getY() - 1) + ",z=" + (controlPoints.get(i - 1).getZ() - 6) + ",dx=12,dy=12,dz=12,team=!" + team.getName() + "] run scoreboard players add @s ControlPoint" + i + " " + controlPoints.get(i - 1).getAddRate());
-                fileCommands19.add("execute if score @r[limit=1,gamemode=!spectator,team=" + team.getName() + "] ControlPoint" + i + " > @p[scores={Admin=1}] Highscore" + i + " run setblock " + controlPoints.get(i - 1).getX() + " " + (controlPoints.get(i - 1).getY() + 1) + " " + controlPoints.get(i - 1).getZ() + " minecraft:" + team.getBossbarColor() + "_stained_glass replace");
+                fileCommands19.add("execute if score @r[limit=1,gamemode=!spectator,team=" + team.getName() + "] ControlPoint" + i + " > @p[scores={Admin=1}] Highscore" + i + " run setblock " + controlPoints.get(i - 1).getX() + " " + (controlPoints.get(i - 1).getY() + 1) + " " + controlPoints.get(i - 1).getZ() + " minecraft:" + team.getGlassColor() + "_stained_glass replace");
             }
             fileCommands19.add("execute if entity @p[x=" + (controlPoints.get(i - 1).getX() - 6) + ",y=" + (controlPoints.get(i - 1).getY() - 1) + ",z=" + (controlPoints.get(i - 1).getZ() - 6) + ",dx=12,dy=12,dz=12,gamemode=!spectator] run scoreboard players add @a[x=" + (controlPoints.get(i - 1).getX() - 6) + ",y=" + (controlPoints.get(i - 1).getY() - 1) + ",z=" + (controlPoints.get(i - 1).getZ() - 6) + ",dx=12,dy=12,dz=12,gamemode=!spectator] MSGDum1CP" + i + " 1");
             fileCommands19.add("execute if entity @p[x=" + (controlPoints.get(i - 1).getX() - 6) + ",y=" + (controlPoints.get(i - 1).getY() - 1) + ",z=" + (controlPoints.get(i - 1).getZ() - 6) + ",dx=12,dy=12,dz=12,gamemode=!spectator,scores={MSGDum1CP" + i + "=200}] run tellraw @a [\"\",{\"text\":\" ⎜ \",\"color\":\"gray\"},{\"text\":\"" + communityName + " UHC\",\"color\":\"gold\"},{\"text\":\" ⎜ \",\"color\":\"gray\"},{\"text\":\"CONTROL POINT " + i + " IS UNDER ATTACK!\",\"color\":\"light_purple\"},{\"text\":\" ⎜ \",\"color\":\"gray\"}]");
