@@ -281,8 +281,8 @@ public class Main {
                 players.add(new Player("Clockweiz",11));
                 players.add(new Player("Eason950116",13));
                 players.add(new Player("CorruptUncle",38));
-                players.add(new Player("Pimmie36",3));
-                players.add(new Player("PbQuinn",0));
+                players.add(new Player("Pimmie36",13));
+                players.add(new Player("PbQuinn",3));
                 players.add(new Player("Jayroon123",0));
 
                 break;
