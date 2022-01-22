@@ -2,6 +2,7 @@ public class ScoreboardObjective {
     private String name;
     private String type;
     private String customName = "";
+    private boolean displaySideBar = false;
 
     public ScoreboardObjective(String name, String type) {
         this.name = name;
@@ -12,6 +13,19 @@ public class ScoreboardObjective {
         this.name = name;
         this.type = type;
         this.customName = customName;
+    }
+
+    public ScoreboardObjective(String name, String type, boolean displaySideBar) {
+        this.name = name;
+        this.type = type;
+        this.displaySideBar = displaySideBar;
+    }
+
+    public ScoreboardObjective(String name, String type, String customName, boolean displaySideBar) {
+        this.name = name;
+        this.type = type;
+        this.customName = customName;
+        this.displaySideBar = displaySideBar;
     }
 
     public String getName() {
@@ -37,4 +51,8 @@ public class ScoreboardObjective {
     public void setCustomName(String customName) {
         this.customName = customName;
     }
+
+    public boolean getDisplaySideBar() { return displaySideBar; }
+
+    public void setDisplaySideBar(boolean displaySideBar) { this.displaySideBar = displaySideBar; }
 }

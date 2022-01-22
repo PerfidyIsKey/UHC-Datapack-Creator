@@ -9,7 +9,7 @@ public class Main {
     }
 
     //DatapackData<
-    private static int gameMode = 1;
+    private static int gameMode = 2;
     /*
     * 1: The Diorite Experts
     * 2: University Racing Eindhoven
@@ -33,7 +33,7 @@ public class Main {
 
     //GameData<
     private static int chestSize = 27;
-    private String commandCenter = "s43";
+    private String commandCenter = "s44";
     private String admin;
     private String startCoordinates;
     private ArrayList<Team> teams = new ArrayList<>();
@@ -45,6 +45,7 @@ public class Main {
     private static int worldSize = 1500;
     private static int worldHeight = 257;
     private static int worldBottom = -64;
+    private static int tickPerSecond = 20;
     private int minTraitorRank;
     private String communityName;
     //GameData>
@@ -188,7 +189,7 @@ public class Main {
                 admin = "PerfidyIsKey";
                 break;
             case 2:
-                uhcNumber = "URE4";
+                uhcNumber = "URE5";
 
                 admin = "Snodog627";
                 break;
@@ -282,30 +283,30 @@ public class Main {
                 players.add(new Player("Eason950116",13));
                 players.add(new Player("CorruptUncle",38));
                 players.add(new Player("Pimmie36",13));
-                players.add(new Player("PbQuinn",3));
                 players.add(new Player("Jayroon123",0));
+                players.add(new Player("PbQuinn",3));
 
                 break;
             case 2:
-                startCoordinates = "-4 74 0";
-                minTraitorRank = 25;
+                startCoordinates = "-4 85 -4";
+                minTraitorRank = 20;
                 communityName = "UNIVERSITY RACING EINDHOVEN";
 
                 // Control point
-                cp1.setX(125);
-                cp1.setY(84);
-                cp1.setZ(-140);
+                cp1.setX(-33);
+                cp1.setY(57);
+                cp1.setZ(163);
 
-                cp2.setX(-91);
-                cp2.setY(64);
-                cp2.setZ(212);
+                cp2.setX(275);
+                cp2.setY(50);
+                cp2.setZ(-98);
                 controlPoints.add(cp1);
                 controlPoints.add(cp2);
 
                 // Care package
-                carePackage2.setX(155);
-                carePackage2.setY(69);
-                carePackage2.setZ(-50);
+                carePackage2.setX(146);
+                carePackage2.setY(62);
+                carePackage2.setZ(-15);
                 carePackages.add(carePackage2);
 
                 // Players
@@ -344,9 +345,10 @@ public class Main {
                 16, 70, 236);
         //carePackages.add(carePackage1);
 
+        // Scoreboard objectives
         scoreboardObjectives.add(new ScoreboardObjective("Admin", "dummy"));
         scoreboardObjectives.add(new ScoreboardObjective("TimDum", "dummy"));
-        scoreboardObjectives.add(new ScoreboardObjective("Time", "dummy", "\"Elapsed Time\""));
+        scoreboardObjectives.add(new ScoreboardObjective("Time", "dummy", "\"Elapsed Time\"",true));
         scoreboardObjectives.add(new ScoreboardObjective("Time2", "dummy", "\"Elapsed Time\""));
         scoreboardObjectives.add(new ScoreboardObjective("SideDum", "dummy"));
         scoreboardObjectives.add(new ScoreboardObjective("ControlPoint1", "dummy"));
@@ -357,11 +359,11 @@ public class Main {
         scoreboardObjectives.add(new ScoreboardObjective("MSGDum2CP2", "dummy"));
         scoreboardObjectives.add(new ScoreboardObjective("Highscore1", "dummy"));
         scoreboardObjectives.add(new ScoreboardObjective("Highscore2", "dummy"));
-        scoreboardObjectives.add(new ScoreboardObjective("Hearts", "health"));
-        scoreboardObjectives.add(new ScoreboardObjective("Apples", "minecraft.used:minecraft.golden_apple", "\"Golden Apple\""));
-        scoreboardObjectives.add(new ScoreboardObjective("Mining", "minecraft.mined:minecraft.stone", "\"I like mining-leaderboard\""));
+        scoreboardObjectives.add(new ScoreboardObjective("Hearts", "health",true));
+        scoreboardObjectives.add(new ScoreboardObjective("Apples", "minecraft.used:minecraft.golden_apple", "\"Golden Apple\"",true));
+        scoreboardObjectives.add(new ScoreboardObjective("Mining", "minecraft.mined:minecraft.stone", "\"I like mining-leaderboard\"",true));
         scoreboardObjectives.add(new ScoreboardObjective("Deaths", "deathCount"));
-        scoreboardObjectives.add(new ScoreboardObjective("Kills", "playerKillCount"));
+        scoreboardObjectives.add(new ScoreboardObjective("Kills", "playerKillCount",true));
         scoreboardObjectives.add(new ScoreboardObjective("Crystal", "dummy"));
         scoreboardObjectives.add(new ScoreboardObjective("Quits", "minecraft.custom:minecraft.leave_game"));
         scoreboardObjectives.add(new ScoreboardObjective("Rank", "dummy"));
@@ -704,6 +706,10 @@ public class Main {
         fileCommands7.add("worldborder set " + worldSize + " 1");
         fileCommands7.add("team leave @a");
         fileCommands7.add("function uhc:display_rank");
+        fileCommands7.add("scoreboard players set NightTime Time 600");
+        fileCommands7.add("scoreboard players set CarePackages Time 1200");
+        fileCommands7.add("scoreboard players set ControlPoints Time 1800");
+        fileCommands7.add("scoreboard players set TraitorFaction Time 2400");
 
         for (CarePackage carepackage : carePackages) {
             fileCommands7.add("forceload add " + carepackage.getX() + " " + carepackage.getZ() + " " + carepackage.getX() + " " + carepackage.getZ());
@@ -1109,6 +1115,35 @@ public class Main {
 
         FileData file35 = new FileData("wolf_collar_execute",fileCommands35);
         files.add(file35);
+
+        // Update side bar
+        ArrayList<String> fileCommands36 = new ArrayList<>();
+        fileCommands36.add("scoreboard players add @p[scores={Admin=1}] SideDum 1");
+        int i = 0;
+        for (ScoreboardObjective s: scoreboardObjectives)
+        {
+            if (s.getDisplaySideBar())
+            {
+                i++;
+                fileCommands36.add("execute if entity @p[scores={SideDum=" + (5*tickPerSecond*i) + "}] run scoreboard objectives setdisplay sidebar " + s.getName());
+            }
+        }
+        fileCommands36.add("execute if entity @p[scores={SideDum=" + (5*tickPerSecond*i+1) +"}] run scoreboard players reset @p[scores={Admin=1}] SideDum");
+
+        FileData file36 = new FileData("update_sidebar",fileCommands36);
+        files.add(file36);
+
+        // Timer
+        ArrayList<String> fileCommands37 = new ArrayList<>();
+        fileCommands37.add("scoreboard players add @p[scores={Admin=1}] Time2 1");
+        fileCommands37.add("scoreboard players add @p[scores={Admin=1}] TimDum 1");
+        fileCommands37.add("execute if entity @p[scores={TimDum=" + tickPerSecond + "}] run scoreboard players add @p[scores={Admin=1}] Time 1");
+        fileCommands37.add("execute if entity @p[scores={TimDum=" + tickPerSecond + "..}] run scoreboard players reset @p[scores={Admin=1}] TimDum");
+        fileCommands37.add("execute if entity @p[scores={Time2=" + (300*tickPerSecond) + "}] run tellraw @a [\"\",{\"text\":\"PVP IS NOT ALLOWED UNTIL DAY 2!\",\"color\":\"gray\"}]");
+        fileCommands37.add("execute if entity @p[scores={Time2=" + (1200*tickPerSecond) + "}] run tellraw @a [\"\",{\"text\":\" ｜ \",\"color\":\"gray\"},{\"text\":\"" + communityName + " UHC\",\"color\":\"gold\"},{\"text\":\" ｜ \",\"color\":\"gray\"},{\"text\":\"DAY TIME HAS ARRIVED!\",\"color\":\"light_purple\"},{\"text\":\" ｜ \",\"color\":\"gray\"}]");
+
+        FileData file37 = new FileData("timer",fileCommands37);
+        files.add(file37);
     }
 
 }
