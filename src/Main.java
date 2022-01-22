@@ -348,6 +348,7 @@ public class Main {
         // Scoreboard objectives
         scoreboardObjectives.add(new ScoreboardObjective("Admin", "dummy"));
         scoreboardObjectives.add(new ScoreboardObjective("TimDum", "dummy"));
+        scoreboardObjectives.add(new ScoreboardObjective("TimeDum", "dummy", "\"Elapsed Time\""));
         scoreboardObjectives.add(new ScoreboardObjective("Time", "dummy", "\"Elapsed Time\"",true));
         scoreboardObjectives.add(new ScoreboardObjective("Time2", "dummy", "\"Elapsed Time\""));
         scoreboardObjectives.add(new ScoreboardObjective("SideDum", "dummy"));
@@ -589,6 +590,8 @@ public class Main {
                 "ties:0b,powered:0b,seed:0L,author:\"?\",rotation:\"NONE\",posX:1,mode:\"LOAD\",posY:1,sizeX:18,posZ:1," +
                 "integrity:1.0f,showair:0b,name:\"minecraft:commandcenter_" + commandCenter + "\",sizeY:31,sizeZ:18,showboundingbox:1b}");
         fileCommands.add("setblock -2 " + (worldBottom + 1) + " -2 minecraft:redstone_block");
+        fileCommands.add("fill 0 " + (worldBottom + 5) + " 1 0 " + (worldBottom + 6) + " 1 minecraft:air");
+        //end structure
         //end structure
         //
 
@@ -1137,7 +1140,8 @@ public class Main {
         ArrayList<String> fileCommands37 = new ArrayList<>();
         fileCommands37.add("scoreboard players add @p[scores={Admin=1}] Time2 1");
         fileCommands37.add("scoreboard players add @p[scores={Admin=1}] TimDum 1");
-        fileCommands37.add("execute if entity @p[scores={TimDum=" + tickPerSecond + "}] run scoreboard players add @p[scores={Admin=1}] Time 1");
+        fileCommands37.add("execute if entity @p[scores={TimDum=" + tickPerSecond + "}] run scoreboard players add @p[scores={Admin=1}] TimeDum 1");
+        fileCommands37.add("execute store result score CurrentTime Time run scoreboard players get @p[scores={Admin=1}] TimeDum");
         fileCommands37.add("execute if entity @p[scores={TimDum=" + tickPerSecond + "..}] run scoreboard players reset @p[scores={Admin=1}] TimDum");
         fileCommands37.add("execute if entity @p[scores={Time2=" + (300*tickPerSecond) + "}] run tellraw @a [\"\",{\"text\":\"PVP IS NOT ALLOWED UNTIL DAY 2!\",\"color\":\"gray\"}]");
         fileCommands37.add("execute if entity @p[scores={Time2=" + (1200*tickPerSecond) + "}] run tellraw @a [\"\",{\"text\":\" ｜ \",\"color\":\"gray\"},{\"text\":\"" + communityName + " UHC\",\"color\":\"gold\"},{\"text\":\" ｜ \",\"color\":\"gray\"},{\"text\":\"DAY TIME HAS ARRIVED!\",\"color\":\"light_purple\"},{\"text\":\" ｜ \",\"color\":\"gray\"}]");
