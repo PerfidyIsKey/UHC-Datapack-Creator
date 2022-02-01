@@ -1,4 +1,7 @@
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -9,13 +12,13 @@ public class Main {
     }
 
     //DatapackData<
-    private static int gameMode = 2;
+    private static int gameMode = 1;
     /*
     * 1: The Diorite Experts
     * 2: University Racing Eindhoven
      */
 
-    private static int adminMode = 2;
+    private static int adminMode = 1;
     /*
     * 1: Wouter
     * 2: Bas
@@ -26,6 +29,7 @@ public class Main {
     private String userFolder;
     private String worldName;
     private String dataPackLocation;
+    private String worldLocation;
     private String dataPackName;
     private String fileLocation;
 
@@ -91,7 +95,7 @@ public class Main {
                 }
             } else if (input.equals("create datapack")) {
                 try {
-                    createDatapack(dataPackLocation);
+                    createDatapack();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -111,7 +115,7 @@ public class Main {
         }
     }
 
-    private void createDatapack(String dataPackLocation) throws IOException {
+    private void createDatapack() throws IOException {
         File file = new File(dataPackLocation + dataPackName);
         if (file.mkdir()) {
             File pack = new File(dataPackLocation + dataPackName + "\\pack.mcmeta");
@@ -149,9 +153,27 @@ public class Main {
                     }
                 }
             }
+            String from = "generated";
+            String to = worldLocation + "\\generated";
+            copyDirectory(from, to);
         } else {
-            System.out.println("Something went wrong creating Datapack 4");
+            System.out.println("Datapack already exists: Updating files now...");
+            updateAllFiles();
         }
+    }
+
+    public static void copyDirectory(String sourceDirectoryLocation, String destinationDirectoryLocation)
+            throws IOException {
+        Files.walk(Paths.get(sourceDirectoryLocation))
+                .forEach(source -> {
+                    Path destination = Paths.get(destinationDirectoryLocation, source.toString()
+                            .substring(sourceDirectoryLocation.length()));
+                    try {
+                        Files.copy(source, destination);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                });
     }
 
     private void writeFile(FileData fileData, String fileLocation) throws IOException {
@@ -199,14 +221,16 @@ public class Main {
             case 1:
                 userFolder = "Wouter Baltus";
                 worldName = "big-test";
-                dataPackLocation = "C:\\Users\\" + userFolder + "\\AppData\\Roaming\\.minecraft\\saves\\" + worldName + "\\datapacks\\";
+                worldLocation = "D:\\Documents\\Gaming\\MinecraftServers\\MinecraftServers\\world\\";
                 break;
             case 2:
                 userFolder = "bthem";
                 worldName = "world";
-                dataPackLocation = "C:\\Users\\" + userFolder + "\\Desktop\\Server\\" + worldName + "\\datapacks\\";
+                worldLocation = "C:\\Users\\" + userFolder + "\\Desktop\\Server\\" + worldName + "\\";
                 break;
         }
+
+        dataPackLocation = worldLocation + "datapacks\\";
 
         dataPackName = "uhc-datapack-" + uhcNumber + "v" + version;
         fileLocation = dataPackLocation + dataPackName + "\\data\\uhc\\";
@@ -232,25 +256,25 @@ public class Main {
 
         switch (gameMode) {
             case 1:
-                startCoordinates = "-1 63 6";
+                startCoordinates = "4 64 5";
                 minTraitorRank = 40;
                 communityName = "THE DIORITE EXPERTS";
 
                 // Control point
-                cp1.setX(105);
-                cp1.setY(65);
-                cp1.setZ(3);
+                cp1.setX(-31);
+                cp1.setY(64);
+                cp1.setZ(193);
 
-                cp2.setX(152);
-                cp2.setY(48);
-                cp2.setZ(277);
+                cp2.setX(-22);
+                cp2.setY(63);
+                cp2.setZ(-142);
                 controlPoints.add(cp1);
                 controlPoints.add(cp2);
 
                 // Care Packages
-                carePackage2.setX(89);
+                carePackage2.setX(25);
                 carePackage2.setY(69);
-                carePackage2.setZ(315);
+                carePackage2.setZ(18);
                 carePackages.add(carePackage2);
 
                 // Players
