@@ -1080,7 +1080,7 @@ public class Main {
         for (ControlPoint cp : controlPoints) {
             fileCommands30.add("forceload add " + cp.getX() + " " + cp.getZ() + " " + cp.getX() + " " + cp.getZ());
             fileCommands30.add("setblock " + cp.getX() + " " + (cp.getY() + 11) + " " + cp.getZ() + " " + "minecraft:structure_block[mode=load]{metadata:\"\",mirror:\"NONE\",ignoreEntities:1b,powered:0b,seed:0L,author:\"?\",rotation:\"NONE\",posX:-6,mode:\"LOAD\",posY:-13,sizeX:13,posZ:-6,integrity:1.0f,showair:0b,name:\"minecraft:control_point\",sizeY:14,sizeZ:13,showboundingbox:1b} replace");
-            fileCommands30.add("setblock " + cp.getX() + " " + (cp.getY() + 10) + " " + cp.getZ() + " " + "minecraft:redstone_block replace");
+            fileCommands30.add("schedule function uhc:controlpoint_redstone 5t");
             for (int i = cp.getY() + 12; i < worldHeight; i++) {
                 fileCommands30.add("execute unless block " + cp.getX() + " " + i + " " + cp.getZ() + " minecraft:air run setblock " + cp.getX() + " " + i + " " + cp.getZ() + " minecraft:glass");
             }
@@ -1172,6 +1172,16 @@ public class Main {
 
         FileData file37 = new FileData("timer",fileCommands37);
         files.add(file37);
+
+        // Sad function for Control Point spawning
+        ArrayList<String> fileCommands38 = new ArrayList<>();
+        for (ControlPoint cp: controlPoints)
+        {
+            fileCommands38.add("setblock " + cp.getX() + " " + (cp.getY() + 10) + " " + cp.getZ() + " " + "minecraft:redstone_block replace");
+        }
+
+        FileData file38 = new FileData("controlpoint_redstone",fileCommands38);
+        files.add(file38);
     }
 
 }
