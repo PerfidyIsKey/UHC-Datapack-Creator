@@ -718,7 +718,7 @@ public class Main {
         return new FileData("clear_enderchest", fileCommands);
     }
 
-    private FileData EquipGear() {
+    private static FileData EquipGear() {
         ArrayList<String> fileCommands = new ArrayList<>();
         fileCommands.add("item replace entity @a armor.chest with minecraft:iron_chestplate");
         fileCommands.add("item replace entity @a armor.feet with minecraft:iron_boots");
@@ -732,7 +732,7 @@ public class Main {
         return new FileData("equip_gear", fileCommands);
     }
 
-    private FileData GodMode() {
+    private static FileData GodMode() {
         ArrayList<String> fileCommands = new ArrayList<>();
         fileCommands.add("effect give @s minecraft:resistance 99999 4 true");
         fileCommands.add("item replace entity @s weapon.mainhand with trident{display:{Name:\"{\\\"text\\\":\\\"The Impaler\\\"}\"}, Enchantments:[{id:sharpness,lvl:999999},{id:fire_aspect,lvl:999999},{id:unbreaking,lvl:999999},{id:loyalty,lvl:999999},{id:impaling,lvl:999999}]}");
@@ -825,7 +825,7 @@ public class Main {
         return new FileData("into_calls", fileCommands);
     }
 
-    private FileData SpreadPlayers() {
+    private static FileData SpreadPlayers() {
         ArrayList<String> fileCommands = new ArrayList<>();
         fileCommands.add("spreadplayers 0 0 300 700 true @a");
         fileCommands.add("scoreboard players set @p[scores={Admin=1}] Highscore 1");
@@ -833,7 +833,7 @@ public class Main {
         return new FileData("spread_players", fileCommands);
     }
 
-    private FileData SurvivalMode() {
+    private static FileData SurvivalMode() {
         ArrayList<String> fileCommands = new ArrayList<>();
         fileCommands.add("gamerule commandBlockOutput false");
         fileCommands.add("gamerule doDaylightCycle true");
@@ -872,7 +872,7 @@ public class Main {
         return new FileData("start_game", fileCommands);
     }
 
-    private FileData BattleRoyale() {
+    private static FileData BattleRoyale() {
         ArrayList<String> fileCommands = new ArrayList<>();
         fileCommands.add("execute positioned 0 151 0 run gamemode survival @a[distance=..20,gamemode=!creative]");
         fileCommands.add("execute positioned 0 151 0 run spreadplayers 0 0 300 700 true @a[distance=..20,gamemode=survival]");
@@ -928,7 +928,7 @@ public class Main {
         return new FileData("victory", fileCommands);
     }
 
-    private FileData DeathMatch() {
+    private static FileData DeathMatch() {
         ArrayList<String> fileCommands18 = new ArrayList<>();
         fileCommands18.add("worldborder set 400");
         fileCommands18.add("worldborder set 1 180");
@@ -985,7 +985,7 @@ public class Main {
         return new FileData("controlpoint_messages", fileCommands);
     }
 
-    private FileData DropCarepackages() {
+    private static FileData DropCarepackages() {
         ArrayList<String> fileCommands = new ArrayList<>();
 
         fileCommands.add("title @a title {\"text\":\"" + "200 Supply Drops" + "!\", \"bold\":true, \"italic\":true, \"color\":\"gold\"}");
@@ -998,7 +998,7 @@ public class Main {
         return new FileData("drop_carepackages", fileCommands);
     }
 
-    private FileData CarepackageDistributor() {
+    private static FileData CarepackageDistributor() {
         ArrayList<String> fileCommands = new ArrayList<>();
 
         fileCommands.add("execute if entity @e[type=minecraft:falling_block,distance=..2] run spreadplayers 0 0 10 500 false @e[type=minecraft:falling_block,distance=..2]");
@@ -1014,7 +1014,7 @@ public class Main {
         return new FileData("give_instructions", fileCommands);
     }
 
-    private FileData InstructionHandoutLoop() {
+    private static FileData InstructionHandoutLoop() {
         ArrayList<String> fileCommands = new ArrayList<>();
 
         //fileCommands.add("execute as @a[scores={Quits=1..}] at @s run function uhc:give_instructions");
@@ -1047,7 +1047,7 @@ public class Main {
         return new FileData("traitor_handout", fileCommands);
     }
 
-    private FileData TraitorActionBar() {
+    private static FileData TraitorActionBar() {
         ArrayList<String> fileCommands = new ArrayList<>();
 
         fileCommands.add("execute as @a[tag=Traitor] run title @s actionbar [\"\",{\"text\":\">>> \",\"color\":\"gold\"},{\"text\":\"Traitor Faction: \",\"color\":\"light_purple\"},{\"selector\":\"@a[tag=Traitor]\"},{\"text\":\" <<<\",\"color\":\"gold\"}]");
@@ -1128,7 +1128,7 @@ public class Main {
         return new FileData("world_pre_load", fileCommands);
     }
 
-    private FileData HorseFrostWalker() {
+    private static FileData HorseFrostWalker() {
         ArrayList<String> fileCommands = new ArrayList<>();
         fileCommands.add("execute at @a[nbt={RootVehicle:{Entity:{id:\"minecraft:horse\"}}}] run fill ~-2 ~-2 ~-2 ~2 ~2 ~2 ice replace water");
 
