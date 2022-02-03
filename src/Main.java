@@ -568,6 +568,10 @@ public class Main {
         }
     }
 
+    private String callFunction(String functionName) {
+        return "function uhc:" + functionName;
+    }
+
     private void makeFunctionFiles() {
         files.add(Initialize());
         files.add(DropPlayerHeads());
@@ -707,6 +711,7 @@ public class Main {
         fileCommands.add("execute store result bossbar minecraft:cp1 value run scoreboard players get @p[scores={Admin=1}] Highscore1");
         fileCommands.add("execute as @r[limit=1,gamemode=!spectator] run scoreboard players operation @p[scores={Admin=1}] Highscore2 > @s ControlPoint2");
         fileCommands.add("execute store result bossbar minecraft:cp2 value run scoreboard players get @p[scores={Admin=1}] Highscore2");
+        fileCommands.add(callFunction("controlpoint_perks"));
 
         return new FileData("bbvalue", fileCommands);
     }
@@ -1199,31 +1204,31 @@ public class Main {
 
         // Define perk activation times
         int minToCPScore = secPerMinute*tickPerSecond*controlPoints.get(0).getAddRate();
-        int[] perks = {3, 6, 12, 15};
-        for (int perk: perks) {
-            perk *= minToCPScore;
-            System.out.println(perk);
+        ArrayList<Integer> perks = new ArrayList<>();
+        perks.add(3);
+        perks.add(6);
+        perks.add(12);
+        perks.add(15);
+        for (int i = 0; i < perks.size(); i++) {
+            perks.set(i, perks.get(i) * minToCPScore);
         }
 
-        int i = 1;
-        for (ControlPoint cp: controlPoints)
+        for (int i = 0; i < controlPoints.size(); i++)
         {
-            i++;
-            for (Team t: teams)
+            ControlPoint cp = controlPoints.get(i);
+            for (Team team: teams)
             {
                 // Award perks
-                fileCommands.add("effect give @a[scores={CP" + i + t.getName() + "=" + perks[0] + ".." + (perks[0] + cp.getAddRate() - 1) + "}] minecraft:speed 999999 0 false");
-                fileCommands.add("effect give @a[scores={CP" + i + t.getName() + "=" + perks[1] + ".." + (perks[1] + cp.getAddRate() - 1) + "}] minecraft:resistance " + (10*secPerMinute) + " 0 false");
-                fileCommands.add("effect give @a[scores={CP" + i + t.getName() + "=" + perks[2] + ".." + (perks[2] + cp.getAddRate() - 1) + "}] minecraft:haste 999999 2 false");
-                fileCommands.add("give @a[scores={CP" + i + t.getName() + "=" + perks[3] + ".." + (perks[3] + cp.getAddRate() - 1) + "}] minecraft:golden_apple");
+                fileCommands.add("effect give @a[scores={CP" + (i+1) + team.getName() + "=" + perks.get(0) + ".." + (perks.get(0) + cp.getAddRate() - 1) + "}] minecraft:speed 999999 0 false");
+                fileCommands.add("effect give @a[scores={CP" + (i+1) + team.getName() + "=" + perks.get(1) + ".." + (perks.get(1) + cp.getAddRate() - 1) + "}] minecraft:resistance " + (10*secPerMinute) + " 0 false");
+                fileCommands.add("effect give @a[scores={CP" + (i+1) + team.getName() + "=" + perks.get(2) + ".." + (perks.get(2) + cp.getAddRate() - 1) + "}] minecraft:haste 999999 2 false");
+                fileCommands.add("give @a[scores={CP" + (i+1) + team.getName() + "=" + perks.get(3) + ".." + (perks.get(3) + cp.getAddRate() - 1) + "}] minecraft:golden_apple");
 
-                // Display perks
-                for (int ii = 0; ii<4; ii++) {
-                    fileCommands.add("execute if @p[scores={CP" + i + t.getName() + "=" + perks[ii] + ".." + (perks[ii] + cp.getAddRate() - 1) + "}] run tellraw @a [\"\",{\"text\":\"TEAM \",\"color\":\"" + t.getColor().toUpperCase() + "\"},{\"text\":\"GREEN\",\"color\":\"dark_green\"},{\"text\":\" HAS REACHED\",\"color\":\"light_purple\"},{\"text\":\" PERK " + (ii + 1) + "!\",\"color\":\"gold\"}]");
+                for (int j = 0; j < perks.size(); j++) {
+                    fileCommands.add("execute if @p[scores={CP" + (i+1) + team.getName() + "=" + perks.get(j) + ".." + (perks.get(j) + cp.getAddRate() - 1) + "}] run tellraw @a [\"\",{\"text\":\"TEAM \",\"color\":\"" + team.getColor().toUpperCase() + "\"},{\"text\":\"GREEN\",\"color\":\"dark_green\"},{\"text\":\" HAS REACHED\",\"color\":\"light_purple\"},{\"text\":\" PERK " + (j + 1) + "!\",\"color\":\"gold\"}]");
                 }
             }
         }
-
 
         return new FileData("controlpoint_perks", fileCommands);
     }
