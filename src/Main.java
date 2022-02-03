@@ -621,6 +621,7 @@ public class Main {
         files.add(UpdateSidebar());
         files.add(Timer());
         files.add(CreateControlpointRedstone());
+        files.add(ControlPointPerks());
     }
 
     private FileData Initialize() {
@@ -1190,6 +1191,41 @@ public class Main {
         }
 
         return new FileData("controlpoint_redstone", fileCommands);
+    }
+
+    // Perks for being on the Control Point
+    private FileData ControlPointPerks() {
+        ArrayList<String> fileCommands = new ArrayList<>();
+
+        // Define perk activation times
+        int minToCPScore = secPerMinute*tickPerSecond*controlPoints.get(0).getAddRate();
+        int[] perks = {3, 6, 12, 15};
+        for (int perk: perks) {
+            perk *= minToCPScore;
+            System.out.println(perk);
+        }
+
+        int i = 1;
+        for (ControlPoint cp: controlPoints)
+        {
+            i++;
+            for (Team t: teams)
+            {
+                // Award perks
+                fileCommands.add("effect give @a[scores={CP" + i + t.getName() + "=" + perks[0] + ".." + (perks[0] + cp.getAddRate() - 1) + "}] minecraft:speed 999999 0 false");
+                fileCommands.add("effect give @a[scores={CP" + i + t.getName() + "=" + perks[1] + ".." + (perks[1] + cp.getAddRate() - 1) + "}] minecraft:resistance " + (10*secPerMinute) + " 0 false");
+                fileCommands.add("effect give @a[scores={CP" + i + t.getName() + "=" + perks[2] + ".." + (perks[2] + cp.getAddRate() - 1) + "}] minecraft:haste 999999 2 false");
+                fileCommands.add("give @a[scores={CP" + i + t.getName() + "=" + perks[3] + ".." + (perks[3] + cp.getAddRate() - 1) + "}] minecraft:golden_apple");
+
+                // Display perks
+                for (int ii = 0; ii<4; ii++) {
+                    fileCommands.add("execute if @p[scores={CP" + i + t.getName() + "=" + perks[ii] + ".." + (perks[ii] + cp.getAddRate() - 1) + "}] run tellraw @a [\"\",{\"text\":\"TEAM \",\"color\":\"" + t.getColor().toUpperCase() + "\"},{\"text\":\"GREEN\",\"color\":\"dark_green\"},{\"text\":\" HAS REACHED\",\"color\":\"light_purple\"},{\"text\":\" PERK " + (ii + 1) + "!\",\"color\":\"gold\"}]");
+                }
+            }
+        }
+
+
+        return new FileData("controlpoint_perks", fileCommands);
     }
 
 }
