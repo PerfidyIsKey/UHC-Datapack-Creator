@@ -18,7 +18,7 @@ public class Main {
     * 2: University Racing Eindhoven
      */
 
-    private static int adminMode = 1;
+    private static int adminMode = 2;
     /*
     * 1: Wouter
     * 2: Bas
@@ -711,7 +711,6 @@ public class Main {
         fileCommands.add("execute store result bossbar minecraft:cp1 value run scoreboard players get @p[scores={Admin=1}] Highscore1");
         fileCommands.add("execute as @r[limit=1,gamemode=!spectator] run scoreboard players operation @p[scores={Admin=1}] Highscore2 > @s ControlPoint2");
         fileCommands.add("execute store result bossbar minecraft:cp2 value run scoreboard players get @p[scores={Admin=1}] Highscore2");
-        fileCommands.add(callFunction("controlpoint_perks"));
 
         return new FileData("bbvalue", fileCommands);
     }
@@ -1219,13 +1218,13 @@ public class Main {
             for (Team team: teams)
             {
                 // Award perks
-                fileCommands.add("effect give @a[scores={CP" + (i+1) + team.getName() + "=" + perks.get(0) + ".." + (perks.get(0) + cp.getAddRate() - 1) + "}] minecraft:speed 999999 0 false");
-                fileCommands.add("effect give @a[scores={CP" + (i+1) + team.getName() + "=" + perks.get(1) + ".." + (perks.get(1) + cp.getAddRate() - 1) + "}] minecraft:resistance " + (10*secPerMinute) + " 0 false");
-                fileCommands.add("effect give @a[scores={CP" + (i+1) + team.getName() + "=" + perks.get(2) + ".." + (perks.get(2) + cp.getAddRate() - 1) + "}] minecraft:haste 999999 2 false");
-                fileCommands.add("give @a[scores={CP" + (i+1) + team.getName() + "=" + perks.get(3) + ".." + (perks.get(3) + cp.getAddRate() - 1) + "}] minecraft:golden_apple");
+                fileCommands.add("execute if entity @p[scores={CP" + (i+1) + team.getName() + "=" + perks.get(0) + ".." + (perks.get(0) + cp.getAddRate()) + "}] run effect give @a[team=" + team.getName() + "] minecraft:speed 999999 0 false");
+                fileCommands.add("execute if entity @p[scores={CP" + (i+1) + team.getName() + "=" + perks.get(1) + ".." + (perks.get(1) + cp.getAddRate()) + "}] run effect give @a[team=" + team.getName() + "] minecraft:resistance " + (10*secPerMinute) + " 0 false");
+                fileCommands.add("execute if entity @p[scores={CP" + (i+1) + team.getName() + "=" + perks.get(2) + ".." + (perks.get(2) + cp.getAddRate()) + "}] run effect give @a[team=" + team.getName() + "] minecraft:haste 999999 2 false");
+                fileCommands.add("execute if entity @p[scores={CP" + (i+1) + team.getName() + "=" + perks.get(3) + ".." + (perks.get(3) + cp.getAddRate()) + "}] run give @a[team=" + team.getName() + "] minecraft:golden_apple");
 
                 for (int j = 0; j < perks.size(); j++) {
-                    fileCommands.add("execute if @p[scores={CP" + (i+1) + team.getName() + "=" + perks.get(j) + ".." + (perks.get(j) + cp.getAddRate() - 1) + "}] run tellraw @a [\"\",{\"text\":\"TEAM \",\"color\":\"" + team.getColor().toUpperCase() + "\"},{\"text\":\"GREEN\",\"color\":\"dark_green\"},{\"text\":\" HAS REACHED\",\"color\":\"light_purple\"},{\"text\":\" PERK " + (j + 1) + "!\",\"color\":\"gold\"}]");
+                    fileCommands.add("execute if entity @p[scores={CP" + (i+1) + team.getName() + "=" + perks.get(j) + ".." + (perks.get(j) + cp.getAddRate()) + "}] run tellraw @a [\"\",{\"text\":\"TEAM \",\"color\":\"light_purple\"},{\"text\":\"" + team.getColor().toUpperCase() + "\",\"color\":\"" + team.getColor() + "\"},{\"text\":\" HAS REACHED\",\"color\":\"light_purple\"},{\"text\":\" PERK " + (j + 1) + "!\",\"color\":\"gold\"}]");
                 }
             }
         }
