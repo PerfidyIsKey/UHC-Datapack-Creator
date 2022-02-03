@@ -790,6 +790,10 @@ public class Main {
         fileCommands.add("scoreboard players set CarePackages Time 1200");
         fileCommands.add("scoreboard players set ControlPoints Time 1800");
         fileCommands.add("scoreboard players set TraitorFaction Time 2400");
+        for (int i = 0; i < 4; i++) {
+            fileCommands.add("tag @a remove ReceivedPerk" + (i+1));
+        }
+
 
         for (CarePackage carepackage : carePackages) {
             fileCommands.add("forceload add " + carepackage.getX() + " " + carepackage.getZ() + " " + carepackage.getX() + " " + carepackage.getZ());
@@ -1217,15 +1221,20 @@ public class Main {
             ControlPoint cp = controlPoints.get(i);
             for (Team team: teams)
             {
-                // Award perks
-                fileCommands.add("execute if entity @p[scores={CP" + (i+1) + team.getName() + "=" + perks.get(0) + ".." + (perks.get(0) + cp.getAddRate()) + "}] run effect give @a[team=" + team.getName() + "] minecraft:speed 999999 0 false");
-                fileCommands.add("execute if entity @p[scores={CP" + (i+1) + team.getName() + "=" + perks.get(1) + ".." + (perks.get(1) + cp.getAddRate()) + "}] run effect give @a[team=" + team.getName() + "] minecraft:resistance " + (10*secPerMinute) + " 0 false");
-                fileCommands.add("execute if entity @p[scores={CP" + (i+1) + team.getName() + "=" + perks.get(2) + ".." + (perks.get(2) + cp.getAddRate()) + "}] run effect give @a[team=" + team.getName() + "] minecraft:haste 999999 2 false");
-                fileCommands.add("execute if entity @p[scores={CP" + (i+1) + team.getName() + "=" + perks.get(3) + ".." + (perks.get(3) + cp.getAddRate()) + "}] run give @a[team=" + team.getName() + "] minecraft:golden_apple");
-
+                // Display team receiving perk
                 for (int j = 0; j < perks.size(); j++) {
-                    fileCommands.add("execute if entity @p[scores={CP" + (i+1) + team.getName() + "=" + perks.get(j) + ".." + (perks.get(j) + cp.getAddRate()) + "}] run tellraw @a [\"\",{\"text\":\"TEAM \",\"color\":\"light_purple\"},{\"text\":\"" + team.getColor().toUpperCase() + "\",\"color\":\"" + team.getColor() + "\"},{\"text\":\" HAS REACHED\",\"color\":\"light_purple\"},{\"text\":\" PERK " + (j + 1) + "!\",\"color\":\"gold\"}]");
+                    fileCommands.add("execute if entity @p[scores={CP" + (i+1) + team.getName() + "=" + perks.get(j) + ".." + (perks.get(j) + 20) + "}] run execute if entity @p[team=" + team.getName() + ",tag=!ReceivedPerk" + (j+1) + "] run tellraw @a [\"\",{\"text\":\"TEAM \",\"color\":\"light_purple\"},{\"text\":\"" + team.getColor().toUpperCase() + "\",\"color\":\"" + team.getColor() + "\"},{\"text\":\" HAS REACHED\",\"color\":\"light_purple\"},{\"text\":\" PERK " + (j + 1) + "!\",\"color\":\"gold\"}]");
                 }
+
+                // Award perks
+                fileCommands.add("execute if entity @p[scores={CP" + (i+1) + team.getName() + "=" + perks.get(0) + ".." + (perks.get(0) + 20) + "}] run effect give @a[team=" + team.getName() + ",tag=!ReceivedPerk1] minecraft:speed 999999 0 false");
+                fileCommands.add("execute if entity @p[scores={CP" + (i+1) + team.getName() + "=" + perks.get(0) + ".." + (perks.get(0) + 20) + "}] run tag @a[team=" + team.getName() + "] add ReceivedPerk1");
+                fileCommands.add("execute if entity @p[scores={CP" + (i+1) + team.getName() + "=" + perks.get(1) + ".." + (perks.get(1) + 20) + "}] run effect give @a[team=" + team.getName() + ",tag=!ReceivedPerk2] minecraft:resistance " + (10*secPerMinute) + " 0 false");
+                fileCommands.add("execute if entity @p[scores={CP" + (i+1) + team.getName() + "=" + perks.get(1) + ".." + (perks.get(1) + 20) + "}] run tag @a[team=" + team.getName() + "] add ReceivedPerk2");
+                fileCommands.add("execute if entity @p[scores={CP" + (i+1) + team.getName() + "=" + perks.get(2) + ".." + (perks.get(2) + 20) + "}] run effect give @a[team=" + team.getName() + ",tag=!ReceivedPerk3] minecraft:haste 999999 2 false");
+                fileCommands.add("execute if entity @p[scores={CP" + (i+1) + team.getName() + "=" + perks.get(2) + ".." + (perks.get(2) + 20) + "}] run tag @a[team=" + team.getName() + "] add ReceivedPerk3");
+                fileCommands.add("execute if entity @p[scores={CP" + (i+1) + team.getName() + "=" + perks.get(3) + ".." + (perks.get(3) + 20) + "}] run give @a[team=" + team.getName() + ",tag=!ReceivedPerk4] minecraft:golden_apple");
+                fileCommands.add("execute if entity @p[scores={CP" + (i+1) + team.getName() + "=" + perks.get(3) + ".." + (perks.get(3) + 20) + "}] run tag @a[team=" + team.getName() + "] add ReceivedPerk4");
             }
         }
 
