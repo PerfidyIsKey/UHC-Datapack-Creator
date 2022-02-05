@@ -245,8 +245,9 @@ public class Main {
         String[] bossbarColors = {"yellow", "blue", "red", "purple", "green", "pink", "white", "white", "white", "white", "white", "white", "white"};
         String[] glassColors = {"yellow", "light_blue", "red", "purple", "green", "pink", "black", "orange", "gray", "cyan", "red", "blue", "blue"};
         String[] collarColors = {"4", "3", "14", "10", "13", "6", "15", "1", "7", "9", "2", "11", "9"};
+        String[] jsonColors = {"YELLOW", "BLUE", "RED", "PURPLE", "GREEN", "PINK", "BLACK", "ORANGE", "GRAY", "AQUA", "DARK RED", "DARK BLUE", "DARK AQUA"};
         for (int i = 0; i < colors.length; i++) {
-            Team team = new Team("Team" + i, colors[i], bossbarColors[i], glassColors[i], collarColors[i]);
+            Team team = new Team("Team" + i, colors[i], bossbarColors[i], glassColors[i], collarColors[i], jsonColors[i]);
             teams.add(team);
         }
 
@@ -1072,6 +1073,7 @@ public class Main {
             fileCommands.add("execute as @r[limit=1,gamemode=!spectator] run scoreboard players operation @s[team=" + t.getName() + "] ControlPoint > @p[scores={Admin=1}] CP" + t.getName());
         }
 
+
         return new FileData("team_score", fileCommands);
     }
 
@@ -1088,7 +1090,7 @@ public class Main {
             fileCommands.add("execute as @r[limit=1,gamemode=!spectator,x=" + (cp1.getX() - 6) + ",y=" + (cp1.getY() - 1) + ",z=" + (cp1.getZ() - 6) + ",dx=12,dy=12,dz=12,team=" + t.getName() + "] run scoreboard players operation @p[scores={Admin=1}] CP1" + t.getName() + " > @p[scores={Admin=1}] CP2" + t.getName());
             fileCommands.add("execute as @r[limit=1,gamemode=!spectator,x=" + (cp2.getX() - 6) + ",y=" + (cp2.getY() - 1) + ",z=" + (cp2.getZ() - 6) + ",dx=12,dy=12,dz=12,team=" + t.getName() + "] run scoreboard players operation @p[scores={Admin=1}] CP2" + t.getName() + " > @p[scores={Admin=1}] CP1" + t.getName());
         }
-
+        fileCommands.add(callFunction("controlpoint_perks"));
 
         return new FileData("team_score", fileCommands);
     }
@@ -1223,7 +1225,7 @@ public class Main {
             {
                 // Display team receiving perk
                 for (int j = 0; j < perks.size(); j++) {
-                    fileCommands.add("execute if entity @p[scores={CP" + (i+1) + team.getName() + "=" + perks.get(j) + ".." + (perks.get(j) + 20) + "}] run execute if entity @p[team=" + team.getName() + ",tag=!ReceivedPerk" + (j+1) + "] run tellraw @a [\"\",{\"text\":\"TEAM \",\"color\":\"light_purple\"},{\"text\":\"" + team.getColor().toUpperCase() + "\",\"color\":\"" + team.getColor() + "\"},{\"text\":\" HAS REACHED\",\"color\":\"light_purple\"},{\"text\":\" PERK " + (j + 1) + "!\",\"color\":\"gold\"}]");
+                    fileCommands.add("execute if entity @p[scores={CP" + (i+1) + team.getName() + "=" + perks.get(j) + ".." + (perks.get(j) + 20) + "}] run execute if entity @p[team=" + team.getName() + ",tag=!ReceivedPerk" + (j+1) + "] run tellraw @a [\"\",{\"text\":\"TEAM \",\"color\":\"light_purple\"},{\"text\":\"" + team.getJSONColor() + "\",\"color\":\"" + team.getColor() + "\"},{\"text\":\" HAS REACHED\",\"color\":\"light_purple\"},{\"text\":\" PERK " + (j + 1) + "!\",\"color\":\"gold\"}]");
                 }
 
                 // Award perks

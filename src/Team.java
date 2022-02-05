@@ -5,13 +5,15 @@ public class Team {
     private String bossbarColor;
     private String glassColor;
     private String collarColor;
+    private String jsonColor;
 
-    public Team(String name, String color, String bossbarColor, String glassColor, String collarColor) {
+    public Team(String name, String color, String bossbarColor, String glassColor, String collarColor, String jsonColor) {
         this.name = name;
         this.color = color;
         this.bossbarColor = bossbarColor;
         this.glassColor = glassColor;
         this.collarColor = collarColor;
+        this.jsonColor = jsonColor;
     }
 
     public String getName() {
@@ -52,5 +54,13 @@ public class Team {
 
     public void setCollarColor(String collarColor) {
         this.collarColor = collarColor;
+    }
+
+    public String getJSONColor() {
+        return jsonColor;
+    }
+
+    public void setJSONColor(String jsonColor) {
+        this.jsonColor = jsonColor;
     }
 }
