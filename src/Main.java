@@ -46,6 +46,7 @@ public class Main {
     private ArrayList<ScoreboardObjective> scoreboardObjectives = new ArrayList<>();
     private ArrayList<Player> players = new ArrayList<>();
     private ArrayList<StatusEffect> effect = new ArrayList<>();
+    private ArrayList<String> quotes = new ArrayList<>();
     private static int worldSize = 1500;
     private static int worldHeight = 257;
     private static int worldBottom = -64;
@@ -310,6 +311,103 @@ public class Main {
                 players.add(new Player("Pimmie36",13));
                 players.add(new Player("Jayroon123",0));
                 players.add(new Player("PbQuinn",3));
+                players.add(new Player("communisticloli",60));
+                players.add(new Player("Jobbo2002",88));
+
+                quotes.add("<Mr9Madness> Fucking eat people");
+                quotes.add("<Kalazniq> It was fun hearing Bas die");
+                quotes.add("<Mr9Madness> Get fat and turn into more people");
+                quotes.add("<Snodog627> I like balls");
+                quotes.add("<Mr9Madness> Thank god I got murdered");
+                quotes.add("<Kalazniq> I'm not inting in ranked, I'm just playing both sides");
+                quotes.add("<PerfidyIsKey> You don't wanna be a big purple man!");
+                quotes.add("<PerfidyIsKey> It was too vanilla");
+                quotes.add("<Bobdafish> I'm gonna take you from behind!");
+                quotes.add("<Mr9Madness> I never expected to be shown these kinds of kinks");
+                quotes.add("<Mr9Madness> I love getting fucked");
+                quotes.add("<Kalazniq> Let's try out this flower");
+                quotes.add("<Mr9Madness> Punching is the best way to make the villagers do what they need to do");
+                quotes.add("<Kalazniq> I will commit genocide on you if you blow up");
+                quotes.add("<PerfidyIsKey> Where are the ass cheeks?");
+                quotes.add("<Snodog627> I don't think, that's why!");
+                quotes.add("<Snodog627> Slavery also makes me happy");
+                quotes.add("<PerfidyIsKey> I just wanted to kill someone");
+                quotes.add("<PerfidyIsKey> Nothing wrong with hitting people");
+                quotes.add("<Mr9Madness> I'm glad you hit my head and not the ground");
+                quotes.add("<PerfidyIsKey> Meneer, does your butt hurt yet?");
+                quotes.add("<PerfidyIsKey> Oh, I'm fighting a dead guy");
+                quotes.add("<Snodog627> I'm gonna take myself from behind");
+                quotes.add("<Kalazniq> It's been a while since I've beaten Meneer");
+                quotes.add("<Mr9Madness> The dick's coming out");
+                quotes.add("<Mr9Madness> Don't forget to breathe");
+                quotes.add("<Kalazniq> Join me in bed");
+                quotes.add("<Snodog627> My fuck was justified");
+                quotes.add("<PerfidyIsKey> Alright, I can walk on water now, I forgot");
+                quotes.add("<Kalazniq> Why would I not want to fart");
+                quotes.add("<PerfidyIsKey> I'm amazed I can kill myself with this");
+                quotes.add("<Kalazniq> Put it in");
+                quotes.add("<Mr9Madness> I don't read. Fuck reading");
+                quotes.add("<Kalazniq> I have tentacles and I'm not afraid to use them");
+                quotes.add("<Kalazniq> I am happy I have farts");
+                quotes.add("<PerfidyIsKey> Thank god for the big dick");
+                quotes.add("<Snodog627> I want some dick");
+                quotes.add("<Snodog627> Meneer dat is veel beweging. Ik vind het goed");
+                quotes.add("<Kalazniq> Why didn't you cum");
+                quotes.add("<Snodog627> You need to upgrade your dick");
+                quotes.add("<Snodog627> Killing a pathetic guy is really fun");
+                quotes.add("<Kalazniq> I'm gonna just watch one anime episode");
+                quotes.add("<Mr9Madness> The death increase isn't that bad");
+                quotes.add("<Kalazniq> I don't even need a hook er");
+                quotes.add("<Kalazniq> I'm not mean, I'm just xenophobic");
+                quotes.add("<Snodog627> This feels much better without a shirt");
+                quotes.add("<Snodog627> A lot of tiny dicks are still bigger than one big dick");
+                quotes.add("<PerfidyIsKey> Oh wait, it's still gonna be way too big, right?");
+                quotes.add("<Snodog627> Meneer, that is literally selling your body");
+                quotes.add("<jk20028> Who the hell is inside of me");
+                quotes.add("<Mr9Madness> My suck is too hard");
+                quotes.add("<Mr9Madness> I love the sound of people dying");
+                quotes.add("<Kalazniq> Oh my god he's so fat");
+                quotes.add("<Mr9Madness> I wanna slurp some eyeballs");
+                quotes.add("<Mr9Madness> It's out here fucking");
+                quotes.add("<Kalazniq> I've been poisoned");
+                quotes.add("<Kalazniq> Please stop making me wet");
+                quotes.add("<Kalazniq> I was naked and on fire");
+                quotes.add("<PerfidyIsKey> It's your turn, go kill yourself");
+                quotes.add("<PerfidyIsKey> I have a hoe");
+                quotes.add("<Mr9Madness> I am the hoe");
+                quotes.add("<PerfidyIsKey> I am heavy because of the fucking");
+                quotes.add("<jonmo0105> He got away with murder");
+                quotes.add("<PerfidyIsKey> Why am I on fire? I'm just laying in bed");
+                quotes.add("<Mr9Madness> Crush that crystal in my...");
+                quotes.add("<Mr9Madness> If you stand in the fire, you won't get hurt");
+                quotes.add("<PerfidyIsKey> Don't poop in your nose buddy");
+                quotes.add("<Kalazniq> Sorry I just wanted to talk, not steal");
+                quotes.add("<Mr9Madness> Oh hey, I'm naked");
+                quotes.add("<Kalazniq> I've got so little actual intelligence");
+                quotes.add("<Mr9Madness> I want to unsexually fuck them");
+                quotes.add("<Snodog627> What is that thing doing?");
+                quotes.add("<Snodog627> I don't want demon Rin to suck me out");
+                quotes.add("<jonmo0105> How do I get these intestines");
+                quotes.add("<jonmo0105> I'm still a bush, fuck");
+                quotes.add("<jonmo0105> I would give him drugs, but it's against his religion");
+                quotes.add("<PerfidyIsKey> People are people");
+                quotes.add("<PerfidyIsKey> Am I bleeding");
+                quotes.add("<Kalazniq> I need your wood");
+                quotes.add("<PerfidyIsKey> Interesting, I can kill myself with this knife");
+                quotes.add("<Kalazniq> Why are all of you in favour of nukes?");
+                quotes.add("<PerfidyIsKey> Why was there a body in the way");
+                quotes.add("<PerfidyIsKey> I'm riding my massive cock");
+                quotes.add("<PerfidyIsKey> Why wouldn't I scam the children?");
+                quotes.add("<PerfidyIsKey> You gotta be high on shrooms");
+                quotes.add("<Mr9Madness> Is it still not in?");
+                quotes.add("<Snodog627> Please stop dying, you make an awful sound when you die");
+                quotes.add("<PerfidyIsKey> This does not look vanilla");
+                quotes.add("<Mr9Madness> I just ate a big cock");
+                quotes.add("<Kalazniq> I can bone myself");
+                quotes.add("<Kalazniq> I was murdering people");
+                quotes.add("<Mr9Madness> I'm a wiener");
+                quotes.add("<Kalazniq> This doesn't let me be racist");
+                quotes.add("<Snodog627> We are large");
 
                 break;
             case 2:
@@ -627,6 +725,7 @@ public class Main {
         files.add(Timer());
         files.add(CreateControlpointRedstone());
         files.add(ControlPointPerks());
+        files.add(DisplayQuotes());
     }
 
     private FileData Initialize() {
@@ -1188,6 +1287,7 @@ public class Main {
         fileCommands.add("execute if entity @p[scores={TimDum=" + tickPerSecond + "..}] run scoreboard players reset @p[scores={Admin=1}] TimDum");
         fileCommands.add("execute if entity @p[scores={Time2=" + (300*tickPerSecond) + "}] run tellraw @a [\"\",{\"text\":\"PVP IS NOT ALLOWED UNTIL DAY 2!\",\"color\":\"gray\"}]");
         fileCommands.add("execute if entity @p[scores={Time2=" + (1200*tickPerSecond) + "}] run tellraw @a [\"\",{\"text\":\" ｜ \",\"color\":\"gray\"},{\"text\":\"" + communityName + " UHC\",\"color\":\"gold\"},{\"text\":\" ｜ \",\"color\":\"gray\"},{\"text\":\"DAY TIME HAS ARRIVED!\",\"color\":\"light_purple\"},{\"text\":\" ｜ \",\"color\":\"gray\"}]");
+        fileCommands.add(callFunction("display_quotes"));
 
         return new FileData("timer", fileCommands);
     }
@@ -1241,6 +1341,19 @@ public class Main {
         }
 
         return new FileData("controlpoint_perks", fileCommands);
+
+    }
+
+    // Display quotes during the match
+    private FileData DisplayQuotes() {
+        ArrayList<String> fileCommands = new ArrayList<>();
+
+        for (int i = 0; i < 36; i++) {
+            int index = (int)(Math.random() * quotes.size());
+            fileCommands.add("execute if entity @p[scores={Time2=" + (7*secPerMinute*tickPerSecond*(i+1)) + "}] run tellraw @a {\"text\":\"" + quotes.get(index) + "\",\"color\":\"white\"}");
+        }
+
+        return new FileData("display_quotes", fileCommands);
     }
 
 }
