@@ -1351,6 +1351,7 @@ public class Main {
         for (int i = 0; i < 36; i++) {
             int index = (int)(Math.random() * quotes.size());
             fileCommands.add("execute if entity @p[scores={Time2=" + (7*secPerMinute*tickPerSecond*(i+1)) + "}] run tellraw @a {\"text\":\"" + quotes.get(index) + "\",\"color\":\"white\"}");
+            quotes.remove(index);
         }
 
         return new FileData("display_quotes", fileCommands);
