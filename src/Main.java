@@ -311,7 +311,6 @@ public class Main {
                 players.add(new Player("Pimmie36",13));
                 players.add(new Player("Jayroon123",0));
                 players.add(new Player("PbQuinn",3));
-                players.add(new Player("communisticloli",60));
                 players.add(new Player("Jobbo2002",88));
 
                 quotes.add("<Mr9Madness> Fucking eat people");
@@ -322,7 +321,7 @@ public class Main {
                 quotes.add("<Kalazniq> I'm not inting in ranked, I'm just playing both sides");
                 quotes.add("<PerfidyIsKey> You don't wanna be a big purple man!");
                 quotes.add("<PerfidyIsKey> It was too vanilla");
-                quotes.add("<Bobdafish> I'm gonna take you from behind!");
+                quotes.add("<Bobdafish> I'm gonna take you from behind!\\n<Mr9Madness> Why didn't you?");
                 quotes.add("<Mr9Madness> I never expected to be shown these kinds of kinks");
                 quotes.add("<Mr9Madness> I love getting fucked");
                 quotes.add("<Kalazniq> Let's try out this flower");
@@ -353,7 +352,7 @@ public class Main {
                 quotes.add("<Snodog627> I want some dick");
                 quotes.add("<Snodog627> Meneer dat is veel beweging. Ik vind het goed");
                 quotes.add("<Kalazniq> Why didn't you cum");
-                quotes.add("<Snodog627> You need to upgrade your dick");
+                quotes.add("<Snodog627> You need to upgrade your dick\\n<jonmo0105> Working on it");
                 quotes.add("<Snodog627> Killing a pathetic guy is really fun");
                 quotes.add("<Kalazniq> I'm gonna just watch one anime episode");
                 quotes.add("<Mr9Madness> The death increase isn't that bad");
@@ -362,7 +361,7 @@ public class Main {
                 quotes.add("<Snodog627> This feels much better without a shirt");
                 quotes.add("<Snodog627> A lot of tiny dicks are still bigger than one big dick");
                 quotes.add("<PerfidyIsKey> Oh wait, it's still gonna be way too big, right?");
-                quotes.add("<Snodog627> Meneer, that is literally selling your body");
+                quotes.add("<Snodog627> Meneer, that is literally selling your body\\n<Mr9Madness> Yes, and it's perfect!");
                 quotes.add("<jk20028> Who the hell is inside of me");
                 quotes.add("<Mr9Madness> My suck is too hard");
                 quotes.add("<Mr9Madness> I love the sound of people dying");
@@ -373,8 +372,7 @@ public class Main {
                 quotes.add("<Kalazniq> Please stop making me wet");
                 quotes.add("<Kalazniq> I was naked and on fire");
                 quotes.add("<PerfidyIsKey> It's your turn, go kill yourself");
-                quotes.add("<PerfidyIsKey> I have a hoe");
-                quotes.add("<Mr9Madness> I am the hoe");
+                quotes.add("<PerfidyIsKey> I have a hoe\\n<Mr9Madness> I am the hoe");
                 quotes.add("<PerfidyIsKey> I am heavy because of the fucking");
                 quotes.add("<jonmo0105> He got away with murder");
                 quotes.add("<PerfidyIsKey> Why am I on fire? I'm just laying in bed");
@@ -391,10 +389,10 @@ public class Main {
                 quotes.add("<jonmo0105> I'm still a bush, fuck");
                 quotes.add("<jonmo0105> I would give him drugs, but it's against his religion");
                 quotes.add("<PerfidyIsKey> People are people");
-                quotes.add("<PerfidyIsKey> Am I bleeding");
+                quotes.add("<PerfidyIsKey> Am I bleeding?");
                 quotes.add("<Kalazniq> I need your wood");
                 quotes.add("<PerfidyIsKey> Interesting, I can kill myself with this knife");
-                quotes.add("<Kalazniq> Why are all of you in favour of nukes?");
+                quotes.add("<Kalazniq> Why are all of you in favour of nukes?\\n<Mr9Madness> Because it's fun!");
                 quotes.add("<PerfidyIsKey> Why was there a body in the way");
                 quotes.add("<PerfidyIsKey> I'm riding my massive cock");
                 quotes.add("<PerfidyIsKey> Why wouldn't I scam the children?");
@@ -407,7 +405,7 @@ public class Main {
                 quotes.add("<Kalazniq> I was murdering people");
                 quotes.add("<Mr9Madness> I'm a wiener");
                 quotes.add("<Kalazniq> This doesn't let me be racist");
-                quotes.add("<Snodog627> We are large");
+                quotes.add("<Snodog627> We are large\\n<Mr9Madness> We are large\\n<PerfidyIsKey> We are large\\n<Kalazniq> We are large\\n<Eason950116> We are large");
 
                 break;
             case 2:
@@ -460,6 +458,49 @@ public class Main {
                 players.add(new Player("ThurianBohan",19));
                 players.add(new Player("Jobbo2002",88));
 
+                // Quotes
+                quotes.add("<Erik> Ik ben nooit brak, ik ben alleen soms boerensmoe.");
+                quotes.add("<Jacco> Zie je deze bril? Ik ben gemaakt voor perceptie.");
+                quotes.add("<Raymond> Ik versta je niet, ik bel Dion wel.");
+                quotes.add("<Kees> Behangen is een soort lamineren, maar dan op muren");
+                quotes.add("<Rob> Ja ik ben geen aero expert maar...\\n<Danick> Ja maar Rob, welke expert ben jij wel dan?");
+                quotes.add("<Data> *exists*\\n<Stan> This looks good");
+                quotes.add("<Person1> Kees wat ben je aan het doen?\\n<Kees> Kabels fixen\\n<Person1> Maar hoe dan?\\n<Kees> Ja dat weet ik eigenlijk ook niet.");
+                quotes.add("<Max> Wat is scrutineering?");
+                quotes.add("<Raymond> Gisteren was er toch ook een race?\\n<Person2> Nee, toen was kwalificatie\\n<Raymond> Ja maar toen deed iedereen toch ook zn best?");
+                quotes.add("<Marco> Waar staat de BOM?");
+                quotes.add("<Lars> Ik had genoeg dingen die in NX niet pasten, en dan in het echt ook niet, das best logisch");
+                quotes.add("<Stan> Moeten we onze eigen tent meenemen dan?");
+                quotes.add("<Jorick> Ik bereken net een area en het is precies 69.420\\n<Joos> Dan moet het wel goed zijn");
+                quotes.add("<Dion> Raymond, leg deze foto's in chronologische volgorde\\n<Raymond> Wat voor chronologische volgorde? In de tijd?");
+                quotes.add("<Joos> Mijn persoonlijkheid is op dit moment bestuur.");
+                quotes.add("<Stan> Ik neem wel een camping stoeltje mee.");
+                quotes.add("<Marco> We bouwen toch auto's, geen stad!");
+                quotes.add("<Person1> Ik was laatst de abc-formule vergeten\\n<Raymond> Dat is toch a^2+b^2=c^2?");
+                quotes.add("<Danick> We moeten hier ook tosti's... uh softies kunnen zijn!");
+                quotes.add("<Stan> Weet ik veel hoe je navigeert in een tent.");
+                quotes.add("<Jorick> Eigenlijk is het gewoon mooi dat we leven");
+                quotes.add("<Raymond> Mocht je toevallig nog bandenhoezen vinden in de supermarkt, dan mag je die ook meenemen.");
+                quotes.add("<Jacco> Je hebt gewoon salmonella of een goeie dag");
+                quotes.add("<Stan> Ik ben niet zo lui als jullie denken, maar het scheelt niet veel.");
+                quotes.add("<Jorick> Echte mannen rijden op de velg.");
+                quotes.add("<Stan> Hier in Spanje zijn ook een hoop Spanjaarden.");
+                quotes.add("<Luc> Ik heb altijd een hele goedkope carnival.");
+                quotes.add("<Teun> Zullen we proberen op het RES kanaal van het andere team te zitten en dan een AS Emergency triggeren?\\n<Dion> Dat mag niet.");
+                quotes.add("<Nicolas> What happened after the lunch?");
+                quotes.add("<UPC ecoRacing> Our goal was to finish Trackdrive, not win it.");
+                quotes.add("<Danick> Chris wat staat er op je voorhoofd?\\n<Chris> De handtekening van Teun voor de escalatie mix!");
+                quotes.add("<Jorick> Luchtvissen");
+                quotes.add("<Jilez> Kijk daar een Ice!");
+                quotes.add("<Jorick> Je bent pas geboren als je 6 bent.");
+                quotes.add("<Chris' small mesh FEM> *being slow*\\n<Rody> I think you meshed up");
+                quotes.add("<Noah> Zijn Nederlandse boetes wel voor URE?");
+                quotes.add("<Joos> Ik heb ook een leven naast mijn alcoholisme.");
+                quotes.add("<Yannick> URE zorgt er niet voor dat je minder tijd hebt, je dagen worden gewoon langer\\n<Ricardo> En de dag erna korter");
+                quotes.add("<Jacco> Ik krijg van Erik geen appels, wel SLAM updates");
+                quotes.add("<Jacco> Als Kees een driverless auto is druk ik nou op de noodstop");
+                quotes.add("<Bas> Ultra Hard Core Minecraft betekent net zoveel voor mij als de URE13 voor Wijshoff");
+
                 break;
         }
 
@@ -510,7 +551,7 @@ public class Main {
         lootEntry.add(new LootTableEntry(3,"saddle"));
         lootEntry.add(new LootTableEntry(1,"netherite_hoe"));
         lootEntry.add(new LootTableEntry(20,"ladder"));
-        lootEntry.add(new LootTableEntry(3,"spectral_arrow", new LootTableFunction(2,0.3)));
+        lootEntry.add(new LootTableEntry(3,"spectral_arrow", new LootTableFunction(5)));
         lootEntry.add(new LootTableEntry(1,"trident"));
         lootEntry.add(new LootTableEntry(3,"horse_spawn_egg"));
         lootEntry.add(new LootTableEntry(2,"diamond_horse_armor"));
@@ -532,11 +573,11 @@ public class Main {
         lootEntry.add(new LootTableEntry(2,"golden_apple"));
         lootEntry.add(new LootTableEntry(20,"stick",new LootTableFunction(8)));
         lootEntry.add(new LootTableEntry(5,"gold_ingot",new LootTableFunction(3,0.3)));
-        lootEntry.add(new LootTableEntry(15,"arrow",new LootTableFunction(4)));
+        lootEntry.add(new LootTableEntry(15,"arrow",new LootTableFunction(10)));
         lootEntry.add(new LootTableEntry(4,"apple",new LootTableFunction(2,0.3)));
         lootEntry.add(new LootTableEntry(2,"anvil"));
         lootEntry.add(new LootTableEntry(18,"diorite",new LootTableFunction(16)));
-        lootEntry.add(new LootTableEntry(2,"cobweb",new LootTableFunction(2,0.4)));
+        lootEntry.add(new LootTableEntry(5,"cobweb",new LootTableFunction(2,0.4)));
         lootEntry.add(new LootTableEntry(4,"diamond",new LootTableFunction(2,0.3)));
         lootEntry.add(new LootTableEntry(12,"iron_ingot",new LootTableFunction(2,0.5)));
         lootEntry.add(new LootTableEntry(1,"diamond_chestplate"));
@@ -1286,7 +1327,7 @@ public class Main {
         fileCommands.add("execute store result score CurrentTime Time run scoreboard players get @p[scores={Admin=1}] TimeDum");
         fileCommands.add("execute if entity @p[scores={TimDum=" + tickPerSecond + "..}] run scoreboard players reset @p[scores={Admin=1}] TimDum");
         fileCommands.add("execute if entity @p[scores={Time2=" + (300*tickPerSecond) + "}] run tellraw @a [\"\",{\"text\":\"PVP IS NOT ALLOWED UNTIL DAY 2!\",\"color\":\"gray\"}]");
-        fileCommands.add("execute if entity @p[scores={Time2=" + (1200*tickPerSecond) + "}] run tellraw @a [\"\",{\"text\":\" ｜ \",\"color\":\"gray\"},{\"text\":\"" + communityName + " UHC\",\"color\":\"gold\"},{\"text\":\" ｜ \",\"color\":\"gray\"},{\"text\":\"DAY TIME HAS ARRIVED!\",\"color\":\"light_purple\"},{\"text\":\" ｜ \",\"color\":\"gray\"}]");
+        fileCommands.add("execute if entity @p[scores={Time2=" + (1200*tickPerSecond) + "}] run tellraw @a [\"\",{\"text\":\" ｜ \",\"color\":\"gray\"},{\"text\":\"" + communityName + " UHC\",\"color\":\"gold\"},{\"text\":\" ｜ \",\"color\":\"gray\"},{\"text\":\"DAY TIME HAS ARRIVED & ETERNAL DAY ENABLED!\",\"color\":\"light_purple\"},{\"text\":\" ｜ \",\"color\":\"gray\"}]");
         fileCommands.add(callFunction("display_quotes"));
 
         return new FileData("timer", fileCommands);
