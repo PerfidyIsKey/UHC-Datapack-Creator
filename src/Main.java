@@ -259,7 +259,7 @@ public class Main {
         switch (gameMode) {
             case 1:
                 startCoordinates = "4 64 5";
-                minTraitorRank = 40;
+                minTraitorRank = 35;
                 communityName = "THE DIORITE EXPERTS";
 
                 // Control point
@@ -280,38 +280,38 @@ public class Main {
                 carePackages.add(carePackage2);
 
                 // Players
-                players.add(new Player("Snodog627",94,true));
-                players.add(new Player("Mr9Madness",88));
-                players.add(new Player("PR0BA",1));
-                players.add(new Player("Tiba101",5));
-                players.add(new Player("W0omy",20));
-                players.add(new Player("MissTutuPrincess",17));
-                players.add(new Player("Kalazniq",43));
-                players.add(new Player("Vladik71",38));
-                players.add(new Player("Smashking242",16));
-                players.add(new Player("Pfalz_",18));
-                players.add(new Player("ThurianBohan",44));
-                players.add(new Player("PerfidyIsKey",69,true));
-                players.add(new Player("deuce__",20));
-                players.add(new Player("jonmo0105",64));
-                players.add(new Player("TheDinoGame",216));
-                players.add(new Player("BAAPABUGGETS",11));
-                players.add(new Player("Kakarot057",45));
-                players.add(new Player("viccietors",41));
+                players.add(new Player("Snodog627",109));
+                players.add(new Player("Mr9Madness",82));
+                players.add(new Player("Tiba101",4));
+                players.add(new Player("W0omy",19));
+                players.add(new Player("MissTutuPrincess",14));
+                players.add(new Player("Kalazniq",39));
+                players.add(new Player("Vladik71",37));
+                players.add(new Player("Smashking242",15));
+                players.add(new Player("Pfalz_",17));
+                players.add(new Player("ThurianBohan",39));
+                players.add(new Player("PerfidyIsKey",80));
+                players.add(new Player("deuce__",17));
+                players.add(new Player("jonmo0105",62));
+                players.add(new Player("TheDinoGame",207));
+                players.add(new Player("BAAPABUGGETS",10));
+                players.add(new Player("Kakarot057",43));
+                players.add(new Player("viccietors",40));
                 players.add(new Player("Rayqson",16));
-                players.add(new Player("Xx__HexGamer__xX",72));
-                players.add(new Player("Bobdafish",120));
+                players.add(new Player("Xx__HexGamer__xX",66));
+                players.add(new Player("Bobdafish",105));
                 players.add(new Player("Alanaenae",0));
-                players.add(new Player("jk20028",22));
+                players.add(new Player("jk20028",21));
                 players.add(new Player("N_G0n",6));
-                players.add(new Player("SpookySpiker",64));
-                players.add(new Player("Clockweiz",11));
-                players.add(new Player("Eason950116",13));
-                players.add(new Player("CorruptUncle",38));
-                players.add(new Player("Pimmie36",13));
+                players.add(new Player("SpookySpiker",62));
+                players.add(new Player("Clockweiz",10));
+                players.add(new Player("Eason950116",15));
+                players.add(new Player("CorruptUncle",55));
+                players.add(new Player("Pimmie36",60));
                 players.add(new Player("Jayroon123",0));
-                players.add(new Player("PbQuinn",3));
-                players.add(new Player("Jobbo2002",88));
+                players.add(new Player("PbQuinn",7));
+                players.add(new Player("Vermeil_Chan",0));
+                players.add(new Player("Jobbo2002",7));
 
                 quotes.add("<Mr9Madness> Fucking eat people");
                 quotes.add("<Kalazniq> It was fun hearing Bas die");
