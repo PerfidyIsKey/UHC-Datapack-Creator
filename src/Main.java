@@ -12,7 +12,7 @@ public class Main {
     }
 
     //DatapackData<
-    private static int gameMode = 1;
+    private static int gameMode = 2;
     /*
     * 1: The Diorite Experts
     * 2: University Racing Eindhoven
@@ -526,7 +526,9 @@ public class Main {
         scoreboardObjectives.add(new ScoreboardObjective("Highscore2", "dummy"));
         scoreboardObjectives.add(new ScoreboardObjective("Hearts", "health",true));
         scoreboardObjectives.add(new ScoreboardObjective("Apples", "minecraft.used:minecraft.golden_apple", "\"Golden Apple\"",true));
-        scoreboardObjectives.add(new ScoreboardObjective("Mining", "minecraft.mined:minecraft.stone", "\"I like mining-leaderboard\"",true));
+        scoreboardObjectives.add(new ScoreboardObjective("Stone","minecraft.mined:minecraft.stone"));
+        scoreboardObjectives.add(new ScoreboardObjective("Deepslate","minecraft.mined:minecraft.deepslate"));
+        scoreboardObjectives.add(new ScoreboardObjective("Mining", "dummy", "\"I like mining-leaderboard\"",true));
         scoreboardObjectives.add(new ScoreboardObjective("Deaths", "deathCount"));
         scoreboardObjectives.add(new ScoreboardObjective("Kills", "playerKillCount",true));
         scoreboardObjectives.add(new ScoreboardObjective("Crystal", "dummy"));
@@ -579,7 +581,7 @@ public class Main {
         lootEntry.add(new LootTableEntry(18,"diorite",new LootTableFunction(16)));
         lootEntry.add(new LootTableEntry(5,"cobweb",new LootTableFunction(2,0.4)));
         lootEntry.add(new LootTableEntry(4,"diamond",new LootTableFunction(2,0.3)));
-        lootEntry.add(new LootTableEntry(12,"iron_ingot",new LootTableFunction(2,0.5)));
+        lootEntry.add(new LootTableEntry(12,"iron_ingot",new LootTableFunction(5)));
         lootEntry.add(new LootTableEntry(1,"diamond_chestplate"));
         lootEntry.add(new LootTableEntry(1,"diamond_leggings"));
         lootEntry.add(new LootTableEntry(1,"netherite_scrap",new LootTableFunction(4,0.001)));
@@ -767,6 +769,7 @@ public class Main {
         files.add(CreateControlpointRedstone());
         files.add(ControlPointPerks());
         files.add(DisplayQuotes());
+        files.add(UpdateMineCount());
     }
 
     private FileData Initialize() {
@@ -1316,6 +1319,8 @@ public class Main {
         }
         fileCommands.add("execute if entity @p[scores={SideDum=" + (5*tickPerSecond*i+1) +"}] run scoreboard players reset @p[scores={Admin=1}] SideDum");
 
+        fileCommands.add(callFunction("update_mine_count"));
+
         return new FileData("update_sidebar",fileCommands);
     }
 
@@ -1370,14 +1375,37 @@ public class Main {
                 }
 
                 // Award perks
-                fileCommands.add("execute if entity @p[scores={CP" + (i+1) + team.getName() + "=" + perks.get(0) + ".." + (perks.get(0) + 20) + "}] run effect give @a[team=" + team.getName() + ",tag=!ReceivedPerk1] minecraft:speed 999999 0 false");
-                fileCommands.add("execute if entity @p[scores={CP" + (i+1) + team.getName() + "=" + perks.get(0) + ".." + (perks.get(0) + 20) + "}] run tag @a[team=" + team.getName() + "] add ReceivedPerk1");
-                fileCommands.add("execute if entity @p[scores={CP" + (i+1) + team.getName() + "=" + perks.get(1) + ".." + (perks.get(1) + 20) + "}] run effect give @a[team=" + team.getName() + ",tag=!ReceivedPerk2] minecraft:resistance " + (10*secPerMinute) + " 0 false");
-                fileCommands.add("execute if entity @p[scores={CP" + (i+1) + team.getName() + "=" + perks.get(1) + ".." + (perks.get(1) + 20) + "}] run tag @a[team=" + team.getName() + "] add ReceivedPerk2");
-                fileCommands.add("execute if entity @p[scores={CP" + (i+1) + team.getName() + "=" + perks.get(2) + ".." + (perks.get(2) + 20) + "}] run effect give @a[team=" + team.getName() + ",tag=!ReceivedPerk3] minecraft:haste 999999 2 false");
-                fileCommands.add("execute if entity @p[scores={CP" + (i+1) + team.getName() + "=" + perks.get(2) + ".." + (perks.get(2) + 20) + "}] run tag @a[team=" + team.getName() + "] add ReceivedPerk3");
-                fileCommands.add("execute if entity @p[scores={CP" + (i+1) + team.getName() + "=" + perks.get(3) + ".." + (perks.get(3) + 20) + "}] run give @a[team=" + team.getName() + ",tag=!ReceivedPerk4] minecraft:golden_apple");
-                fileCommands.add("execute if entity @p[scores={CP" + (i+1) + team.getName() + "=" + perks.get(3) + ".." + (perks.get(3) + 20) + "}] run tag @a[team=" + team.getName() + "] add ReceivedPerk4");
+                fileCommands.add("execute if entity @p[scores={CP" + (i+1) + team.getName() + "=" + perks.get(0) + ".." + (perks.get(0) + 20) + "}] " +
+                        "run effect give @a[team=" + team.getName() + ",tag=!ReceivedPerk1] minecraft:speed 999999 0 false");
+                fileCommands.add("execute if entity @p[scores={CP" + (i+1) + team.getName() + "=" + perks.get(0) + ".." + (perks.get(0) + 20) + "}] " +
+                        "run execute if entity @p[team=" + team.getName() + ",tag=!ReceivedPerk1] " +
+                        "run playsound minecraft:ambient.basalt_deltas.mood master @a ~ ~50 ~ 100 1 0");
+                fileCommands.add("execute if entity @p[scores={CP" + (i+1) + team.getName() + "=" + perks.get(0) + ".." + (perks.get(0) + 20) + "}] " +
+                        "run tag @a[team=" + team.getName() + "] add ReceivedPerk1");
+
+                fileCommands.add("execute if entity @p[scores={CP" + (i+1) + team.getName() + "=" + perks.get(1) + ".." + (perks.get(1) + 20) + "}] " +
+                        "run effect give @a[team=" + team.getName() + ",tag=!ReceivedPerk2] minecraft:resistance " + (10*secPerMinute) + " 0 false");
+                fileCommands.add("execute if entity @p[scores={CP" + (i+1) + team.getName() + "=" + perks.get(1) + ".." + (perks.get(1) + 20) + "}] " +
+                        "run execute if entity @p[team=" + team.getName() + ",tag=!ReceivedPerk2] " +
+                        "run playsound minecraft:ambient.crimson_forest.mood master @a ~ ~50 ~ 100 1 0");
+                fileCommands.add("execute if entity @p[scores={CP" + (i+1) + team.getName() + "=" + perks.get(1) + ".." + (perks.get(1) + 20) + "}] " +
+                        "run tag @a[team=" + team.getName() + "] add ReceivedPerk2");
+
+                fileCommands.add("execute if entity @p[scores={CP" + (i+1) + team.getName() + "=" + perks.get(2) + ".." + (perks.get(2) + 20) + "}] " +
+                        "run effect give @a[team=" + team.getName() + ",tag=!ReceivedPerk3] minecraft:haste 999999 2 false");
+                fileCommands.add("execute if entity @p[scores={CP" + (i+1) + team.getName() + "=" + perks.get(2) + ".." + (perks.get(2) + 20) + "}] " +
+                        "run execute if entity @p[team=" + team.getName() + ",tag=!ReceivedPerk3] " +
+                        "run playsound minecraft:ambient.warped_forest.mood master @a ~ ~50 ~ 100 1 0");
+                fileCommands.add("execute if entity @p[scores={CP" + (i+1) + team.getName() + "=" + perks.get(2) + ".." + (perks.get(2) + 20) + "}] " +
+                        "run tag @a[team=" + team.getName() + "] add ReceivedPerk3");
+
+                fileCommands.add("execute if entity @p[scores={CP" + (i+1) + team.getName() + "=" + perks.get(3) + ".." + (perks.get(3) + 20) + "}] " +
+                        "run give @a[team=" + team.getName() + ",tag=!ReceivedPerk4] minecraft:golden_apple");
+                fileCommands.add("execute if entity @p[scores={CP" + (i+1) + team.getName() + "=" + perks.get(3) + ".." + (perks.get(3) + 20) + "}] " +
+                        "run execute if entity @p[team=" + team.getName() + ",tag=!ReceivedPerk4] " +
+                        "run playsound minecraft:entity.wither.spawn master @a ~ ~50 ~ 100 1 0");
+                fileCommands.add("execute if entity @p[scores={CP" + (i+1) + team.getName() + "=" + perks.get(3) + ".." + (perks.get(3) + 20) + "}] " +
+                        "run tag @a[team=" + team.getName() + "] add ReceivedPerk4");
             }
         }
 
@@ -1396,6 +1424,15 @@ public class Main {
         }
 
         return new FileData("display_quotes", fileCommands);
+    }
+
+    // Update amount stripmined
+    private FileData UpdateMineCount() {
+        ArrayList<String> fileCommands = new ArrayList<>();
+
+        fileCommands.add("execute store result score @a Mining run scoreboard players operation @a Stone += @a Deepslate");
+
+        return new FileData("update_mine_count", fileCommands);
     }
 
 }
