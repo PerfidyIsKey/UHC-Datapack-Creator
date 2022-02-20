@@ -409,7 +409,7 @@ public class Main {
 
                 break;
             case 2:
-                startCoordinates = "-4 85 -4";
+                startCoordinates = "0 85 0";
                 minTraitorRank = 20;
                 communityName = "UNIVERSITY RACING EINDHOVEN";
 
@@ -527,6 +527,9 @@ public class Main {
         scoreboardObjectives.add(new ScoreboardObjective("Hearts", "health",true));
         scoreboardObjectives.add(new ScoreboardObjective("Apples", "minecraft.used:minecraft.golden_apple", "\"Golden Apple\"",true));
         scoreboardObjectives.add(new ScoreboardObjective("Stone","minecraft.mined:minecraft.stone"));
+        scoreboardObjectives.add(new ScoreboardObjective("Diorite","minecraft.mined:minecraft.diorite"));
+        scoreboardObjectives.add(new ScoreboardObjective("Andesite","minecraft.mined:minecraft.andesite"));
+        scoreboardObjectives.add(new ScoreboardObjective("Granite","minecraft.mined:minecraft.granite"));
         scoreboardObjectives.add(new ScoreboardObjective("Deepslate","minecraft.mined:minecraft.deepslate"));
         scoreboardObjectives.add(new ScoreboardObjective("Mining", "dummy", "\"I like mining-leaderboard\"",true));
         scoreboardObjectives.add(new ScoreboardObjective("Deaths", "deathCount"));
@@ -1428,7 +1431,18 @@ public class Main {
     private FileData UpdateMineCount() {
         ArrayList<String> fileCommands = new ArrayList<>();
 
-        fileCommands.add("execute store result score @a Mining run scoreboard players operation @a Stone += @a Deepslate");
+        ArrayList<String> blocks = new ArrayList<>();
+        blocks.add("Stone");
+        blocks.add("Deepslate");
+        blocks.add("Diorite");
+        blocks.add("Andesite");
+        blocks.add("Granite");
+
+        fileCommands.add("scoreboard players set @a[scores={Mining=1..}] Mining 0");
+        for (String block: blocks)
+        {
+            fileCommands.add("execute store result score @a Mining run scoreboard players operation @a Mining += @a " + block);
+        }
 
         return new FileData("update_mine_count", fileCommands);
     }
