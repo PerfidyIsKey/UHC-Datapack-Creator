@@ -37,7 +37,7 @@ public class Main {
 
     //GameData<
     private static int chestSize = 27;
-    private String commandCenter = "s44";
+    private String commandCenter = "s45";
     private String admin;
     private String startCoordinates;
     private ArrayList<Team> teams = new ArrayList<>();
@@ -281,7 +281,7 @@ public class Main {
 
                 // Players
                 players.add(new Player("Snodog627",109));
-                players.add(new Player("Mr9Madness",82));
+                players.add(new Player("Mr9Madness",87));
                 players.add(new Player("Tiba101",4));
                 players.add(new Player("W0omy",19));
                 players.add(new Player("MissTutuPrincess",14));
@@ -293,12 +293,12 @@ public class Main {
                 players.add(new Player("PerfidyIsKey",80));
                 players.add(new Player("deuce__",17));
                 players.add(new Player("jonmo0105",62));
-                players.add(new Player("TheDinoGame",207));
+                players.add(new Player("TheDinoGame",207,true));
                 players.add(new Player("BAAPABUGGETS",10));
                 players.add(new Player("Kakarot057",43));
                 players.add(new Player("viccietors",40));
                 players.add(new Player("Rayqson",16));
-                players.add(new Player("Xx__HexGamer__xX",66));
+                players.add(new Player("Xx__HexGamer__xX",59));
                 players.add(new Player("Bobdafish",105));
                 players.add(new Player("Alanaenae",0));
                 players.add(new Player("jk20028",21));
@@ -306,7 +306,7 @@ public class Main {
                 players.add(new Player("SpookySpiker",62));
                 players.add(new Player("Clockweiz",10));
                 players.add(new Player("Eason950116",15));
-                players.add(new Player("CorruptUncle",55));
+                players.add(new Player("CorruptUncle",55,true));
                 players.add(new Player("Pimmie36",60));
                 players.add(new Player("Jayroon123",0));
                 players.add(new Player("PbQuinn",7));
@@ -810,11 +810,9 @@ public class Main {
         }
         //end teams
         //structure
-        fileCommands.add("fill -1 " + (worldBottom + 5) + " -1 1 150 1 minecraft:barrier");
-        fileCommands.add("fill 0 " + (worldBottom + 5) +" 0 0 150 0 minecraft:air");
         fileCommands.add("fill -6 150 -6 6 156 6 minecraft:barrier");
         fileCommands.add("fill -5 151 -5 5 156 5 minecraft:air");
-        fileCommands.add("setblock 0 150 0 minecraft:air");
+        fileCommands.add("setblock 0 152 -5 minecraft:oak_wall_sign[facing=south,waterlogged=false]{Color:\"black\",GlowingText:0b,Text1:'{\"clickEvent\":{\"action\":\"run_command\",\"value\":\"tp @s 5 " + (worldBottom + 5) + " 5\"},\"text\":\"\"}',Text2:'{\"text\":\"Teleport to\"}',Text3:'{\"text\":\"Command Center\"}',Text4:'{\"text\":\"\"}'}");
         fileCommands.add("setblock -2 " + worldBottom + " -2 minecraft:structure_block[mode=load]{metadata:\"\",mirror:\"NONE\",ignoreEnti" +
                 "ties:0b,powered:0b,seed:0L,author:\"?\",rotation:\"NONE\",posX:1,mode:\"LOAD\",posY:1,sizeX:18,posZ:1," +
                 "integrity:1.0f,showair:0b,name:\"minecraft:commandcenter_" + commandCenter + "\",sizeY:31,sizeZ:18,showboundingbox:1b}");

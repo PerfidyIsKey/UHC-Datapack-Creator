@@ -70,7 +70,7 @@ for i = 1:NN
             end
             
             if ~isnan(Players(j).Rank)
-                text{i} = {['**' num2str(Players(j).RankPosition(end)) ' (' RankChange ') ' Players(j).PlayerName '**' BestRankPosition]
+                text{i} = {['**' num2str(Players(j).RankPosition(end)) ' (' RankChange ') ' strrep(Players(j).PlayerName,'_','\_') '**' BestRankPosition]
                     ['Rank: ' num2str(uint8(Players(j).Rank),'%u') ' (' num2str(int8(Players(j).Rank - Players(j).RankHistory(end-1)),'%+d') ') ' BestRank]
                     ['Number of games: ' num2str(sum(Players(j).Participation))]
                     ['Total number of wins: ' num2str(sum(Players(j).Winner))]

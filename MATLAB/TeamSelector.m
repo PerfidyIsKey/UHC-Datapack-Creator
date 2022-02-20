@@ -20,11 +20,11 @@ load('DataS44.mat')
 
 % Enter the players that are participating (corresponding numbers with
 % PlayerName variable in Players struct)
-ParticipantIndex = [1,2,17,24,25,28,33,34,40,41,42,44,45,46];
+ParticipantIndex = [1,2,17,24,25,28,33,34,40,41,42,43,44,45,46];
 
 % Enter the names of new players
-NewPlayers = {};
-EstimatedRank = [];
+NewPlayers = {'JustMaxyy'};
+EstimatedRank = [60];
 
 NoN = size(NewPlayers,2);
 NoP = size(Players,2) + NoN;

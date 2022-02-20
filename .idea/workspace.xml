@@ -3,6 +3,9 @@
   <component name="ChangeListManager">
     <list default="true" id="29ea8b6e-275d-4362-ac9d-03b61e76e2c7" name="Default" comment="Loot table and function write fixes">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MATLAB/Data/DataS43.mat" beforeDir="false" afterPath="$PROJECT_DIR$/MATLAB/Data/DataS43.mat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MATLAB/Functions/RedditText.m" beforeDir="false" afterPath="$PROJECT_DIR$/MATLAB/Functions/RedditText.m" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MATLAB/TeamSelector.m" beforeDir="false" afterPath="$PROJECT_DIR$/MATLAB/TeamSelector.m" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/UHC-Datapack-Creator/Main.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/UHC-Datapack-Creator/Main.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
     </list>
