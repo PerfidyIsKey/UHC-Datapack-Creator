@@ -1,4 +1,5 @@
 import java.io.*;
+import java.lang.reflect.Array;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -12,13 +13,13 @@ public class Main {
     }
 
     //DatapackData<
-    private static int gameMode = 2;
+    private static int gameMode = 1;
     /*
     * 1: The Diorite Experts
     * 2: University Racing Eindhoven
      */
 
-    private static int adminMode = 2;
+    private static int adminMode = 1;
     /*
     * 1: Wouter
     * 2: Bas
@@ -313,99 +314,8 @@ public class Main {
                 players.add(new Player("Vermeil_Chan",0));
                 players.add(new Player("Jobbo2002",7));
 
-                quotes.add("<Mr9Madness> Fucking eat people");
-                quotes.add("<Kalazniq> It was fun hearing Bas die");
-                quotes.add("<Mr9Madness> Get fat and turn into more people");
-                quotes.add("<Snodog627> I like balls");
-                quotes.add("<Mr9Madness> Thank god I got murdered");
-                quotes.add("<Kalazniq> I'm not inting in ranked, I'm just playing both sides");
-                quotes.add("<PerfidyIsKey> You don't wanna be a big purple man!");
-                quotes.add("<PerfidyIsKey> It was too vanilla");
-                quotes.add("<Bobdafish> I'm gonna take you from behind!\\n<Mr9Madness> Why didn't you?");
-                quotes.add("<Mr9Madness> I never expected to be shown these kinds of kinks");
-                quotes.add("<Mr9Madness> I love getting fucked");
-                quotes.add("<Kalazniq> Let's try out this flower");
-                quotes.add("<Mr9Madness> Punching is the best way to make the villagers do what they need to do");
-                quotes.add("<Kalazniq> I will commit genocide on you if you blow up");
-                quotes.add("<PerfidyIsKey> Where are the ass cheeks?");
-                quotes.add("<Snodog627> I don't think, that's why!");
-                quotes.add("<Snodog627> Slavery also makes me happy");
-                quotes.add("<PerfidyIsKey> I just wanted to kill someone");
-                quotes.add("<PerfidyIsKey> Nothing wrong with hitting people");
-                quotes.add("<Mr9Madness> I'm glad you hit my head and not the ground");
-                quotes.add("<PerfidyIsKey> Meneer, does your butt hurt yet?");
-                quotes.add("<PerfidyIsKey> Oh, I'm fighting a dead guy");
-                quotes.add("<Snodog627> I'm gonna take myself from behind");
-                quotes.add("<Kalazniq> It's been a while since I've beaten Meneer");
-                quotes.add("<Mr9Madness> The dick's coming out");
-                quotes.add("<Mr9Madness> Don't forget to breathe");
-                quotes.add("<Kalazniq> Join me in bed");
-                quotes.add("<Snodog627> My fuck was justified");
-                quotes.add("<PerfidyIsKey> Alright, I can walk on water now, I forgot");
-                quotes.add("<Kalazniq> Why would I not want to fart");
-                quotes.add("<PerfidyIsKey> I'm amazed I can kill myself with this");
-                quotes.add("<Kalazniq> Put it in");
-                quotes.add("<Mr9Madness> I don't read. Fuck reading");
-                quotes.add("<Kalazniq> I have tentacles and I'm not afraid to use them");
-                quotes.add("<Kalazniq> I am happy I have farts");
-                quotes.add("<PerfidyIsKey> Thank god for the big dick");
-                quotes.add("<Snodog627> I want some dick");
-                quotes.add("<Snodog627> Meneer dat is veel beweging. Ik vind het goed");
-                quotes.add("<Kalazniq> Why didn't you cum");
-                quotes.add("<Snodog627> You need to upgrade your dick\\n<jonmo0105> Working on it");
-                quotes.add("<Snodog627> Killing a pathetic guy is really fun");
-                quotes.add("<Kalazniq> I'm gonna just watch one anime episode");
-                quotes.add("<Mr9Madness> The death increase isn't that bad");
-                quotes.add("<Kalazniq> I don't even need a hook er");
-                quotes.add("<Kalazniq> I'm not mean, I'm just xenophobic");
-                quotes.add("<Snodog627> This feels much better without a shirt");
-                quotes.add("<Snodog627> A lot of tiny dicks are still bigger than one big dick");
-                quotes.add("<PerfidyIsKey> Oh wait, it's still gonna be way too big, right?");
-                quotes.add("<Snodog627> Meneer, that is literally selling your body\\n<Mr9Madness> Yes, and it's perfect!");
-                quotes.add("<jk20028> Who the hell is inside of me");
-                quotes.add("<Mr9Madness> My suck is too hard");
-                quotes.add("<Mr9Madness> I love the sound of people dying");
-                quotes.add("<Kalazniq> Oh my god he's so fat");
-                quotes.add("<Mr9Madness> I wanna slurp some eyeballs");
-                quotes.add("<Mr9Madness> It's out here fucking");
-                quotes.add("<Kalazniq> I've been poisoned");
-                quotes.add("<Kalazniq> Please stop making me wet");
-                quotes.add("<Kalazniq> I was naked and on fire");
-                quotes.add("<PerfidyIsKey> It's your turn, go kill yourself");
-                quotes.add("<PerfidyIsKey> I have a hoe\\n<Mr9Madness> I am the hoe");
-                quotes.add("<PerfidyIsKey> I am heavy because of the fucking");
-                quotes.add("<jonmo0105> He got away with murder");
-                quotes.add("<PerfidyIsKey> Why am I on fire? I'm just laying in bed");
-                quotes.add("<Mr9Madness> Crush that crystal in my...");
-                quotes.add("<Mr9Madness> If you stand in the fire, you won't get hurt");
-                quotes.add("<PerfidyIsKey> Don't poop in your nose buddy");
-                quotes.add("<Kalazniq> Sorry I just wanted to talk, not steal");
-                quotes.add("<Mr9Madness> Oh hey, I'm naked");
-                quotes.add("<Kalazniq> I've got so little actual intelligence");
-                quotes.add("<Mr9Madness> I want to unsexually fuck them");
-                quotes.add("<Snodog627> What is that thing doing?");
-                quotes.add("<Snodog627> I don't want demon Rin to suck me out");
-                quotes.add("<jonmo0105> How do I get these intestines");
-                quotes.add("<jonmo0105> I'm still a bush, fuck");
-                quotes.add("<jonmo0105> I would give him drugs, but it's against his religion");
-                quotes.add("<PerfidyIsKey> People are people");
-                quotes.add("<PerfidyIsKey> Am I bleeding?");
-                quotes.add("<Kalazniq> I need your wood");
-                quotes.add("<PerfidyIsKey> Interesting, I can kill myself with this knife");
-                quotes.add("<Kalazniq> Why are all of you in favour of nukes?\\n<Mr9Madness> Because it's fun!");
-                quotes.add("<PerfidyIsKey> Why was there a body in the way");
-                quotes.add("<PerfidyIsKey> I'm riding my massive cock");
-                quotes.add("<PerfidyIsKey> Why wouldn't I scam the children?");
-                quotes.add("<PerfidyIsKey> You gotta be high on shrooms");
-                quotes.add("<Mr9Madness> Is it still not in?");
-                quotes.add("<Snodog627> Please stop dying, you make an awful sound when you die");
-                quotes.add("<PerfidyIsKey> This does not look vanilla");
-                quotes.add("<Mr9Madness> I just ate a big cock");
-                quotes.add("<Kalazniq> I can bone myself");
-                quotes.add("<Kalazniq> I was murdering people");
-                quotes.add("<Mr9Madness> I'm a wiener");
-                quotes.add("<Kalazniq> This doesn't let me be racist");
-                quotes.add("<Snodog627> We are large\\n<Mr9Madness> We are large\\n<PerfidyIsKey> We are large\\n<Kalazniq> We are large\\n<Eason950116> We are large");
+                quotes = GetLinesFromFile("Files\\Diorite\\quotes.txt");
+
 
                 break;
             case 2:
@@ -459,47 +369,7 @@ public class Main {
                 players.add(new Player("Jobbo2002",88));
 
                 // Quotes
-                quotes.add("<Erik> Ik ben nooit brak, ik ben alleen soms boerensmoe.");
-                quotes.add("<Jacco> Zie je deze bril? Ik ben gemaakt voor perceptie.");
-                quotes.add("<Raymond> Ik versta je niet, ik bel Dion wel.");
-                quotes.add("<Kees> Behangen is een soort lamineren, maar dan op muren");
-                quotes.add("<Rob> Ja ik ben geen aero expert maar...\\n<Danick> Ja maar Rob, welke expert ben jij wel dan?");
-                quotes.add("<Data> *exists*\\n<Stan> This looks good");
-                quotes.add("<Person1> Kees wat ben je aan het doen?\\n<Kees> Kabels fixen\\n<Person1> Maar hoe dan?\\n<Kees> Ja dat weet ik eigenlijk ook niet.");
-                quotes.add("<Max> Wat is scrutineering?");
-                quotes.add("<Raymond> Gisteren was er toch ook een race?\\n<Person2> Nee, toen was kwalificatie\\n<Raymond> Ja maar toen deed iedereen toch ook zn best?");
-                quotes.add("<Marco> Waar staat de BOM?");
-                quotes.add("<Lars> Ik had genoeg dingen die in NX niet pasten, en dan in het echt ook niet, das best logisch");
-                quotes.add("<Stan> Moeten we onze eigen tent meenemen dan?");
-                quotes.add("<Jorick> Ik bereken net een area en het is precies 69.420\\n<Joos> Dan moet het wel goed zijn");
-                quotes.add("<Dion> Raymond, leg deze foto's in chronologische volgorde\\n<Raymond> Wat voor chronologische volgorde? In de tijd?");
-                quotes.add("<Joos> Mijn persoonlijkheid is op dit moment bestuur.");
-                quotes.add("<Stan> Ik neem wel een camping stoeltje mee.");
-                quotes.add("<Marco> We bouwen toch auto's, geen stad!");
-                quotes.add("<Person1> Ik was laatst de abc-formule vergeten\\n<Raymond> Dat is toch a^2+b^2=c^2?");
-                quotes.add("<Danick> We moeten hier ook tosti's... uh softies kunnen zijn!");
-                quotes.add("<Stan> Weet ik veel hoe je navigeert in een tent.");
-                quotes.add("<Jorick> Eigenlijk is het gewoon mooi dat we leven");
-                quotes.add("<Raymond> Mocht je toevallig nog bandenhoezen vinden in de supermarkt, dan mag je die ook meenemen.");
-                quotes.add("<Jacco> Je hebt gewoon salmonella of een goeie dag");
-                quotes.add("<Stan> Ik ben niet zo lui als jullie denken, maar het scheelt niet veel.");
-                quotes.add("<Jorick> Echte mannen rijden op de velg.");
-                quotes.add("<Stan> Hier in Spanje zijn ook een hoop Spanjaarden.");
-                quotes.add("<Luc> Ik heb altijd een hele goedkope carnival.");
-                quotes.add("<Teun> Zullen we proberen op het RES kanaal van het andere team te zitten en dan een AS Emergency triggeren?\\n<Dion> Dat mag niet.");
-                quotes.add("<Nicolas> What happened after the lunch?");
-                quotes.add("<UPC ecoRacing> Our goal was to finish Trackdrive, not win it.");
-                quotes.add("<Danick> Chris wat staat er op je voorhoofd?\\n<Chris> De handtekening van Teun voor de escalatie mix!");
-                quotes.add("<Jorick> Luchtvissen");
-                quotes.add("<Jilez> Kijk daar een Ice!");
-                quotes.add("<Jorick> Je bent pas geboren als je 6 bent.");
-                quotes.add("<Chris' small mesh FEM> *being slow*\\n<Rody> I think you meshed up");
-                quotes.add("<Noah> Zijn Nederlandse boetes wel voor URE?");
-                quotes.add("<Joos> Ik heb ook een leven naast mijn alcoholisme.");
-                quotes.add("<Yannick> URE zorgt er niet voor dat je minder tijd hebt, je dagen worden gewoon langer\\n<Ricardo> En de dag erna korter");
-                quotes.add("<Jacco> Ik krijg van Erik geen appels, wel SLAM updates");
-                quotes.add("<Jacco> Als Kees een driverless auto is druk ik nou op de noodstop");
-                quotes.add("<Bas> Ultra Hard Core Minecraft betekent net zoveel voor mij als de URE13 voor Wijshoff");
+                quotes = GetLinesFromFile("Files\\URE\\quotes.txt");
 
                 break;
         }
@@ -546,6 +416,23 @@ public class Main {
         effect.add(new StatusEffect("fire_resistance",20,1));
         effect.add(new StatusEffect("nausea",10,1));
         effect.add(new StatusEffect("speed",20,1));
+    }
+
+    private ArrayList<String> GetLinesFromFile(String pathname) {
+        ArrayList<String> fileLines = new ArrayList<>();
+        try {
+            File myObj = new File(pathname);
+            Scanner myReader = new Scanner(myObj);
+            while (myReader.hasNextLine()) {
+                String data = myReader.nextLine();
+                fileLines.add(data);
+            }
+            myReader.close();
+        } catch (FileNotFoundException e) {
+            System.out.println("An error occurred.");
+            e.printStackTrace();
+        }
+        return fileLines;
     }
 
     private void makeLootTableFiles() {
@@ -1367,7 +1254,6 @@ public class Main {
 
         for (int i = 0; i < controlPoints.size(); i++)
         {
-            ControlPoint cp = controlPoints.get(i);
             for (Team team: teams)
             {
                 // Display team receiving perk
