@@ -225,11 +225,10 @@ public class Main {
 
                 quotes = fileTools.GetLinesFromFile("Files\\Diorite\\quotes.txt");
 
-
                 break;
             case 2:
                 startCoordinates = "0 85 0";
-                minTraitorRank = 20;
+                minTraitorRank = 15;
                 communityName = "UNIVERSITY RACING EINDHOVEN";
 
                 // Control point
@@ -251,31 +250,32 @@ public class Main {
 
                 // Players
                 players.add(new Player("Bertje13",0));
-                players.add(new Player("Lefke67",8));
-                players.add(new Player("SpookySpiker",16));
-                players.add(new Player("joep359",32));
-                players.add(new Player("Snodog627",156,true));
-                players.add(new Player("Mafkees__10",91));
-                players.add(new Player("woutje33",78));
-                players.add(new Player("CorruptUncle",52));
+                players.add(new Player("Lefke67",7));
+                players.add(new Player("SpookySpiker",15));
+                players.add(new Player("joep359",47));
+                players.add(new Player("Snodog627",130));
+                players.add(new Player("Mafkees__10",85));
+                players.add(new Player("woutje33",72));
+                players.add(new Player("CorruptUncle",49));
                 players.add(new Player("Luuk",2));
-                players.add(new Player("sepertibos",6));
-                players.add(new Player("Clik_clak",10));
-                players.add(new Player("HumblesBumblesV2",12));
-                players.add(new Player("RoyalGub",23));
-                players.add(new Player("Chrissah58",16));
-                players.add(new Player("TNTbuilder21",31));
-                players.add(new Player("Pimmie36",96));
-                players.add(new Player("lenschoenie98",52));
-                players.add(new Player("PbQuinn",0));
+                players.add(new Player("sepertibos",5));
+                players.add(new Player("Clik_clak",9));
+                players.add(new Player("HumblesBumblesV2",11));
+                players.add(new Player("RoyalGub",21));
+                players.add(new Player("Chrissah58",14));
+                players.add(new Player("TNTbuilder21",43));
+                players.add(new Player("Pimmie36",74));
+                players.add(new Player("lenschoenie98",50));
+                players.add(new Player("PbQuinn",25));
                 players.add(new Player("Luc_B21",2));
-                players.add(new Player("Captain_Kills",5));
+                players.add(new Player("Captain_Kills",4));
                 players.add(new Player("PeterBeTripin",7));
-                players.add(new Player("Jayroon123",16,true));
-                players.add(new Player("JD329",12));
-                players.add(new Player("maxim_rongen",17));
-                players.add(new Player("ThurianBohan",19));
-                players.add(new Player("Jobbo2002",88));
+                players.add(new Player("Jayroon123",15));
+                players.add(new Player("JD329",16));
+                players.add(new Player("maxim_rongen",27));
+                players.add(new Player("URE16Noah",14));
+                players.add(new Player("Jobbo2002",137));
+                players.add(new Player("PvPg0d_Joosie",57));
 
                 // Quotes
                 quotes = fileTools.GetLinesFromFile("Files\\URE\\quotes.txt");
@@ -331,10 +331,10 @@ public class Main {
         ArrayList<LootTableEntry> lootEntry = new ArrayList<>();
 
         // Loot table items
-        lootEntry.add(new LootTableEntry(20,"egg"));
+        lootEntry.add(new LootTableEntry(19,"egg"));
         lootEntry.add(new LootTableEntry(3,"saddle"));
         lootEntry.add(new LootTableEntry(1,"netherite_hoe"));
-        lootEntry.add(new LootTableEntry(20,"ladder"));
+        lootEntry.add(new LootTableEntry(19,"ladder"));
         lootEntry.add(new LootTableEntry(3,"spectral_arrow", new LootTableFunction(5)));
         lootEntry.add(new LootTableEntry(1,"trident"));
         lootEntry.add(new LootTableEntry(3,"horse_spawn_egg"));
@@ -355,7 +355,7 @@ public class Main {
         lootEntry.add(new LootTableEntry(8,"obsidian",new LootTableFunction(4)));
         lootEntry.add(new LootTableEntry(4,"lava_bucket"));
         lootEntry.add(new LootTableEntry(2,"golden_apple"));
-        lootEntry.add(new LootTableEntry(20,"stick",new LootTableFunction(8)));
+        lootEntry.add(new LootTableEntry(19,"stick",new LootTableFunction(8)));
         lootEntry.add(new LootTableEntry(5,"gold_ingot",new LootTableFunction(3,0.3)));
         lootEntry.add(new LootTableEntry(15,"arrow",new LootTableFunction(10)));
         lootEntry.add(new LootTableEntry(4,"apple",new LootTableFunction(2,0.3)));
@@ -368,8 +368,9 @@ public class Main {
         lootEntry.add(new LootTableEntry(1,"diamond_leggings"));
         lootEntry.add(new LootTableEntry(1,"netherite_scrap",new LootTableFunction(4,0.001)));
         lootEntry.add(new LootTableEntry(2,"spyglass"));
-        lootEntry.add(new LootTableEntry(18,"amethyst_block",new LootTableFunction(16)));
-        lootEntry.add(new LootTableEntry(15,"copper_block",new LootTableFunction(16)));
+        lootEntry.add(new LootTableEntry(17,"amethyst_block",new LootTableFunction(16)));
+        lootEntry.add(new LootTableEntry(14,"copper_block",new LootTableFunction(16)));
+        lootEntry.add(new LootTableEntry(5,"tnt",new LootTableFunction(4)));
 
         ArrayList<String> fileCommands = fileTools.generateLootTable(lootEntry);
 
@@ -1104,7 +1105,7 @@ public class Main {
         fileCommands.add("scoreboard players set @a[scores={Mining=1..}] Mining 0");
         for (String block: blocks)
         {
-            fileCommands.add("execute store result score @a Mining run scoreboard players operation @a Mining += @a " + block);
+            fileCommands.add("execute as @r run scoreboard players operation @s Mining += @s " + block);
         }
 
         return new FileData("update_mine_count", fileCommands);
