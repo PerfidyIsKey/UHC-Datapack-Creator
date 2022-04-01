@@ -16,14 +16,15 @@ NewPlayers = {};
 EstimatedRank = [];
 
 %%% Algorithm settings
-teamPlayer          = 3;    % Number of players per team
-rankLowerBound      = 5;    % Maximum negative deviation of score median
-rankUpperBound      = 5;    % Maximum positive deviation of score mean
-rankLowerTolerance	= 10;   % Maximum allowed negative deviation
-rankUpperTolerance  = 10;   % Maximum allowed positive deviation
-maxConnections      = 2;    % Maximum number of times players have played together
-scoreNoise          = 30;   % Additional score noise to account for inaccuracies
-plotResults         = false; % Visualize results in real time
+teamPlayer          = 3;        % Number of players per team
+rankLowerBound      = 5;        % Maximum negative deviation of score median
+rankUpperBound      = 5;        % Maximum positive deviation of score mean
+rankLowerTolerance	= 10;       % Maximum allowed negative deviation
+rankUpperTolerance  = 10;       % Maximum allowed positive deviation
+maxConnections      = 2;        % Maximum number of times players have played together
+scoreNoise          = 30;       % Additional score noise to account for inaccuracies
+plotResults         = false;    % Visualize results in real time
+verboseMode         = false;    % Allow messages
 
 % Conversion
 settings = struct('players',teamPlayer,'rank',struct('LB',rankLowerBound,...
@@ -102,11 +103,15 @@ while true
     
     if ~sizeBool
         % Team size violated
-        fprintf('Team sizes are not correct.\n')
+        if verboseMode == true
+            fprintf('Team sizes are not correct.\n')
+        end
     end
     if ~topBool
         % Upper tolerance violated --> increase upper tolerance
-        fprintf('Balance is too overpowered, increasing tolerance.\n')
+        if verboseMode == true
+            fprintf('Balance is too overpowered, increasing tolerance.\n')
+        end
         if randi(2) == 1
             settings.rank.UB = settings.rank.UB + 1;
         else
@@ -115,7 +120,9 @@ while true
     end
     if ~downBool
         % Lower tolerance violated --> decrease lower tolerance
-        fprintf('Balance is too underwhelming, increasing tolerance.\n')
+        if verboseMode == true
+            fprintf('Balance is too underwhelming, increasing tolerance.\n')
+        end
         if randi(2) == 1
             settings.rank.LB = settings.rank.LB + 1;
         else
