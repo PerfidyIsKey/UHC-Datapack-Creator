@@ -138,12 +138,14 @@ end
 
 %% Display results
 %%% Plot results
-X = categorical(PlayerName);
-X = reordercats(X,PlayerName);
-figure();
-bar(X,x)
-ax = gca;
-ax.XAxis.TickLabelInterpreter = 'none';
+if verboseMode == true
+    X = categorical(PlayerName);
+    X = reordercats(X,PlayerName);
+    figure();
+    bar(X,x)
+    ax = gca;
+    ax.XAxis.TickLabelInterpreter = 'none';
+end
 
 %%% Display results in command window
 teamScore = getTeamScore(x,scores,teamNumber,teamSize,...
