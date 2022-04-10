@@ -22,7 +22,7 @@ public class Main {
     * 2: University Racing Eindhoven
      */
 
-    private static int adminMode = 1;
+    private static int adminMode = 2;
     /*
     * 1: Wouter
     * 2: Bas
@@ -120,7 +120,7 @@ public class Main {
     private void initSaveDir() {
         switch (gameMode) {
             case 1:
-                uhcNumber = "S44";
+                uhcNumber = "S45";
 
                 admin = "PerfidyIsKey";
                 break;
@@ -985,7 +985,9 @@ public class Main {
         }
         fileCommands.add("execute if entity @p[scores={SideDum=" + (5*tickPerSecond*i+1) +"}] run scoreboard players reset @p[scores={Admin=1}] SideDum");
 
-        fileCommands.add(callFunction("update_mine_count"));
+        // Update stripmine count
+        fileCommands.add("scoreboard players set @a[scores={Mining=1..}] Mining 0");
+        fileCommands.add("execute as @a run " + callFunction("update_mine_count"));
 
         return new FileData("update_sidebar",fileCommands);
     }
@@ -1019,6 +1021,9 @@ public class Main {
     private FileData ControlPointPerks() {
         ArrayList<String> fileCommands = new ArrayList<>();
 
+        // Activation period
+        int actPeriod = 50;
+
         // Define perk activation times
         int minToCPScore = secPerMinute*tickPerSecond*controlPoints.get(0).getAddRate();
         ArrayList<Integer> perks = new ArrayList<>();
@@ -1036,40 +1041,40 @@ public class Main {
             {
                 // Display team receiving perk
                 for (int j = 0; j < perks.size(); j++) {
-                    fileCommands.add("execute if entity @p[scores={CP" + (i+1) + team.getName() + "=" + perks.get(j) + ".." + (perks.get(j) + 20) + "}] run execute if entity @p[team=" + team.getName() + ",tag=!ReceivedPerk" + (j+1) + "] run tellraw @a [\"\",{\"text\":\"TEAM \",\"color\":\"light_purple\"},{\"text\":\"" + team.getJSONColor() + "\",\"color\":\"" + team.getColor() + "\"},{\"text\":\" HAS REACHED\",\"color\":\"light_purple\"},{\"text\":\" PERK " + (j + 1) + "!\",\"color\":\"gold\"}]");
+                    fileCommands.add("execute if entity @p[scores={CP" + (i+1) + team.getName() + "=" + perks.get(j) + ".." + (perks.get(j) + actPeriod) + "}] run execute if entity @p[team=" + team.getName() + ",tag=!ReceivedPerk" + (j+1) + "] run tellraw @a [\"\",{\"text\":\"TEAM \",\"color\":\"light_purple\"},{\"text\":\"" + team.getJSONColor() + "\",\"color\":\"" + team.getColor() + "\"},{\"text\":\" HAS REACHED\",\"color\":\"light_purple\"},{\"text\":\" PERK " + (j + 1) + "!\",\"color\":\"gold\"}]");
                 }
 
                 // Award perks
-                fileCommands.add("execute if entity @p[scores={CP" + (i+1) + team.getName() + "=" + perks.get(0) + ".." + (perks.get(0) + 20) + "}] " +
+                fileCommands.add("execute if entity @p[scores={CP" + (i+1) + team.getName() + "=" + perks.get(0) + ".." + (perks.get(0) + actPeriod) + "}] " +
                         "run effect give @a[team=" + team.getName() + ",tag=!ReceivedPerk1] minecraft:speed 999999 0 false");
-                fileCommands.add("execute if entity @p[scores={CP" + (i+1) + team.getName() + "=" + perks.get(0) + ".." + (perks.get(0) + 20) + "}] " +
+                fileCommands.add("execute if entity @p[scores={CP" + (i+1) + team.getName() + "=" + perks.get(0) + ".." + (perks.get(0) + actPeriod) + "}] " +
                         "run execute if entity @p[team=" + team.getName() + ",tag=!ReceivedPerk1] " +
                         "run playsound minecraft:ambient.basalt_deltas.mood master @a ~ ~50 ~ 100 1 0");
-                fileCommands.add("execute if entity @p[scores={CP" + (i+1) + team.getName() + "=" + perks.get(0) + ".." + (perks.get(0) + 20) + "}] " +
+                fileCommands.add("execute if entity @p[scores={CP" + (i+1) + team.getName() + "=" + perks.get(0) + ".." + (perks.get(0) + actPeriod) + "}] " +
                         "run tag @a[team=" + team.getName() + "] add ReceivedPerk1");
 
-                fileCommands.add("execute if entity @p[scores={CP" + (i+1) + team.getName() + "=" + perks.get(1) + ".." + (perks.get(1) + 20) + "}] " +
+                fileCommands.add("execute if entity @p[scores={CP" + (i+1) + team.getName() + "=" + perks.get(1) + ".." + (perks.get(1) + actPeriod) + "}] " +
                         "run effect give @a[team=" + team.getName() + ",tag=!ReceivedPerk2] minecraft:resistance " + (10*secPerMinute) + " 0 false");
-                fileCommands.add("execute if entity @p[scores={CP" + (i+1) + team.getName() + "=" + perks.get(1) + ".." + (perks.get(1) + 20) + "}] " +
+                fileCommands.add("execute if entity @p[scores={CP" + (i+1) + team.getName() + "=" + perks.get(1) + ".." + (perks.get(1) + actPeriod) + "}] " +
                         "run execute if entity @p[team=" + team.getName() + ",tag=!ReceivedPerk2] " +
                         "run playsound minecraft:ambient.crimson_forest.mood master @a ~ ~50 ~ 100 1 0");
-                fileCommands.add("execute if entity @p[scores={CP" + (i+1) + team.getName() + "=" + perks.get(1) + ".." + (perks.get(1) + 20) + "}] " +
+                fileCommands.add("execute if entity @p[scores={CP" + (i+1) + team.getName() + "=" + perks.get(1) + ".." + (perks.get(1) + actPeriod) + "}] " +
                         "run tag @a[team=" + team.getName() + "] add ReceivedPerk2");
 
-                fileCommands.add("execute if entity @p[scores={CP" + (i+1) + team.getName() + "=" + perks.get(2) + ".." + (perks.get(2) + 20) + "}] " +
+                fileCommands.add("execute if entity @p[scores={CP" + (i+1) + team.getName() + "=" + perks.get(2) + ".." + (perks.get(2) + actPeriod) + "}] " +
                         "run effect give @a[team=" + team.getName() + ",tag=!ReceivedPerk3] minecraft:haste 999999 2 false");
-                fileCommands.add("execute if entity @p[scores={CP" + (i+1) + team.getName() + "=" + perks.get(2) + ".." + (perks.get(2) + 20) + "}] " +
+                fileCommands.add("execute if entity @p[scores={CP" + (i+1) + team.getName() + "=" + perks.get(2) + ".." + (perks.get(2) + actPeriod) + "}] " +
                         "run execute if entity @p[team=" + team.getName() + ",tag=!ReceivedPerk3] " +
                         "run playsound minecraft:ambient.warped_forest.mood master @a ~ ~50 ~ 100 1 0");
-                fileCommands.add("execute if entity @p[scores={CP" + (i+1) + team.getName() + "=" + perks.get(2) + ".." + (perks.get(2) + 20) + "}] " +
+                fileCommands.add("execute if entity @p[scores={CP" + (i+1) + team.getName() + "=" + perks.get(2) + ".." + (perks.get(2) + actPeriod) + "}] " +
                         "run tag @a[team=" + team.getName() + "] add ReceivedPerk3");
 
-                fileCommands.add("execute if entity @p[scores={CP" + (i+1) + team.getName() + "=" + perks.get(3) + ".." + (perks.get(3) + 20) + "}] " +
+                fileCommands.add("execute if entity @p[scores={CP" + (i+1) + team.getName() + "=" + perks.get(3) + ".." + (perks.get(3) + actPeriod) + "}] " +
                         "run give @a[team=" + team.getName() + ",tag=!ReceivedPerk4] minecraft:golden_apple");
-                fileCommands.add("execute if entity @p[scores={CP" + (i+1) + team.getName() + "=" + perks.get(3) + ".." + (perks.get(3) + 20) + "}] " +
+                fileCommands.add("execute if entity @p[scores={CP" + (i+1) + team.getName() + "=" + perks.get(3) + ".." + (perks.get(3) + actPeriod) + "}] " +
                         "run execute if entity @p[team=" + team.getName() + ",tag=!ReceivedPerk4] " +
                         "run playsound minecraft:entity.wither.spawn master @a ~ ~50 ~ 100 1 0");
-                fileCommands.add("execute if entity @p[scores={CP" + (i+1) + team.getName() + "=" + perks.get(3) + ".." + (perks.get(3) + 20) + "}] " +
+                fileCommands.add("execute if entity @p[scores={CP" + (i+1) + team.getName() + "=" + perks.get(3) + ".." + (perks.get(3) + actPeriod) + "}] " +
                         "run tag @a[team=" + team.getName() + "] add ReceivedPerk4");
             }
         }
@@ -1102,10 +1107,9 @@ public class Main {
         blocks.add("Andesite");
         blocks.add("Granite");
 
-        fileCommands.add("scoreboard players set @a[scores={Mining=1..}] Mining 0");
         for (String block: blocks)
         {
-            fileCommands.add("execute as @r run scoreboard players operation @s Mining += @s " + block);
+            fileCommands.add("scoreboard players operation @s Mining += @s " + block);
         }
 
         return new FileData("update_mine_count", fileCommands);
