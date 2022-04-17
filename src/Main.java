@@ -504,6 +504,7 @@ public class Main {
         fileCommands.add("scoreboard players set @a[scores={Deaths=1}] ControlPoint2 0");
         fileCommands.add("scoreboard players set @p[scores={Admin=1}] Highscore1 1");
         fileCommands.add("scoreboard players set @p[scores={Admin=1}] Highscore2 1");
+        fileCommands.add("scoreboard players set @p[scores={Admin=1}] MinHealth 20");
 
         fileCommands.add("execute if entity @p[scores={Deaths=1},tag=Traitor] run tellraw @a [\"\",{\"text\":\" | \",\"bold\":true,\"color\":\"dark_gray\"},{\"text\":\"A TRAITOR HAS BEEN ELIMINATED\",\"bold\":true,\"color\":\"red\"},{\"text\":\" | \",\"bold\":true,\"color\":\"dark_gray\"},{\"text\":\"WELL DONE\",\"bold\":true,\"color\":\"gold\"},{\"text\":\" | \",\"bold\":true,\"color\":\"dark_gray\"}]");
         for (Player p : players) {
