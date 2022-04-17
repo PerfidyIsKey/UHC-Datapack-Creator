@@ -319,6 +319,7 @@ public class Main {
         scoreboardObjectives.add(new ScoreboardObjective("WorldLoad","dummy"));
         scoreboardObjectives.add(new ScoreboardObjective("CollarCheck0","dummy"));
         scoreboardObjectives.add(new ScoreboardObjective("CollarCheck1","dummy"));
+        scoreboardObjectives.add(new ScoreboardObjective("MinHealth","dummy"));
 
         // Status effects
         effect.add(new StatusEffect("glowing",30,1));
@@ -438,6 +439,8 @@ public class Main {
         files.add(ControlPointPerks());
         files.add(DisplayQuotes());
         files.add(UpdateMineCount());
+        files.add(ResetRespawnHealth());
+        files.add(UpdateMinHealth());
     }
 
     private FileData Initialize() {
@@ -649,6 +652,7 @@ public class Main {
         ArrayList<String> fileCommands = new ArrayList<>();
         fileCommands.add("spreadplayers 0 0 300 700 true @a");
         fileCommands.add("scoreboard players set @p[scores={Admin=1}] Highscore 1");
+        fileCommands.add("scoreboard players set @p[scores={Admin=1}] MinHealth 20");
 
         return new FileData("spread_players", fileCommands);
     }
@@ -989,6 +993,9 @@ public class Main {
         fileCommands.add("scoreboard players set @a[scores={Mining=1..}] Mining 0");
         fileCommands.add("execute as @a run " + callFunction("update_mine_count"));
 
+        // Update minimum health
+        fileCommands.add(callFunction("update_min_health"));
+
         return new FileData("update_sidebar",fileCommands);
     }
 
@@ -1113,6 +1120,35 @@ public class Main {
         }
 
         return new FileData("update_mine_count", fileCommands);
+    }
+
+    // Update minimum health
+    private FileData UpdateMinHealth() {
+        ArrayList<String> fileCommands = new ArrayList<>();
+
+        fileCommands.add("execute as @r[gamemode=!spectator] if score @s Hearts < @p[scores={Admin=1}] MinHealth store" +
+                " result score @p[scores={Admin=1}] MinHealth run scoreboard players get @s Hearts");
+
+        return new FileData("update_min_health",fileCommands);
+    }
+
+    // Reset health of respawned players
+    private FileData ResetRespawnHealth() {
+        ArrayList<String> fileCommands = new ArrayList<>();
+
+        for (int i = 0; i < 10; i++) {
+            int indexFront = 2*i+1;
+            int indexRear = 2*(i+1);
+
+            fileCommands.add("execute if entity @p[scores={MinHealth=" + indexFront + ".." + indexRear + "}] run attribute @p[tag=Respawn]" +
+                    " generic.max_health base set " + (i+1));
+        }
+        fileCommands.add("effect give @p[tag=Respawn] health_boost 1 0");
+        fileCommands.add("effect clear @p[tag=Respawn] health_boost");
+        fileCommands.add("attribute @p[tag=Respawn] generic.max_health base set 20");
+        fileCommands.add("tag @p[tag=Respawn] remove Respawn");
+
+        return new FileData("reset_respawn_health",fileCommands);
     }
 
 }
