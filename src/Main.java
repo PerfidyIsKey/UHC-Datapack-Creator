@@ -57,6 +57,7 @@ public class Main {
     private static int tickPerSecond = 20;
     private static int secPerMinute = 60;
     private int minTraitorRank;
+    private int traitorMode = 2;
     private String communityName;
     private ControlPoint cp1 = new ControlPoint("CP1", 20*secPerMinute*tickPerSecond*2, 2, 0, 0, 0);
     private ControlPoint cp2 = new ControlPoint("CP2", 20*secPerMinute*tickPerSecond*2, 3, 0, 0, 0);
@@ -864,6 +865,19 @@ public class Main {
         }
         //fileCommands.add("tag @r[limit=1,tag=!DontMakeTraitor] add Traitor");
         fileCommands.add("tag @r[limit=1,tag=!DontMakeTraitor,scores={Rank="  + minTraitorRank + "..},gamemode=!spectator] add Traitor");
+
+        // Add additional traitor
+        if (traitorMode == 2) {
+            fileCommands.add("tag @a remove DontMakeTraitor");
+            for (Player p : players) {
+                if (p.getIgnoreTraitor()) {
+                    fileCommands.add("tag " + p.getPlayerName() + " add DontMakeTraitor");
+                }
+            }
+            fileCommands.add("tag @a[tag=Traitor] add DontMakeTraitor");
+            fileCommands.add("tag @r[limit=1,tag=!DontMakeTraitor,scores={Rank=" + minTraitorRank + "..},gamemode=!spectator] add Traitor");
+        }
+
         fileCommands.add("execute as @a[tag=Traitor] run tellraw @s [\"\",{\"text\":\"You feel like betrayal today. You have become a Traitor. Your faction consists of: \",\"italic\":true,\"color\":\"red\"},{\"selector\":\"@a[tag=Traitor]\",\"italic\":true,\"color\":\"red\"},{\"text\":\".\",\"italic\":true,\"color\":\"red\"}]");
         fileCommands.add("title @a title [\"\",{\"text\":\"A Traitor Faction\",\"bold\":true,\"color\":\"red\"}]");
         fileCommands.add("title @a subtitle [\"\",{\"text\":\"has been founded!\",\"bold\":true,\"color\":\"dark_red\"}]");

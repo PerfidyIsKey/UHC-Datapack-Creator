@@ -16,14 +16,14 @@ NewPlayers = {};
 EstimatedRank = [];
 
 %%% Algorithm settings
-teamPlayer          = 2;        % Number of players per team
+teamPlayer          = 5;        % Number of players per team
 rankLowerBound      = 5;        % Maximum negative deviation of score median
 rankUpperBound      = 5;        % Maximum positive deviation of score mean
 rankLowerTolerance	= 10;       % Maximum allowed negative deviation
 rankUpperTolerance  = 10;       % Maximum allowed positive deviation
 maxConnections      = 2;        % Maximum number of times players have played together
 scoreNoise          = 30;       % Additional score noise to account for inaccuracies
-plotResults         = false;    % Visualize results in real time
+plotResults         = true;    % Visualize results in real time
 verboseMode         = false;    % Allow messages
 
 % Conversion
