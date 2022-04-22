@@ -123,7 +123,7 @@ public class Main {
             case 1:
                 uhcNumber = "S45";
 
-                admin = "PerfidyIsKey";
+                admin = "Snodog627";
                 break;
             case 2:
                 uhcNumber = "URE5";
@@ -169,25 +169,25 @@ public class Main {
 
         switch (gameMode) {
             case 1:
-                startCoordinates = "4 64 5";
+                startCoordinates = "0 88 0";
                 minTraitorRank = 35;
                 communityName = "THE DIORITE EXPERTS";
 
                 // Control point
-                cp1.setX(-31);
-                cp1.setY(64);
-                cp1.setZ(193);
+                cp1.setX(124);
+                cp1.setY(63);
+                cp1.setZ(214);
 
-                cp2.setX(-22);
-                cp2.setY(63);
-                cp2.setZ(-142);
+                cp2.setX(-30);
+                cp2.setY(86);
+                cp2.setZ(-57);
                 controlPoints.add(cp1);
                 controlPoints.add(cp2);
 
                 // Care Packages
-                carePackage2.setX(25);
-                carePackage2.setY(69);
-                carePackage2.setZ(18);
+                carePackage2.setX(59);
+                carePackage2.setY(76);
+                carePackage2.setZ(142);
                 carePackages.add(carePackage2);
 
                 // Players
@@ -875,7 +875,7 @@ public class Main {
                 }
             }
             fileCommands.add("tag @a[tag=Traitor] add DontMakeTraitor");
-            fileCommands.add("tag @r[limit=1,tag=!DontMakeTraitor,scores={Rank=" + minTraitorRank + "..},gamemode=!spectator] add Traitor");
+            fileCommands.add("tag @r[limit=1,tag=!DontMakeTraitor,gamemode=!spectator] add Traitor");
         }
 
         fileCommands.add("execute as @a[tag=Traitor] run tellraw @s [\"\",{\"text\":\"You feel like betrayal today. You have become a Traitor. Your faction consists of: \",\"italic\":true,\"color\":\"red\"},{\"selector\":\"@a[tag=Traitor]\",\"italic\":true,\"color\":\"red\"},{\"text\":\".\",\"italic\":true,\"color\":\"red\"}]");

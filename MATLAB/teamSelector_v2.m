@@ -9,18 +9,19 @@ load('DataS44.mat')
 %% Input
 % Enter the players that are participating (corresponding numbers with
 % PlayerName variable in Players struct)
-ParticipantIndex = [1,2,24,25,33,38,40,44,45,46];
+ParticipantIndex = [1,2,17,24,28,33,34,46];
+% ParticipantIndex = [1,2,25,28,30,33,34,40,45];
 
 %%% Enter the names of new players
 NewPlayers = {};
 EstimatedRank = [];
 
 %%% Algorithm settings
-teamPlayer          = 5;        % Number of players per team
+teamPlayer          = 4;        % Number of players per team
 rankLowerBound      = 5;        % Maximum negative deviation of score median
-rankUpperBound      = 5;        % Maximum positive deviation of score mean
+rankUpperBound      = 8;        % Maximum positive deviation of score mean
 rankLowerTolerance	= 10;       % Maximum allowed negative deviation
-rankUpperTolerance  = 10;       % Maximum allowed positive deviation
+rankUpperTolerance  = 15;       % Maximum allowed positive deviation
 maxConnections      = 2;        % Maximum number of times players have played together
 scoreNoise          = 30;       % Additional score noise to account for inaccuracies
 plotResults         = true;    % Visualize results in real time
@@ -74,6 +75,10 @@ options = optimoptions('ga','Display','none');
 
 %% Evaluate Genetic Algorithm
 while true
+    for i = 1:length(Ranks)
+        scores(i) = max(Ranks(i)+settings.noise/(Players(ParticipantIndex(i)).Experience)^2*randn,0);
+    end
+    
     %%% Define functions
     fun = @(x)groupPlayers(x,scores,teamNumber,teamSize,...
         Players,ParticipantIndex,settings); % Objective function

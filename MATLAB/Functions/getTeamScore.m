@@ -17,8 +17,9 @@ for i = 1:teamNumber
     for ii = 1:unitsNumber
         if x(ii) == i % If player is in this team, add their score
             count = count + 1;  % Update counter
-            scoreNoise = settings.noise/(Players(ParticipantIndex(ii)).Experience)^2*randn; % Add score noise
-            playerScore = max(scores(ii)+scoreNoise,0);
+%             scoreNoise = settings.noise/(Players(ParticipantIndex(ii)).Experience)^2*randn; % Add score noise
+%             playerScore = max(scores(ii)+scoreNoise,0);
+playerScore = scores(ii);
             teamScore(i) = teamScore(i) + playerScore^power;   % Update team score
             bestPlayer = max(bestPlayer,playerScore);
             if count > teamSize % If extra players are added, add a score of a pseudo-team mate
