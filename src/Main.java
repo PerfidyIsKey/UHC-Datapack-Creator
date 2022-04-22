@@ -174,13 +174,14 @@ public class Main {
                 communityName = "THE DIORITE EXPERTS";
 
                 // Control point
-                cp1.setX(124);
-                cp1.setY(63);
-                cp1.setZ(214);
+                cp1.setX(-30);
+                cp1.setY(86);
+                cp1.setZ(-57);
 
-                cp2.setX(-30);
-                cp2.setY(86);
-                cp2.setZ(-57);
+                cp2.setX(124);
+                cp2.setY(63);
+                cp2.setZ(214);
+
                 controlPoints.add(cp1);
                 controlPoints.add(cp2);
 
@@ -191,38 +192,38 @@ public class Main {
                 carePackages.add(carePackage2);
 
                 // Players
-                players.add(new Player("Snodog627",109));
-                players.add(new Player("Mr9Madness",87));
-                players.add(new Player("Tiba101",4));
-                players.add(new Player("W0omy",19));
-                players.add(new Player("MissTutuPrincess",14));
-                players.add(new Player("Kalazniq",39));
-                players.add(new Player("Vladik71",37));
-                players.add(new Player("Smashking242",15));
-                players.add(new Player("Pfalz_",17));
-                players.add(new Player("ThurianBohan",39));
+                players.add(new Player("Snodog627",103));
+                players.add(new Player("Mr9Madness",80));
+                players.add(new Player("Tiba101",3));
+                players.add(new Player("W0omy",18));
+                players.add(new Player("MissTutuPrincess",12));
+                players.add(new Player("Kalazniq",57,true));
+                players.add(new Player("Vladik71",35));
+                players.add(new Player("Smashking242",14));
+                players.add(new Player("Pfalz_",15));
+                players.add(new Player("ThurianBodan",37));
                 players.add(new Player("PerfidyIsKey",80));
-                players.add(new Player("deuce__",17));
-                players.add(new Player("jonmo0105",62));
-                players.add(new Player("TheDinoGame",207,true));
-                players.add(new Player("BAAPABUGGETS",10));
-                players.add(new Player("Kakarot057",43));
-                players.add(new Player("viccietors",40));
-                players.add(new Player("Rayqson",16));
-                players.add(new Player("Xx__HexGamer__xX",59));
-                players.add(new Player("Bobdafish",105));
+                players.add(new Player("deuce__",13));
+                players.add(new Player("jonmo0105",60));
+                players.add(new Player("TheDinoGame",195));
+                players.add(new Player("BAAPABUGGETS",9));
+                players.add(new Player("Kakarot057",41));
+                players.add(new Player("viccietors",39));
+                players.add(new Player("Rayqson",15));
+                players.add(new Player("Xx__HexGamer__xX",67,true));
+                players.add(new Player("Bobdafish",106,true));
                 players.add(new Player("Alanaenae",0));
                 players.add(new Player("jk20028",21));
                 players.add(new Player("N_G0n",6));
-                players.add(new Player("SpookySpiker",62));
+                players.add(new Player("SpookySpiker",61));
                 players.add(new Player("Clockweiz",10));
-                players.add(new Player("Eason950116",15));
-                players.add(new Player("CorruptUncle",55,true));
-                players.add(new Player("Pimmie36",60));
+                players.add(new Player("Eason950116",14));
+                players.add(new Player("CorruptUncle",53));
+                players.add(new Player("Pimmie36",58));
                 players.add(new Player("Jayroon123",0));
                 players.add(new Player("PbQuinn",7));
                 players.add(new Player("Vermeil_Chan",0));
-                players.add(new Player("Jobbo2002",7));
+                players.add(new Player("Jobbo2002",5));
 
                 quotes = fileTools.GetLinesFromFile("Files\\Diorite\\quotes.txt");
 
