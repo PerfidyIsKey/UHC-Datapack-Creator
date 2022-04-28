@@ -1,3 +1,5 @@
+import Enums.FileName;
+
 import java.util.ArrayList;
 
 public class FileData {
@@ -8,6 +10,11 @@ public class FileData {
 
     public FileData(String name, ArrayList<String> fileText) {
         this.name = name;
+        this.fileText = fileText;
+    }
+
+    public FileData(FileName name, ArrayList<String> fileText) {
+        this.name = name + "";
         this.fileText = fileText;
     }
 
