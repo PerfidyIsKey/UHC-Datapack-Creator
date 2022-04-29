@@ -16,15 +16,15 @@ addpath('Data','Functions')
 % out of the mat file anyways.
 Players             = struct;       % Preallocation
 PlayerConnectivity	= zeros(1,3); % Preallocation
-load('DataS44.mat')                    % Load data
+load('DataS45A.mat')                    % Load data
 
 %% Define season data
 %%% Season data
 NoS                     = size(Seasons,2) + 1;  % New season index
-Seasons(NoS).Season     = 'S45A';    % Season name
+Seasons(NoS).Season     = 'S45B';    % Season name
 Seasons(NoS).Players    = 8;                    % Total number of players
-Seasons(NoS).Date       = datetime(2022,4,22); % Date of the season
-Seasons(NoS).TeamAmount = 3;	% Needs to be equal to the amount of members in the winning team
+Seasons(NoS).Date       = datetime(2022,4,23); % Date of the season
+Seasons(NoS).TeamAmount = 0;	% Needs to be equal to the amount of members in the winning team
 
 %%% New Players
 PlayersNew = {};     % Define the username of new players
@@ -39,25 +39,25 @@ for i = 1:NoN
 end
 
 %%% Player data
-ParticipantIndex	= [01,02,17,24,28,33,34,46,NewIndex'];    % Define index of the participants
-Kills               = [00;00;02;00;02;00;01;00];                  % Indicate amount of kills per player
-Position            = [03;07;01;05;06;01;04;08];                   % Indicate final position
-Winner              = [00;00;01;00;00;01;01;00];                   % Indicate whether the player won the season
+ParticipantIndex	= [01,02,25,28,33,34,38,45,NewIndex'];    % Define index of the participants
+Kills               = [00;01;00;04;00;00;02;00];                  % Indicate amount of kills per player
+Position            = [02;04;08;05;07;05;03;06];                   % Indicate final position
+Winner              = [00;00;00;00;00;00;00;00];                   % Indicate whether the player won the season
 NoPar               = size(ParticipantIndex,2);             % Indicate number of participants
 
 PC = [      % Indicate which players were in a team together
-    1 2
-    1 34
-    1 46
+    1 28
+    1 38
+    1 45
+    2 25
+    2 33
     2 34
-    2 46
-    17 24
-    17 28
-    17 33
-    24 28
-    24 33
-    28 33
-    34 46
+    25 33
+    25 34
+    28 38
+    28 45
+    33 34
+    38 45
     ];
 
 %% Update data

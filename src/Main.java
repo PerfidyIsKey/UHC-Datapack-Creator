@@ -57,7 +57,7 @@ public class Main {
     private static int tickPerSecond = 20;
     private static int secPerMinute = 60;
     private int minTraitorRank;
-    private int traitorMode = 2;
+    private int traitorMode = 1;
     private String communityName;
     private ControlPoint cp1 = new ControlPoint("CP1", 20*secPerMinute*tickPerSecond*2, 2, 0, 0, 0);
     private ControlPoint cp2 = new ControlPoint("CP2", 20*secPerMinute*tickPerSecond*2, 3, 0, 0, 0);
@@ -121,7 +121,7 @@ public class Main {
     private void initSaveDir() {
         switch (gameMode) {
             case 1:
-                uhcNumber = "S45";
+                uhcNumber = "S45B";
 
                 admin = "Snodog627";
                 break;
@@ -169,31 +169,31 @@ public class Main {
 
         switch (gameMode) {
             case 1:
-                startCoordinates = "0 88 0";
+                startCoordinates = "0 78 0";
                 minTraitorRank = 35;
                 communityName = "THE DIORITE EXPERTS";
 
                 // Control point
-                cp1.setX(-30);
-                cp1.setY(86);
-                cp1.setZ(-57);
+                cp1.setX(12);
+                cp1.setY(87);
+                cp1.setZ(-78);
 
-                cp2.setX(124);
-                cp2.setY(63);
-                cp2.setZ(214);
+                cp2.setX(-164);
+                cp2.setY(89);
+                cp2.setZ(149);
 
                 controlPoints.add(cp1);
                 controlPoints.add(cp2);
 
                 // Care Packages
-                carePackage2.setX(59);
-                carePackage2.setY(76);
-                carePackage2.setZ(142);
+                carePackage2.setX(-56);
+                carePackage2.setY(67);
+                carePackage2.setZ(-40);
                 carePackages.add(carePackage2);
 
                 // Players
-                players.add(new Player("Snodog627",103));
-                players.add(new Player("Mr9Madness",80));
+                players.add(new Player("Snodog627",102));
+                players.add(new Player("Mr9Madness",82,true));
                 players.add(new Player("Tiba101",3));
                 players.add(new Player("W0omy",18));
                 players.add(new Player("MissTutuPrincess",12));
@@ -202,27 +202,27 @@ public class Main {
                 players.add(new Player("Smashking242",14));
                 players.add(new Player("Pfalz_",15));
                 players.add(new Player("ThurianBodan",37));
-                players.add(new Player("PerfidyIsKey",80));
+                players.add(new Player("PerfidyIsKey",74));
                 players.add(new Player("deuce__",13));
-                players.add(new Player("jonmo0105",60));
-                players.add(new Player("TheDinoGame",195));
+                players.add(new Player("jonmo0105",61));
+                players.add(new Player("TheDinoGame",202,true));
                 players.add(new Player("BAAPABUGGETS",9));
                 players.add(new Player("Kakarot057",41));
-                players.add(new Player("viccietors",39));
+                players.add(new Player("viccietors",38));
                 players.add(new Player("Rayqson",15));
-                players.add(new Player("Xx__HexGamer__xX",67,true));
-                players.add(new Player("Bobdafish",106,true));
+                players.add(new Player("Xx__HexGamer__xX",63));
+                players.add(new Player("Bobdafish",99));
                 players.add(new Player("Alanaenae",0));
                 players.add(new Player("jk20028",21));
                 players.add(new Player("N_G0n",6));
-                players.add(new Player("SpookySpiker",61));
+                players.add(new Player("SpookySpiker",80));
                 players.add(new Player("Clockweiz",10));
                 players.add(new Player("Eason950116",14));
                 players.add(new Player("CorruptUncle",53));
                 players.add(new Player("Pimmie36",58));
                 players.add(new Player("Jayroon123",0));
                 players.add(new Player("PbQuinn",7));
-                players.add(new Player("Vermeil_Chan",0));
+                players.add(new Player("Vermeil_Chan",6));
                 players.add(new Player("Jobbo2002",5));
 
                 quotes = fileTools.GetLinesFromFile("Files\\Diorite\\quotes.txt");

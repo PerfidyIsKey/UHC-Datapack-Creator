@@ -4,19 +4,19 @@ close all
 addpath('Functions','Documents','Data')
 
 Players = struct;
-load('DataS45A.mat')
+load('DataS45B.mat')
 
 %% Input
 % Enter the players that are participating (corresponding numbers with
 % PlayerName variable in Players struct)
-ParticipantIndex = [1,2,25,28,30,33,34,40,45];
+ParticipantIndex = [1,2,25,28,33,34,38,45];
 
 %%% Enter the names of new players
-NewPlayers = {'JustMaxyy'};
-EstimatedRank = [60];
+NewPlayers = {};
+EstimatedRank = [];
 
 %%% Algorithm settings
-teamPlayer          = 5;        % Number of players per team
+teamPlayer          = 4;        % Number of players per team
 rankLowerBound      = 5;        % Maximum negative deviation of score median
 rankUpperBound      = 8;        % Maximum positive deviation of score mean
 rankLowerTolerance	= 10;       % Maximum allowed negative deviation
