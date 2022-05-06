@@ -4,6 +4,10 @@ public class ScoreboardObjective {
     private String customName = "";
     private boolean displaySideBar = false;
 
+    public ScoreboardObjective() {
+
+    }
+
     public ScoreboardObjective(String name, String type) {
         this.name = name;
         this.type = type;
@@ -26,6 +30,22 @@ public class ScoreboardObjective {
         this.type = type;
         this.customName = customName;
         this.displaySideBar = displaySideBar;
+    }
+
+    public String add() {
+        return "scoreboard objectives add " + name + " " + type + " " + customName;
+    }
+
+    public String add(String name, String type) {
+        return "scoreboard objectives add " + name + " " + type;
+    }
+
+    public String setDisplay(String location) {
+        return "scoreboard objectives setdisplay " + location + " " + name;
+    }
+
+    public String setDisplay(String location, String name) {
+        return "scoreboard objectives setdisplay " + location + " " + name;
     }
 
     public String getName() {
