@@ -24,7 +24,7 @@ public class Main {
      * 2: University Racing Eindhoven
      */
 
-    private static final int adminMode = 1;
+    private static final int adminMode = 2;
     /*
      * 1: Wouter
      * 2: Bas
@@ -212,7 +212,7 @@ public class Main {
                 players.add(new Player("Vladik71", 35));
                 players.add(new Player("Smashking242", 14));
                 players.add(new Player("Pfalz_", 15));
-                players.add(new Player("ThurianBohan", 37));
+                players.add(new Player("ThurianBohan", 37,true));
                 players.add(new Player("ThurianBodan", 37));
                 players.add(new Player("PerfidyIsKey", 80));
                 players.add(new Player("deuce__", 13));
@@ -854,7 +854,7 @@ public class Main {
 
     private FileData VictoryMessage(Team team, int i) {
         ArrayList<String> fileCommands = new ArrayList<>();
-        fileCommands.add("tellraw @a [\"\",{\"text\":\" ⎜ \",\"color\":\"gray\"},{\"text\":\"" + communityName + " UHC\",\"color\":\"gold\"},{\"text\":\" ⎜ \",\"color\":\"gray\"},{\"text\":\"" + team.getJSONColor() + " TEAM VICTORY HAS BEEN ACHIEVED! 3 MINUTES UNTIL THE FINAL DEATHMATCH\",\"color\":\"light_purple\"},{\"text\":\" ⎜ \",\"color\":\"gray\"}]");
+        fileCommands.add("tellraw @a [\"\",{\"text\":\" | \",\"color\":\"gray\"},{\"text\":\"" + communityName + " UHC\",\"color\":\"gold\"},{\"text\":\" | \",\"color\":\"gray\"},{\"text\":\"" + team.getJSONColor() + "\",\"color\":\"" + team.getColor() + "\"},{\"text\":\" TEAM VICTORY HAS BEEN ACHIEVED! 3 MINUTES UNTIL THE FINAL DEATHMATCH\",\"color\":\"light_purple\"},{\"text\":\" | \",\"color\":\"gray\"}]");
         fileCommands.add("title @a subtitle {\"text\":\"has been achieved!\", \"bold\":true, \"italic\":true, \"color\":\"light_purple\"}");
         fileCommands.add("title @a title {\"text\":\"" + team.getJSONColor() + " team victory\", \"bold\":true, \"italic\":true, \"color\":\"gold\"}");
         fileCommands.add(callFunction(FileName.victory));
@@ -1355,9 +1355,9 @@ public class Main {
         ArrayList<String> fileCommands = new ArrayList<>();
         for (int i = 0; i < teams.size(); i++) {
             for (int j = 1; j < 3; j++) {
-                fileCommands.add("execute if entity @a[limit=1,scores={Admin=1,Victory=1}] run execute as @a[limit=1,tag=!Traitor,team=" + teams.get(i).getName() + ",gamemode=!spectator,scores={ControlPoint" + j + "=" + maxCPScore + "..}] run " + callFunction("" + FileName.victory_message_ + i));
+                fileCommands.add("execute if entity @a[limit=1,scores={Admin=1,Victory=1}] if entity @p[team=" + teams.get(i).getName() + ",gamemode=!spectator,scores={ControlPoint" + j + "=" + (maxCPScore*tickPerSecond) + "..},tag=!Traitor] run " + callFunction("" + FileName.victory_message_ + i));
+                fileCommands.add("execute if entity @a[limit=1,scores={Admin=1,Victory=1}] if entity @p[team=" + teams.get(i).getName() + ",gamemode=!spectator,scores={ControlPoint" + j + "=" + (maxCPScore*tickPerSecond) + "..},tag=Traitor] unless entity @p[team=" + teams.get(i).getName() + ",gamemode=!spectator,scores={ControlPoint" + j + "=" + (maxCPScore*tickPerSecond) + "..},tag=!Traitor] run " + callFunction(FileName.victory_message_traitor));
             }
-            fileCommands.add("execute if entity @a[limit=1,scores={Admin=1,Victory=1}] run " + callFunction(FileName.victory_message_traitor));
         }
         return new FileData(FileName.teams_highscore_alive_check, fileCommands);
     }
