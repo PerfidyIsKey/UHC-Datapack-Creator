@@ -3,5 +3,5 @@ Misc/
 Non-git/
 Server/
 Videos/
-.idea/
-out/
+.idea
+out
