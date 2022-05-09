@@ -1,3 +1,14 @@
+
+misc.xml
+workspace.xml
+vcs.xml
+uiDesigner.xml
+modules.xml
+.name
+
+
+
+
 # Not useful folders
 Misc/
 Non-git/
@@ -6,5 +17,8 @@ Videos/
 .idea
 .idea/
 out
+out/
 out/production
+out/production/
+out/production/UHC-Datapack-Creator
 out/production/UHC-Datapack-Creator/
