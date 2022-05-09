@@ -4,4 +4,7 @@ Non-git/
 Server/
 Videos/
 .idea
+.idea/
 out
+out/production
+out/production/UHC-Datapack-Creator/
