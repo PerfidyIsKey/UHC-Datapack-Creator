@@ -4,7 +4,7 @@ close all
 addpath('Functions','Documents','Data')
 
 Players = struct;
-load('DataURE5.mat')
+load('DataS45B.mat')
 
 %% Input
 % Enter the players that are participating (corresponding numbers with
