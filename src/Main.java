@@ -1226,7 +1226,7 @@ public class Main {
 
                     // give rewards
                     fileCommands.add(execute.If("entity @p[scores={CP" + (i + 1) + team.getName() + "=" + perk.getActivationTime() + ".." + (perk.getActivationTime() + actPeriod) + "}]") +
-                            perk.getRewardType() + team.getName() + ",tag=!ReceivedPerk" + perk.getId() + "] " + perk.getReward());
+                            perk.getRewardType() + " @a[team=" + team.getName() + ",tag=!ReceivedPerk" + perk.getId() + "] " + perk.getReward());
                     fileCommands.add(execute.If("entity @p[scores={CP" + (i + 1) + team.getName() + "=" + perk.getActivationTime() + ".." + (perk.getActivationTime() + actPeriod) + "}]") +
                             execute.If("entity @p[team=" + team.getName() + ",tag=!ReceivedPerk" + perk.getId() + "]") +
                             "playsound " + perk.getSoundEffect() + " master @a ~ ~50 ~ 100 1 0");
