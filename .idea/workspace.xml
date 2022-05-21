@@ -3,11 +3,10 @@
   <component name="ChangeListManager">
     <list default="true" id="29ea8b6e-275d-4362-ac9d-03b61e76e2c7" name="Default" comment="Loot table and function write fixes">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Files/Diorite/quotes.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Files/Diorite/quotes.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MATLAB/AddRank.m" beforeDir="false" afterPath="$PROJECT_DIR$/MATLAB/AddRank.m" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MATLAB/Rankings.m" beforeDir="false" afterPath="$PROJECT_DIR$/MATLAB/Rankings.m" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MATLAB/teamSelector_v2.m" beforeDir="false" afterPath="$PROJECT_DIR$/MATLAB/teamSelector_v2.m" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/UHC-Datapack-Creator/FileData.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/UHC-Datapack-Creator/FileData.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/UHC-Datapack-Creator/Main.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/UHC-Datapack-Creator/Main.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/UHC-Datapack-Creator/ScoreboardObjective.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/UHC-Datapack-Creator/ScoreboardObjective.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/BossBar.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/BossBar.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
