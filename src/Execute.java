@@ -8,10 +8,10 @@ public class Execute {
 
     private String wrap(String content, boolean execute, boolean run) {
         String result = content;
-        if(execute) {
+        if (execute) {
             result = "execute " + content;
         }
-        if(run) {
+        if (run) {
             result += "run ";
         }
         return result;
@@ -26,59 +26,115 @@ public class Execute {
     }
 
     public String If(String condition, boolean run) {
-        return Standard(IfNext(condition, false), run);
+        return Standard(IfNext(condition), run);
+    }
+
+    public String If(String condition) {
+        return Standard(IfNext(condition), true);
     }
 
     public String IfNext(String condition, boolean run) {
         return Next("if " + condition + " ", run);
     }
 
+    public String IfNext(String condition) {
+        return Next("if " + condition + " ", false);
+    }
+
     public String At(String location, boolean run) {
-        return Standard(AtNext(location, false), run);
+        return Standard(AtNext(location), run);
+    }
+
+    public String At(String location) {
+        return Standard(AtNext(location), true);
     }
 
     public String AtNext(String location, boolean run) {
         return Next("at " + location + " ", run);
     }
 
+    public String AtNext(String location) {
+        return Next("at " + location + " ", false);
+    }
+
     public String As(String entity, boolean run) {
-        return Standard(AsNext(entity, false), run);
+        return Standard(AsNext(entity), run);
+    }
+
+    public String As(String entity) {
+        return Standard(AsNext(entity), true);
     }
 
     public String AsNext(String entity, boolean run) {
         return Next("as " + entity + " ", run);
     }
 
+    public String AsNext(String entity) {
+        return Next("as " + entity + " ", false);
+    }
+
     public String Positioned(int x, int y, int z, boolean run) {
-        return Standard(PositionedNext(x, y, z, false), run);
+        return Standard(PositionedNext(x, y, z), run);
+    }
+
+    public String Positioned(int x, int y, int z) {
+        return Standard(PositionedNext(x, y, z), true);
     }
 
     public String PositionedNext(int x, int y, int z, boolean run) {
         return Next("positioned " + x + " " + y + " " + z + " ", run);
     }
 
+    public String PositionedNext(int x, int y, int z) {
+        return Next("positioned " + x + " " + y + " " + z + " ", false);
+    }
+
     public String PositionedRelative(int x, int y, int z, boolean run) {
-        return Standard(PositionedRelativeNext(x, y, z, false), run);
+        return Standard(PositionedRelativeNext(x, y, z), run);
+    }
+
+    public String PositionedRelative(int x, int y, int z) {
+        return Standard(PositionedRelativeNext(x, y, z), true);
     }
 
     public String PositionedRelativeNext(int x, int y, int z, boolean run) {
         return Next("positioned ~" + x + " ~" + y + " ~" + z + " ", run);
     }
 
+    public String PositionedRelativeNext(int x, int y, int z) {
+        return Next("positioned ~" + x + " ~" + y + " ~" + z + " ", false);
+    }
+
     public String In(Dimension dimension, boolean run) {
-        return Standard(InNext(dimension, false), run);
+        return Standard(InNext(dimension), run);
+    }
+
+    public String In(Dimension dimension) {
+        return Standard(InNext(dimension), true);
     }
 
     public String InNext(Dimension dimension, boolean run) {
         return Next("in minecraft:" + dimension + " ", run);
     }
 
+    public String InNext(Dimension dimension) {
+        return Next("in minecraft:" + dimension + " ", false);
+    }
+
     public String Unless(String condition, boolean run) {
-        return Standard(UnlessNext(condition, false), run);
+        return Standard(UnlessNext(condition), run);
+    }
+
+    public String Unless(String condition) {
+        return Standard(UnlessNext(condition), true);
     }
 
     public String UnlessNext(String condition, boolean run) {
         return Next("unless " + condition + " ", run);
+    }
+
+    public String UnlessNext(String condition) {
+        return Next("unless " + condition + " ", false);
     }
 
     public String StoreResult(String execution) {
