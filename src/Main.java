@@ -15,13 +15,13 @@ public class Main {
     FileTools fileTools;
 
     //DatapackData<
-    private static final int gameMode = 1;
+    private static final int gameMode = 2;
     /*
      * 1: The Diorite Experts
      * 2: University Racing Eindhoven
      */
 
-    private static final int adminMode = 1;
+    private static final int adminMode = 2;
     /*
      * 1: Wouter
      * 2: Bas
@@ -40,7 +40,7 @@ public class Main {
 
     //GameData<
     private static final int chestSize = 27;
-    private static final String commandCenter = "s45";
+    private static final String commandCenter = "s46";
     private String admin;
     private String startCoordinates;
     private ArrayList<Team> teams = new ArrayList<>();
@@ -124,12 +124,12 @@ public class Main {
     private void initSaveDir() {
         switch (gameMode) {
             case 1:
-                uhcNumber = "S45";
+                uhcNumber = "S46";
 
                 admin = "Snodog627";
                 break;
             case 2:
-                uhcNumber = "URE5";
+                uhcNumber = "URE6";
 
                 admin = "Snodog627";
                 break;
@@ -238,25 +238,25 @@ public class Main {
 
                 break;
             case 2:
-                startCoordinates = "0 85 0";
+                startCoordinates = "0 165 0";
                 minTraitorRank = 15;
                 communityName = "UNIVERSITY RACING EINDHOVEN";
 
                 // Control point
-                cp1.setX(-33);
-                cp1.setY(57);
-                cp1.setZ(163);
+                cp1.setX(-2);
+                cp1.setY(160);
+                cp1.setZ(-65);
 
-                cp2.setX(275);
-                cp2.setY(50);
-                cp2.setZ(-98);
+                cp2.setX(213);
+                cp2.setY(141);
+                cp2.setZ(227);
                 controlPoints.add(cp1);
                 controlPoints.add(cp2);
 
                 // Care package
-                carePackage2.setX(146);
-                carePackage2.setY(62);
-                carePackage2.setZ(-15);
+                carePackage2.setX(61);
+                carePackage2.setY(155);
+                carePackage2.setZ(-6);
                 carePackages.add(carePackage2);
 
                 // Players
@@ -344,10 +344,10 @@ public class Main {
         ArrayList<LootTableEntry> lootEntry = new ArrayList<>();
 
         // Loot table items
-        lootEntry.add(new LootTableEntry(19, "egg"));
+        lootEntry.add(new LootTableEntry(17, "egg"));
         lootEntry.add(new LootTableEntry(3, "saddle"));
         lootEntry.add(new LootTableEntry(1, "netherite_hoe"));
-        lootEntry.add(new LootTableEntry(19, "ladder"));
+        lootEntry.add(new LootTableEntry(17, "ladder", new LootTableFunction(10)));
         lootEntry.add(new LootTableEntry(3, "spectral_arrow", new LootTableFunction(5)));
         lootEntry.add(new LootTableEntry(1, "trident"));
         lootEntry.add(new LootTableEntry(3, "horse_spawn_egg"));
@@ -358,22 +358,22 @@ public class Main {
         lootEntry.add(new LootTableEntry(7, "glass", new LootTableFunction(3)));
         lootEntry.add(new LootTableEntry(2, "nether_wart", new LootTableFunction(5)));
         lootEntry.add(new LootTableEntry(2, "blaze_rod", new LootTableFunction(2, 0.1)));
-        lootEntry.add(new LootTableEntry(8, "melon_slice", new LootTableFunction(3, 0.4)));
-        lootEntry.add(new LootTableEntry(12, "bone", new LootTableFunction(3, 0.4)));
+        lootEntry.add(new LootTableEntry(7, "melon_slice", new LootTableFunction(3, 0.4)));
+        lootEntry.add(new LootTableEntry(11, "bone", new LootTableFunction(3, 0.4)));
         lootEntry.add(new LootTableEntry(5, "book"));
         lootEntry.add(new LootTableEntry(5, "redstone", new LootTableFunction(16)));
         lootEntry.add(new LootTableEntry(5, "gunpowder", new LootTableFunction(16)));
         lootEntry.add(new LootTableEntry(3, "glowstone_dust", new LootTableFunction(6)));
-        lootEntry.add(new LootTableEntry(10, "fishing_rod"));
+        lootEntry.add(new LootTableEntry(8, "fishing_rod"));
         lootEntry.add(new LootTableEntry(8, "obsidian", new LootTableFunction(4)));
         lootEntry.add(new LootTableEntry(4, "lava_bucket"));
         lootEntry.add(new LootTableEntry(2, "golden_apple"));
-        lootEntry.add(new LootTableEntry(19, "stick", new LootTableFunction(8)));
+        lootEntry.add(new LootTableEntry(17, "stick", new LootTableFunction(8)));
         lootEntry.add(new LootTableEntry(5, "gold_ingot", new LootTableFunction(3, 0.3)));
-        lootEntry.add(new LootTableEntry(15, "arrow", new LootTableFunction(10)));
+        lootEntry.add(new LootTableEntry(14, "arrow", new LootTableFunction(10)));
         lootEntry.add(new LootTableEntry(4, "apple", new LootTableFunction(2, 0.3)));
         lootEntry.add(new LootTableEntry(2, "anvil"));
-        lootEntry.add(new LootTableEntry(18, "diorite", new LootTableFunction(16)));
+        lootEntry.add(new LootTableEntry(16, "diorite", new LootTableFunction(16)));
         lootEntry.add(new LootTableEntry(5, "cobweb", new LootTableFunction(2, 0.4)));
         lootEntry.add(new LootTableEntry(4, "diamond", new LootTableFunction(2, 0.3)));
         lootEntry.add(new LootTableEntry(15, "iron_ingot", new LootTableFunction(8)));
@@ -381,9 +381,10 @@ public class Main {
         lootEntry.add(new LootTableEntry(1, "diamond_leggings"));
         lootEntry.add(new LootTableEntry(1, "netherite_scrap", new LootTableFunction(4, 0.001)));
         lootEntry.add(new LootTableEntry(2, "spyglass"));
-        lootEntry.add(new LootTableEntry(17, "amethyst_block", new LootTableFunction(16)));
-        lootEntry.add(new LootTableEntry(14, "copper_block", new LootTableFunction(16)));
+        lootEntry.add(new LootTableEntry(15, "amethyst_block", new LootTableFunction(16)));
+        lootEntry.add(new LootTableEntry(10, "copper_block", new LootTableFunction(16)));
         lootEntry.add(new LootTableEntry(5, "tnt", new LootTableFunction(4)));
+        lootEntry.add(new LootTableEntry(10,"bread", new LootTableFunction(5)));
 
         ArrayList<String> fileCommands = fileTools.generateLootTable(lootEntry);
 
@@ -536,7 +537,7 @@ public class Main {
         fileCommands.add(setGameRule(GameRule.doWeatherCycle, false));
         fileCommands.add("difficulty hard");
         fileCommands.add("defaultgamemode adventure");
-        fileCommands.add("setworldspawn 0 151 3");
+        fileCommands.add("setworldspawn 0 221 3");
 
         //scoreboard
         for (ScoreboardObjective objective : scoreboardObjectives) {
@@ -565,9 +566,9 @@ public class Main {
         }
         //end teams
         //structure
-        fileCommands.add(fill(-6, 150, -6, 6, 156, 6, "minecraft:barrier"));
-        fileCommands.add(fill(-5, 151, -5, 5, 156, 5, "minecraft:air"));
-        fileCommands.add(setBlock(0, 152, -5, "minecraft:oak_wall_sign[facing=south,waterlogged=false]{Color:\"black\",GlowingText:0b,Text1:'{\"clickEvent\":{\"action\":\"run_command\",\"value\":\"tp @s 5 " + (worldBottom + 5) + " 5\"},\"text\":\"\"}',Text2:'{\"text\":\"Teleport to\"}',Text3:'{\"text\":\"Command Center\"}',Text4:'{\"text\":\"\"}'}"));
+        fileCommands.add(fill(-6, 220, -6, 6, 226, 6, "minecraft:barrier"));
+        fileCommands.add(fill(-5, 221, -5, 5, 226, 5, "minecraft:air"));
+        fileCommands.add(setBlock(0, 222, -5, "minecraft:oak_wall_sign[facing=south,waterlogged=false]{Color:\"black\",GlowingText:0b,Text1:'{\"clickEvent\":{\"action\":\"run_command\",\"value\":\"tp @s 5 " + (worldBottom + 5) + " 5\"},\"text\":\"\"}',Text2:'{\"text\":\"Teleport to\"}',Text3:'{\"text\":\"Command Center\"}',Text4:'{\"text\":\"\"}'}"));
         fileCommands.add(setBlock(-2, worldBottom, -2, "minecraft:structure_block[mode=load]{metadata:\"\",mirror:\"NONE\",ignoreEnti" +
                 "ties:0b,powered:0b,seed:0L,author:\"?\",rotation:\"NONE\",posX:1,mode:\"LOAD\",posY:1,sizeX:18,posZ:1," +
                 "integrity:1.0f,showair:0b,name:\"minecraft:commandcenter_" + commandCenter + "\",sizeY:31,sizeZ:18,showboundingbox:1b}"));
@@ -862,7 +863,7 @@ public class Main {
 
     private FileData VictoryTraitor() {
         ArrayList<String> fileCommands = new ArrayList<>();
-        fileCommands.add("tellraw @a [\"\",{\"text\":\" ⎜ \",\"color\":\"gray\"},{\"text\":\"" + communityName + " UHC\",\"color\":\"gold\"},{\"text\":\" ⎜ \",\"color\":\"gray\"},{\"text\":\" GET PLAYED BRO!\",\"color\":\"light_purple\"},{\"text\":\" ⎜ \",\"color\":\"gray\"}]");
+        fileCommands.add("tellraw @a [\"\",{\"text\":\" ⎜ \",\"color\":\"gray\"},{\"text\":\"" + communityName + " UHC\",\"color\":\"gold\"},{\"text\":\" ⎜ \",\"color\":\"gray\"},{\"text\":\" TRAITOR VICTORY HAS BEEN ACHIEVED! 3 MINUTES UNTIL THE FINAL DEATHMATCH\",\"color\":\"light_purple\"},{\"text\":\" ⎜ \",\"color\":\"gray\"}]");
         fileCommands.add("title @a subtitle {\"text\":\"ggez\", \"bold\":true, \"italic\":true, \"color\":\"light_purple\"}");
         fileCommands.add("title @a title {\"text\":\"Traitors Win\", \"bold\":true, \"italic\":true, \"color\":\"gold\"}");
         fileCommands.add(callFunction(FileName.victory));
