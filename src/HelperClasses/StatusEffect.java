@@ -1,3 +1,5 @@
+package HelperClasses;
+
 public class StatusEffect {
 
     private String effectName;

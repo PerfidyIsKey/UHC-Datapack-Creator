@@ -1,4 +1,10 @@
+package FileGeneration;
+
+import FileGeneration.FileData;
+import FileGeneration.Recipe;
+
 import java.io.*;
+import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -35,25 +41,25 @@ public class FileTools {
         ArrayList<String> keys2 = new ArrayList<>();
         keys2.add("gold_ingot");
         keys2.add("player_head");
-        Recipe recipe2 = new Recipe("crafting_shaped", grid2, keys2, "golden_apple", 1);
+        FileGeneration.Recipe recipe2 = new FileGeneration.Recipe("crafting_shaped", grid2, keys2, "golden_apple", 1);
         recipes.add(recipe2);
         */
 
         for (Recipe r : recipes) {
             ArrayList<String> fileCommands = new ArrayList<>();
             fileCommands.add(" {");
-            fileCommands.add("        \"type\": \"" + r.type + "\",");
+            fileCommands.add("        \"type\": \"" + r.getType() + "\",");
             fileCommands.add("        \"pattern\": [");
-            fileCommands.add("            \"" + r.grid[0] + r.grid[1] + r.grid[2] + "\",");
-            fileCommands.add("            \"" + r.grid[3] + r.grid[4] + r.grid[5] + "\",");
-            fileCommands.add("            \"" + r.grid[6] + r.grid[7] + r.grid[8] + "\"");
+            fileCommands.add("            \"" + r.getGrid()[0] + r.getGrid()[1] + r.getGrid()[2] + "\",");
+            fileCommands.add("            \"" + r.getGrid()[3] + r.getGrid()[4] + r.getGrid()[5] + "\",");
+            fileCommands.add("            \"" + r.getGrid()[6] + r.getGrid()[7] + r.getGrid()[8] + "\"");
             fileCommands.add("        ],");
             fileCommands.add("        \"key\": {");
             int counter = 1;
-            for (String key : r.keys) {
+            for (String key : r.getKeys()) {
                 fileCommands.add("            \"" + counter + "\": {");
                 fileCommands.add("                \"item\": \"" + key + "\"");
-                if (r.keys.size() == counter) {
+                if (r.getKeys().size() == counter) {
                     fileCommands.add("            }");
                 } else {
                     fileCommands.add("            },");
@@ -62,12 +68,12 @@ public class FileTools {
             }
             fileCommands.add("        },");
             fileCommands.add("        \"result\": {");
-            fileCommands.add("            \"item\": \"" + r.resultItem + "\",");
-            fileCommands.add("            \"count\": " + r.resultAmount);
+            fileCommands.add("            \"item\": \"" + r.getResultItem() + "\",");
+            fileCommands.add("            \"count\": " + r.getResultAmount());
             fileCommands.add("        }");
             fileCommands.add("    }");
 
-            FileData fileData = new FileData(r.resultItem + r.resultAmount, fileCommands, "recipe");
+            FileData fileData = new FileData(r.getResultItem() + r.getResultAmount(), fileCommands, "recipe");
             files.add(fileData);
         }
         return files;
@@ -206,11 +212,17 @@ public class FileTools {
                 .forEach(source -> {
                     Path destination = Paths.get(destinationDirectoryLocation, source.toString()
                             .substring(sourceDirectoryLocation.length()));
-                    try {
-                        Files.copy(source, destination);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+
+                        try {
+                            try {
+                            Files.copy(source, destination);
+                            }catch (FileAlreadyExistsException e) {
+                                System.out.println("File already exists at location");
+                            }
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+
                 });
     }
 

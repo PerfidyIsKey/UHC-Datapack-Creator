@@ -1,3 +1,5 @@
+package HelperClasses;
+
 public class Perk {
 
     private int id;

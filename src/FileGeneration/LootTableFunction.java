@@ -1,3 +1,5 @@
+package FileGeneration;
+
 public class LootTableFunction {
 
     private int itemCount;

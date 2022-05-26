@@ -1,3 +1,5 @@
+package HelperClasses;
+
 public class ScoreboardObjective {
     private String name;
     private String type;

@@ -1,3 +1,5 @@
+package HelperClasses;
+
 public class ControlPoint {
 
     private String name;

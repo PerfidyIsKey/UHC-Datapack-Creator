@@ -1,3 +1,5 @@
+package HelperClasses;
+
 public class BossBar {
 
     private String name;

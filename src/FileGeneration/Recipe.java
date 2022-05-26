@@ -1,11 +1,13 @@
+package FileGeneration;
+
 import java.util.ArrayList;
 
 public class Recipe {
-    String type;
-    String[] grid;
-    ArrayList<String> keys;
-    String resultItem;
-    int resultAmount;
+    private String type;
+    private String[] grid;
+    private ArrayList<String> keys;
+    private String resultItem;
+    private int resultAmount;
 
     public Recipe(String type, String[] grid, ArrayList<String> keys, String resultItem, int resultAmount) {
         this.type = type;
