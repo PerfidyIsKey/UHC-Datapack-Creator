@@ -1,3 +1,5 @@
+package HelperClasses;
+
 public class Team {
 
     private String name;

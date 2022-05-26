@@ -1,3 +1,5 @@
+package HelperClasses;
+
 public class CarePackage {
     private String name;
     private String displayName;

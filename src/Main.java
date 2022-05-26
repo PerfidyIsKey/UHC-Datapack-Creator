@@ -1,4 +1,6 @@
 import Enums.*;
+import FileGeneration.*;
+import HelperClasses.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -14,13 +16,13 @@ public class Main {
     FileTools fileTools;
 
     //DatapackData<
-    private static final int gameMode = 2;
+    private static final int gameMode = 1;
     /*
      * 1: The Diorite Experts
      * 2: University Racing Eindhoven
      */
 
-    private static final int adminMode = 2;
+    private static final int adminMode = 1;
     /*
      * 1: Wouter
      * 2: Bas
@@ -208,7 +210,7 @@ public class Main {
                 players.add(new Player("Vladik71", 35));
                 players.add(new Player("Smashking242", 14));
                 players.add(new Player("Pfalz_", 15));
-                players.add(new Player("ThurianBohan", 37,true));
+                players.add(new Player("ThurianBohan", 37, true));
                 players.add(new Player("ThurianBodan", 37));
                 players.add(new Player("PerfidyIsKey", 80));
                 players.add(new Player("deuce__", 13));
@@ -383,7 +385,7 @@ public class Main {
         lootEntry.add(new LootTableEntry(15, "amethyst_block", new LootTableFunction(16)));
         lootEntry.add(new LootTableEntry(10, "copper_block", new LootTableFunction(16)));
         lootEntry.add(new LootTableEntry(5, "tnt", new LootTableFunction(4)));
-        lootEntry.add(new LootTableEntry(10,"bread", new LootTableFunction(5)));
+        lootEntry.add(new LootTableEntry(10, "bread", new LootTableFunction(5)));
 
         ArrayList<String> fileCommands = fileTools.generateLootTable(lootEntry);
 
@@ -420,7 +422,7 @@ public class Main {
     }
 
     private ArrayList<String> forceLoadAndSet(int x, int y, int z, BlockType blockType) {
-        return forceLoadAndSet(x, y, z, blockType+"");
+        return forceLoadAndSet(x, y, z, blockType + "");
     }
 
     private ArrayList<String> forceLoadAndSet(int x, int y, int z, String blockType, SetBlockType type) {
@@ -432,7 +434,7 @@ public class Main {
     }
 
     private ArrayList<String> forceLoadAndSet(int x, int y, int z, BlockType blockType, SetBlockType type) {
-       return forceLoadAndSet(x, y, z, blockType+"", type);
+        return forceLoadAndSet(x, y, z, blockType + "", type);
     }
 
     private String setBlock(int x, int y, int z, String blockType) {
@@ -633,7 +635,7 @@ public class Main {
     private FileData BossBarValue() {
         ArrayList<String> fileCommands = new ArrayList<>();
         for (Team t : teams) {
-            fileCommands.add(execute.If(new Score("@r[limit=1,gamemode=!spectator,team=" + t.getName() + "]", "ControlPoint1",  ">",  "@p[scores={Admin=1}] Highscore1")) +
+            fileCommands.add(execute.If(new Score("@r[limit=1,gamemode=!spectator,team=" + t.getName() + "]", "ControlPoint1", ">", "@p[scores={Admin=1}] Highscore1")) +
                     getBossbarByName("cp1").setColor(t.getBossbarColor()));
             fileCommands.add(execute.If(new Score("@r[limit=1,gamemode=!spectator,team=" + t.getName() + "]", "ControlPoint2", ">", "@p[scores={Admin=1}] Highscore2")) +
                     getBossbarByName("cp2").setColor(t.getBossbarColor()));
@@ -935,7 +937,7 @@ public class Main {
                 "scoreboard players add @a[distance=9..,gamemode=!spectator, scores={MSGDum1CP" + i + "=" + (10 * tickPerSecond) + "..}] MSGDum2CP" + i + " 1");
 
         fileCommands.add(execute.Positioned(controlPoints.get(i - 1).getX(), controlPoints.get(i - 1).getY() + 5, controlPoints.get(i - 1).getZ(), false) +
-                execute.IfNext(new Selector(i + "=" + (10 * tickPerSecond) + ",MSGDum1CP" + i + "=" + (10 * tickPerSecond) + "..}]"), true) +
+                execute.IfNext(new Selector("@p[distance=9..,gamemode=!spectator,scores={MSGDum2CP" + i + "=" + (10 * tickPerSecond) + ",MSGDum1CP" + i + "=" + (10 * tickPerSecond) + "..}]"), true) +
                 "tellraw @a [\"\",{\"text\":\" ⎜ \",\"color\":\"gray\"},{\"text\":\"" + communityName + " UHC\",\"color\":\"gold\"},{\"text\":\" ⎜ \",\"color\":\"gray\"},{\"text\":\"CONTROL POINT " + i + " HAS BEEN ABANDONED\",\"color\":\"light_purple\"},{\"text\":\" ⎜ \",\"color\":\"gray\"}]");
 
         fileCommands.add(execute.Positioned(controlPoints.get(i - 1).getX(), controlPoints.get(i - 1).getY() + 5, controlPoints.get(i - 1).getZ(), false) +
@@ -1168,7 +1170,7 @@ public class Main {
             fileCommands.add("tag @a[team=" + t.getName() + "] add CollarCheck");
             fileCommands.add(execute.As("@e[type=wolf]", false) +
                     execute.IfNext(new Score("@s", "CollarCheck0", "=", "@p[tag=CollarCheck] CollarCheck0")) +
-                    execute.IfNext(new Score("@s", "CollarCheck1",  "=", "@p[tag=CollarCheck] CollarCheck1"), true) +
+                    execute.IfNext(new Score("@s", "CollarCheck1", "=", "@p[tag=CollarCheck] CollarCheck1"), true) +
                     "data modify entity @s CollarColor set value " + t.getCollarColor() + "b");
             fileCommands.add("tag @a[team=" + t.getName() + "] remove CollarCheck");
         }
@@ -1369,12 +1371,12 @@ public class Main {
         ArrayList<String> fileCommands = new ArrayList<>();
         for (int i = 0; i < teams.size(); i++) {
             for (int j = 1; j < 3; j++) {
-                fileCommands.add(execute.If(new Selector("@a[limit=1,scores={Admin=1,Victory=1}]")) +
-                        execute.IfNext(new Selector("@p[team=" + teams.get(i).getName() + ",gamemode=!spectator,scores={ControlPoint" + j + "=" + (maxCPScore*tickPerSecond) + "..},tag=!Traitor]"), true) +
+                fileCommands.add(execute.If(new Selector("@a[limit=1,scores={Admin=1,Victory=1}]"), false) +
+                        execute.IfNext(new Selector("@p[team=" + teams.get(i).getName() + ",gamemode=!spectator,scores={ControlPoint" + j + "=" + (maxCPScore * tickPerSecond) + "..},tag=!Traitor]"), true) +
                         callFunction("" + FileName.victory_message_ + i));
-                fileCommands.add(execute.If(new Selector("@a[limit=1,scores={Admin=1,Victory=1}]")) +
-                        execute.IfNext(new Selector("@p[team=" + teams.get(i).getName() + ",gamemode=!spectator,scores={ControlPoint" + j + "=" + (maxCPScore*tickPerSecond) + "..},tag=Traitor]")) +
-                        execute.UnlessNext(new Selector("@p[team=" + teams.get(i).getName() + ",gamemode=!spectator,scores={ControlPoint" + j + "=" + (maxCPScore*tickPerSecond) + "..},tag=!Traitor]"), true) +
+                fileCommands.add(execute.If(new Selector("@a[limit=1,scores={Admin=1,Victory=1}]"), false) +
+                        execute.IfNext(new Selector("@p[team=" + teams.get(i).getName() + ",gamemode=!spectator,scores={ControlPoint" + j + "=" + (maxCPScore * tickPerSecond) + "..},tag=Traitor]")) +
+                        execute.UnlessNext(new Selector("@p[team=" + teams.get(i).getName() + ",gamemode=!spectator,scores={ControlPoint" + j + "=" + (maxCPScore * tickPerSecond) + "..},tag=!Traitor]"), true) +
                         callFunction(FileName.victory_message_traitor));
             }
         }

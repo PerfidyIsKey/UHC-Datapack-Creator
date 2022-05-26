@@ -1,3 +1,5 @@
+package FileGeneration;
+
 public class LootTableEntry {
 
     private int weight;

@@ -1,3 +1,5 @@
+package HelperClasses;
+
 public class Location {
     private String location;
 

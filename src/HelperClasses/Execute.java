@@ -1,4 +1,7 @@
+package HelperClasses;
+
 import Enums.Dimension;
+import HelperClasses.Condition;
 
 public class Execute {
 
@@ -130,7 +133,7 @@ public class Execute {
     }
 
     public String UnlessNext(Condition condition, boolean run) {
-        return Next("unless " + condition + " ", run);
+        return Next("unless " + condition.getText() + " ", run);
     }
 
     public String UnlessNext(Condition condition) {

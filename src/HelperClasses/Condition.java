@@ -1,3 +1,5 @@
+package HelperClasses;
+
 public class Condition {
 
     private String text;
