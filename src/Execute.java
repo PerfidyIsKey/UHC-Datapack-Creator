@@ -25,36 +25,36 @@ public class Execute {
         return wrap(content, false, run);
     }
 
-    public String If(String condition, boolean run) {
+    public String If(Condition condition, boolean run) {
         return Standard(IfNext(condition), run);
     }
 
-    public String If(String condition) {
-        return Standard(IfNext(condition), true);
+    public String If(Condition condition) {
+        return If(condition, true);
     }
 
-    public String IfNext(String condition, boolean run) {
-        return Next("if " + condition + " ", run);
+    public String IfNext(Condition condition, boolean run) {
+        return Next("if " + condition.getText() + " ", run);
     }
 
-    public String IfNext(String condition) {
-        return Next("if " + condition + " ", false);
+    public String IfNext(Condition condition) {
+        return IfNext(condition, false);
     }
 
-    public String At(String location, boolean run) {
+    public String At(Location location, boolean run) {
         return Standard(AtNext(location), run);
     }
 
-    public String At(String location) {
-        return Standard(AtNext(location), true);
+    public String At(Location location) {
+        return At(location, true);
     }
 
-    public String AtNext(String location, boolean run) {
-        return Next("at " + location + " ", run);
+    public String AtNext(Location location, boolean run) {
+        return Next("at " + location.getLocation() + " ", run);
     }
 
-    public String AtNext(String location) {
-        return Next("at " + location + " ", false);
+    public String AtNext(Location location) {
+        return AtNext(location, false);
     }
 
     public String As(String entity, boolean run) {
@@ -121,20 +121,20 @@ public class Execute {
         return Next("in minecraft:" + dimension + " ", false);
     }
 
-    public String Unless(String condition, boolean run) {
+    public String Unless(Condition condition, boolean run) {
         return Standard(UnlessNext(condition), run);
     }
 
-    public String Unless(String condition) {
-        return Standard(UnlessNext(condition), true);
+    public String Unless(Condition condition) {
+        return Unless(condition, true);
     }
 
-    public String UnlessNext(String condition, boolean run) {
+    public String UnlessNext(Condition condition, boolean run) {
         return Next("unless " + condition + " ", run);
     }
 
-    public String UnlessNext(String condition) {
-        return Next("unless " + condition + " ", false);
+    public String UnlessNext(Condition condition) {
+        return UnlessNext(condition, false);
     }
 
     public String StoreResult(String execution) {
