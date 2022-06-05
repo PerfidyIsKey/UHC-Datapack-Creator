@@ -16,13 +16,13 @@ public class Main {
     FileTools fileTools;
 
     //DatapackData<
-    private static final int gameMode = 1;
+    private static final int gameMode = 2;
     /*
      * 1: The Diorite Experts
      * 2: University Racing Eindhoven
      */
 
-    private static final int adminMode = 1;
+    private static final int adminMode = 2;
     /*
      * 1: Wouter
      * 2: Bas
@@ -62,7 +62,7 @@ public class Main {
     private static final int traitorMode = 1;
     private String communityName;
     private static final ControlPoint cp1 = new ControlPoint("CP1", 20 * secPerMinute * tickPerSecond * 2, 2, 0, 0, 0);
-    private static final ControlPoint cp2 = new ControlPoint("CP2", 20 * secPerMinute * tickPerSecond * 2, 3, 0, 0, 0);
+    private static final ControlPoint cp2 = new ControlPoint("CP2", 20 * secPerMinute * tickPerSecond * 2, 3, 0, 0, 0,Dimension.nether);
     private static final Execute execute = new Execute();
 
     //GameData>
@@ -568,9 +568,9 @@ public class Main {
 
         fileCommands.add(getBossbarByName("cp1").remove());
         fileCommands.add(getBossbarByName("cp2").remove());
-        fileCommands.add(getBossbarByName("cp1").add(cp1.getName() + ": " + cp1.getX() + ", " + cp1.getY() + ", " + cp1.getZ()));
+        fileCommands.add(getBossbarByName("cp1").add(cp1.getName() + ": " + cp1.getX() + ", " + cp1.getY() + ", " + cp1.getZ() + " (" + cp1.getDimension() + ")"));
         fileCommands.add(getBossbarByName("cp1").setMax(cp1.getMaxVal()));
-        fileCommands.add(getBossbarByName("cp2").add(cp2.getName() + " soon: " + cp2.getX() + ", " + cp2.getY() + ", " + cp2.getZ()));
+        fileCommands.add(getBossbarByName("cp2").add(cp2.getName() + " soon: " + cp2.getX() + ", " + cp2.getY() + ", " + cp2.getZ() + " (" + cp2.getDimension() + ")"));
         fileCommands.add(getBossbarByName("cp2").setMax(cp2.getMaxVal()));
         fileCommands.add(getBossbarByName("carepackage").add("Care Package available at x, y, z"));
         //end bossbar
@@ -693,11 +693,11 @@ public class Main {
         fileCommands.add(setBlock(11, worldBottom + 2, 0, BlockType.bedrock, SetBlockType.destroy));
         fileCommands.add(setBlock(10, worldBottom + 2, 0, BlockType.bedrock, SetBlockType.destroy));
         fileCommands.add(getBossbarByName("cp").setTitle(cp1.getName() + ": " + cp1.getX() + ", " + cp1.getY() + ", " + cp1.getZ() + "; " + cp2.getName() + " soon: " + cp2.getX() + ", " + cp2.getY() + ", " + cp2.getZ()));
-        fileCommands.add("forceload add " + cp1.getX() + " " + cp1.getZ() + " " + cp1.getX() + " " + cp1.getZ());
-        fileCommands.add("forceload add " + cp2.getX() + " " + cp2.getZ() + " " + cp2.getX() + " " + cp2.getZ());
+        fileCommands.add(execute.In(cp1.getDimension()) + "forceload add" + cp1.getX() + " " + cp1.getZ() + " " + cp1.getX() + " " + cp1.getZ());
+        fileCommands.add(execute.In(cp2.getDimension()) + "forceload add " + cp2.getX() + " " + cp2.getZ() + " " + cp2.getX() + " " + cp2.getZ());
         fileCommands.add(callFunction(FileName.spawn_controlpoints));
-        fileCommands.add("forceload remove " + cp1.getX() + " " + cp1.getZ() + " " + cp1.getX() + " " + cp1.getZ());
-        fileCommands.add("forceload remove " + cp2.getX() + " " + cp2.getZ() + " " + cp2.getX() + " " + cp2.getZ());
+        fileCommands.add(execute.In(cp1.getDimension()) + "forceload remove " + cp1.getX() + " " + cp1.getZ() + " " + cp1.getX() + " " + cp1.getZ());
+        fileCommands.add(execute.In(cp2.getDimension()) + "forceload remove " + cp2.getX() + " " + cp2.getZ() + " " + cp2.getX() + " " + cp2.getZ());
         BossBar bossBarCp1 = getBossbarByName("cp1");
         BossBar bossBarCp2 = getBossbarByName("cp2");
         BossBar bossBarCarePackage = getBossbarByName("carepackage");
@@ -707,7 +707,7 @@ public class Main {
         fileCommands.add(bossBarCp2.setColor("white"));
         fileCommands.add(bossBarCp2.setVisible(false));
         fileCommands.add(bossBarCp2.setPlayers("@a"));
-        fileCommands.add(bossBarCp2.setTitle(cp2.getName() + " soon: " + cp2.getX() + ", " + cp2.getY() + ", " + cp2.getZ()));
+        fileCommands.add(bossBarCp2.setTitle(cp2.getName() + " soon: " + cp2.getX() + ", " + cp2.getY() + ", " + cp2.getZ() + " (" + cp2.getDimension() + ")"));
         fileCommands.add(bossBarCarePackage.setVisible(false));
         fileCommands.add(bossBarCarePackage.setPlayers("@a"));
         fileCommands.add("tag @a remove Traitor");
@@ -846,7 +846,7 @@ public class Main {
         fileCommands.add("tellraw @a [\"\",{\"text\":\" ⎜ \",\"color\":\"gray\"},{\"text\":\"" + communityName + " UHC\",\"color\":\"gold\"},{\"text\":\" ⎜ \",\"color\":\"gray\"},{\"text\":\"CONTROL POINT 2 IS NOW AVAILABLE!\",\"color\":\"light_purple\"},{\"text\":\" ⎜ \",\"color\":\"gray\"}]");
         fileCommands.add(setBlock(15, worldBottom + 2, 11, BlockType.redstone_block, SetBlockType.replace));
         fileCommands.addAll(forceLoadAndSet(cp2.getX(), cp2.getY() + 3, cp2.getZ(), BlockType.air, SetBlockType.replace));
-        fileCommands.add(getBossbarByName("cp2").setTitle("CP2: " + cp2.getX() + ", " + cp2.getY() + ", " + cp2.getZ() + " (faster capping!)"));
+        fileCommands.add(getBossbarByName("cp2").setTitle("CP2: " + cp2.getX() + ", " + cp2.getY() + ", " + cp2.getZ() + " (" + cp2.getDimension() + ") - FASTER!!"));
         //fileCommands.add("give @a[scores={ControlPoint1=14400..}] minecraft:splash_potion{CustomPotionEffects:[{Id:11,Duration:1200},{Id:24,Duration:1200}],CustomPotionColor:15462415,display:{Name:\"\\\"Hero of the First Control Point\\\"\",Lore:[\"Thank you for enabling the second Control Point! Good luck with winning the match!\"]}}");
         fileCommands.add(callFunction(FileName.carepackage_ + carePackages.get(0).getName()));
 
@@ -903,33 +903,41 @@ public class Main {
     private FileData Controlpoint(int i) {
         ArrayList<String> fileCommands = new ArrayList<>();
         for (Team team : teams) {
-            fileCommands.add(execute.As("@a[gamemode=!spectator,team=" + team.getName() + "]", false) +
+            fileCommands.add(execute.In(controlPoints.get(i-1).getDimension(),false) +
+                    execute.AsNext("@a[gamemode=!spectator,team=" + team.getName() + "]", false) +
                     execute.IfNext(new Selector("@a[gamemode=!spectator,x=" + (controlPoints.get(i - 1).getX() - 6) + ",y=" + (controlPoints.get(i - 1).getY() - 1) + ",z=" + (controlPoints.get(i - 1).getZ() - 6) + ",dx=12,dy=12,dz=12]")) +
                     execute.AtNext(new Location("@s")) +
                     execute.UnlessNext(new Selector("@a[gamemode=!spectator,x=" + (controlPoints.get(i - 1).getX() - 6) + ",y=" + (controlPoints.get(i - 1).getY() - 1) + ",z=" + (controlPoints.get(i - 1).getZ() - 6) + ",dx=12,dy=12,dz=12,team=!" + team.getName() + "]"), true) +
                     "scoreboard players add @s ControlPoint" + i + " " + controlPoints.get(i - 1).getAddRate());
 
-            fileCommands.add(execute.If(new Score("@r[limit=1,gamemode=!spectator,team=" + team.getName() + "]", "ControlPoint" + i, ">", "@p[scores={Admin=1}] Highscore" + i)) +
+            fileCommands.add(execute.In(controlPoints.get(i-1).getDimension(),false) +
+                    execute.IfNext(new Score("@r[limit=1,gamemode=!spectator,team=" + team.getName() + "]", "ControlPoint" + i, ">", "@p[scores={Admin=1}] Highscore" + i)) +
                     setBlock(controlPoints.get(i - 1).getX(), controlPoints.get(i - 1).getY() + 1, controlPoints.get(i - 1).getZ(), "minecraft:" + team.getGlassColor() + "_stained_glass", SetBlockType.replace));
         }
-        fileCommands.add(execute.If(new Selector("@p[x=" + (controlPoints.get(i - 1).getX() - 6) + ",y=" + (controlPoints.get(i - 1).getY() - 1) + ",z=" + (controlPoints.get(i - 1).getZ() - 6) + ",dx=12,dy=12,dz=12,gamemode=!spectator]")) +
+        fileCommands.add(execute.In(controlPoints.get(i-1).getDimension(),false) +
+                execute.IfNext(new Selector("@p[x=" + (controlPoints.get(i - 1).getX() - 6) + ",y=" + (controlPoints.get(i - 1).getY() - 1) + ",z=" + (controlPoints.get(i - 1).getZ() - 6) + ",dx=12,dy=12,dz=12,gamemode=!spectator]")) +
                 "scoreboard players add @a[x=" + (controlPoints.get(i - 1).getX() - 6) + ",y=" + (controlPoints.get(i - 1).getY() - 1) + ",z=" + (controlPoints.get(i - 1).getZ() - 6) + ",dx=12,dy=12,dz=12,gamemode=!spectator] MSGDum1CP" + i + " 1");
 
-        fileCommands.add(execute.If(new Selector("@p[x=" + (controlPoints.get(i - 1).getX() - 6) + ",y=" + (controlPoints.get(i - 1).getY() - 1) + ",z=" + (controlPoints.get(i - 1).getZ() - 6) + ",dx=12,dy=12,dz=12,gamemode=!spectator,scores={MSGDum1CP" + i + "=" + (10 * tickPerSecond) + "}]")) +
+        fileCommands.add(execute.In(controlPoints.get(i-1).getDimension(),false) +
+                execute.IfNext(new Selector("@p[x=" + (controlPoints.get(i - 1).getX() - 6) + ",y=" + (controlPoints.get(i - 1).getY() - 1) + ",z=" + (controlPoints.get(i - 1).getZ() - 6) + ",dx=12,dy=12,dz=12,gamemode=!spectator,scores={MSGDum1CP" + i + "=" + (10 * tickPerSecond) + "}]")) +
                 "tellraw @a [\"\",{\"text\":\" ⎜ \",\"color\":\"gray\"},{\"text\":\"" + communityName + " UHC\",\"color\":\"gold\"},{\"text\":\" ⎜ \",\"color\":\"gray\"},{\"text\":\"CONTROL POINT " + i + " IS UNDER ATTACK!\",\"color\":\"light_purple\"},{\"text\":\" ⎜ \",\"color\":\"gray\"}]");
 
-        fileCommands.add(execute.If(new Selector("@p[x=" + (controlPoints.get(i - 1).getX() - 6) + ",y=" + (controlPoints.get(i - 1).getY() - 1) + ",z=" + (controlPoints.get(i - 1).getZ() - 6) + ",dx=12,dy=12,dz=12,gamemode=!spectator,scores={MSGDum1CP" + i + "=" + (10 * tickPerSecond) + "}]")) +
+        fileCommands.add(execute.In(controlPoints.get(i-1).getDimension(),false) +
+                execute.IfNext(new Selector("@p[x=" + (controlPoints.get(i - 1).getX() - 6) + ",y=" + (controlPoints.get(i - 1).getY() - 1) + ",z=" + (controlPoints.get(i - 1).getZ() - 6) + ",dx=12,dy=12,dz=12,gamemode=!spectator,scores={MSGDum1CP" + i + "=" + (10 * tickPerSecond) + "}]")) +
                 "scoreboard players reset @a[x=" + (controlPoints.get(i - 1).getX() - 6) + ",y=" + (controlPoints.get(i - 1).getY() - 1) + ",z=" + (controlPoints.get(i - 1).getZ() - 6) + ",dx=12,dy=12,dz=12,gamemode=!spectator] MSGDum2CP" + i);
 
-        fileCommands.add(execute.Positioned(controlPoints.get(i - 1).getX(), controlPoints.get(i - 1).getY() + 5, controlPoints.get(i - 1).getZ(), false) +
+        fileCommands.add(execute.In(controlPoints.get(i-1).getDimension(),false) +
+                execute.PositionedNext(controlPoints.get(i - 1).getX(), controlPoints.get(i - 1).getY() + 5, controlPoints.get(i - 1).getZ(), false) +
                 execute.IfNext(new Selector("@p[distance=9..,gamemode=!spectator, scores={MSGDum1CP" + i + "=" + (10 * tickPerSecond) + "..}]"), true) +
                 "scoreboard players add @a[distance=9..,gamemode=!spectator, scores={MSGDum1CP" + i + "=" + (10 * tickPerSecond) + "..}] MSGDum2CP" + i + " 1");
 
-        fileCommands.add(execute.Positioned(controlPoints.get(i - 1).getX(), controlPoints.get(i - 1).getY() + 5, controlPoints.get(i - 1).getZ(), false) +
+        fileCommands.add(execute.In(controlPoints.get(i-1).getDimension(),false) +
+                execute.PositionedNext(controlPoints.get(i - 1).getX(), controlPoints.get(i - 1).getY() + 5, controlPoints.get(i - 1).getZ(), false) +
                 execute.IfNext(new Selector("@p[distance=9..,gamemode=!spectator,scores={MSGDum2CP" + i + "=" + (10 * tickPerSecond) + ",MSGDum1CP" + i + "=" + (10 * tickPerSecond) + "..}]"), true) +
                 "tellraw @a [\"\",{\"text\":\" ⎜ \",\"color\":\"gray\"},{\"text\":\"" + communityName + " UHC\",\"color\":\"gold\"},{\"text\":\" ⎜ \",\"color\":\"gray\"},{\"text\":\"CONTROL POINT " + i + " HAS BEEN ABANDONED\",\"color\":\"light_purple\"},{\"text\":\" ⎜ \",\"color\":\"gray\"}]");
 
-        fileCommands.add(execute.Positioned(controlPoints.get(i - 1).getX(), controlPoints.get(i - 1).getY() + 5, controlPoints.get(i - 1).getZ(), false) +
+        fileCommands.add(execute.In(controlPoints.get(i-1).getDimension(),false) +
+                execute.PositionedNext(controlPoints.get(i - 1).getX(), controlPoints.get(i - 1).getY() + 5, controlPoints.get(i - 1).getZ(), false) +
                 execute.IfNext(new Selector("@p[distance=9..,gamemode=!spectator,scores={MSGDum2CP" + i + "=" + (10 * tickPerSecond) + ",MSGDum1CP" + i + "=" + (10 * tickPerSecond) + "..}]"), true) +
                 "scoreboard players reset @a[distance=9..,gamemode=!spectator] MSGDum1CP" + i);
 
@@ -1078,10 +1086,12 @@ public class Main {
         }
 
         for (Team t : teams) {
-            fileCommands.add(execute.As("@r[limit=1,gamemode=!spectator,x=" + (cp1.getX() - 6) + ",y=" + (cp1.getY() - 1) + ",z=" + (cp1.getZ() - 6) + ",dx=12,dy=12,dz=12,team=" + t.getName() + "]") +
+            fileCommands.add(execute.In(cp1.getDimension(),false) +
+                    execute.AsNext("@r[limit=1,gamemode=!spectator,x=" + (cp1.getX() - 6) + ",y=" + (cp1.getY() - 1) + ",z=" + (cp1.getZ() - 6) + ",dx=12,dy=12,dz=12,team=" + t.getName() + "]") +
                     "scoreboard players operation @p[scores={Admin=1}] CP1" + t.getName() + " > @p[scores={Admin=1}] CP2" + t.getName());
 
-            fileCommands.add(execute.As("@r[limit=1,gamemode=!spectator,x=" + (cp2.getX() - 6) + ",y=" + (cp2.getY() - 1) + ",z=" + (cp2.getZ() - 6) + ",dx=12,dy=12,dz=12,team=" + t.getName() + "]") +
+            fileCommands.add(execute.In(cp2.getDimension(),false) +
+                    execute.As("@r[limit=1,gamemode=!spectator,x=" + (cp2.getX() - 6) + ",y=" + (cp2.getY() - 1) + ",z=" + (cp2.getZ() - 6) + ",dx=12,dy=12,dz=12,team=" + t.getName() + "]") +
                     "scoreboard players operation @p[scores={Admin=1}] CP2" + t.getName() + " > @p[scores={Admin=1}] CP1" + t.getName());
         }
         fileCommands.add(callFunction(FileName.controlpoint_perks));
@@ -1093,14 +1103,14 @@ public class Main {
         ArrayList<String> fileCommands = new ArrayList<>();
 
         for (ControlPoint cp : controlPoints) {
-            fileCommands.add("forceload add " + cp.getX() + " " + cp.getZ() + " " + cp.getX() + " " + cp.getZ());
-            fileCommands.add(setBlock(cp.getX(), cp.getY() + 11, cp.getZ(), "minecraft:structure_block[mode=load]{metadata:\"\",mirror:\"NONE\",ignoreEntities:1b,powered:0b,seed:0L,author:\"?\",rotation:\"NONE\",posX:-6,mode:\"LOAD\",posY:-13,sizeX:13,posZ:-6,integrity:1.0f,showair:0b,name:\"minecraft:control_point\",sizeY:14,sizeZ:13,showboundingbox:1b}", SetBlockType.replace));
-            fileCommands.add(callFunction(FileName.controlpoint_redstone, 0.05));
+            fileCommands.add(execute.In(cp.getDimension()) + "forceload add " + cp.getX() + " " + cp.getZ() + " " + cp.getX() + " " + cp.getZ());
+            fileCommands.add(execute.In(cp.getDimension()) + setBlock(cp.getX(), cp.getY() + 11, cp.getZ(), "minecraft:structure_block[mode=load]{metadata:\"\",mirror:\"NONE\",ignoreEntities:1b,powered:0b,seed:0L,author:\"?\",rotation:\"NONE\",posX:-6,mode:\"LOAD\",posY:-13,sizeX:13,posZ:-6,integrity:1.0f,showair:0b,name:\"minecraft:control_point\",sizeY:14,sizeZ:13,showboundingbox:1b}", SetBlockType.replace));
+            fileCommands.add(execute.In(cp.getDimension()) + callFunction(FileName.controlpoint_redstone, 0.05));
             for (int i = cp.getY() + 12; i < worldHeight; i++) {
-                fileCommands.add(execute.Unless(new Block(cp.getX(), i, cp.getZ(), BlockType.air)) +
+                fileCommands.add(execute.In(cp.getDimension()) + execute.Unless(new Block(cp.getX(), i, cp.getZ(), BlockType.air)) +
                         setBlock(cp.getX(), i, cp.getZ(), BlockType.glass));
             }
-            fileCommands.add("forceload remove " + cp.getX() + " " + cp.getZ() + " " + cp.getX() + " " + cp.getZ());
+            fileCommands.add(execute.In(cp.getDimension()) + "forceload remove " + cp.getX() + " " + cp.getZ() + " " + cp.getX() + " " + cp.getZ());
         }
 
         return new FileData(FileName.spawn_controlpoints, fileCommands);
@@ -1121,7 +1131,8 @@ public class Main {
         ArrayList<String> fileCommands = new ArrayList<>();
 
         for (ControlPoint cp : controlPoints) {
-            fileCommands.add(execute.Positioned(cp.getX(), cp.getY(), cp.getZ()) +
+            fileCommands.add(execute.In(cp.getDimension(),false) +
+                    execute.PositionedNext(cp.getX(), cp.getY(), cp.getZ()) +
                     "effect give @p[gamemode=!spectator] minecraft:" + effect.get(i).getEffectName() + " " + effect.get(i).getDuration() + " " + effect.get(i).getAmplification());
         }
 
@@ -1214,7 +1225,8 @@ public class Main {
     private FileData CreateControlpointRedstone() {
         ArrayList<String> fileCommands = new ArrayList<>();
         for (ControlPoint cp : controlPoints) {
-            fileCommands.add(setBlock(cp.getX(), cp.getY() + 10, cp.getZ(), BlockType.redstone_block, SetBlockType.replace));
+            fileCommands.add(execute.In(cp1.getDimension()) +
+                    setBlock(cp.getX(), cp.getY() + 10, cp.getZ(), BlockType.redstone_block, SetBlockType.replace));
         }
 
         return new FileData(FileName.controlpoint_redstone, fileCommands);
