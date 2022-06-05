@@ -1,5 +1,7 @@
 package HelperClasses;
 
+import Enums.Dimension;
+
 public class ControlPoint {
 
     private String name;
@@ -11,6 +13,8 @@ public class ControlPoint {
     private int y;
     private int z;
 
+    private Enums.Dimension dimension;
+
     public ControlPoint(String name, int maxVal, int addRate, int x, int y, int z) {
         this.name = name;
         this.maxVal = maxVal;
@@ -18,6 +22,17 @@ public class ControlPoint {
         this.x = x;
         this.y = y;
         this.z = z;
+        this.dimension = Dimension.overworld;
+    }
+
+    public ControlPoint(String name, int maxVal, int addRate, int x, int y, int z, Enums.Dimension dimension) {
+        this.name = name;
+        this.maxVal = maxVal;
+        this.addRate = addRate;
+        this.x = x;
+        this.y = y;
+        this.z = z;
+        this.dimension = dimension;
     }
 
     public String getName() {
@@ -67,4 +82,8 @@ public class ControlPoint {
     public void setZ(int z) {
         this.z = z;
     }
+
+    public Enums.Dimension getDimension() { return dimension; }
+
+    public void setDimension(Enums.Dimension dimension) { this.dimension = dimension; }
 }
