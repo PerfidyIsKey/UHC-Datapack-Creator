@@ -62,7 +62,7 @@ public class Main {
     private static final int traitorMode = 1;
     private String communityName;
     private static final ControlPoint cp1 = new ControlPoint("CP1", 20 * secPerMinute * tickPerSecond * 2, 2, 0, 0, 0);
-    private static final ControlPoint cp2 = new ControlPoint("CP2", 20 * secPerMinute * tickPerSecond * 2, 3, 0, 0, 0,Dimension.nether);
+    private static final ControlPoint cp2 = new ControlPoint("CP2", 20 * secPerMinute * tickPerSecond * 2, 3, 0, 0, 0);
     private static final Execute execute = new Execute();
 
     //GameData>
@@ -595,14 +595,20 @@ public class Main {
         }
         //end teams
         //structure
-        fileCommands.add(fill(-6, 220, -6, 6, 226, 6, "minecraft:barrier"));
-        fileCommands.add(fill(-5, 221, -5, 5, 226, 5, "minecraft:air"));
-        fileCommands.add(setBlock(0, 222, -5, "minecraft:oak_wall_sign[facing=south,waterlogged=false]{Color:\"black\",GlowingText:0b,Text1:'{\"clickEvent\":{\"action\":\"run_command\",\"value\":\"tp @s 5 " + (worldBottom + 5) + " 5\"},\"text\":\"\"}',Text2:'{\"text\":\"Teleport to\"}',Text3:'{\"text\":\"Command Center\"}',Text4:'{\"text\":\"\"}'}"));
-        fileCommands.add(setBlock(-2, worldBottom, -2, "minecraft:structure_block[mode=load]{metadata:\"\",mirror:\"NONE\",ignoreEnti" +
+        fileCommands.add(execute.In(Dimension.overworld) +
+                fill(-6, 220, -6, 6, 226, 6, "minecraft:barrier"));
+        fileCommands.add(execute.In(Dimension.overworld) +
+                fill(-5, 221, -5, 5, 226, 5, "minecraft:air"));
+        fileCommands.add(execute.In(Dimension.overworld) +
+                setBlock(0, 222, -5, "minecraft:oak_wall_sign[facing=south,waterlogged=false]{Color:\"black\",GlowingText:0b,Text1:'{\"clickEvent\":{\"action\":\"run_command\",\"value\":\"tp @s 5 " + (worldBottom + 5) + " 5\"},\"text\":\"\"}',Text2:'{\"text\":\"Teleport to\"}',Text3:'{\"text\":\"Command Center\"}',Text4:'{\"text\":\"\"}'}"));
+        fileCommands.add(execute.In(Dimension.overworld) +
+                setBlock(-2, worldBottom, -2, "minecraft:structure_block[mode=load]{metadata:\"\",mirror:\"NONE\",ignoreEnti" +
                 "ties:0b,powered:0b,seed:0L,author:\"?\",rotation:\"NONE\",posX:1,mode:\"LOAD\",posY:1,sizeX:18,posZ:1," +
                 "integrity:1.0f,showair:0b,name:\"minecraft:commandcenter_" + commandCenter + "\",sizeY:31,sizeZ:18,showboundingbox:1b}"));
-        fileCommands.add(setBlock(-2, worldBottom + 1, -2, BlockType.redstone_block));
-        fileCommands.add(fill(0, worldBottom + 5, 1, 0, worldBottom + 6, 1, BlockType.air));
+        fileCommands.add(execute.In(Dimension.overworld) +
+                setBlock(-2, worldBottom + 1, -2, BlockType.redstone_block));
+        fileCommands.add(execute.In(Dimension.overworld) +
+                fill(0, worldBottom + 5, 1, 0, worldBottom + 6, 1, BlockType.air));
         //end structure
         //end structure
         //
@@ -696,15 +702,21 @@ public class Main {
         fileCommands.add(setGameRule(GameRule.sendCommandFeedback, true));
         fileCommands.add(setGameRule(GameRule.doImmediateRespawn, true));
         fileCommands.add("scoreboard players reset @a");
-        fileCommands.add(fill(0, worldBottom + 2, 15, 0, worldBottom + 2, 2, BlockType.bedrock, SetBlockType.replace));
-        fileCommands.add(fill(2, worldBottom + 2, 0, 8, worldBottom + 2, 0, BlockType.bedrock, SetBlockType.replace));
-        fileCommands.add(fill(15, worldBottom + 2, 3, 15, worldBottom + 2, 11, BlockType.bedrock, SetBlockType.replace));
+        fileCommands.add(execute.In(Dimension.overworld) +
+                fill(0, worldBottom + 2, 15, 0, worldBottom + 2, 2, BlockType.bedrock, SetBlockType.replace));
+        fileCommands.add(execute.In(Dimension.overworld) +
+                fill(2, worldBottom + 2, 0, 8, worldBottom + 2, 0, BlockType.bedrock, SetBlockType.replace));
+        fileCommands.add(execute.In(Dimension.overworld) +
+                fill(15, worldBottom + 2, 3, 15, worldBottom + 2, 11, BlockType.bedrock, SetBlockType.replace));
         fileCommands.add("scoreboard players set " + admin + " Admin 1");
-        fileCommands.add(fill(15, worldBottom + 2, 15, 9, worldBottom + 2, 15, BlockType.redstone_block, SetBlockType.replace));
-        fileCommands.add(setBlock(11, worldBottom + 2, 0, BlockType.bedrock, SetBlockType.destroy));
-        fileCommands.add(setBlock(10, worldBottom + 2, 0, BlockType.bedrock, SetBlockType.destroy));
+        fileCommands.add(execute.In(Dimension.overworld) +
+                fill(15, worldBottom + 2, 15, 9, worldBottom + 2, 15, BlockType.redstone_block, SetBlockType.replace));
+        fileCommands.add(execute.In(Dimension.overworld) +
+                setBlock(11, worldBottom + 2, 0, BlockType.bedrock, SetBlockType.destroy));
+        fileCommands.add(execute.In(Dimension.overworld) +
+                setBlock(10, worldBottom + 2, 0, BlockType.bedrock, SetBlockType.destroy));
         fileCommands.add(getBossbarByName("cp").setTitle(cp1.getName() + ": " + cp1.getX() + ", " + cp1.getY() + ", " + cp1.getZ() + "; " + cp2.getName() + " soon: " + cp2.getX() + ", " + cp2.getY() + ", " + cp2.getZ()));
-        fileCommands.add(execute.In(cp1.getDimension()) + "forceload add" + cp1.getX() + " " + cp1.getZ() + " " + cp1.getX() + " " + cp1.getZ());
+        fileCommands.add(execute.In(cp1.getDimension()) + "forceload add " + cp1.getX() + " " + cp1.getZ() + " " + cp1.getX() + " " + cp1.getZ());
         fileCommands.add(execute.In(cp2.getDimension()) + "forceload add " + cp2.getX() + " " + cp2.getZ() + " " + cp2.getX() + " " + cp2.getZ());
         fileCommands.add(callFunction(FileName.spawn_controlpoints));
         fileCommands.add(execute.In(cp1.getDimension()) + "forceload remove " + cp1.getX() + " " + cp1.getZ() + " " + cp1.getX() + " " + cp1.getZ());
@@ -756,7 +768,8 @@ public class Main {
     private FileData Predictions() {
         ArrayList<String> fileCommands = new ArrayList<>();
         fileCommands.add("effect clear @a");
-        fileCommands.add("tp @a 0 -100 0");
+        fileCommands.add(execute.In(Dimension.overworld) +
+                "tp @a 0 -100 0");
         fileCommands.add("tellraw @a [\"\",{\"text\":\" ｜ \",\"color\":\"gray\"},{\"text\":\"" + communityName +
                 " UHC\",\"color\":\"gold\"},{\"text\":\" ｜ \",\"color\":\"gray\"},{\"text\":\"PREDICTIONS COMPLETED" +
                 "\",\"color\":\"light_purple\"},{\"text\":\" ｜ \",\"color\":\"gray\"}]");
@@ -766,7 +779,8 @@ public class Main {
 
     private FileData IntoCalls() {
         ArrayList<String> fileCommands = new ArrayList<>();
-        fileCommands.add("tp @a " + startCoordinates);
+        fileCommands.add(execute.In(Dimension.overworld) +
+                "tp @a " + startCoordinates);
         fileCommands.add("scoreboard players reset @a Deaths");
         fileCommands.add("scoreboard players reset @a Kills");
 
@@ -775,7 +789,8 @@ public class Main {
 
     private static FileData SpreadPlayers() {
         ArrayList<String> fileCommands = new ArrayList<>();
-        fileCommands.add("spreadplayers 0 0 300 700 true @a");
+        fileCommands.add(execute.In(Dimension.overworld) +
+                "spreadplayers 0 0 300 700 true @a");
         fileCommands.add("scoreboard players set @p[scores={Admin=1}] Highscore 1");
         fileCommands.add("scoreboard players set @p[scores={Admin=1}] MinHealth 20");
 
@@ -811,10 +826,14 @@ public class Main {
         fileCommands.add("title @a title {\"text\":\"Game Starting Now!\", \"bold\":true, \"italic\":true, \"color\":\"gold\"}");
         fileCommands.add("gamemode survival @a");
         fileCommands.add(setGameRule(GameRule.sendCommandFeedback, false));
-        fileCommands.add(fill(0, worldBottom + 2, 15, 0, worldBottom + 2, 2, BlockType.redstone_block, SetBlockType.replace));
-        fileCommands.add(fill(2, worldBottom + 2, 0, 6, worldBottom + 2, 0, BlockType.redstone_block, SetBlockType.replace));
-        fileCommands.add(fill(15, worldBottom + 2, 15, 9, worldBottom + 2, 15, BlockType.bedrock));
-        fileCommands.add(setBlock(10, worldBottom + 2, 0, BlockType.redstone_block, SetBlockType.destroy));
+        fileCommands.add(execute.In(Dimension.overworld) +
+                fill(0, worldBottom + 2, 15, 0, worldBottom + 2, 2, BlockType.redstone_block, SetBlockType.replace));
+        fileCommands.add(execute.In(Dimension.overworld) +
+                fill(2, worldBottom + 2, 0, 6, worldBottom + 2, 0, BlockType.redstone_block, SetBlockType.replace));
+        fileCommands.add(execute.In(Dimension.overworld) +
+                fill(15, worldBottom + 2, 15, 9, worldBottom + 2, 15, BlockType.bedrock));
+        fileCommands.add(execute.In(Dimension.overworld) +
+                setBlock(10, worldBottom + 2, 0, BlockType.redstone_block, SetBlockType.destroy));
         fileCommands.add("advancement revoke @a everything");
         fileCommands.add("xp set @a 0 points");
         fileCommands.add("scoreboard players set @p[scores={Admin=1}] Victory 1");
@@ -825,9 +844,11 @@ public class Main {
 
     private static FileData BattleRoyale() {
         ArrayList<String> fileCommands = new ArrayList<>();
-        fileCommands.add(execute.Positioned(0, 151, 0) +
+        fileCommands.add(execute.In(Dimension.overworld,false) +
+                execute.PositionedNext(0, 151, 0,true) +
                 "gamemode survival @a[distance=..20,gamemode=!creative]");
-        fileCommands.add(execute.Positioned(0, 151, 0) +
+        fileCommands.add(execute.In(Dimension.overworld,false) +
+                execute.PositionedNext(0, 151, 0,true) +
                 "spreadplayers 0 0 300 700 true @a[distance=..20,gamemode=survival]");
 
         return new FileData(FileName.battle_royale, fileCommands);
@@ -836,15 +857,20 @@ public class Main {
     private FileData InitializeControlpoint() {
         ArrayList<String> fileCommands = new ArrayList<>();
         fileCommands.add("title @a subtitle {\"text\":\"is now enabled!\", \"bold\":true, \"italic\":true, \"color\":\"light_purple\"}");
-        fileCommands.add(setBlock(7, worldBottom + 2, 0, BlockType.redstone_block, SetBlockType.replace));
+        fileCommands.add(execute.In(Dimension.overworld) +
+                setBlock(7, worldBottom + 2, 0, BlockType.redstone_block, SetBlockType.replace));
         fileCommands.add("title @a title {\"text\":\"Control Point 1\", \"bold\":true, \"italic\":true, \"color\":\"gold\"}");
         fileCommands.add(getBossbarByName("cp1").setVisible(true));
         fileCommands.add(getBossbarByName("cp2").setVisible(true));
-        fileCommands.add(setBlock(6, worldBottom + 2, 0, BlockType.bedrock, SetBlockType.replace));
+        fileCommands.add(execute.In(Dimension.overworld) +
+                setBlock(6, worldBottom + 2, 0, BlockType.bedrock, SetBlockType.replace));
         fileCommands.addAll(forceLoadAndSet(cp1.getX(), cp1.getY() + 3, cp1.getZ(), BlockType.air, SetBlockType.replace));
-        fileCommands.add(setBlock(15, worldBottom + 2, 7, BlockType.redstone_block, SetBlockType.replace));
-        fileCommands.add(setBlock(15, worldBottom + 2, 6, BlockType.redstone_block, SetBlockType.replace));
-        fileCommands.add(setBlock(15, worldBottom + 2, 10, BlockType.redstone_block, SetBlockType.replace));
+        fileCommands.add(execute.In(Dimension.overworld) +
+                setBlock(15, worldBottom + 2, 7, BlockType.redstone_block, SetBlockType.replace));
+        fileCommands.add(execute.In(Dimension.overworld) +
+                setBlock(15, worldBottom + 2, 6, BlockType.redstone_block, SetBlockType.replace));
+        fileCommands.add(execute.In(Dimension.overworld) +
+                setBlock(15, worldBottom + 2, 10, BlockType.redstone_block, SetBlockType.replace));
         fileCommands.add(setGameRule(GameRule.doDaylightCycle, false));
 
         return new FileData(FileName.initialize_controlpoint, fileCommands);
@@ -852,10 +878,13 @@ public class Main {
 
     private FileData SecondControlpoint() {
         ArrayList<String> fileCommands = new ArrayList<>();
-        fileCommands.add(setBlock(7, worldBottom + 2, 0, BlockType.bedrock, SetBlockType.replace));
-        fileCommands.add(setBlock(8, worldBottom + 2, 0, BlockType.redstone_block, SetBlockType.replace));
+        fileCommands.add(execute.In(Dimension.overworld) +
+                setBlock(7, worldBottom + 2, 0, BlockType.bedrock, SetBlockType.replace));
+        fileCommands.add(execute.In(Dimension.overworld) +
+                setBlock(8, worldBottom + 2, 0, BlockType.redstone_block, SetBlockType.replace));
         fileCommands.add("tellraw @a [\"\",{\"text\":\" ⎜ \",\"color\":\"gray\"},{\"text\":\"" + communityName + " UHC\",\"color\":\"gold\"},{\"text\":\" ⎜ \",\"color\":\"gray\"},{\"text\":\"CONTROL POINT 2 IS NOW AVAILABLE!\",\"color\":\"light_purple\"},{\"text\":\" ⎜ \",\"color\":\"gray\"}]");
-        fileCommands.add(setBlock(15, worldBottom + 2, 11, BlockType.redstone_block, SetBlockType.replace));
+        fileCommands.add(execute.In(Dimension.overworld) +
+                setBlock(15, worldBottom + 2, 11, BlockType.redstone_block, SetBlockType.replace));
         fileCommands.addAll(forceLoadAndSet(cp2.getX(), cp2.getY() + 3, cp2.getZ(), BlockType.air, SetBlockType.replace));
         fileCommands.add(getBossbarByName("cp2").setTitle("CP2: " + cp2.getX() + ", " + cp2.getY() + ", " + cp2.getZ() + " (" + cp2.getDimension() + ") - FASTER!!"));
         //fileCommands.add("give @a[scores={ControlPoint1=14400..}] minecraft:splash_potion{CustomPotionEffects:[{Id:11,Duration:1200},{Id:24,Duration:1200}],CustomPotionColor:15462415,display:{Name:\"\\\"Hero of the First Control Point\\\"\",Lore:[\"Thank you for enabling the second Control Point! Good luck with winning the match!\"]}}");
@@ -905,7 +934,8 @@ public class Main {
         fileCommands.add("worldborder set 10 180");
         fileCommands.add(execute.In(Dimension.overworld) +
                 "tp @a[gamemode=!spectator] 3 153 3");
-        fileCommands.add("spreadplayers 0 0 75 150 true @a[gamemode=!spectator]");
+        fileCommands.add(execute.In(Dimension.overworld) +
+                "spreadplayers 0 0 75 150 true @a[gamemode=!spectator]");
         fileCommands.add(getBossbarByName("cp").setVisible(false));
 
         return new FileData(FileName.death_match, fileCommands);
@@ -922,19 +952,19 @@ public class Main {
                     "scoreboard players add @s ControlPoint" + i + " " + controlPoints.get(i - 1).getAddRate());
 
             fileCommands.add(execute.In(controlPoints.get(i-1).getDimension(),false) +
-                    execute.IfNext(new Score("@r[limit=1,gamemode=!spectator,team=" + team.getName() + "]", "ControlPoint" + i, ">", "@p[scores={Admin=1}] Highscore" + i)) +
+                    execute.IfNext(new Score("@r[limit=1,gamemode=!spectator,team=" + team.getName() + "]", "ControlPoint" + i, ">", "@p[scores={Admin=1}] Highscore" + i),true) +
                     setBlock(controlPoints.get(i - 1).getX(), controlPoints.get(i - 1).getY() + 1, controlPoints.get(i - 1).getZ(), "minecraft:" + team.getGlassColor() + "_stained_glass", SetBlockType.replace));
         }
         fileCommands.add(execute.In(controlPoints.get(i-1).getDimension(),false) +
-                execute.IfNext(new Selector("@p[x=" + (controlPoints.get(i - 1).getX() - 6) + ",y=" + (controlPoints.get(i - 1).getY() - 1) + ",z=" + (controlPoints.get(i - 1).getZ() - 6) + ",dx=12,dy=12,dz=12,gamemode=!spectator]")) +
+                execute.IfNext(new Selector("@p[x=" + (controlPoints.get(i - 1).getX() - 6) + ",y=" + (controlPoints.get(i - 1).getY() - 1) + ",z=" + (controlPoints.get(i - 1).getZ() - 6) + ",dx=12,dy=12,dz=12,gamemode=!spectator]"),true) +
                 "scoreboard players add @a[x=" + (controlPoints.get(i - 1).getX() - 6) + ",y=" + (controlPoints.get(i - 1).getY() - 1) + ",z=" + (controlPoints.get(i - 1).getZ() - 6) + ",dx=12,dy=12,dz=12,gamemode=!spectator] MSGDum1CP" + i + " 1");
 
         fileCommands.add(execute.In(controlPoints.get(i-1).getDimension(),false) +
-                execute.IfNext(new Selector("@p[x=" + (controlPoints.get(i - 1).getX() - 6) + ",y=" + (controlPoints.get(i - 1).getY() - 1) + ",z=" + (controlPoints.get(i - 1).getZ() - 6) + ",dx=12,dy=12,dz=12,gamemode=!spectator,scores={MSGDum1CP" + i + "=" + (10 * tickPerSecond) + "}]")) +
+                execute.IfNext(new Selector("@p[x=" + (controlPoints.get(i - 1).getX() - 6) + ",y=" + (controlPoints.get(i - 1).getY() - 1) + ",z=" + (controlPoints.get(i - 1).getZ() - 6) + ",dx=12,dy=12,dz=12,gamemode=!spectator,scores={MSGDum1CP" + i + "=" + (10 * tickPerSecond) + "}]"),true) +
                 "tellraw @a [\"\",{\"text\":\" ⎜ \",\"color\":\"gray\"},{\"text\":\"" + communityName + " UHC\",\"color\":\"gold\"},{\"text\":\" ⎜ \",\"color\":\"gray\"},{\"text\":\"CONTROL POINT " + i + " IS UNDER ATTACK!\",\"color\":\"light_purple\"},{\"text\":\" ⎜ \",\"color\":\"gray\"}]");
 
         fileCommands.add(execute.In(controlPoints.get(i-1).getDimension(),false) +
-                execute.IfNext(new Selector("@p[x=" + (controlPoints.get(i - 1).getX() - 6) + ",y=" + (controlPoints.get(i - 1).getY() - 1) + ",z=" + (controlPoints.get(i - 1).getZ() - 6) + ",dx=12,dy=12,dz=12,gamemode=!spectator,scores={MSGDum1CP" + i + "=" + (10 * tickPerSecond) + "}]")) +
+                execute.IfNext(new Selector("@p[x=" + (controlPoints.get(i - 1).getX() - 6) + ",y=" + (controlPoints.get(i - 1).getY() - 1) + ",z=" + (controlPoints.get(i - 1).getZ() - 6) + ",dx=12,dy=12,dz=12,gamemode=!spectator,scores={MSGDum1CP" + i + "=" + (10 * tickPerSecond) + "}]"),true) +
                 "scoreboard players reset @a[x=" + (controlPoints.get(i - 1).getX() - 6) + ",y=" + (controlPoints.get(i - 1).getY() - 1) + ",z=" + (controlPoints.get(i - 1).getZ() - 6) + ",dx=12,dy=12,dz=12,gamemode=!spectator] MSGDum2CP" + i);
 
         fileCommands.add(execute.In(controlPoints.get(i-1).getDimension(),false) +
@@ -987,7 +1017,8 @@ public class Main {
         fileCommands.add("title @a subtitle {\"text\":\"Delivered NOW on the surface!\", \"bold\":true, \"italic\":true, \"color\":\"light_purple\"}");
 
         for (int i = 0; i < 200; i++) {
-            fileCommands.add("summon minecraft:area_effect_cloud ~ ~5 ~ {Passengers:[{id:falling_block,Time:1,DropItem:0b,BlockState:{Name:\"minecraft:chest\"},TileEntityData:{CustomName:\"\\\"Loot chest\\\"\",LootTable:\"uhc:supply_drop\"}}]}");
+            fileCommands.add(execute.In(Dimension.overworld) +
+                    "summon minecraft:area_effect_cloud ~ ~5 ~ {Passengers:[{id:falling_block,Time:1,DropItem:0b,BlockState:{Name:\"minecraft:chest\"},TileEntityData:{CustomName:\"\\\"Loot chest\\\"\",LootTable:\"uhc:supply_drop\"}}]}");
         }
 
         return new FileData(FileName.drop_carepackages, fileCommands);
@@ -996,7 +1027,8 @@ public class Main {
     private static FileData CarepackageDistributor() {
         ArrayList<String> fileCommands = new ArrayList<>();
 
-        fileCommands.add(execute.If(new Selector("@e[type=minecraft:falling_block,distance=..2]")) +
+        fileCommands.add(execute.In(Dimension.overworld,false) +
+                execute.IfNext(new Selector("@e[type=minecraft:falling_block,distance=..2]"),true) +
                 "spreadplayers 0 0 10 500 false @e[type=minecraft:falling_block,distance=..2]");
 
         return new FileData(FileName.carepackage_distributor, fileCommands);
@@ -1054,7 +1086,8 @@ public class Main {
 
         fileCommands.add("title @a title [\"\",{\"text\":\"A Traitor Faction\",\"bold\":true,\"color\":\"red\"}]");
         fileCommands.add("title @a subtitle [\"\",{\"text\":\"has been founded!\",\"bold\":true,\"color\":\"dark_red\"}]");
-        fileCommands.add(setBlock(11, worldBottom + 2, 0, BlockType.redstone_block, SetBlockType.destroy));
+        fileCommands.add(execute.In(Dimension.overworld) +
+                setBlock(11, worldBottom + 2, 0, BlockType.redstone_block, SetBlockType.destroy));
         fileCommands.add(callFunction(FileName.traitor_check));
         return new FileData(FileName.traitor_handout, fileCommands);
     }
@@ -1098,11 +1131,11 @@ public class Main {
 
         for (Team t : teams) {
             fileCommands.add(execute.In(cp1.getDimension(),false) +
-                    execute.AsNext("@r[limit=1,gamemode=!spectator,x=" + (cp1.getX() - 6) + ",y=" + (cp1.getY() - 1) + ",z=" + (cp1.getZ() - 6) + ",dx=12,dy=12,dz=12,team=" + t.getName() + "]") +
+                    execute.AsNext("@r[limit=1,gamemode=!spectator,x=" + (cp1.getX() - 6) + ",y=" + (cp1.getY() - 1) + ",z=" + (cp1.getZ() - 6) + ",dx=12,dy=12,dz=12,team=" + t.getName() + "]",true) +
                     "scoreboard players operation @p[scores={Admin=1}] CP1" + t.getName() + " > @p[scores={Admin=1}] CP2" + t.getName());
 
             fileCommands.add(execute.In(cp2.getDimension(),false) +
-                    execute.As("@r[limit=1,gamemode=!spectator,x=" + (cp2.getX() - 6) + ",y=" + (cp2.getY() - 1) + ",z=" + (cp2.getZ() - 6) + ",dx=12,dy=12,dz=12,team=" + t.getName() + "]") +
+                    execute.AsNext("@r[limit=1,gamemode=!spectator,x=" + (cp2.getX() - 6) + ",y=" + (cp2.getY() - 1) + ",z=" + (cp2.getZ() - 6) + ",dx=12,dy=12,dz=12,team=" + t.getName() + "]",true) +
                     "scoreboard players operation @p[scores={Admin=1}] CP2" + t.getName() + " > @p[scores={Admin=1}] CP1" + t.getName());
         }
         fileCommands.add(callFunction(FileName.controlpoint_perks));
@@ -1143,7 +1176,7 @@ public class Main {
 
         for (ControlPoint cp : controlPoints) {
             fileCommands.add(execute.In(cp.getDimension(),false) +
-                    execute.PositionedNext(cp.getX(), cp.getY(), cp.getZ()) +
+                    execute.PositionedNext(cp.getX(), cp.getY(), cp.getZ(),true) +
                     "effect give @p[gamemode=!spectator] minecraft:" + effect.get(i).getEffectName() + " " + effect.get(i).getDuration() + " " + effect.get(i).getAmplification());
         }
 
@@ -1153,7 +1186,8 @@ public class Main {
 
     private FileData WorldPreload() {
         ArrayList<String> fileCommands = new ArrayList<>();
-        fileCommands.add(setBlock(6, worldBottom + 2, 15, BlockType.redstone_block));
+        fileCommands.add(execute.In(Dimension.overworld) +
+                setBlock(6, worldBottom + 2, 15, BlockType.redstone_block));
 
         return new FileData(FileName.world_pre_load, fileCommands);
     }
@@ -1161,7 +1195,7 @@ public class Main {
     private FileData HorseFrostWalker() {
         ArrayList<String> fileCommands = new ArrayList<>();
         fileCommands.add(execute.At(new Location("@a[nbt={RootVehicle:{Entity:{id:\"minecraft:horse\"}}}]")) +
-                relativeFill(-2, -2, -2, 2, 2, 2, "ice", SetBlockType.replace, "water"));
+                relativeFill(-2, -2, -2, 2, 0, 2, "ice", SetBlockType.replace, "water"));
 
         return new FileData(FileName.horse_frost_walker, fileCommands);
     }
@@ -1236,7 +1270,7 @@ public class Main {
     private FileData CreateControlpointRedstone() {
         ArrayList<String> fileCommands = new ArrayList<>();
         for (ControlPoint cp : controlPoints) {
-            fileCommands.add(execute.In(cp1.getDimension()) +
+            fileCommands.add(execute.In(cp.getDimension()) +
                     setBlock(cp.getX(), cp.getY() + 10, cp.getZ(), BlockType.redstone_block, SetBlockType.replace));
         }
 
@@ -1345,9 +1379,11 @@ public class Main {
 
     private FileData ControlPointCaptured() {
         ArrayList<String> fileCommands = new ArrayList<>();
-        fileCommands.add(setBlock(8, worldBottom + 2, 0, BlockType.bedrock, SetBlockType.replace));
+        fileCommands.add(execute.In(Dimension.overworld) +
+                setBlock(8, worldBottom + 2, 0, BlockType.bedrock, SetBlockType.replace));
         fileCommands.add("tellraw @a [\"\",{\"text\":\" ⎜ \",\"color\":\"gray\"},{\"text\":\"" + communityName + " UHC\",\"color\":\"gold\"},{\"text\":\" ⎜ \",\"color\":\"gray\"},{\"text\":\"The Controlpoint has been captured!\",\"color\":\"light_purple\"},{\"text\":\" ⎜ \",\"color\":\"gray\"}]");
-        fileCommands.add(fill(15, worldBottom + 2, 3, 15, worldBottom + 2, 4, "minecraft:bedrock"));
+        fileCommands.add(execute.In(Dimension.overworld) +
+                fill(15, worldBottom + 2, 3, 15, worldBottom + 2, 4, "minecraft:bedrock"));
 
         fileCommands.add("title @a subtitle {\"text\":\"has been captured!\", \"bold\":true, \"italic\":true, \"color\":\"light_purple\"}");
         fileCommands.add("title @a title {\"text\":\"The Controlpoint\", \"bold\":true, \"italic\":true, \"color\":\"gold\"}");
