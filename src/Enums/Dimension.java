@@ -2,6 +2,6 @@ package Enums;
 
 public enum Dimension {
     overworld,
-    nether,
-    end
+    the_nether,
+    the_end
 }
