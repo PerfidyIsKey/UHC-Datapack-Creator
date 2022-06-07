@@ -568,9 +568,9 @@ public class Main {
 
         fileCommands.add(getBossbarByName("cp1").remove());
         fileCommands.add(getBossbarByName("cp2").remove());
-        fileCommands.add(getBossbarByName("cp1").add(cp1.getName() + ": " + cp1.getX() + ", " + cp1.getY() + ", " + cp1.getZ() + " (" + cp1.getDimension() + ")"));
+        fileCommands.add(getBossbarByName("cp1").add(cp1.getName() + ": " + cp1.getX() + ", " + cp1.getY() + ", " + cp1.getZ() + " (" + cp1.getDimensionName() + ")"));
         fileCommands.add(getBossbarByName("cp1").setMax(cp1.getMaxVal()));
-        fileCommands.add(getBossbarByName("cp2").add(cp2.getName() + " soon: " + cp2.getX() + ", " + cp2.getY() + ", " + cp2.getZ() + " (" + cp2.getDimension() + ")"));
+        fileCommands.add(getBossbarByName("cp2").add(cp2.getName() + " soon: " + cp2.getX() + ", " + cp2.getY() + ", " + cp2.getZ() + " (" + cp2.getDimensionName() + ")"));
         fileCommands.add(getBossbarByName("cp2").setMax(cp2.getMaxVal()));
         fileCommands.add(getBossbarByName("carepackage").add("Care Package available at x, y, z"));
         //end bossbar
@@ -704,7 +704,7 @@ public class Main {
                 setBlock(11, worldBottom + 2, 0, BlockType.bedrock, SetBlockType.destroy));
         fileCommands.add(execute.In(Dimension.overworld) +
                 setBlock(10, worldBottom + 2, 0, BlockType.bedrock, SetBlockType.destroy));
-        fileCommands.add(getBossbarByName("cp").setTitle(cp1.getName() + ": " + cp1.getX() + ", " + cp1.getY() + ", " + cp1.getZ() + "; " + cp2.getName() + " soon: " + cp2.getX() + ", " + cp2.getY() + ", " + cp2.getZ()));
+        //fileCommands.add(getBossbarByName("cp").setTitle(cp1.getName() + ": " + cp1.getX() + ", " + cp1.getY() + ", " + cp1.getZ() + "; " + cp2.getName() + " soon: " + cp2.getX() + ", " + cp2.getY() + ", " + cp2.getZ()));
         fileCommands.add(execute.In(cp1.getDimension()) + "forceload add " + cp1.getX() + " " + cp1.getZ() + " " + cp1.getX() + " " + cp1.getZ());
         fileCommands.add(execute.In(cp2.getDimension()) + "forceload add " + cp2.getX() + " " + cp2.getZ() + " " + cp2.getX() + " " + cp2.getZ());
         fileCommands.add(callFunction(FileName.spawn_controlpoints));
@@ -719,7 +719,7 @@ public class Main {
         fileCommands.add(bossBarCp2.setColor("white"));
         fileCommands.add(bossBarCp2.setVisible(false));
         fileCommands.add(bossBarCp2.setPlayers("@a"));
-        fileCommands.add(bossBarCp2.setTitle(cp2.getName() + " soon: " + cp2.getX() + ", " + cp2.getY() + ", " + cp2.getZ() + " (" + cp2.getDimension() + ")"));
+        fileCommands.add(bossBarCp2.setTitle(cp2.getName() + " soon: " + cp2.getX() + ", " + cp2.getY() + ", " + cp2.getZ() + " (" + cp2.getDimensionName() + ")"));
         fileCommands.add(bossBarCarePackage.setVisible(false));
         fileCommands.add(bossBarCarePackage.setPlayers("@a"));
         fileCommands.add("tag @a remove Traitor");
@@ -875,7 +875,7 @@ public class Main {
         fileCommands.add(execute.In(Dimension.overworld) +
                 setBlock(15, worldBottom + 2, 11, BlockType.redstone_block, SetBlockType.replace));
         fileCommands.addAll(forceLoadAndSet(cp2.getX(), cp2.getY() + 3, cp2.getZ(), BlockType.air, SetBlockType.replace));
-        fileCommands.add(getBossbarByName("cp2").setTitle("CP2: " + cp2.getX() + ", " + cp2.getY() + ", " + cp2.getZ() + " (" + cp2.getDimension() + ") - FASTER!!"));
+        fileCommands.add(getBossbarByName("cp2").setTitle("CP2: " + cp2.getX() + ", " + cp2.getY() + ", " + cp2.getZ() + " (" + cp2.getDimensionName() + ") - FASTER!!"));
         //fileCommands.add("give @a[scores={ControlPoint1=14400..}] minecraft:splash_potion{CustomPotionEffects:[{Id:11,Duration:1200},{Id:24,Duration:1200}],CustomPotionColor:15462415,display:{Name:\"\\\"Hero of the First Control Point\\\"\",Lore:[\"Thank you for enabling the second Control Point! Good luck with winning the match!\"]}}");
         fileCommands.add(callFunction(FileName.carepackage_ + carePackages.get(0).getName()));
 
@@ -1136,14 +1136,19 @@ public class Main {
         ArrayList<String> fileCommands = new ArrayList<>();
 
         for (ControlPoint cp : controlPoints) {
-            fileCommands.add(execute.In(cp.getDimension()) + "forceload add " + cp.getX() + " " + cp.getZ() + " " + cp.getX() + " " + cp.getZ());
-            fileCommands.add(execute.In(cp.getDimension()) + setBlock(cp.getX(), cp.getY() + 11, cp.getZ(), "minecraft:structure_block[mode=load]{metadata:\"\",mirror:\"NONE\",ignoreEntities:1b,powered:0b,seed:0L,author:\"?\",rotation:\"NONE\",posX:-6,mode:\"LOAD\",posY:-13,sizeX:13,posZ:-6,integrity:1.0f,showair:0b,name:\"minecraft:control_point\",sizeY:14,sizeZ:13,showboundingbox:1b}", SetBlockType.replace));
-            fileCommands.add(execute.In(cp.getDimension()) + callFunction(FileName.controlpoint_redstone, 0.05));
+            fileCommands.add(execute.In(cp.getDimension()) +
+                    "forceload add " + cp.getX() + " " + cp.getZ() + " " + cp.getX() + " " + cp.getZ());
+            fileCommands.add(execute.In(cp.getDimension()) +
+                    setBlock(cp.getX(), cp.getY() + 11, cp.getZ(), "minecraft:structure_block[mode=load]{metadata:\"\",mirror:\"NONE\",ignoreEntities:1b,powered:0b,seed:0L,author:\"?\",rotation:\"NONE\",posX:-6,mode:\"LOAD\",posY:-13,sizeX:13,posZ:-6,integrity:1.0f,showair:0b,name:\"minecraft:control_point\",sizeY:14,sizeZ:13,showboundingbox:1b}", SetBlockType.replace));
+            fileCommands.add(execute.In(cp.getDimension()) +
+                    callFunction(FileName.controlpoint_redstone, 0.05));
             for (int i = cp.getY() + 12; i < worldHeight; i++) {
-                fileCommands.add(execute.In(cp.getDimension()) + execute.Unless(new Block(cp.getX(), i, cp.getZ(), BlockType.air)) +
+                fileCommands.add(execute.In(cp.getDimension(),false) +
+                        execute.UnlessNext(new Block(cp.getX(), i, cp.getZ(), BlockType.air),true) +
                         setBlock(cp.getX(), i, cp.getZ(), BlockType.glass));
             }
-            fileCommands.add(execute.In(cp.getDimension()) + "forceload remove " + cp.getX() + " " + cp.getZ() + " " + cp.getX() + " " + cp.getZ());
+            fileCommands.add(execute.In(cp.getDimension()) +
+                    "forceload remove " + cp.getX() + " " + cp.getZ() + " " + cp.getX() + " " + cp.getZ());
         }
 
         return new FileData(FileName.spawn_controlpoints, fileCommands);
@@ -1285,15 +1290,15 @@ public class Main {
             for (Team team : teams) {
                 // Display team receiving perk
                 for (Perk perk : perks) {
-                    fileCommands.add(execute.If(new Selector("@p[scores={CP" + (i + 1) + team.getName() + "=" + perk.getActivationTime() + ".." + (perk.getActivationTime() + actPeriod) + "}]")) +
-                            execute.If(new Selector("@p[team=" + team.getName() + ",tag=!ReceivedPerk" + perk.getId() + "]")) +
+                    fileCommands.add(execute.If(new Selector("@p[scores={CP" + (i + 1) + team.getName() + "=" + perk.getActivationTime() + ".." + (perk.getActivationTime() + actPeriod) + "}]"),false) +
+                            execute.IfNext(new Selector("@p[team=" + team.getName() + ",tag=!ReceivedPerk" + perk.getId() + "]"),true) +
                             "tellraw @a [\"\",{\"text\":\"TEAM \",\"color\":\"light_purple\"},{\"text\":\"" + team.getJSONColor() + "\",\"color\":\"" + team.getColor() + "\"},{\"text\":\" HAS REACHED\",\"color\":\"light_purple\"},{\"text\":\" PERK " + perk.getId() + "!\",\"color\":\"gold\"}]");
 
                     // give rewards
                     fileCommands.add(execute.If(new Selector("@p[scores={CP" + (i + 1) + team.getName() + "=" + perk.getActivationTime() + ".." + (perk.getActivationTime() + actPeriod) + "}]")) +
                             perk.getRewardType() + " @a[team=" + team.getName() + ",tag=!ReceivedPerk" + perk.getId() + "] " + perk.getReward());
-                    fileCommands.add(execute.If(new Selector("@p[scores={CP" + (i + 1) + team.getName() + "=" + perk.getActivationTime() + ".." + (perk.getActivationTime() + actPeriod) + "}]")) +
-                            execute.If(new Selector("@p[team=" + team.getName() + ",tag=!ReceivedPerk" + perk.getId() + "]")) +
+                    fileCommands.add(execute.If(new Selector("@p[scores={CP" + (i + 1) + team.getName() + "=" + perk.getActivationTime() + ".." + (perk.getActivationTime() + actPeriod) + "}]"),false) +
+                            execute.IfNext(new Selector("@p[team=" + team.getName() + ",tag=!ReceivedPerk" + perk.getId() + "]"),true) +
                             "playsound " + perk.getSoundEffect() + " master @a ~ ~50 ~ 100 1 0");
                     fileCommands.add(execute.If(new Selector("@p[scores={CP" + (i + 1) + team.getName() + "=" + perk.getActivationTime() + ".." + (perk.getActivationTime() + actPeriod) + "}]")) +
                             "tag @a[team=" + team.getName() + "] add ReceivedPerk" + perk.getId());
