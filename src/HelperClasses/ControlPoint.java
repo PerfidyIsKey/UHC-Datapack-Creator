@@ -2,6 +2,8 @@ package HelperClasses;
 
 import Enums.Dimension;
 
+import static Enums.Dimension.overworld;
+
 public class ControlPoint {
 
     private String name;
@@ -22,7 +24,7 @@ public class ControlPoint {
         this.x = x;
         this.y = y;
         this.z = z;
-        this.dimension = Dimension.overworld;
+        this.dimension = overworld;
     }
 
     public ControlPoint(String name, int maxVal, int addRate, int x, int y, int z, Enums.Dimension dimension) {
@@ -86,4 +88,20 @@ public class ControlPoint {
     public Enums.Dimension getDimension() { return dimension; }
 
     public void setDimension(Enums.Dimension dimension) { this.dimension = dimension; }
+
+    public String getDimensionName() {
+        String result;
+        switch (dimension) {
+            case the_end:
+                result = "End";
+                break;
+            case the_nether:
+                result = "Nether";
+                break;
+            default:
+                result = "Overworld";
+        }
+
+        return result;
+    }
 }
