@@ -1,0 +1,20 @@
+ {
+        "type": "crafting_shaped",
+        "pattern": [
+            "   ",
+            "121",
+            "   "
+        ],
+        "key": {
+            "1": {
+                "item": "ender_eye"
+            },
+            "2": {
+                "item": "black_wool"
+            }
+        },
+        "result": {
+            "item": "dragon_head",
+            "count": 1
+        }
+    }

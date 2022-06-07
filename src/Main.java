@@ -136,18 +136,7 @@ public class Main {
                 break;
         }
 
-        switch (adminMode) {
-            case 1:
-                userFolder = "Wouter Baltus";
-                worldName = "big-test";
-                worldLocation = "C:\\Users\\ninja\\Documents\\Gaming\\MinecraftServers\\world\\";
-                break;
-            case 2:
-                userFolder = "bthem";
-                worldName = "world";
-                worldLocation = "C:\\Users\\" + userFolder + "\\Desktop\\Server\\" + worldName + "\\";
-                break;
-        }
+        worldLocation = "Server\\world\\";
 
         dataPackLocation = worldLocation + "datapacks\\";
 
