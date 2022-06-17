@@ -36,6 +36,7 @@ public enum FileName {
     display_rank,
     give_status_effect,
     world_pre_load,
+    world_pre_load_activation,
     horse_frost_walker,
     wolf_collar_execute,
     update_sidebar,
@@ -49,5 +50,6 @@ public enum FileName {
     control_point_captured,
     traitor_check,
     teams_alive_check,
-    teams_highscore_alive_check
+    teams_highscore_alive_check,
+    spawn_nether_portal
 }
