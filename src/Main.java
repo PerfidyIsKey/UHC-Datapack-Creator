@@ -43,10 +43,11 @@ public class Main {
     private static final int chestSize = 27;
     private static final String commandCenter = "s46";
     private String admin;
-    private String startCoordinates;
+    private Coordinate startCoordinates;
+    private Coordinate netherPortal;
     private ArrayList<Team> teams = new ArrayList<>();
     private ArrayList<ControlPoint> controlPoints = new ArrayList<>();
-    private ArrayList<CarePackage> carePackages = new ArrayList<>();
+    //private ArrayList<CarePackage> carePackages = new ArrayList<>();
     private ArrayList<ScoreboardObjective> scoreboardObjectives = new ArrayList<>();
     private ArrayList<Player> players = new ArrayList<>();
     private ArrayList<StatusEffect> effect = new ArrayList<>();
@@ -178,7 +179,8 @@ public class Main {
 
         switch (gameMode) {
             case 1:
-                startCoordinates = "0 88 0";
+                startCoordinates = new Coordinate(0, 88, 0);
+                netherPortal = new Coordinate(15,148,-14);
                 minTraitorRank = 35;
                 communityName = "THE DIORITE EXPERTS";
 
@@ -198,7 +200,7 @@ public class Main {
                 carePackage2.setX(59);
                 carePackage2.setY(76);
                 carePackage2.setZ(142);
-                carePackages.add(carePackage2);
+                //carePackages.add(carePackage2);
 
                 // Players
                 players.add(new Player("Snodog627", 103));
@@ -239,7 +241,8 @@ public class Main {
 
                 break;
             case 2:
-                startCoordinates = "0 165 0";
+                startCoordinates = new Coordinate(0, 165, 0);
+                netherPortal = new Coordinate(15,148,-14);
                 minTraitorRank = 15;
                 communityName = "UNIVERSITY RACING EINDHOVEN";
 
@@ -258,7 +261,7 @@ public class Main {
                 carePackage2.setX(61);
                 carePackage2.setY(155);
                 carePackage2.setZ(-6);
-                carePackages.add(carePackage2);
+                //carePackages.add(carePackage2);
 
                 // Players
                 players.add(new Player("Bertje13", 0));
@@ -524,9 +527,9 @@ public class Main {
             files.add(Controlpoint(i));
         }
 
-        for (CarePackage carepackage : carePackages) {
-            files.add(Carepackage(carepackage));
-        }
+        //for (CarePackage carepackage : carePackages) {
+        //    files.add(Carepackage(carepackage));
+        //}
         //files.add(ControlpointMessages());
         files.add(DropCarepackages());
         files.add(CarepackageDistributor());
@@ -545,6 +548,7 @@ public class Main {
             files.add(GiveStatusEffect(i));
         }
         files.add(WorldPreload());
+        files.add(WorldPreLoadActivation());
         files.add(HorseFrostWalker());
         files.add(WolfCollarExecute());
         files.add(UpdateSidebar());
@@ -555,6 +559,7 @@ public class Main {
         files.add(UpdateMineCount());
         files.add(ResetRespawnHealth());
         files.add(UpdateMinHealth());
+        files.add(SpawnNetherPortal());
     }
 
     private FileData Initialize() {
@@ -566,7 +571,7 @@ public class Main {
         fileCommands.add(setGameRule(GameRule.doWeatherCycle, false));
         fileCommands.add("difficulty hard");
         fileCommands.add("defaultgamemode adventure");
-        fileCommands.add("setworldspawn 0 221 3");
+        fileCommands.add("setworldspawn 0 221 0");
 
         //scoreboard
         for (ScoreboardObjective objective : scoreboardObjectives) {
@@ -733,6 +738,8 @@ public class Main {
         fileCommands.add(bossBarCp2.setTitle(cp2.getName() + " soon: " + cp2.getX() + ", " + cp2.getY() + ", " + cp2.getZ() + " (" + cp2.getDimensionName() + ")"));
         fileCommands.add(bossBarCarePackage.setVisible(false));
         fileCommands.add(bossBarCarePackage.setPlayers("@a"));
+        fileCommands.add(execute.In(Dimension.overworld) +
+                setBlock(startCoordinates.getX(), startCoordinates.getY(), startCoordinates.getZ(), "minecraft:jukebox[has_record=true]{RecordItem:{Count:1b,id:\"minecraft:music_disc_stal\"}}",SetBlockType.replace));
         fileCommands.add("tag @a remove Traitor");
         fileCommands.add("tag @a remove DontMakeTraitor");
         fileCommands.add("worldborder set " + worldSize + " 1");
@@ -745,11 +752,13 @@ public class Main {
         for (int i = 0; i < 4; i++) {
             fileCommands.add("tag @a remove ReceivedPerk" + (i + 1));
         }
+        fileCommands.add(execute.In(Dimension.overworld) +
+                fill(netherPortal.getX() - 1, netherPortal.getY(), netherPortal.getZ(), netherPortal.getX() + 2, netherPortal.getY() + 4, netherPortal.getZ(), BlockType.bedrock, SetBlockType.replace));
 
 
-        for (CarePackage carepackage : carePackages) {
-            fileCommands.addAll(forceLoadAndSet(carepackage.getX(), carepackage.getY(), carepackage.getZ(), BlockType.air, SetBlockType.replace));
-        }
+        //for (CarePackage carepackage : carePackages) {
+        //    fileCommands.addAll(forceLoadAndSet(carepackage.getX(), carepackage.getY(), carepackage.getZ(), BlockType.air, SetBlockType.replace));
+        //}
 
         fileCommands.add("gamemode creative @s");
 
@@ -780,7 +789,7 @@ public class Main {
     private FileData IntoCalls() {
         ArrayList<String> fileCommands = new ArrayList<>();
         fileCommands.add(execute.In(Dimension.overworld) +
-                "tp @a " + startCoordinates);
+                "tp @a " + startCoordinates.getCoordinate());
         fileCommands.add("scoreboard players reset @a Deaths");
         fileCommands.add("scoreboard players reset @a Kills");
 
@@ -872,6 +881,7 @@ public class Main {
         fileCommands.add(execute.In(Dimension.overworld) +
                 setBlock(15, worldBottom + 2, 10, BlockType.redstone_block, SetBlockType.replace));
         fileCommands.add(setGameRule(GameRule.doDaylightCycle, false));
+        fileCommands.add(callFunction(FileName.spawn_nether_portal));
 
         return new FileData(FileName.initialize_controlpoint, fileCommands);
     }
@@ -888,7 +898,7 @@ public class Main {
         fileCommands.addAll(forceLoadAndSet(cp2.getX(), cp2.getY() + 3, cp2.getZ(), BlockType.air, SetBlockType.replace));
         fileCommands.add(getBossbarByName("cp2").setTitle("CP2: " + cp2.getX() + ", " + cp2.getY() + ", " + cp2.getZ() + " (" + cp2.getDimensionName() + ") - FASTER!!"));
         //fileCommands.add("give @a[scores={ControlPoint1=14400..}] minecraft:splash_potion{CustomPotionEffects:[{Id:11,Duration:1200},{Id:24,Duration:1200}],CustomPotionColor:15462415,display:{Name:\"\\\"Hero of the First Control Point\\\"\",Lore:[\"Thank you for enabling the second Control Point! Good luck with winning the match!\"]}}");
-        fileCommands.add(callFunction(FileName.carepackage_ + carePackages.get(0).getName()));
+        //fileCommands.add(callFunction(FileName.carepackage_ + carePackages.get(0).getName()));
 
 
         return new FileData(FileName.second_controlpoint, fileCommands);
@@ -1191,10 +1201,32 @@ public class Main {
 
     private FileData WorldPreload() {
         ArrayList<String> fileCommands = new ArrayList<>();
-        fileCommands.add(execute.In(Dimension.overworld) +
-                setBlock(6, worldBottom + 2, 15, BlockType.redstone_block));
+        fileCommands.add("scoreboard players add @a[gamemode=creative] WorldLoad 1");
+        fileCommands.add("scoreboard players add @a[gamemode=creative] Time 1");
+        fileCommands.add(execute.If(new Selector("@p[scores={WorldLoad=400..}]")) +
+                "spreadplayers 0 0 5 750 false @a");
+        fileCommands.add(execute.If(new Selector("@p[scores={Time=12000..12020}]"),false) +
+                execute.InNext(Dimension.the_nether,true) +
+                "tp @a[gamemode=creative] 0 80 0");
+        fileCommands.add(execute.If(new Selector("@p[scores={Time=24000..}]"),false) +
+                execute.InNext(Dimension.overworld,true) +
+                setBlock(6,worldBottom + 2,15,BlockType.bedrock));
+        fileCommands.add(execute.If(new Selector("@p[scores={Time=24000..}]"),false) +
+                execute.InNext(Dimension.overworld,true) +
+                "tp @a[gamemode=creative] 0 221 0");
+        fileCommands.add(execute.If(new Selector("@p[scores={WorldLoad=400..}]")) +
+                "scoreboard players reset @a WorldLoad");
 
         return new FileData(FileName.world_pre_load, fileCommands);
+    }
+
+    private FileData WorldPreLoadActivation() {
+        ArrayList<String> fileCommands = new ArrayList<>();
+        fileCommands.add(execute.In(Dimension.overworld) +
+                setBlock(6, worldBottom + 2, 15, BlockType.redstone_block));
+        fileCommands.add("scoreboard objectives setdisplay sidebar WorldLoad");
+
+        return new FileData(FileName.world_pre_load_activation, fileCommands);
     }
 
     private FileData HorseFrostWalker() {
@@ -1435,4 +1467,20 @@ public class Main {
         }
         return new FileData(FileName.teams_highscore_alive_check, fileCommands);
     }
+
+    private FileData SpawnNetherPortal() {
+        ArrayList<String> fileCommands = new ArrayList<>();
+        fileCommands.add(execute.In(Dimension.overworld) +
+                "forceload add " + netherPortal.getX() + " " + netherPortal.getZ() + " " + netherPortal.getX() + " " + netherPortal.getZ());
+        fileCommands.add(execute.In(Dimension.overworld) +
+                setBlock(netherPortal.getX(), netherPortal.getY(), netherPortal.getZ(), "minecraft:structure_block[mode=load]{author:\"?\",ignoreEntities:1b,integrity:1.0f,metadata:\"\",mirror:\"NONE\",mode:\"LOAD\",name:\"minecraft:nether_portal\",posX:-1,posY:0,posZ:0,powered:0b,rotation:\"NONE\",seed:0L,showair:0b,showboundingbox:1b,sizeX:4,sizeY:5,sizeZ:1}"));
+        fileCommands.add(execute.In(Dimension.overworld) +
+                setBlock(netherPortal.getX() - 1, netherPortal.getY(), netherPortal.getZ(), BlockType.redstone_block));
+        fileCommands.add("give @a[gamemode=!spectator] minecraft:compass{display:{Name:\"{\\\"text\\\":\\\"Nether Portal -  located at " + netherPortal.getX() + ", " + netherPortal.getY() + ", " + netherPortal.getZ() + "\\\"}\"}, LodestoneDimension:\"minecraft:" + Dimension.overworld + "\",LodestoneTracked:0b,LodestonePos:{X:" + netherPortal.getX() + ",Y:" + netherPortal.getY() + ",Z:" + netherPortal.getZ() + "}}");
+        fileCommands.add(execute.In(Dimension.overworld) +
+                "forceload remove " + netherPortal.getX() + " " + netherPortal.getZ() + " " + netherPortal.getX() + " " + netherPortal.getZ());
+
+        return new FileData(FileName.spawn_nether_portal, fileCommands);
+    }
+
 }
