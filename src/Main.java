@@ -30,8 +30,6 @@ public class Main {
 
     private String uhcNumber;
     private static final String version = "3.0";
-    private String userFolder;
-    private String worldName;
     private String dataPackLocation;
     private String worldLocation;
     private String dataPackName;

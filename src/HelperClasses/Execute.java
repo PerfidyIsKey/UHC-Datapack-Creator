@@ -1,7 +1,6 @@
 package HelperClasses;
 
 import Enums.Dimension;
-import HelperClasses.Condition;
 
 public class Execute {
 
