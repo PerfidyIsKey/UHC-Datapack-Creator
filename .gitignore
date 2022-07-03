@@ -22,3 +22,16 @@ out/production
 out/production/
 out/production/UHC-Datapack-Creator
 out/production/UHC-Datapack-Creator/
+
+# Server folders
+Server/cache
+Server/config
+Server/libraries
+Server/logd
+Server/plugins
+Server/versions
+Server/world
+Server/world_nether
+Server/world_the_end
+Server/.console_history
+Server/*.yml

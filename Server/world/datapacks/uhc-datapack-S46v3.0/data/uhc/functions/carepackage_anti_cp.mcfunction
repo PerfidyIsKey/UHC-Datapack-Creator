@@ -1,9 +1,0 @@
-forceload add 59 142 59 142
-setblock 59 76 142 chest{CustomName:"\"Anti Controlpoint Drop\"",Items:[{Slot:1b,id:"minecraft:gunpowder",Count:1b},{Slot:2b,id:"minecraft:gunpowder",Count:1b},{Slot:3b,id:"minecraft:tnt",Count:1b},{Slot:4b,id:"minecraft:flint_and_steel",Count:1b},{Slot:5b,id:"minecraft:tnt",Count:1b},{Slot:6b,id:"minecraft:sand",Count:1b},{Slot:7b,id:"minecraft:sand",Count:1b},{Slot:11b,id:"minecraft:enchanted_book",Count:1b,tag:{StoredEnchantments:[{lvl:4s,id:"minecraft:blast_protection"}]}},{Slot:12b,id:"minecraft:lava_bucket",Count:1b},{Slot:13b,id:"minecraft:tnt",Count:1b},{Slot:14b,id:"minecraft:lava_bucket",Count:1b},{Slot:15b,id:"minecraft:enchanted_book",Count:1b,tag:{StoredEnchantments:[{lvl:4s,id:"minecraft:blast_protection"}]}},{Slot:19b,id:"minecraft:sand",Count:1b},{Slot:20b,id:"minecraft:sand",Count:1b},{Slot:21b,id:"minecraft:tnt",Count:1b},{Slot:22b,id:"minecraft:flint_and_steel",Count:1b},{Slot:23b,id:"minecraft:tnt",Count:1b},{Slot:24b,id:"minecraft:gunpowder",Count:1b},{Slot:25b,id:"minecraft:gunpowder",Count:1b}]}
-forceload remove 59 142 59 142
-title @a title {"text":"Anti Controlpoint Drop!", "bold":true, "italic":true, "color":"gold"}
-title @a subtitle {"text":"Delivered now on the surface!", "bold":true, "italic":true, "color":"light_purple"}
-give @a[gamemode=!spectator] minecraft:compass{display:{Name:"{\"text\":\"Anti Controlpoint Drop available at 59, 76, 142\"}"}, LodestoneDimension:"minecraft:overworld",LodestoneTracked:0b,LodestonePos:{X:59,Y:76,Z:142}}
-#This file was made using the "UHC-Datapack-Creator" current version: 3.0.
-#If you want to make any changes to this file please contact the UHC-Committee member: Perfidy.
-#He will know how to change it. (Without messing things up...)
