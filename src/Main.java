@@ -16,7 +16,7 @@ public class Main {
     FileTools fileTools;
 
     //DatapackData<
-    private static final int gameMode = 2;
+    private static final int gameMode = 1;
     /*
      * 1: The Diorite Experts
      * 2: University Racing Eindhoven
@@ -62,8 +62,8 @@ public class Main {
     private int minTraitorRank;
     private static final int traitorMode = 1;
     private String communityName;
-    private static final ControlPoint cp1 = new ControlPoint("CP1", 20 * secPerMinute * tickPerSecond * 2, 2, 0, 0, 0);
-    private static final ControlPoint cp2 = new ControlPoint("CP2", 20 * secPerMinute * tickPerSecond * 2, 3, 0, 0, 0);
+    private static final ControlPoint cp1 = new ControlPoint("CP1", 20 * secPerMinute * tickPerSecond * 2, 2, 0, 0, 0,  Biome.birch_forest);
+    private static final ControlPoint cp2 = new ControlPoint("CP2", 20 * secPerMinute * tickPerSecond * 2, 3, 0, 0, 0,  Dimension.the_nether, Biome.basalt_deltas);
     private static final Execute execute = new Execute();
 
     //GameData>
@@ -1149,7 +1149,7 @@ public class Main {
             fileCommands.add(execute.In(cp.getDimension()) +
                     "forceload add " + cp.getX() + " " + cp.getZ() + " " + cp.getX() + " " + cp.getZ());
             fileCommands.add(execute.In(cp.getDimension()) +
-                    setBlock(cp.getX(), cp.getY() + 11, cp.getZ(), "minecraft:structure_block[mode=load]{metadata:\"\",mirror:\"NONE\",ignoreEntities:1b,powered:0b,seed:0L,author:\"?\",rotation:\"NONE\",posX:-6,mode:\"LOAD\",posY:-13,sizeX:13,posZ:-6,integrity:1.0f,showair:0b,name:\"minecraft:control_point\",sizeY:14,sizeZ:13,showboundingbox:1b}", SetBlockType.replace));
+                    setBlock(cp.getX(), cp.getY() + 11, cp.getZ(), "minecraft:structure_block[mode=load]{metadata:\"\",mirror:\"NONE\",ignoreEntities:1b,powered:0b,seed:0L,author:\"?\",rotation:\"NONE\",posX:-6,mode:\"LOAD\",posY:-13,sizeX:13,posZ:-6,integrity:1.0f,showair:0b,name:\"" + cp.getStructureName() + "\",sizeY:14,sizeZ:13,showboundingbox:1b}", SetBlockType.destroy));
             fileCommands.add(execute.In(cp.getDimension()) +
                     callFunction(FileName.controlpoint_redstone, 0.05));
             for (int i = cp.getY() + 12; i < worldHeight; i++) {
@@ -1297,7 +1297,7 @@ public class Main {
         ArrayList<String> fileCommands = new ArrayList<>();
         for (ControlPoint cp : controlPoints) {
             fileCommands.add(execute.In(cp.getDimension()) +
-                    setBlock(cp.getX(), cp.getY() + 10, cp.getZ(), BlockType.redstone_block, SetBlockType.replace));
+                    setBlock(cp.getX(), cp.getY() + 10, cp.getZ(), BlockType.redstone_block, SetBlockType.destroy));
         }
 
         return new FileData(FileName.controlpoint_redstone, fileCommands);

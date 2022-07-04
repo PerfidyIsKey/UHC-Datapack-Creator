@@ -27,7 +27,7 @@ out/production/UHC-Datapack-Creator/
 Server/cache
 Server/config
 Server/libraries
-Server/logd
+Server/logs
 Server/plugins
 Server/versions
 Server/world
