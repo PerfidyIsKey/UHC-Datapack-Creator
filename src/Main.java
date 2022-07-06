@@ -167,12 +167,16 @@ public class Main {
                 minTraitorRank = 35;
                 communityName = "THE DIORITE EXPERTS";
 
-                cpList.add(new ControlPoint("CP1", maxCPScoreBossbar, 2, -2, 66, 230,  Biome.forest));
-                cpList.add(new ControlPoint("CP1", maxCPScoreBossbar, 2, -309, 62, -34,  Biome.river));
-                cpList.add(new ControlPoint("CP1", maxCPScoreBossbar, 2, 624, 118, 612,  Biome.meadow));
+                cpList.add(new ControlPoint("CP1", maxCPScoreBossbar, 2, -53, 78, -7,  Biome.windswept_hills));
+                cpList.add(new ControlPoint("CP1", maxCPScoreBossbar, 2, -34, 0, 165,  Biome.cave));
+                cpList.add(new ControlPoint("CP1", maxCPScoreBossbar, 2, -330, 69, 400,  Biome.old_growth_birch_forest));
+                cpList.add(new ControlPoint("CP1", maxCPScoreBossbar, 2, -607, 64, 366,  Biome.plains));
+                cpList.add(new ControlPoint("CP1", maxCPScoreBossbar, 2, -311, 79, -1491,  Biome.badlands));
+                cpList.add(new ControlPoint("CP1", maxCPScoreBossbar, 2, 1313, 67, -562,  Biome.mangrove_swamp));
+                cpList.add(new ControlPoint("CP1", maxCPScoreBossbar, 2, 1073, 67, -672,  Biome.jungle));
                 cpList.add(new ControlPoint("CP2", maxCPScoreBossbar, 3, 127, 63, 214,  Dimension.the_nether, Biome.crimson_forest));
                 cpList.add(new ControlPoint("CP2", maxCPScoreBossbar, 3, -182, 35, 1,  Dimension.the_nether, Biome.soul_sand_valley));
-                cpList.add(new ControlPoint("CP2", maxCPScoreBossbar, 3, -402, -6, 463,  Biome.cave));
+                cpList.add(new ControlPoint("CP2", maxCPScoreBossbar, 3, -471, 62, 487,  Biome.river));
 
                 /*// Control point
                 cp1.setX(-2);
@@ -776,6 +780,7 @@ public class Main {
         fileCommands.add(bossBarCp1.setColor("white"));
         fileCommands.add(bossBarCp1.setVisible(false));
         fileCommands.add(bossBarCp1.setPlayers("@a"));
+        fileCommands.add(bossBarCp1.setTitle(controlPoints.get(0).getName() + ": " + controlPoints.get(0).getX() + ", " + controlPoints.get(0).getY() + ", " + controlPoints.get(0).getZ() + " (" + controlPoints.get(0).getDimensionName() + ")"));
         fileCommands.add(bossBarCp2.setColor("white"));
         fileCommands.add(bossBarCp2.setVisible(false));
         fileCommands.add(bossBarCp2.setPlayers("@a"));
