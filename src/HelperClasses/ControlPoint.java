@@ -156,6 +156,7 @@ public class ControlPoint {
             case jagged_peaks:
             case stony_peaks:
             case stony_shore:
+            case meadow:
                 result = "mountain";
                 break;
 
