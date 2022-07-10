@@ -135,9 +135,6 @@ public class ControlPoint {
                 break;
 
             case desert:
-            case savanna:
-            case savanna_plateau:
-            case windswept_savanna:
             case badlands:
             case eroded_badlands:
             case wooded_badlands:
@@ -170,6 +167,9 @@ public class ControlPoint {
             case old_growth_pine_taiga:
             case old_growth_birch_forest:
             case old_growth_spruce_taiga:
+            case savanna:
+            case savanna_plateau:
+            case windswept_savanna:
                 result = "nature";
                 break;
 
