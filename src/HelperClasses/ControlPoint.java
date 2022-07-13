@@ -150,7 +150,6 @@ public class ControlPoint {
             case windswept_gravelly_hills:
             case windswept_hills:
             case grove:
-            case jagged_peaks:
             case stony_peaks:
             case stony_shore:
             case meadow:
@@ -158,20 +157,33 @@ public class ControlPoint {
                 break;
 
             case forest:
-            case taiga:
-            case dark_forest:
-            case birch_forest:
             case flower_forest:
             case sunflower_plains:
             case windswept_forest:
+                result = "nature_oak";
+                break;
+
+            case taiga:
             case old_growth_pine_taiga:
-            case old_growth_birch_forest:
             case old_growth_spruce_taiga:
+                result = "nature_spruce";
+                break;
+
+            case dark_forest:
+                result = "nature_dark";
+                break;
+
+            case birch_forest:
+            case old_growth_birch_forest:
+                result = "nature_birch";
+                break;
+
             case savanna:
             case savanna_plateau:
             case windswept_savanna:
-                result = "nature";
+                result = "nature_acacia";
                 break;
+
 
             case basalt_deltas:
             case nether_wastes:
@@ -196,6 +208,19 @@ public class ControlPoint {
             case deep_cold_ocean:
             case deep_lukewarm_ocean:
                 result = "water";
+                break;
+
+            case frozen_ocean:
+            case ice_spikes:
+            case snowy_beach:
+            case snowy_taiga:
+            case frozen_peaks:
+            case frozen_river:
+            case snowy_plains:
+            case snowy_slopes:
+            case deep_frozen_ocean:
+            case jagged_peaks:
+                result = "snow";
                 break;
 
             default:
