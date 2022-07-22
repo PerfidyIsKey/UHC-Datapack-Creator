@@ -51,5 +51,6 @@ public enum FileName {
     traitor_check,
     teams_alive_check,
     teams_highscore_alive_check,
-    spawn_nether_portal
+    spawn_nether_portal,
+    clear_schedule
 }

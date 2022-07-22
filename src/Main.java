@@ -164,7 +164,7 @@ public class Main {
             case 1:
                 startCoordinates = new Coordinate(0, 66, 0);
                 netherPortal = new Coordinate(-21,63,-20);
-                minTraitorRank = 35;
+                minTraitorRank = 40;
                 communityName = "THE DIORITE EXPERTS";
 
                 cpList.add(new ControlPoint("CP1", maxCPScoreBossbar, 2, 61, 62, -96,  Biome.river));
@@ -231,6 +231,8 @@ public class Main {
                 players.add(new Player("PbQuinn", 7));
                 players.add(new Player("Vermeil_Chan", 6));
                 players.add(new Player("Jobbo2002", 5));
+                players.add(new Player("cat_person", 60));
+                players.add(new Player("AurqSnqtcher", 100));
 
                 quotes = fileTools.GetLinesFromFile("Files\\Diorite\\quotes.txt");
 
@@ -606,6 +608,7 @@ public class Main {
         files.add(ResetRespawnHealth());
         files.add(UpdateMinHealth());
         files.add(SpawnNetherPortal());
+        files.add(ClearSchedule());
     }
 
     private FileData Initialize() {
@@ -1535,6 +1538,15 @@ public class Main {
                 "forceload remove " + netherPortal.getX() + " " + netherPortal.getZ() + " " + netherPortal.getX() + " " + netherPortal.getZ());
 
         return new FileData(FileName.spawn_nether_portal, fileCommands);
+    }
+
+    private FileData ClearSchedule() {
+        ArrayList<String> fileCommands = new ArrayList<>();
+        fileCommands.add("schedule clear uhc:minute_2");
+        fileCommands.add("schedule clear uhc:minute_1");
+        fileCommands.add("schedule clear uhc:death_match");
+
+        return new FileData(FileName.clear_schedule, fileCommands);
     }
 
 }
