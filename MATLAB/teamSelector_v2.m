@@ -9,11 +9,11 @@ load('DataS46.mat')
 %% Input
 % Enter the players that are participating (corresponding numbers with
 % PlayerName variable in Players struct)
-ParticipantIndex = [1,2,17,18,24,25,30,31,33,34,38,39,41,44,45,46,47:50];
+ParticipantIndex = [1,2,17,25,47,49];
 
 %%% Enter the names of new players
-NewPlayers = {};
-EstimatedRank = [];
+NewPlayers = {'cid','alpha1223','ThetrueAlpha5777','lobotomizemedaddy','Dino_danger'};
+EstimatedRank = [20,60,100,20,100];
 
 %%% Algorithm settings
 teamPlayer          = 3;        % Number of players per team

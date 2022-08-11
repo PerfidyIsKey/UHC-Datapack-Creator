@@ -3,6 +3,7 @@ package FileGeneration;
 import FileGeneration.FileData;
 import FileGeneration.Recipe;
 
+import javax.swing.*;
 import java.io.*;
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
@@ -138,6 +139,50 @@ public class FileTools {
         fileCommands.add("    }");
         fileCommands.add("  ]");
         fileCommands.add("}");
+
+        double currentWeight;
+        double sumWeight = totalWeight;
+        double dispWeight;
+        String name = "";
+        double checkWeight = 0;
+        for (LootTableEntry l : lootEntry) {
+            if (l.getFunction() != null) {
+                if (l.getFunction().getChance() > 0) {
+                    for (int i = 0; i < 2; i++) {
+                        if (i == 0) {
+                            currentWeight = l.getWeight() * l.getFunction().getChance();
+                            name = l.getName() + " x" + l.getFunction().getCount();
+                            dispWeight = currentWeight/sumWeight*100;
+                            checkWeight += dispWeight;
+                            fileCommands.add("# Weight " + name + " = " + dispWeight + "%");
+                        }
+                        else {
+                            currentWeight = l.getWeight() * (1 - l.getFunction().getChance());
+                            name = l.getName() + " x1";
+                            dispWeight = currentWeight/sumWeight*100;
+                            checkWeight += dispWeight;
+                            fileCommands.add("# Weight " + name + " = " + dispWeight + "%");
+                        }
+                    }
+                }
+
+                else {
+                    currentWeight = l.getWeight();
+                    dispWeight = currentWeight/sumWeight*100;
+                    checkWeight += dispWeight;
+                    name = l.getName() + " x" + l.getFunction().getCount();
+                    fileCommands.add("# Weight " + name + " = " + dispWeight + "%");
+                }
+            }
+            else {
+                currentWeight = l.getWeight();
+                dispWeight = currentWeight/sumWeight*100;
+                checkWeight += dispWeight;
+                name = l.getName() + " x1";
+                fileCommands.add("# Weight " + name + " = " + dispWeight + "%");
+            }
+
+        }
         //fileCommands.add("#Total weight = "+ totalWeight);
         return fileCommands;
     }

@@ -16,7 +16,7 @@ public class Main {
     FileTools fileTools;
 
     //DatapackData<
-    private static final int gameMode = 1;
+    private static final int gameMode = 2;
     /*
      * 1: The Diorite Experts
      * 2: University Racing Eindhoven
@@ -256,10 +256,20 @@ public class Main {
                 controlPoints.add(cp1);
                 controlPoints.add(cp2);*/
 
-                // Care package
+                cpList.add(new ControlPoint("CP1", maxCPScoreBossbar, 2, -2, 160, -65,  Biome.jagged_peaks));
+                cpList.add(new ControlPoint("CP1", maxCPScoreBossbar, 2, -33, 93, 152,  Biome.taiga));
+                cpList.add(new ControlPoint("CP1", maxCPScoreBossbar, 2, 55, 97, -199,  Biome.cave));
+                cpList.add(new ControlPoint("CP1", maxCPScoreBossbar, 2, 242, 94, -149,  Biome.cave));
+                cpList.add(new ControlPoint("CP2", maxCPScoreBossbar, 3, 213, 141, 227, Biome.grove));
+                cpList.add(new ControlPoint("CP2", maxCPScoreBossbar, 3, -207, 103, -159, Biome.forest));
+                cpList.add(new ControlPoint("CP2", maxCPScoreBossbar, 3, 167, 144, -139, Biome.grove));
+                cpList.add(new ControlPoint("CP2", maxCPScoreBossbar, 3, -19, 97, 68, Dimension.the_nether, Biome.nether_wastes));
+
+
+                /*// Care package
                 carePackage2.setX(61);
                 carePackage2.setY(155);
-                carePackage2.setZ(-6);
+                carePackage2.setZ(-6);*/
                 //carePackages.add(carePackage2);
 
                 // Players
@@ -298,21 +308,13 @@ public class Main {
         }
 
         int[] addRates = {2, 3};
-        for (int count : addRates) {
-            boolean success = false;
-            while (!success)
-            {
-                int index = (int) (Math.random() * cpList.size());
-                if (cpList.get(index).getAddRate() == count)
-                {
-                    controlPoints.add(cpList.get(index));
-                    success = true;
-                }
-            }
+        for (int i = 0; i < addRates.length; i++) {
+            int index = (int) (Math.random() * cpList.size());
+            controlPoints.add(cpList.get(index));
+            controlPoints.get(i).setAddRate(addRates[i]);
+            controlPoints.get(i).setName("CP" + (i+1));
+            cpList.remove(index);
         }
-
-
-
 
         CarePackage carePackage1 = new CarePackage("enchanting", "Enchanting Drop",
                 "[{Slot:3b,id:\"minecraft:enchanted_book\",Count:1b,tag:{StoredEnchantments:[{lvl:1s,id:\"minecraft:power\"}]}},{Slot:4b,id:\"minecraft:golden_apple\",Count:1b},{Slot:5b,id:\"minecraft:enchanted_book\",Count:1b,tag:{StoredEnchantments:[{lvl:2s,id:\"minecraft:sharpness\"}]}},{Slot:12b,id:\"minecraft:apple\",Count:1b},{Slot:13b,id:\"minecraft:anvil\",Count:1b},{Slot:14b,id:\"minecraft:apple\",Count:1b},{Slot:21b,id:\"minecraft:enchanted_book\",Count:1b,tag:{StoredEnchantments:[{lvl:2s,id:\"minecraft:sharpness\"}]}},{Slot:22b,id:\"minecraft:book\",Count:1b},{Slot:23b,id:\"minecraft:enchanted_book\",Count:1b,tag:{StoredEnchantments:[{lvl:1s,id:\"minecraft:protection\"}]}}]",
@@ -365,46 +367,46 @@ public class Main {
 
         // Loot table items
         lootEntry.add(new LootTableEntry(17, "egg"));
-        lootEntry.add(new LootTableEntry(3, "saddle"));
-        lootEntry.add(new LootTableEntry(1, "netherite_hoe"));
         lootEntry.add(new LootTableEntry(17, "ladder", new LootTableFunction(10)));
-        lootEntry.add(new LootTableEntry(3, "spectral_arrow", new LootTableFunction(5)));
-        lootEntry.add(new LootTableEntry(1, "trident"));
-        lootEntry.add(new LootTableEntry(3, "horse_spawn_egg"));
-        lootEntry.add(new LootTableEntry(2, "diamond_horse_armor"));
-        lootEntry.add(new LootTableEntry(5, "experience_bottle", new LootTableFunction(3, 0.2)));
-        lootEntry.add(new LootTableEntry(1, "wolf_spawn_egg", new LootTableFunction(2, 0.01)));
-        lootEntry.add(new LootTableEntry(4, "lapis_lazuli", new LootTableFunction(2)));
-        lootEntry.add(new LootTableEntry(7, "glass", new LootTableFunction(3)));
-        lootEntry.add(new LootTableEntry(2, "nether_wart", new LootTableFunction(5)));
-        lootEntry.add(new LootTableEntry(2, "blaze_rod", new LootTableFunction(2, 0.1)));
-        lootEntry.add(new LootTableEntry(7, "melon_slice", new LootTableFunction(3, 0.4)));
+        lootEntry.add(new LootTableEntry(17, "stick", new LootTableFunction(8)));
+        lootEntry.add(new LootTableEntry(16, "diorite", new LootTableFunction(16)));
+        lootEntry.add(new LootTableEntry(15, "amethyst_block", new LootTableFunction(16)));
+        lootEntry.add(new LootTableEntry(15, "iron_ingot", new LootTableFunction(8)));
+        lootEntry.add(new LootTableEntry(14, "arrow", new LootTableFunction(10)));
         lootEntry.add(new LootTableEntry(11, "bone", new LootTableFunction(3, 0.4)));
+        lootEntry.add(new LootTableEntry(10, "copper_block", new LootTableFunction(16)));
+        lootEntry.add(new LootTableEntry(10, "bread", new LootTableFunction(5)));
+        lootEntry.add(new LootTableEntry(8, "fishing_rod"));
+        lootEntry.add(new LootTableEntry(8, "obsidian", new LootTableFunction(4)));
+        lootEntry.add(new LootTableEntry(7, "glass", new LootTableFunction(3)));
+        lootEntry.add(new LootTableEntry(7, "melon_slice", new LootTableFunction(3, 0.4)));
+        lootEntry.add(new LootTableEntry(5, "tnt", new LootTableFunction(4)));
+        lootEntry.add(new LootTableEntry(5, "experience_bottle", new LootTableFunction(3, 0.2)));
         lootEntry.add(new LootTableEntry(5, "book"));
         lootEntry.add(new LootTableEntry(5, "redstone", new LootTableFunction(16)));
         lootEntry.add(new LootTableEntry(5, "gunpowder", new LootTableFunction(16)));
-        lootEntry.add(new LootTableEntry(3, "glowstone_dust", new LootTableFunction(6)));
-        lootEntry.add(new LootTableEntry(8, "fishing_rod"));
-        lootEntry.add(new LootTableEntry(8, "obsidian", new LootTableFunction(4)));
-        lootEntry.add(new LootTableEntry(4, "lava_bucket"));
-        lootEntry.add(new LootTableEntry(2, "golden_apple"));
-        lootEntry.add(new LootTableEntry(17, "stick", new LootTableFunction(8)));
         lootEntry.add(new LootTableEntry(5, "gold_ingot", new LootTableFunction(3, 0.3)));
-        lootEntry.add(new LootTableEntry(14, "arrow", new LootTableFunction(10)));
-        lootEntry.add(new LootTableEntry(4, "apple", new LootTableFunction(2, 0.3)));
-        lootEntry.add(new LootTableEntry(2, "anvil"));
-        lootEntry.add(new LootTableEntry(16, "diorite", new LootTableFunction(16)));
         lootEntry.add(new LootTableEntry(5, "cobweb", new LootTableFunction(2, 0.4)));
+        lootEntry.add(new LootTableEntry(4, "lapis_lazuli", new LootTableFunction(2)));
+        lootEntry.add(new LootTableEntry(4, "lava_bucket"));
+        lootEntry.add(new LootTableEntry(4, "apple", new LootTableFunction(2, 0.3)));
         lootEntry.add(new LootTableEntry(4, "diamond", new LootTableFunction(2, 0.3)));
-        lootEntry.add(new LootTableEntry(15, "iron_ingot", new LootTableFunction(8)));
+        lootEntry.add(new LootTableEntry(3, "saddle"));
+        lootEntry.add(new LootTableEntry(3, "spectral_arrow", new LootTableFunction(5)));
+        lootEntry.add(new LootTableEntry(3, "horse_spawn_egg"));
+        lootEntry.add(new LootTableEntry(3, "glowstone_dust", new LootTableFunction(6)));
+        lootEntry.add(new LootTableEntry(2, "diamond_horse_armor"));
+        lootEntry.add(new LootTableEntry(2, "nether_wart", new LootTableFunction(5)));
+        lootEntry.add(new LootTableEntry(2, "blaze_rod", new LootTableFunction(2, 0.1)));
+        lootEntry.add(new LootTableEntry(2, "golden_apple"));
+        lootEntry.add(new LootTableEntry(2, "anvil"));
+        lootEntry.add(new LootTableEntry(2, "spyglass"));
+        lootEntry.add(new LootTableEntry(1, "netherite_hoe"));
+        lootEntry.add(new LootTableEntry(1, "trident"));
+        lootEntry.add(new LootTableEntry(1, "wolf_spawn_egg", new LootTableFunction(2, 0.01)));
         lootEntry.add(new LootTableEntry(1, "diamond_chestplate"));
         lootEntry.add(new LootTableEntry(1, "diamond_leggings"));
         lootEntry.add(new LootTableEntry(1, "netherite_scrap", new LootTableFunction(4, 0.001)));
-        lootEntry.add(new LootTableEntry(2, "spyglass"));
-        lootEntry.add(new LootTableEntry(15, "amethyst_block", new LootTableFunction(16)));
-        lootEntry.add(new LootTableEntry(10, "copper_block", new LootTableFunction(16)));
-        lootEntry.add(new LootTableEntry(5, "tnt", new LootTableFunction(4)));
-        lootEntry.add(new LootTableEntry(10, "bread", new LootTableFunction(5)));
 
         ArrayList<String> fileCommands = fileTools.generateLootTable(lootEntry);
 
