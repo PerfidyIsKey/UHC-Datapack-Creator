@@ -2,7 +2,7 @@ clear
 close all
 
 addpath('Data','Functions','Documents')
-load('DataS46.mat')
+load('DataURE6.mat')
 
 Players = RankDetermine(Players,Seasons);
 

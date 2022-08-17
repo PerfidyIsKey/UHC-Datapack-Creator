@@ -16,7 +16,7 @@ close all
 
 %% Information
 addpath('Data','Functions','Figures')
-load('DataS46.mat')
+load('DataURE6.mat')
 
 %% Visualization
 NoP = size(Players,2);
@@ -24,7 +24,7 @@ NoS = size(Seasons,2);
 legdata = cell(NoP,1);
 for i = 1:NoP
     if ~isnan(Players(i).RankPosition(NoS))
-        LineSize = 2*(1 - (Players(i).RankPosition(NoS)+0.5)/NoP);
+        LineSize = 2*(1 - (Players(i).RankPosition(NoS)-0.5)/NoP);
     else
         LineSize = 0.1;
     end

@@ -242,7 +242,7 @@ public class Main {
             case 2:
                 startCoordinates = new Coordinate(0, 165, 0);
                 netherPortal = new Coordinate(15,148,-14);
-                minTraitorRank = 15;
+                minTraitorRank = 1;
                 communityName = "UNIVERSITY RACING EINDHOVEN";
 
                 /*// Control point
@@ -275,31 +275,32 @@ public class Main {
                 // Players
                 players.add(new Player("Bertje13", 0));
                 players.add(new Player("Lefke67", 7));
-                players.add(new Player("SpookySpiker", 15));
-                players.add(new Player("joep359", 47));
-                players.add(new Player("Snodog627", 130));
-                players.add(new Player("Mafkees__10", 85));
-                players.add(new Player("woutje33", 72));
-                players.add(new Player("CorruptUncle", 49));
+                players.add(new Player("SpookySpiker", 14));
+                players.add(new Player("joep359", 45));
+                players.add(new Player("Snodog627", 164));
+                players.add(new Player("Mafkees__10", 78));
+                players.add(new Player("woutje33", 64));
+                players.add(new Player("CorruptUncle", 44));
                 players.add(new Player("Luuk", 2));
                 players.add(new Player("sepertibos", 5));
-                players.add(new Player("Clik_clak", 9));
-                players.add(new Player("HumblesBumblesV2", 11));
-                players.add(new Player("RoyalGub", 21));
-                players.add(new Player("Chrissah58", 14));
-                players.add(new Player("TNTbuilder21", 43));
-                players.add(new Player("Pimmie36", 74));
-                players.add(new Player("lenschoenie98", 50));
-                players.add(new Player("PbQuinn", 25));
-                players.add(new Player("Luc_B21", 2));
+                players.add(new Player("Clik_clak", 8));
+                players.add(new Player("HumblesBumblesV2", 9));
+                players.add(new Player("RoyalGub", 19));
+                players.add(new Player("Chrissah58", 13));
+                players.add(new Player("TNTbuilder21", 40));
+                players.add(new Player("Pimmie36", 68));
+                players.add(new Player("lenschoenie98", 46));
+                players.add(new Player("PbQuinn", 24));
+                players.add(new Player("Luc_B21", 5));
                 players.add(new Player("Captain_Kills", 4));
-                players.add(new Player("PeterBeTripin", 7));
-                players.add(new Player("Jayroon123", 15));
-                players.add(new Player("JD329", 16));
-                players.add(new Player("maxim_rongen", 27));
-                players.add(new Player("URE16Noah", 14));
-                players.add(new Player("Jobbo2002", 137));
-                players.add(new Player("PvPg0d_Joosie", 57));
+                players.add(new Player("Chassisboy16", 15));
+                players.add(new Player("Jayrooninator", 24));
+                players.add(new Player("JD329", 15));
+                players.add(new Player("maxim_rongen", 25));
+                players.add(new Player("URE16Noah", 45));
+                players.add(new Player("Jobbo2002", 116));
+                players.add(new Player("Gladde_Paling1", 41));
+                players.add(new Player("Elenbaas", 8));
 
                 // Quotes
                 quotes = fileTools.GetLinesFromFile("Files\\URE\\quotes.txt");
