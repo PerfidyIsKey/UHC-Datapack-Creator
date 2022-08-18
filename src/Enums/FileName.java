@@ -52,5 +52,6 @@ public enum FileName {
     teams_alive_check,
     teams_highscore_alive_check,
     spawn_nether_portal,
-    clear_schedule
+    clear_schedule,
+    locate_teammate
 }

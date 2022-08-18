@@ -17,7 +17,7 @@ public class Main {
     FileTools fileTools;
 
     //DatapackData<
-    private static final int gameMode = 2;
+    private static final int gameMode = 1;
     /*
      * 1: The Diorite Experts
      * 2: University Racing Eindhoven
@@ -614,6 +614,7 @@ public class Main {
         files.add(UpdateMinHealth());
         files.add(SpawnNetherPortal());
         files.add(ClearSchedule());
+        files.add(LocateTeamMate());
     }
 
     private FileData Initialize() {
@@ -1361,6 +1362,7 @@ public class Main {
         fileCommands.add(execute.If(new Selector("@p[scores={Time2=" + (1200 * tickPerSecond) + "}]")) +
                 "tellraw @a [\"\",{\"text\":\" ｜ \",\"color\":\"gray\"},{\"text\":\"" + communityName + " UHC\",\"color\":\"gold\"},{\"text\":\" ｜ \",\"color\":\"gray\"},{\"text\":\"DAY TIME HAS ARRIVED & ETERNAL DAY ENABLED!\",\"color\":\"light_purple\"},{\"text\":\" ｜ \",\"color\":\"gray\"}]");
         fileCommands.add(callFunction(FileName.display_quotes));
+        fileCommands.add(callFunction(FileName.locate_teammate));
 
         return new FileData(FileName.timer, fileCommands);
     }
@@ -1552,6 +1554,23 @@ public class Main {
         fileCommands.add("schedule clear uhc:death_match");
 
         return new FileData(FileName.clear_schedule, fileCommands);
+    }
+
+    private FileData LocateTeamMate() {
+        ArrayList<String> fileCommands = new ArrayList<>();
+        for (Team team : teams) {
+            for (int i = 0; i < 3; i++) {
+                fileCommands.add(execute.As("@a[team=" + team.getName() + ",nbt={SelectedItem:{id:\"minecraft:compass\"}}]",false) +
+                        execute.AtNext("@s") +
+                        execute.IfNext(new Selector("@a[team=" + team.getName() + ",distance=0.1..,gamemode=!spectator]")) +
+                        execute.FacingNext(new Selector("@a[team=" + team.getName() + ",distance=0.1..,gamemode=!spectator,limit=1,sort=nearest]"), EntityAnchor.eyes) +
+                        execute.PositionedRelativeNext(0, 1, 0) +
+                        execute.PositionedRelativeFacingNext(0, 0, i + 1,true) +
+                        "particle minecraft:dust 1.0 1.0 1.0 1.0 ~ ~ ~ 0 0 0 0 1 normal @s");
+            }
+        }
+
+        return new FileData(FileName.locate_teammate, fileCommands);
     }
 
 }

@@ -1,6 +1,7 @@
 package HelperClasses;
 
 import Enums.Dimension;
+import Enums.EntityAnchor;
 import HelperClasses.Condition;
 
 public class Execute {
@@ -48,16 +49,32 @@ public class Execute {
         return Standard(AtNext(location), run);
     }
 
+    public String At(String targets, boolean run) {
+        return Standard(AtNext(targets), run);
+    }
+
     public String At(Location location) {
         return At(location, true);
+    }
+
+    public String At(String targets) {
+        return At(targets, true);
     }
 
     public String AtNext(Location location, boolean run) {
         return Next("at " + location.getLocation() + " ", run);
     }
 
+    public String AtNext(String targets, boolean run) {
+        return Next("at " + targets + " ", run);
+    }
+
     public String AtNext(Location location) {
         return AtNext(location, false);
+    }
+
+    public String AtNext(String targets) {
+        return AtNext(targets, false);
     }
 
     public String As(String entity, boolean run) {
@@ -108,6 +125,22 @@ public class Execute {
         return Next("positioned ~" + x + " ~" + y + " ~" + z + " ", false);
     }
 
+    public String PositionedRelativeFacing(int x, int y, int z, boolean run) {
+        return Standard(PositionedRelativeFacingNext(x, y, z), run);
+    }
+
+    public String PositionedRelativeFacing(int x, int y, int z) {
+        return Standard(PositionedRelativeFacingNext(x, y, z), true);
+    }
+
+    public String PositionedRelativeFacingNext(int x, int y, int z, boolean run) {
+        return Next("positioned ^" + x + " ^" + y + " ^" + z + " ", run);
+    }
+
+    public String PositionedRelativeFacingNext(int x, int y, int z) {
+        return Next("positioned ^" + x + " ^" + y + " ^" + z + " ", false);
+    }
+
     public String In(Dimension dimension, boolean run) {
         return Standard(InNext(dimension), run);
     }
@@ -146,5 +179,37 @@ public class Execute {
 
     public String StoreResultNext(String execution) {
         return "store result " + execution;
+    }
+
+    public String Facing(Location location, boolean run) {
+        return Standard(FacingNext(location), run);
+    }
+
+    public String Facing(Location location) {
+        return Standard(FacingNext(location), true);
+    }
+
+    public String Facing(Condition target, EntityAnchor anchor, boolean run) {
+        return Standard(FacingNext(target, anchor), run);
+    }
+
+    public String Facing(Condition target, EntityAnchor anchor) {
+        return Standard(FacingNext(target, anchor), true);
+    }
+
+    public String FacingNext(Location location, boolean run) {
+        return Next("facing " + location.getLocation() + " ", run);
+    }
+
+    public String FacingNext(Location location) {
+        return FacingNext(location, false);
+    }
+
+    public String FacingNext(Condition target, EntityAnchor anchor, boolean run) {
+        return Next("facing " + target.getText() + " " + anchor + " ", run);
+    }
+
+    public String FacingNext(Condition target, EntityAnchor anchor) {
+        return FacingNext(target, anchor, false);
     }
 }
