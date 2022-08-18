@@ -4,6 +4,7 @@ import HelperClasses.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Scanner;
 
 public class Main {
@@ -309,12 +310,11 @@ public class Main {
         }
 
         int[] addRates = {2, 3};
+        Collections.shuffle(cpList);
         for (int i = 0; i < addRates.length; i++) {
-            int index = (int) (Math.random() * cpList.size());
-            controlPoints.add(cpList.get(index));
+            controlPoints.add(cpList.get(i));
             controlPoints.get(i).setAddRate(addRates[i]);
             controlPoints.get(i).setName("CP" + (i+1));
-            cpList.remove(index);
         }
 
         CarePackage carePackage1 = new CarePackage("enchanting", "Enchanting Drop",
