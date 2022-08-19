@@ -614,7 +614,7 @@ public class Main {
         files.add(UpdateMinHealth());
         files.add(SpawnNetherPortal());
         files.add(ClearSchedule());
-        files.add(LocateTeamMate());
+        files.add(LocateTeammate());
     }
 
     private FileData Initialize() {
@@ -906,6 +906,7 @@ public class Main {
         fileCommands.add("advancement revoke @a everything");
         fileCommands.add("xp set @a 0 points");
         fileCommands.add("scoreboard players set @p[scores={Admin=1}] Victory 1");
+        fileCommands.add("give @a minecraft:compass{tag:LocateTeammate}");
         //fileCommands.add("execute as @a at @s run function uhc:give_instructions");
 
         return new FileData(FileName.start_game, fileCommands);
@@ -1556,11 +1557,11 @@ public class Main {
         return new FileData(FileName.clear_schedule, fileCommands);
     }
 
-    private FileData LocateTeamMate() {
+    private FileData LocateTeammate() {
         ArrayList<String> fileCommands = new ArrayList<>();
         for (Team team : teams) {
             for (int i = 0; i < 3; i++) {
-                fileCommands.add(execute.As("@a[team=" + team.getName() + ",nbt={SelectedItem:{id:\"minecraft:compass\"}}]",false) +
+                fileCommands.add(execute.As("@a[team=" + team.getName() + ",nbt={SelectedItem:{id:\"minecraft:compass\",tag:{tag:LocateTeammate}}}]",false) +
                         execute.AtNext("@s") +
                         execute.IfNext(new Selector("@a[team=" + team.getName() + ",distance=0.1..,gamemode=!spectator]")) +
                         execute.FacingNext(new Selector("@a[team=" + team.getName() + ",distance=0.1..,gamemode=!spectator,limit=1,sort=nearest]"), EntityAnchor.eyes) +
