@@ -168,18 +168,8 @@ public class Main {
                 minTraitorRank = 40;
                 communityName = "THE DIORITE EXPERTS";
 
-                cpList.add(new ControlPoint("CP1", maxCPScoreBossbar, 2, 61, 62, -96,  Biome.river));
-                cpList.add(new ControlPoint("CP1", maxCPScoreBossbar, 2, 247, 64, 323,  Biome.mangrove_swamp));
-                cpList.add(new ControlPoint("CP1", maxCPScoreBossbar, 2, -155, 63, 138,  Biome.savanna));
-                cpList.add(new ControlPoint("CP1", maxCPScoreBossbar, 2, -24, 32, -182,  Biome.cave));
-                cpList.add(new ControlPoint("CP1", maxCPScoreBossbar, 2, 428, -10, -12,  Biome.dripstone_caves));
-                cpList.add(new ControlPoint("CP1", maxCPScoreBossbar, 2, -261, 64, 414,  Biome.desert));
-                cpList.add(new ControlPoint("CP1", maxCPScoreBossbar, 2, -506, 62, 78,  Biome.river));
-                cpList.add(new ControlPoint("CP1", maxCPScoreBossbar, 2, -283, 151, -320,  Biome.jagged_peaks));
-                cpList.add(new ControlPoint("CP2", maxCPScoreBossbar, 3, -296, 132, 49,  Biome.savanna_plateau));
-                cpList.add(new ControlPoint("CP2", maxCPScoreBossbar, 3, -109, 131, -287,  Biome.meadow));
-                cpList.add(new ControlPoint("CP2", maxCPScoreBossbar, 3, 18, 76, 104,  Dimension.the_nether, Biome.crimson_forest));
-                cpList.add(new ControlPoint("CP2", maxCPScoreBossbar, 3, -4, 52, -46,  Dimension.the_nether, Biome.crimson_forest));
+                cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, -54, 44, 62,  Biome.cave));
+                cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, -54, 44, 62,  Biome.cave));
 
                 /*// Control point
                 cp1.setX(-2);
