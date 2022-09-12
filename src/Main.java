@@ -163,13 +163,19 @@ public class Main {
 
         switch (gameMode) {
             case 1:
-                startCoordinates = new Coordinate(0, 66, 0);
-                netherPortal = new Coordinate(-21,63,-20);
+                startCoordinates = new Coordinate(0, 58, 0);
+                netherPortal = new Coordinate(8,63,-19);
                 minTraitorRank = 40;
                 communityName = "THE DIORITE EXPERTS";
 
                 cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, -54, 44, 62,  Biome.cave));
-                cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, -54, 44, 62,  Biome.cave));
+                cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, -424, 63, -459,  Biome.lukewarm_ocean));
+                cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, 194, 103, 375,  Biome.savanna));
+                cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, 468, 64, -169,  Biome.desert));
+                cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, -222, 71, -8,  Biome.forest));
+                cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, 253, 117, 4,  Biome.savanna_plateau));
+                cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, 259, 96, -580,  Biome.forest));
+                cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, -43, 65, -17, Dimension.the_nether,  Biome.nether_wastes));
 
                 /*// Control point
                 cp1.setX(-2);
