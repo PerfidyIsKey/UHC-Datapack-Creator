@@ -169,7 +169,7 @@ public class Main {
                 communityName = "THE DIORITE EXPERTS";
 
                 cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, -54, 44, 62,  Biome.cave));
-                cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, -424, 63, -459,  Biome.lukewarm_ocean));
+                cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, -424, 62, -459,  Biome.lukewarm_ocean));
                 cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, 194, 103, 375,  Biome.savanna));
                 cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, 468, 64, -169,  Biome.desert));
                 cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, -222, 71, -8,  Biome.forest));
