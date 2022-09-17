@@ -4,24 +4,24 @@ close all
 addpath('Functions','Documents','Data')
 
 Players = struct;
-load('DataURE6.mat')
+load('DataS46.mat')
 
 %% Input
 % Enter the players that are participating (corresponding numbers with
 % PlayerName variable in Players struct)
-ParticipantIndex = [5,19,21,22,25,26,27,28];
+ParticipantIndex = [1,2,17,25,30,46,47,48,49];
 
 %%% Enter the names of new players
-NewPlayers = {};
-EstimatedRank = [];
+NewPlayers = {'CrimsonCid','Dino_Danger','Blackhawkup'};
+EstimatedRank = [20,100,100];
 
 %%% Algorithm settings
-teamPlayer          = 4;        % Number of players per team
+teamPlayer          = 6;        % Number of players per team
 rankLowerBound      = 5;        % Maximum negative deviation of score median
 rankUpperBound      = 8;        % Maximum positive deviation of score mean
 rankLowerTolerance	= 10;       % Maximum allowed negative deviation
 rankUpperTolerance  = 15;       % Maximum allowed positive deviation
-maxConnections      = 1;        % Maximum number of times players have played together
+maxConnections      = 2;        % Maximum number of times players have played together
 scoreNoise          = 30;       % Additional score noise to account for inaccuracies
 plotResults         = true;    % Visualize results in real time
 verboseMode         = false;    % Allow messages

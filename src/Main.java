@@ -165,7 +165,7 @@ public class Main {
             case 1:
                 startCoordinates = new Coordinate(0, 58, 0);
                 netherPortal = new Coordinate(8,63,-19);
-                minTraitorRank = 40;
+                minTraitorRank = 25;
                 communityName = "THE DIORITE EXPERTS";
 
                 cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, -54, 44, 62,  Biome.cave));
@@ -232,6 +232,9 @@ public class Main {
                 players.add(new Player("AurqSnqtcher", 26));
                 players.add(new Player("cat_person", 17));
                 players.add(new Player("GoldBard2474348", 24));
+                players.add(new Player("CrimsonCid", 20));
+                players.add(new Player("Dino_Danger", 100));
+                players.add(new Player("Blackhawkup", 100));
 
                 quotes = fileTools.GetLinesFromFile("Files\\Diorite\\quotes.txt");
 
@@ -375,6 +378,7 @@ public class Main {
         lootEntry.add(new LootTableEntry(10, "bread", new LootTableFunction(5)));
         lootEntry.add(new LootTableEntry(8, "fishing_rod"));
         lootEntry.add(new LootTableEntry(8, "obsidian", new LootTableFunction(4)));
+        lootEntry.add(new LootTableEntry(8, "cobweb", new LootTableFunction(2, 0.4)));
         lootEntry.add(new LootTableEntry(7, "glass", new LootTableFunction(3)));
         lootEntry.add(new LootTableEntry(7, "melon_slice", new LootTableFunction(3, 0.4)));
         lootEntry.add(new LootTableEntry(5, "tnt", new LootTableFunction(4)));
@@ -383,13 +387,12 @@ public class Main {
         lootEntry.add(new LootTableEntry(5, "redstone", new LootTableFunction(16)));
         lootEntry.add(new LootTableEntry(5, "gunpowder", new LootTableFunction(16)));
         lootEntry.add(new LootTableEntry(5, "gold_ingot", new LootTableFunction(3, 0.3)));
-        lootEntry.add(new LootTableEntry(5, "cobweb", new LootTableFunction(2, 0.4)));
-        lootEntry.add(new LootTableEntry(4, "lapis_lazuli", new LootTableFunction(2)));
+        lootEntry.add(new LootTableEntry(5, "lapis_lazuli", new LootTableFunction(10)));
         lootEntry.add(new LootTableEntry(4, "lava_bucket"));
         lootEntry.add(new LootTableEntry(4, "apple", new LootTableFunction(2, 0.3)));
         lootEntry.add(new LootTableEntry(4, "diamond", new LootTableFunction(2, 0.3)));
         lootEntry.add(new LootTableEntry(3, "saddle"));
-        lootEntry.add(new LootTableEntry(3, "spectral_arrow", new LootTableFunction(5)));
+        lootEntry.add(new LootTableEntry(3, "spectral_arrow", new LootTableFunction(10)));
         lootEntry.add(new LootTableEntry(3, "horse_spawn_egg"));
         lootEntry.add(new LootTableEntry(3, "glowstone_dust", new LootTableFunction(6)));
         lootEntry.add(new LootTableEntry(2, "diamond_horse_armor"));
@@ -398,9 +401,9 @@ public class Main {
         lootEntry.add(new LootTableEntry(2, "golden_apple"));
         lootEntry.add(new LootTableEntry(2, "anvil"));
         lootEntry.add(new LootTableEntry(2, "spyglass"));
+        lootEntry.add(new LootTableEntry(2, "wolf_spawn_egg", new LootTableFunction(2, 0.01)));
         lootEntry.add(new LootTableEntry(1, "netherite_hoe"));
         lootEntry.add(new LootTableEntry(1, "trident"));
-        lootEntry.add(new LootTableEntry(1, "wolf_spawn_egg", new LootTableFunction(2, 0.01)));
         lootEntry.add(new LootTableEntry(1, "diamond_chestplate"));
         lootEntry.add(new LootTableEntry(1, "diamond_leggings"));
         lootEntry.add(new LootTableEntry(1, "netherite_scrap", new LootTableFunction(4, 0.001)));
