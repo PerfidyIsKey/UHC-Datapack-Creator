@@ -174,7 +174,7 @@ public class Main {
                 cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, -154, 178, 163,  Biome.jagged_peaks));
                 cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, 185, 103, 238,  Biome.grove));
                 cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, 559, 59, 69,  Biome.river));
-                cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, -18, 117, -211,  Biome.meadow));
+                cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, -18, 118, -211,  Biome.meadow));
                 cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, -25, 99, -40, Dimension.the_nether,  Biome.crimson_forest));
 
 
@@ -613,6 +613,7 @@ public class Main {
         files.add(SpawnNetherPortal());
         files.add(ClearSchedule());
         files.add(LocateTeammate());
+        files.add(UnleashLava());
     }
 
     private FileData Initialize() {
@@ -1572,6 +1573,13 @@ public class Main {
         }
 
         return new FileData(FileName.locate_teammate, fileCommands);
+    }
+
+    private FileData UnleashLava() {
+        ArrayList<String> fileCommands = new ArrayList<>();
+        fileCommands.add("setblock ~ ~-1 ~ minecraft:lava");
+
+        return new FileData(FileName.unleash_lava, fileCommands);
     }
 
 }
