@@ -999,12 +999,14 @@ public class Main {
     private FileData DeathMatch() {
         ArrayList<String> fileCommands = new ArrayList<>();
         fileCommands.add("worldborder set 400");
-        fileCommands.add("worldborder set 10 180");
+        fileCommands.add("worldborder set 20 180");
         fileCommands.add(execute.In(Dimension.overworld) +
                 "tp @a[gamemode=!spectator] 3 153 3");
         fileCommands.add(execute.In(Dimension.overworld) +
                 "spreadplayers 0 0 75 150 true @a[gamemode=!spectator]");
         fileCommands.add(getBossbarByName("cp").setVisible(false));
+        fileCommands.add(execute.In(Dimension.overworld) +
+                fill(netherPortal.getX() - 1, netherPortal.getY(), netherPortal.getZ(), netherPortal.getX() + 2, netherPortal.getY() + 4, netherPortal.getZ(), BlockType.bedrock, SetBlockType.replace));
 
         return new FileData(FileName.death_match, fileCommands);
     }
