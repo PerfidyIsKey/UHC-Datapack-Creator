@@ -163,19 +163,20 @@ public class Main {
 
         switch (gameMode) {
             case 1:
-                startCoordinates = new Coordinate(0, 58, 0);
-                netherPortal = new Coordinate(8,63,-19);
-                minTraitorRank = 1;
+                startCoordinates = new Coordinate(0, 95, 0);
+                netherPortal = new Coordinate(43,93,-19);
+                minTraitorRank = 20;
                 communityName = "THE DIORITE EXPERTS";
 
-                cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, -54, 44, 62,  Biome.cave));
-                cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, -424, 62, -459,  Biome.lukewarm_ocean));
-                cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, 194, 103, 375,  Biome.savanna));
-                cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, 468, 64, -169,  Biome.desert));
-                cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, -222, 71, -8,  Biome.forest));
-                cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, 253, 117, 4,  Biome.savanna_plateau));
-                cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, 259, 96, -580,  Biome.forest));
-                cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, -43, 65, -17, Dimension.the_nether,  Biome.nether_wastes));
+                cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, -68, 99, -375,  Biome.forest));
+                cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, 222, 67, -243,  Biome.plains));
+                cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, 257, 154, 172,  Biome.frozen_peaks));
+                cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, -154, 178, 163,  Biome.jagged_peaks));
+                cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, 185, 103, 238,  Biome.grove));
+                cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, 559, 59, 69,  Biome.river));
+                cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, -18, 117, -211,  Biome.meadow));
+                cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, -25, 99, -40, Dimension.the_nether,  Biome.crimson_forest));
+
 
                 /*// Control point
                 cp1.setX(-2);
