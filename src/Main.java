@@ -121,7 +121,7 @@ public class Main {
     private void initSaveDir() {
         switch (gameMode) {
             case 1:
-                uhcNumber = "S46";
+                uhcNumber = "S48";
 
                 admin = "Snodog627";
                 break;
@@ -165,7 +165,7 @@ public class Main {
             case 1:
                 startCoordinates = new Coordinate(0, 95, 0);
                 netherPortal = new Coordinate(43,93,-19);
-                minTraitorRank = 20;
+                minTraitorRank = 200;
                 communityName = "THE DIORITE EXPERTS";
 
                 cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, -68, 99, -375,  Biome.forest));
@@ -198,41 +198,40 @@ public class Main {
 
                 // Players
                 players.add(new Player("Snodog627", 113, true));
-                players.add(new Player("Mr9Madness", 79, true));
+                players.add(new Player("Mr9Madness", 88));
                 players.add(new Player("Tiba101", 1));
-                players.add(new Player("W0omy", 16));
-                players.add(new Player("MissTutuPrincess", 4));
-                players.add(new Player("Kalazniq", 61));
-                players.add(new Player("Vladik71", 33));
-                players.add(new Player("Smashking242", 11));
-                players.add(new Player("Pfalz_", 12));
-                players.add(new Player("ThurianBodan", 29));
-                players.add(new Player("PerfidyIsKey", 65, true));
-                players.add(new Player("deuce__", 4));
-                players.add(new Player("jonmo0105", 54));
-                players.add(new Player("TheDinoGame", 180));
-                players.add(new Player("BAAPABUGGETS", 7));
-                players.add(new Player("Th3Flash05", 66));
-                players.add(new Player("viccietors", 37));
-                players.add(new Player("Rayqson", 14));
-                players.add(new Player("64bf", 85));
-                players.add(new Player("Bobdafish", 84, true));
+                players.add(new Player("W0omy", 15));
+                players.add(new Player("Kalazniq", 59));
+                players.add(new Player("Vladik71", 32));
+                players.add(new Player("Smashking242", 9));
+                players.add(new Player("Pfalz_", 10));
+                players.add(new Player("ThurianBodan", 27));
+                players.add(new Player("PerfidyIsKey", 60, true));
+                players.add(new Player("deuce__", 1));
+                players.add(new Player("jonmo0105", 49));
+                players.add(new Player("TheDinoGame", 178));
+                players.add(new Player("BAAPABUGGETS", 6));
+                players.add(new Player("Th3Flash05", 64));
+                players.add(new Player("viccietors", 35));
+                players.add(new Player("Rayqson", 13));
+                players.add(new Player("_HexGamer", 95));
+                players.add(new Player("Bobdafish", 80));
                 players.add(new Player("Alanaenae", 0));
-                players.add(new Player("jk20028", 20));
+                players.add(new Player("jk20028", 19));
                 players.add(new Player("N_G0n", 5));
-                players.add(new Player("SpookySpiker", 70));
+                players.add(new Player("SpookySpiker", 69));
                 players.add(new Player("Clockweiz", 8));
-                players.add(new Player("Eason950116", 13));
-                players.add(new Player("CorruptUncle", 50));
-                players.add(new Player("Pimmie36", 54));
+                players.add(new Player("Eason950116", 12));
+                players.add(new Player("CorruptUncle", 48));
+                players.add(new Player("Pimmie36", 52));
                 players.add(new Player("Jayroon123", 0));
-                players.add(new Player("PbQuinn", 7));
-                players.add(new Player("Vermeil_Chan", 6));
+                players.add(new Player("PbQuinn", 27));
+                players.add(new Player("Vermeil_Chan", 16));
                 players.add(new Player("Jobbo2002", 9));
                 players.add(new Player("Uncle_Lolly", 4));
                 players.add(new Player("AurqSnqtcher", 29));
-                players.add(new Player("cat_person", 34));
-                players.add(new Player("GoldBard2474348", 23));
+                players.add(new Player("cat_person", 27));
+                players.add(new Player("GoldBard2474348", 22));
                 players.add(new Player("CrimsonCid", 12));
 
                 quotes = fileTools.GetLinesFromFile("Files\\Diorite\\quotes.txt");
@@ -1279,6 +1278,8 @@ public class Main {
         fileCommands.add(execute.If(new Selector("@p[scores={Time=24000..}]"),false) +
                 execute.InNext(Dimension.overworld,true) +
                 "tp @a[gamemode=creative] 0 221 0");
+        fileCommands.add(execute.If(new Selector("@p[scores={Time=24000..}]")) +
+                setGameRule(GameRule.commandBlockOutput, true));
         fileCommands.add(execute.If(new Selector("@p[scores={WorldLoad=400..}]")) +
                 "scoreboard players reset @a WorldLoad");
 
@@ -1287,6 +1288,7 @@ public class Main {
 
     private FileData WorldPreLoadActivation() {
         ArrayList<String> fileCommands = new ArrayList<>();
+        fileCommands.add(setGameRule(GameRule.commandBlockOutput, false));
         fileCommands.add(execute.In(Dimension.overworld) +
                 setBlock(6, worldBottom + 2, 15, BlockType.redstone_block));
         fileCommands.add("scoreboard objectives setdisplay sidebar WorldLoad");
