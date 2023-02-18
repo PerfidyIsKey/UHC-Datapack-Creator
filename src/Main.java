@@ -21,6 +21,7 @@ public class Main {
     /*
      * 1: The Diorite Experts
      * 2: University Racing Eindhoven
+     * 3: Kinjin
      */
 
     private String uhcNumber;
@@ -121,12 +122,18 @@ public class Main {
     private void initSaveDir() {
         switch (gameMode) {
             case 1:
-                uhcNumber = "S48";
+                uhcNumber = "S49";
 
                 admin = "Snodog627";
                 break;
             case 2:
                 uhcNumber = "URE6";
+
+                admin = "Snodog627";
+                break;
+
+            case 3:
+                uhcNumber = "KJ1";
 
                 admin = "Snodog627";
                 break;
@@ -163,19 +170,19 @@ public class Main {
 
         switch (gameMode) {
             case 1:
-                startCoordinates = new Coordinate(0, 95, 0);
-                netherPortal = new Coordinate(43,93,-19);
-                minTraitorRank = 200;
+                startCoordinates = new Coordinate(0, 71, 0);
+                netherPortal = new Coordinate(-8,69,22);
+                minTraitorRank = 25;
                 communityName = "THE DIORITE EXPERTS";
 
-                cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, -68, 99, -375,  Biome.forest));
-                cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, 222, 67, -243,  Biome.plains));
-                cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, 257, 154, 172,  Biome.frozen_peaks));
-                cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, -154, 178, 163,  Biome.jagged_peaks));
-                cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, 185, 103, 238,  Biome.grove));
-                cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, 559, 59, 69,  Biome.river));
-                cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, -18, 118, -211,  Biome.meadow));
-                cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, -25, 99, -40, Dimension.the_nether,  Biome.crimson_forest));
+                cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, 158, 78, 93,  Biome.plains));
+                cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, -61, 62, 80,  Biome.river));
+                cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, -66, 116, -38,  Biome.sunflower_plains));
+                cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, -297, 65, -221,  Biome.windswept_savanna));
+                cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, -277, 22, 59,  Biome.cave));
+                cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, 123, 65, 258,  Biome.plains));
+                cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, 39, 68, -179,  Biome.sunflower_plains));
+                cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, 302, 65, -161,  Biome.flower_forest));
 
 
                 /*// Control point
@@ -302,6 +309,29 @@ public class Main {
 
                 // Quotes
                 quotes = fileTools.GetLinesFromFile("Files\\URE\\quotes.txt");
+
+                break;
+
+            case 3:
+                startCoordinates = new Coordinate(0, 165, 0);
+                netherPortal = new Coordinate(15,148,-14);
+                minTraitorRank = 1;
+                communityName = "KINJIN";
+
+                cpList.add(new ControlPoint("CP1", maxCPScoreBossbar, 2, -2, 160, -65,  Biome.jagged_peaks));
+                cpList.add(new ControlPoint("CP1", maxCPScoreBossbar, 2, -33, 93, 152,  Biome.taiga));
+                cpList.add(new ControlPoint("CP1", maxCPScoreBossbar, 2, 55, 97, -199,  Biome.cave));
+                cpList.add(new ControlPoint("CP1", maxCPScoreBossbar, 2, 242, 94, -149,  Biome.cave));
+                cpList.add(new ControlPoint("CP2", maxCPScoreBossbar, 3, 213, 141, 227, Biome.grove));
+                cpList.add(new ControlPoint("CP2", maxCPScoreBossbar, 3, -207, 103, -159, Biome.forest));
+                cpList.add(new ControlPoint("CP2", maxCPScoreBossbar, 3, 167, 144, -139, Biome.grove));
+                cpList.add(new ControlPoint("CP2", maxCPScoreBossbar, 3, -19, 97, 68, Dimension.the_nether, Biome.nether_wastes));
+
+                // Players
+                players.add(new Player("Snodog627", 113));
+
+                // Quotes
+                quotes = fileTools.GetLinesFromFile("Files\\Kinjin\\quotes.txt");
 
                 break;
         }
