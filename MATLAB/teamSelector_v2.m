@@ -4,12 +4,12 @@ close all
 addpath('Functions','Documents','Data')
 
 Players = struct;
-load('DataS48.mat')
+load('DataS49.mat')
 
 %% Input
 % Enter the players that are participating (corresponding numbers with
 % PlayerName variable in Players struct)
-ParticipantIndex = [1,2,17,18,25,31,33,38,48];
+ParticipantIndex = [1,2,17,18,25,28,31,33,38,48];
 
 %%% Enter the names of new players
 NewPlayers = {};

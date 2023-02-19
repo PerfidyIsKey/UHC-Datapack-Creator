@@ -16,14 +16,14 @@ addpath('Data','Functions')
 % out of the mat file anyways.
 Players             = struct;       % Preallocation
 PlayerConnectivity	= zeros(1,3); % Preallocation
-load('DataS47.mat')                    % Load data
+load('DataS48.mat')                    % Load data
 
 %% Define season data
 %%% Season data
 NoS                     = size(Seasons,2) + 1;  % New season index
-Seasons(NoS).Season     = 'S48';    % Season name
-Seasons(NoS).Players    = 8;                    % Total number of players
-Seasons(NoS).Date       = datetime(2022,12,3); % Date of the season
+Seasons(NoS).Season     = 'S49';    % Season name
+Seasons(NoS).Players    = 10;                    % Total number of players
+Seasons(NoS).Date       = datetime(2023,2,18); % Date of the season
 Seasons(NoS).TeamAmount = 2;	% Needs to be equal to the amount of members in the winning team
 
 %%% New Players
@@ -39,17 +39,25 @@ for i = 1:NoN
 end
 
 %%% Player data
-ParticipantIndex	= [01,02,17,25,33,44,45,49,NewIndex'];    % Define index of the participants
-Kills               = [02;01;00;00;02;00;00;00];                  % Indicate amount of kills per player
-Position            = [06;01;05;07;02;03;04;08];                   % Indicate final position
-Winner              = [00;01;00;00;00;01;00;00];                   % Indicate whether the player won the season
+ParticipantIndex	= [01,02,17,18,25,28,31,33,38,48,NewIndex'];    % Define index of the participants
+Kills               = [00;00;00;01;00;02;01;04;00;00];              % Indicate amount of kills per player
+Position            = [05;08;04;03;07;02;06;01;09;10];              % Indicate final position
+Winner              = [01;00;00;00;00;00;00;01;00;00];              % Indicate whether the player won the season
 NoPar               = size(ParticipantIndex,2);             % Indicate number of participants
 
 PC = [      % Indicate which players were in a team together
-    1 45
-    2 44
-    17 33
-    25 49
+    1 31
+    1 33
+    2 17
+    2 38
+    2 48
+    17 38
+    17 48
+    18 25
+    18 28
+    25 28
+    31 33
+    38 48
     ];
 
 %% Update data

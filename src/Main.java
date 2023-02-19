@@ -177,11 +177,11 @@ public class Main {
 
                 cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, 158, 78, 93,  Biome.plains));
                 cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, -61, 62, 80,  Biome.river));
-                cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, -66, 116, -38,  Biome.sunflower_plains));
+                cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, -66, 114, -38,  Biome.sunflower_plains));
                 cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, -297, 65, -221,  Biome.windswept_savanna));
                 cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, -277, 22, 59,  Biome.cave));
-                cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, 123, 65, 258,  Biome.plains));
-                cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, 39, 68, -179,  Biome.sunflower_plains));
+                cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, 125, 65, 258,  Biome.plains));
+                cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, 39, 69, -179,  Biome.sunflower_plains));
                 cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, 302, 65, -161,  Biome.flower_forest));
 
 
@@ -204,42 +204,41 @@ public class Main {
                 //carePackages.add(carePackage2);
 
                 // Players
-                players.add(new Player("Snodog627", 113, true));
-                players.add(new Player("Mr9Madness", 88));
+                players.add(new Player("Snodog627", 110, true));
+                players.add(new Player("Mr9Madness", 81));
                 players.add(new Player("Tiba101", 1));
-                players.add(new Player("W0omy", 15));
-                players.add(new Player("Kalazniq", 59));
-                players.add(new Player("Vladik71", 32));
-                players.add(new Player("Smashking242", 9));
-                players.add(new Player("Pfalz_", 10));
-                players.add(new Player("ThurianBodan", 27));
-                players.add(new Player("PerfidyIsKey", 60, true));
-                players.add(new Player("deuce__", 1));
-                players.add(new Player("jonmo0105", 49));
-                players.add(new Player("TheDinoGame", 178));
-                players.add(new Player("BAAPABUGGETS", 6));
-                players.add(new Player("Th3Flash05", 64));
-                players.add(new Player("viccietors", 35));
-                players.add(new Player("Rayqson", 13));
-                players.add(new Player("_HexGamer", 95));
-                players.add(new Player("Bobdafish", 80));
+                players.add(new Player("W0omy", 14));
+                players.add(new Player("Kalazniq", 58));
+                players.add(new Player("Vladik71", 47));
+                players.add(new Player("Smashking242", 7));
+                players.add(new Player("Pfalz_", 8));
+                players.add(new Player("ThurianBodan", 23));
+                players.add(new Player("PerfidyIsKey", 57, true));
+                players.add(new Player("jonmo0105", 45));
+                players.add(new Player("TheDinoGame", 174));
+                players.add(new Player("BAAPABUGGETS", 5));
+                players.add(new Player("Th3Flash05", 61));
+                players.add(new Player("viccietors", 42));
+                players.add(new Player("Rayqson", 12));
+                players.add(new Player("_HexGamer", 116));
+                players.add(new Player("Bobdafish", 76));
                 players.add(new Player("Alanaenae", 0));
-                players.add(new Player("jk20028", 19));
-                players.add(new Player("N_G0n", 5));
-                players.add(new Player("SpookySpiker", 69));
-                players.add(new Player("Clockweiz", 8));
+                players.add(new Player("jk20028", 18));
+                players.add(new Player("N_G0n", 4));
+                players.add(new Player("SpookySpiker", 59));
+                players.add(new Player("Clockweiz", 7));
                 players.add(new Player("Eason950116", 12));
-                players.add(new Player("CorruptUncle", 48));
-                players.add(new Player("Pimmie36", 52));
+                players.add(new Player("CorruptUncle", 46));
+                players.add(new Player("Pimmie36", 50));
                 players.add(new Player("Jayroon123", 0));
                 players.add(new Player("PbQuinn", 27));
-                players.add(new Player("Vermeil_Chan", 16));
+                players.add(new Player("Vermeil_Chan", 15));
                 players.add(new Player("Jobbo2002", 9));
-                players.add(new Player("Uncle_Lolly", 4));
-                players.add(new Player("AurqSnqtcher", 29));
-                players.add(new Player("cat_person", 27));
-                players.add(new Player("GoldBard2474348", 22));
-                players.add(new Player("CrimsonCid", 12));
+                players.add(new Player("Uncle_Lolly", 3));
+                players.add(new Player("AurqSnqtcher", 22));
+                players.add(new Player("cat_person", 26));
+                players.add(new Player("GoldBard2474348", 21));
+                players.add(new Player("CrimsonCid", 11));
 
                 quotes = fileTools.GetLinesFromFile("Files\\Diorite\\quotes.txt");
 
