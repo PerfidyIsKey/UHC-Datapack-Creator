@@ -57,10 +57,24 @@ for i = 1:NN
                 KillSeason = '';
             end
             
-            if isnan(Players(j).RankPosition(end-1) - Players(j).RankPosition(end))
-                RankChange = 'NEW';
+            if length(Players(j).RankPosition) > 1
+                if isnan(Players(j).RankPosition(end-1) - Players(j).RankPosition(end))
+                    RankChange = 'NEW';
+                else
+                    RankChange = num2str(Players(j).RankPosition(end-1) - Players(j).RankPosition(end),'%+i');
+                end
             else
-                RankChange = num2str(Players(j).RankPosition(end-1) - Players(j).RankPosition(end),'%+i');
+                RankChange = 'NEW';
+            end
+            
+            if length(Players(j).RankPosition) > 1
+                if isnan(Players(j).RankPosition(end-1) - Players(j).RankPosition(end))
+                    RankChangeNum = 'NEW';
+                else
+                    RankChangeNum = num2str(int8(Players(j).Rank - Players(j).RankHistory(end-1)),'%+d');
+                end
+            else
+                RankChangeNum = 'NEW';
             end
             
             if max(uint8(Players(j).RankHistory)) == 0
@@ -71,7 +85,7 @@ for i = 1:NN
             
             if ~isnan(Players(j).Rank)
                 text{i} = {['**' num2str(Players(j).RankPosition(end)) ' (' RankChange ') ' strrep(Players(j).PlayerName,'_','\_') '**' BestRankPosition]
-                    ['Rank: ' num2str(uint8(Players(j).Rank),'%u') ' (' num2str(int8(Players(j).Rank - Players(j).RankHistory(end-1)),'%+d') ') ' BestRank]
+                    ['Rank: ' num2str(uint8(Players(j).Rank),'%u') ' (' RankChangeNum ') ' BestRank]
                     ['Number of games: ' num2str(sum(Players(j).Participation))]
                     ['Total number of wins: ' num2str(sum(Players(j).Winner))]
                     ['Best performance: ' num2str(max(Players(j).PerformanceScore),'%.2f') ' (in UHC ' PerformanceSeason ')']

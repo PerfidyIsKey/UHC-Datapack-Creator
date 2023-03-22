@@ -4,12 +4,12 @@ close all
 addpath('Functions','Documents','Data')
 
 Players = struct;
-load('DataS49.mat')
+load('DataKJ1.mat')
 
 %% Input
 % Enter the players that are participating (corresponding numbers with
 % PlayerName variable in Players struct)
-ParticipantIndex = [1,2,17,18,25,28,31,33,38,48];
+ParticipantIndex = [1:12];
 
 %%% Enter the names of new players
 NewPlayers = {};
@@ -21,7 +21,7 @@ rankLowerBound      = 5;        % Maximum negative deviation of score median
 rankUpperBound      = 8;        % Maximum positive deviation of score mean
 rankLowerTolerance	= 10;       % Maximum allowed negative deviation
 rankUpperTolerance  = 15;       % Maximum allowed positive deviation
-maxConnections      = 2;        % Maximum number of times players have played together
+maxConnections      = 1;        % Maximum number of times players have played together
 scoreNoise          = 60;       % Additional score noise to account for inaccuracies
 plotResults         = true;    % Visualize results in real time
 verboseMode         = false;    % Allow messages
@@ -31,9 +31,9 @@ settings = struct('players',teamPlayer,'rank',struct('LB',rankLowerBound,...
     'UB',rankUpperBound,'LT',rankLowerTolerance,'UT',rankUpperTolerance),...
     'connections',maxConnections,'noise',scoreNoise);
 
-NoN = size(NewPlayers,2);           % Number of new players
-NoP = size(Players,2) + NoN;        % Total number of players
-NoPar = size(ParticipantIndex,2);	% Number of participants
+NoN = length(NewPlayers);           % Number of new players
+NoP = length(Players) + NoN;        % Total number of players
+NoPar = length(ParticipantIndex);	% Number of participants
 
 %% Participation criteria
 % Pull the players that are participating in this season

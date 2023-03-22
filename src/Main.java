@@ -17,7 +17,7 @@ public class Main {
     FileTools fileTools;
 
     //DatapackData<
-    private static final int gameMode = 1;
+    private static final int gameMode = 3;
     /*
      * 1: The Diorite Experts
      * 2: University Racing Eindhoven
@@ -312,22 +312,32 @@ public class Main {
                 break;
 
             case 3:
-                startCoordinates = new Coordinate(0, 165, 0);
-                netherPortal = new Coordinate(15,148,-14);
-                minTraitorRank = 1;
+                startCoordinates = new Coordinate(0, 64, 0);
+                netherPortal = new Coordinate(-3,64,1);
+                minTraitorRank = 50;
                 communityName = "KINJIN";
 
-                cpList.add(new ControlPoint("CP1", maxCPScoreBossbar, 2, -2, 160, -65,  Biome.jagged_peaks));
-                cpList.add(new ControlPoint("CP1", maxCPScoreBossbar, 2, -33, 93, 152,  Biome.taiga));
-                cpList.add(new ControlPoint("CP1", maxCPScoreBossbar, 2, 55, 97, -199,  Biome.cave));
-                cpList.add(new ControlPoint("CP1", maxCPScoreBossbar, 2, 242, 94, -149,  Biome.cave));
-                cpList.add(new ControlPoint("CP2", maxCPScoreBossbar, 3, 213, 141, 227, Biome.grove));
-                cpList.add(new ControlPoint("CP2", maxCPScoreBossbar, 3, -207, 103, -159, Biome.forest));
-                cpList.add(new ControlPoint("CP2", maxCPScoreBossbar, 3, 167, 144, -139, Biome.grove));
-                cpList.add(new ControlPoint("CP2", maxCPScoreBossbar, 3, -19, 97, 68, Dimension.the_nether, Biome.nether_wastes));
+                cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, -72, 64, -63,  Biome.jungle));
+                cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, 214, 65, -207,  Biome.sparse_jungle));
+                cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, 76, 69, 83,  Biome.old_growth_birch_forest));
+                cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, -172, 75, 100,  Biome.old_growth_birch_forest));
+                cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, -213, 80, -143,  Biome.sparse_jungle));
+                cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, 27, 46, -153,  Biome.cave));
+                cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, 84, 62, -92,  Biome.river));
 
                 // Players
-                players.add(new Player("Snodog627", 113));
+                players.add(new Player("Snodog627", 114));
+                players.add(new Player("Infima", 8));
+                players.add(new Player("Thatepicpotato", 71));
+                players.add(new Player("Joker447xd9", 18));
+                players.add(new Player("ICEturbo", 21));
+                players.add(new Player("mrtkrl", 13));
+                players.add(new Player("Maurcy", 38));
+                players.add(new Player("Correawesome", 16));
+                players.add(new Player("thekillertb", 0));
+                players.add(new Player("Greyhalfbuster", 17));
+                players.add(new Player("xPromachos", 10));
+                players.add(new Player("BorisBeast", 5));
 
                 // Quotes
                 quotes = fileTools.GetLinesFromFile("Files\\Kinjin\\quotes.txt");
@@ -1061,7 +1071,7 @@ public class Main {
 
         fileCommands.add(execute.In(controlPoints.get(i-1).getDimension(),false) +
                 execute.IfNext(new Selector("@p[x=" + (controlPoints.get(i - 1).getX() - 6) + ",y=" + (controlPoints.get(i - 1).getY() - 1) + ",z=" + (controlPoints.get(i - 1).getZ() - 6) + ",dx=12,dy=12,dz=12,gamemode=!spectator,scores={MSGDum1CP" + i + "=" + (10 * tickPerSecond) + "}]"),true) +
-                "tellraw @a [\"\",{\"text\":\" ⎜ \",\"color\":\"gray\"},{\"text\":\"" + communityName + " UHC\",\"color\":\"gold\"},{\"text\":\" ⎜ \",\"color\":\"gray\"},{\"text\":\"CONTROL POINT " + i + " IS UNDER ATTACK!\",\"color\":\"light_purple\"},{\"text\":\" ⎜ \",\"color\":\"gray\"}]");
+                "tellraw @a [\"\",{\"text\":\" ⎜ \",\"color\":\"gray\"},{\"text\":\"" + communityName + " UHC\",\"color\":\"gold\"},{\"text\":\" ⎜ \",\"color\":\"gray\"},{\"text\":\"A PLAYER IS ATTACKING CONTROL POINT " + i + "!\",\"color\":\"light_purple\"},{\"text\":\" ⎜ \",\"color\":\"gray\"}]");
 
         fileCommands.add(execute.In(controlPoints.get(i-1).getDimension(),false) +
                 execute.IfNext(new Selector("@p[x=" + (controlPoints.get(i - 1).getX() - 6) + ",y=" + (controlPoints.get(i - 1).getY() - 1) + ",z=" + (controlPoints.get(i - 1).getZ() - 6) + ",dx=12,dy=12,dz=12,gamemode=!spectator,scores={MSGDum1CP" + i + "=" + (10 * tickPerSecond) + "}]"),true) +
@@ -1075,7 +1085,7 @@ public class Main {
         fileCommands.add(execute.In(controlPoints.get(i-1).getDimension(),false) +
                 execute.PositionedNext(controlPoints.get(i - 1).getX(), controlPoints.get(i - 1).getY() + 5, controlPoints.get(i - 1).getZ(), false) +
                 execute.IfNext(new Selector("@p[distance=9..,gamemode=!spectator,scores={MSGDum2CP" + i + "=" + (10 * tickPerSecond) + ",MSGDum1CP" + i + "=" + (10 * tickPerSecond) + "..}]"), true) +
-                "tellraw @a [\"\",{\"text\":\" ⎜ \",\"color\":\"gray\"},{\"text\":\"" + communityName + " UHC\",\"color\":\"gold\"},{\"text\":\" ⎜ \",\"color\":\"gray\"},{\"text\":\"CONTROL POINT " + i + " HAS BEEN ABANDONED\",\"color\":\"light_purple\"},{\"text\":\" ⎜ \",\"color\":\"gray\"}]");
+                "tellraw @a [\"\",{\"text\":\" ⎜ \",\"color\":\"gray\"},{\"text\":\"" + communityName + " UHC\",\"color\":\"gold\"},{\"text\":\" ⎜ \",\"color\":\"gray\"},{\"text\":\"A PLAYER HAS LEFT CONTROL POINT " + i + "\",\"color\":\"light_purple\"},{\"text\":\" ⎜ \",\"color\":\"gray\"}]");
 
         fileCommands.add(execute.In(controlPoints.get(i-1).getDimension(),false) +
                 execute.PositionedNext(controlPoints.get(i - 1).getX(), controlPoints.get(i - 1).getY() + 5, controlPoints.get(i - 1).getZ(), false) +
@@ -1099,11 +1109,11 @@ public class Main {
         ArrayList<String> fileCommands = new ArrayList<>();
         for (int i = 1; i < controlPoints.size() + 1; i++) {
             fileCommands.add("execute at @e[type=minecraft:end_crystal,scores={Crystal=" + i + "}] positioned ~ ~200 ~ if entity @p[distance=..5,gamemode=!spectator] run scoreboard players add @a[distance=..5,gamemode=!spectator] MSGDum1CP" + i + " 1");
-            fileCommands.add("execute at @e[type=minecraft:end_crystal,scores={Crystal=" + i + "}] positioned ~ ~200 ~ if entity @p[distance=..5,gamemode=!spectator,scores={MSGDum1CP" + i + "=200}] run tellraw @a [\"\",{\"text\":\" ⎜ \",\"color\":\"gray\"},{\"text\":\"THE DIORITE EXPERTS UHC\",\"color\":\"gold\"},{\"text\":\" ⎜ \",\"color\":\"gray\"},{\"text\":\"CONTROL POINT " + i + " IS UNDER ATTACK!\",\"color\":\"light_purple\"},{\"text\":\" ⎜ \",\"color\":\"gray\"}]");
+            fileCommands.add("execute at @e[type=minecraft:end_crystal,scores={Crystal=" + i + "}] positioned ~ ~200 ~ if entity @p[distance=..5,gamemode=!spectator,scores={MSGDum1CP" + i + "=200}] run tellraw @a [\"\",{\"text\":\" ⎜ \",\"color\":\"gray\"},{\"text\":\"THE DIORITE EXPERTS UHC\",\"color\":\"gold\"},{\"text\":\" ⎜ \",\"color\":\"gray\"},{\"text\":\"A PLAYER IS ATTACKING CONTROL POINT " + i + "!\",\"color\":\"light_purple\"},{\"text\":\" ⎜ \",\"color\":\"gray\"}]");
             fileCommands.add("execute at @e[type=minecraft:end_crystal,scores={Crystal=" + i + "}] positioned ~ ~200 ~ if entity @p[distance=..5,gamemode=!spectator,scores={MSGDum1CP" + i + "=200}] run scoreboard players reset @a[distance=..5,gamemode=!spectator] MSGDum2CP" + i);
 
             fileCommands.add("execute at @e[type=minecraft:end_crystal,scores={Crystal=" + i + "}] positioned ~ ~200 ~ if entity @p[distance=6..,gamemode=!spectator, scores={MSGDum1CP" + i + "=200..}] run scoreboard players add @a[distance=6..,gamemode=!spectator, scores={MSGDum1CP" + i + "=200..}] MSGDum2CP" + i + " 1");
-            fileCommands.add("execute at @e[type=minecraft:end_crystal,scores={Crystal=" + i + "}] positioned ~ ~200 ~ if entity @p[distance=6..,gamemode=!spectator,scores={MSGDum2CP" + i + "=200,MSGDum1CP" + i + "=200..}] run tellraw @a [\"\",{\"text\":\" ⎜ \",\"color\":\"gray\"},{\"text\":\"THE DIORITE EXPERTS UHC\",\"color\":\"gold\"},{\"text\":\" ⎜ \",\"color\":\"gray\"},{\"text\":\"CONTROL POINT " + i + " HAS BEEN ABANDONED\",\"color\":\"light_purple\"},{\"text\":\" ⎜ \",\"color\":\"gray\"}]");
+            fileCommands.add("execute at @e[type=minecraft:end_crystal,scores={Crystal=" + i + "}] positioned ~ ~200 ~ if entity @p[distance=6..,gamemode=!spectator,scores={MSGDum2CP" + i + "=200,MSGDum1CP" + i + "=200..}] run tellraw @a [\"\",{\"text\":\" ⎜ \",\"color\":\"gray\"},{\"text\":\"THE DIORITE EXPERTS UHC\",\"color\":\"gold\"},{\"text\":\" ⎜ \",\"color\":\"gray\"},{\"text\":\"A PLAYER HAS LEFT CONTROL POINT " + i + "\",\"color\":\"light_purple\"},{\"text\":\" ⎜ \",\"color\":\"gray\"}]");
             fileCommands.add("execute at @e[type=minecraft:end_crystal,scores={Crystal=" + i + "}] positioned ~ ~200 ~ if entity @p[distance=6..,gamemode=!spectator,scores={MSGDum2CP" + i + "=200,MSGDum1CP" + i + "=200..}] run scoreboard players reset @a[distance=6..,gamemode=!spectator] MSGDum1CP" + i);
         }
 
