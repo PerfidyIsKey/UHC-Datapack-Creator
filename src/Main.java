@@ -17,7 +17,7 @@ public class Main {
     FileTools fileTools;
 
     //DatapackData<
-    private static final int gameMode = 3;
+    private static final int gameMode = 1;
     /*
      * 1: The Diorite Experts
      * 2: University Racing Eindhoven
