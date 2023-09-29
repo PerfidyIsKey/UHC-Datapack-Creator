@@ -228,17 +228,17 @@ public class FileTools {
                 if (uhc.mkdir()) {
                     File functions = new File(dataPackLocation + dataPackName + "\\data\\uhc\\functions");
                     if (!functions.mkdir()) {
-                        System.out.println("Something went wrong creating Datapack 1");
+                        System.out.println("No functions dir");
                     }
                     File recipes = new File(dataPackLocation + dataPackName + "\\data\\uhc\\recipes");
                     if (!recipes.mkdir()) {
-                        System.out.println("Something went wrong creating Datapack 2");
+                        System.out.println("No recipes dir");
                     }
                     File lootTables = new File(dataPackLocation + dataPackName + "\\data\\uhc\\loot_tables");
                     if (lootTables.mkdir()) {
                         updateAllFiles(files, fileLocation);
                     } else {
-                        System.out.println("Something went wrong creating Datapack 3");
+                        System.out.println("No lootTables dir");
                     }
                 }
             }
