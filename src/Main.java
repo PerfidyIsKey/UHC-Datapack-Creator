@@ -228,7 +228,7 @@ public class Main {
                 players.add(new Player("TheDinoGame", 174));
                 players.add(new Player("BAAPABUGGETS", 5));
                 players.add(new Player("Th3Flash05", 61));
-                players.add(new Player("viccietors", 42));
+                players.add(new Player("viccietors", 42, true));
                 players.add(new Player("Rayqson", 12));
                 players.add(new Player("_HexGamer", 116));
                 players.add(new Player("Bobdafish", 76));
@@ -245,10 +245,11 @@ public class Main {
                 players.add(new Player("Vermeil_Chan", 15));
                 players.add(new Player("Jobbo2002", 9));
                 players.add(new Player("Uncle_Lolly", 3));
-                players.add(new Player("AurqSnqtcher", 22));
+                players.add(new Player("AurqSnqtcher", 22, true));
                 players.add(new Player("cat_person", 26));
                 players.add(new Player("GoldBard2474348", 21));
                 players.add(new Player("CrimsonCid", 11));
+                players.add(new Player("ICEturbo", 21));
 
                 quotes = fileTools.GetLinesFromFile("Files\\Diorite\\quotes.txt");
 
@@ -680,7 +681,7 @@ public class Main {
         for (ScoreboardObjective objective : scoreboardObjectives) {
             fileCommands.add(objective.add());
         }
-        fileCommands.add(new ScoreboardObjective().setDisplay("belowName", "Hearts"));
+        fileCommands.add(new ScoreboardObjective().setDisplay("below_name", "Hearts"));
         fileCommands.add(new ScoreboardObjective().setDisplay("list", "Hearts"));
         //end scoreboard
         //bossbar
