@@ -443,6 +443,7 @@ public class Main {
         lootEntry.add(new LootTableEntry(1, "trident"));
         lootEntry.add(new LootTableEntry(1, "diamond_chestplate"));
         lootEntry.add(new LootTableEntry(1, "diamond_leggings"));
+        lootEntry.add(new LootTableEntry(1, "netherite_upgrade_smithing_template"));
         lootEntry.add(new LootTableEntry(1, "netherite_scrap", new LootTableFunction(4, 0.001)));
 
         ArrayList<String> fileCommands = fileTools.generateLootTable(lootEntry);
