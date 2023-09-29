@@ -406,7 +406,7 @@ public class Main {
         lootEntry.add(new LootTableEntry(17, "egg"));
         lootEntry.add(new LootTableEntry(17, "ladder", new LootTableFunction(10)));
         lootEntry.add(new LootTableEntry(17, "stick", new LootTableFunction(8)));
-        lootEntry.add(new LootTableEntry(16, "diorite", new LootTableFunction(16)));
+        lootEntry.add(new LootTableEntry(15, "diorite", new LootTableFunction(16)));
         lootEntry.add(new LootTableEntry(15, "amethyst_block", new LootTableFunction(16)));
         lootEntry.add(new LootTableEntry(15, "iron_ingot", new LootTableFunction(8)));
         lootEntry.add(new LootTableEntry(14, "arrow", new LootTableFunction(10)));
