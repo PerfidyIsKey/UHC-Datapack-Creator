@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Scanner;
 
+import static java.lang.Integer.parseInt;
+
 public class Main {
 
     public static void main(String[] args) {
@@ -17,12 +19,7 @@ public class Main {
     FileTools fileTools;
 
     //DatapackData<
-    private static final int gameMode = 1;
-    /*
-     * 1: The Diorite Experts
-     * 2: University Racing Eindhoven
-     * 3: Kinjin
-     */
+    private GameMode gameMode = GameMode.DIORITE_EXPERTS;
 
     private String uhcNumber;
     private static final String version = "3.0";
@@ -107,6 +104,19 @@ public class Main {
                         }
                     }
                 }
+            } else if (input.startsWith("type ")) {
+                String command = input.replace("type ", "");
+                int num = parseInt(command);
+                if (num == 0) {
+                    gameMode = GameMode.DIORITE_EXPERTS;
+                }
+                if (num == 1) {
+                    gameMode = GameMode.UNIVERSITY_RACING_EINDHOVEN;
+                }
+                if (num == 2) {
+                    gameMode = GameMode.KINJIN;
+                }
+                System.out.println("Set gameMode to " + gameMode);
             } else if (input.equals("create datapack")) {
                 try {
                     fileTools.createDatapack(files, fileLocation);
@@ -121,18 +131,18 @@ public class Main {
 
     private void initSaveDir() {
         switch (gameMode) {
-            case 1:
-                uhcNumber = "S49";
+            case DIORITE_EXPERTS:
+                uhcNumber = "S50";
 
                 admin = "Snodog627";
                 break;
-            case 2:
+            case UNIVERSITY_RACING_EINDHOVEN:
                 uhcNumber = "URE6";
 
                 admin = "Snodog627";
                 break;
 
-            case 3:
+            case KINJIN:
                 uhcNumber = "KJ1";
 
                 admin = "Snodog627";
@@ -169,20 +179,20 @@ public class Main {
         bossBars.add(new BossBar("carepackage"));
 
         switch (gameMode) {
-            case 1:
+            case DIORITE_EXPERTS:
                 startCoordinates = new Coordinate(0, 71, 0);
-                netherPortal = new Coordinate(-8,69,22);
+                netherPortal = new Coordinate(-8, 69, 22);
                 minTraitorRank = 25;
                 communityName = "THE DIORITE EXPERTS";
 
-                cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, 158, 78, 93,  Biome.plains));
-                cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, -61, 62, 80,  Biome.river));
-                cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, -66, 114, -38,  Biome.sunflower_plains));
-                cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, -297, 65, -221,  Biome.windswept_savanna));
-                cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, -277, 22, 59,  Biome.cave));
-                cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, 125, 65, 258,  Biome.plains));
-                cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, 39, 69, -179,  Biome.sunflower_plains));
-                cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, 302, 65, -161,  Biome.flower_forest));
+                cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, 158, 78, 93, Biome.plains));
+                cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, -61, 62, 80, Biome.river));
+                cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, -66, 114, -38, Biome.sunflower_plains));
+                cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, -297, 65, -221, Biome.windswept_savanna));
+                cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, -277, 22, 59, Biome.cave));
+                cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, 125, 65, 258, Biome.plains));
+                cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, 39, 69, -179, Biome.sunflower_plains));
+                cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, 302, 65, -161, Biome.flower_forest));
 
 
                 /*// Control point
@@ -243,9 +253,9 @@ public class Main {
                 quotes = fileTools.GetLinesFromFile("Files\\Diorite\\quotes.txt");
 
                 break;
-            case 2:
+            case UNIVERSITY_RACING_EINDHOVEN:
                 startCoordinates = new Coordinate(0, 165, 0);
-                netherPortal = new Coordinate(15,148,-14);
+                netherPortal = new Coordinate(15, 148, -14);
                 minTraitorRank = 1;
                 communityName = "UNIVERSITY RACING EINDHOVEN";
 
@@ -260,10 +270,10 @@ public class Main {
                 controlPoints.add(cp1);
                 controlPoints.add(cp2);*/
 
-                cpList.add(new ControlPoint("CP1", maxCPScoreBossbar, 2, -2, 160, -65,  Biome.jagged_peaks));
-                cpList.add(new ControlPoint("CP1", maxCPScoreBossbar, 2, -33, 93, 152,  Biome.taiga));
-                cpList.add(new ControlPoint("CP1", maxCPScoreBossbar, 2, 55, 97, -199,  Biome.cave));
-                cpList.add(new ControlPoint("CP1", maxCPScoreBossbar, 2, 242, 94, -149,  Biome.cave));
+                cpList.add(new ControlPoint("CP1", maxCPScoreBossbar, 2, -2, 160, -65, Biome.jagged_peaks));
+                cpList.add(new ControlPoint("CP1", maxCPScoreBossbar, 2, -33, 93, 152, Biome.taiga));
+                cpList.add(new ControlPoint("CP1", maxCPScoreBossbar, 2, 55, 97, -199, Biome.cave));
+                cpList.add(new ControlPoint("CP1", maxCPScoreBossbar, 2, 242, 94, -149, Biome.cave));
                 cpList.add(new ControlPoint("CP2", maxCPScoreBossbar, 3, 213, 141, 227, Biome.grove));
                 cpList.add(new ControlPoint("CP2", maxCPScoreBossbar, 3, -207, 103, -159, Biome.forest));
                 cpList.add(new ControlPoint("CP2", maxCPScoreBossbar, 3, 167, 144, -139, Biome.grove));
@@ -311,19 +321,19 @@ public class Main {
 
                 break;
 
-            case 3:
+            case KINJIN:
                 startCoordinates = new Coordinate(0, 64, 0);
-                netherPortal = new Coordinate(-3,64,1);
+                netherPortal = new Coordinate(-3, 64, 1);
                 minTraitorRank = 50;
                 communityName = "KINJIN";
 
-                cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, -72, 64, -63,  Biome.jungle));
-                cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, 214, 65, -207,  Biome.sparse_jungle));
-                cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, 76, 69, 83,  Biome.old_growth_birch_forest));
-                cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, -172, 75, 100,  Biome.old_growth_birch_forest));
-                cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, -213, 80, -143,  Biome.sparse_jungle));
-                cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, 27, 46, -153,  Biome.cave));
-                cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, 84, 62, -92,  Biome.river));
+                cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, -72, 64, -63, Biome.jungle));
+                cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, 214, 65, -207, Biome.sparse_jungle));
+                cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, 76, 69, 83, Biome.old_growth_birch_forest));
+                cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, -172, 75, 100, Biome.old_growth_birch_forest));
+                cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, -213, 80, -143, Biome.sparse_jungle));
+                cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, 27, 46, -153, Biome.cave));
+                cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, 84, 62, -92, Biome.river));
 
                 // Players
                 players.add(new Player("Snodog627", 114));
@@ -350,7 +360,7 @@ public class Main {
         for (int i = 0; i < addRates.length; i++) {
             controlPoints.add(cpList.get(i));
             controlPoints.get(i).setAddRate(addRates[i]);
-            controlPoints.get(i).setName("CP" + (i+1));
+            controlPoints.get(i).setName("CP" + (i + 1));
         }
 
         CarePackage carePackage1 = new CarePackage("enchanting", "Enchanting Drop",
@@ -701,8 +711,8 @@ public class Main {
                 setBlock(0, 222, -5, "minecraft:oak_wall_sign[facing=south,waterlogged=false]{Color:\"black\",GlowingText:0b,Text1:'{\"clickEvent\":{\"action\":\"run_command\",\"value\":\"tp @s 5 " + (worldBottom + 5) + " 5\"},\"text\":\"\"}',Text2:'{\"text\":\"Teleport to\"}',Text3:'{\"text\":\"Command Center\"}',Text4:'{\"text\":\"\"}'}"));
         fileCommands.add(execute.In(Dimension.overworld) +
                 setBlock(-2, worldBottom, -2, "minecraft:structure_block[mode=load]{metadata:\"\",mirror:\"NONE\",ignoreEnti" +
-                "ties:0b,powered:0b,seed:0L,author:\"?\",rotation:\"NONE\",posX:1,mode:\"LOAD\",posY:1,sizeX:18,posZ:1," +
-                "integrity:1.0f,showair:0b,name:\"minecraft:commandcenter_" + commandCenter + "\",sizeY:31,sizeZ:18,showboundingbox:1b}"));
+                        "ties:0b,powered:0b,seed:0L,author:\"?\",rotation:\"NONE\",posX:1,mode:\"LOAD\",posY:1,sizeX:18,posZ:1," +
+                        "integrity:1.0f,showair:0b,name:\"minecraft:commandcenter_" + commandCenter + "\",sizeY:31,sizeZ:18,showboundingbox:1b}"));
         fileCommands.add(execute.In(Dimension.overworld) +
                 setBlock(-2, worldBottom + 1, -2, BlockType.redstone_block));
         fileCommands.add(execute.In(Dimension.overworld) +
@@ -837,7 +847,7 @@ public class Main {
         fileCommands.add(bossBarCarePackage.setVisible(false));
         fileCommands.add(bossBarCarePackage.setPlayers("@a"));
         fileCommands.add(execute.In(Dimension.overworld) +
-                setBlock(startCoordinates.getX(), startCoordinates.getY(), startCoordinates.getZ(), "minecraft:jukebox[has_record=true]{RecordItem:{Count:1b,id:\"minecraft:music_disc_stal\"}}",SetBlockType.replace));
+                setBlock(startCoordinates.getX(), startCoordinates.getY(), startCoordinates.getZ(), "minecraft:jukebox[has_record=true]{RecordItem:{Count:1b,id:\"minecraft:music_disc_stal\"}}", SetBlockType.replace));
         fileCommands.add("tag @a remove Traitor");
         fileCommands.add("tag @a remove DontMakeTraitor");
         fileCommands.add("worldborder set " + worldSize + " 1");
@@ -952,11 +962,11 @@ public class Main {
 
     private static FileData BattleRoyale() {
         ArrayList<String> fileCommands = new ArrayList<>();
-        fileCommands.add(execute.In(Dimension.overworld,false) +
-                execute.PositionedNext(0, 151, 0,true) +
+        fileCommands.add(execute.In(Dimension.overworld, false) +
+                execute.PositionedNext(0, 151, 0, true) +
                 "gamemode survival @a[distance=..20,gamemode=!creative]");
-        fileCommands.add(execute.In(Dimension.overworld,false) +
-                execute.PositionedNext(0, 151, 0,true) +
+        fileCommands.add(execute.In(Dimension.overworld, false) +
+                execute.PositionedNext(0, 151, 0, true) +
                 "spreadplayers 0 0 300 700 true @a[distance=..20,gamemode=survival]");
 
         return new FileData(FileName.battle_royale, fileCommands);
@@ -1055,40 +1065,40 @@ public class Main {
     private FileData Controlpoint(int i) {
         ArrayList<String> fileCommands = new ArrayList<>();
         for (Team team : teams) {
-            fileCommands.add(execute.In(controlPoints.get(i-1).getDimension(),false) +
+            fileCommands.add(execute.In(controlPoints.get(i - 1).getDimension(), false) +
                     execute.AsNext("@a[gamemode=!spectator,team=" + team.getName() + "]", false) +
                     execute.IfNext(new Selector("@a[gamemode=!spectator,x=" + (controlPoints.get(i - 1).getX() - 6) + ",y=" + (controlPoints.get(i - 1).getY() - 1) + ",z=" + (controlPoints.get(i - 1).getZ() - 6) + ",dx=12,dy=12,dz=12]")) +
                     execute.AtNext(new Location("@s")) +
                     execute.UnlessNext(new Selector("@a[gamemode=!spectator,x=" + (controlPoints.get(i - 1).getX() - 6) + ",y=" + (controlPoints.get(i - 1).getY() - 1) + ",z=" + (controlPoints.get(i - 1).getZ() - 6) + ",dx=12,dy=12,dz=12,team=!" + team.getName() + "]"), true) +
                     "scoreboard players add @s ControlPoint" + i + " " + controlPoints.get(i - 1).getAddRate());
 
-            fileCommands.add(execute.In(controlPoints.get(i-1).getDimension(),false) +
-                    execute.IfNext(new Score("@r[limit=1,gamemode=!spectator,team=" + team.getName() + "]", "ControlPoint" + i, ">", "@p[scores={Admin=1}] Highscore" + i),true) +
+            fileCommands.add(execute.In(controlPoints.get(i - 1).getDimension(), false) +
+                    execute.IfNext(new Score("@r[limit=1,gamemode=!spectator,team=" + team.getName() + "]", "ControlPoint" + i, ">", "@p[scores={Admin=1}] Highscore" + i), true) +
                     setBlock(controlPoints.get(i - 1).getX(), controlPoints.get(i - 1).getY() + 1, controlPoints.get(i - 1).getZ(), "minecraft:" + team.getGlassColor() + "_stained_glass", SetBlockType.replace));
         }
-        fileCommands.add(execute.In(controlPoints.get(i-1).getDimension(),false) +
-                execute.IfNext(new Selector("@p[x=" + (controlPoints.get(i - 1).getX() - 6) + ",y=" + (controlPoints.get(i - 1).getY() - 1) + ",z=" + (controlPoints.get(i - 1).getZ() - 6) + ",dx=12,dy=12,dz=12,gamemode=!spectator]"),true) +
+        fileCommands.add(execute.In(controlPoints.get(i - 1).getDimension(), false) +
+                execute.IfNext(new Selector("@p[x=" + (controlPoints.get(i - 1).getX() - 6) + ",y=" + (controlPoints.get(i - 1).getY() - 1) + ",z=" + (controlPoints.get(i - 1).getZ() - 6) + ",dx=12,dy=12,dz=12,gamemode=!spectator]"), true) +
                 "scoreboard players add @a[x=" + (controlPoints.get(i - 1).getX() - 6) + ",y=" + (controlPoints.get(i - 1).getY() - 1) + ",z=" + (controlPoints.get(i - 1).getZ() - 6) + ",dx=12,dy=12,dz=12,gamemode=!spectator] MSGDum1CP" + i + " 1");
 
-        fileCommands.add(execute.In(controlPoints.get(i-1).getDimension(),false) +
-                execute.IfNext(new Selector("@p[x=" + (controlPoints.get(i - 1).getX() - 6) + ",y=" + (controlPoints.get(i - 1).getY() - 1) + ",z=" + (controlPoints.get(i - 1).getZ() - 6) + ",dx=12,dy=12,dz=12,gamemode=!spectator,scores={MSGDum1CP" + i + "=" + (10 * tickPerSecond) + "}]"),true) +
+        fileCommands.add(execute.In(controlPoints.get(i - 1).getDimension(), false) +
+                execute.IfNext(new Selector("@p[x=" + (controlPoints.get(i - 1).getX() - 6) + ",y=" + (controlPoints.get(i - 1).getY() - 1) + ",z=" + (controlPoints.get(i - 1).getZ() - 6) + ",dx=12,dy=12,dz=12,gamemode=!spectator,scores={MSGDum1CP" + i + "=" + (10 * tickPerSecond) + "}]"), true) +
                 "tellraw @a [\"\",{\"text\":\" ⎜ \",\"color\":\"gray\"},{\"text\":\"" + communityName + " UHC\",\"color\":\"gold\"},{\"text\":\" ⎜ \",\"color\":\"gray\"},{\"text\":\"A PLAYER IS ATTACKING CONTROL POINT " + i + "!\",\"color\":\"light_purple\"},{\"text\":\" ⎜ \",\"color\":\"gray\"}]");
 
-        fileCommands.add(execute.In(controlPoints.get(i-1).getDimension(),false) +
-                execute.IfNext(new Selector("@p[x=" + (controlPoints.get(i - 1).getX() - 6) + ",y=" + (controlPoints.get(i - 1).getY() - 1) + ",z=" + (controlPoints.get(i - 1).getZ() - 6) + ",dx=12,dy=12,dz=12,gamemode=!spectator,scores={MSGDum1CP" + i + "=" + (10 * tickPerSecond) + "}]"),true) +
+        fileCommands.add(execute.In(controlPoints.get(i - 1).getDimension(), false) +
+                execute.IfNext(new Selector("@p[x=" + (controlPoints.get(i - 1).getX() - 6) + ",y=" + (controlPoints.get(i - 1).getY() - 1) + ",z=" + (controlPoints.get(i - 1).getZ() - 6) + ",dx=12,dy=12,dz=12,gamemode=!spectator,scores={MSGDum1CP" + i + "=" + (10 * tickPerSecond) + "}]"), true) +
                 "scoreboard players reset @a[x=" + (controlPoints.get(i - 1).getX() - 6) + ",y=" + (controlPoints.get(i - 1).getY() - 1) + ",z=" + (controlPoints.get(i - 1).getZ() - 6) + ",dx=12,dy=12,dz=12,gamemode=!spectator] MSGDum2CP" + i);
 
-        fileCommands.add(execute.In(controlPoints.get(i-1).getDimension(),false) +
+        fileCommands.add(execute.In(controlPoints.get(i - 1).getDimension(), false) +
                 execute.PositionedNext(controlPoints.get(i - 1).getX(), controlPoints.get(i - 1).getY() + 5, controlPoints.get(i - 1).getZ(), false) +
                 execute.IfNext(new Selector("@p[distance=9..,gamemode=!spectator, scores={MSGDum1CP" + i + "=" + (10 * tickPerSecond) + "..}]"), true) +
                 "scoreboard players add @a[distance=9..,gamemode=!spectator, scores={MSGDum1CP" + i + "=" + (10 * tickPerSecond) + "..}] MSGDum2CP" + i + " 1");
 
-        fileCommands.add(execute.In(controlPoints.get(i-1).getDimension(),false) +
+        fileCommands.add(execute.In(controlPoints.get(i - 1).getDimension(), false) +
                 execute.PositionedNext(controlPoints.get(i - 1).getX(), controlPoints.get(i - 1).getY() + 5, controlPoints.get(i - 1).getZ(), false) +
                 execute.IfNext(new Selector("@p[distance=9..,gamemode=!spectator,scores={MSGDum2CP" + i + "=" + (10 * tickPerSecond) + ",MSGDum1CP" + i + "=" + (10 * tickPerSecond) + "..}]"), true) +
                 "tellraw @a [\"\",{\"text\":\" ⎜ \",\"color\":\"gray\"},{\"text\":\"" + communityName + " UHC\",\"color\":\"gold\"},{\"text\":\" ⎜ \",\"color\":\"gray\"},{\"text\":\"A PLAYER HAS LEFT CONTROL POINT " + i + "\",\"color\":\"light_purple\"},{\"text\":\" ⎜ \",\"color\":\"gray\"}]");
 
-        fileCommands.add(execute.In(controlPoints.get(i-1).getDimension(),false) +
+        fileCommands.add(execute.In(controlPoints.get(i - 1).getDimension(), false) +
                 execute.PositionedNext(controlPoints.get(i - 1).getX(), controlPoints.get(i - 1).getY() + 5, controlPoints.get(i - 1).getZ(), false) +
                 execute.IfNext(new Selector("@p[distance=9..,gamemode=!spectator,scores={MSGDum2CP" + i + "=" + (10 * tickPerSecond) + ",MSGDum1CP" + i + "=" + (10 * tickPerSecond) + "..}]"), true) +
                 "scoreboard players reset @a[distance=9..,gamemode=!spectator] MSGDum1CP" + i);
@@ -1138,8 +1148,8 @@ public class Main {
     private static FileData CarepackageDistributor() {
         ArrayList<String> fileCommands = new ArrayList<>();
 
-        fileCommands.add(execute.In(Dimension.overworld,false) +
-                execute.IfNext(new Selector("@e[type=minecraft:falling_block,distance=..2]"),true) +
+        fileCommands.add(execute.In(Dimension.overworld, false) +
+                execute.IfNext(new Selector("@e[type=minecraft:falling_block,distance=..2]"), true) +
                 "spreadplayers 0 0 10 500 false @e[type=minecraft:falling_block,distance=..2]");
 
         return new FileData(FileName.carepackage_distributor, fileCommands);
@@ -1241,12 +1251,12 @@ public class Main {
         }
 
         for (Team t : teams) {
-            fileCommands.add(execute.In(controlPoints.get(0).getDimension(),false) +
-                    execute.AsNext("@r[limit=1,gamemode=!spectator,x=" + (controlPoints.get(0).getX() - 6) + ",y=" + (controlPoints.get(0).getY() - 1) + ",z=" + (controlPoints.get(0).getZ() - 6) + ",dx=12,dy=12,dz=12,team=" + t.getName() + "]",true) +
+            fileCommands.add(execute.In(controlPoints.get(0).getDimension(), false) +
+                    execute.AsNext("@r[limit=1,gamemode=!spectator,x=" + (controlPoints.get(0).getX() - 6) + ",y=" + (controlPoints.get(0).getY() - 1) + ",z=" + (controlPoints.get(0).getZ() - 6) + ",dx=12,dy=12,dz=12,team=" + t.getName() + "]", true) +
                     "scoreboard players operation @p[scores={Admin=1}] CP1" + t.getName() + " > @p[scores={Admin=1}] CP2" + t.getName());
 
-            fileCommands.add(execute.In(controlPoints.get(1).getDimension(),false) +
-                    execute.AsNext("@r[limit=1,gamemode=!spectator,x=" + (controlPoints.get(1).getX() - 6) + ",y=" + (controlPoints.get(1).getY() - 1) + ",z=" + (controlPoints.get(1).getZ() - 6) + ",dx=12,dy=12,dz=12,team=" + t.getName() + "]",true) +
+            fileCommands.add(execute.In(controlPoints.get(1).getDimension(), false) +
+                    execute.AsNext("@r[limit=1,gamemode=!spectator,x=" + (controlPoints.get(1).getX() - 6) + ",y=" + (controlPoints.get(1).getY() - 1) + ",z=" + (controlPoints.get(1).getZ() - 6) + ",dx=12,dy=12,dz=12,team=" + t.getName() + "]", true) +
                     "scoreboard players operation @p[scores={Admin=1}] CP2" + t.getName() + " > @p[scores={Admin=1}] CP1" + t.getName());
         }
         fileCommands.add(callFunction(FileName.controlpoint_perks));
@@ -1263,11 +1273,11 @@ public class Main {
             fileCommands.add(execute.In(cp.getDimension()) +
                     setBlock(cp.getX(), cp.getY() + 11, cp.getZ(), "minecraft:structure_block[mode=load]{metadata:\"\",mirror:\"NONE\",ignoreEntities:1b,powered:0b,seed:0L,author:\"?\",rotation:\"NONE\",posX:-6,mode:\"LOAD\",posY:-13,sizeX:13,posZ:-6,integrity:1.0f,showair:0b,name:\"" + cp.getStructureName() + "\",sizeY:14,sizeZ:13,showboundingbox:1b}", SetBlockType.destroy));
             for (int i = cp.getY() + 12; i < worldHeight; i++) {
-                fileCommands.add(execute.In(cp.getDimension(),false) +
+                fileCommands.add(execute.In(cp.getDimension(), false) +
                         execute.UnlessNext(new Block(cp.getX(), i, cp.getZ(), BlockType.air)) +
                         execute.UnlessNext(new Block(cp.getX(), i, cp.getZ(), BlockType.cave_air)) +
                         execute.UnlessNext(new Block(cp.getX(), i, cp.getZ(), BlockType.void_air)) +
-                        execute.UnlessNext(new Block(cp.getX(), i, cp.getZ(), BlockType.bedrock),true) +
+                        execute.UnlessNext(new Block(cp.getX(), i, cp.getZ(), BlockType.bedrock), true) +
                         setBlock(cp.getX(), i, cp.getZ(), BlockType.glass));
             }
             fileCommands.add(execute.In(cp.getDimension()) +
@@ -1294,8 +1304,8 @@ public class Main {
         ArrayList<String> fileCommands = new ArrayList<>();
 
         for (ControlPoint cp : controlPoints) {
-            fileCommands.add(execute.In(cp.getDimension(),false) +
-                    execute.PositionedNext(cp.getX(), cp.getY(), cp.getZ(),true) +
+            fileCommands.add(execute.In(cp.getDimension(), false) +
+                    execute.PositionedNext(cp.getX(), cp.getY(), cp.getZ(), true) +
                     "effect give @p[gamemode=!spectator] minecraft:" + effect.get(i).getEffectName() + " " + effect.get(i).getDuration() + " " + effect.get(i).getAmplification());
         }
 
@@ -1309,14 +1319,14 @@ public class Main {
         fileCommands.add("scoreboard players add @a[gamemode=creative] Time 1");
         fileCommands.add(execute.If(new Selector("@p[scores={WorldLoad=400..}]")) +
                 "spreadplayers 0 0 5 750 false @a");
-        fileCommands.add(execute.If(new Selector("@p[scores={Time=12000..12020}]"),false) +
-                execute.InNext(Dimension.the_nether,true) +
+        fileCommands.add(execute.If(new Selector("@p[scores={Time=12000..12020}]"), false) +
+                execute.InNext(Dimension.the_nether, true) +
                 "tp @a[gamemode=creative] 0 80 0");
-        fileCommands.add(execute.If(new Selector("@p[scores={Time=24000..}]"),false) +
-                execute.InNext(Dimension.overworld,true) +
-                setBlock(6,worldBottom + 2,15,BlockType.bedrock));
-        fileCommands.add(execute.If(new Selector("@p[scores={Time=24000..}]"),false) +
-                execute.InNext(Dimension.overworld,true) +
+        fileCommands.add(execute.If(new Selector("@p[scores={Time=24000..}]"), false) +
+                execute.InNext(Dimension.overworld, true) +
+                setBlock(6, worldBottom + 2, 15, BlockType.bedrock));
+        fileCommands.add(execute.If(new Selector("@p[scores={Time=24000..}]"), false) +
+                execute.InNext(Dimension.overworld, true) +
                 "tp @a[gamemode=creative] 0 221 0");
         fileCommands.add(execute.If(new Selector("@p[scores={Time=24000..}]")) +
                 setGameRule(GameRule.commandBlockOutput, true));
@@ -1441,15 +1451,15 @@ public class Main {
             for (Team team : teams) {
                 // Display team receiving perk
                 for (Perk perk : perks) {
-                    fileCommands.add(execute.If(new Selector("@p[scores={CP" + (i + 1) + team.getName() + "=" + perk.getActivationTime() + ".." + (perk.getActivationTime() + actPeriod) + "}]"),false) +
-                            execute.IfNext(new Selector("@p[team=" + team.getName() + ",tag=!ReceivedPerk" + perk.getId() + "]"),true) +
+                    fileCommands.add(execute.If(new Selector("@p[scores={CP" + (i + 1) + team.getName() + "=" + perk.getActivationTime() + ".." + (perk.getActivationTime() + actPeriod) + "}]"), false) +
+                            execute.IfNext(new Selector("@p[team=" + team.getName() + ",tag=!ReceivedPerk" + perk.getId() + "]"), true) +
                             "tellraw @a [\"\",{\"text\":\"TEAM \",\"color\":\"light_purple\"},{\"text\":\"" + team.getJSONColor() + "\",\"color\":\"" + team.getColor() + "\"},{\"text\":\" HAS REACHED\",\"color\":\"light_purple\"},{\"text\":\" PERK " + perk.getId() + "!\",\"color\":\"gold\"}]");
 
                     // give rewards
                     fileCommands.add(execute.If(new Selector("@p[scores={CP" + (i + 1) + team.getName() + "=" + perk.getActivationTime() + ".." + (perk.getActivationTime() + actPeriod) + "}]")) +
                             perk.getRewardType() + " @a[team=" + team.getName() + ",tag=!ReceivedPerk" + perk.getId() + "] " + perk.getReward());
-                    fileCommands.add(execute.If(new Selector("@p[scores={CP" + (i + 1) + team.getName() + "=" + perk.getActivationTime() + ".." + (perk.getActivationTime() + actPeriod) + "}]"),false) +
-                            execute.IfNext(new Selector("@p[team=" + team.getName() + ",tag=!ReceivedPerk" + perk.getId() + "]"),true) +
+                    fileCommands.add(execute.If(new Selector("@p[scores={CP" + (i + 1) + team.getName() + "=" + perk.getActivationTime() + ".." + (perk.getActivationTime() + actPeriod) + "}]"), false) +
+                            execute.IfNext(new Selector("@p[team=" + team.getName() + ",tag=!ReceivedPerk" + perk.getId() + "]"), true) +
                             "playsound " + perk.getSoundEffect() + " master @a ~ ~50 ~ 100 1 0");
                     fileCommands.add(execute.If(new Selector("@p[scores={CP" + (i + 1) + team.getName() + "=" + perk.getActivationTime() + ".." + (perk.getActivationTime() + actPeriod) + "}]")) +
                             "tag @a[team=" + team.getName() + "] add ReceivedPerk" + perk.getId());
@@ -1604,12 +1614,12 @@ public class Main {
         ArrayList<String> fileCommands = new ArrayList<>();
         for (Team team : teams) {
             for (int i = 0; i < 3; i++) {
-                fileCommands.add(execute.As("@a[team=" + team.getName() + ",nbt={SelectedItem:{id:\"minecraft:compass\",tag:{tag:LocateTeammate}}}]",false) +
+                fileCommands.add(execute.As("@a[team=" + team.getName() + ",nbt={SelectedItem:{id:\"minecraft:compass\",tag:{tag:LocateTeammate}}}]", false) +
                         execute.AtNext("@s") +
                         execute.IfNext(new Selector("@a[team=" + team.getName() + ",distance=0.1..,gamemode=!spectator]")) +
                         execute.FacingNext(new Selector("@a[team=" + team.getName() + ",distance=0.1..,gamemode=!spectator,limit=1,sort=nearest]"), EntityAnchor.eyes) +
                         execute.PositionedRelativeNext(0, 1, 0) +
-                        execute.PositionedRelativeFacingNext(0, 0, i + 1,true) +
+                        execute.PositionedRelativeFacingNext(0, 0, i + 1, true) +
                         "particle minecraft:dust 1.0 1.0 1.0 1.0 ~ ~ ~ 0 0 0 0 1 normal @s");
             }
         }
