@@ -95,7 +95,7 @@ for i = 1:NN
                     ['Mean Survivalrate: ' num2str(Players(j).SurvivalRate,'%.2f')]
                     ['Peak ranking score: ' num2str(max(uint8(Players(j).RankHistory)),'%u') ' (after UHC ' Seasons(BestSeason).Season ')']
                     ['Highest rank: ' iptnum2ordinal(min(Players(j).RankPosition)) ' (x' num2str(size(find(Players(j).RankPosition == min(Players(j).RankPosition)),1)) ', last achieved in UHC ' Seasons(find(Players(j).RankPosition == min(Players(j).RankPosition,[],'omitnan'),1,'last')).Season ')']
-                    ['Last UHC season: ' num2str(Seasons(find(Players(j).Participation == 1,1,'last')).Season) ' (' datestr(Seasons(find(Players(j).Participation == 1,1,'last')).Date) ')']
+                    ['Last UHC season: ' num2str(Seasons(find(Players(j).Participation == 1,1,'last')).Season) ' (' datestr(Seasons(find(Players(j).Participation == 1,1,'last')).Date, 24) ')']
                     '&nbsp;'};
             end
             ClassifiedPlayers = i;

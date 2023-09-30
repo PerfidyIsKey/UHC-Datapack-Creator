@@ -180,19 +180,18 @@ public class Main {
 
         switch (gameMode) {
             case DIORITE_EXPERTS:
-                startCoordinates = new Coordinate(0, 71, 0);
-                netherPortal = new Coordinate(-8, 69, 22);
+                startCoordinates = new Coordinate(0, 73, 0);
+                netherPortal = new Coordinate(5, 71, -11);
                 minTraitorRank = 30;
                 communityName = "THE DIORITE EXPERTS";
 
-                cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, 158, 78, 93, Biome.plains));
-                cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, -61, 62, 80, Biome.river));
-                cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, -66, 114, -38, Biome.sunflower_plains));
-                cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, -297, 65, -221, Biome.windswept_savanna));
-                cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, -277, 22, 59, Biome.cave));
-                cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, 125, 65, 258, Biome.plains));
-                cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, 39, 69, -179, Biome.sunflower_plains));
-                cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, 302, 65, -161, Biome.flower_forest));
+                cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, -85, 57, -519, Biome.plains));
+                cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, 78, 62, -271, Biome.river));
+                cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, 11, 69, -154, Biome.forest));
+                cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, -71, 79, -49, Biome.cave));
+                cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, -281, 128, -314, Biome.forest));
+                cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, -125, 108, 52, Biome.plains));
+                cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, 293, 69, -165, Biome.beach));
 
 
                 /*// Control point
