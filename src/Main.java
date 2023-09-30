@@ -249,6 +249,8 @@ public class Main {
                 players.add(new Player("GoldBard2474348", 21));
                 players.add(new Player("CrimsonCid", 11));
                 players.add(new Player("ICEturbo", 21));
+                players.add(new Player("TheTolstar", 20));
+                players.add(new Player("NekoBotUwU", 20));
 
                 quotes = fileTools.GetLinesFromFile("Files\\Diorite\\quotes.txt");
 
@@ -680,7 +682,7 @@ public class Main {
         for (ScoreboardObjective objective : scoreboardObjectives) {
             fileCommands.add(objective.add());
         }
-        fileCommands.add(new ScoreboardObjective().setDisplay("below_name", "Hearts"));
+        fileCommands.add(new ScoreboardObjective().setDisplay("belowName", "Hearts"));
         fileCommands.add(new ScoreboardObjective().setDisplay("list", "Hearts"));
         //end scoreboard
         //bossbar
