@@ -182,7 +182,7 @@ public class Main {
             case DIORITE_EXPERTS:
                 startCoordinates = new Coordinate(0, 71, 0);
                 netherPortal = new Coordinate(-8, 69, 22);
-                minTraitorRank = 25;
+                minTraitorRank = 30;
                 communityName = "THE DIORITE EXPERTS";
 
                 cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, 158, 78, 93, Biome.plains));
