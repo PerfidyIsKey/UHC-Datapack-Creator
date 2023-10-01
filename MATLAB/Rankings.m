@@ -4,8 +4,6 @@ close all
 addpath('Data','Functions','Documents')
 load('DataS50.mat')
 
-Players = RankDetermine(Players,Seasons);
-
 text = RedditText(Players,Seasons);
 
 %% Save to txt file

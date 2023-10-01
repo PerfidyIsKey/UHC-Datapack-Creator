@@ -4,21 +4,21 @@ close all
 addpath('Functions','Documents','Data')
 
 Players = struct;
-load('DataS49.mat')
+load('DataS50.mat')
 
 %% Input
 % Enter the players that are participating (corresponding numbers with
 % PlayerName variable in Players struct)
-ParticipantIndex = [1, 2, 17, 18, 25, 28];
+ParticipantIndex = [1, 2, 17, 18, 25, 28, 30, 31, 33, 34, 38, 44, 46, 48, 49, 52, 53, 54];
 
 %%% Enter the names of new players
-NewPlayers = ["ICEturbo"];
-EstimatedRank = [21];
+NewPlayers = [];
+EstimatedRank = [];
 
 %%% Algorithm settings
-teamPlayer          = 2;        % Number of players per team
+teamPlayer          = 3;        % Number of players per team
 rankLowerBound      = 5;        % Maximum negative deviation of score median
-rankUpperBound      = 40;        % Maximum positive deviation of score mean
+rankUpperBound      = 10;        % Maximum positive deviation of score mean
 rankLowerTolerance	= rankLowerBound + 10;       % Maximum allowed negative deviation
 rankUpperTolerance  = rankUpperBound + 15;       % Maximum allowed positive deviation
 maxConnections      = 2;        % Maximum number of times players have played together
