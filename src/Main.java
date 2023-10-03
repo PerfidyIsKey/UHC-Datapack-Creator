@@ -733,7 +733,7 @@ public class Main {
     private FileData DropPlayerHeads() {
         ArrayList<String> fileCommands = new ArrayList<>();
         fileCommands.add(execute.If(new Selector("@p[scores={Deaths=1}]")) +
-                "playsound minecraft:entity.lightning_bolt.thunder master @a ~ ~50 ~ 100 1 0");
+                new PlaySound(Sound.THUNDER,SoundSource.master,"@a", "~", "~50", "~", "100", "1", "0").getSound());
         fileCommands.add("gamemode spectator @a[scores={Deaths=1},gamemode=!spectator]");
         fileCommands.add("scoreboard players set @a[scores={Deaths=1}] ControlPoint1 0");
         fileCommands.add("scoreboard players set @a[scores={Deaths=1}] ControlPoint2 0");
@@ -1444,10 +1444,10 @@ public class Main {
         // Define perk activation times
         int minToCPScore = secPerMinute * tickPerSecond * controlPoints.get(0).getAddRate();
         ArrayList<Perk> perks = new ArrayList<>();
-        perks.add(new Perk(1, "minecraft:" + Effect.speed + " 999999 0 false", "effect give", "minecraft:ambient.basalt_deltas.mood", 3 * minToCPScore));
-        perks.add(new Perk(2, "minecraft:" + Effect.resistance + " " + (10 * secPerMinute) + " 0 false", "effect give", "minecraft:ambient.crimson_forest.mood", 6 * minToCPScore));
-        perks.add(new Perk(3, "minecraft:" + Effect.haste + " 999999 2 false", "effect give", "minecraft:ambient.warped_forest.mood", 12 * minToCPScore));
-        perks.add(new Perk(4, "minecraft:golden_apple", "give", "minecraft:entity.wither.spawn", 15 * minToCPScore));
+        perks.add(new Perk(1, "minecraft:" + Effect.speed + " 999999 0 false", "effect give", Sound.BASALT, 3 * minToCPScore));
+        perks.add(new Perk(2, "minecraft:" + Effect.resistance + " " + (10 * secPerMinute) + " 0 false", "effect give", Sound.CRIMSON, 6 * minToCPScore));
+        perks.add(new Perk(3, "minecraft:" + Effect.haste + " 999999 2 false", "effect give", Sound.WARPED, 12 * minToCPScore));
+        perks.add(new Perk(4, "minecraft:golden_apple", "give", Sound.WITHER, 15 * minToCPScore));
 
         for (int i = 0; i < controlPoints.size(); i++) {
             for (Team team : teams) {
@@ -1462,7 +1462,7 @@ public class Main {
                             perk.getRewardType() + " @a[team=" + team.getName() + ",tag=!ReceivedPerk" + perk.getId() + "] " + perk.getReward());
                     fileCommands.add(execute.If(new Selector("@p[scores={CP" + (i + 1) + team.getName() + "=" + perk.getActivationTime() + ".." + (perk.getActivationTime() + actPeriod) + "}]"), false) +
                             execute.IfNext(new Selector("@p[team=" + team.getName() + ",tag=!ReceivedPerk" + perk.getId() + "]"), true) +
-                            "playsound " + perk.getSoundEffect() + " master @a ~ ~50 ~ 100 1 0");
+                            new PlaySound(perk.getSound(),SoundSource.master,"@a", "~", "~50", "~", "100", "1", "0").getSound());
                     fileCommands.add(execute.If(new Selector("@p[scores={CP" + (i + 1) + team.getName() + "=" + perk.getActivationTime() + ".." + (perk.getActivationTime() + actPeriod) + "}]")) +
                             "tag @a[team=" + team.getName() + "] add ReceivedPerk" + perk.getId());
                 }
