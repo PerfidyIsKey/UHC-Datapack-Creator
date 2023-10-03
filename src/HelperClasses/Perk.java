@@ -1,19 +1,21 @@
 package HelperClasses;
 
+import Enums.Sound;
+
 public class Perk {
 
     private int id;
     private String reward;
-    private String soundEffect;
+    private Sound sound;
     private int activationTime;
 
     private String rewardType;
 
-    public Perk(int id, String reward, String rewardType, String soundEffect, int activationTime) {
+    public Perk(int id, String reward, String rewardType, Sound sound, int activationTime) {
         this.id = id;
         this.reward = reward;
         this.rewardType = rewardType;
-        this.soundEffect = soundEffect;
+        this.sound = sound;
         this.activationTime = activationTime;
     }
 
@@ -21,8 +23,8 @@ public class Perk {
         return reward;
     }
 
-    public String getSoundEffect() {
-        return soundEffect;
+    public Sound getSound() {
+        return sound;
     }
 
     public int getActivationTime() {
