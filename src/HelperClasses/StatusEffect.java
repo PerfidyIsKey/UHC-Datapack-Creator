@@ -1,24 +1,26 @@
 package HelperClasses;
 
+import Enums.Effect;
+
 public class StatusEffect {
 
-    private String effectName;
+    private Effect effect;
 
     private int duration;
 
     private int amplification;
 
-    public StatusEffect(String effectName, int duration, int amplification){
-        this.effectName = effectName;
+    public StatusEffect(Effect effect, int duration, int amplification){
+        this.effect = effect;
         this.duration = duration;
         this.amplification = amplification;
     }
 
-    public String getEffectName() {
-        return effectName;
+    public Effect getEffect() {
+        return this.effect;
     }
 
-    public void setEffectName(String effectName) { this.effectName = effectName; }
+    public void setEffectName(Effect effect) { this.effect = effect; }
 
     public int getDuration() {
         return duration;
