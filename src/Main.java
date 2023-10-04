@@ -44,7 +44,7 @@ public class Main {
     //private ArrayList<CarePackage> carePackages = new ArrayList<>();
     private ArrayList<ScoreboardObjective> scoreboardObjectives = new ArrayList<>();
     private ArrayList<Player> players = new ArrayList<>();
-    private ArrayList<StatusEffect> effect = new ArrayList<>();
+    private ArrayList<StatusEffect> effects = new ArrayList<>();
     private ArrayList<String> quotes = new ArrayList<>();
     private ArrayList<BossBar> bossBars = new ArrayList<>();
     private static final int worldSize = 1500;
@@ -405,10 +405,10 @@ public class Main {
         scoreboardObjectives.add(new ScoreboardObjective("Victory", "dummy"));
 
         // Status effects
-        effect.add(new StatusEffect("glowing", 30, 1));
-        effect.add(new StatusEffect("fire_resistance", 20, 1));
-        effect.add(new StatusEffect("nausea", 10, 1));
-        effect.add(new StatusEffect("speed", 20, 1));
+        effects.add(new StatusEffect(Effect.glowing, 30, 1));
+        effects.add(new StatusEffect(Effect.fire_resistance, 20, 1));
+        effects.add(new StatusEffect(Effect.nausea, 10, 1));
+        effects.add(new StatusEffect(Effect.speed, 20, 1));
     }
 
     private void makeLootTableFiles() {
@@ -733,7 +733,7 @@ public class Main {
     private FileData DropPlayerHeads() {
         ArrayList<String> fileCommands = new ArrayList<>();
         fileCommands.add(execute.If(new Selector("@p[scores={Deaths=1}]")) +
-                new PlaySound(Sound.THUNDER,SoundSource.master,"@a", "~", "~50", "~", "100", "1", "0").getSound());
+                new PlaySound(Sound.THUNDER, SoundSource.master, "@a", "~", "~50", "~", "100", "1", "0").getSound());
         fileCommands.add("gamemode spectator @a[scores={Deaths=1},gamemode=!spectator]");
         fileCommands.add("scoreboard players set @a[scores={Deaths=1}] ControlPoint1 0");
         fileCommands.add("scoreboard players set @a[scores={Deaths=1}] ControlPoint2 0");
@@ -790,14 +790,14 @@ public class Main {
         fileCommands.add("item replace entity @a weapon.offhand with minecraft:shield");
         fileCommands.add("item replace entity @a weapon.mainhand with minecraft:iron_axe");
         fileCommands.add("item replace entity @a inventory.0 with minecraft:iron_sword");
-        fileCommands.add("effect give @a minecraft:regeneration 1 255 true");
+        fileCommands.add("effect give @a minecraft:" + Effect.regeneration + " 1 255 true");
 
         return new FileData(FileName.equip_gear, fileCommands);
     }
 
     private static FileData GodMode() {
         ArrayList<String> fileCommands = new ArrayList<>();
-        fileCommands.add("effect give @s minecraft:resistance 99999 4 true");
+        fileCommands.add("effect give @s minecraft:" + Effect.resistance + " 99999 4 true");
         fileCommands.add("item replace entity @s weapon.mainhand with trident{display:{Name:\"{\\\"text\\\":\\\"The Impaler\\\"}\"}, Enchantments:[{id:sharpness,lvl:999999},{id:fire_aspect,lvl:999999},{id:unbreaking,lvl:999999},{id:loyalty,lvl:999999},{id:impaling,lvl:999999}]}");
 
         return new FileData(FileName.god_mode, fileCommands);
@@ -939,8 +939,8 @@ public class Main {
         ArrayList<String> fileCommands = new ArrayList<>();
         fileCommands.add("time set 0");
         fileCommands.add("xp set @a 0 levels");
-        fileCommands.add("effect give @a minecraft:regeneration 1 255");
-        fileCommands.add("effect give @a minecraft:saturation 1 255");
+        fileCommands.add("effect give @a minecraft:" + Effect.regeneration + " 1 255");
+        fileCommands.add("effect give @a minecraft:" + Effect.saturation + " 1 255");
         fileCommands.add("clear @a");
         fileCommands.add("title @a title {\"text\":\"Game Starting Now!\", \"bold\":true, \"italic\":true, \"color\":\"gold\"}");
         fileCommands.add("gamemode survival @a");
@@ -1308,7 +1308,7 @@ public class Main {
         for (ControlPoint cp : controlPoints) {
             fileCommands.add(execute.In(cp.getDimension(), false) +
                     execute.PositionedNext(cp.getX(), cp.getY(), cp.getZ(), true) +
-                    "effect give @p[gamemode=!spectator] minecraft:" + effect.get(i).getEffectName() + " " + effect.get(i).getDuration() + " " + effect.get(i).getAmplification());
+                    "effect give @p[gamemode=!spectator] minecraft:" + effects.get(i).getEffect() + " " + effects.get(i).getDuration() + " " + effects.get(i).getAmplification());
         }
 
 
@@ -1462,7 +1462,7 @@ public class Main {
                             perk.getRewardType() + " @a[team=" + team.getName() + ",tag=!ReceivedPerk" + perk.getId() + "] " + perk.getReward());
                     fileCommands.add(execute.If(new Selector("@p[scores={CP" + (i + 1) + team.getName() + "=" + perk.getActivationTime() + ".." + (perk.getActivationTime() + actPeriod) + "}]"), false) +
                             execute.IfNext(new Selector("@p[team=" + team.getName() + ",tag=!ReceivedPerk" + perk.getId() + "]"), true) +
-                            new PlaySound(perk.getSound(),SoundSource.master,"@a", "~", "~50", "~", "100", "1", "0").getSound());
+                            new PlaySound(perk.getSound(), SoundSource.master, "@a", "~", "~50", "~", "100", "1", "0").getSound());
                     fileCommands.add(execute.If(new Selector("@p[scores={CP" + (i + 1) + team.getName() + "=" + perk.getActivationTime() + ".." + (perk.getActivationTime() + actPeriod) + "}]")) +
                             "tag @a[team=" + team.getName() + "] add ReceivedPerk" + perk.getId());
                 }
@@ -1526,8 +1526,8 @@ public class Main {
             fileCommands.add(execute.If(new Selector("@p[scores={MinHealth=" + indexFront + ".." + indexRear + "}]")) +
                     "attribute @p[tag=Respawn] generic.max_health base set " + (i + 1));
         }
-        fileCommands.add("effect give @p[tag=Respawn] health_boost 1 0");
-        fileCommands.add("effect clear @p[tag=Respawn] health_boost");
+        fileCommands.add("effect give @p[tag=Respawn] minecraft:" + Effect.health_boost + " 1 0");
+        fileCommands.add("effect clear @p[tag=Respawn] minecraft:" + Effect.health_boost);
         fileCommands.add("attribute @p[tag=Respawn] generic.max_health base set 20");
         fileCommands.add("tag @p[tag=Respawn] remove Respawn");
 
