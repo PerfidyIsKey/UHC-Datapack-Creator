@@ -61,6 +61,8 @@ public class Main {
     private String communityName;
     private static final Execute execute = new Execute();
 
+    private final Text bannerText = new Text(Color.dark_gray, true, false, " | ");
+
     //GameData>
 
 
@@ -161,7 +163,7 @@ public class Main {
     }
 
     private void initGameData() {
-        String[] colors = {"yellow", "blue", "red", "dark_purple", "dark_green", "light_purple", "black", "gold", "gray", "aqua", "dark_red", "dark_blue", "dark_aqua"};
+        Color[] colors = {Color.yellow, Color.blue, Color.red, Color.dark_purple, Color.dark_green, Color.light_purple, Color.black, Color.gold, Color.gray, Color.aqua, Color.dark_red, Color.dark_blue, Color.dark_aqua};
         String[] bossbarColors = {"yellow", "blue", "red", "purple", "green", "pink", "white", "white", "white", "white", "white", "white", "white"};
         String[] glassColors = {"yellow", "light_blue", "red", "purple", "green", "pink", "black", "orange", "gray", "cyan", "red", "blue", "blue"};
         String[] collarColors = {"4", "3", "14", "10", "13", "6", "15", "1", "7", "9", "2", "11", "9"};
@@ -759,8 +761,15 @@ public class Main {
         fileCommands.add("scoreboard players set @p[scores={Admin=1}] Highscore2 1");
         fileCommands.add("scoreboard players set @p[scores={Admin=1}] MinHealth 20");
 
+        ArrayList<TextItem> texts = new ArrayList<>();
+        texts.add(bannerText);
+        texts.add(new Text(Color.red, true, false, "A TRAITOR HAS BEEN ELIMINATED"));
+        texts.add(bannerText);
+        texts.add(new Text(Color.gold, true, false, "WELL DONE"));
+        texts.add(bannerText);
+
         fileCommands.add(execute.If(new Selector("@p[scores={Deaths=1},tag=Traitor]")) +
-                "tellraw @a [\"\",{\"text\":\" | \",\"bold\":true,\"color\":\"dark_gray\"},{\"text\":\"A TRAITOR HAS BEEN ELIMINATED\",\"bold\":true,\"color\":\"red\"},{\"text\":\" | \",\"bold\":true,\"color\":\"dark_gray\"},{\"text\":\"WELL DONE\",\"bold\":true,\"color\":\"gold\"},{\"text\":\" | \",\"bold\":true,\"color\":\"dark_gray\"}]");
+                new TellRaw("@a", texts).sendRaw());
         for (Player p : players) {
             fileCommands.add(execute.At(new Location("@p[name=" + p.getPlayerName() + ",scores={Deaths=1}]")) +
                     "summon minecraft:item ~ ~ ~ {Item:{id:player_head,Count:1,tag:{SkullOwner:" + p.getPlayerName() + "}}}");
@@ -907,9 +916,15 @@ public class Main {
         fileCommands.add("effect clear @a");
         fileCommands.add(execute.In(Dimension.overworld) +
                 "tp @a 0 -100 0");
-        fileCommands.add("tellraw @a [\"\",{\"text\":\" ｜ \",\"color\":\"gray\"},{\"text\":\"" + communityName +
-                " UHC\",\"color\":\"gold\"},{\"text\":\" ｜ \",\"color\":\"gray\"},{\"text\":\"PREDICTIONS COMPLETED" +
-                "\",\"color\":\"light_purple\"},{\"text\":\" ｜ \",\"color\":\"gray\"}]");
+
+        ArrayList<TextItem> texts = new ArrayList<>();
+        texts.add(bannerText);
+        texts.add(new Text(Color.gold, true, false, communityName+ " UHC"));
+        texts.add(bannerText);
+        texts.add(new Text(Color.light_purple, true, false, "PREDICTIONS COMPLETED"));
+        texts.add(bannerText);
+
+        fileCommands.add(new TellRaw("@a", texts).sendRaw());
 
         return new FileData(FileName.predictions, fileCommands);
     }
@@ -960,7 +975,7 @@ public class Main {
         fileCommands.add("effect give @a minecraft:" + Effect.regeneration + " 1 255");
         fileCommands.add("effect give @a minecraft:" + Effect.saturation + " 1 255");
         fileCommands.add("clear @a");
-        fileCommands.add(new Title("@a", TitleType.title, new Text(Color.gold, "Game Starting Now!", true, true)).displayTitle());
+        fileCommands.add(new Title("@a", TitleType.title, new Text(Color.gold, true, true, "Game Starting Now!")).displayTitle());
         fileCommands.add("gamemode survival @a");
         fileCommands.add(setGameRule(GameRule.sendCommandFeedback, false));
         fileCommands.add(execute.In(Dimension.overworld) +
@@ -994,10 +1009,10 @@ public class Main {
 
     private FileData InitializeControlpoint() {
         ArrayList<String> fileCommands = new ArrayList<>();
-        fileCommands.add(new Title("@a", TitleType.subtitle, new Text(Color.light_purple, "is now enabled!", true, true)).displayTitle());
+        fileCommands.add(new Title("@a", TitleType.subtitle, new Text(Color.light_purple, true, true, "is now enabled!")).displayTitle());
         fileCommands.add(execute.In(Dimension.overworld) +
                 setBlock(7, worldBottom + 2, 0, BlockType.redstone_block, SetBlockType.replace));
-        fileCommands.add(new Title("@a", TitleType.title, new Text(Color.gold, "Control Point 1", true, true)).displayTitle());
+        fileCommands.add(new Title("@a", TitleType.title, new Text(Color.gold, true, true, "Control Point 1")).displayTitle());
         fileCommands.add(getBossbarByName("cp1").setVisible(true));
         fileCommands.add(getBossbarByName("cp2").setVisible(true));
         fileCommands.add(execute.In(Dimension.overworld) +
@@ -1021,7 +1036,15 @@ public class Main {
                 setBlock(7, worldBottom + 2, 0, BlockType.bedrock, SetBlockType.replace));
         fileCommands.add(execute.In(Dimension.overworld) +
                 setBlock(8, worldBottom + 2, 0, BlockType.redstone_block, SetBlockType.replace));
-        fileCommands.add("tellraw @a [\"\",{\"text\":\" ⎜ \",\"color\":\"gray\"},{\"text\":\"" + communityName + " UHC\",\"color\":\"gold\"},{\"text\":\" ⎜ \",\"color\":\"gray\"},{\"text\":\"CONTROL POINT 2 IS NOW AVAILABLE!\",\"color\":\"light_purple\"},{\"text\":\" ⎜ \",\"color\":\"gray\"}]");
+
+        ArrayList<TextItem> texts = new ArrayList<>();
+        texts.add(bannerText);
+        texts.add(new Text(Color.gold, true, false, communityName+ " UHC"));
+        texts.add(bannerText);
+        texts.add(new Text(Color.light_purple, true, false, "CONTROL POINT 2 IS NOW AVAILABLE!"));
+        texts.add(bannerText);
+
+        fileCommands.add(new TellRaw("@a", texts).sendRaw());
         fileCommands.add(execute.In(Dimension.overworld) +
                 setBlock(15, worldBottom + 2, 11, BlockType.redstone_block, SetBlockType.replace));
         fileCommands.addAll(forceLoadAndSet(controlPoints.get(1).getX(), controlPoints.get(1).getY() + 3, controlPoints.get(1).getZ(), controlPoints.get(1).getDimension(), BlockType.air, SetBlockType.replace));
@@ -1035,8 +1058,15 @@ public class Main {
 
     private FileData Minute(int i) {
         ArrayList<String> fileCommands = new ArrayList<>();
-        fileCommands.add("tellraw @a [\"\",{\"text\":\" ⎜ \",\"color\":\"gray\"},{\"text\":\"" + communityName + " UHC\",\"color\":\"gold\"},{\"text\":\" ⎜ \",\"color\":\"gray\"},{\"text\":\" " + i + " minute(s) remaining.\",\"color\":\"light_purple\"},{\"text\":\" ⎜ \",\"color\":\"gray\"}]");
-        fileCommands.add(new Title("@a", TitleType.title, new Text(Color.gold, i + " minute(s) remaining.", true, true)).displayTitle());
+        ArrayList<TextItem> texts = new ArrayList<>();
+        texts.add(bannerText);
+        texts.add(new Text(Color.gold, true, false, communityName+ " UHC"));
+        texts.add(bannerText);
+        texts.add(new Text(Color.light_purple, true, false, i + " minute(s) remaining"));
+        texts.add(bannerText);
+
+        fileCommands.add(new TellRaw("@a", texts).sendRaw());
+        fileCommands.add(new Title("@a", TitleType.title, new Text(Color.gold, true, true, i + " minute(s) remaining.")).displayTitle());
         return new FileData("" + FileName.minute_ + i, fileCommands);
     }
 
@@ -1051,18 +1081,33 @@ public class Main {
 
     private FileData VictoryMessage(Team team, int i) {
         ArrayList<String> fileCommands = new ArrayList<>();
-        fileCommands.add("tellraw @a [\"\",{\"text\":\" | \",\"color\":\"gray\"},{\"text\":\"" + communityName + " UHC\",\"color\":\"gold\"},{\"text\":\" | \",\"color\":\"gray\"},{\"text\":\"" + team.getJSONColor() + "\",\"color\":\"" + team.getColor() + "\"},{\"text\":\" TEAM VICTORY HAS BEEN ACHIEVED! 3 MINUTES UNTIL THE FINAL DEATHMATCH\",\"color\":\"light_purple\"},{\"text\":\" | \",\"color\":\"gray\"}]");
-        fileCommands.add(new Title("@a", TitleType.subtitle, new Text(Color.light_purple, "has been achieved!", true, true)).displayTitle());
-        fileCommands.add(new Title("@a", TitleType.title, new Text(Color.gold, team.getJSONColor() + " team victory", true, true)).displayTitle());
+        ArrayList<TextItem> texts = new ArrayList<>();
+        texts.add(bannerText);
+        texts.add(new Text(Color.gold, true, false, communityName+ " UHC"));
+        texts.add(bannerText);
+        texts.add(new Text(team.getColor(), true, false, team.getJSONColor()));
+        texts.add(new Text(Color.light_purple, true, false, " TEAM VICTORY HAS BEEN ACHIEVED! 3 MINUTES UNTIL THE FINAL DEATHMATCH"));
+        texts.add(bannerText);
+
+        fileCommands.add(new TellRaw("@a", texts).sendRaw());
+        fileCommands.add(new Title("@a", TitleType.subtitle, new Text(Color.light_purple, true, true, "has been achieved!")).displayTitle());
+        fileCommands.add(new Title("@a", TitleType.title, new Text(Color.gold, true, true, team.getJSONColor() + " team victory")).displayTitle());
         fileCommands.add(callFunction(FileName.victory));
         return new FileData("" + FileName.victory_message_ + i, fileCommands);
     }
 
     private FileData VictoryTraitor() {
         ArrayList<String> fileCommands = new ArrayList<>();
-        fileCommands.add("tellraw @a [\"\",{\"text\":\" ⎜ \",\"color\":\"gray\"},{\"text\":\"" + communityName + " UHC\",\"color\":\"gold\"},{\"text\":\" ⎜ \",\"color\":\"gray\"},{\"text\":\" TRAITOR VICTORY HAS BEEN ACHIEVED! 3 MINUTES UNTIL THE FINAL DEATHMATCH\",\"color\":\"light_purple\"},{\"text\":\" ⎜ \",\"color\":\"gray\"}]");
-        fileCommands.add(new Title("@a", TitleType.subtitle, new Text(Color.light_purple, "ggez", true, true)).displayTitle());
-        fileCommands.add(new Title("@a", TitleType.title, new Text(Color.gold, "Traitors Win", true, true)).displayTitle());
+        ArrayList<TextItem> texts = new ArrayList<>();
+        texts.add(bannerText);
+        texts.add(new Text(Color.gold, true, false, communityName+ " UHC"));
+        texts.add(bannerText);
+        texts.add(new Text(Color.light_purple, true, false, " TRAITOR VICTORY HAS BEEN ACHIEVED! 3 MINUTES UNTIL THE FINAL DEATHMATCH"));
+        texts.add(bannerText);
+
+        fileCommands.add(new TellRaw("@a", texts).sendRaw());
+        fileCommands.add(new Title("@a", TitleType.subtitle, new Text(Color.light_purple, true, true, "ggez")).displayTitle());
+        fileCommands.add(new Title("@a", TitleType.title, new Text(Color.gold, true, true, "Traitors Win")).displayTitle());
         fileCommands.add(callFunction(FileName.victory));
         return new FileData(FileName.victory_message_traitor, fileCommands);
     }
@@ -1100,9 +1145,16 @@ public class Main {
                 execute.IfNext(new Selector("@p[x=" + (controlPoints.get(i - 1).getX() - 6) + ",y=" + (controlPoints.get(i - 1).getY() - 1) + ",z=" + (controlPoints.get(i - 1).getZ() - 6) + ",dx=12,dy=12,dz=12,gamemode=!spectator]"), true) +
                 "scoreboard players add @a[x=" + (controlPoints.get(i - 1).getX() - 6) + ",y=" + (controlPoints.get(i - 1).getY() - 1) + ",z=" + (controlPoints.get(i - 1).getZ() - 6) + ",dx=12,dy=12,dz=12,gamemode=!spectator] MSGDum1CP" + i + " 1");
 
+        ArrayList<TextItem> texts = new ArrayList<>();
+        texts.add(bannerText);
+        texts.add(new Text(Color.gold, true, false, communityName+ " UHC"));
+        texts.add(bannerText);
+        texts.add(new Text(Color.light_purple, true, false, "A PLAYER IS ATTACKING CONTROL POINT " + i + "!"));
+        texts.add(bannerText);
+
         fileCommands.add(execute.In(controlPoints.get(i - 1).getDimension(), false) +
                 execute.IfNext(new Selector("@p[x=" + (controlPoints.get(i - 1).getX() - 6) + ",y=" + (controlPoints.get(i - 1).getY() - 1) + ",z=" + (controlPoints.get(i - 1).getZ() - 6) + ",dx=12,dy=12,dz=12,gamemode=!spectator,scores={MSGDum1CP" + i + "=" + (10 * tickPerSecond) + "}]"), true) +
-                "tellraw @a [\"\",{\"text\":\" ⎜ \",\"color\":\"gray\"},{\"text\":\"" + communityName + " UHC\",\"color\":\"gold\"},{\"text\":\" ⎜ \",\"color\":\"gray\"},{\"text\":\"A PLAYER IS ATTACKING CONTROL POINT " + i + "!\",\"color\":\"light_purple\"},{\"text\":\" ⎜ \",\"color\":\"gray\"}]");
+                new TellRaw("@a", texts).sendRaw());
 
         fileCommands.add(execute.In(controlPoints.get(i - 1).getDimension(), false) +
                 execute.IfNext(new Selector("@p[x=" + (controlPoints.get(i - 1).getX() - 6) + ",y=" + (controlPoints.get(i - 1).getY() - 1) + ",z=" + (controlPoints.get(i - 1).getZ() - 6) + ",dx=12,dy=12,dz=12,gamemode=!spectator,scores={MSGDum1CP" + i + "=" + (10 * tickPerSecond) + "}]"), true) +
@@ -1113,10 +1165,17 @@ public class Main {
                 execute.IfNext(new Selector("@p[distance=9..,gamemode=!spectator, scores={MSGDum1CP" + i + "=" + (10 * tickPerSecond) + "..}]"), true) +
                 "scoreboard players add @a[distance=9..,gamemode=!spectator, scores={MSGDum1CP" + i + "=" + (10 * tickPerSecond) + "..}] MSGDum2CP" + i + " 1");
 
+        ArrayList<TextItem> texts2 = new ArrayList<>();
+        texts2.add(bannerText);
+        texts2.add(new Text(Color.gold, true, false, communityName+ " UHC"));
+        texts2.add(bannerText);
+        texts2.add(new Text(Color.light_purple, true, false, "A PLAYER HAS LEFT CONTROL POINT " + i));
+        texts2.add(bannerText);
+
         fileCommands.add(execute.In(controlPoints.get(i - 1).getDimension(), false) +
                 execute.PositionedNext(controlPoints.get(i - 1).getX(), controlPoints.get(i - 1).getY() + 5, controlPoints.get(i - 1).getZ(), false) +
                 execute.IfNext(new Selector("@p[distance=9..,gamemode=!spectator,scores={MSGDum2CP" + i + "=" + (10 * tickPerSecond) + ",MSGDum1CP" + i + "=" + (10 * tickPerSecond) + "..}]"), true) +
-                "tellraw @a [\"\",{\"text\":\" ⎜ \",\"color\":\"gray\"},{\"text\":\"" + communityName + " UHC\",\"color\":\"gold\"},{\"text\":\" ⎜ \",\"color\":\"gray\"},{\"text\":\"A PLAYER HAS LEFT CONTROL POINT " + i + "\",\"color\":\"light_purple\"},{\"text\":\" ⎜ \",\"color\":\"gray\"}]");
+                new TellRaw("@a", texts2).sendRaw());
 
         fileCommands.add(execute.In(controlPoints.get(i - 1).getDimension(), false) +
                 execute.PositionedNext(controlPoints.get(i - 1).getX(), controlPoints.get(i - 1).getY() + 5, controlPoints.get(i - 1).getZ(), false) +
@@ -1129,8 +1188,8 @@ public class Main {
     private FileData Carepackage(CarePackage carepackage) {
         ArrayList<String> fileCommands = forceLoadAndSet(carepackage.getX(), carepackage.getY(), carepackage.getZ(), "chest{CustomName:\"\\\"" + carepackage.getDisplayName() + "\\\"\",Items:" + carepackage.getNbtTag() + "}");
 
-        fileCommands.add(new Title("@a", TitleType.title, new Text(Color.gold, carepackage.getDisplayName() + "!", true, true)).displayTitle());
-        fileCommands.add(new Title("@a", TitleType.subtitle, new Text(Color.light_purple, "Delivered now on the surface!", true, true)).displayTitle());
+        fileCommands.add(new Title("@a", TitleType.title, new Text(Color.gold, true, true, carepackage.getDisplayName() + "!")).displayTitle());
+        fileCommands.add(new Title("@a", TitleType.subtitle, new Text(Color.light_purple, true, true, "Delivered now on the surface!")).displayTitle());
         fileCommands.add("give @a[gamemode=!spectator] minecraft:compass{display:{Name:\"{\\\"text\\\":\\\"" + carepackage.getDisplayName() + " available at " + carepackage.getX() + ", " + carepackage.getY() + ", " + carepackage.getZ() + "\\\"}\"}, LodestoneDimension:\"minecraft:" + Dimension.overworld + "\",LodestoneTracked:0b,LodestonePos:{X:" + carepackage.getX() + ",Y:" + carepackage.getY() + ",Z:" + carepackage.getZ() + "}}");
 
         return new FileData("" + FileName.carepackage_ + carepackage.getName(), fileCommands);
@@ -1154,8 +1213,8 @@ public class Main {
     private static FileData DropCarepackages() {
         ArrayList<String> fileCommands = new ArrayList<>();
 
-        fileCommands.add(new Title("@a", TitleType.title, new Text(Color.gold, carePackageAmount + " Supply Drops!", true, true)).displayTitle());
-        fileCommands.add(new Title("@a", TitleType.subtitle, new Text(Color.light_purple, "Delivered NOW on the surface!", true, true)).displayTitle());
+        fileCommands.add(new Title("@a", TitleType.title, new Text(Color.gold, true, true, carePackageAmount + " Supply Drops!")).displayTitle());
+        fileCommands.add(new Title("@a", TitleType.subtitle, new Text(Color.light_purple, true, true, "Delivered NOW on the surface!")).displayTitle());
 
         for (int i = 0; i < carePackageAmount; i++) {
             fileCommands.add(execute.In(Dimension.overworld) +
@@ -1222,11 +1281,16 @@ public class Main {
             fileCommands.add("tag @r[limit=1,tag=!DontMakeTraitor,gamemode=!spectator] add Traitor");
         }
 
-        fileCommands.add(execute.As("@a[tag=Traitor]") +
-                "tellraw @s [\"\",{\"text\":\"You feel like betrayal today. You have become a Traitor. Your faction consists of: \",\"italic\":true,\"color\":\"red\"},{\"selector\":\"@a[tag=Traitor]\",\"italic\":true,\"color\":\"red\"},{\"text\":\".\",\"italic\":true,\"color\":\"red\"}]");
+        ArrayList<TextItem> texts = new ArrayList<>();
+        texts.add(new Text(Color.red, false, true, "You feel like betrayal today. You have become a Traitor. Your faction consists of: "));
+        texts.add(new Select(Color.red, false, true, "@a[tag=Traitor]"));
+        texts.add(new Text(Color.red, false, true, "."));
 
-        fileCommands.add(new Title("@a",TitleType.title, new Text(Color.red,"A Traitor Faction",true,false)).displayTitle());
-        fileCommands.add(new Title("@a", TitleType.subtitle, new Text(Color.dark_red,"has been founded!", true,false)).displayTitle());
+        fileCommands.add(execute.As("@a[tag=Traitor]") +
+                new TellRaw("@s", texts).sendRaw());
+
+        fileCommands.add(new Title("@a",TitleType.title, new Text(Color.red,true,false,"A Traitor Faction")).displayTitle());
+        fileCommands.add(new Title("@a", TitleType.subtitle, new Text(Color.dark_red, true,false,"has been founded!")).displayTitle());
         fileCommands.add(execute.In(Dimension.overworld) +
                 setBlock(11, worldBottom + 2, 0, BlockType.redstone_block, SetBlockType.destroy));
         fileCommands.add(callFunction(FileName.traitor_check));
@@ -1236,10 +1300,10 @@ public class Main {
     private FileData TraitorActionBar() {
         ArrayList<String> fileCommands = new ArrayList<>();
         ArrayList<TextItem> texts = new ArrayList<>();
-        texts.add(new Text(Color.gold,">>> ",false,false));
-        texts.add(new Text(Color.light_purple,"Traitor Faction: ",false,false));
-        texts.add(new Select("@a[tag=Traitor]"));
-        texts.add(new Text(Color.gold," <<<",false,false));
+        texts.add(new Text(Color.gold,false,false,">>> "));
+        texts.add(new Text(Color.light_purple,false,false,"Traitor Faction: "));
+        texts.add(new Select(Color.red,false,false,"@a[tag=Traitor]"));
+        texts.add(new Text(Color.gold,false,false," <<<"));
 
         fileCommands.add(execute.As("@a[tag=Traitor]") +
                 new Title("@s", TitleType.actionbar, texts).displayTitle());
@@ -1436,10 +1500,20 @@ public class Main {
         fileCommands.add(execute.StoreResult("score CurrentTime Time run scoreboard players get @p[scores={Admin=1}] TimeDum"));
         fileCommands.add(execute.If(new Selector("@p[scores={TimDum=" + tickPerSecond + "..}]")) +
                 "scoreboard players reset @p[scores={Admin=1}] TimDum");
+
+
         fileCommands.add(execute.If(new Selector("@p[scores={Time2=" + (300 * tickPerSecond) + "}]")) +
-                "tellraw @a [\"\",{\"text\":\"PVP IS NOT ALLOWED UNTIL DAY 2!\",\"color\":\"gray\"}]");
+                new TellRaw("@a", new Text(Color.gray, false,false,"PVP IS NOT ALLOWED UNTIL DAY 2!")).sendRaw());
+
+        ArrayList<TextItem> texts = new ArrayList<>();
+        texts.add(bannerText);
+        texts.add(new Text(Color.gold, true, false, communityName+ " UHC"));
+        texts.add(bannerText);
+        texts.add(new Text(Color.light_purple, true, false, "DAY TIME HAS ARRIVED & ETERNAL DAY ENABLED!"));
+        texts.add(bannerText);
+
         fileCommands.add(execute.If(new Selector("@p[scores={Time2=" + (1200 * tickPerSecond) + "}]")) +
-                "tellraw @a [\"\",{\"text\":\" ｜ \",\"color\":\"gray\"},{\"text\":\"" + communityName + " UHC\",\"color\":\"gold\"},{\"text\":\" ｜ \",\"color\":\"gray\"},{\"text\":\"DAY TIME HAS ARRIVED & ETERNAL DAY ENABLED!\",\"color\":\"light_purple\"},{\"text\":\" ｜ \",\"color\":\"gray\"}]");
+                new TellRaw("@a", texts).sendRaw());
         fileCommands.add(callFunction(FileName.display_quotes));
         fileCommands.add(callFunction(FileName.locate_teammate));
 
@@ -1476,9 +1550,15 @@ public class Main {
             for (Team team : teams) {
                 // Display team receiving perk
                 for (Perk perk : perks) {
+                    ArrayList<TextItem> texts = new ArrayList<>();
+                    texts.add(new Text(Color.light_purple, false, false, "TEAM "));
+                    texts.add(new Text(team.getColor(), false, false, team.getJSONColor()));
+                    texts.add(new Text(Color.light_purple, false, false, " HAS REACHED"));
+                    texts.add(new Text(Color.gold, false, false, " PERK " + perk.getId() + "!"));
+
                     fileCommands.add(execute.If(new Selector("@p[scores={CP" + (i + 1) + team.getName() + "=" + perk.getActivationTime() + ".." + (perk.getActivationTime() + actPeriod) + "}]"), false) +
                             execute.IfNext(new Selector("@p[team=" + team.getName() + ",tag=!ReceivedPerk" + perk.getId() + "]"), true) +
-                            "tellraw @a [\"\",{\"text\":\"TEAM \",\"color\":\"light_purple\"},{\"text\":\"" + team.getJSONColor() + "\",\"color\":\"" + team.getColor() + "\"},{\"text\":\" HAS REACHED\",\"color\":\"light_purple\"},{\"text\":\" PERK " + perk.getId() + "!\",\"color\":\"gold\"}]");
+                            new TellRaw("@a", texts).sendRaw());
 
                     // give rewards
                     fileCommands.add(execute.If(new Selector("@p[scores={CP" + (i + 1) + team.getName() + "=" + perk.getActivationTime() + ".." + (perk.getActivationTime() + actPeriod) + "}]")) +
@@ -1503,7 +1583,7 @@ public class Main {
         for (int i = 0; i < 36; i++) {
             int index = (int) (Math.random() * quotes.size());
             fileCommands.add(execute.If(new Selector("@p[scores={Time2=" + (7 * secPerMinute * tickPerSecond * (i + 1)) + "}]")) +
-                    "tellraw @a {\"text\":\"" + quotes.get(index) + "\",\"color\":\"white\"}");
+                    new TellRaw("@a", new Text(Color.white, false, false,quotes.get(index))).sendRaw());
             quotes.remove(index);
         }
 
@@ -1561,12 +1641,20 @@ public class Main {
         ArrayList<String> fileCommands = new ArrayList<>();
         fileCommands.add(execute.In(Dimension.overworld) +
                 setBlock(8, worldBottom + 2, 0, BlockType.bedrock, SetBlockType.replace));
-        fileCommands.add("tellraw @a [\"\",{\"text\":\" ⎜ \",\"color\":\"gray\"},{\"text\":\"" + communityName + " UHC\",\"color\":\"gold\"},{\"text\":\" ⎜ \",\"color\":\"gray\"},{\"text\":\"The Controlpoint has been captured!\",\"color\":\"light_purple\"},{\"text\":\" ⎜ \",\"color\":\"gray\"}]");
+
+        ArrayList<TextItem> texts = new ArrayList<>();
+        texts.add(bannerText);
+        texts.add(new Text(Color.gold, true, false, communityName+ " UHC"));
+        texts.add(bannerText);
+        texts.add(new Text(Color.light_purple, true, false, "The Controlpoint has been captured!"));
+        texts.add(bannerText);
+
+        fileCommands.add(new TellRaw("@a", texts).sendRaw());
         fileCommands.add(execute.In(Dimension.overworld) +
                 fill(15, worldBottom + 2, 3, 15, worldBottom + 2, 4, BlockType.bedrock));
 
-        fileCommands.add(new Title("@a", TitleType.subtitle, new Text(Color.light_purple, "has been captured!", true, true)).displayTitle());
-        fileCommands.add(new Title("@a", TitleType.title, new Text(Color.gold, "The Controlpoint", true, true)).displayTitle());
+        fileCommands.add(new Title("@a", TitleType.subtitle, new Text(Color.light_purple, true, true, "has been captured!")).displayTitle());
+        fileCommands.add(new Title("@a", TitleType.title, new Text(Color.gold, true, true, "The Controlpoint")).displayTitle());
 
         fileCommands.add(callFunction(FileName.teams_highscore_alive_check));
 

@@ -1,15 +1,17 @@
 package HelperClasses;
 
+import Enums.Color;
+
 public class Team {
 
     private String name;
-    private String color;
+    private Color color;
     private String bossbarColor;
     private String glassColor;
     private String collarColor;
     private String jsonColor;
 
-    public Team(String name, String color, String bossbarColor, String glassColor, String collarColor, String jsonColor) {
+    public Team(String name, Color color, String bossbarColor, String glassColor, String collarColor, String jsonColor) {
         this.name = name;
         this.color = color;
         this.bossbarColor = bossbarColor;
@@ -26,11 +28,11 @@ public class Team {
         this.name = name;
     }
 
-    public String getColor() {
+    public Color getColor() {
         return color;
     }
 
-    public void setColor(String color) {
+    public void setColor(Color color) {
         this.color = color;
     }
 
