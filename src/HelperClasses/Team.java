@@ -65,4 +65,8 @@ public class Team {
     public void setJSONColor(String jsonColor) {
         this.jsonColor = jsonColor;
     }
+
+    public String add(){
+        return "team add " + this.name;
+    }
 }
