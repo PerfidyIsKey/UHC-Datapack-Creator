@@ -590,6 +590,10 @@ public class Main {
         return "gamerule " + gamerule + " " + bool;
     }
 
+    private String playSound(Sound sound, SoundSource source, String entity, String x, String y, String z, String x1, String y1, String z1) {
+        return "playsound " + sound.getValue() + " " + source + " " + entity + " " + x + " " + y + " " + z + " " + x1 + " " + y1 + " " + z1;
+    }
+
     private void makeFunctionFiles() {
         files.add(Initialize());
         files.add(DropPlayerHeads());
@@ -733,7 +737,7 @@ public class Main {
     private FileData DropPlayerHeads() {
         ArrayList<String> fileCommands = new ArrayList<>();
         fileCommands.add(execute.If(new Selector("@p[scores={Deaths=1}]")) +
-                new PlaySound(Sound.THUNDER, SoundSource.master, "@a", "~", "~50", "~", "100", "1", "0").getSound());
+                playSound(Sound.THUNDER, SoundSource.master, "@a", "~", "~50", "~", "100", "1", "0"));
         fileCommands.add("gamemode spectator @a[scores={Deaths=1},gamemode=!spectator]");
         fileCommands.add("scoreboard players set @a[scores={Deaths=1}] ControlPoint1 0");
         fileCommands.add("scoreboard players set @a[scores={Deaths=1}] ControlPoint2 0");
@@ -1462,7 +1466,7 @@ public class Main {
                             perk.getRewardType() + " @a[team=" + team.getName() + ",tag=!ReceivedPerk" + perk.getId() + "] " + perk.getReward());
                     fileCommands.add(execute.If(new Selector("@p[scores={CP" + (i + 1) + team.getName() + "=" + perk.getActivationTime() + ".." + (perk.getActivationTime() + actPeriod) + "}]"), false) +
                             execute.IfNext(new Selector("@p[team=" + team.getName() + ",tag=!ReceivedPerk" + perk.getId() + "]"), true) +
-                            new PlaySound(perk.getSound(), SoundSource.master, "@a", "~", "~50", "~", "100", "1", "0").getSound());
+                            playSound(perk.getSound(), SoundSource.master, "@a", "~", "~50", "~", "100", "1", "0"));
                     fileCommands.add(execute.If(new Selector("@p[scores={CP" + (i + 1) + team.getName() + "=" + perk.getActivationTime() + ".." + (perk.getActivationTime() + actPeriod) + "}]")) +
                             "tag @a[team=" + team.getName() + "] add ReceivedPerk" + perk.getId());
                 }
