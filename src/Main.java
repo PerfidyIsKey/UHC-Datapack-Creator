@@ -700,7 +700,7 @@ public class Main {
 
         //scoreboard
         for (ScoreboardObjective objective : scoreboardObjectives) {
-            fileCommands.add(objective.add());
+            fileCommands.add(objective.objectiveAdd());
         }
         fileCommands.add(new ScoreboardObjective().setDisplay("belowName", "Hearts"));
         fileCommands.add(new ScoreboardObjective().setDisplay("list", "Hearts"));
@@ -720,7 +720,7 @@ public class Main {
             fileCommands.add(t.add());
             fileCommands.add("team modify " + t.getName() + " color " + t.getColor());
             for (int i = 1; i < controlPoints.size() + 1; i++) {
-                fileCommands.add(new ScoreboardObjective().add("CP" + i + t.getName(), "dummy"));
+                fileCommands.add(new ScoreboardObjective().objectiveAdd("CP" + i + t.getName(), "dummy"));
             }
         }
         //end teams

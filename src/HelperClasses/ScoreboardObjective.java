@@ -34,11 +34,11 @@ public class ScoreboardObjective {
         this.displaySideBar = displaySideBar;
     }
 
-    public String add() {
+    public String objectiveAdd() {
         return "scoreboard objectives add " + name + " " + type + " " + customName;
     }
 
-    public String add(String name, String type) {
+    public String objectiveAdd(String name, String type) {
         return "scoreboard objectives add " + name + " " + type;
     }
 
@@ -48,6 +48,26 @@ public class ScoreboardObjective {
 
     public String setDisplay(String location, String name) {
         return "scoreboard objectives setdisplay " + location + " " + name;
+    }
+
+    public String get(Selector selector) {
+        return "scoreboard players get " + selector + " " + name;
+    }
+
+    public String set(Condition condition, int value) {
+        return "scoreboard players set " + condition + " " + name + " " + value;
+    }
+
+    public String add(Condition condition, int value) {
+        return "scoreboard players add " + condition + " " + name + " " + value;
+    }
+
+    public String operation(Selector selector, String score, String operator, Selector selector2, String score2) {
+        return "scoreboard players operation " + selector + " " + score + " " + operator + " " + selector2 + " " + score2;
+    }
+
+    public String reset(Selector selector) {
+        return "scoreboard players reset " + selector + " " + name;
     }
 
     public String getName() {
@@ -74,7 +94,11 @@ public class ScoreboardObjective {
         this.customName = customName;
     }
 
-    public boolean getDisplaySideBar() { return displaySideBar; }
+    public boolean getDisplaySideBar() {
+        return displaySideBar;
+    }
 
-    public void setDisplaySideBar(boolean displaySideBar) { this.displaySideBar = displaySideBar; }
+    public void setDisplaySideBar(boolean displaySideBar) {
+        this.displaySideBar = displaySideBar;
+    }
 }
