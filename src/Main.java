@@ -54,6 +54,8 @@ public class Main {
     private static final int secPerMinute = 60;
     private static final int maxCPScore = 2400;
     private static final int maxCPScoreBossbar = 20 * secPerMinute * tickPerSecond * 2;
+
+    private static final int carePackageAmount = 200;
     private int minTraitorRank;
     private static final int traitorMode = 1;
     private String communityName;
@@ -473,26 +475,27 @@ public class Main {
     }
 
     private String callFunction(FileName functionName) {
-        return "function uhc:" + functionName;
+        return callFunction("" + functionName);
     }
 
     private String callFunction(String functionName, double delayInSeconds) {
-        return "schedule function uhc:" + functionName + " " + (int) (delayInSeconds * tickPerSecond) + "t";
+        return "schedule " + callFunction(functionName) + " " + (int) (delayInSeconds * tickPerSecond) + "t";
     }
 
     private String callFunction(FileName functionName, double delayInSeconds) {
-        return "schedule function uhc:" + functionName + " " + (int) (delayInSeconds * tickPerSecond) + "t";
+        return callFunction("" + functionName, delayInSeconds);
+    }
+
+    private String clearFunction(String functionName) {
+        return "schedule clear uhc:" + functionName;
+    }
+
+    private String clearFunction(FileName functionName) {
+        return clearFunction("" + functionName);
     }
 
     private ArrayList<String> forceLoadAndSet(int x, int y, int z, String blockType) {
-        ArrayList<String> fileCommands = new ArrayList<>();
-        fileCommands.add(execute.In(Dimension.overworld) +
-                "forceload add " + x + " " + z + " " + x + " " + z);
-        fileCommands.add(execute.In(Dimension.overworld) +
-                setBlock(x, y, z, blockType));
-        fileCommands.add(execute.In(Dimension.overworld) +
-                "forceload remove " + x + " " + z + " " + x + " " + z);
-        return fileCommands;
+        return forceLoadAndSet(x, y, z, Dimension.overworld, blockType);
     }
 
     private ArrayList<String> forceLoadAndSet(int x, int y, int z, BlockType blockType) {
@@ -500,14 +503,7 @@ public class Main {
     }
 
     private ArrayList<String> forceLoadAndSet(int x, int y, int z, String blockType, SetBlockType type) {
-        ArrayList<String> fileCommands = new ArrayList<>();
-        fileCommands.add(execute.In(Dimension.overworld) +
-                "forceload add " + x + " " + z + " " + x + " " + z);
-        fileCommands.add(execute.In(Dimension.overworld) +
-                setBlock(x, y, z, blockType, type));
-        fileCommands.add(execute.In(Dimension.overworld) +
-                "forceload remove " + x + " " + z + " " + x + " " + z);
-        return fileCommands;
+        return forceLoadAndSet(x, y, z, Dimension.overworld, blockType, type);
     }
 
     private ArrayList<String> forceLoadAndSet(int x, int y, int z, BlockType blockType, SetBlockType type) {
@@ -518,8 +514,10 @@ public class Main {
         ArrayList<String> fileCommands = new ArrayList<>();
         fileCommands.add(execute.In(dimension) +
                 "forceload add " + x + " " + z + " " + x + " " + z);
-        fileCommands.add(setBlock(x, y, z, blockType));
-        fileCommands.add("forceload remove " + x + " " + z + " " + x + " " + z);
+        fileCommands.add(execute.In(dimension) +
+                setBlock(x, y, z, blockType));
+        fileCommands.add(execute.In(dimension) +
+                "forceload remove " + x + " " + z + " " + x + " " + z);
         return fileCommands;
     }
 
@@ -542,48 +540,64 @@ public class Main {
         return forceLoadAndSet(x, y, z, dimension, blockType + "", type);
     }
 
-    private String setBlock(int x, int y, int z, String blockType) {
+    private String setBlock(String x, String y, String z, String blockType) {
         return "setblock " + x + " " + y + " " + z + " " + blockType;
     }
 
+    private String setBlock(int x, int y, int z, String blockType) {
+        return setBlock("" + x, "" + y, "" + z, blockType);
+    }
+
     private String setBlock(int x, int y, int z, String blockType, SetBlockType type) {
-        return "setblock " + x + " " + y + " " + z + " " + blockType + " " + type;
+        return setBlock(x, y, z, blockType) + " " + type;
     }
 
     private String setBlock(int x, int y, int z, BlockType blockType) {
-        return "setblock " + x + " " + y + " " + z + " minecraft:" + blockType;
+        return setBlock(x, y, z, "minecraft:" + blockType);
     }
 
     private String setBlock(int x, int y, int z, BlockType blockType, SetBlockType type) {
-        return "setblock " + x + " " + y + " " + z + " minecraft:" + blockType + " " + type;
+        return setBlock(x, y, z, blockType) + " " + type;
     }
 
-    private String fill(int x1, int y1, int z1, int x2, int y2, int z2, String blockType) {
+    private String setBlockRelative(int x, int y, int z, String blockType) {
+        return setBlock("~" + x, "~" + y, "~" + z, blockType);
+    }
+
+    private String setBlockRelative(int x, int y, int z, BlockType blockType) {
+        return setBlockRelative(x, y, z, "minecraft:" + blockType);
+    }
+
+    private String fill(String x1, String y1, String z1, String x2, String y2, String z2, String blockType) {
         return "fill " + x1 + " " + y1 + " " + z1 + " " + x2 + " " + y2 + " " + z2 + " " + blockType;
     }
 
+    private String fill(int x1, int y1, int z1, int x2, int y2, int z2, String blockType) {
+        return fill("" + x1, "" + y1, "" + z1, "" + x2, "" + y2, "" + z2, blockType);
+    }
+
     private String fill(int x1, int y1, int z1, int x2, int y2, int z2, String blockType, SetBlockType type) {
-        return "fill " + x1 + " " + y1 + " " + z1 + " " + x2 + " " + y2 + " " + z2 + " " + blockType + " " + type;
+        return fill(x1, y1, z1, x2, y2, z2, blockType) + " " + type;
     }
 
     private String fill(int x1, int y1, int z1, int x2, int y2, int z2, String blockType, SetBlockType type, String blockToReplace) {
-        return "fill " + x1 + " " + y1 + " " + z1 + " " + x2 + " " + y2 + " " + z2 + " " + blockType + " " + type + " " + blockToReplace;
+        return fill(x1, y1, z1, x2, y2, z2, blockType, type) + " " + blockToReplace;
     }
 
     private String fill(int x1, int y1, int z1, int x2, int y2, int z2, BlockType blockType) {
-        return "fill " + x1 + " " + y1 + " " + z1 + " " + x2 + " " + y2 + " " + z2 + " minecraft:" + blockType;
+        return fill(x1, y1, z1, x2, y2, z2, "minecraft:" + blockType);
     }
 
     private String fill(int x1, int y1, int z1, int x2, int y2, int z2, BlockType blockType, SetBlockType type) {
-        return "fill " + x1 + " " + y1 + " " + z1 + " " + x2 + " " + y2 + " " + z2 + " minecraft:" + blockType + " " + type;
+        return fill(x1, y1, z1, x2, y2, z2, blockType) + " " + type;
     }
 
     private String fill(int x1, int y1, int z1, int x2, int y2, int z2, BlockType blockType, SetBlockType type, String blockToReplace) {
-        return "fill " + x1 + " " + y1 + " " + z1 + " " + x2 + " " + y2 + " " + z2 + " minecraft:" + blockType + " " + type + " " + blockToReplace;
+        return fill(x1, y1, z1, x2, y2, z2, blockType, type) + " " + blockToReplace;
     }
 
     private String relativeFill(int x1, int y1, int z1, int x2, int y2, int z2, String blockType, SetBlockType type, String blockToReplace) {
-        return "fill ~" + x1 + " ~" + y1 + " ~" + z1 + " ~" + x2 + " ~" + y2 + " ~" + z2 + " " + blockType + " " + type + " " + blockToReplace;
+        return fill("~" + x1, "~" + y1, "~" + z1, "~" + x2, "~" + y2, "~" + z2, blockType) + " " + type + " " + blockToReplace;
     }
 
     private String setGameRule(GameRule gamerule, boolean bool) {
@@ -701,7 +715,7 @@ public class Main {
         //end bossbar
         //teams
         for (Team t : teams) {
-            fileCommands.add("team add " + t.getName());
+            fileCommands.add(t.add());
             fileCommands.add("team modify " + t.getName() + " color " + t.getColor());
             for (int i = 1; i < controlPoints.size() + 1; i++) {
                 fileCommands.add(new ScoreboardObjective().add("CP" + i + t.getName(), "dummy"));
@@ -710,9 +724,9 @@ public class Main {
         //end teams
         //structure
         fileCommands.add(execute.In(Dimension.overworld) +
-                fill(-6, 220, -6, 6, 226, 6, "minecraft:barrier"));
+                fill(-6, 220, -6, 6, 226, 6, BlockType.barrier));
         fileCommands.add(execute.In(Dimension.overworld) +
-                fill(-5, 221, -5, 5, 226, 5, "minecraft:air"));
+                fill(-5, 221, -5, 5, 226, 5, BlockType.air));
         fileCommands.add(execute.In(Dimension.overworld) +
                 setBlock(0, 222, -5, "minecraft:oak_wall_sign[facing=south,waterlogged=false]{Color:\"black\",GlowingText:0b,Text1:'{\"clickEvent\":{\"action\":\"run_command\",\"value\":\"tp @s 5 " + (worldBottom + 5) + " 5\"},\"text\":\"\"}',Text2:'{\"text\":\"Teleport to\"}',Text3:'{\"text\":\"Command Center\"}',Text4:'{\"text\":\"\"}'}"));
         fileCommands.add(execute.In(Dimension.overworld) +
@@ -946,7 +960,7 @@ public class Main {
         fileCommands.add("effect give @a minecraft:" + Effect.regeneration + " 1 255");
         fileCommands.add("effect give @a minecraft:" + Effect.saturation + " 1 255");
         fileCommands.add("clear @a");
-        fileCommands.add("title @a title {\"text\":\"Game Starting Now!\", \"bold\":true, \"italic\":true, \"color\":\"gold\"}");
+        fileCommands.add(new Title("@a", TitleType.title, new Text(Color.gold, "Game Starting Now!", true, true)).displayTitle());
         fileCommands.add("gamemode survival @a");
         fileCommands.add(setGameRule(GameRule.sendCommandFeedback, false));
         fileCommands.add(execute.In(Dimension.overworld) +
@@ -980,10 +994,10 @@ public class Main {
 
     private FileData InitializeControlpoint() {
         ArrayList<String> fileCommands = new ArrayList<>();
-        fileCommands.add("title @a subtitle {\"text\":\"is now enabled!\", \"bold\":true, \"italic\":true, \"color\":\"light_purple\"}");
+        fileCommands.add(new Title("@a", TitleType.subtitle, new Text(Color.light_purple, "is now enabled!", true, true)).displayTitle());
         fileCommands.add(execute.In(Dimension.overworld) +
                 setBlock(7, worldBottom + 2, 0, BlockType.redstone_block, SetBlockType.replace));
-        fileCommands.add("title @a title {\"text\":\"Control Point 1\", \"bold\":true, \"italic\":true, \"color\":\"gold\"}");
+        fileCommands.add(new Title("@a", TitleType.title, new Text(Color.gold, "Control Point 1", true, true)).displayTitle());
         fileCommands.add(getBossbarByName("cp1").setVisible(true));
         fileCommands.add(getBossbarByName("cp2").setVisible(true));
         fileCommands.add(execute.In(Dimension.overworld) +
@@ -1022,7 +1036,7 @@ public class Main {
     private FileData Minute(int i) {
         ArrayList<String> fileCommands = new ArrayList<>();
         fileCommands.add("tellraw @a [\"\",{\"text\":\" ⎜ \",\"color\":\"gray\"},{\"text\":\"" + communityName + " UHC\",\"color\":\"gold\"},{\"text\":\" ⎜ \",\"color\":\"gray\"},{\"text\":\" " + i + " minute(s) remaining.\",\"color\":\"light_purple\"},{\"text\":\" ⎜ \",\"color\":\"gray\"}]");
-        fileCommands.add("title @a title {\"text\":\"" + i + " minute(s) remaining.\", \"bold\":true, \"italic\":true, \"color\":\"gold\"}");
+        fileCommands.add(new Title("@a", TitleType.title, new Text(Color.gold, i + " minute(s) remaining.", true, true)).displayTitle());
         return new FileData("" + FileName.minute_ + i, fileCommands);
     }
 
@@ -1038,8 +1052,8 @@ public class Main {
     private FileData VictoryMessage(Team team, int i) {
         ArrayList<String> fileCommands = new ArrayList<>();
         fileCommands.add("tellraw @a [\"\",{\"text\":\" | \",\"color\":\"gray\"},{\"text\":\"" + communityName + " UHC\",\"color\":\"gold\"},{\"text\":\" | \",\"color\":\"gray\"},{\"text\":\"" + team.getJSONColor() + "\",\"color\":\"" + team.getColor() + "\"},{\"text\":\" TEAM VICTORY HAS BEEN ACHIEVED! 3 MINUTES UNTIL THE FINAL DEATHMATCH\",\"color\":\"light_purple\"},{\"text\":\" | \",\"color\":\"gray\"}]");
-        fileCommands.add("title @a subtitle {\"text\":\"has been achieved!\", \"bold\":true, \"italic\":true, \"color\":\"light_purple\"}");
-        fileCommands.add("title @a title {\"text\":\"" + team.getJSONColor() + " team victory\", \"bold\":true, \"italic\":true, \"color\":\"gold\"}");
+        fileCommands.add(new Title("@a", TitleType.subtitle, new Text(Color.light_purple, "has been achieved!", true, true)).displayTitle());
+        fileCommands.add(new Title("@a", TitleType.title, new Text(Color.gold, team.getJSONColor() + " team victory", true, true)).displayTitle());
         fileCommands.add(callFunction(FileName.victory));
         return new FileData("" + FileName.victory_message_ + i, fileCommands);
     }
@@ -1047,8 +1061,8 @@ public class Main {
     private FileData VictoryTraitor() {
         ArrayList<String> fileCommands = new ArrayList<>();
         fileCommands.add("tellraw @a [\"\",{\"text\":\" ⎜ \",\"color\":\"gray\"},{\"text\":\"" + communityName + " UHC\",\"color\":\"gold\"},{\"text\":\" ⎜ \",\"color\":\"gray\"},{\"text\":\" TRAITOR VICTORY HAS BEEN ACHIEVED! 3 MINUTES UNTIL THE FINAL DEATHMATCH\",\"color\":\"light_purple\"},{\"text\":\" ⎜ \",\"color\":\"gray\"}]");
-        fileCommands.add("title @a subtitle {\"text\":\"ggez\", \"bold\":true, \"italic\":true, \"color\":\"light_purple\"}");
-        fileCommands.add("title @a title {\"text\":\"Traitors Win\", \"bold\":true, \"italic\":true, \"color\":\"gold\"}");
+        fileCommands.add(new Title("@a", TitleType.subtitle, new Text(Color.light_purple, "ggez", true, true)).displayTitle());
+        fileCommands.add(new Title("@a", TitleType.title, new Text(Color.gold, "Traitors Win", true, true)).displayTitle());
         fileCommands.add(callFunction(FileName.victory));
         return new FileData(FileName.victory_message_traitor, fileCommands);
     }
@@ -1115,8 +1129,8 @@ public class Main {
     private FileData Carepackage(CarePackage carepackage) {
         ArrayList<String> fileCommands = forceLoadAndSet(carepackage.getX(), carepackage.getY(), carepackage.getZ(), "chest{CustomName:\"\\\"" + carepackage.getDisplayName() + "\\\"\",Items:" + carepackage.getNbtTag() + "}");
 
-        fileCommands.add("title @a title {\"text\":\"" + carepackage.getDisplayName() + "!\", \"bold\":true, \"italic\":true, \"color\":\"gold\"}");
-        fileCommands.add("title @a subtitle {\"text\":\"Delivered now on the surface!\", \"bold\":true, \"italic\":true, \"color\":\"light_purple\"}");
+        fileCommands.add(new Title("@a", TitleType.title, new Text(Color.gold, carepackage.getDisplayName() + "!", true, true)).displayTitle());
+        fileCommands.add(new Title("@a", TitleType.subtitle, new Text(Color.light_purple, "Delivered now on the surface!", true, true)).displayTitle());
         fileCommands.add("give @a[gamemode=!spectator] minecraft:compass{display:{Name:\"{\\\"text\\\":\\\"" + carepackage.getDisplayName() + " available at " + carepackage.getX() + ", " + carepackage.getY() + ", " + carepackage.getZ() + "\\\"}\"}, LodestoneDimension:\"minecraft:" + Dimension.overworld + "\",LodestoneTracked:0b,LodestonePos:{X:" + carepackage.getX() + ",Y:" + carepackage.getY() + ",Z:" + carepackage.getZ() + "}}");
 
         return new FileData("" + FileName.carepackage_ + carepackage.getName(), fileCommands);
@@ -1140,10 +1154,10 @@ public class Main {
     private static FileData DropCarepackages() {
         ArrayList<String> fileCommands = new ArrayList<>();
 
-        fileCommands.add("title @a title {\"text\":\"" + "200 Supply Drops" + "!\", \"bold\":true, \"italic\":true, \"color\":\"gold\"}");
-        fileCommands.add("title @a subtitle {\"text\":\"Delivered NOW on the surface!\", \"bold\":true, \"italic\":true, \"color\":\"light_purple\"}");
+        fileCommands.add(new Title("@a", TitleType.title, new Text(Color.gold, carePackageAmount + " Supply Drops!", true, true)).displayTitle());
+        fileCommands.add(new Title("@a", TitleType.subtitle, new Text(Color.light_purple, "Delivered NOW on the surface!", true, true)).displayTitle());
 
-        for (int i = 0; i < 200; i++) {
+        for (int i = 0; i < carePackageAmount; i++) {
             fileCommands.add(execute.In(Dimension.overworld) +
                     "summon minecraft:area_effect_cloud ~ ~5 ~ {Passengers:[{id:falling_block,Time:1,DropItem:0b,BlockState:{Name:\"minecraft:chest\"},TileEntityData:{CustomName:\"\\\"Loot chest\\\"\",LootTable:\"uhc:supply_drop\"}}]}");
         }
@@ -1211,8 +1225,8 @@ public class Main {
         fileCommands.add(execute.As("@a[tag=Traitor]") +
                 "tellraw @s [\"\",{\"text\":\"You feel like betrayal today. You have become a Traitor. Your faction consists of: \",\"italic\":true,\"color\":\"red\"},{\"selector\":\"@a[tag=Traitor]\",\"italic\":true,\"color\":\"red\"},{\"text\":\".\",\"italic\":true,\"color\":\"red\"}]");
 
-        fileCommands.add("title @a title [\"\",{\"text\":\"A Traitor Faction\",\"bold\":true,\"color\":\"red\"}]");
-        fileCommands.add("title @a subtitle [\"\",{\"text\":\"has been founded!\",\"bold\":true,\"color\":\"dark_red\"}]");
+        fileCommands.add(new Title("@a",TitleType.title, new Text(Color.red,"A Traitor Faction",true,false)).displayTitle());
+        fileCommands.add(new Title("@a", TitleType.subtitle, new Text(Color.dark_red,"has been founded!", true,false)).displayTitle());
         fileCommands.add(execute.In(Dimension.overworld) +
                 setBlock(11, worldBottom + 2, 0, BlockType.redstone_block, SetBlockType.destroy));
         fileCommands.add(callFunction(FileName.traitor_check));
@@ -1221,9 +1235,14 @@ public class Main {
 
     private FileData TraitorActionBar() {
         ArrayList<String> fileCommands = new ArrayList<>();
+        ArrayList<TextItem> texts = new ArrayList<>();
+        texts.add(new Text(Color.gold,">>> ",false,false));
+        texts.add(new Text(Color.light_purple,"Traitor Faction: ",false,false));
+        texts.add(new Select("@a[tag=Traitor]"));
+        texts.add(new Text(Color.gold," <<<",false,false));
 
         fileCommands.add(execute.As("@a[tag=Traitor]") +
-                "title @s actionbar [\"\",{\"text\":\">>> \",\"color\":\"gold\"},{\"text\":\"Traitor Faction: \",\"color\":\"light_purple\"},{\"selector\":\"@a[tag=Traitor]\"},{\"text\":\" <<<\",\"color\":\"gold\"}]");
+                new Title("@s", TitleType.actionbar, texts).displayTitle());
 
         fileCommands.add(execute.If(new Selector("@p[scores={Admin=1,Victory=1}]")) +
                 callFunction(FileName.traitor_check));
@@ -1544,10 +1563,10 @@ public class Main {
                 setBlock(8, worldBottom + 2, 0, BlockType.bedrock, SetBlockType.replace));
         fileCommands.add("tellraw @a [\"\",{\"text\":\" ⎜ \",\"color\":\"gray\"},{\"text\":\"" + communityName + " UHC\",\"color\":\"gold\"},{\"text\":\" ⎜ \",\"color\":\"gray\"},{\"text\":\"The Controlpoint has been captured!\",\"color\":\"light_purple\"},{\"text\":\" ⎜ \",\"color\":\"gray\"}]");
         fileCommands.add(execute.In(Dimension.overworld) +
-                fill(15, worldBottom + 2, 3, 15, worldBottom + 2, 4, "minecraft:bedrock"));
+                fill(15, worldBottom + 2, 3, 15, worldBottom + 2, 4, BlockType.bedrock));
 
-        fileCommands.add("title @a subtitle {\"text\":\"has been captured!\", \"bold\":true, \"italic\":true, \"color\":\"light_purple\"}");
-        fileCommands.add("title @a title {\"text\":\"The Controlpoint\", \"bold\":true, \"italic\":true, \"color\":\"gold\"}");
+        fileCommands.add(new Title("@a", TitleType.subtitle, new Text(Color.light_purple, "has been captured!", true, true)).displayTitle());
+        fileCommands.add(new Title("@a", TitleType.title, new Text(Color.gold, "The Controlpoint", true, true)).displayTitle());
 
         fileCommands.add(callFunction(FileName.teams_highscore_alive_check));
 
@@ -1609,9 +1628,9 @@ public class Main {
 
     private FileData ClearSchedule() {
         ArrayList<String> fileCommands = new ArrayList<>();
-        fileCommands.add("schedule clear uhc:minute_2");
-        fileCommands.add("schedule clear uhc:minute_1");
-        fileCommands.add("schedule clear uhc:death_match");
+        fileCommands.add(clearFunction(FileName.minute_ + "2"));
+        fileCommands.add(clearFunction(FileName.minute_ + "1"));
+        fileCommands.add(clearFunction(FileName.death_match));
 
         return new FileData(FileName.clear_schedule, fileCommands);
     }
@@ -1635,7 +1654,7 @@ public class Main {
 
     private FileData UnleashLava() {
         ArrayList<String> fileCommands = new ArrayList<>();
-        fileCommands.add("setblock ~ ~-1 ~ minecraft:lava");
+        fileCommands.add(setBlockRelative(0, -1, 0, BlockType.lava));
 
         return new FileData(FileName.unleash_lava, fileCommands);
     }

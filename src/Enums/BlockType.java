@@ -8,4 +8,6 @@ public enum BlockType {
     glass,
     bedrock,
     ice,
+    barrier,
+    lava
 }
