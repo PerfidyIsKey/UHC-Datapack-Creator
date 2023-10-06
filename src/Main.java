@@ -603,7 +603,15 @@ public class Main {
     }
 
     private String setGameRule(GameRule gamerule, boolean bool) {
-        return "gamerule " + gamerule + " " + bool;
+        return setGameRule(gamerule, "" + bool);
+    }
+
+    private String setGameRule(GameRule gamerule, int num) {
+        return setGameRule(gamerule, "" + num);
+    }
+
+    private String setGameRule(GameRule gamerule, String string) {
+        return "gamerule " + gamerule + " " + string;
     }
 
     private String playSound(Sound sound, SoundSource source, String entity, String x, String y, String z, String x1, String y1, String z1) {
@@ -919,7 +927,7 @@ public class Main {
 
         ArrayList<TextItem> texts = new ArrayList<>();
         texts.add(bannerText);
-        texts.add(new Text(Color.gold, true, false, communityName+ " UHC"));
+        texts.add(new Text(Color.gold, true, false, communityName + " UHC"));
         texts.add(bannerText);
         texts.add(new Text(Color.light_purple, true, false, "PREDICTIONS COMPLETED"));
         texts.add(bannerText);
@@ -1039,7 +1047,7 @@ public class Main {
 
         ArrayList<TextItem> texts = new ArrayList<>();
         texts.add(bannerText);
-        texts.add(new Text(Color.gold, true, false, communityName+ " UHC"));
+        texts.add(new Text(Color.gold, true, false, communityName + " UHC"));
         texts.add(bannerText);
         texts.add(new Text(Color.light_purple, true, false, "CONTROL POINT 2 IS NOW AVAILABLE!"));
         texts.add(bannerText);
@@ -1060,7 +1068,7 @@ public class Main {
         ArrayList<String> fileCommands = new ArrayList<>();
         ArrayList<TextItem> texts = new ArrayList<>();
         texts.add(bannerText);
-        texts.add(new Text(Color.gold, true, false, communityName+ " UHC"));
+        texts.add(new Text(Color.gold, true, false, communityName + " UHC"));
         texts.add(bannerText);
         texts.add(new Text(Color.light_purple, true, false, i + " minute(s) remaining"));
         texts.add(bannerText);
@@ -1083,7 +1091,7 @@ public class Main {
         ArrayList<String> fileCommands = new ArrayList<>();
         ArrayList<TextItem> texts = new ArrayList<>();
         texts.add(bannerText);
-        texts.add(new Text(Color.gold, true, false, communityName+ " UHC"));
+        texts.add(new Text(Color.gold, true, false, communityName + " UHC"));
         texts.add(bannerText);
         texts.add(new Text(team.getColor(), true, false, team.getJSONColor()));
         texts.add(new Text(Color.light_purple, true, false, " TEAM VICTORY HAS BEEN ACHIEVED! 3 MINUTES UNTIL THE FINAL DEATHMATCH"));
@@ -1100,7 +1108,7 @@ public class Main {
         ArrayList<String> fileCommands = new ArrayList<>();
         ArrayList<TextItem> texts = new ArrayList<>();
         texts.add(bannerText);
-        texts.add(new Text(Color.gold, true, false, communityName+ " UHC"));
+        texts.add(new Text(Color.gold, true, false, communityName + " UHC"));
         texts.add(bannerText);
         texts.add(new Text(Color.light_purple, true, false, " TRAITOR VICTORY HAS BEEN ACHIEVED! 3 MINUTES UNTIL THE FINAL DEATHMATCH"));
         texts.add(bannerText);
@@ -1147,7 +1155,7 @@ public class Main {
 
         ArrayList<TextItem> texts = new ArrayList<>();
         texts.add(bannerText);
-        texts.add(new Text(Color.gold, true, false, communityName+ " UHC"));
+        texts.add(new Text(Color.gold, true, false, communityName + " UHC"));
         texts.add(bannerText);
         texts.add(new Text(Color.light_purple, true, false, "A PLAYER IS ATTACKING CONTROL POINT " + i + "!"));
         texts.add(bannerText);
@@ -1167,7 +1175,7 @@ public class Main {
 
         ArrayList<TextItem> texts2 = new ArrayList<>();
         texts2.add(bannerText);
-        texts2.add(new Text(Color.gold, true, false, communityName+ " UHC"));
+        texts2.add(new Text(Color.gold, true, false, communityName + " UHC"));
         texts2.add(bannerText);
         texts2.add(new Text(Color.light_purple, true, false, "A PLAYER HAS LEFT CONTROL POINT " + i));
         texts2.add(bannerText);
@@ -1289,8 +1297,8 @@ public class Main {
         fileCommands.add(execute.As("@a[tag=Traitor]") +
                 new TellRaw("@s", texts).sendRaw());
 
-        fileCommands.add(new Title("@a",TitleType.title, new Text(Color.red,true,false,"A Traitor Faction")).displayTitle());
-        fileCommands.add(new Title("@a", TitleType.subtitle, new Text(Color.dark_red, true,false,"has been founded!")).displayTitle());
+        fileCommands.add(new Title("@a", TitleType.title, new Text(Color.red, true, false, "A Traitor Faction")).displayTitle());
+        fileCommands.add(new Title("@a", TitleType.subtitle, new Text(Color.dark_red, true, false, "has been founded!")).displayTitle());
         fileCommands.add(execute.In(Dimension.overworld) +
                 setBlock(11, worldBottom + 2, 0, BlockType.redstone_block, SetBlockType.destroy));
         fileCommands.add(callFunction(FileName.traitor_check));
@@ -1300,10 +1308,10 @@ public class Main {
     private FileData TraitorActionBar() {
         ArrayList<String> fileCommands = new ArrayList<>();
         ArrayList<TextItem> texts = new ArrayList<>();
-        texts.add(new Text(Color.gold,false,false,">>> "));
-        texts.add(new Text(Color.light_purple,false,false,"Traitor Faction: "));
-        texts.add(new Select(Color.red,false,false,"@a[tag=Traitor]"));
-        texts.add(new Text(Color.gold,false,false," <<<"));
+        texts.add(new Text(Color.gold, false, false, ">>> "));
+        texts.add(new Text(Color.light_purple, false, false, "Traitor Faction: "));
+        texts.add(new Select(Color.red, false, false, "@a[tag=Traitor]"));
+        texts.add(new Text(Color.gold, false, false, " <<<"));
 
         fileCommands.add(execute.As("@a[tag=Traitor]") +
                 new Title("@s", TitleType.actionbar, texts).displayTitle());
@@ -1503,11 +1511,11 @@ public class Main {
 
 
         fileCommands.add(execute.If(new Selector("@p[scores={Time2=" + (300 * tickPerSecond) + "}]")) +
-                new TellRaw("@a", new Text(Color.gray, false,false,"PVP IS NOT ALLOWED UNTIL DAY 2!")).sendRaw());
+                new TellRaw("@a", new Text(Color.gray, false, false, "PVP IS NOT ALLOWED UNTIL DAY 2!")).sendRaw());
 
         ArrayList<TextItem> texts = new ArrayList<>();
         texts.add(bannerText);
-        texts.add(new Text(Color.gold, true, false, communityName+ " UHC"));
+        texts.add(new Text(Color.gold, true, false, communityName + " UHC"));
         texts.add(bannerText);
         texts.add(new Text(Color.light_purple, true, false, "DAY TIME HAS ARRIVED & ETERNAL DAY ENABLED!"));
         texts.add(bannerText);
@@ -1583,7 +1591,7 @@ public class Main {
         for (int i = 0; i < 36; i++) {
             int index = (int) (Math.random() * quotes.size());
             fileCommands.add(execute.If(new Selector("@p[scores={Time2=" + (7 * secPerMinute * tickPerSecond * (i + 1)) + "}]")) +
-                    new TellRaw("@a", new Text(Color.white, false, false,quotes.get(index))).sendRaw());
+                    new TellRaw("@a", new Text(Color.white, false, false, quotes.get(index))).sendRaw());
             quotes.remove(index);
         }
 
@@ -1644,7 +1652,7 @@ public class Main {
 
         ArrayList<TextItem> texts = new ArrayList<>();
         texts.add(bannerText);
-        texts.add(new Text(Color.gold, true, false, communityName+ " UHC"));
+        texts.add(new Text(Color.gold, true, false, communityName + " UHC"));
         texts.add(bannerText);
         texts.add(new Text(Color.light_purple, true, false, "The Controlpoint has been captured!"));
         texts.add(bannerText);
