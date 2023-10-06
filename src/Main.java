@@ -421,7 +421,7 @@ public class Main {
         // Loot table items
         lootEntry.add(new LootTableEntry(17, "egg"));
         lootEntry.add(new LootTableEntry(17, "ladder", new LootTableFunction(10)));
-        lootEntry.add(new LootTableEntry(17, "stick", new LootTableFunction(8)));
+        lootEntry.add(new LootTableEntry(15, "stick", new LootTableFunction(8)));
         lootEntry.add(new LootTableEntry(15, "diorite", new LootTableFunction(16)));
         lootEntry.add(new LootTableEntry(15, "amethyst_block", new LootTableFunction(16)));
         lootEntry.add(new LootTableEntry(15, "iron_ingot", new LootTableFunction(8)));
@@ -429,9 +429,9 @@ public class Main {
         lootEntry.add(new LootTableEntry(11, "bone", new LootTableFunction(3, 0.4)));
         lootEntry.add(new LootTableEntry(10, "copper_block", new LootTableFunction(16)));
         lootEntry.add(new LootTableEntry(10, "bread", new LootTableFunction(5)));
+        lootEntry.add(new LootTableEntry(10, "cobweb", new LootTableFunction(2, 0.4)));
         lootEntry.add(new LootTableEntry(8, "fishing_rod"));
         lootEntry.add(new LootTableEntry(8, "obsidian", new LootTableFunction(4)));
-        lootEntry.add(new LootTableEntry(8, "cobweb", new LootTableFunction(2, 0.4)));
         lootEntry.add(new LootTableEntry(7, "glass", new LootTableFunction(3)));
         lootEntry.add(new LootTableEntry(7, "melon_slice", new LootTableFunction(3, 0.4)));
         lootEntry.add(new LootTableEntry(5, "tnt", new LootTableFunction(4)));
@@ -689,7 +689,7 @@ public class Main {
         files.add(UpdateMineCount());
         files.add(ResetRespawnHealth());
         files.add(UpdateMinHealth());
-        files.add(SpawnNetherPortal());
+        //files.add(SpawnNetherPortal());
         files.add(ClearSchedule());
         files.add(LocateTeammate());
         files.add(UnleashLava());
@@ -897,9 +897,6 @@ public class Main {
         for (int i = 0; i < 4; i++) {
             fileCommands.add("tag @a remove ReceivedPerk" + (i + 1));
         }
-        fileCommands.add(execute.In(Dimension.overworld) +
-                fill(netherPortal.getX() - 1, netherPortal.getY(), netherPortal.getZ(), netherPortal.getX() + 2, netherPortal.getY() + 4, netherPortal.getZ(), BlockType.bedrock, SetBlockType.replace));
-
 
         //for (CarePackage carepackage : carePackages) {
         //    fileCommands.addAll(forceLoadAndSet(carepackage.getX(), carepackage.getY(), carepackage.getZ(), BlockType.air, SetBlockType.replace));
@@ -997,7 +994,7 @@ public class Main {
         fileCommands.add("advancement revoke @a everything");
         fileCommands.add("xp set @a 0 points");
         fileCommands.add("scoreboard players set @p[scores={Admin=1}] Victory 1");
-        fileCommands.add("give @a minecraft:compass{tag:LocateTeammate}");
+        fileCommands.add("give @a minecraft:bundle{tag:LocateTeammate}");
         //fileCommands.add("execute as @a at @s run function uhc:give_instructions");
 
         return new FileData(FileName.start_game, fileCommands);
@@ -1033,7 +1030,6 @@ public class Main {
         fileCommands.add(execute.In(Dimension.overworld) +
                 setBlock(15, worldBottom + 2, 10, BlockType.redstone_block, SetBlockType.replace));
         fileCommands.add(setGameRule(GameRule.doDaylightCycle, false));
-        fileCommands.add(callFunction(FileName.spawn_nether_portal));
 
         return new FileData(FileName.initialize_controlpoint, fileCommands);
     }
@@ -1129,8 +1125,6 @@ public class Main {
         fileCommands.add(execute.In(Dimension.overworld) +
                 "spreadplayers 0 0 75 150 true @a[gamemode=!spectator]");
         fileCommands.add(getBossbarByName("cp").setVisible(false));
-        fileCommands.add(execute.In(Dimension.overworld) +
-                fill(netherPortal.getX() - 1, netherPortal.getY(), netherPortal.getZ(), netherPortal.getX() + 2, netherPortal.getY() + 4, netherPortal.getZ(), BlockType.bedrock, SetBlockType.replace));
 
         return new FileData(FileName.death_match, fileCommands);
     }
@@ -1416,16 +1410,13 @@ public class Main {
         fileCommands.add("scoreboard players add @a[gamemode=creative] Time 1");
         fileCommands.add(execute.If(new Selector("@p[scores={WorldLoad=400..}]")) +
                 "spreadplayers 0 0 5 750 false @a");
-        fileCommands.add(execute.If(new Selector("@p[scores={Time=12000..12020}]"), false) +
-                execute.InNext(Dimension.the_nether, true) +
-                "tp @a[gamemode=creative] 0 80 0");
-        fileCommands.add(execute.If(new Selector("@p[scores={Time=24000..}]"), false) +
+        fileCommands.add(execute.If(new Selector("@p[scores={Time=12000..}]"), false) +
                 execute.InNext(Dimension.overworld, true) +
                 setBlock(6, worldBottom + 2, 15, BlockType.bedrock));
-        fileCommands.add(execute.If(new Selector("@p[scores={Time=24000..}]"), false) +
+        fileCommands.add(execute.If(new Selector("@p[scores={Time=12000..}]"), false) +
                 execute.InNext(Dimension.overworld, true) +
                 "tp @a[gamemode=creative] 0 221 0");
-        fileCommands.add(execute.If(new Selector("@p[scores={Time=24000..}]")) +
+        fileCommands.add(execute.If(new Selector("@p[scores={Time=12000..}]")) +
                 setGameRule(GameRule.commandBlockOutput, true));
         fileCommands.add(execute.If(new Selector("@p[scores={WorldLoad=400..}]")) +
                 "scoreboard players reset @a WorldLoad");
@@ -1735,7 +1726,7 @@ public class Main {
         ArrayList<String> fileCommands = new ArrayList<>();
         for (Team team : teams) {
             for (int i = 0; i < 3; i++) {
-                fileCommands.add(execute.As("@a[team=" + team.getName() + ",nbt={SelectedItem:{id:\"minecraft:compass\",tag:{tag:LocateTeammate}}}]", false) +
+                fileCommands.add(execute.As("@a[team=" + team.getName() + ",nbt={SelectedItem:{id:\"minecraft:bundle\",tag:{tag:LocateTeammate}}}]", false) +
                         execute.AtNext("@s") +
                         execute.IfNext(new Selector("@a[team=" + team.getName() + ",distance=0.1..,gamemode=!spectator]")) +
                         execute.FacingNext(new Selector("@a[team=" + team.getName() + ",distance=0.1..,gamemode=!spectator,limit=1,sort=nearest]"), EntityAnchor.eyes) +
