@@ -2,6 +2,7 @@ import Enums.*;
 import FileGeneration.*;
 import HelperClasses.*;
 
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -19,23 +20,23 @@ public class Main {
     FileTools fileTools;
 
     //DatapackData<
-    private GameMode gameMode = GameMode.DIORITE_EXPERTS;
 
-    private String uhcNumber;
+    private String uhcNumber = "s50";
     private static final String version = "3.0";
     private String userFolder;
     private String worldName;
     private String dataPackLocation;
     private String worldLocation;
     private String dataPackName;
-    private String fileLocation;
 
+    private String fileLocation;
+    private GameMode gameMode = GameMode.DIORITE;
     //DatapackData>
 
     //GameData<
     private static final int chestSize = 27;
     private static final String commandCenter = "s46";
-    private String admin;
+    private String admin = "Snodog627";
     private Coordinate startCoordinates;
     private Coordinate netherPortal;
     private ArrayList<Team> teams = new ArrayList<>();
@@ -71,87 +72,75 @@ public class Main {
 
     private void run() {
 
+        gameModeChange();
+        createDatapack();
         boolean menuRunning = true;
         Scanner scanner = new Scanner(System.in);
         String input;
-        initSaveDir();
-
-        fileTools = new FileTools(version, dataPackLocation, dataPackName, worldLocation);
-
-        initGameData();
-        makeFunctionFiles();
-        files.addAll(fileTools.makeRecipeFiles());
-        makeLootTableFiles();
-        System.out.println("Files available:\n");
-        for (FileData data : files) {
-            System.out.println(data.getName());
-        }
-        System.out.println("\n-----------------");
+        System.out.println("-----------------\n");
         while (menuRunning) {
+            System.out.println("Datapack created under Gamemode: " + gameMode);
+            System.out.println("Options:\n");
+            System.out.println("Change Gamemode (c[n])");
+            System.out.println("Re-run (r)");
+            System.out.println("-----------------");
             System.out.print("> ");
             input = scanner.nextLine();
             if (input.equals("exit")) {
                 menuRunning = false;
                 System.out.println("Exiting System.");
-            } else if (input.startsWith("update ")) {
-                String command = input.replace("update ", "");
-                if (command.equals("all")) {
-                    fileTools.updateAllFiles(files, fileLocation);
-                } else {
-                    for (FileData f : files) {
-                        if (f.getNameWithoutExtension().equals(command)) {
-                            try {
-                                fileTools.writeFile(f, fileLocation);
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    }
-                }
-            } else if (input.startsWith("type ")) {
-                String command = input.replace("type ", "");
+            } else if (input.startsWith("c")) {
+                String command = input.replace("c", "");
                 int num = parseInt(command);
-                if (num == 0) {
-                    gameMode = GameMode.DIORITE_EXPERTS;
-                }
-                if (num == 1) {
-                    gameMode = GameMode.UNIVERSITY_RACING_EINDHOVEN;
-                }
-                if (num == 2) {
-                    gameMode = GameMode.KINJIN;
-                }
-                System.out.println("Set gameMode to " + gameMode);
-            } else if (input.equals("create datapack")) {
-                try {
-                    fileTools.createDatapack(files, fileLocation);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                changeGamemode(num);
+                createDatapack();
+            } else if (input.equals("r")) {
+                createDatapack();
             } else {
                 System.out.println("Input not recognized.");
             }
         }
     }
 
-    private void initSaveDir() {
-        switch (gameMode) {
-            case DIORITE_EXPERTS:
-                uhcNumber = "S50";
-
-                admin = "Snodog627";
-                break;
-            case UNIVERSITY_RACING_EINDHOVEN:
-                uhcNumber = "URE6";
-
-                admin = "Snodog627";
-                break;
-
-            case KINJIN:
-                uhcNumber = "KJ1";
-
-                admin = "Snodog627";
-                break;
+    private void changeGamemode(int num) {
+        if (num == 0) {
+            gameMode = GameMode.DIORITE;
         }
+        if (num == 1) {
+            gameMode = GameMode.URE;
+        }
+        if (num == 2) {
+            gameMode = GameMode.KINJIN;
+        }
+
+        gameModeChange();
+    }
+
+
+    private void createDatapack() {
+        try {
+            fileTools.createDatapack(files, fileLocation);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void gameModeChange() {
+        initSaveDir();
+        fileTools = new FileTools(version, dataPackLocation, dataPackName, worldLocation);
+
+        initGameData();
+        makeFunctionFiles();
+        files.addAll(fileTools.makeRecipeFiles());
+        makeLootTableFiles();
+    }
+
+    private void initSaveDir() {
+        if(fileTools == null) {
+            fileTools = new FileTools();
+        }
+        uhcNumber = fileTools.getContentOutOfFile("Files\\" + gameMode + "\\uhc_data.txt", "uhcNumber");
+        admin = fileTools.getContentOutOfFile("Files\\" + gameMode + "\\uhc_data.txt", "admin");
 
         worldLocation = "Server\\world\\";
 
@@ -182,184 +171,30 @@ public class Main {
         bossBars.add(new BossBar("cp2"));
         bossBars.add(new BossBar("carepackage"));
 
-        switch (gameMode) {
-            case DIORITE_EXPERTS:
-                startCoordinates = new Coordinate(0, 73, 0);
-                netherPortal = new Coordinate(5, 71, -11);
-                minTraitorRank = 30;
-                communityName = "THE DIORITE EXPERTS";
+        // Data
+        String[] splitStartCoordinates = fileTools.splitLineOnComma(fileTools.getContentOutOfFile("Files\\" + gameMode + "\\uhc_data.txt", "startCoordinates"));
+        startCoordinates = new Coordinate(Integer.parseInt(splitStartCoordinates[0]), Integer.parseInt(splitStartCoordinates[1]), Integer.parseInt(splitStartCoordinates[2]));
+        String[] splitNetherPortal = fileTools.splitLineOnComma(fileTools.getContentOutOfFile("Files\\" + gameMode + "\\uhc_data.txt", "netherPortal"));
+        netherPortal = new Coordinate(Integer.parseInt(splitNetherPortal[0]), Integer.parseInt(splitNetherPortal[1]), Integer.parseInt(splitNetherPortal[2]));
+        minTraitorRank = Integer.parseInt(fileTools.getContentOutOfFile("Files\\" + gameMode + "\\uhc_data.txt", "minTraitorRank"));
+        communityName = fileTools.getContentOutOfFile("Files\\" + gameMode + "\\uhc_data.txt", "communityName");
 
-                cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, -85, 57, -519, Biome.plains));
-                cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, 78, 62, -271, Biome.river));
-                cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, 11, 69, -154, Biome.forest));
-                cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, -71, 79, -49, Biome.cave));
-                cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, -281, 128, -314, Biome.forest));
-                cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, -125, 108, 52, Biome.plains));
-                cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, 293, 69, -165, Biome.beach));
-
-
-                /*// Control point
-                cp1.setX(-2);
-                cp1.setY(66);
-                cp1.setZ(230);
-
-                cp2.setX(127);
-                cp2.setY(63);
-                cp2.setZ(214);
-
-                controlPoints.add(cp1);
-                controlPoints.add(cp2);*/
-
-                // Care Packages
-                carePackage2.setX(59);
-                carePackage2.setY(76);
-                carePackage2.setZ(142);
-                //carePackages.add(carePackage2);
-
-                // Players
-                players.add(new Player("Snodog627", 101));
-                players.add(new Player("Mr9Madness", 72));
-                players.add(new Player("Tiba101", 0));
-                players.add(new Player("W0omy", 9));
-                players.add(new Player("Kalazniq", 51));
-                players.add(new Player("Vladik71", 54));
-                players.add(new Player("Smashking242", 2));
-                players.add(new Player("Pfalz_", 1));
-                players.add(new Player("ThurianBodan", 17));
-                players.add(new Player("PerfidyIsKey", 67));
-                players.add(new Player("jonmo0105", 26));
-                players.add(new Player("TheDinoGame", 167, true));
-                players.add(new Player("BAAPABUGGETS", 2));
-                players.add(new Player("Th3Flash05", 51));
-                players.add(new Player("viccietors", 37));
-                players.add(new Player("Rayqson", 9));
-                players.add(new Player("_HexGamer", 105, true));
-                players.add(new Player("Bobdafish", 61));
-                players.add(new Player("Alanaenae", 0));
-                players.add(new Player("jk20028", 15));
-                players.add(new Player("N_G0n", 3));
-                players.add(new Player("SpookySpiker", 54));
-                players.add(new Player("Clockweiz", 5));
-                players.add(new Player("Eason950116", 9));
-                players.add(new Player("CorruptUncle", 40));
-                players.add(new Player("Pimmie36", 42));
-                players.add(new Player("Jayroon123", 0));
-                players.add(new Player("PbQuinn", 25));
-                players.add(new Player("Vermeil_Chan", 14));
-                players.add(new Player("Jobbo2002", 8));
-                players.add(new Player("Uncle_Lolly", 3));
-                players.add(new Player("AurqSnqtcher", 20));
-                players.add(new Player("cat_person", 23));
-                players.add(new Player("GoldBard2474348", 18));
-                players.add(new Player("CrimsonCid", 10));
-                players.add(new Player("ICEturbo", 80));
-                players.add(new Player("TheTolstar", 21));
-                players.add(new Player("NekoBotUwU", 38));
-
-                quotes = fileTools.GetLinesFromFile("Files\\Diorite\\quotes.txt");
-
-                break;
-            case UNIVERSITY_RACING_EINDHOVEN:
-                startCoordinates = new Coordinate(0, 165, 0);
-                netherPortal = new Coordinate(15, 148, -14);
-                minTraitorRank = 1;
-                communityName = "UNIVERSITY RACING EINDHOVEN";
-
-                /*// Control point
-                cp1.setX(-2);
-                cp1.setY(160);
-                cp1.setZ(-65);
-
-                cp2.setX(213);
-                cp2.setY(141);
-                cp2.setZ(227);
-                controlPoints.add(cp1);
-                controlPoints.add(cp2);*/
-
-                cpList.add(new ControlPoint("CP1", maxCPScoreBossbar, 2, -2, 160, -65, Biome.jagged_peaks));
-                cpList.add(new ControlPoint("CP1", maxCPScoreBossbar, 2, -33, 93, 152, Biome.taiga));
-                cpList.add(new ControlPoint("CP1", maxCPScoreBossbar, 2, 55, 97, -199, Biome.cave));
-                cpList.add(new ControlPoint("CP1", maxCPScoreBossbar, 2, 242, 94, -149, Biome.cave));
-                cpList.add(new ControlPoint("CP2", maxCPScoreBossbar, 3, 213, 141, 227, Biome.grove));
-                cpList.add(new ControlPoint("CP2", maxCPScoreBossbar, 3, -207, 103, -159, Biome.forest));
-                cpList.add(new ControlPoint("CP2", maxCPScoreBossbar, 3, 167, 144, -139, Biome.grove));
-                cpList.add(new ControlPoint("CP2", maxCPScoreBossbar, 3, -19, 97, 68, Dimension.the_nether, Biome.nether_wastes));
-
-
-                /*// Care package
-                carePackage2.setX(61);
-                carePackage2.setY(155);
-                carePackage2.setZ(-6);*/
-                //carePackages.add(carePackage2);
-
-                // Players
-                players.add(new Player("Bertje13", 0));
-                players.add(new Player("Lefke67", 7));
-                players.add(new Player("SpookySpiker", 14));
-                players.add(new Player("joep359", 45));
-                players.add(new Player("Snodog627", 164));
-                players.add(new Player("Mafkees__10", 78));
-                players.add(new Player("woutje33", 64));
-                players.add(new Player("CorruptUncle", 44));
-                players.add(new Player("Luuk", 2));
-                players.add(new Player("sepertibos", 5));
-                players.add(new Player("Clik_clak", 8));
-                players.add(new Player("HumblesBumblesV2", 9));
-                players.add(new Player("RoyalGub", 19));
-                players.add(new Player("Chrissah58", 13));
-                players.add(new Player("TNTbuilder21", 40));
-                players.add(new Player("Pimmie36", 68));
-                players.add(new Player("lenschoenie98", 46));
-                players.add(new Player("PbQuinn", 24));
-                players.add(new Player("Luc_B21", 5));
-                players.add(new Player("Captain_Kills", 4));
-                players.add(new Player("Chassisboy16", 15));
-                players.add(new Player("Jayrooninator", 24));
-                players.add(new Player("JD329", 15));
-                players.add(new Player("maxim_rongen", 25));
-                players.add(new Player("URE16Noah", 45));
-                players.add(new Player("Jobbo2002", 116));
-                players.add(new Player("Gladde_Paling1", 41));
-                players.add(new Player("Elenbaas", 8));
-
-                // Quotes
-                quotes = fileTools.GetLinesFromFile("Files\\URE\\quotes.txt");
-
-                break;
-
-            case KINJIN:
-                startCoordinates = new Coordinate(0, 64, 0);
-                netherPortal = new Coordinate(-3, 64, 1);
-                minTraitorRank = 50;
-                communityName = "KINJIN";
-
-                cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, -72, 64, -63, Biome.jungle));
-                cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, 214, 65, -207, Biome.sparse_jungle));
-                cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, 76, 69, 83, Biome.old_growth_birch_forest));
-                cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, -172, 75, 100, Biome.old_growth_birch_forest));
-                cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, -213, 80, -143, Biome.sparse_jungle));
-                cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, 27, 46, -153, Biome.cave));
-                cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, 84, 62, -92, Biome.river));
-
-                // Players
-                players.add(new Player("Snodog627", 114));
-                players.add(new Player("Infima", 8));
-                players.add(new Player("Thatepicpotato", 71));
-                players.add(new Player("Joker447xd9", 18));
-                players.add(new Player("ICEturbo", 21));
-                players.add(new Player("mrtkrl", 13));
-                players.add(new Player("Maurcy", 38));
-                players.add(new Player("Correawesome", 16));
-                players.add(new Player("thekillertb", 0));
-                players.add(new Player("Greyhalfbuster", 17));
-                players.add(new Player("xPromachos", 10));
-                players.add(new Player("BorisBeast", 5));
-
-                // Quotes
-                quotes = fileTools.GetLinesFromFile("Files\\Kinjin\\quotes.txt");
-
-                break;
+        // ControlPoints
+        ArrayList<String> controlPointString = fileTools.GetLinesFromFile("Files\\" + gameMode + "\\controlPoints.txt");
+        for (String controlPoint : controlPointString) {
+            String[] controlPointSplit = fileTools.splitLineOnComma(controlPoint);
+            cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, Integer.parseInt(controlPointSplit[0]), Integer.parseInt(controlPointSplit[1]), Integer.parseInt(controlPointSplit[2]), Biome.valueOf(controlPointSplit[3])));
         }
+
+        // Players
+        ArrayList<String> playersString = fileTools.GetLinesFromFile("Files\\" + gameMode + "\\players.txt");
+        for (String player : playersString) {
+            String[] playerSplit = fileTools.splitLineOnComma(player);
+            players.add(new Player(playerSplit[0], Integer.parseInt(playerSplit[1]), Boolean.parseBoolean(playerSplit[2])));
+        }
+
+        // Quotes
+        quotes = fileTools.GetLinesFromFile("Files\\" + gameMode + "\\quotes.txt");
 
         int[] addRates = {2, 3};
         Collections.shuffle(cpList);

@@ -19,7 +19,9 @@ public class FileTools {
     private String dataPackName;
     private String worldLocation;
 
-    public FileTools (String version, String dataPackLocation, String dataPackName, String worldLocation) {
+    public FileTools(){};
+
+    public FileTools(String version, String dataPackLocation, String dataPackName, String worldLocation) {
         this.version = version;
         this.dataPackLocation = dataPackLocation;
         this.dataPackName = dataPackName;
@@ -95,8 +97,7 @@ public class FileTools {
 
         int counter = 1;
         int totalWeight = 0;
-        for (LootTableEntry l : lootEntry)
-        {
+        for (LootTableEntry l : lootEntry) {
             fileCommands.add("        {");
             fileCommands.add("          \"type\": \"minecraft:item\",");
             fileCommands.add("          \"weight\": " + l.getWeight() + ",");
@@ -113,23 +114,18 @@ public class FileTools {
                     fileCommands.add("                  \"chance\": " + l.getFunction().getChance());
                     fileCommands.add("                }");
                     fileCommands.add("              ]");
-                }
-                else
-                {
+                } else {
                     fileCommands.add("              \"count\": " + l.getFunction().getCount());
                 }
                 fileCommands.add("            }");
                 fileCommands.add("          ]");
-            }
-            else
-            {
+            } else {
                 fileCommands.add("          \"name\": \"minecraft:" + l.getName() + "\"");
             }
             if (counter < lootEntry.size()) {
                 fileCommands.add("        },");
                 counter++;
-            }
-            else {
+            } else {
                 fileCommands.add("        }");
             }
             totalWeight += l.getWeight();
@@ -152,31 +148,27 @@ public class FileTools {
                         if (i == 0) {
                             currentWeight = l.getWeight() * l.getFunction().getChance();
                             name = l.getName() + " x" + l.getFunction().getCount();
-                            dispWeight = currentWeight/sumWeight*100;
+                            dispWeight = currentWeight / sumWeight * 100;
                             checkWeight += dispWeight;
                             fileCommands.add("# Weight " + name + " = " + dispWeight + "%");
-                        }
-                        else {
+                        } else {
                             currentWeight = l.getWeight() * (1 - l.getFunction().getChance());
                             name = l.getName() + " x1";
-                            dispWeight = currentWeight/sumWeight*100;
+                            dispWeight = currentWeight / sumWeight * 100;
                             checkWeight += dispWeight;
                             fileCommands.add("# Weight " + name + " = " + dispWeight + "%");
                         }
                     }
-                }
-
-                else {
+                } else {
                     currentWeight = l.getWeight();
-                    dispWeight = currentWeight/sumWeight*100;
+                    dispWeight = currentWeight / sumWeight * 100;
                     checkWeight += dispWeight;
                     name = l.getName() + " x" + l.getFunction().getCount();
                     fileCommands.add("# Weight " + name + " = " + dispWeight + "%");
                 }
-            }
-            else {
+            } else {
                 currentWeight = l.getWeight();
-                dispWeight = currentWeight/sumWeight*100;
+                dispWeight = currentWeight / sumWeight * 100;
                 checkWeight += dispWeight;
                 name = l.getName() + " x1";
                 fileCommands.add("# Weight " + name + " = " + dispWeight + "%");
@@ -202,6 +194,21 @@ public class FileTools {
             e.printStackTrace();
         }
         return fileLines;
+    }
+
+    public String getContentOutOfFile(String pathName, String rowName) {
+        ArrayList<String> lines = GetLinesFromFile(pathName);
+        for (String line : lines) {
+            if(line.startsWith(rowName)) {
+                line = line.replace(rowName + ':', "");
+                return line;
+            }
+        }
+        return "";
+    }
+
+    public String[] splitLineOnComma(String line) {
+        return line.split(",");
     }
 
     public void createDatapack(ArrayList<FileData> files, String fileLocation) throws IOException {
@@ -258,15 +265,15 @@ public class FileTools {
                     Path destination = Paths.get(destinationDirectoryLocation, source.toString()
                             .substring(sourceDirectoryLocation.length()));
 
+                    try {
                         try {
-                            try {
                             Files.copy(source, destination);
-                            }catch (FileAlreadyExistsException e) {
-                                System.out.println("File already exists at location");
-                            }
-                        } catch (IOException e) {
-                            e.printStackTrace();
+                        } catch (FileAlreadyExistsException e) {
+                            System.out.println("File already exists at location");
                         }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
 
                 });
     }
@@ -288,8 +295,7 @@ public class FileTools {
             file = new File(fileLocation + "recipes\\" + fileData.getName() + ".json");
         } else if (fileData.getType().equals("loot_tables")) {
             file = new File(fileLocation + "loot_tables\\" + fileData.getName() + ".json");
-        }
-        else {
+        } else {
             file = new File(fileLocation + "functions\\" + fileData.getName() + ".mcfunction");
         }
         BufferedWriter writer = new BufferedWriter(new FileWriter(file));
