@@ -152,6 +152,15 @@ public class Main {
     }
 
     private void initGameData() {
+        files = new ArrayList<>();
+        teams = new ArrayList<>();
+        bossBars = new ArrayList<>();
+        cpList = new ArrayList<>();
+        controlPoints = new ArrayList<>();
+        scoreboardObjectives = new ArrayList<>();
+        effects = new ArrayList<>();
+        players = new ArrayList<>();
+
         Color[] colors = {Color.yellow, Color.blue, Color.red, Color.dark_purple, Color.dark_green, Color.light_purple, Color.black, Color.gold, Color.gray, Color.aqua, Color.dark_red, Color.dark_blue, Color.dark_aqua};
         String[] bossbarColors = {"yellow", "blue", "red", "purple", "green", "pink", "white", "white", "white", "white", "white", "white", "white"};
         String[] glassColors = {"yellow", "light_blue", "red", "purple", "green", "pink", "black", "orange", "gray", "cyan", "red", "blue", "blue"};
