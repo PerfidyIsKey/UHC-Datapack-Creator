@@ -1,6 +1,6 @@
 uhcNumber:S50
 admin:Snodog627
-startCoordinates:0,73,0
+startCoordinate:0,73,0
 netherPortal:5,71,-11
 minTraitorRank:30
 communityName:THE DIORITE EXPERTS

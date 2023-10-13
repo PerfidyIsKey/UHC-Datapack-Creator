@@ -19,7 +19,10 @@ public class FileTools {
     private String dataPackName;
     private String worldLocation;
 
-    public FileTools(){};
+    public FileTools() {
+    }
+
+    ;
 
     public FileTools(String version, String dataPackLocation, String dataPackName, String worldLocation) {
         this.version = version;
@@ -175,7 +178,7 @@ public class FileTools {
             }
 
         }
-        //fileCommands.add("#Total weight = "+ totalWeight);
+        fileCommands.add("#Total weight = " + totalWeight);
         return fileCommands;
     }
 
@@ -199,7 +202,7 @@ public class FileTools {
     public String getContentOutOfFile(String pathName, String rowName) {
         ArrayList<String> lines = GetLinesFromFile(pathName);
         for (String line : lines) {
-            if(line.startsWith(rowName)) {
+            if (line.startsWith(rowName)) {
                 line = line.replace(rowName + ':', "");
                 return line;
             }
@@ -309,6 +312,8 @@ public class FileTools {
             writer.write("#If you want to make any changes to this file please contact the UHC-Committee member: Perfidy.");
             writer.newLine();
             writer.write("#He will know how to change it. (Without messing things up...)");
+            writer.newLine();
+            writer.write("#Or take a look at: https://github.com/PerfidyIsKey/UHC-Datapack-Creator");
         }
         writer.close();
         System.out.println("File \"" + fileData.getName() + "\" Updated.");

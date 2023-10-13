@@ -55,7 +55,23 @@ public class Coordinate {
         this.dimension = dimension;
     }
 
-    public String getCoordinate() {
+    public String getCoordinateString() {
         return this.x + " " + this.y + " " + this.z;
+    }
+
+    public String getDimensionName() {
+        String result;
+        switch (dimension) {
+            case the_end:
+                result = "End";
+                break;
+            case the_nether:
+                result = "Nether";
+                break;
+            default:
+                result = "Overworld";
+        }
+
+        return result;
     }
 }
