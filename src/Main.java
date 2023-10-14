@@ -181,7 +181,7 @@ public class Main {
         bossBars.add(new BossBar("carepackage"));
 
         // Data
-        String[] splitStartCoordinates = fileTools.splitLineOnComma(fileTools.getContentOutOfFile("Files\\" + gameMode + "\\uhc_data.txt", "startCoordinates"));
+        String[] splitStartCoordinates = fileTools.splitLineOnComma(fileTools.getContentOutOfFile("Files\\" + gameMode + "\\uhc_data.txt", "startCoordinate"));
         startCoordinate = new Coordinate(Integer.parseInt(splitStartCoordinates[0]), Integer.parseInt(splitStartCoordinates[1]), Integer.parseInt(splitStartCoordinates[2]));
         String[] splitNetherPortal = fileTools.splitLineOnComma(fileTools.getContentOutOfFile("Files\\" + gameMode + "\\uhc_data.txt", "netherPortal"));
         netherPortal = new Coordinate(Integer.parseInt(splitNetherPortal[0]), Integer.parseInt(splitNetherPortal[1]), Integer.parseInt(splitNetherPortal[2]));
