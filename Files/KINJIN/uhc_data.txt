@@ -1,0 +1,6 @@
+uhcNumber:KJ1
+admin:Snodog627
+startCoordinate:0,64,0
+netherPortal:-3,64,1
+minTraitorRank:50
+communityName:KINJIN

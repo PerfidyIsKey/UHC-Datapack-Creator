@@ -12,43 +12,22 @@ public class ControlPoint {
     private int maxVal;
     private int addRate;
 
-    private int x;
-    private int y;
-    private int z;
-
-    private Enums.Dimension dimension;
+    private Coordinate coordinate;
     private Enums.Biome biome;
 
-    public ControlPoint(String name, int maxVal, int addRate, int x, int y, int z) {
+    public ControlPoint(String name, int maxVal, int addRate, Coordinate coordinate) {
         this.name = name;
         this.maxVal = maxVal;
         this.addRate = addRate;
-        this.x = x;
-        this.y = y;
-        this.z = z;
-        this.dimension = overworld;
+        this.coordinate = coordinate;
         this.biome = Biome.plains;
     }
 
-    public ControlPoint(String name, int maxVal, int addRate, int x, int y, int z, Enums.Biome biome) {
+    public ControlPoint(String name, int maxVal, int addRate, Coordinate coordinate, Enums.Biome biome) {
         this.name = name;
         this.maxVal = maxVal;
         this.addRate = addRate;
-        this.x = x;
-        this.y = y;
-        this.z = z;
-        this.dimension = overworld;
-        this.biome = biome;
-    }
-
-    public ControlPoint(String name, int maxVal, int addRate, int x, int y, int z, Enums.Dimension dimension, Enums.Biome biome) {
-        this.name = name;
-        this.maxVal = maxVal;
-        this.addRate = addRate;
-        this.x = x;
-        this.y = y;
-        this.z = z;
-        this.dimension = dimension;
+        this.coordinate = coordinate;
         this.biome = biome;
     }
 
@@ -76,53 +55,13 @@ public class ControlPoint {
         this.addRate = addRate;
     }
 
-    public int getX() {
-        return x;
+    public Coordinate getCoordinate() {
+        return this.coordinate;
     }
-
-    public void setX(int x) {
-        this.x = x;
-    }
-
-    public int getY() {
-        return y;
-    }
-
-    public void setY(int y) {
-        this.y = y;
-    }
-
-    public int getZ() {
-        return z;
-    }
-
-    public void setZ(int z) {
-        this.z = z;
-    }
-
-    public Enums.Dimension getDimension() { return dimension; }
-
-    public void setDimension(Enums.Dimension dimension) { this.dimension = dimension; }
 
     public Biome getBiome() { return biome; }
 
     public void setBiome(Biome biome) { this.biome = biome; }
-
-    public String getDimensionName() {
-        String result;
-        switch (dimension) {
-            case the_end:
-                result = "End";
-                break;
-            case the_nether:
-                result = "Nether";
-                break;
-            default:
-                result = "Overworld";
-        }
-
-        return result;
-    }
 
     public String getStructureName() {
         String result;
@@ -138,6 +77,7 @@ public class ControlPoint {
             case badlands:
             case eroded_badlands:
             case wooded_badlands:
+            case beach:
                 result = "desert";
                 break;
 
@@ -199,7 +139,6 @@ public class ControlPoint {
                 break;
 
             case river:
-            case beach:
             case ocean:
             case cold_ocean:
             case deep_ocean:

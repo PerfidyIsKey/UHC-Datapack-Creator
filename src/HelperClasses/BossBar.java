@@ -1,5 +1,7 @@
 package HelperClasses;
 
+import Enums.BossBarColor;
+
 public class BossBar {
 
     private String name;
@@ -25,7 +27,7 @@ public class BossBar {
         return prefix + "set minecraft:" + name + " max " + max;
     }
 
-    public String setColor(String color) {
+    public String setColor(BossBarColor color) {
         return prefix + "set minecraft:" + name + " color " + color;
     }
 

@@ -1,0 +1,6 @@
+uhcNumber:URE6
+admin:Snodog627
+startCoordinate:0,165,0
+netherPortal:15,148,-14
+minTraitorRank:1
+communityName:UNIVERSITY RACING EINDHOVEN

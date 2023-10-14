@@ -2,6 +2,7 @@ import Enums.*;
 import FileGeneration.*;
 import HelperClasses.*;
 
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -19,24 +20,24 @@ public class Main {
     FileTools fileTools;
 
     //DatapackData<
-    private GameMode gameMode = GameMode.DIORITE_EXPERTS;
 
-    private String uhcNumber;
+    private String uhcNumber = "s50";
     private static final String version = "3.0";
     private String userFolder;
     private String worldName;
     private String dataPackLocation;
     private String worldLocation;
     private String dataPackName;
-    private String fileLocation;
 
+    private String fileLocation;
+    private GameMode gameMode = GameMode.DIORITE;
     //DatapackData>
 
     //GameData<
     private static final int chestSize = 27;
     private static final String commandCenter = "s46";
-    private String admin;
-    private Coordinate startCoordinates;
+    private String admin = "Snodog627";
+    private Coordinate startCoordinate;
     private Coordinate netherPortal;
     private ArrayList<Team> teams = new ArrayList<>();
     private ArrayList<ControlPoint> cpList = new ArrayList<>();
@@ -71,87 +72,77 @@ public class Main {
 
     private void run() {
 
+        gameModeChange();
+        createDatapack();
         boolean menuRunning = true;
         Scanner scanner = new Scanner(System.in);
         String input;
-        initSaveDir();
-
-        fileTools = new FileTools(version, dataPackLocation, dataPackName, worldLocation);
-
-        initGameData();
-        makeFunctionFiles();
-        files.addAll(fileTools.makeRecipeFiles());
-        makeLootTableFiles();
-        System.out.println("Files available:\n");
-        for (FileData data : files) {
-            System.out.println(data.getName());
-        }
-        System.out.println("\n-----------------");
+        System.out.println("-----------------\n");
         while (menuRunning) {
+            System.out.println("Datapack created under Gamemode: " + gameMode);
+            System.out.println("Options:\n");
+            System.out.println("Change Gamemode (c[n])");
+            System.out.println("Re-run (r)");
+            System.out.println("-----------------");
             System.out.print("> ");
             input = scanner.nextLine();
             if (input.equals("exit")) {
                 menuRunning = false;
                 System.out.println("Exiting System.");
-            } else if (input.startsWith("update ")) {
-                String command = input.replace("update ", "");
-                if (command.equals("all")) {
-                    fileTools.updateAllFiles(files, fileLocation);
-                } else {
-                    for (FileData f : files) {
-                        if (f.getNameWithoutExtension().equals(command)) {
-                            try {
-                                fileTools.writeFile(f, fileLocation);
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    }
-                }
-            } else if (input.startsWith("type ")) {
-                String command = input.replace("type ", "");
+            } else if (input.startsWith("c")) {
+                String command = input.replace("c", "");
                 int num = parseInt(command);
-                if (num == 0) {
-                    gameMode = GameMode.DIORITE_EXPERTS;
-                }
-                if (num == 1) {
-                    gameMode = GameMode.UNIVERSITY_RACING_EINDHOVEN;
-                }
-                if (num == 2) {
-                    gameMode = GameMode.KINJIN;
-                }
-                System.out.println("Set gameMode to " + gameMode);
-            } else if (input.equals("create datapack")) {
-                try {
-                    fileTools.createDatapack(files, fileLocation);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                changeGamemode(num);
+                createDatapack();
+            } else if (input.equals("r")) {
+                gameModeChange();
+                createDatapack();
             } else {
                 System.out.println("Input not recognized.");
             }
         }
     }
 
-    private void initSaveDir() {
-        switch (gameMode) {
-            case DIORITE_EXPERTS:
-                uhcNumber = "S50";
-
-                admin = "Snodog627";
-                break;
-            case UNIVERSITY_RACING_EINDHOVEN:
-                uhcNumber = "URE6";
-
-                admin = "Snodog627";
-                break;
-
-            case KINJIN:
-                uhcNumber = "KJ1";
-
-                admin = "Snodog627";
-                break;
+    private void changeGamemode(int num) {
+        if (num == 0) {
+            gameMode = GameMode.DIORITE;
         }
+        if (num == 1) {
+            gameMode = GameMode.URE;
+        }
+        if (num == 2) {
+            gameMode = GameMode.KINJIN;
+        }
+
+        gameModeChange();
+    }
+
+
+    private void createDatapack() {
+        try {
+            fileTools.createDatapack(files, fileLocation);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void gameModeChange() {
+        files = new ArrayList<>();
+        initSaveDir();
+        fileTools = new FileTools(version, dataPackLocation, dataPackName, worldLocation);
+
+        initGameData();
+        makeFunctionFiles();
+        files.addAll(fileTools.makeRecipeFiles());
+        makeLootTableFiles();
+    }
+
+    private void initSaveDir() {
+        if (fileTools == null) {
+            fileTools = new FileTools();
+        }
+        uhcNumber = fileTools.getContentOutOfFile("Files\\" + gameMode + "\\uhc_data.txt", "uhcNumber");
+        admin = fileTools.getContentOutOfFile("Files\\" + gameMode + "\\uhc_data.txt", "admin");
 
         worldLocation = "Server\\world\\";
 
@@ -163,8 +154,17 @@ public class Main {
     }
 
     private void initGameData() {
+        teams = new ArrayList<>();
+        bossBars = new ArrayList<>();
+        cpList = new ArrayList<>();
+        controlPoints = new ArrayList<>();
+        scoreboardObjectives = new ArrayList<>();
+        effects = new ArrayList<>();
+        players = new ArrayList<>();
+        quotes = new ArrayList<>();
+
         Color[] colors = {Color.yellow, Color.blue, Color.red, Color.dark_purple, Color.dark_green, Color.light_purple, Color.black, Color.gold, Color.gray, Color.aqua, Color.dark_red, Color.dark_blue, Color.dark_aqua};
-        String[] bossbarColors = {"yellow", "blue", "red", "purple", "green", "pink", "white", "white", "white", "white", "white", "white", "white"};
+        BossBarColor[] bossbarColors = {BossBarColor.yellow, BossBarColor.blue, BossBarColor.red, BossBarColor.purple, BossBarColor.green, BossBarColor.pink, BossBarColor.white, BossBarColor.white, BossBarColor.white, BossBarColor.white, BossBarColor.white, BossBarColor.white, BossBarColor.white};
         String[] glassColors = {"yellow", "light_blue", "red", "purple", "green", "pink", "black", "orange", "gray", "cyan", "red", "blue", "blue"};
         String[] collarColors = {"4", "3", "14", "10", "13", "6", "15", "1", "7", "9", "2", "11", "9"};
         String[] jsonColors = {"YELLOW", "BLUE", "RED", "PURPLE", "GREEN", "PINK", "BLACK", "ORANGE", "GRAY", "AQUA", "DARK RED", "DARK BLUE", "DARK AQUA"};
@@ -182,184 +182,30 @@ public class Main {
         bossBars.add(new BossBar("cp2"));
         bossBars.add(new BossBar("carepackage"));
 
-        switch (gameMode) {
-            case DIORITE_EXPERTS:
-                startCoordinates = new Coordinate(0, 73, 0);
-                netherPortal = new Coordinate(5, 71, -11);
-                minTraitorRank = 30;
-                communityName = "THE DIORITE EXPERTS";
+        // Data
+        String[] splitStartCoordinates = fileTools.splitLineOnComma(fileTools.getContentOutOfFile("Files\\" + gameMode + "\\uhc_data.txt", "startCoordinate"));
+        startCoordinate = new Coordinate(Integer.parseInt(splitStartCoordinates[0]), Integer.parseInt(splitStartCoordinates[1]), Integer.parseInt(splitStartCoordinates[2]));
+        String[] splitNetherPortal = fileTools.splitLineOnComma(fileTools.getContentOutOfFile("Files\\" + gameMode + "\\uhc_data.txt", "netherPortal"));
+        netherPortal = new Coordinate(Integer.parseInt(splitNetherPortal[0]), Integer.parseInt(splitNetherPortal[1]), Integer.parseInt(splitNetherPortal[2]));
+        minTraitorRank = Integer.parseInt(fileTools.getContentOutOfFile("Files\\" + gameMode + "\\uhc_data.txt", "minTraitorRank"));
+        communityName = fileTools.getContentOutOfFile("Files\\" + gameMode + "\\uhc_data.txt", "communityName");
 
-                cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, -85, 57, -519, Biome.plains));
-                cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, 78, 62, -271, Biome.river));
-                cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, 11, 69, -154, Biome.forest));
-                cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, -71, 79, -49, Biome.cave));
-                cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, -281, 128, -314, Biome.forest));
-                cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, -125, 108, 52, Biome.plains));
-                cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, 293, 69, -165, Biome.beach));
-
-
-                /*// Control point
-                cp1.setX(-2);
-                cp1.setY(66);
-                cp1.setZ(230);
-
-                cp2.setX(127);
-                cp2.setY(63);
-                cp2.setZ(214);
-
-                controlPoints.add(cp1);
-                controlPoints.add(cp2);*/
-
-                // Care Packages
-                carePackage2.setX(59);
-                carePackage2.setY(76);
-                carePackage2.setZ(142);
-                //carePackages.add(carePackage2);
-
-                // Players
-                players.add(new Player("Snodog627", 101));
-                players.add(new Player("Mr9Madness", 72));
-                players.add(new Player("Tiba101", 0));
-                players.add(new Player("W0omy", 9));
-                players.add(new Player("Kalazniq", 51));
-                players.add(new Player("Vladik71", 54));
-                players.add(new Player("Smashking242", 2));
-                players.add(new Player("Pfalz_", 1));
-                players.add(new Player("ThurianBodan", 17));
-                players.add(new Player("PerfidyIsKey", 67));
-                players.add(new Player("jonmo0105", 26));
-                players.add(new Player("TheDinoGame", 167, true));
-                players.add(new Player("BAAPABUGGETS", 2));
-                players.add(new Player("Th3Flash05", 51));
-                players.add(new Player("viccietors", 37));
-                players.add(new Player("Rayqson", 9));
-                players.add(new Player("_HexGamer", 105, true));
-                players.add(new Player("Bobdafish", 61));
-                players.add(new Player("Alanaenae", 0));
-                players.add(new Player("jk20028", 15));
-                players.add(new Player("N_G0n", 3));
-                players.add(new Player("SpookySpiker", 54));
-                players.add(new Player("Clockweiz", 5));
-                players.add(new Player("Eason950116", 9));
-                players.add(new Player("CorruptUncle", 40));
-                players.add(new Player("Pimmie36", 42));
-                players.add(new Player("Jayroon123", 0));
-                players.add(new Player("PbQuinn", 25));
-                players.add(new Player("Vermeil_Chan", 14));
-                players.add(new Player("Jobbo2002", 8));
-                players.add(new Player("Uncle_Lolly", 3));
-                players.add(new Player("AurqSnqtcher", 20));
-                players.add(new Player("cat_person", 23));
-                players.add(new Player("GoldBard2474348", 18));
-                players.add(new Player("CrimsonCid", 10));
-                players.add(new Player("ICEturbo", 80));
-                players.add(new Player("TheTolstar", 21));
-                players.add(new Player("NekoBotUwU", 38));
-
-                quotes = fileTools.GetLinesFromFile("Files\\Diorite\\quotes.txt");
-
-                break;
-            case UNIVERSITY_RACING_EINDHOVEN:
-                startCoordinates = new Coordinate(0, 165, 0);
-                netherPortal = new Coordinate(15, 148, -14);
-                minTraitorRank = 1;
-                communityName = "UNIVERSITY RACING EINDHOVEN";
-
-                /*// Control point
-                cp1.setX(-2);
-                cp1.setY(160);
-                cp1.setZ(-65);
-
-                cp2.setX(213);
-                cp2.setY(141);
-                cp2.setZ(227);
-                controlPoints.add(cp1);
-                controlPoints.add(cp2);*/
-
-                cpList.add(new ControlPoint("CP1", maxCPScoreBossbar, 2, -2, 160, -65, Biome.jagged_peaks));
-                cpList.add(new ControlPoint("CP1", maxCPScoreBossbar, 2, -33, 93, 152, Biome.taiga));
-                cpList.add(new ControlPoint("CP1", maxCPScoreBossbar, 2, 55, 97, -199, Biome.cave));
-                cpList.add(new ControlPoint("CP1", maxCPScoreBossbar, 2, 242, 94, -149, Biome.cave));
-                cpList.add(new ControlPoint("CP2", maxCPScoreBossbar, 3, 213, 141, 227, Biome.grove));
-                cpList.add(new ControlPoint("CP2", maxCPScoreBossbar, 3, -207, 103, -159, Biome.forest));
-                cpList.add(new ControlPoint("CP2", maxCPScoreBossbar, 3, 167, 144, -139, Biome.grove));
-                cpList.add(new ControlPoint("CP2", maxCPScoreBossbar, 3, -19, 97, 68, Dimension.the_nether, Biome.nether_wastes));
-
-
-                /*// Care package
-                carePackage2.setX(61);
-                carePackage2.setY(155);
-                carePackage2.setZ(-6);*/
-                //carePackages.add(carePackage2);
-
-                // Players
-                players.add(new Player("Bertje13", 0));
-                players.add(new Player("Lefke67", 7));
-                players.add(new Player("SpookySpiker", 14));
-                players.add(new Player("joep359", 45));
-                players.add(new Player("Snodog627", 164));
-                players.add(new Player("Mafkees__10", 78));
-                players.add(new Player("woutje33", 64));
-                players.add(new Player("CorruptUncle", 44));
-                players.add(new Player("Luuk", 2));
-                players.add(new Player("sepertibos", 5));
-                players.add(new Player("Clik_clak", 8));
-                players.add(new Player("HumblesBumblesV2", 9));
-                players.add(new Player("RoyalGub", 19));
-                players.add(new Player("Chrissah58", 13));
-                players.add(new Player("TNTbuilder21", 40));
-                players.add(new Player("Pimmie36", 68));
-                players.add(new Player("lenschoenie98", 46));
-                players.add(new Player("PbQuinn", 24));
-                players.add(new Player("Luc_B21", 5));
-                players.add(new Player("Captain_Kills", 4));
-                players.add(new Player("Chassisboy16", 15));
-                players.add(new Player("Jayrooninator", 24));
-                players.add(new Player("JD329", 15));
-                players.add(new Player("maxim_rongen", 25));
-                players.add(new Player("URE16Noah", 45));
-                players.add(new Player("Jobbo2002", 116));
-                players.add(new Player("Gladde_Paling1", 41));
-                players.add(new Player("Elenbaas", 8));
-
-                // Quotes
-                quotes = fileTools.GetLinesFromFile("Files\\URE\\quotes.txt");
-
-                break;
-
-            case KINJIN:
-                startCoordinates = new Coordinate(0, 64, 0);
-                netherPortal = new Coordinate(-3, 64, 1);
-                minTraitorRank = 50;
-                communityName = "KINJIN";
-
-                cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, -72, 64, -63, Biome.jungle));
-                cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, 214, 65, -207, Biome.sparse_jungle));
-                cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, 76, 69, 83, Biome.old_growth_birch_forest));
-                cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, -172, 75, 100, Biome.old_growth_birch_forest));
-                cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, -213, 80, -143, Biome.sparse_jungle));
-                cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, 27, 46, -153, Biome.cave));
-                cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, 84, 62, -92, Biome.river));
-
-                // Players
-                players.add(new Player("Snodog627", 114));
-                players.add(new Player("Infima", 8));
-                players.add(new Player("Thatepicpotato", 71));
-                players.add(new Player("Joker447xd9", 18));
-                players.add(new Player("ICEturbo", 21));
-                players.add(new Player("mrtkrl", 13));
-                players.add(new Player("Maurcy", 38));
-                players.add(new Player("Correawesome", 16));
-                players.add(new Player("thekillertb", 0));
-                players.add(new Player("Greyhalfbuster", 17));
-                players.add(new Player("xPromachos", 10));
-                players.add(new Player("BorisBeast", 5));
-
-                // Quotes
-                quotes = fileTools.GetLinesFromFile("Files\\Kinjin\\quotes.txt");
-
-                break;
+        // ControlPoints
+        ArrayList<String> controlPointString = fileTools.GetLinesFromFile("Files\\" + gameMode + "\\controlPoints.txt");
+        for (String controlPoint : controlPointString) {
+            String[] controlPointSplit = fileTools.splitLineOnComma(controlPoint);
+            cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, new Coordinate(Integer.parseInt(controlPointSplit[0]), Integer.parseInt(controlPointSplit[1]), Integer.parseInt(controlPointSplit[2])), Biome.valueOf(controlPointSplit[3])));
         }
+
+        // Players
+        ArrayList<String> playersString = fileTools.GetLinesFromFile("Files\\" + gameMode + "\\players.txt");
+        for (String player : playersString) {
+            String[] playerSplit = fileTools.splitLineOnComma(player);
+            players.add(new Player(playerSplit[0], Integer.parseInt(playerSplit[1]), Boolean.parseBoolean(playerSplit[2])));
+        }
+
+        // Quotes
+        quotes = fileTools.GetLinesFromFile("Files\\" + gameMode + "\\quotes.txt");
 
         int[] addRates = {2, 3};
         Collections.shuffle(cpList);
@@ -448,13 +294,14 @@ public class Main {
         lootEntry.add(new LootTableEntry(3, "spectral_arrow", new LootTableFunction(10)));
         lootEntry.add(new LootTableEntry(3, "horse_spawn_egg"));
         lootEntry.add(new LootTableEntry(3, "glowstone_dust", new LootTableFunction(6)));
-        lootEntry.add(new LootTableEntry(2, "diamond_horse_armor"));
+        lootEntry.add(new LootTableEntry(1, "diamond_horse_armor"));
         lootEntry.add(new LootTableEntry(2, "nether_wart", new LootTableFunction(5)));
         lootEntry.add(new LootTableEntry(2, "blaze_rod", new LootTableFunction(2, 0.1)));
         lootEntry.add(new LootTableEntry(2, "golden_apple"));
         lootEntry.add(new LootTableEntry(2, "anvil"));
         lootEntry.add(new LootTableEntry(2, "spyglass"));
         lootEntry.add(new LootTableEntry(2, "wolf_spawn_egg", new LootTableFunction(2, 0.01)));
+        lootEntry.add(new LootTableEntry(1, "ender_pearl", new LootTableFunction(2, 0.5)));
         lootEntry.add(new LootTableEntry(1, "netherite_hoe"));
         lootEntry.add(new LootTableEntry(1, "trident"));
         lootEntry.add(new LootTableEntry(1, "diamond_chestplate"));
@@ -550,12 +397,24 @@ public class Main {
         return setBlock("" + x, "" + y, "" + z, blockType);
     }
 
+    private String setBlock(Coordinate coordinate, String blockType) {
+        return setBlock("" + coordinate.getX(), "" + coordinate.getY(), "" + coordinate.getZ(), blockType);
+    }
+
     private String setBlock(int x, int y, int z, String blockType, SetBlockType type) {
         return setBlock(x, y, z, blockType) + " " + type;
     }
 
+    private String setBlock(Coordinate coordinate, String blockType, SetBlockType type) {
+        return setBlock(coordinate, blockType) + " " + type;
+    }
+
     private String setBlock(int x, int y, int z, BlockType blockType) {
         return setBlock(x, y, z, "minecraft:" + blockType);
+    }
+
+    private String setBlock(Coordinate coordinate, BlockType blockType) {
+        return setBlock(coordinate, "minecraft:" + blockType);
     }
 
     private String setBlock(int x, int y, int z, BlockType blockType, SetBlockType type) {
@@ -717,9 +576,9 @@ public class Main {
 
         fileCommands.add(getBossbarByName("cp1").remove());
         fileCommands.add(getBossbarByName("cp2").remove());
-        fileCommands.add(getBossbarByName("cp1").add(controlPoints.get(0).getName() + ": " + controlPoints.get(0).getX() + ", " + controlPoints.get(0).getY() + ", " + controlPoints.get(0).getZ() + " (" + controlPoints.get(0).getDimensionName() + ")"));
+        fileCommands.add(getBossbarByName("cp1").add(controlPoints.get(0).getName() + ": " + controlPoints.get(0).getCoordinate().getX() + ", " + controlPoints.get(0).getCoordinate().getY() + ", " + controlPoints.get(0).getCoordinate().getZ() + " (" + controlPoints.get(0).getCoordinate().getDimensionName() + ")"));
         fileCommands.add(getBossbarByName("cp1").setMax(controlPoints.get(0).getMaxVal()));
-        fileCommands.add(getBossbarByName("cp2").add(controlPoints.get(1).getName() + " soon: " + controlPoints.get(1).getX() + ", " + controlPoints.get(1).getY() + ", " + controlPoints.get(1).getZ() + " (" + controlPoints.get(1).getDimensionName() + ")"));
+        fileCommands.add(getBossbarByName("cp2").add(controlPoints.get(1).getName() + " soon: " + controlPoints.get(1).getCoordinate().getX() + ", " + controlPoints.get(1).getCoordinate().getY() + ", " + controlPoints.get(1).getCoordinate().getZ() + " (" + controlPoints.get(1).getCoordinate().getDimensionName() + ")"));
         fileCommands.add(getBossbarByName("cp2").setMax(controlPoints.get(1).getMaxVal()));
         fileCommands.add(getBossbarByName("carepackage").add("Care Package available at x, y, z"));
         //end bossbar
@@ -838,6 +697,12 @@ public class Main {
         return new FileData(FileName.god_mode, fileCommands);
     }
 
+    private static FileData GetStartPotions() {
+        ArrayList<String> fileCommands = new ArrayList<>();
+        //TODO: create;
+        return new FileData(FileName.god_mode, fileCommands);
+    }
+
     private FileData DeveloperMode() {
         ArrayList<String> fileCommands = new ArrayList<>();
         fileCommands.add(setGameRule(GameRule.commandBlockOutput, true));
@@ -865,26 +730,26 @@ public class Main {
         fileCommands.add(execute.In(Dimension.overworld) +
                 setBlock(10, worldBottom + 2, 0, BlockType.bedrock, SetBlockType.destroy));
         //fileCommands.add(getBossbarByName("cp").setTitle(cp1.getName() + ": " + cp1.getX() + ", " + cp1.getY() + ", " + cp1.getZ() + "; " + cp2.getName() + " soon: " + cp2.getX() + ", " + cp2.getY() + ", " + cp2.getZ()));
-        fileCommands.add(execute.In(controlPoints.get(0).getDimension()) + "forceload add " + controlPoints.get(0).getX() + " " + controlPoints.get(0).getZ() + " " + controlPoints.get(0).getX() + " " + controlPoints.get(0).getZ());
-        fileCommands.add(execute.In(controlPoints.get(1).getDimension()) + "forceload add " + controlPoints.get(1).getX() + " " + controlPoints.get(1).getZ() + " " + controlPoints.get(1).getX() + " " + controlPoints.get(1).getZ());
+        fileCommands.add(execute.In(controlPoints.get(0).getCoordinate().getDimension()) + "forceload add " + controlPoints.get(0).getCoordinate().getX() + " " + controlPoints.get(0).getCoordinate().getZ() + " " + controlPoints.get(0).getCoordinate().getX() + " " + controlPoints.get(0).getCoordinate().getZ());
+        fileCommands.add(execute.In(controlPoints.get(1).getCoordinate().getDimension()) + "forceload add " + controlPoints.get(1).getCoordinate().getX() + " " + controlPoints.get(1).getCoordinate().getZ() + " " + controlPoints.get(1).getCoordinate().getX() + " " + controlPoints.get(1).getCoordinate().getZ());
         fileCommands.add(callFunction(FileName.spawn_controlpoints));
-        fileCommands.add(execute.In(controlPoints.get(0).getDimension()) + "forceload remove " + controlPoints.get(0).getX() + " " + controlPoints.get(0).getZ() + " " + controlPoints.get(0).getX() + " " + controlPoints.get(0).getZ());
-        fileCommands.add(execute.In(controlPoints.get(1).getDimension()) + "forceload remove " + controlPoints.get(1).getX() + " " + controlPoints.get(1).getZ() + " " + controlPoints.get(1).getX() + " " + controlPoints.get(1).getZ());
+        fileCommands.add(execute.In(controlPoints.get(0).getCoordinate().getDimension()) + "forceload remove " + controlPoints.get(0).getCoordinate().getX() + " " + controlPoints.get(0).getCoordinate().getZ() + " " + controlPoints.get(0).getCoordinate().getX() + " " + controlPoints.get(0).getCoordinate().getZ());
+        fileCommands.add(execute.In(controlPoints.get(1).getCoordinate().getDimension()) + "forceload remove " + controlPoints.get(1).getCoordinate().getX() + " " + controlPoints.get(1).getCoordinate().getZ() + " " + controlPoints.get(1).getCoordinate().getX() + " " + controlPoints.get(1).getCoordinate().getZ());
         BossBar bossBarCp1 = getBossbarByName("cp1");
         BossBar bossBarCp2 = getBossbarByName("cp2");
         BossBar bossBarCarePackage = getBossbarByName("carepackage");
-        fileCommands.add(bossBarCp1.setColor("white"));
+        fileCommands.add(bossBarCp1.setColor(BossBarColor.white));
         fileCommands.add(bossBarCp1.setVisible(false));
         fileCommands.add(bossBarCp1.setPlayers("@a"));
-        fileCommands.add(bossBarCp1.setTitle(controlPoints.get(0).getName() + ": " + controlPoints.get(0).getX() + ", " + controlPoints.get(0).getY() + ", " + controlPoints.get(0).getZ() + " (" + controlPoints.get(0).getDimensionName() + ")"));
-        fileCommands.add(bossBarCp2.setColor("white"));
+        fileCommands.add(bossBarCp1.setTitle(controlPoints.get(0).getName() + ": " + controlPoints.get(0).getCoordinate().getX() + ", " + controlPoints.get(0).getCoordinate().getY() + ", " + controlPoints.get(0).getCoordinate().getZ() + " (" + controlPoints.get(0).getCoordinate().getDimensionName() + ")"));
+        fileCommands.add(bossBarCp2.setColor(BossBarColor.white));
         fileCommands.add(bossBarCp2.setVisible(false));
         fileCommands.add(bossBarCp2.setPlayers("@a"));
-        fileCommands.add(bossBarCp2.setTitle(controlPoints.get(1).getName() + " soon: " + controlPoints.get(1).getX() + ", " + controlPoints.get(1).getY() + ", " + controlPoints.get(1).getZ() + " (" + controlPoints.get(1).getDimensionName() + ")"));
+        fileCommands.add(bossBarCp2.setTitle(controlPoints.get(1).getName() + " soon: " + controlPoints.get(1).getCoordinate().getX() + ", " + controlPoints.get(1).getCoordinate().getY() + ", " + controlPoints.get(1).getCoordinate().getZ() + " (" + controlPoints.get(1).getCoordinate().getDimensionName() + ")"));
         fileCommands.add(bossBarCarePackage.setVisible(false));
         fileCommands.add(bossBarCarePackage.setPlayers("@a"));
         fileCommands.add(execute.In(Dimension.overworld) +
-                setBlock(startCoordinates.getX(), startCoordinates.getY(), startCoordinates.getZ(), "minecraft:jukebox[has_record=true]{RecordItem:{Count:1b,id:\"minecraft:music_disc_stal\"}}", SetBlockType.replace));
+                setBlock(startCoordinate, "minecraft:jukebox[has_record=true]{RecordItem:{Count:1b,id:\"minecraft:music_disc_stal\"}}", SetBlockType.replace));
         fileCommands.add("tag @a remove Traitor");
         fileCommands.add("tag @a remove DontMakeTraitor");
         fileCommands.add("worldborder set " + worldSize + " 1");
@@ -937,7 +802,7 @@ public class Main {
     private FileData IntoCalls() {
         ArrayList<String> fileCommands = new ArrayList<>();
         fileCommands.add(execute.In(Dimension.overworld) +
-                "tp @a " + startCoordinates.getCoordinate());
+                "tp @a " + startCoordinate.getCoordinateString());
         fileCommands.add("scoreboard players reset @a Deaths");
         fileCommands.add("scoreboard players reset @a Kills");
 
@@ -1022,7 +887,7 @@ public class Main {
         fileCommands.add(getBossbarByName("cp2").setVisible(true));
         fileCommands.add(execute.In(Dimension.overworld) +
                 setBlock(6, worldBottom + 2, 0, BlockType.bedrock, SetBlockType.replace));
-        fileCommands.addAll(forceLoadAndSet(controlPoints.get(0).getX(), controlPoints.get(0).getY() + 3, controlPoints.get(0).getZ(), BlockType.air, SetBlockType.replace));
+        fileCommands.addAll(forceLoadAndSet(controlPoints.get(0).getCoordinate().getX(), controlPoints.get(0).getCoordinate().getY() + 3, controlPoints.get(0).getCoordinate().getZ(), BlockType.air, SetBlockType.replace));
         fileCommands.add(execute.In(Dimension.overworld) +
                 setBlock(15, worldBottom + 2, 7, BlockType.redstone_block, SetBlockType.replace));
         fileCommands.add(execute.In(Dimension.overworld) +
@@ -1051,8 +916,8 @@ public class Main {
         fileCommands.add(new TellRaw("@a", texts).sendRaw());
         fileCommands.add(execute.In(Dimension.overworld) +
                 setBlock(15, worldBottom + 2, 11, BlockType.redstone_block, SetBlockType.replace));
-        fileCommands.addAll(forceLoadAndSet(controlPoints.get(1).getX(), controlPoints.get(1).getY() + 3, controlPoints.get(1).getZ(), controlPoints.get(1).getDimension(), BlockType.air, SetBlockType.replace));
-        fileCommands.add(getBossbarByName("cp2").setTitle("CP2: " + controlPoints.get(1).getX() + ", " + controlPoints.get(1).getY() + ", " + controlPoints.get(1).getZ() + " (" + controlPoints.get(1).getDimensionName() + ") - FASTER!!"));
+        fileCommands.addAll(forceLoadAndSet(controlPoints.get(1).getCoordinate().getX(), controlPoints.get(1).getCoordinate().getY() + 3, controlPoints.get(1).getCoordinate().getZ(), controlPoints.get(1).getCoordinate().getDimension(), BlockType.air, SetBlockType.replace));
+        fileCommands.add(getBossbarByName("cp2").setTitle("CP2: " + controlPoints.get(1).getCoordinate().getX() + ", " + controlPoints.get(1).getCoordinate().getY() + ", " + controlPoints.get(1).getCoordinate().getZ() + " (" + controlPoints.get(1).getCoordinate().getDimensionName() + ") - FASTER!!"));
         //fileCommands.add("give @a[scores={ControlPoint1=14400..}] minecraft:splash_potion{CustomPotionEffects:[{Id:11,Duration:1200},{Id:24,Duration:1200}],CustomPotionColor:15462415,display:{Name:\"\\\"Hero of the First Control Point\\\"\",Lore:[\"Thank you for enabling the second Control Point! Good luck with winning the match!\"]}}");
         //fileCommands.add(callFunction(FileName.carepackage_ + carePackages.get(0).getName()));
 
@@ -1132,20 +997,20 @@ public class Main {
     private FileData Controlpoint(int i) {
         ArrayList<String> fileCommands = new ArrayList<>();
         for (Team team : teams) {
-            fileCommands.add(execute.In(controlPoints.get(i - 1).getDimension(), false) +
+            fileCommands.add(execute.In(controlPoints.get(i - 1).getCoordinate().getDimension(), false) +
                     execute.AsNext("@a[gamemode=!spectator,team=" + team.getName() + "]", false) +
-                    execute.IfNext(new Selector("@a[gamemode=!spectator,x=" + (controlPoints.get(i - 1).getX() - 6) + ",y=" + (controlPoints.get(i - 1).getY() - 1) + ",z=" + (controlPoints.get(i - 1).getZ() - 6) + ",dx=12,dy=12,dz=12]")) +
+                    execute.IfNext(new Selector("@a[gamemode=!spectator,x=" + (controlPoints.get(i - 1).getCoordinate().getX() - 6) + ",y=" + (controlPoints.get(i - 1).getCoordinate().getY() - 1) + ",z=" + (controlPoints.get(i - 1).getCoordinate().getZ() - 6) + ",dx=12,dy=12,dz=12]")) +
                     execute.AtNext(new Location("@s")) +
-                    execute.UnlessNext(new Selector("@a[gamemode=!spectator,x=" + (controlPoints.get(i - 1).getX() - 6) + ",y=" + (controlPoints.get(i - 1).getY() - 1) + ",z=" + (controlPoints.get(i - 1).getZ() - 6) + ",dx=12,dy=12,dz=12,team=!" + team.getName() + "]"), true) +
+                    execute.UnlessNext(new Selector("@a[gamemode=!spectator,x=" + (controlPoints.get(i - 1).getCoordinate().getX() - 6) + ",y=" + (controlPoints.get(i - 1).getCoordinate().getY() - 1) + ",z=" + (controlPoints.get(i - 1).getCoordinate().getZ() - 6) + ",dx=12,dy=12,dz=12,team=!" + team.getName() + "]"), true) +
                     "scoreboard players add @s ControlPoint" + i + " " + controlPoints.get(i - 1).getAddRate());
 
-            fileCommands.add(execute.In(controlPoints.get(i - 1).getDimension(), false) +
+            fileCommands.add(execute.In(controlPoints.get(i - 1).getCoordinate().getDimension(), false) +
                     execute.IfNext(new Score("@r[limit=1,gamemode=!spectator,team=" + team.getName() + "]", "ControlPoint" + i, ">", "@p[scores={Admin=1}] Highscore" + i), true) +
-                    setBlock(controlPoints.get(i - 1).getX(), controlPoints.get(i - 1).getY() + 1, controlPoints.get(i - 1).getZ(), "minecraft:" + team.getGlassColor() + "_stained_glass", SetBlockType.replace));
+                    setBlock(controlPoints.get(i - 1).getCoordinate().getX(), controlPoints.get(i - 1).getCoordinate().getY() + 1, controlPoints.get(i - 1).getCoordinate().getZ(), "minecraft:" + team.getGlassColor() + "_stained_glass", SetBlockType.replace));
         }
-        fileCommands.add(execute.In(controlPoints.get(i - 1).getDimension(), false) +
-                execute.IfNext(new Selector("@p[x=" + (controlPoints.get(i - 1).getX() - 6) + ",y=" + (controlPoints.get(i - 1).getY() - 1) + ",z=" + (controlPoints.get(i - 1).getZ() - 6) + ",dx=12,dy=12,dz=12,gamemode=!spectator]"), true) +
-                "scoreboard players add @a[x=" + (controlPoints.get(i - 1).getX() - 6) + ",y=" + (controlPoints.get(i - 1).getY() - 1) + ",z=" + (controlPoints.get(i - 1).getZ() - 6) + ",dx=12,dy=12,dz=12,gamemode=!spectator] MSGDum1CP" + i + " 1");
+        fileCommands.add(execute.In(controlPoints.get(i - 1).getCoordinate().getDimension(), false) +
+                execute.IfNext(new Selector("@p[x=" + (controlPoints.get(i - 1).getCoordinate().getX() - 6) + ",y=" + (controlPoints.get(i - 1).getCoordinate().getY() - 1) + ",z=" + (controlPoints.get(i - 1).getCoordinate().getZ() - 6) + ",dx=12,dy=12,dz=12,gamemode=!spectator]"), true) +
+                "scoreboard players add @a[x=" + (controlPoints.get(i - 1).getCoordinate().getX() - 6) + ",y=" + (controlPoints.get(i - 1).getCoordinate().getY() - 1) + ",z=" + (controlPoints.get(i - 1).getCoordinate().getZ() - 6) + ",dx=12,dy=12,dz=12,gamemode=!spectator] MSGDum1CP" + i + " 1");
 
         ArrayList<TextItem> texts = new ArrayList<>();
         texts.add(bannerText);
@@ -1154,16 +1019,16 @@ public class Main {
         texts.add(new Text(Color.light_purple, true, false, "A PLAYER IS ATTACKING CONTROL POINT " + i + "!"));
         texts.add(bannerText);
 
-        fileCommands.add(execute.In(controlPoints.get(i - 1).getDimension(), false) +
-                execute.IfNext(new Selector("@p[x=" + (controlPoints.get(i - 1).getX() - 6) + ",y=" + (controlPoints.get(i - 1).getY() - 1) + ",z=" + (controlPoints.get(i - 1).getZ() - 6) + ",dx=12,dy=12,dz=12,gamemode=!spectator,scores={MSGDum1CP" + i + "=" + (10 * tickPerSecond) + "}]"), true) +
+        fileCommands.add(execute.In(controlPoints.get(i - 1).getCoordinate().getDimension(), false) +
+                execute.IfNext(new Selector("@p[x=" + (controlPoints.get(i - 1).getCoordinate().getX() - 6) + ",y=" + (controlPoints.get(i - 1).getCoordinate().getY() - 1) + ",z=" + (controlPoints.get(i - 1).getCoordinate().getZ() - 6) + ",dx=12,dy=12,dz=12,gamemode=!spectator,scores={MSGDum1CP" + i + "=" + (10 * tickPerSecond) + "}]"), true) +
                 new TellRaw("@a", texts).sendRaw());
 
-        fileCommands.add(execute.In(controlPoints.get(i - 1).getDimension(), false) +
-                execute.IfNext(new Selector("@p[x=" + (controlPoints.get(i - 1).getX() - 6) + ",y=" + (controlPoints.get(i - 1).getY() - 1) + ",z=" + (controlPoints.get(i - 1).getZ() - 6) + ",dx=12,dy=12,dz=12,gamemode=!spectator,scores={MSGDum1CP" + i + "=" + (10 * tickPerSecond) + "}]"), true) +
-                "scoreboard players reset @a[x=" + (controlPoints.get(i - 1).getX() - 6) + ",y=" + (controlPoints.get(i - 1).getY() - 1) + ",z=" + (controlPoints.get(i - 1).getZ() - 6) + ",dx=12,dy=12,dz=12,gamemode=!spectator] MSGDum2CP" + i);
+        fileCommands.add(execute.In(controlPoints.get(i - 1).getCoordinate().getDimension(), false) +
+                execute.IfNext(new Selector("@p[x=" + (controlPoints.get(i - 1).getCoordinate().getX() - 6) + ",y=" + (controlPoints.get(i - 1).getCoordinate().getY() - 1) + ",z=" + (controlPoints.get(i - 1).getCoordinate().getZ() - 6) + ",dx=12,dy=12,dz=12,gamemode=!spectator,scores={MSGDum1CP" + i + "=" + (10 * tickPerSecond) + "}]"), true) +
+                "scoreboard players reset @a[x=" + (controlPoints.get(i - 1).getCoordinate().getX() - 6) + ",y=" + (controlPoints.get(i - 1).getCoordinate().getY() - 1) + ",z=" + (controlPoints.get(i - 1).getCoordinate().getZ() - 6) + ",dx=12,dy=12,dz=12,gamemode=!spectator] MSGDum2CP" + i);
 
-        fileCommands.add(execute.In(controlPoints.get(i - 1).getDimension(), false) +
-                execute.PositionedNext(controlPoints.get(i - 1).getX(), controlPoints.get(i - 1).getY() + 5, controlPoints.get(i - 1).getZ(), false) +
+        fileCommands.add(execute.In(controlPoints.get(i - 1).getCoordinate().getDimension(), false) +
+                execute.PositionedNext(controlPoints.get(i - 1).getCoordinate().getX(), controlPoints.get(i - 1).getCoordinate().getY() + 5, controlPoints.get(i - 1).getCoordinate().getZ(), false) +
                 execute.IfNext(new Selector("@p[distance=9..,gamemode=!spectator, scores={MSGDum1CP" + i + "=" + (10 * tickPerSecond) + "..}]"), true) +
                 "scoreboard players add @a[distance=9..,gamemode=!spectator, scores={MSGDum1CP" + i + "=" + (10 * tickPerSecond) + "..}] MSGDum2CP" + i + " 1");
 
@@ -1174,13 +1039,13 @@ public class Main {
         texts2.add(new Text(Color.light_purple, true, false, "A PLAYER HAS LEFT CONTROL POINT " + i));
         texts2.add(bannerText);
 
-        fileCommands.add(execute.In(controlPoints.get(i - 1).getDimension(), false) +
-                execute.PositionedNext(controlPoints.get(i - 1).getX(), controlPoints.get(i - 1).getY() + 5, controlPoints.get(i - 1).getZ(), false) +
+        fileCommands.add(execute.In(controlPoints.get(i - 1).getCoordinate().getDimension(), false) +
+                execute.PositionedNext(controlPoints.get(i - 1).getCoordinate().getX(), controlPoints.get(i - 1).getCoordinate().getY() + 5, controlPoints.get(i - 1).getCoordinate().getZ(), false) +
                 execute.IfNext(new Selector("@p[distance=9..,gamemode=!spectator,scores={MSGDum2CP" + i + "=" + (10 * tickPerSecond) + ",MSGDum1CP" + i + "=" + (10 * tickPerSecond) + "..}]"), true) +
                 new TellRaw("@a", texts2).sendRaw());
 
-        fileCommands.add(execute.In(controlPoints.get(i - 1).getDimension(), false) +
-                execute.PositionedNext(controlPoints.get(i - 1).getX(), controlPoints.get(i - 1).getY() + 5, controlPoints.get(i - 1).getZ(), false) +
+        fileCommands.add(execute.In(controlPoints.get(i - 1).getCoordinate().getDimension(), false) +
+                execute.PositionedNext(controlPoints.get(i - 1).getCoordinate().getX(), controlPoints.get(i - 1).getCoordinate().getY() + 5, controlPoints.get(i - 1).getCoordinate().getZ(), false) +
                 execute.IfNext(new Selector("@p[distance=9..,gamemode=!spectator,scores={MSGDum2CP" + i + "=" + (10 * tickPerSecond) + ",MSGDum1CP" + i + "=" + (10 * tickPerSecond) + "..}]"), true) +
                 "scoreboard players reset @a[distance=9..,gamemode=!spectator] MSGDum1CP" + i);
 
@@ -1304,7 +1169,7 @@ public class Main {
         ArrayList<TextItem> texts = new ArrayList<>();
         texts.add(new Text(Color.gold, false, false, ">>> "));
         texts.add(new Text(Color.light_purple, false, false, "Traitor Faction: "));
-        texts.add(new Select(Color.red, false, false, "@a[tag=Traitor]"));
+        texts.add(new Select(false, false, "@a[tag=Traitor]"));
         texts.add(new Text(Color.gold, false, false, " <<<"));
 
         fileCommands.add(execute.As("@a[tag=Traitor]") +
@@ -1342,12 +1207,12 @@ public class Main {
         }
 
         for (Team t : teams) {
-            fileCommands.add(execute.In(controlPoints.get(0).getDimension(), false) +
-                    execute.AsNext("@r[limit=1,gamemode=!spectator,x=" + (controlPoints.get(0).getX() - 6) + ",y=" + (controlPoints.get(0).getY() - 1) + ",z=" + (controlPoints.get(0).getZ() - 6) + ",dx=12,dy=12,dz=12,team=" + t.getName() + "]", true) +
+            fileCommands.add(execute.In(controlPoints.get(0).getCoordinate().getDimension(), false) +
+                    execute.AsNext("@r[limit=1,gamemode=!spectator,x=" + (controlPoints.get(0).getCoordinate().getX() - 6) + ",y=" + (controlPoints.get(0).getCoordinate().getY() - 1) + ",z=" + (controlPoints.get(0).getCoordinate().getZ() - 6) + ",dx=12,dy=12,dz=12,team=" + t.getName() + "]", true) +
                     "scoreboard players operation @p[scores={Admin=1}] CP1" + t.getName() + " > @p[scores={Admin=1}] CP2" + t.getName());
 
-            fileCommands.add(execute.In(controlPoints.get(1).getDimension(), false) +
-                    execute.AsNext("@r[limit=1,gamemode=!spectator,x=" + (controlPoints.get(1).getX() - 6) + ",y=" + (controlPoints.get(1).getY() - 1) + ",z=" + (controlPoints.get(1).getZ() - 6) + ",dx=12,dy=12,dz=12,team=" + t.getName() + "]", true) +
+            fileCommands.add(execute.In(controlPoints.get(1).getCoordinate().getDimension(), false) +
+                    execute.AsNext("@r[limit=1,gamemode=!spectator,x=" + (controlPoints.get(1).getCoordinate().getX() - 6) + ",y=" + (controlPoints.get(1).getCoordinate().getY() - 1) + ",z=" + (controlPoints.get(1).getCoordinate().getZ() - 6) + ",dx=12,dy=12,dz=12,team=" + t.getName() + "]", true) +
                     "scoreboard players operation @p[scores={Admin=1}] CP2" + t.getName() + " > @p[scores={Admin=1}] CP1" + t.getName());
         }
         fileCommands.add(callFunction(FileName.controlpoint_perks));
@@ -1359,22 +1224,23 @@ public class Main {
         ArrayList<String> fileCommands = new ArrayList<>();
 
         for (ControlPoint cp : cpList) {
-            fileCommands.add(execute.In(cp.getDimension()) +
-                    "forceload add " + cp.getX() + " " + cp.getZ() + " " + cp.getX() + " " + cp.getZ());
-            fileCommands.add(execute.In(cp.getDimension()) +
-                    setBlock(cp.getX(), cp.getY() + 11, cp.getZ(), "minecraft:structure_block[mode=load]{metadata:\"\",mirror:\"NONE\",ignoreEntities:1b,powered:0b,seed:0L,author:\"?\",rotation:\"NONE\",posX:-6,mode:\"LOAD\",posY:-13,sizeX:13,posZ:-6,integrity:1.0f,showair:0b,name:\"" + cp.getStructureName() + "\",sizeY:14,sizeZ:13,showboundingbox:1b}", SetBlockType.destroy));
-            for (int i = cp.getY() + 12; i < worldHeight; i++) {
-                fileCommands.add(execute.In(cp.getDimension(), false) +
-                        execute.UnlessNext(new Block(cp.getX(), i, cp.getZ(), BlockType.air)) +
-                        execute.UnlessNext(new Block(cp.getX(), i, cp.getZ(), BlockType.cave_air)) +
-                        execute.UnlessNext(new Block(cp.getX(), i, cp.getZ(), BlockType.void_air)) +
-                        execute.UnlessNext(new Block(cp.getX(), i, cp.getZ(), BlockType.bedrock), true) +
-                        setBlock(cp.getX(), i, cp.getZ(), BlockType.glass));
+            Coordinate c = cp.getCoordinate();
+            fileCommands.add(execute.In(c.getDimension()) +
+                    "forceload add " + c.getX() + " " + c.getZ() + " " + c.getX() + " " + c.getZ());
+            fileCommands.add(execute.In(c.getDimension()) +
+                    setBlock(c.getX(), c.getY() + 11, c.getZ(), "minecraft:structure_block[mode=load]{metadata:\"\",mirror:\"NONE\",ignoreEntities:1b,powered:0b,seed:0L,author:\"?\",rotation:\"NONE\",posX:-6,mode:\"LOAD\",posY:-13,sizeX:13,posZ:-6,integrity:1.0f,showair:0b,name:\"" + cp.getStructureName() + "\",sizeY:14,sizeZ:13,showboundingbox:1b}", SetBlockType.destroy));
+            for (int i = c.getY() + 12; i < worldHeight; i++) {
+                fileCommands.add(execute.In(c.getDimension(), false) +
+                        execute.UnlessNext(new Block(c.getX(), i, c.getZ(), BlockType.air)) +
+                        execute.UnlessNext(new Block(c.getX(), i, c.getZ(), BlockType.cave_air)) +
+                        execute.UnlessNext(new Block(c.getX(), i, c.getZ(), BlockType.void_air)) +
+                        execute.UnlessNext(new Block(c.getX(), i, c.getZ(), BlockType.bedrock), true) +
+                        setBlock(c.getX(), i, c.getZ(), BlockType.glass));
             }
-            fileCommands.add(execute.In(cp.getDimension()) +
-                    setBlock(cp.getX(), cp.getY() + 10, cp.getZ(), BlockType.redstone_block, SetBlockType.destroy));
-            fileCommands.add(execute.In(cp.getDimension()) +
-                    "forceload remove " + cp.getX() + " " + cp.getZ() + " " + cp.getX() + " " + cp.getZ());
+            fileCommands.add(execute.In(c.getDimension()) +
+                    setBlock(c.getX(), c.getY() + 10, c.getZ(), BlockType.redstone_block, SetBlockType.destroy));
+            fileCommands.add(execute.In(c.getDimension()) +
+                    "forceload remove " + c.getX() + " " + c.getZ() + " " + c.getX() + " " + c.getZ());
         }
 
         return new FileData(FileName.spawn_controlpoints, fileCommands);
@@ -1395,8 +1261,9 @@ public class Main {
         ArrayList<String> fileCommands = new ArrayList<>();
 
         for (ControlPoint cp : controlPoints) {
-            fileCommands.add(execute.In(cp.getDimension(), false) +
-                    execute.PositionedNext(cp.getX(), cp.getY(), cp.getZ(), true) +
+            Coordinate c = cp.getCoordinate();
+            fileCommands.add(execute.In(c.getDimension(), false) +
+                    execute.PositionedNext(c.getX(), c.getY(), c.getZ(), true) +
                     "effect give @p[gamemode=!spectator] minecraft:" + effects.get(i).getEffect() + " " + effects.get(i).getDuration() + " " + effects.get(i).getAmplification());
         }
 
@@ -1523,8 +1390,9 @@ public class Main {
     private FileData CreateControlpointRedstone() {
         ArrayList<String> fileCommands = new ArrayList<>();
         for (ControlPoint cp : controlPoints) {
-            fileCommands.add(execute.In(cp.getDimension()) +
-                    setBlock(cp.getX(), cp.getY() + 10, cp.getZ(), BlockType.redstone_block, SetBlockType.destroy));
+            Coordinate c = cp.getCoordinate();
+            fileCommands.add(execute.In(c.getDimension()) +
+                    setBlock(c.getX(), c.getY() + 10, c.getZ(), BlockType.redstone_block, SetBlockType.destroy));
         }
 
         return new FileData(FileName.controlpoint_redstone, fileCommands);
@@ -1703,7 +1571,7 @@ public class Main {
         fileCommands.add(execute.In(Dimension.overworld) +
                 "forceload add " + netherPortal.getX() + " " + netherPortal.getZ() + " " + netherPortal.getX() + " " + netherPortal.getZ());
         fileCommands.add(execute.In(Dimension.overworld) +
-                setBlock(netherPortal.getX(), netherPortal.getY(), netherPortal.getZ(), "minecraft:structure_block[mode=load]{author:\"?\",ignoreEntities:1b,integrity:1.0f,metadata:\"\",mirror:\"NONE\",mode:\"LOAD\",name:\"minecraft:nether_portal\",posX:-1,posY:0,posZ:0,powered:0b,rotation:\"NONE\",seed:0L,showair:0b,showboundingbox:1b,sizeX:4,sizeY:5,sizeZ:1}"));
+                setBlock(netherPortal, "minecraft:structure_block[mode=load]{author:\"?\",ignoreEntities:1b,integrity:1.0f,metadata:\"\",mirror:\"NONE\",mode:\"LOAD\",name:\"minecraft:nether_portal\",posX:-1,posY:0,posZ:0,powered:0b,rotation:\"NONE\",seed:0L,showair:0b,showboundingbox:1b,sizeX:4,sizeY:5,sizeZ:1}"));
         fileCommands.add(execute.In(Dimension.overworld) +
                 setBlock(netherPortal.getX() - 1, netherPortal.getY(), netherPortal.getZ(), BlockType.redstone_block));
         fileCommands.add("give @a[gamemode=!spectator] minecraft:compass{display:{Name:\"{\\\"text\\\":\\\"Nether Portal -  located at " + netherPortal.getX() + ", " + netherPortal.getY() + ", " + netherPortal.getZ() + "\\\"}\"}, LodestoneDimension:\"minecraft:" + Dimension.overworld + "\",LodestoneTracked:0b,LodestonePos:{X:" + netherPortal.getX() + ",Y:" + netherPortal.getY() + ",Z:" + netherPortal.getZ() + "}}");
