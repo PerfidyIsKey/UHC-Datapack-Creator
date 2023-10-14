@@ -17,17 +17,33 @@ public class TextItem {
         this.isItalic = isItalic;
     }
 
+    public TextItem(boolean isBold, boolean isItalic) {
+        this.isBold = isBold;
+        this.isItalic = isItalic;
+    }
+
+    private boolean hasColor() {
+        return color != null;
+    }
+
     protected String bold() {
         if (!isBold) {
             return "";
         }
-        return " \"bold\":true,";
+        return ", \"bold\":true";
     }
 
     protected String italic() {
         if (!isItalic) {
             return "";
         }
-        return " \"italic\":true,";
+        return ", \"italic\":true";
+    }
+
+    protected String colorShow() {
+        if (!hasColor()) {
+            return "";
+        }
+        return ", \"color\":\"" + color + "\"";
     }
 }

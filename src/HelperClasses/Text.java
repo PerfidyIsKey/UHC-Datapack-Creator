@@ -14,7 +14,7 @@ public class Text extends TextItem {
     }
 
     public String getText() {
-        return "{\"text\":\"" + text + "\"," + bold() + italic() + " \"color\":\"" + color + "\"}";
+        return "{\"text\":\"" + text + "\"" + bold() + italic() + colorShow() + "}";
     }
 
 

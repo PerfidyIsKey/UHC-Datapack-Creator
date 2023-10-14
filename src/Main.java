@@ -95,6 +95,7 @@ public class Main {
                 changeGamemode(num);
                 createDatapack();
             } else if (input.equals("r")) {
+                gameModeChange();
                 createDatapack();
             } else {
                 System.out.println("Input not recognized.");
@@ -160,6 +161,7 @@ public class Main {
         scoreboardObjectives = new ArrayList<>();
         effects = new ArrayList<>();
         players = new ArrayList<>();
+        quotes = new ArrayList<>();
 
         Color[] colors = {Color.yellow, Color.blue, Color.red, Color.dark_purple, Color.dark_green, Color.light_purple, Color.black, Color.gold, Color.gray, Color.aqua, Color.dark_red, Color.dark_blue, Color.dark_aqua};
         BossBarColor[] bossbarColors = {BossBarColor.yellow, BossBarColor.blue, BossBarColor.red, BossBarColor.purple, BossBarColor.green, BossBarColor.pink, BossBarColor.white, BossBarColor.white, BossBarColor.white, BossBarColor.white, BossBarColor.white, BossBarColor.white, BossBarColor.white};
@@ -1167,7 +1169,7 @@ public class Main {
         ArrayList<TextItem> texts = new ArrayList<>();
         texts.add(new Text(Color.gold, false, false, ">>> "));
         texts.add(new Text(Color.light_purple, false, false, "Traitor Faction: "));
-        texts.add(new Select(Color.red, false, false, "@a[tag=Traitor]"));
+        texts.add(new Select(false, false, "@a[tag=Traitor]"));
         texts.add(new Text(Color.gold, false, false, " <<<"));
 
         fileCommands.add(execute.As("@a[tag=Traitor]") +

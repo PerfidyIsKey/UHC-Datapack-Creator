@@ -1,2 +1,6 @@
-85,57,519,plains
-78,62,-271,river
+-182,87,-281,windswept_hills
+288,114,-314,birch_forest
+335,115,-172,dark_forest
+-407,70,449,savanna
+39,77,-210,old_growth_birch_forest
+-160,62,236,river

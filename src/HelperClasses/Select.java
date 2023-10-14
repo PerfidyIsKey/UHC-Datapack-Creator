@@ -10,7 +10,12 @@ public class Select extends TextItem {
         this.selector = selector;
     }
 
+    public Select(boolean isBold, boolean isItalic, String selector) {
+        super(isBold, isItalic);
+        this.selector = selector;
+    }
+
     public String getText() {
-        return "{\"selector\":\"" + selector + "\"," + bold() + italic() + " \"color\":\"" + color + "\"}";
+        return "{\"selector\":\"" + selector + "\"" + bold() + italic() + colorShow() +"}";
     }
 }
