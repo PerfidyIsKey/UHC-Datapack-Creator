@@ -16,13 +16,13 @@ NewPlayers = [];
 EstimatedRank = [];
 
 %%% Algorithm settings
-teamPlayer          = 3;        % Number of players per team
+teamPlayer          = 4;        % Number of players per team
 rankLowerBound      = 5;        % Maximum negative deviation of score median
 rankUpperBound      = 10;        % Maximum positive deviation of score mean
 rankLowerTolerance	= rankLowerBound + 10;       % Maximum allowed negative deviation
 rankUpperTolerance  = rankUpperBound + 15;       % Maximum allowed positive deviation
 maxConnections      = 2;        % Maximum number of times players have played together
-scoreNoise          = 60;       % Additional score noise to account for inaccuracies
+scoreNoise          = 20;       % Additional score noise to account for inaccuracies
 plotResults         = true;    % Visualize results in real time
 verboseMode         = false;    % Allow messages
 
@@ -37,11 +37,11 @@ NoPar = length(ParticipantIndex);	% Number of participants
 
 %% Participation criteria
 % Pull the players that are participating in this season
-PlayerName	= cell(NoPar+NoN,1);
+playerName	= cell(NoPar+NoN,1);
 Ranks       = zeros(NoPar+NoN,1);
 for i = 1:NoPar + NoN
     if i <= NoPar
-        PlayerName{i} = Players(ParticipantIndex(i)).PlayerName;
+        playerName{i} = Players(ParticipantIndex(i)).PlayerName;
         if ~isnan(Players(ParticipantIndex(i)).Rank)
             Ranks(i) = Players(ParticipantIndex(i)).Rank;
         else
@@ -50,7 +50,7 @@ for i = 1:NoPar + NoN
         end
         Players(ParticipantIndex(i)).Experience = sum(Players(ParticipantIndex(i)).Participation);
     else
-        PlayerName{i} = NewPlayers{i - NoPar};
+        playerName{i} = NewPlayers{i - NoPar};
         Ranks(i) = EstimatedRank(i-NoPar);
         ParticipantIndex(i) = NoP - NoN + i - NoPar;
         Players(ParticipantIndex(i)).Experience = 1;
@@ -70,7 +70,7 @@ lb = ones(playersNumber,1);             % Lower bound (team 1)
 ub = teamNumber*ones(playersNumber,1);  % Upper bound (last team)
 
 %%% Specify Genetic Algorithm options
-options = optimoptions('ga','Display','none');
+options = optimoptions('ga','Display','none', "OutputFcn", @(x, y, z) gaoutfun(x, y, z, playerName));
 
 %% Evaluate Genetic Algorithm
 while true
@@ -83,15 +83,6 @@ while true
         Players,ParticipantIndex,settings); % Objective function
     nonlcon = @(x)constrainTeams(x,scores,teamNumber,teamSize,...
         Players,ParticipantIndex,PlayerConnectivity,settings);  % Constraints
-    vfun = {    % Visualization
-        @(options,state,flag)teamAssign(options,state,flag,PlayerName)
-        @(options,state,flag)teamProgress(options,state,flag,scores,teamNumber,...
-        teamSize,Players,ParticipantIndex,settings)
-        };
-    
-    if plotResults == true
-        options = optimoptions(options,'PlotFcn',vfun);
-    end
     
     [x,fval,exitflag,output,population,popScores] = ga(fun,playersNumber,[],[],[],[],...
         lb,ub,nonlcon,1:playersNumber,options);
@@ -143,8 +134,8 @@ end
 %% Display results
 %%% Plot results
 if verboseMode == true
-    X = categorical(PlayerName);
-    X = reordercats(X,PlayerName);
+    X = categorical(playerName);
+    X = reordercats(X,playerName);
     figure();
     bar(X,x)
     ax = gca;
@@ -171,13 +162,13 @@ for i = 1:teamNumber
             count   = count + 1;
             pCount	= pCount + 1;
             
-            names(count)   = convertCharsToStrings(PlayerName{ii}); % Add player name to display list
+            names(count)   = convertCharsToStrings(playerName{ii}); % Add player name to display list
             if count == 1   % Update display operators
                 oper = '%s';
             else
                 oper((end+1):(end+4)) = ', %s';
             end
-            joinName            = ['team join Team',num2str(i-1),' ',PlayerName{ii}];
+            joinName            = ['team join Team',num2str(i-1),' ',playerName{ii}];
             printName(pCount)	= convertCharsToStrings(joinName);  % Add player name to command list
         end
     end
