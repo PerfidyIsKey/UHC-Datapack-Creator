@@ -34,5 +34,5 @@ cat_person,23,false,true
 GoldBard2474348,18,false,false
 CrimsonCid,10,false,true
 ICEturbo,80,false,true
-TheTolstar,21,false,true
+TheTolstar,21,false,false
 NekoBotUwU,38,false,true

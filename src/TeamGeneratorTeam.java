@@ -5,15 +5,25 @@ import java.util.ArrayList;
 
 public class TeamGeneratorTeam {
     private ArrayList<Player> players;
-    private int totalRank;
+    private int teamSize = 0;
+
+    private int extraMemberPoints = 30;
 
     public TeamGeneratorTeam(ArrayList<Player> players) {
         this.players = players;
-        this.totalRank = generateTotalRank();
+    }
+
+    public TeamGeneratorTeam(ArrayList<Player> players, int teamSize) {
+        this.players = players;
+        this.teamSize = teamSize;
     }
 
     public int getTotalRank() {
-        return totalRank;
+        return generateTotalRank();
+    }
+
+    public void addPlayer(Player player) {
+        this.players.add(player);
     }
 
     private int generateTotalRank() {
@@ -21,6 +31,10 @@ public class TeamGeneratorTeam {
         for (Player player : players) {
             total += player.getRank();
         }
+        if (teamSize != 0) {
+            if (players.size() > teamSize) total += extraMemberPoints;
+        }
+
         return total;
     }
 
@@ -34,7 +48,7 @@ public class TeamGeneratorTeam {
     }
 
     public String getDisplayString(int averageRank) {
-        int rankDiff = totalRank - averageRank;
+        int rankDiff = getTotalRank() - averageRank;
         String rankDiffDisplay;
         if (rankDiff > 0) {
             rankDiffDisplay = "+" + rankDiff;
@@ -42,6 +56,6 @@ public class TeamGeneratorTeam {
             rankDiffDisplay = rankDiff + "";
         }
 
-        return "[" + totalRank + "] " + rankDiffDisplay + " " + getPlayers();
+        return "[" + getTotalRank() + "] " + rankDiffDisplay + " " + getPlayers();
     }
 }

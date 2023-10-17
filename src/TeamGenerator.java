@@ -2,15 +2,15 @@ import Enums.GameMode;
 import FileGeneration.FileTools;
 import HelperClasses.Player;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 public class TeamGenerator {
     private List<Player> players = new ArrayList<>();
-    private int playerAmount = 3;
+    private int playerAmount = 2;
     private int teamAmount;
+
+    private int iterationsPerRun = 3000;
+    private int iterations = 1000;
 
     private int averageRank;
 
@@ -24,27 +24,92 @@ public class TeamGenerator {
 
     public void run() {
         insertNewPlayers();
-        teams = generateFairTeamWithIterations(generateFairTeams(), 1000, averageRank * playerAmount);
+        if(playerAmount == 2 && isDivisible()) {
+            generateTeamsOfTwo();
+        } else {
+            teams = generateFairTeamWithIterations(generateFairTeams(), iterationsPerRun, averageRank * playerAmount, averageRank * playerAmount, averageRank * playerAmount);
+            for (int i = 0; i < iterations; i++) {
+                int highest = 0;
+                int second = 0;
+                int third = 0;
+                for (TeamGeneratorTeam t : teams) {
+                    int diff = t.getTotalRank();
+                    if (diff < 0) diff = diff * -1;
+                    if (diff > highest) {
+                        third = second;
+                        second = highest;
+                        highest = diff;
+                    } else if (diff > second) {
+                        third = second;
+                        second = diff;
+                    } else if (diff > third) {
+                        third = diff;
+                    }
+                }
+                teams = generateFairTeamWithIterations(teams, iterationsPerRun, highest, second, third);
+            }
+        }
+
+
         displayTeams();
     }
 
-    private ArrayList<TeamGeneratorTeam> generateFairTeamWithIterations(ArrayList<TeamGeneratorTeam> bestTeams, int iterations, int diff) {
+    private void generateTeamsOfTwo() {
+        ArrayList<Player> players = new ArrayList<>(this.players);
+        Collections.sort(players, Comparator.comparing(Player::getRank));
+        for (int i = 0; i < teamAmount; i++) {
+            ArrayList<Player> temp = new ArrayList<>();
+            Player p1 = players.get(0);
+            Player p2 = players.get(players.size()-1);
+            temp.add(p1);
+            temp.add(p2);
+            players.remove(p1);
+            players.remove(p2);
+            teams.add(new TeamGeneratorTeam(temp));
+        }
+    }
+
+    private ArrayList<TeamGeneratorTeam> generateFairTeamWithIterations(ArrayList<TeamGeneratorTeam> bestTeams, int iterations, int first, int second, int third) {
+        int margin = 1;
         if (iterations == 0) {
             return bestTeams;
         }
         ArrayList<TeamGeneratorTeam> teams = generateFairTeams();
-        int maxDiff = 0;
+        int maxFirst = 0;
+        int maxSecond = 0;
+        int maxThird = 0;
         for (TeamGeneratorTeam t : teams) {
             int teamDiff = t.getTotalRank() - averageRank * playerAmount;
             if (teamDiff < 0) teamDiff = teamDiff * -1;
-            if (teamDiff > maxDiff) {
-                maxDiff = teamDiff;
+            if (teamDiff > maxFirst) {
+                maxThird = maxSecond;
+                maxSecond = maxFirst;
+                maxFirst = teamDiff;
+            } else if (teamDiff > maxSecond) {
+                maxThird = maxSecond;
+                maxSecond = teamDiff;
+            } else if (teamDiff > maxThird) {
+                maxThird = teamDiff;
             }
         }
-        if (maxDiff < diff) {
-            return generateFairTeamWithIterations(teams, iterations - 1, maxDiff);
+        if (first + margin >= maxFirst && maxFirst >= first - margin && second + margin >= maxSecond && maxSecond >= second - margin) {
+            if (maxThird < third) {
+                return generateFairTeamWithIterations(teams, iterations - 1, maxFirst, maxSecond, maxThird);
+            } else {
+                return generateFairTeamWithIterations(bestTeams, iterations - 1, first, second, maxThird);
+            }
+        }
+        if (first + margin >= maxFirst && maxFirst >= first - margin) {
+            if (maxSecond < second) {
+                return generateFairTeamWithIterations(teams, iterations - 1, maxFirst, maxSecond, maxThird);
+            } else {
+                return generateFairTeamWithIterations(bestTeams, iterations - 1, first, second, maxThird);
+            }
+        }
+        if (maxFirst < first) {
+            return generateFairTeamWithIterations(teams, iterations - 1, maxFirst, maxSecond, maxThird);
         } else {
-            return generateFairTeamWithIterations(bestTeams, iterations - 1, diff);
+            return generateFairTeamWithIterations(bestTeams, iterations - 1, first, second, maxThird);
         }
     }
 
@@ -77,14 +142,6 @@ public class TeamGenerator {
         return total / players.size();
     }
 
-    public void generateEqualSizeTeams() {
-        ArrayList<Player> playersTemp = new ArrayList<>(players);
-        Collections.shuffle(playersTemp);
-        for (int i = 0; i < teamAmount; i++) {
-            teams.add(new TeamGeneratorTeam(new ArrayList(playersTemp.subList(i * playerAmount, i * playerAmount + playerAmount))));
-        }
-    }
-
     private void displayTeams() {
         int totalRank = 0;
         for (TeamGeneratorTeam team : teams) {
@@ -110,10 +167,18 @@ public class TeamGenerator {
                 temp.remove(teamMate);
                 tempList.add(teamMate);
             }
-            if (!isDivisible() && i == teamAmount - 1) {
-                tempList.addAll(temp);
+            teams.add(new TeamGeneratorTeam(tempList, playerAmount));
+        }
+        if (!isDivisible()) {
+            Collections.sort(teams, Comparator.comparing(TeamGeneratorTeam::getTotalRank));
+            int count = 0;
+            while (temp.size() > 0) {
+                Collections.sort(temp, Comparator.comparing(Player::getRank));
+                Player player = temp.get(temp.size() - 1);
+                teams.get(count).addPlayer(player);
+                temp.remove(player);
+                count++;
             }
-            teams.add(new TeamGeneratorTeam(tempList));
         }
         return teams;
     }
@@ -129,11 +194,6 @@ public class TeamGenerator {
         int searchAmount = 0;
         if (playerRank < averageRank * playerAmount) {
             searchAmount = averageRank * playerAmount - playerRank;
-        } else {
-            searchAmount = 0;
-        }
-        if (searchAmount < 0) {
-            searchAmount = 0;
         }
         int searchLowerBound = searchAmount - teamRankMargin;
         int searchHigherBound = searchAmount + teamRankMargin;
