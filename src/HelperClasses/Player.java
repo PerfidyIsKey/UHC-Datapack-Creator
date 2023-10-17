@@ -8,15 +8,18 @@ public class Player {
 
     private boolean ignoreTraitor;
 
+    private boolean isPlaying;
+
     public Player(String playerName, int rank) {
         this.playerName = playerName;
         this.rank = rank;
     }
 
-    public Player(String playerName, int rank, boolean ignoreTraitor) {
+    public Player(String playerName, int rank, boolean ignoreTraitor, boolean isPlaying) {
         this.playerName = playerName;
         this.rank = rank;
         this.ignoreTraitor = ignoreTraitor;
+        this.isPlaying = isPlaying;
     }
 
     public String getPlayerName() {
@@ -39,5 +42,9 @@ public class Player {
 
     public void setIgnoreTraitor(boolean admin) {
         this.ignoreTraitor = ignoreTraitor;
+    }
+
+    public boolean isPlaying() {
+        return isPlaying;
     }
 }
