@@ -24,7 +24,7 @@ public class TeamGenerator {
 
     public void run() {
         insertNewPlayers();
-        teams = generateFairTeamWithIterations(generateFairTeams(), 10, averageRank * playerAmount);
+        teams = generateFairTeamWithIterations(generateFairTeams(), 1000, averageRank * playerAmount);
         displayTeams();
     }
 
@@ -33,7 +33,7 @@ public class TeamGenerator {
             return bestTeams;
         }
         ArrayList<TeamGeneratorTeam> teams = generateFairTeams();
-        int maxDiff = diff;
+        int maxDiff = 0;
         for (TeamGeneratorTeam t : teams) {
             int teamDiff = t.getTotalRank() - averageRank * playerAmount;
             if (teamDiff < 0) teamDiff = teamDiff * -1;
@@ -46,7 +46,6 @@ public class TeamGenerator {
         } else {
             return generateFairTeamWithIterations(bestTeams, iterations - 1, diff);
         }
-
     }
 
     private void insertNewPlayers() {
