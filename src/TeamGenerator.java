@@ -4,10 +4,13 @@ import HelperClasses.Player;
 
 import java.util.*;
 
+//TODO: Create team files .mcfunction.
 public class TeamGenerator {
     private List<Player> players = new ArrayList<>();
-    private int playerAmount = 2;
+    private int playerAmount = 0;
     private int teamAmount;
+
+    private boolean allPlayers = false;
 
     private int iterationsPerRun = 3000;
     private int iterations = 1000;
@@ -24,10 +27,11 @@ public class TeamGenerator {
 
     public void run() {
         insertNewPlayers();
-        if(playerAmount == 2 && isDivisible()) {
+        if (playerAmount == 2 && isDivisible()) {
             generateTeamsOfTwo();
         } else {
             teams = generateFairTeamWithIterations(generateFairTeams(), iterationsPerRun, averageRank * playerAmount, averageRank * playerAmount, averageRank * playerAmount);
+            //Change depth of 3 to use Collection sort. Results in max-depth.
             for (int i = 0; i < iterations; i++) {
                 int highest = 0;
                 int second = 0;
@@ -60,7 +64,7 @@ public class TeamGenerator {
         for (int i = 0; i < teamAmount; i++) {
             ArrayList<Player> temp = new ArrayList<>();
             Player p1 = players.get(0);
-            Player p2 = players.get(players.size()-1);
+            Player p2 = players.get(players.size() - 1);
             temp.add(p1);
             temp.add(p2);
             players.remove(p1);
@@ -120,7 +124,12 @@ public class TeamGenerator {
             String[] playerSplit = fileTools.splitLineOnComma(player);
             players.add(new Player(playerSplit[0], Integer.parseInt(playerSplit[1]), Boolean.parseBoolean(playerSplit[2]), Boolean.parseBoolean(playerSplit[3])));
         }
-        removeInactivePlayers();
+        if (!allPlayers) {
+            removeInactivePlayers();
+        } else {
+            iterationsPerRun = iterationsPerRun / 10;
+        }
+        determineAmountOfPlayersPerTeam();
         averageRank = getAverageRankOfPlayers();
         teamAmount = calcTeamAmount();
     }
@@ -220,6 +229,15 @@ public class TeamGenerator {
         Collections.sort(players, Comparator.comparing(Player::getRank));
         Collections.reverse(players);
         return players;
+    }
+
+    private void determineAmountOfPlayersPerTeam() {
+        if ((players.size() % 4) == 0 && players.size() >= 16) playerAmount = 4;
+        else if ((players.size() % 2) == 0) playerAmount = 2;
+        else if ((players.size() % 3) == 0) playerAmount = 3;
+
+        else if (players.size() % 3 == 1) playerAmount = 3;
+        else playerAmount = 2;
     }
 }
 
