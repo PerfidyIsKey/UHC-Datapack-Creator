@@ -9,7 +9,6 @@ import HelperClasses.Team;
 import java.io.IOException;
 import java.util.*;
 
-//TODO: Create team files .mcfunction.
 public class TeamGenerator {
     private List<Player> players = new ArrayList<>();
 
@@ -41,7 +40,7 @@ public class TeamGenerator {
         teamss.add(generateTeams(teamRankMargin, playerAmount, iterationsPerRun));
 
         for (int i = 0; i < 5; i++) {
-            teamss.add(generateTeams(teamRankMargin + i * 2, playerAmount, 300));
+            teamss.add(generateTeams(teamRankMargin + i * 3, playerAmount, 300));
         }
         Scanner scanner = new Scanner(System.in);
         System.out.println("Choose a team composition. [num]");
@@ -58,13 +57,13 @@ public class TeamGenerator {
             teams = teamss.get(num - 1);
             System.out.println("Teams chosen: " + num);
             displayTeams(teams, 0);
+            try {
+                fileTools.writeFile(generateTeamFile(teams), fileLocation);
+            } catch (IOException e){
+                System.out.println("Error writing team file");
+            }
         } catch (Exception e) {
             chooseTeams(teamss.size());
-        }
-        try {
-            fileTools.writeFile(generateTeamFile(teams), fileLocation);
-        } catch (IOException e){
-            System.out.println("Error writing team file");
         }
     }
 
@@ -194,7 +193,7 @@ public class TeamGenerator {
                 temp.remove(teamMate);
                 tempList.add(teamMate);
             }
-            teams.add(new TeamGeneratorTeam(tempList, playerAmount));
+            teams.add(new TeamGeneratorTeam(tempList, playerAmount, playerConnections));
         }
         if (!isDivisible()) {
             Collections.sort(teams, Comparator.comparing(TeamGeneratorTeam::getTotalRank));

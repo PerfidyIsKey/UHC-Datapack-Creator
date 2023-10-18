@@ -1,7 +1,10 @@
 
 import HelperClasses.Player;
+import HelperClasses.PlayerConnection;
 
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 
 public class TeamGeneratorTeam {
     private ArrayList<Player> players;
@@ -9,14 +12,28 @@ public class TeamGeneratorTeam {
 
     private int extraMemberPoints = 30;
 
-    public TeamGeneratorTeam(ArrayList<Player> players) {
-        this.players = players;
-    }
+    private List<PlayerConnection> playerConnections;
 
-    public TeamGeneratorTeam(ArrayList<Player> players, int teamSize) {
+    public TeamGeneratorTeam(ArrayList<Player> players, int teamSize, List<PlayerConnection> playerConnections) {
         this.players = players;
         this.teamSize = teamSize;
+        this.playerConnections = filterPlayerConnections(playerConnections);
     }
+
+    private List<PlayerConnection> filterPlayerConnections(List<PlayerConnection> playerConnections) {
+        List<PlayerConnection> filteredPlayerConnections = new ArrayList<>();
+        for (PlayerConnection playerConnection : playerConnections) {
+            for (Player player : players) {
+                if (playerConnection.getPlayer1().getInternalID() == player.getInternalID())
+                    for (Player player2 : players) {
+                        if (playerConnection.getPlayer2().getInternalID() == player2.getInternalID())
+                            filteredPlayerConnections.add(playerConnection);
+                    }
+            }
+        }
+        return filteredPlayerConnections;
+    }
+
 
     public int getTotalRank() {
         return generateTotalRank();
@@ -42,10 +59,25 @@ public class TeamGeneratorTeam {
         return players;
     }
 
+    private List<PlayerConnection> getPlayerConnections(Player player) {
+        List<PlayerConnection> playerConnectionsOfPlayer = new ArrayList<>();
+        for (PlayerConnection playerConnection : playerConnections) {
+            if (playerConnection.getPlayer1().getInternalID() == player.getInternalID() || playerConnection.getPlayer2().getInternalID() == player.getInternalID())
+                playerConnectionsOfPlayer.add(playerConnection);
+        }
+        return playerConnectionsOfPlayer;
+    }
+
+    private int getHighestConnection(List<PlayerConnection> playerConnections) {
+        if (playerConnections.size() == 0) return 0;
+        playerConnections.sort(Comparator.comparing(PlayerConnection::getTimesPlayedTogether));
+        return playerConnections.get(playerConnections.size() - 1).getTimesPlayedTogether();
+    }
+
     public String getPlayersString() {
         StringBuilder result = new StringBuilder();
         for (Player player : players) {
-            result.append(player.getPlayerName()).append(", ");
+            result.append(player.getPlayerName()).append("{").append(getHighestConnection(getPlayerConnections(player))).append("}, ");
         }
         result.deleteCharAt(result.length() - 2);
         return result.toString();
