@@ -1,9 +1,12 @@
+import Enums.FileName;
 import Enums.GameMode;
+import FileGeneration.FileData;
 import FileGeneration.FileTools;
 import HelperClasses.Player;
 import HelperClasses.PlayerConnection;
 import HelperClasses.Team;
 
+import java.io.IOException;
 import java.util.*;
 
 //TODO: Create team files .mcfunction.
@@ -14,36 +17,78 @@ public class TeamGenerator {
     private int playerAmount = 3;
     private int teamAmount;
 
-    private int maxTimesPlayedTogether = 3;
-    private int highestPlayerConnection;
+    private ArrayList<Team> teams;
 
     private int iterationsPerRun = 3000;
     private int iterations = 1000;
 
     private int averageRank;
 
+    ArrayList<ArrayList<TeamGeneratorTeam>> teamss = new ArrayList<>();
     private int teamRankMargin = 20;
-    private ArrayList<TeamGeneratorTeam> teams = new ArrayList<>();
-
     FileTools fileTools = new FileTools();
 
+    String fileLocation;
 
-    public static void main(String[] args) {
-        new TeamGenerator().run();
+    public TeamGenerator(String fileLocation, ArrayList<Team> teams) {
+        this.teams = teams;
+        this.fileLocation = fileLocation;
     }
 
     public void run() {
         insertNewPlayers();
         determinePlayerConnections();
-//        if (playerAmount == 2 && isDivisible()) {
-//            generateTeamsOfTwo();
-//        } else {
+        teamss.add(generateTeams(teamRankMargin, playerAmount, iterationsPerRun));
+
+        for (int i = 0; i < 5; i++) {
+            teamss.add(generateTeams(teamRankMargin + i * 2, playerAmount, 300));
+        }
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Choose a team composition. [num]");
+        int input = scanner.nextInt();
+        chooseTeams(input);
+    }
+
+    private void chooseTeams(int num) {
+        if (num <= 0) {
+            num = 1;
+        }
+        ArrayList<TeamGeneratorTeam> teams = new ArrayList<>();
+        try {
+            teams = teamss.get(num - 1);
+            System.out.println("Teams chosen: " + num);
+            displayTeams(teams, 0);
+        } catch (Exception e) {
+            chooseTeams(teamss.size());
+        }
+        try {
+            fileTools.writeFile(generateTeamFile(teams), fileLocation);
+        } catch (IOException e){
+            System.out.println("Error writing team file");
+        }
+    }
+
+    private FileData generateTeamFile(ArrayList<TeamGeneratorTeam> teamGeneratorTeams) {
+        ArrayList<String> fileCommands = new ArrayList<>();
+        for (int i = 0; i < teamGeneratorTeams.size(); i++) {
+            for (Player p : teamGeneratorTeams.get(i).getPlayers()) {
+                fileCommands.add("team join " + teams.get(i).getName() + " " + p.getPlayerName());
+            }
+        }
+        return new FileData(FileName.teams, fileCommands);
+    }
+
+    private ArrayList<TeamGeneratorTeam> generateTeams(int teamRankMargin, int playerAmount, int iterationsPerRun) {
+        this.teamRankMargin = teamRankMargin;
+        this.playerAmount = playerAmount;
+        this.iterationsPerRun = iterationsPerRun;
+        ArrayList<TeamGeneratorTeam> teams;
         teams = generateFairTeamWithIterations(generateFairTeams(), iterationsPerRun);
         for (int i = 0; i < iterations; i++) {
             teams = generateFairTeamWithIterations(teams, iterationsPerRun);
         }
-//        }
-        displayTeams();
+        displayTeams(teams, iterationsPerRun);
+        return teams;
     }
 
     private void insertNewPlayers() {
@@ -88,7 +133,6 @@ public class TeamGenerator {
             }
         }
         Collections.sort(playerConnections, Comparator.comparing(PlayerConnection::getTimesPlayedTogether));
-        highestPlayerConnection = playerConnections.get(playerConnections.size() - 1).getTimesPlayedTogether();
     }
 
     private Player getPlayerByInternalID(int internalID) {
@@ -98,21 +142,6 @@ public class TeamGenerator {
             }
         }
         return null;
-    }
-
-    private void generateTeamsOfTwo() {
-        ArrayList<Player> players = new ArrayList<>(this.players);
-        sortPlayers(players);
-        for (int i = 0; i < teamAmount; i++) {
-            ArrayList<Player> temp = new ArrayList<>();
-            Player p1 = players.get(0);
-            Player p2 = players.get(players.size() - 1);
-            temp.add(p1);
-            temp.add(p2);
-            players.remove(p1);
-            players.remove(p2);
-            teams.add(new TeamGeneratorTeam(temp));
-        }
     }
 
     private ArrayList<TeamGeneratorTeam> generateFairTeamWithIterations(ArrayList<TeamGeneratorTeam> bestTeams, int iterations) {
@@ -266,27 +295,49 @@ public class TeamGenerator {
 
     private void determineAmountOfPlayersPerTeam() {
         if ((players.size() % 4) == 0 && players.size() >= 16) playerAmount = 4;
-        else if ((players.size() % 2) == 0) playerAmount = 2;
         else if ((players.size() % 3) == 0) playerAmount = 3;
+        else if ((players.size() % 2) == 0) playerAmount = 2;
         else if (players.size() % 3 == 1) playerAmount = 3;
         else playerAmount = 2;
     }
 
-    private void displayTeams() {
+    private void displayTeams(ArrayList<TeamGeneratorTeam> teams, int iterationsPerRun) {
+        String iterations = "";
+        if (iterationsPerRun != 0) {
+            iterations = stringFormat(iterationsPerRun * this.iterations) + " iterations checked.";
+        }
         int totalRank = 0;
         for (TeamGeneratorTeam team : teams) {
             totalRank += team.getTotalRank();
         }
-        System.out.println("Average rank for teams: " + totalRank / teamAmount + " With a total of " + players.size() + " players.");
+        System.out.println("Average rank for teams: " + totalRank / teamAmount + " With a total of " + players.size() + " players." + " " + iterations);
         for (TeamGeneratorTeam team : teams) {
             System.out.println(team.getDisplayString(totalRank / teamAmount));
         }
+        System.out.println();
     }
 
-    private void displayPlayerConnections() {
-        for (PlayerConnection playerConnection : playerConnections) {
-            System.out.println(playerConnection.getPlayer1().getPlayerName() + ", " + playerConnection.getPlayer2().getPlayerName() + ", " + playerConnection.getTimesPlayedTogether());
+    private String stringFormat(int num) {
+        String numString = num + "";
+        int length = numString.length();
+        int interval = length % 3;
+        StringBuilder sb = new StringBuilder(numString);
+        int amountOfDots;
+        if (interval > 0) {
+            amountOfDots = length / 3;
+        } else {
+            amountOfDots = length / 3;
         }
+        for (int i = 0; i < amountOfDots; i++) {
+            if (interval == 0) {
+                if (i != 0) {
+                    sb.insert((interval + i * 4) - 1, '.');
+                }
+            } else {
+                sb.insert(interval + i * 4, '.');
+            }
+        }
+        return sb.toString();
     }
 }
 

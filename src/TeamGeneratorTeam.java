@@ -38,7 +38,11 @@ public class TeamGeneratorTeam {
         return total;
     }
 
-    public String getPlayers() {
+    public ArrayList<Player> getPlayers() {
+        return players;
+    }
+
+    public String getPlayersString() {
         StringBuilder result = new StringBuilder();
         for (Player player : players) {
             result.append(player.getPlayerName()).append(", ");
@@ -56,6 +60,6 @@ public class TeamGeneratorTeam {
             rankDiffDisplay = rankDiff + "";
         }
 
-        return "[" + getTotalRank() + "] " + rankDiffDisplay + " " + getPlayers();
+        return "[" + getTotalRank() + "] " + rankDiffDisplay + " " + getPlayersString();
     }
 }

@@ -26,8 +26,8 @@
 42,Pimmie36,42,false,true
 43,Jayroon123,0,false,true
 44,PbQuinn,25,false,true
-45,Vermeil_Chan,14,false,true
-46,Jobbo2002,8,false,true
+45,Vermeil_Chan,14,false,false
+46,Jobbo2002,8,false,false
 47,Uncle_Lolly,3,false,false
 48,AurqSnqtcher,20,false,true
 49,cat_person,23,false,true

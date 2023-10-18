@@ -64,6 +64,8 @@ public class Main {
 
     private final Text bannerText = new Text(Color.dark_gray, true, false, " | ");
 
+    private TeamGenerator teamGenerator;
+
     //GameData>
 
 
@@ -83,6 +85,7 @@ public class Main {
             System.out.println("Options:\n");
             System.out.println("Change Gamemode (c[n])");
             System.out.println("Re-run (r)");
+            System.out.println("Generate teams (t)");
             System.out.println("-----------------");
             System.out.print("> ");
             input = scanner.nextLine();
@@ -97,7 +100,9 @@ public class Main {
             } else if (input.equals("r")) {
                 gameModeChange();
                 createDatapack();
-            } else {
+            }else if (input.equals("t")) {
+                teamGenerator.run();
+            }else {
                 System.out.println("Input not recognized.");
             }
         }
@@ -172,6 +177,7 @@ public class Main {
             Team team = new Team("Team" + i, colors[i], bossbarColors[i], glassColors[i], collarColors[i], jsonColors[i]);
             teams.add(team);
         }
+        teamGenerator = new TeamGenerator(fileLocation, teams);
 
         CarePackage carePackage2 = new CarePackage("anti_cp", "Anti Controlpoint Drop",
                 "[{Slot:1b,id:\"minecraft:gunpowder\",Count:1b},{Slot:2b,id:\"minecraft:gunpowder\",Count:1b},{Slot:3b,id:\"minecraft:tnt\",Count:1b},{Slot:4b,id:\"minecraft:flint_and_steel\",Count:1b},{Slot:5b,id:\"minecraft:tnt\",Count:1b},{Slot:6b,id:\"minecraft:sand\",Count:1b},{Slot:7b,id:\"minecraft:sand\",Count:1b},{Slot:11b,id:\"minecraft:enchanted_book\",Count:1b,tag:{StoredEnchantments:[{lvl:4s,id:\"minecraft:blast_protection\"}]}},{Slot:12b,id:\"minecraft:lava_bucket\",Count:1b},{Slot:13b,id:\"minecraft:tnt\",Count:1b},{Slot:14b,id:\"minecraft:lava_bucket\",Count:1b},{Slot:15b,id:\"minecraft:enchanted_book\",Count:1b,tag:{StoredEnchantments:[{lvl:4s,id:\"minecraft:blast_protection\"}]}},{Slot:19b,id:\"minecraft:sand\",Count:1b},{Slot:20b,id:\"minecraft:sand\",Count:1b},{Slot:21b,id:\"minecraft:tnt\",Count:1b},{Slot:22b,id:\"minecraft:flint_and_steel\",Count:1b},{Slot:23b,id:\"minecraft:tnt\",Count:1b},{Slot:24b,id:\"minecraft:gunpowder\",Count:1b},{Slot:25b,id:\"minecraft:gunpowder\",Count:1b}]",
