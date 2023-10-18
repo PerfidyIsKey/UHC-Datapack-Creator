@@ -1,13 +1,14 @@
 import Enums.GameMode;
 import FileGeneration.FileTools;
 import HelperClasses.Player;
+import HelperClasses.Team;
 
 import java.util.*;
 
 //TODO: Create team files .mcfunction.
 public class TeamGenerator {
     private List<Player> players = new ArrayList<>();
-    private int playerAmount = 0;
+    private int playerAmount = 3;
     private int teamAmount;
 
     private boolean allPlayers = false;
@@ -30,37 +31,17 @@ public class TeamGenerator {
         if (playerAmount == 2 && isDivisible()) {
             generateTeamsOfTwo();
         } else {
-            teams = generateFairTeamWithIterations(generateFairTeams(), iterationsPerRun, averageRank * playerAmount, averageRank * playerAmount, averageRank * playerAmount);
-            //Change depth of 3 to use Collection sort. Results in max-depth.
+            teams = generateFairTeamWithIterations(generateFairTeams(), iterationsPerRun);
             for (int i = 0; i < iterations; i++) {
-                int highest = 0;
-                int second = 0;
-                int third = 0;
-                for (TeamGeneratorTeam t : teams) {
-                    int diff = t.getTotalRank();
-                    if (diff < 0) diff = diff * -1;
-                    if (diff > highest) {
-                        third = second;
-                        second = highest;
-                        highest = diff;
-                    } else if (diff > second) {
-                        third = second;
-                        second = diff;
-                    } else if (diff > third) {
-                        third = diff;
-                    }
-                }
-                teams = generateFairTeamWithIterations(teams, iterationsPerRun, highest, second, third);
+                teams = generateFairTeamWithIterations(teams, iterationsPerRun);
             }
         }
-
-
         displayTeams();
     }
 
     private void generateTeamsOfTwo() {
         ArrayList<Player> players = new ArrayList<>(this.players);
-        Collections.sort(players, Comparator.comparing(Player::getRank));
+        sortPlayers(players);
         for (int i = 0; i < teamAmount; i++) {
             ArrayList<Player> temp = new ArrayList<>();
             Player p1 = players.get(0);
@@ -73,48 +54,39 @@ public class TeamGenerator {
         }
     }
 
-    private ArrayList<TeamGeneratorTeam> generateFairTeamWithIterations(ArrayList<TeamGeneratorTeam> bestTeams, int iterations, int first, int second, int third) {
+    private ArrayList<TeamGeneratorTeam> generateFairTeamWithIterations(ArrayList<TeamGeneratorTeam> bestTeams, int iterations) {
         int margin = 1;
         if (iterations == 0) {
             return bestTeams;
         }
-        ArrayList<TeamGeneratorTeam> teams = generateFairTeams();
-        int maxFirst = 0;
-        int maxSecond = 0;
-        int maxThird = 0;
-        for (TeamGeneratorTeam t : teams) {
-            int teamDiff = t.getTotalRank() - averageRank * playerAmount;
-            if (teamDiff < 0) teamDiff = teamDiff * -1;
-            if (teamDiff > maxFirst) {
-                maxThird = maxSecond;
-                maxSecond = maxFirst;
-                maxFirst = teamDiff;
-            } else if (teamDiff > maxSecond) {
-                maxThird = maxSecond;
-                maxSecond = teamDiff;
-            } else if (teamDiff > maxThird) {
-                maxThird = teamDiff;
+        ArrayList<TeamGeneratorTeam> newTeams = generateFairTeams();
+        ArrayList<Integer> newTeamsMeta = getMetaData(newTeams);
+        ArrayList<Integer> bestTeamsMeta = getMetaData(bestTeams);
+        for (int i = 0; i < newTeamsMeta.size(); i++) {
+            if(!(bestTeamsMeta.get(i) + margin >= newTeamsMeta.get(i) && newTeamsMeta.get(i) >= bestTeamsMeta.get(i) - margin)) {
+                if (newTeamsMeta.get(i) < bestTeamsMeta.get(i)) {
+                    return generateFairTeamWithIterations(newTeams, iterations - 1);
+                } else {
+                    return generateFairTeamWithIterations(bestTeams, iterations - 1);
+                }
             }
         }
-        if (first + margin >= maxFirst && maxFirst >= first - margin && second + margin >= maxSecond && maxSecond >= second - margin) {
-            if (maxThird < third) {
-                return generateFairTeamWithIterations(teams, iterations - 1, maxFirst, maxSecond, maxThird);
-            } else {
-                return generateFairTeamWithIterations(bestTeams, iterations - 1, first, second, maxThird);
-            }
+        return generateFairTeamWithIterations(bestTeams, iterations - 1);
+    }
+
+    private ArrayList<Integer> getMetaData(ArrayList<TeamGeneratorTeam> teams) {
+        Collections.sort(teams, Comparator.comparing(TeamGeneratorTeam::getTotalRank));
+        Collections.reverse(teams);
+        ArrayList<Integer> teamNums = new ArrayList<>();
+        for (TeamGeneratorTeam team : teams) {
+            teamNums.add(confirmPositiveValue(team.getTotalRank()));
         }
-        if (first + margin >= maxFirst && maxFirst >= first - margin) {
-            if (maxSecond < second) {
-                return generateFairTeamWithIterations(teams, iterations - 1, maxFirst, maxSecond, maxThird);
-            } else {
-                return generateFairTeamWithIterations(bestTeams, iterations - 1, first, second, maxThird);
-            }
-        }
-        if (maxFirst < first) {
-            return generateFairTeamWithIterations(teams, iterations - 1, maxFirst, maxSecond, maxThird);
-        } else {
-            return generateFairTeamWithIterations(bestTeams, iterations - 1, first, second, maxThird);
-        }
+        return teamNums;
+    }
+
+    private int confirmPositiveValue(int num) {
+        if (num < 0) return num * -1;
+        else return num;
     }
 
     private void insertNewPlayers() {
@@ -126,10 +98,10 @@ public class TeamGenerator {
         }
         if (!allPlayers) {
             removeInactivePlayers();
+            determineAmountOfPlayersPerTeam();
         } else {
             iterationsPerRun = iterationsPerRun / 10;
         }
-        determineAmountOfPlayersPerTeam();
         averageRank = getAverageRankOfPlayers();
         teamAmount = calcTeamAmount();
     }
@@ -164,7 +136,8 @@ public class TeamGenerator {
 
     private ArrayList<TeamGeneratorTeam> generateFairTeams() {
         ArrayList<TeamGeneratorTeam> teams = new ArrayList<>();
-        ArrayList<Player> temp = sortPlayersHighToLow(new ArrayList<>(players));
+        ArrayList<Player> temp = new ArrayList<>(players);
+        sortPlayersHighToLow(temp);
 
         for (int i = 0; i < teamAmount; i++) {
             Player player = temp.get(0);
@@ -182,7 +155,7 @@ public class TeamGenerator {
             Collections.sort(teams, Comparator.comparing(TeamGeneratorTeam::getTotalRank));
             int count = 0;
             while (temp.size() > 0) {
-                Collections.sort(temp, Comparator.comparing(Player::getRank));
+                sortPlayers(temp);
                 Player player = temp.get(temp.size() - 1);
                 teams.get(count).addPlayer(player);
                 temp.remove(player);
@@ -225,17 +198,19 @@ public class TeamGenerator {
         return this.players.size() % playerAmount == 0;
     }
 
-    private ArrayList<Player> sortPlayersHighToLow(ArrayList<Player> players) {
-        Collections.sort(players, Comparator.comparing(Player::getRank));
+    private void sortPlayersHighToLow(ArrayList<Player> players) {
+        sortPlayers(players);
         Collections.reverse(players);
-        return players;
+    }
+
+    private void sortPlayers(ArrayList<Player> players) {
+        Collections.sort(players, Comparator.comparing(Player::getRank));
     }
 
     private void determineAmountOfPlayersPerTeam() {
         if ((players.size() % 4) == 0 && players.size() >= 16) playerAmount = 4;
         else if ((players.size() % 2) == 0) playerAmount = 2;
         else if ((players.size() % 3) == 0) playerAmount = 3;
-
         else if (players.size() % 3 == 1) playerAmount = 3;
         else playerAmount = 2;
     }
