@@ -10,12 +10,16 @@ public class Player {
 
     private boolean isPlaying;
 
-    public Player(String playerName, int rank) {
+    private int internalID;
+
+    public Player(int internalID, String playerName, int rank) {
+        this.internalID = internalID;
         this.playerName = playerName;
         this.rank = rank;
     }
 
-    public Player(String playerName, int rank, boolean ignoreTraitor, boolean isPlaying) {
+    public Player(int internalID, String playerName, int rank, boolean ignoreTraitor, boolean isPlaying) {
+        this.internalID = internalID;
         this.playerName = playerName;
         this.rank = rank;
         this.ignoreTraitor = ignoreTraitor;
@@ -26,7 +30,9 @@ public class Player {
         return playerName;
     }
 
-    public void setPlayerName(String playerName) { this.playerName = playerName; }
+    public void setPlayerName(String playerName) {
+        this.playerName = playerName;
+    }
 
     public int getRank() {
         return rank;
@@ -46,5 +52,9 @@ public class Player {
 
     public boolean isPlaying() {
         return isPlaying;
+    }
+
+    public int getInternalID() {
+        return internalID;
     }
 }
