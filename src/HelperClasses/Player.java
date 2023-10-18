@@ -30,10 +30,6 @@ public class Player {
         return playerName;
     }
 
-    public void setPlayerName(String playerName) {
-        this.playerName = playerName;
-    }
-
     public int getRank() {
         return rank;
     }
@@ -44,10 +40,6 @@ public class Player {
 
     public boolean getIgnoreTraitor() {
         return ignoreTraitor;
-    }
-
-    public void setIgnoreTraitor(boolean admin) {
-        this.ignoreTraitor = ignoreTraitor;
     }
 
     public boolean isPlaying() {

@@ -12,8 +12,10 @@ import static java.lang.Integer.parseInt;
 
 public class Main {
 
+
+    //TODO: Automate process using args.
     public static void main(String[] args) {
-        new Main().run();
+        new Main().run(args);
     }
 
     //packages
@@ -72,39 +74,45 @@ public class Main {
     private ArrayList<FileData> files = new ArrayList<>();
 
 
-    private void run() {
+    private void run(String[] args) {
 
-        gameModeChange();
-        createDatapack();
-        boolean menuRunning = true;
-        Scanner scanner = new Scanner(System.in);
-        String input;
-        System.out.println("-----------------\n");
-        while (menuRunning) {
-            System.out.println("Datapack created under Gamemode: " + gameMode);
-            System.out.println("Options:\n");
-            System.out.println("Change Gamemode (c[n])");
-            System.out.println("Re-run (r)");
-            System.out.println("Generate teams (t)");
-            System.out.println("-----------------");
-            System.out.print("> ");
-            input = scanner.nextLine();
-            if (input.equals("exit")) {
-                menuRunning = false;
-                System.out.println("Exiting System.");
-            } else if (input.startsWith("c")) {
-                String command = input.replace("c", "");
-                int num = parseInt(command);
-                changeGamemode(num);
-                createDatapack();
-            } else if (input.equals("r")) {
-                gameModeChange();
-                createDatapack();
-            }else if (input.equals("t")) {
-                teamGenerator.run();
-            }else {
-                System.out.println("Input not recognized.");
+            gameModeChange();
+            createDatapack();
+        if (args.length == 0) {
+            boolean menuRunning = true;
+            Scanner scanner = new Scanner(System.in);
+            String input;
+            System.out.println("-----------------\n");
+            while (menuRunning) {
+                System.out.println("Datapack created under Gamemode: " + gameMode);
+                System.out.println("Options:\n");
+                System.out.println("Change Gamemode (c[n])");
+                System.out.println("Re-run (r)");
+                System.out.println("Generate teams (t)");
+                System.out.println("-----------------");
+                System.out.print("> ");
+                input = scanner.nextLine();
+                if (input.equals("exit")) {
+                    menuRunning = false;
+                    System.out.println("Exiting System.");
+                } else if (input.startsWith("c")) {
+                    String command = input.replace("c", "");
+                    int num = parseInt(command);
+                    changeGamemode(num);
+                    createDatapack();
+                } else if (input.equals("r")) {
+                    gameModeChange();
+                    createDatapack();
+                } else if (input.equals("t")) {
+                    teamGenerator = new TeamGenerator(fileLocation, teams);
+                    teamGenerator.run(false);
+                } else {
+                    System.out.println("Input not recognized.");
+                }
             }
+        } else {
+            teamGenerator = new TeamGenerator(fileLocation, teams);
+            teamGenerator.run(true);
         }
     }
 
@@ -207,7 +215,10 @@ public class Main {
         ArrayList<String> playersString = fileTools.GetLinesFromFile("Files\\" + gameMode + "\\players.txt");
         for (String player : playersString) {
             String[] playerSplit = fileTools.splitLineOnComma(player);
-            players.add(new Player(Integer.parseInt(playerSplit[0]), playerSplit[1], Integer.parseInt(playerSplit[2]), Boolean.parseBoolean(playerSplit[3]), Boolean.parseBoolean(playerSplit[4])));
+            boolean isPlaying = Boolean.parseBoolean(playerSplit[4]);
+            if (isPlaying) {
+                players.add(new Player(Integer.parseInt(playerSplit[0]), playerSplit[1], Integer.parseInt(playerSplit[2]), Boolean.parseBoolean(playerSplit[3]), isPlaying));
+            }
         }
 
         // Quotes

@@ -34,32 +34,37 @@ public class TeamGenerator {
         this.fileLocation = fileLocation;
     }
 
-    public void run() {
+    //TODO: Update player connections after UHC. Update file yes/no.
+
+    public void run(boolean auto) {
         insertNewPlayers();
         determinePlayerConnections();
         teamss.add(generateTeams(teamRankMargin, playerAmount, iterationsPerRun));
-
-        for (int i = 0; i < 5; i++) {
-            teamss.add(generateTeams(teamRankMargin + i * 3, playerAmount, 300));
+        if (!auto) {
+            for (int i = 0; i < 5; i++) {
+                teamss.add(generateTeams(teamRankMargin + i * 3, playerAmount, 300));
+            }
+            Scanner scanner = new Scanner(System.in);
+            System.out.println("Choose a team composition. [num]");
+            int input = scanner.nextInt();
+            chooseTeams(input);
+        } else {
+            chooseTeams(0);
         }
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("Choose a team composition. [num]");
-        int input = scanner.nextInt();
-        chooseTeams(input);
     }
 
     private void chooseTeams(int num) {
         if (num <= 0) {
             num = 1;
         }
-        ArrayList<TeamGeneratorTeam> teams = new ArrayList<>();
+
         try {
-            teams = teamss.get(num - 1);
+            ArrayList<TeamGeneratorTeam> teams = teamss.get(num - 1);
             System.out.println("Teams chosen: " + num);
             displayTeams(teams, 0);
             try {
                 fileTools.writeFile(generateTeamFile(teams), fileLocation);
-            } catch (IOException e){
+            } catch (IOException e) {
                 System.out.println("Error writing team file");
             }
         } catch (Exception e) {
