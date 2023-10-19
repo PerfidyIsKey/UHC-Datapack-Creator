@@ -12,12 +12,14 @@ public class TeamGeneratorTeam {
 
     private int extraMemberPoints = 30;
 
+    private List<PlayerConnection> allPlayerConnections;
     private List<PlayerConnection> playerConnections;
 
     public TeamGeneratorTeam(ArrayList<Player> players, int teamSize, List<PlayerConnection> playerConnections) {
         this.players = players;
         this.teamSize = teamSize;
-        this.playerConnections = filterPlayerConnections(playerConnections);
+        this.allPlayerConnections = playerConnections;
+        this.playerConnections = ensurePlayerConnections(filterPlayerConnections(playerConnections));
     }
 
     private List<PlayerConnection> filterPlayerConnections(List<PlayerConnection> playerConnections) {
@@ -34,6 +36,27 @@ public class TeamGeneratorTeam {
         return filteredPlayerConnections;
     }
 
+    private List<PlayerConnection> ensurePlayerConnections(List<PlayerConnection> playerConnections) {
+        for (Player player1 : players) {
+            for (Player player2 : players) {
+                if (player1.getInternalID() != player2.getInternalID()) {
+                    int connections = 0;
+                    for (PlayerConnection playerConnection : playerConnections) {
+                        if (player1.getInternalID() == playerConnection.getPlayer1().getInternalID() && player2.getInternalID() == playerConnection.getPlayer2().getInternalID()) {
+                            connections++;
+                        } else if (player1.getInternalID() == playerConnection.getPlayer2().getInternalID() && player2.getInternalID() == playerConnection.getPlayer1().getInternalID()) {
+                            connections++;
+                        }
+                    }
+                    if (connections == 0) {
+                        playerConnections.add(new PlayerConnection(player1, player2, 0));
+                    }
+                }
+            }
+        }
+        return playerConnections;
+    }
+
 
     public int getTotalRank() {
         return generateTotalRank();
@@ -41,6 +64,7 @@ public class TeamGeneratorTeam {
 
     public void addPlayer(Player player) {
         this.players.add(player);
+        this.playerConnections = ensurePlayerConnections(filterPlayerConnections(allPlayerConnections));
     }
 
     private int generateTotalRank() {
@@ -93,5 +117,12 @@ public class TeamGeneratorTeam {
         }
 
         return "[" + getTotalRank() + "] " + rankDiffDisplay + " " + getPlayersString();
+    }
+
+    public List<PlayerConnection> updatePlayerConnections() {
+        for (PlayerConnection playerConnection : playerConnections) {
+            playerConnection.updateTimesPlayedTogether();
+        }
+        return this.playerConnections;
     }
 }

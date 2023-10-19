@@ -112,7 +112,7 @@ public class Main {
             }
         } else {
             teamGenerator = new TeamGenerator(fileLocation, teams);
-            teamGenerator.run(true);
+            teamGenerator.run(true, args);
         }
     }
 

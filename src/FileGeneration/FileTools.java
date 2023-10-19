@@ -2,6 +2,7 @@ package FileGeneration;
 
 import FileGeneration.FileData;
 import FileGeneration.Recipe;
+import HelperClasses.PlayerConnection;
 
 import javax.swing.*;
 import java.io.*;
@@ -10,6 +11,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class FileTools {
@@ -21,8 +23,6 @@ public class FileTools {
 
     public FileTools() {
     }
-
-    ;
 
     public FileTools(String version, String dataPackLocation, String dataPackName, String worldLocation) {
         this.version = version;
@@ -317,5 +317,48 @@ public class FileTools {
         }
         writer.close();
         System.out.println("File \"" + fileData.getName() + "\" Updated.");
+    }
+
+    public void createPlayerConnection(String fileLocation, String fileName, PlayerConnection playerConnection) throws IOException {
+        File file = new File(fileLocation + fileName + ".txt");
+        ArrayList<String> fileContents = getFileContents(file);
+        fileContents.add(playerConnection.getPlayer1().getInternalID() + "," + playerConnection.getPlayer2().getInternalID() + "," + playerConnection.getTimesPlayedTogether());
+        writeFileContents(file, fileContents);
+    }
+
+    public void updatePlayerConnections(String fileLocation, String fileName, ArrayList<PlayerConnection> playerConnections) throws IOException {
+        File file = new File(fileLocation + fileName + ".txt");
+        ArrayList<String> fileContents = getFileContents(file);
+        ArrayList<String> outputFileContents = new ArrayList<>();
+        for (String s : fileContents) {
+            for (PlayerConnection p : playerConnections) {
+                if (s.startsWith(p.getPlayer1().getInternalID() + "," + p.getPlayer2().getInternalID())) {
+                    s = p.getPlayer1().getInternalID() + "," + p.getPlayer2().getInternalID() + "," + p.getTimesPlayedTogether();
+                }
+            }
+            outputFileContents.add(s);
+        }
+        writeFileContents(file, outputFileContents);
+
+        System.out.println("File \"" + fileName + "\" Updated.");
+    }
+
+    private ArrayList<String> getFileContents(File file) throws IOException {
+        Scanner scanner = new Scanner(file);
+        ArrayList<String> fileContents = new ArrayList<>();
+        while (scanner.hasNextLine()) {
+            fileContents.add(scanner.nextLine());
+        }
+        scanner.close();
+        return fileContents;
+    }
+
+    private void writeFileContents(File file, List<String> fileContents) throws IOException {
+        BufferedWriter writer = new BufferedWriter(new FileWriter(file));
+        for (String s : fileContents) {
+            writer.write(s);
+            writer.newLine();
+        }
+        writer.close();
     }
 }

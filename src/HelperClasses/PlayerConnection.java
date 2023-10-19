@@ -23,9 +23,13 @@ public class PlayerConnection {
         return timesPlayedTogether;
     }
 
+    public void updateTimesPlayedTogether() {
+        this.timesPlayedTogether++;
+    }
+
     public PlayerConnection getPlayerConnection(Player player) {
-        if(player.getInternalID() == this.player1.getInternalID() || player.getInternalID() == this.player2.getInternalID()) {
-            if(player1.isPlaying() && player2.isPlaying()) {
+        if (player.getInternalID() == this.player1.getInternalID() || player.getInternalID() == this.player2.getInternalID()) {
+            if (player1.isPlaying() && player2.isPlaying()) {
                 return this;
             }
         }
@@ -33,8 +37,8 @@ public class PlayerConnection {
     }
 
     public PlayerConnection getPlayerConnection(Player player1, Player player2) {
-        if(player1.getInternalID() == this.player1.getInternalID() && player2.getInternalID() == this.player2.getInternalID() || player2.getInternalID() == this.player1.getInternalID() && player1.getInternalID() == this.player2.getInternalID()) {
-            if(player1.isPlaying() && player2.isPlaying()) {
+        if (player1.getInternalID() == this.player1.getInternalID() && player2.getInternalID() == this.player2.getInternalID() || player2.getInternalID() == this.player1.getInternalID() && player1.getInternalID() == this.player2.getInternalID()) {
+            if (player1.isPlaying() && player2.isPlaying()) {
                 return this;
             }
         }
