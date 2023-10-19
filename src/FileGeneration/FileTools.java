@@ -343,6 +343,13 @@ public class FileTools {
         System.out.println("File \"" + fileName + "\" Updated.");
     }
 
+    public void makeFileCopy(String fileLocation, String fileName) throws IOException {
+        File file = new File(fileLocation + fileName + ".txt");
+        File fileCopy = new File(fileLocation + fileName + "_copy.txt");
+        ArrayList<String> fileContents = getFileContents(file);
+        writeFileContents(fileCopy, fileContents);
+    }
+
     private ArrayList<String> getFileContents(File file) throws IOException {
         Scanner scanner = new Scanner(file);
         ArrayList<String> fileContents = new ArrayList<>();

@@ -30,9 +30,12 @@ public class TeamGenerator {
     String fileLocation;
     String[] args;
 
-    public TeamGenerator(String fileLocation, ArrayList<Team> teams) {
+    GameMode gameMode;
+
+    public TeamGenerator(String fileLocation, ArrayList<Team> teams, GameMode gameMode) {
         this.teams = teams;
         this.fileLocation = fileLocation;
+        this.gameMode = gameMode;
     }
 
     //TODO: Update player connections after UHC. Update file yes/no.
@@ -66,7 +69,7 @@ public class TeamGenerator {
         boolean update = false;
         if (!auto) {
             Scanner scanner = new Scanner(System.in);
-            System.out.println("Should playerconnections be updated in files? (y/n)");
+            System.out.println("Should playerconnections be updated in official files? (y/n)");
             String input = scanner.nextLine();
             if (input.equals("y")) update = true;
         } else if (this.args[0].equals("-y")) update = true;
@@ -75,12 +78,16 @@ public class TeamGenerator {
     }
 
     private void updatePlayerConnections(ArrayList<TeamGeneratorTeam> teams, boolean shouldUpdate) {
-        String fileLocation = "Files\\" + GameMode.DIORITE + "\\";
-        String fileName;
-        if (shouldUpdate) {
-            fileName = "playerConnections";
-        } else {
-            fileName = "playerConnections_copy";
+        String fileLocation = "Files\\" + gameMode + "\\";
+        String fileName = "playerConnections";
+        if (!shouldUpdate) {
+            try{
+                fileTools.makeFileCopy(fileLocation, fileName);
+            }catch (IOException e) {
+                System.out.println("Error duplicating file");
+            } finally {
+                fileName = "playerConnections_copy";
+            }
         }
         ArrayList<PlayerConnection> playerConnections = new ArrayList<>();
         for (TeamGeneratorTeam team : teams) {
@@ -149,7 +156,7 @@ public class TeamGenerator {
     }
 
     private void insertNewPlayers() {
-        ArrayList<String> playersString = fileTools.GetLinesFromFile("Files\\" + GameMode.DIORITE + "\\players.txt");
+        ArrayList<String> playersString = fileTools.GetLinesFromFile("Files\\" + gameMode + "\\players.txt");
         for (String player : playersString) {
             String[] playerSplit = fileTools.splitLineOnComma(player);
             players.add(new Player(Integer.parseInt(playerSplit[0]), playerSplit[1], Integer.parseInt(playerSplit[2]), Boolean.parseBoolean(playerSplit[3]), Boolean.parseBoolean(playerSplit[4])));
@@ -181,7 +188,7 @@ public class TeamGenerator {
 
     private ArrayList<PlayerConnection> determinePlayerConnections() {
         ArrayList<PlayerConnection> playerConnections = new ArrayList<>();
-        ArrayList<String> playerConnectionsString = fileTools.GetLinesFromFile("Files\\" + GameMode.DIORITE + "\\playerConnections.txt");
+        ArrayList<String> playerConnectionsString = fileTools.GetLinesFromFile("Files\\" + gameMode + "\\playerConnections.txt");
         for (String string : playerConnectionsString) {
             String[] playerConnectionsSplit = fileTools.splitLineOnComma(string);
             Player player1 = getPlayerByInternalID(Integer.parseInt(playerConnectionsSplit[0]));

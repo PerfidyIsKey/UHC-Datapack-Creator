@@ -8,9 +8,9 @@ import java.util.List;
 
 public class TeamGeneratorTeam {
     private ArrayList<Player> players;
-    private int teamSize = 0;
+    private int teamSize;
 
-    private int extraMemberPoints = 30;
+    private final int extraMemberPoints = 30;
 
     private List<PlayerConnection> allPlayerConnections;
     private List<PlayerConnection> playerConnections;

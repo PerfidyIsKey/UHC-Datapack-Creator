@@ -104,14 +104,14 @@ public class Main {
                     gameModeChange();
                     createDatapack();
                 } else if (input.equals("t")) {
-                    teamGenerator = new TeamGenerator(fileLocation, teams);
+                    teamGenerator = new TeamGenerator(fileLocation, teams, gameMode);
                     teamGenerator.run(false);
                 } else {
                     System.out.println("Input not recognized.");
                 }
             }
         } else {
-            teamGenerator = new TeamGenerator(fileLocation, teams);
+            teamGenerator = new TeamGenerator(fileLocation, teams, gameMode);
             teamGenerator.run(true, args);
         }
     }
@@ -185,7 +185,7 @@ public class Main {
             Team team = new Team("Team" + i, colors[i], bossbarColors[i], glassColors[i], collarColors[i], jsonColors[i]);
             teams.add(team);
         }
-        teamGenerator = new TeamGenerator(fileLocation, teams);
+        teamGenerator = new TeamGenerator(fileLocation, teams, gameMode);
 
         CarePackage carePackage2 = new CarePackage("anti_cp", "Anti Controlpoint Drop",
                 "[{Slot:1b,id:\"minecraft:gunpowder\",Count:1b},{Slot:2b,id:\"minecraft:gunpowder\",Count:1b},{Slot:3b,id:\"minecraft:tnt\",Count:1b},{Slot:4b,id:\"minecraft:flint_and_steel\",Count:1b},{Slot:5b,id:\"minecraft:tnt\",Count:1b},{Slot:6b,id:\"minecraft:sand\",Count:1b},{Slot:7b,id:\"minecraft:sand\",Count:1b},{Slot:11b,id:\"minecraft:enchanted_book\",Count:1b,tag:{StoredEnchantments:[{lvl:4s,id:\"minecraft:blast_protection\"}]}},{Slot:12b,id:\"minecraft:lava_bucket\",Count:1b},{Slot:13b,id:\"minecraft:tnt\",Count:1b},{Slot:14b,id:\"minecraft:lava_bucket\",Count:1b},{Slot:15b,id:\"minecraft:enchanted_book\",Count:1b,tag:{StoredEnchantments:[{lvl:4s,id:\"minecraft:blast_protection\"}]}},{Slot:19b,id:\"minecraft:sand\",Count:1b},{Slot:20b,id:\"minecraft:sand\",Count:1b},{Slot:21b,id:\"minecraft:tnt\",Count:1b},{Slot:22b,id:\"minecraft:flint_and_steel\",Count:1b},{Slot:23b,id:\"minecraft:tnt\",Count:1b},{Slot:24b,id:\"minecraft:gunpowder\",Count:1b},{Slot:25b,id:\"minecraft:gunpowder\",Count:1b}]",
