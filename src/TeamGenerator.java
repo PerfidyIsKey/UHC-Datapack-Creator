@@ -41,13 +41,13 @@ public class TeamGenerator {
     //TODO: Update player connections after UHC. Update file yes/no.
 
 
-    public void run(boolean auto) {
-        execute(auto);
+    public void run() {
+        execute(false);
     }
 
-    public void run(boolean auto, String[] args) {
+    public void run(String[] args) {
         this.args = args;
-        execute(auto);
+        execute(true);
     }
 
     public void execute(boolean auto) {
