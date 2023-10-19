@@ -23,8 +23,8 @@ public class Main {
 
     //DatapackData<
 
-    private String uhcNumber = "s50";
-    private static final String version = "3.0";
+    private String uhcNumber;
+    private static final String version = "4.0";
     private String userFolder;
     private String worldName;
     private String dataPackLocation;
@@ -38,7 +38,7 @@ public class Main {
     //GameData<
     private static final int chestSize = 27;
     private static final String commandCenter = "s46";
-    private String admin = "Snodog627";
+    private String admin;
     private Coordinate startCoordinate;
     private Coordinate netherPortal;
     private ArrayList<Team> teams = new ArrayList<>();
