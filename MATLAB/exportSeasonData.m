@@ -5,8 +5,7 @@ close all
 %%%%%%%% THE DIORITE EXPERTS ULTRAHARDCORE EXPORT SEASONS DATA %%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Writes season data from a .mat file to a .txt file. The following format
-% is used: identifier, number of players, players in winning team, year,
-% month, day.
+% is used: identifier, number of players, year, month, day.
 
 %% Import data
 loadName = "DataS50.mat";   % Indicate .mat data file
@@ -25,13 +24,13 @@ fileID = fopen(fullfile("Documents", saveName), "w");
 text = strings(totalLines, 1);  % Preallocation
 
 % Header
-text(1) =  "// Format: Identifier, number of players, players in winning team, year, month, day";
+text(1) =  "// Format: Identifier, number of players, year, month, day";
 
 % Player indexing
 for i = 1:seasonNumber
     index = i + headerSize;
     text(index) = lower(string(Seasons(i).Season)) + "," + num2str(Seasons(i).Players, "%1.0f") +...
-        "," + num2str(Seasons(i).TeamAmount, "%1.0f") + "," + string(Seasons(i).Date, "yyyy,MM,dd"); 
+        "," + string(Seasons(i).Date, "yyyy,MM,dd"); 
 end
 
 %% Save text to file
