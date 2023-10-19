@@ -78,13 +78,14 @@ public class Main {
 
             gameModeChange();
             createDatapack();
+        System.out.println("Datapack created");
         if (args.length == 0) {
             boolean menuRunning = true;
             Scanner scanner = new Scanner(System.in);
             String input;
-            System.out.println("-----------------\n");
             while (menuRunning) {
-                System.out.println("Datapack created under Gamemode: " + gameMode);
+                System.out.println("-----------------\n");
+                System.out.println("Gamemode: " + gameMode);
                 System.out.println("Options:\n");
                 System.out.println("Change Gamemode (c[n])");
                 System.out.println("Re-run (r)");
@@ -100,9 +101,11 @@ public class Main {
                     int num = parseInt(command);
                     changeGamemode(num);
                     createDatapack();
+                    System.out.println("Datapack created");
                 } else if (input.equals("r")) {
                     gameModeChange();
                     createDatapack();
+                    System.out.println("Datapack created");
                 } else if (input.equals("t")) {
                     teamGenerator = new TeamGenerator(fileLocation, teams, gameMode);
                     teamGenerator.run(false);
