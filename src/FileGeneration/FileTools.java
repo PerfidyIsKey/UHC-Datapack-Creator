@@ -3,6 +3,7 @@ package FileGeneration;
 import FileGeneration.FileData;
 import FileGeneration.Recipe;
 import HelperClasses.PlayerConnection;
+import TeamGeneration.Season;
 
 import javax.swing.*;
 import java.io.*;
@@ -322,7 +323,8 @@ public class FileTools {
     public void createPlayerConnection(String fileLocation, String fileName, PlayerConnection playerConnection) throws IOException {
         File file = new File(fileLocation + fileName + ".txt");
         ArrayList<String> fileContents = getFileContents(file);
-        fileContents.add(playerConnection.getPlayer1().getInternalID() + "," + playerConnection.getPlayer2().getInternalID() + "," + playerConnection.getTimesPlayedTogether());
+        double seasonID = playerConnection.getSeasons().get(0).getID();
+        fileContents.add(playerConnection.getPlayer1().getInternalID() + "," + playerConnection.getPlayer2().getInternalID() + ",[" + seasonID +"]");
         writeFileContents(file, fileContents);
     }
 
@@ -333,7 +335,13 @@ public class FileTools {
         for (String s : fileContents) {
             for (PlayerConnection p : playerConnections) {
                 if (s.startsWith(p.getPlayer1().getInternalID() + "," + p.getPlayer2().getInternalID())) {
-                    s = p.getPlayer1().getInternalID() + "," + p.getPlayer2().getInternalID() + "," + p.getTimesPlayedTogether();
+                    StringBuilder stringBuilder = new StringBuilder();
+                    for (Season season: p.getSeasons()) {
+                        stringBuilder.append(season.getID());
+                        stringBuilder.append(",");
+                    }
+                    stringBuilder.setLength(stringBuilder.length() - 1);
+                    s = p.getPlayer1().getInternalID() + "," + p.getPlayer2().getInternalID() + ",[" + stringBuilder + "]";
                 }
             }
             outputFileContents.add(s);

@@ -1,3 +1,4 @@
+package TeamGeneration;
 
 import HelperClasses.Player;
 import HelperClasses.PlayerConnection;
@@ -49,7 +50,7 @@ public class TeamGeneratorTeam {
                         }
                     }
                     if (connections == 0) {
-                        playerConnections.add(new PlayerConnection(player1, player2, 0));
+                        playerConnections.add(new PlayerConnection(player1, player2, null));
                     }
                 }
             }
@@ -93,7 +94,7 @@ public class TeamGeneratorTeam {
     }
 
     private int getHighestConnection(List<PlayerConnection> playerConnections) {
-        if (playerConnections.size() == 0) return 0;
+        if (playerConnections.isEmpty()) return 0;
         playerConnections.sort(Comparator.comparing(PlayerConnection::getTimesPlayedTogether));
         return playerConnections.get(playerConnections.size() - 1).getTimesPlayedTogether();
     }
@@ -119,9 +120,9 @@ public class TeamGeneratorTeam {
         return "[" + getTotalRank() + "] " + rankDiffDisplay + " " + getPlayersString();
     }
 
-    public List<PlayerConnection> updatePlayerConnections() {
+    public List<PlayerConnection> updatePlayerConnections(Season season) {
         for (PlayerConnection playerConnection : playerConnections) {
-            playerConnection.updateTimesPlayedTogether();
+            playerConnection.addSeason(season);
         }
         return this.playerConnections;
     }

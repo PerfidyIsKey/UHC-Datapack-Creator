@@ -1,14 +1,20 @@
 package HelperClasses;
 
+import TeamGeneration.Season;
+
+import java.util.ArrayList;
+import java.util.List;
+
 public class PlayerConnection {
     private Player player1;
     private Player player2;
-    private int timesPlayedTogether;
 
-    public PlayerConnection(Player player1, Player player2, int timesPlayedTogether) {
+    private List<Season> seasons;
+
+    public PlayerConnection(Player player1, Player player2, List<Season> seasons) {
         this.player1 = player1;
         this.player2 = player2;
-        this.timesPlayedTogether = timesPlayedTogether;
+        this.seasons = seasons == null ? new ArrayList<>() : seasons;
     }
 
     public Player getPlayer1() {
@@ -20,11 +26,15 @@ public class PlayerConnection {
     }
 
     public int getTimesPlayedTogether() {
-        return timesPlayedTogether;
+        return seasons == null ? 0 : seasons.size();
     }
 
-    public void updateTimesPlayedTogether() {
-        this.timesPlayedTogether++;
+    public void addSeason(Season season) {
+        this.seasons.add(season);
+    }
+
+    public List<Season> getSeasons() {
+        return seasons;
     }
 
     public PlayerConnection getPlayerConnection(Player player) {

@@ -1,3 +1,5 @@
+package TeamGeneration;
+
 import Enums.FileName;
 import Enums.GameMode;
 import FileGeneration.FileData;
@@ -10,7 +12,10 @@ import java.io.IOException;
 import java.util.*;
 
 public class TeamGenerator {
+
+    private Season currentSeason;
     private List<Player> players = new ArrayList<>();
+    private List<Season> seasons = new ArrayList<>();
 
     private List<PlayerConnection> playerConnections = new ArrayList<>();
     private int playerAmount = 3;
@@ -32,14 +37,14 @@ public class TeamGenerator {
 
     GameMode gameMode;
 
-    public TeamGenerator(String fileLocation, ArrayList<Team> teams, GameMode gameMode) {
+    private double seasonID;
+
+    public TeamGenerator(double seasonID, String fileLocation, ArrayList<Team> teams, GameMode gameMode) {
+        this.seasonID = seasonID;
         this.teams = teams;
         this.fileLocation = fileLocation;
         this.gameMode = gameMode;
     }
-
-    //TODO: Update player connections after UHC. Update file yes/no.
-
 
     public void run() {
         execute(false);
@@ -51,7 +56,9 @@ public class TeamGenerator {
     }
 
     public void execute(boolean auto) {
-        insertNewPlayers();
+        importPlayers();
+        establishSeason();
+        importSeasons();
         playerConnections = determinePlayerConnections();
         teamss.add(generateTeams(teamRankMargin, playerAmount, iterationsPerRun));
         ArrayList<TeamGeneratorTeam> teams;
@@ -77,13 +84,19 @@ public class TeamGenerator {
         updatePlayerConnections(teams, update);
     }
 
+    private void establishSeason() {
+        currentSeason = new Season(seasonID,players.size(), new Date());
+    }
+
+
+    //TODO: generate Season data in files.
     private void updatePlayerConnections(ArrayList<TeamGeneratorTeam> teams, boolean shouldUpdate) {
         String fileLocation = "Files\\" + gameMode + "\\";
         String fileName = "playerConnections";
         if (!shouldUpdate) {
-            try{
+            try {
                 fileTools.makeFileCopy(fileLocation, fileName);
-            }catch (IOException e) {
+            } catch (IOException e) {
                 System.out.println("Error duplicating file");
             } finally {
                 fileName = "playerConnections_copy";
@@ -91,7 +104,7 @@ public class TeamGenerator {
         }
         ArrayList<PlayerConnection> playerConnections = new ArrayList<>();
         for (TeamGeneratorTeam team : teams) {
-            playerConnections.addAll(team.updatePlayerConnections());
+            playerConnections.addAll(team.updatePlayerConnections(currentSeason));
         }
         ArrayList<PlayerConnection> playerConnectionsToRemove = new ArrayList<>();
         for (PlayerConnection playerConnection : playerConnections) {
@@ -155,7 +168,7 @@ public class TeamGenerator {
         return teams;
     }
 
-    private void insertNewPlayers() {
+    private void importPlayers() {
         ArrayList<String> playersString = fileTools.GetLinesFromFile("Files\\" + gameMode + "\\players.txt");
         for (String player : playersString) {
             String[] playerSplit = fileTools.splitLineOnComma(player);
@@ -167,6 +180,14 @@ public class TeamGenerator {
 
         averageRank = getAverageRankOfPlayers();
         teamAmount = calcTeamAmount();
+    }
+
+    private void importSeasons() {
+        ArrayList<String> seasonsString = fileTools.GetLinesFromFile("Files\\" + gameMode + "\\seasonData.txt");
+        for (String season : seasonsString) {
+            String[] seasonSplit = fileTools.splitLineOnComma(season);
+            seasons.add(new Season(Double.parseDouble(seasonSplit[0]), Integer.parseInt(seasonSplit[1]), new Date(Integer.parseInt(seasonSplit[2]), Integer.parseInt(seasonSplit[3]), Integer.parseInt(seasonSplit[4]))));
+        }
     }
 
     private void removeInactivePlayers() {
@@ -190,15 +211,29 @@ public class TeamGenerator {
         ArrayList<PlayerConnection> playerConnections = new ArrayList<>();
         ArrayList<String> playerConnectionsString = fileTools.GetLinesFromFile("Files\\" + gameMode + "\\playerConnections.txt");
         for (String string : playerConnectionsString) {
+            String seasons = string.split("\\[")[1];
+            seasons = seasons.substring(0, seasons.length() - 1);
             String[] playerConnectionsSplit = fileTools.splitLineOnComma(string);
+            String[] seasonsSplit = fileTools.splitLineOnComma(seasons);
             Player player1 = getPlayerByInternalID(Integer.parseInt(playerConnectionsSplit[0]));
             Player player2 = getPlayerByInternalID(Integer.parseInt(playerConnectionsSplit[1]));
             if (player1 != null && player2 != null) {
-                playerConnections.add(new PlayerConnection(player1, player2, Integer.parseInt(playerConnectionsSplit[2])));
+                List<Season> connectionSeasons = new ArrayList<>();
+                for (String s:seasonsSplit) {
+                    connectionSeasons.add(getSeasonByID(Double.parseDouble(s)));
+                }
+                playerConnections.add(new PlayerConnection(player1, player2, connectionSeasons));
             }
         }
-        Collections.sort(playerConnections, Comparator.comparing(PlayerConnection::getTimesPlayedTogether));
+        playerConnections.sort(Comparator.comparing(PlayerConnection::getTimesPlayedTogether));
         return playerConnections;
+    }
+
+    private Season getSeasonByID(double ID){
+        for (Season season: seasons) {
+            if(season.getID() == ID) return season;
+        }
+        return null;
     }
 
     private Player getPlayerByInternalID(int internalID) {
@@ -231,7 +266,7 @@ public class TeamGenerator {
     }
 
     private ArrayList<Integer> getMetaData(ArrayList<TeamGeneratorTeam> teams) {
-        Collections.sort(teams, Comparator.comparing(TeamGeneratorTeam::getTotalRank));
+        teams.sort(Comparator.comparing(TeamGeneratorTeam::getTotalRank));
         Collections.reverse(teams);
         ArrayList<Integer> teamNums = new ArrayList<>();
         for (TeamGeneratorTeam team : teams) {
@@ -263,9 +298,9 @@ public class TeamGenerator {
             teams.add(new TeamGeneratorTeam(tempList, playerAmount, playerConnections));
         }
         if (!isDivisible()) {
-            Collections.sort(teams, Comparator.comparing(TeamGeneratorTeam::getTotalRank));
+            teams.sort(Comparator.comparing(TeamGeneratorTeam::getTotalRank));
             int count = 0;
-            while (temp.size() > 0) {
+            while (!temp.isEmpty()) {
                 sortPlayers(temp);
                 Player player = temp.get(temp.size() - 1);
                 teams.get(count).addPlayer(player);
@@ -351,7 +386,7 @@ public class TeamGenerator {
     }
 
     private void sortPlayers(ArrayList<Player> players) {
-        Collections.sort(players, Comparator.comparing(Player::getRank));
+        players.sort(Comparator.comparing(Player::getRank));
     }
 
     private void sortPlayersHighToLow(ArrayList<Player> players) {
@@ -388,12 +423,7 @@ public class TeamGenerator {
         int length = numString.length();
         int interval = length % 3;
         StringBuilder sb = new StringBuilder(numString);
-        int amountOfDots;
-        if (interval > 0) {
-            amountOfDots = length / 3;
-        } else {
-            amountOfDots = length / 3;
-        }
+        int amountOfDots = length / 3;
         for (int i = 0; i < amountOfDots; i++) {
             if (interval == 0) {
                 if (i != 0) {

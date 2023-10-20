@@ -1,6 +1,7 @@
 import Enums.*;
 import FileGeneration.*;
 import HelperClasses.*;
+import TeamGeneration.TeamGenerator;
 
 
 import java.io.IOException;
@@ -107,14 +108,14 @@ public class Main {
                     createDatapack();
                     System.out.println("Datapack created");
                 } else if (input.equals("t")) {
-                    teamGenerator = new TeamGenerator(fileLocation, teams, gameMode);
+                    teamGenerator = new TeamGenerator(Double.parseDouble(uhcNumber), fileLocation, teams, gameMode);
                     teamGenerator.run();
                 } else {
                     System.out.println("Input not recognized.");
                 }
             }
         } else {
-            teamGenerator = new TeamGenerator(fileLocation, teams, gameMode);
+            teamGenerator = new TeamGenerator(Double.parseDouble(uhcNumber), fileLocation, teams, gameMode);
             teamGenerator.run(args);
         }
     }
