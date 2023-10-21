@@ -3,4 +3,5 @@ admin:Snodog627
 startCoordinate:0,69,0
 netherPortal:5,71,-11
 minTraitorRank:30
+traitorWaitTime:2
 communityName:THE DIORITE EXPERTS

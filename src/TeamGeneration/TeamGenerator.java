@@ -172,7 +172,7 @@ public class TeamGenerator {
         ArrayList<String> playersString = fileTools.GetLinesFromFile("Files\\" + gameMode + "\\players.txt");
         for (String player : playersString) {
             String[] playerSplit = fileTools.splitLineOnComma(player);
-            players.add(new Player(Integer.parseInt(playerSplit[0]), playerSplit[1], Integer.parseInt(playerSplit[2]), Boolean.parseBoolean(playerSplit[3]), Boolean.parseBoolean(playerSplit[4])));
+            players.add(new Player(Integer.parseInt(playerSplit[0]), playerSplit[1], Integer.parseInt(playerSplit[2]), Double.parseDouble(playerSplit[3]), Boolean.parseBoolean(playerSplit[4])));
         }
 
         removeInactivePlayers();

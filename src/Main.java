@@ -1,10 +1,12 @@
 import Enums.*;
 import FileGeneration.*;
 import HelperClasses.*;
+import TeamGeneration.Season;
 import TeamGeneration.TeamGenerator;
 
 
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Scanner;
@@ -48,6 +50,7 @@ public class Main {
     //private ArrayList<CarePackage> carePackages = new ArrayList<>();
     private ArrayList<ScoreboardObjective> scoreboardObjectives = new ArrayList<>();
     private ArrayList<Player> players = new ArrayList<>();
+    private ArrayList<Season> seasons = new ArrayList<>();
     private ArrayList<StatusEffect> effects = new ArrayList<>();
     private ArrayList<String> quotes = new ArrayList<>();
     private ArrayList<BossBar> bossBars = new ArrayList<>();
@@ -61,6 +64,7 @@ public class Main {
 
     private static final int carePackageAmount = 200;
     private int minTraitorRank;
+    private int traitorWaitTime;
     private static final int traitorMode = 1;
     private String communityName;
     private static final Execute execute = new Execute();
@@ -178,6 +182,7 @@ public class Main {
         scoreboardObjectives = new ArrayList<>();
         effects = new ArrayList<>();
         players = new ArrayList<>();
+        seasons = new ArrayList<>();
         quotes = new ArrayList<>();
 
         Color[] colors = {Color.yellow, Color.blue, Color.red, Color.dark_purple, Color.dark_green, Color.light_purple, Color.black, Color.gold, Color.gray, Color.aqua, Color.dark_red, Color.dark_blue, Color.dark_aqua};
@@ -205,6 +210,7 @@ public class Main {
         String[] splitNetherPortal = fileTools.splitLineOnComma(fileTools.getContentOutOfFile("Files\\" + gameMode + "\\uhc_data.txt", "netherPortal"));
         netherPortal = new Coordinate(Integer.parseInt(splitNetherPortal[0]), Integer.parseInt(splitNetherPortal[1]), Integer.parseInt(splitNetherPortal[2]));
         minTraitorRank = Integer.parseInt(fileTools.getContentOutOfFile("Files\\" + gameMode + "\\uhc_data.txt", "minTraitorRank"));
+        traitorWaitTime = Integer.parseInt(fileTools.getContentOutOfFile("Files\\" + gameMode + "\\uhc_data.txt", "traitorWaitTime"));
         communityName = fileTools.getContentOutOfFile("Files\\" + gameMode + "\\uhc_data.txt", "communityName");
 
         // ControlPoints
@@ -220,8 +226,15 @@ public class Main {
             String[] playerSplit = fileTools.splitLineOnComma(player);
             boolean isPlaying = Boolean.parseBoolean(playerSplit[4]);
             if (isPlaying) {
-                players.add(new Player(Integer.parseInt(playerSplit[0]), playerSplit[1], Integer.parseInt(playerSplit[2]), Boolean.parseBoolean(playerSplit[3]), isPlaying));
+                players.add(new Player(Integer.parseInt(playerSplit[0]), playerSplit[1], Integer.parseInt(playerSplit[2]), Double.parseDouble(playerSplit[3]), isPlaying));
             }
+        }
+
+        // Seasons
+        ArrayList<String> seasonsString = fileTools.GetLinesFromFile("Files\\" + gameMode + "\\seasonData.txt");
+        for (String season : seasonsString) {
+            String[] seasonSplit = fileTools.splitLineOnComma(season);
+            seasons.add(new Season(Double.parseDouble(seasonSplit[0]), Integer.parseInt(seasonSplit[1])));
         }
 
         // Quotes
@@ -1142,7 +1155,7 @@ public class Main {
         ArrayList<String> fileCommands = new ArrayList<>();
         //fileCommands.add("tag @r[limit=1,tag=!DontMakeTraitor] add Traitor");
         for (Player p : players) {
-            if (p.getIgnoreTraitor()) {
+            if (p.getLastTraitorSeason() >= seasons.get(seasons.size() - traitorWaitTime).getID()) {
                 fileCommands.add("tag " + p.getPlayerName() + " add DontMakeTraitor");
             }
         }
@@ -1160,7 +1173,7 @@ public class Main {
         if (traitorMode == 2) {
             fileCommands.add("tag @a remove DontMakeTraitor");
             for (Player p : players) {
-                if (p.getIgnoreTraitor()) {
+                if (p.getLastTraitorSeason() >= seasons.get(seasons.size() - traitorWaitTime).getID()) {
                     fileCommands.add("tag " + p.getPlayerName() + " add DontMakeTraitor");
                 }
             }

@@ -6,7 +6,7 @@ public class Player {
 
     private int rank;
 
-    private boolean ignoreTraitor;
+    private double lastTraitorSeason;
 
     private boolean isPlaying;
 
@@ -18,11 +18,11 @@ public class Player {
         this.rank = rank;
     }
 
-    public Player(int internalID, String playerName, int rank, boolean ignoreTraitor, boolean isPlaying) {
+    public Player(int internalID, String playerName, int rank, double lastTraitorSeason, boolean isPlaying) {
         this.internalID = internalID;
         this.playerName = playerName;
         this.rank = rank;
-        this.ignoreTraitor = ignoreTraitor;
+        this.lastTraitorSeason = lastTraitorSeason;
         this.isPlaying = isPlaying;
     }
 
@@ -38,8 +38,8 @@ public class Player {
         this.rank = rank;
     }
 
-    public boolean getIgnoreTraitor() {
-        return ignoreTraitor;
+    public double getLastTraitorSeason() {
+        return lastTraitorSeason;
     }
 
     public boolean isPlaying() {
