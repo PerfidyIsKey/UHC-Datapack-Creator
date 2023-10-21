@@ -14,7 +14,7 @@ public class QuickTest {
             File file = new File("Files\\KINJIN\\players.txt");
             BufferedWriter writer = new BufferedWriter(new FileWriter(file));
             for (Player player: players) {
-                writer.write(player.getPlayerName() + ',' + player.getRank() + ',' + player.getIgnoreTraitor());
+                writer.write(player.getPlayerName() + ',' + player.getRank() + ',' + "player.getIgnoreTraitor()");
                 writer.newLine();
             }
             writer.close();

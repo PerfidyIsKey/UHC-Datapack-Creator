@@ -8,6 +8,11 @@ public class Season {
     private int numberOfPlayers;
     private Date date;
 
+    public Season(double ID, int numberOfPlayers) {
+        this.ID = ID;
+        this.numberOfPlayers = numberOfPlayers;
+    }
+
     public Season(double ID, int numberOfPlayers, Date date) {
         this.ID = ID;
         this.numberOfPlayers = numberOfPlayers;

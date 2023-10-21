@@ -30,7 +30,7 @@ text(1) =  "// Format: Identifier, number of players, year, month, day";
 for i = 1:seasonNumber
     index = i + headerSize;
     text(index) = lower(string(Seasons(i).Season)) + "," + num2str(Seasons(i).Players, "%1.0f") +...
-        "," + string(Seasons(i).Date, "yyyy,MM,dd"); 
+        "," + string(Seasons(i).Date, "yyyy,MM,dd");
 end
 
 %% Save text to file
