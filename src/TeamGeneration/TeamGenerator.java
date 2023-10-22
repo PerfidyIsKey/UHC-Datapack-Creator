@@ -255,7 +255,7 @@ public class TeamGenerator {
         ArrayList<Integer> bestTeamsMeta = getMetaData(bestTeams);
         for (int i = 0; i < newTeamsMeta.size(); i++) {
             if (!(bestTeamsMeta.get(i) + margin >= newTeamsMeta.get(i) && newTeamsMeta.get(i) >= bestTeamsMeta.get(i) - margin)) {
-                if (newTeamsMeta.get(i) < bestTeamsMeta.get(i)) {
+                if (newTeamsMeta.size() != i+1 && newTeamsMeta.get(i+1) < bestTeamsMeta.get(i+1)) {
                     return generateFairTeamWithIterations(newTeams, iterations - 1);
                 } else {
                     return generateFairTeamWithIterations(bestTeams, iterations - 1);

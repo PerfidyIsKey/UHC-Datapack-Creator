@@ -216,8 +216,13 @@ public class FileTools {
     }
 
     public void createDatapack(ArrayList<FileData> files, String fileLocation) throws IOException {
-        File file = new File(dataPackLocation + dataPackName);
-        if (file.mkdir()) {
+
+
+        File file = new File(dataPackLocation);
+        file.mkdir();
+
+        File file2 = new File(dataPackLocation + dataPackName);
+        if (file2.mkdir()) {
             File pack = new File(dataPackLocation + dataPackName + "\\pack.mcmeta");
             BufferedWriter writer = new BufferedWriter(new FileWriter(pack));
             writer.write(" {");

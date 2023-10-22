@@ -7,9 +7,7 @@ import TeamGeneration.TeamGenerator;
 
 import java.io.IOException;
 import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Scanner;
+import java.util.*;
 
 import static java.lang.Integer.parseInt;
 
@@ -234,7 +232,7 @@ public class Main {
         ArrayList<String> seasonsString = fileTools.GetLinesFromFile("Files\\" + gameMode + "\\seasonData.txt");
         for (String season : seasonsString) {
             String[] seasonSplit = fileTools.splitLineOnComma(season);
-            seasons.add(new Season(Double.parseDouble(seasonSplit[0]), Integer.parseInt(seasonSplit[1])));
+            seasons.add(new Season(Double.parseDouble(seasonSplit[0]), Integer.parseInt(seasonSplit[1]), new Date(Integer.parseInt(seasonSplit[2]), Integer.parseInt(seasonSplit[3]), Integer.parseInt(seasonSplit[4]))));
         }
 
         // Quotes
@@ -1153,6 +1151,8 @@ public class Main {
 
     private FileData TraitorHandout() {
         ArrayList<String> fileCommands = new ArrayList<>();
+        ArrayList<Season> seasons = new ArrayList<>(this.seasons);
+        seasons.sort(Comparator.comparing(Season::getID));
         //fileCommands.add("tag @r[limit=1,tag=!DontMakeTraitor] add Traitor");
         for (Player p : players) {
             if (p.getLastTraitorSeason() >= seasons.get(seasons.size() - traitorWaitTime).getID()) {
