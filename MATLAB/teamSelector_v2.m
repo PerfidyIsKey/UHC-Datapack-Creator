@@ -9,14 +9,14 @@ load('DataS50.mat')
 %% Input
 % Enter the players that are participating (corresponding numbers with
 % PlayerName variable in Players struct)
-ParticipantIndex = [1, 2, 17, 18, 25, 28, 30, 31, 33, 34, 38, 44, 46, 48, 49, 52, 53, 54];
+ParticipantIndex = [1, 2, 17, 18, 25, 31, 48, 52];
 
 %%% Enter the names of new players
-NewPlayers = [];
-EstimatedRank = [];
+NewPlayers = ["mrminebase", "Correawesome"];
+EstimatedRank = [20, 16];
 
 %%% Algorithm settings
-teamPlayer          = 4;        % Number of players per team
+teamPlayer          = 2;        % Number of players per team
 rankLowerBound      = 5;        % Maximum negative deviation of score median
 rankUpperBound      = 10;        % Maximum positive deviation of score mean
 rankLowerTolerance	= rankLowerBound + 10;       % Maximum allowed negative deviation

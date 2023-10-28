@@ -30,9 +30,12 @@
 46,Jobbo2002,8,0,false
 47,Uncle_Lolly,3,0,false
 48,AurqSnqtcher,20,49,true
-49,cat_person,23,0,true
+49,cat_person,23,0,false
 50,GoldBard2474348,18,0,false
 51,CrimsonCid,10,0,false
+52,NekoBotUwU,38,0,true
 53,TheTolstar,21,0,false
-52,NekoBotUwU,38,0,false
 54,ICEturbo,80,0,true
+55,mrminebase,20,0,true
+56,JOPONOS,40,0,true
+57,Correawesome,16,0,true
