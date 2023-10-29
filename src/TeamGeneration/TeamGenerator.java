@@ -10,12 +10,14 @@ import HelperClasses.Team;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class TeamGenerator {
 
     private Season currentSeason;
     private List<Player> players = new ArrayList<>();
     private List<Season> seasons = new ArrayList<>();
+    private List<TeamGeneratorTeam> preAssignedTeams = new ArrayList<>();
 
     private List<PlayerConnection> playerConnections = new ArrayList<>();
     private int playerAmount = 3;
@@ -132,6 +134,7 @@ public class TeamGenerator {
 
         try {
             ArrayList<TeamGeneratorTeam> teams = teamss.get(num - 1);
+            teams.addAll(preAssignedTeams);
             System.out.println("Teams chosen: " + num);
             displayTeams(teams, 0);
             try {
@@ -143,6 +146,25 @@ public class TeamGenerator {
         } catch (Exception e) {
             return chooseTeams(teamss.size());
         }
+    }
+
+    private ArrayList<TeamGeneratorTeam> preAssignedTeams() {
+        ArrayList<TeamGeneratorTeam> teamGeneratorTeams = new ArrayList<>();
+
+        ArrayList<String> preAssignedString = fileTools.GetLinesFromFile("Files\\" + gameMode + "\\preAssignedTeams.txt");
+        for (String team : preAssignedString) {
+            String[] teamSplit = fileTools.splitLineOnComma(team);
+
+            ArrayList<Player> playerArray = new ArrayList<>();
+            for (String playerID : teamSplit ) {
+                playerArray.add(getPlayerByInternalID(Integer.parseInt(playerID)));
+            }
+
+
+            teamGeneratorTeams.add(new TeamGeneratorTeam(playerArray, playerAmount, playerConnections));
+        }
+
+        return teamGeneratorTeams;
     }
 
     private FileData generateTeamFile(ArrayList<TeamGeneratorTeam> teamGeneratorTeams) {
@@ -175,6 +197,8 @@ public class TeamGenerator {
             players.add(new Player(Integer.parseInt(playerSplit[0]), playerSplit[1], Integer.parseInt(playerSplit[2]), Double.parseDouble(playerSplit[3]), Boolean.parseBoolean(playerSplit[4])));
         }
 
+        preAssignedTeams = preAssignedTeams();  // Add pre assigned teams
+
         removeInactivePlayers();
         determineAmountOfPlayersPerTeam();
 
@@ -197,6 +221,10 @@ public class TeamGenerator {
                 players.remove(player);
             }
         }
+
+        // Remove players from pre assigned teams
+        ArrayList<Player> temp2 = preAssignedTeams.stream().map(TeamGeneratorTeam::getPlayers).findAny().orElse(null);
+        if (temp2 != null && !temp2.isEmpty()) players.remove(temp2);
     }
 
     private int getAverageRankOfPlayers() {
