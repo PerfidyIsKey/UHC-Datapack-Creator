@@ -85,7 +85,7 @@ public class TeamGenerator {
     }
 
     private void establishSeason() {
-        currentSeason = new Season(seasonID,players.size(), new Date());
+        currentSeason = new Season(seasonID, players.size(), new Date());
     }
 
 
@@ -219,7 +219,7 @@ public class TeamGenerator {
             Player player2 = getPlayerByInternalID(Integer.parseInt(playerConnectionsSplit[1]));
             if (player1 != null && player2 != null) {
                 List<Season> connectionSeasons = new ArrayList<>();
-                for (String s:seasonsSplit) {
+                for (String s : seasonsSplit) {
                     connectionSeasons.add(getSeasonByID(Double.parseDouble(s)));
                 }
                 playerConnections.add(new PlayerConnection(player1, player2, connectionSeasons));
@@ -229,20 +229,12 @@ public class TeamGenerator {
         return playerConnections;
     }
 
-    private Season getSeasonByID(double ID){
-        for (Season season: seasons) {
-            if(season.getID() == ID) return season;
-        }
-        return null;
+    private Season getSeasonByID(double ID) {
+        return seasons.stream().filter(s -> s.getID() == ID).findAny().orElse(null);
     }
 
     private Player getPlayerByInternalID(int internalID) {
-        for (Player player : players) {
-            if (player.getInternalID() == internalID) {
-                return player;
-            }
-        }
-        return null;
+        return players.stream().filter(p -> p.getInternalID() == internalID).findAny().orElse(null);
     }
 
     private ArrayList<TeamGeneratorTeam> generateFairTeamWithIterations(ArrayList<TeamGeneratorTeam> bestTeams, int iterations) {
@@ -255,7 +247,7 @@ public class TeamGenerator {
         ArrayList<Integer> bestTeamsMeta = getMetaData(bestTeams);
         for (int i = 0; i < newTeamsMeta.size(); i++) {
             if (!(bestTeamsMeta.get(i) + margin >= newTeamsMeta.get(i) && newTeamsMeta.get(i) >= bestTeamsMeta.get(i) - margin)) {
-                if (newTeamsMeta.size() != i+1 && newTeamsMeta.get(i+1) < bestTeamsMeta.get(i+1)) {
+                if (newTeamsMeta.size() != i + 1 && newTeamsMeta.get(i + 1) < bestTeamsMeta.get(i + 1)) {
                     return generateFairTeamWithIterations(newTeams, iterations - 1);
                 } else {
                     return generateFairTeamWithIterations(bestTeams, iterations - 1);
@@ -330,11 +322,11 @@ public class TeamGenerator {
         }
         for (Player p : tempered) {
             if (p.getRank() >= searchLowerBound && p.getRank() <= searchHigherBound) {
+                int[] t = getLowestAndHighestAmountPlayedTogether(p);
                 ArrayList<PlayerConnection> playerConnections = getPlayerConnection(players, p);
                 int count = 0;
                 for (PlayerConnection playerConnection : playerConnections) {
                     if (playerConnection != null) {
-                        int[] t = getLowestAndHighestAmountPlayedTogether(p);
                         if (playerConnection.getTimesPlayedTogether() == t[1] + timesPlayedMargin && t[1] != t[0]) {
                             count++;
                         }
@@ -369,12 +361,7 @@ public class TeamGenerator {
     }
 
     private PlayerConnection getPlayerConnection(Player player1, Player player2) {
-        for (PlayerConnection playerConnection : playerConnections) {
-            if (playerConnection.getPlayerConnection(player1, player2) != null) {
-                return playerConnection;
-            }
-        }
-        return null;
+        return playerConnections.stream().filter(connection -> connection.getPlayerConnection(player1, player2) != null).findAny().orElse(null);
     }
 
     private int calcTeamAmount() {

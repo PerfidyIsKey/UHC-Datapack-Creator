@@ -6,6 +6,7 @@ import HelperClasses.PlayerConnection;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class TeamGeneratorTeam {
     private ArrayList<Player> players;
@@ -85,12 +86,7 @@ public class TeamGeneratorTeam {
     }
 
     private List<PlayerConnection> getPlayerConnections(Player player) {
-        List<PlayerConnection> playerConnectionsOfPlayer = new ArrayList<>();
-        for (PlayerConnection playerConnection : playerConnections) {
-            if (playerConnection.getPlayer1().getInternalID() == player.getInternalID() || playerConnection.getPlayer2().getInternalID() == player.getInternalID())
-                playerConnectionsOfPlayer.add(playerConnection);
-        }
-        return playerConnectionsOfPlayer;
+        return playerConnections.stream().filter(playerConnection -> playerConnection.getPlayer1().getInternalID() == player.getInternalID() || playerConnection.getPlayer2().getInternalID() == player.getInternalID()).collect(Collectors.toList());
     }
 
     private int getHighestConnection(List<PlayerConnection> playerConnections) {
@@ -121,9 +117,7 @@ public class TeamGeneratorTeam {
     }
 
     public List<PlayerConnection> updatePlayerConnections(Season season) {
-        for (PlayerConnection playerConnection : playerConnections) {
-            playerConnection.addSeason(season);
-        }
+        playerConnections.forEach(playerConnection -> playerConnection.addSeason(season));
         return this.playerConnections;
     }
 }
