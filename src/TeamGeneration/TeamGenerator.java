@@ -10,12 +10,15 @@ import HelperClasses.Team;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class TeamGenerator {
 
     private Season currentSeason;
     private List<Player> players = new ArrayList<>();
     private List<Season> seasons = new ArrayList<>();
+    private List<TeamGeneratorTeam> preAssignedTeams = new ArrayList<>();
 
     private List<PlayerConnection> playerConnections = new ArrayList<>();
     private int playerAmount = 3;
@@ -132,6 +135,7 @@ public class TeamGenerator {
 
         try {
             ArrayList<TeamGeneratorTeam> teams = teamss.get(num - 1);
+            teams.addAll(preAssignedTeams);
             System.out.println("Teams chosen: " + num);
             displayTeams(teams, 0);
             try {
@@ -143,6 +147,25 @@ public class TeamGenerator {
         } catch (Exception e) {
             return chooseTeams(teamss.size());
         }
+    }
+
+    private ArrayList<TeamGeneratorTeam> preAssignedTeams() {
+        ArrayList<TeamGeneratorTeam> teamGeneratorTeams = new ArrayList<>();
+
+        ArrayList<String> preAssignedString = fileTools.GetLinesFromFile("Files\\" + gameMode + "\\preAssignedTeams.txt");
+        for (String team : preAssignedString) {
+            String[] teamSplit = fileTools.splitLineOnComma(team);
+
+            ArrayList<Player> playerArray = new ArrayList<>();
+            for (String playerID : teamSplit ) {
+                playerArray.add(getPlayerByInternalID(Integer.parseInt(playerID)));
+            }
+
+
+            teamGeneratorTeams.add(new TeamGeneratorTeam(playerArray, playerAmount, playerConnections));
+        }
+
+        return teamGeneratorTeams;
     }
 
     private FileData generateTeamFile(ArrayList<TeamGeneratorTeam> teamGeneratorTeams) {
@@ -175,10 +198,13 @@ public class TeamGenerator {
             players.add(new Player(Integer.parseInt(playerSplit[0]), playerSplit[1], Integer.parseInt(playerSplit[2]), Double.parseDouble(playerSplit[3]), Boolean.parseBoolean(playerSplit[4])));
         }
 
-        removeInactivePlayers();
-        determineAmountOfPlayersPerTeam();
+        preAssignedTeams = preAssignedTeams();  // Add pre-assigned teams
 
+        removeInactivePlayers();
+        removePlayersFromPreAssignedTeams();
+        determineAmountOfPlayersPerTeam();
         averageRank = getAverageRankOfPlayers();
+
         teamAmount = calcTeamAmount();
     }
 
@@ -197,6 +223,15 @@ public class TeamGenerator {
                 players.remove(player);
             }
         }
+    }
+
+    private void removePlayersFromPreAssignedTeams() {
+        ArrayList<Player> temp2;
+        for (TeamGeneratorTeam team : preAssignedTeams) {
+            temp2 = team.getPlayers();
+            temp2.forEach(player -> players.remove(player));
+        }
+
     }
 
     private int getAverageRankOfPlayers() {
@@ -398,9 +433,9 @@ public class TeamGenerator {
         for (TeamGeneratorTeam team : teams) {
             totalRank += team.getTotalRank();
         }
-        System.out.println("Average rank for teams: " + totalRank / teamAmount + " With a total of " + players.size() + " players." + " " + iterations);
+        System.out.println("Average rank for teams: " + totalRank / teams.size() + " With a total of " + players.size() + " players." + " " + iterations);
         for (TeamGeneratorTeam team : teams) {
-            System.out.println(team.getDisplayString(totalRank / teamAmount));
+            System.out.println(team.getDisplayString(totalRank / teams.size()));
         }
         System.out.println();
     }
