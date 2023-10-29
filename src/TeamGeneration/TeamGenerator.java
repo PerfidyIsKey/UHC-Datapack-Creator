@@ -226,8 +226,12 @@ public class TeamGenerator {
     }
 
     private void removePlayersFromPreAssignedTeams() {
-        ArrayList<Player> temp2 = preAssignedTeams.stream().flatMap(teamGeneratorTeam -> Stream.of(teamGeneratorTeam.getPlayers())).findFirst().get();
-        temp2.forEach(player -> players.remove(player));
+        ArrayList<Player> temp2;
+        for (TeamGeneratorTeam team : preAssignedTeams) {
+            temp2 = team.getPlayers();
+            temp2.forEach(player -> players.remove(player));
+        }
+
     }
 
     private int getAverageRankOfPlayers() {
