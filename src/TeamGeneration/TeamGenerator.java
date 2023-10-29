@@ -11,6 +11,7 @@ import HelperClasses.Team;
 import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class TeamGenerator {
 
@@ -197,12 +198,13 @@ public class TeamGenerator {
             players.add(new Player(Integer.parseInt(playerSplit[0]), playerSplit[1], Integer.parseInt(playerSplit[2]), Double.parseDouble(playerSplit[3]), Boolean.parseBoolean(playerSplit[4])));
         }
 
-        preAssignedTeams = preAssignedTeams();  // Add pre assigned teams
+        preAssignedTeams = preAssignedTeams();  // Add pre-assigned teams
 
         removeInactivePlayers();
+        removePlayersFromPreAssignedTeams();
         determineAmountOfPlayersPerTeam();
-
         averageRank = getAverageRankOfPlayers();
+
         teamAmount = calcTeamAmount();
     }
 
@@ -221,10 +223,11 @@ public class TeamGenerator {
                 players.remove(player);
             }
         }
+    }
 
-        // Remove players from pre assigned teams
-        ArrayList<Player> temp2 = preAssignedTeams.stream().map(TeamGeneratorTeam::getPlayers).findAny().orElse(null);
-        if (temp2 != null && !temp2.isEmpty()) players.remove(temp2);
+    private void removePlayersFromPreAssignedTeams() {
+        ArrayList<Player> temp2 = preAssignedTeams.stream().flatMap(teamGeneratorTeam -> Stream.of(teamGeneratorTeam.getPlayers())).findFirst().get();
+        temp2.forEach(player -> players.remove(player));
     }
 
     private int getAverageRankOfPlayers() {
@@ -439,9 +442,9 @@ public class TeamGenerator {
         for (TeamGeneratorTeam team : teams) {
             totalRank += team.getTotalRank();
         }
-        System.out.println("Average rank for teams: " + totalRank / teamAmount + " With a total of " + players.size() + " players." + " " + iterations);
+        System.out.println("Average rank for teams: " + totalRank / teams.size() + " With a total of " + players.size() + " players." + " " + iterations);
         for (TeamGeneratorTeam team : teams) {
-            System.out.println(team.getDisplayString(totalRank / teamAmount));
+            System.out.println(team.getDisplayString(totalRank / teams.size()));
         }
         System.out.println();
     }
