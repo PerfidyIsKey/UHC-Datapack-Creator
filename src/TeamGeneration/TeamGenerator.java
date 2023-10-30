@@ -26,8 +26,9 @@ public class TeamGenerator {
 
     private ArrayList<Team> teams;
 
-    private int iterationsPerRun = 3000;
-    private int iterations = 1000;
+    //This number can cause stack overflow errors if it gets too high.
+    private int iterationsPerRun = 2000;
+    private int iterations = 1500;
 
     private int averageRank;
 
@@ -65,9 +66,10 @@ public class TeamGenerator {
         playerConnections = determinePlayerConnections();
         teamss.add(generateTeams(teamRankMargin, playerAmount, iterationsPerRun));
         ArrayList<TeamGeneratorTeam> teams;
+        int smallerIterations = iterationsPerRun/10;
         if (!auto) {
             for (int i = 0; i < 5; i++) {
-                teamss.add(generateTeams(teamRankMargin + i * 3, playerAmount, 300));
+                teamss.add(generateTeams(teamRankMargin + i * 3, playerAmount, smallerIterations));
             }
             Scanner scanner = new Scanner(System.in);
             System.out.println("Choose a team composition. [num]");
@@ -135,7 +137,6 @@ public class TeamGenerator {
 
         try {
             ArrayList<TeamGeneratorTeam> teams = teamss.get(num - 1);
-            teams.addAll(preAssignedTeams);
             System.out.println("Teams chosen: " + num);
             displayTeams(teams, 0);
             try {
@@ -157,7 +158,7 @@ public class TeamGenerator {
             String[] teamSplit = fileTools.splitLineOnComma(team);
 
             ArrayList<Player> playerArray = new ArrayList<>();
-            for (String playerID : teamSplit ) {
+            for (String playerID : teamSplit) {
                 playerArray.add(getPlayerByInternalID(Integer.parseInt(playerID)));
             }
 
@@ -187,6 +188,7 @@ public class TeamGenerator {
         for (int i = 0; i < iterations; i++) {
             teams = generateFairTeamWithIterations(teams, iterationsPerRun);
         }
+        teams.addAll(preAssignedTeams);
         displayTeams(teams, iterationsPerRun);
         return teams;
     }
@@ -226,12 +228,14 @@ public class TeamGenerator {
     }
 
     private void removePlayersFromPreAssignedTeams() {
-        ArrayList<Player> temp2;
-        for (TeamGeneratorTeam team : preAssignedTeams) {
-            temp2 = team.getPlayers();
-            temp2.forEach(player -> players.remove(player));
-        }
+        ArrayList<Player> players = getPreAssignedPlayers();
+        players.forEach(player -> this.players.remove(player));
+    }
 
+    private ArrayList<Player> getPreAssignedPlayers() {
+        ArrayList<Player> temp = new ArrayList<>();
+        preAssignedTeams.forEach(team -> temp.addAll(team.getPlayers()));
+        return temp;
     }
 
     private int getAverageRankOfPlayers() {
@@ -383,6 +387,9 @@ public class TeamGenerator {
         for (PlayerConnection playerConnection : this.playerConnections) {
             if (playerConnection.getPlayerConnection(player) != null) playerConnections1.add(playerConnection);
         }
+        if (playerConnections1.isEmpty()) {
+            return new int[]{0, 0};
+        }
         playerConnections1.sort(Comparator.comparing(PlayerConnection::getTimesPlayedTogether));
         return new int[]{playerConnections1.get(0).getTimesPlayedTogether(), playerConnections1.get(playerConnections1.size() - 1).getTimesPlayedTogether()};
     }
@@ -396,7 +403,12 @@ public class TeamGenerator {
     }
 
     private PlayerConnection getPlayerConnection(Player player1, Player player2) {
-        return playerConnections.stream().filter(connection -> connection.getPlayerConnection(player1, player2) != null).findAny().orElse(null);
+        for (PlayerConnection playerConnection : playerConnections) {
+            if (playerConnection.getPlayerConnection(player1, player2) != null) {
+                return playerConnection;
+            }
+        }
+        return null;
     }
 
     private int calcTeamAmount() {
@@ -417,10 +429,12 @@ public class TeamGenerator {
     }
 
     private void determineAmountOfPlayersPerTeam() {
-        if ((players.size() % 4) == 0 && players.size() >= 16) playerAmount = 4;
-        else if ((players.size() % 3) == 0) playerAmount = 3;
-        else if ((players.size() % 2) == 0) playerAmount = 2;
-        else if (players.size() % 3 == 1) playerAmount = 3;
+        int totalPlayers = players.size();
+        if (!getPreAssignedPlayers().isEmpty()) playerAmount = 2;
+        else if ((totalPlayers % 4) == 0 && totalPlayers >= 16) playerAmount = 4;
+        else if ((totalPlayers % 3) == 0) playerAmount = 3;
+        else if ((totalPlayers % 2) == 0) playerAmount = 2;
+        else if (totalPlayers % 3 == 1) playerAmount = 3;
         else playerAmount = 2;
     }
 
@@ -433,7 +447,8 @@ public class TeamGenerator {
         for (TeamGeneratorTeam team : teams) {
             totalRank += team.getTotalRank();
         }
-        System.out.println("Average rank for teams: " + totalRank / teams.size() + " With a total of " + players.size() + " players." + " " + iterations);
+        int totalPlayers = players.size() + getPreAssignedPlayers().size();
+        System.out.println("Average rank for teams: " + totalRank / teams.size() + " With a total of " + totalPlayers + " players." + " " + iterations);
         for (TeamGeneratorTeam team : teams) {
             System.out.println(team.getDisplayString(totalRank / teams.size()));
         }

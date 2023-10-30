@@ -21,8 +21,8 @@
 37,N_G0n,3,0,false
 38,SpookySpiker,53,0,false
 39,Clockweiz,5,0,false
-40,Eason950116,9,0,false
-41,CorruptUncle,39,44,false
+40,Eason950116,9,0,true
+41,CorruptUncle,39,44,true
 42,Pimmie36,41,0,false
 43,Jayroon123,0,43,false
 44,PbQuinn,25,0,false
