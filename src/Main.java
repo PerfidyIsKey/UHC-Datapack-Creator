@@ -38,7 +38,7 @@ public class Main {
 
     //GameData<
     private static final int chestSize = 27;
-    private static final String commandCenter = "s46";
+    private static final String commandCenter = "s52";
     private String admin;
     private Coordinate startCoordinate;
     private Coordinate netherPortal;
@@ -1386,6 +1386,11 @@ public class Main {
 
         // Update minimum health
         fileCommands.add(callFunction(FileName.update_min_health));
+
+        // Remove piercing enchantment
+        fileCommands.add(execute.If(new Selector("@p[nbt={SelectedItem:{id:\"minecraft:crossbow\",tag:{Enchantments:[{id:\"minecraft:piercing\"}]}}}]")) +
+                new TellRaw("@p[nbt={SelectedItem:{id:\"minecraft:crossbow\",tag:{Enchantments:[{id:\"minecraft:piercing\"}]}}}]", new Text(Color.red, true, false, "PIERCING IS NOT ALLOWED, YOU NAUGHTY BUM!")).sendRaw());
+        fileCommands.add("item replace entity @p[nbt={SelectedItem:{id:\"minecraft:crossbow\",tag:{Enchantments:[{id:\"minecraft:piercing\"}]}}}] weapon.mainhand with minecraft:crossbow");
 
         return new FileData(FileName.update_sidebar, fileCommands);
     }

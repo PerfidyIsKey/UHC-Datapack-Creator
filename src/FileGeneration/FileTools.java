@@ -43,14 +43,12 @@ public class FileTools {
         Recipe recipe = new Recipe("crafting_shaped", grid, keys, "dragon_head", 1);
         recipes.add(recipe);
 
-        /*
         String[] grid2 = {" ", "1", " ", "1", "2", "1", " ", "1", " "};
         ArrayList<String> keys2 = new ArrayList<>();
         keys2.add("gold_ingot");
         keys2.add("player_head");
         FileGeneration.Recipe recipe2 = new FileGeneration.Recipe("crafting_shaped", grid2, keys2, "golden_apple", 1);
         recipes.add(recipe2);
-        */
 
         for (Recipe r : recipes) {
             ArrayList<String> fileCommands = new ArrayList<>();
