@@ -623,12 +623,15 @@ public class Main {
         }
         //end teams
         //structure
+        // Staging area
         fileCommands.add(execute.In(Dimension.overworld) +
                 fill(-6, 220, -6, 6, 226, 6, BlockType.barrier));
         fileCommands.add(execute.In(Dimension.overworld) +
                 fill(-5, 221, -5, 5, 226, 5, BlockType.air));
         fileCommands.add(execute.In(Dimension.overworld) +
-                setBlock(0, 222, -5, "minecraft:oak_wall_sign[facing=south,waterlogged=false]{Color:\"black\",GlowingText:0b,Text1:'{\"clickEvent\":{\"action\":\"run_command\",\"value\":\"tp @s 5 " + (worldBottom + 5) + " 5\"},\"text\":\"\"}',Text2:'{\"text\":\"Teleport to\"}',Text3:'{\"text\":\"Command Center\"}',Text4:'{\"text\":\"\"}'}"));
+                setBlock(0, 222, -5, "cherry_wall_sign[facing=south,waterlogged=false]{back_text:{messages:['{\"text\":\"You have\"}','{\"text\":\"angered\"}','{\"text\":\"the Gods!\"}','{\"text\":\"\"}']},front_text:{messages:['{\"text\":\"Teleport\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"tp @s 5 " + (worldBottom + 5) + " 5\"}}','{\"text\":\"to the\"}','{\"text\":\"Command center\"}','{\"text\":\"\"}']},is_waxed:0b}"));
+
+        // Command center
         fileCommands.add(execute.In(Dimension.overworld) +
                 setBlock(-2, worldBottom, -2, "minecraft:structure_block[mode=load]{metadata:\"\",mirror:\"NONE\",ignoreEnti" +
                         "ties:0b,powered:0b,seed:0L,author:\"?\",rotation:\"NONE\",posX:1,mode:\"LOAD\",posY:1,sizeX:18,posZ:1," +
