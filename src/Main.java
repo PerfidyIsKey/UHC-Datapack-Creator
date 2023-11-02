@@ -682,7 +682,7 @@ public class Main {
         for (Team t : teams) {
             fileCommands.add(execute.If(new Score("@r[limit=1,gamemode=!spectator,team=" + t.getName() + "]", "ControlPoint1", ">", "@p[scores={Admin=1}] Highscore1")) +
                     getBossbarByName("cp1").setColor(t.getBossbarColor()));
-            fileCommands.add(execute.If(new Score("@r[limit=1,gamemode=!spectator,team=" + t.getName() + "]", "ControlPoint2", ">", "@p[scores={Admin=1}] Highscore2")) +
+            fileCommands.add(execute.If(new Score("@r[limit=1,gamemode=!spectator,team=" + t.getName() + "]", "ControlPoint2", ">", "@p[scores={Admin=1,Highscore1=14400..}] Highscore2")) +
                     getBossbarByName("cp2").setColor(t.getBossbarColor()));
         }
         fileCommands.add(execute.As("@r[limit=1,gamemode=!spectator]") +
@@ -692,7 +692,7 @@ public class Main {
         fileCommands.add(execute.As("@r[limit=1,gamemode=!spectator]") +
                 "scoreboard players operation @p[scores={Admin=1}] Highscore2 > @s ControlPoint2");
         fileCommands.add(execute.StoreResult(getBossbarByName("cp2")
-                .setValue("run scoreboard players get @p[scores={Admin=1}] Highscore2")));
+                .setValue("run scoreboard players get @p[scores={Admin=1,Highscore2=14400..}] Highscore2")));
 
         return new FileData(FileName.bbvalue, fileCommands);
     }
