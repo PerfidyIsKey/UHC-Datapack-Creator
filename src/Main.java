@@ -1551,7 +1551,7 @@ public class Main {
         texts.add(bannerText);
         texts.add(new Text(Color.gold, true, false, communityName + " UHC"));
         texts.add(bannerText);
-        texts.add(new Text(Color.light_purple, true, false, "The Controlpoint has been captured!"));
+        texts.add(new Text(Color.light_purple, true, false, "THE CONTROL POINT HAS BEEN CAPTURED!"));
         texts.add(bannerText);
 
         fileCommands.add(new TellRaw("@a", texts).sendRaw());
@@ -1559,7 +1559,7 @@ public class Main {
                 fill(15, worldBottom + 2, 3, 15, worldBottom + 2, 4, BlockType.bedrock));
 
         fileCommands.add(new Title("@a", TitleType.subtitle, new Text(Color.light_purple, true, true, "has been captured!")).displayTitle());
-        fileCommands.add(new Title("@a", TitleType.title, new Text(Color.gold, true, true, "The Controlpoint")).displayTitle());
+        fileCommands.add(new Title("@a", TitleType.title, new Text(Color.gold, true, true, "The Control Point")).displayTitle());
 
         fileCommands.add(callFunction(FileName.teams_highscore_alive_check));
 
