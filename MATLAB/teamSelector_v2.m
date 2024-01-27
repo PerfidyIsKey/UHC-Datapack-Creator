@@ -106,10 +106,45 @@ while true
         scores(i)   = max(ranks(i) + noise,  0);
     end
 
-    
+    %%% Create manual initial population
+    [~, I] = sort(scores, "descend");   % Get player ranking order
+    meanPlayerScore = mean(scores);     % Get mean player scores
+
+    initialPopulation = zeros(1, playersNumber);    % Preallocation
+    for assignedTeam = 1:teamNumber
+        assignedPlayers         = zeros(1, teamPlayer); % Initialize
+        assignedIndex           = [1, length(I)];       % Take best and worst player
+        assignedPlayers(1:2)    = I(assignedIndex);     % Assign actual player indices
+        I(assignedIndex)        = [];                   % Remove players from callback list
+        
+        % Populate teams larger than two players
+        if teamPlayer > 2
+            % Add extra team mates to team in case of inbalance
+            if teamNumber - assignedTeam >= mod(playersNumber, teamPlayer)
+                extraTeamPlayers = 0;
+            else
+                extraTeamPlayers = 1;
+            end
+
+            for teamIndex = 3:(teamPlayer + extraTeamPlayers)
+                % Find next best players
+                teamScores                  = (sum(scores(assignedPlayers(1:teamIndex-1))) +...
+                    scores(I))/teamIndex;                                               % Find team scores with all possible team mates
+                [~, addedPlayer]            = min(abs(teamScores - meanPlayerScore));   % Find best player to add
+                assignedPlayers(teamIndex)  = I(addedPlayer);                           % Add player to list
+                I(addedPlayer) = [];                                                    % Remove players from callback list
+            end
+        end
+
+        % Assign team to initial population
+        initialPopulation(assignedPlayers) = assignedTeam;
+    end
+
+    % Add initial population option
+    options = optimoptions(options, "InitialPopulationMatrix", initialPopulation);
 
     %%% Define functions
-    fun = @(x) groupPlayers(x, scores, teamNumber, teamSize);       % Objective function
+    fun     = @(x) groupPlayers(x, scores, teamNumber, teamSize);   % Objective function
     nonlcon = @(x) constrainTeams(x, scores, teamNumber, teamSize, ...
         Players, participantIndex, PlayerConnectivity, settings);   % Constraints
     
@@ -164,11 +199,10 @@ end
 %% Display results
 %%% Display results in command window
 teamScore = getTeamScore(x, scores, teamNumber, teamSize, 2);   % Get team scores
-meanScore = mean(scores);                                       % Mean of team scores
 
 colVec = ["Yellow", "Blue", "Red", "Purple", "Green", "Pink", "Black", "Orange", "Gray",...
     "Aqua", "D.Red", "D.Blue", "D.Aqua", "D.Green", "D.Gray", "White"];   % Team colors
-fprintf("The mean score of all players is %3.0f.\n", meanScore)
+fprintf("The mean score of all players is %3.0f.\n", meanPlayerScore)
 
 printName	= strings(playersNumber, 1); % Preallocation
 pCount      = 0;                        % Initialization
@@ -193,7 +227,7 @@ for i = 1:teamNumber
 
     % Convert scores to strings
     score       = num2str(teamScore(i), "%3.0f");
-    devScore	= num2str(teamScore(i) - meanScore, "%+2.0f");
+    devScore	= num2str(teamScore(i) - meanPlayerScore, "%+2.0f");
     printChar = "Team %7s: " + oper + " Team score: %s (%s)\n";
     names(names == "") = [];
     fprintf(printChar, [colVec(i), names, score, devScore])
