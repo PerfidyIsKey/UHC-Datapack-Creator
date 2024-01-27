@@ -1,6 +1,6 @@
--182,87,-281,windswept_hills
-288,114,-314,birch_forest
-335,115,-172,dark_forest
--407,70,449,savanna
-39,77,-210,old_growth_birch_forest
--160,62,236,river
+155,64,-129,mangrove_swamp
+-95,99,280,forest
+334,93,-171,mangrove_swamp
+275,69,475,bamboo_jungle
+-247,61,95,cave
+250,64,66,savanna

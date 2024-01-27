@@ -1,6 +1,6 @@
 uhcNumber:51
 admin:Snodog627
-startCoordinate:0,69,0
+startCoordinate:0,84,0
 netherPortal:5,71,-11
 minTraitorRank:30
 traitorWaitTime:2
