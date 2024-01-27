@@ -600,7 +600,7 @@ public class Main {
         for (ScoreboardObjective objective : scoreboardObjectives) {
             fileCommands.add(objective.add());
         }
-        fileCommands.add(new ScoreboardObjective().setDisplay("belowName", "Hearts"));
+        fileCommands.add(new ScoreboardObjective().setDisplay("below_name", "Hearts"));
         fileCommands.add(new ScoreboardObjective().setDisplay("list", "Hearts"));
         //end scoreboard
         //bossbar

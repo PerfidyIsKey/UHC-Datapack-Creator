@@ -9,13 +9,17 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class TeamGeneratorTeam {
-    private ArrayList<Player> players;
+    private List<Player> players;
     private int teamSize;
 
     private final int extraMemberPoints = 30;
 
     private List<PlayerConnection> allPlayerConnections;
     private List<PlayerConnection> playerConnections;
+
+    public TeamGeneratorTeam(ArrayList<Player> players) {
+        this.players = players;
+    }
 
     public TeamGeneratorTeam(ArrayList<Player> players, int teamSize, List<PlayerConnection> playerConnections) {
         this.players = players;
@@ -66,7 +70,15 @@ public class TeamGeneratorTeam {
 
     public void addPlayer(Player player) {
         this.players.add(player);
-        this.playerConnections = ensurePlayerConnections(filterPlayerConnections(allPlayerConnections));
+        try {
+            this.playerConnections = ensurePlayerConnections(filterPlayerConnections(allPlayerConnections));
+        } catch (Exception e) {
+
+        }
+    }
+
+    public void setPlayers(List<Player> players) {
+        this.players = players;
     }
 
     private int generateTotalRank() {
@@ -81,7 +93,7 @@ public class TeamGeneratorTeam {
         return total;
     }
 
-    public ArrayList<Player> getPlayers() {
+    public List<Player> getPlayers() {
         return players;
     }
 
