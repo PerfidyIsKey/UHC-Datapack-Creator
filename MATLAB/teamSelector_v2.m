@@ -13,10 +13,10 @@ participantIndex = [1, 2, 17, 25, 44, 45, 48, 54, 56];
 
 %%% Enter the names of new players
 newPlayers = ["Dan_Fingerman", "marckstef", "neokneipies", "blacksnake29", "BuildingBard300"];
-estimatedRank = [60, 20, 10, 20, 60];
+estimatedRank = [40, 20, 10, 20, 60];
 
 %%% Algorithm settings
-teamPlayer          = 2;                    % Number of players per team
+teamPlayer          = 3;                    % Number of players per team
 rankLowerBound      = 5;                    % Maximum negative deviation of score median
 rankUpperBound      = 10;                   % Maximum positive deviation of score mean
 rankLowerTolerance	= rankLowerBound + 10;  % Maximum allowed negative deviation
@@ -32,8 +32,10 @@ settings = struct("players", teamPlayer, "rank", struct("LB", rankLowerBound, ..
     "connections", maxConnections, "noise", scoreNoise);
 
 newAmount           = length(newPlayers);           % Number of new players
-totalAmount         = length(Players) + newAmount;  % Total number of players
-participantAmount   = length(participantIndex);	    % Number of participants
+playerDataNumber    = length(Players);              % Number of players in the data base
+totalAmount         = playerDataNumber + newAmount; % Total number of players
+participantAmount   = length(participantIndex);	    % Number of returning participants
+seasonNumber        = length(Seasons);              % Define number of seasons played
 
 %% Participation criteria
 % Pull the players that are participating in this season
@@ -48,12 +50,29 @@ for i = 1:participantAmount + newAmount
             lastActive  = find(Players(participantIndex(i)).Participation == true, 1, "last");
             ranks(i)    = Players(participantIndex(i)).RankHistory(lastActive);
         end
-        Players(participantIndex(i)).Experience = sum(Players(participantIndex(i)).Participation);
+
     else
         playerName(i)       = newPlayers(i - participantAmount);
         ranks(i)            = estimatedRank(i - participantAmount);
         participantIndex(i) = totalAmount - newAmount + i - participantAmount;
-        Players(participantIndex(i)).Experience = 1;
+    end
+end
+
+%% Season data
+today = datetime("today");  % Create a date for today
+for i = seasonNumber:-1:1
+    % Extract season date
+    lastEligible = Seasons(i).Date;
+
+    % Find time between today and season
+    timeBetween         = between(lastEligible, today);
+    [timeYears, ~, ~]   = split(timeBetween, ["years", "months", "days"]);  % Convert to years
+
+    % Break loop if season is no longer valid
+    if timeYears >= 4
+        lastEligibleSeason      = i + 1;                            % Store index
+        participationIndexing   = lastEligibleSeason:seasonNumber;  % Create index for participation
+        break
     end
 end
 
@@ -75,16 +94,26 @@ options = optimoptions("ga", "Display", "none",...
 
 %% Evaluate Genetic Algorithm
 while true
-    for i = 1:length(ranks)
-        noise       = settings.noise*exp(-Players(participantIndex(i)).Experience)*randn;   % Add random noise scaled with experience
+    %%% Add noise to the rank
+    for i = 1:playersNumber
+        if participantIndex(i) <= playerDataNumber
+            experience = numel(find(Players(participantIndex(i)).Participation(participationIndexing) == true));    % Determine experience
+        else
+            experience = 0; % New players have no experience
+        end
+
+        noise       = settings.noise*exp(-experience)*randn;   % Add random noise scaled with experience
         scores(i)   = max(ranks(i) + noise,  0);
     end
+
     
+
     %%% Define functions
     fun = @(x) groupPlayers(x, scores, teamNumber, teamSize);       % Objective function
     nonlcon = @(x) constrainTeams(x, scores, teamNumber, teamSize, ...
         Players, participantIndex, PlayerConnectivity, settings);   % Constraints
     
+    %%% Genetic Algorithm
     [x, fval, exitflag, output, population, popScores] = ga(fun, playersNumber, [], [], [], [], ...
         lb, ub, nonlcon, 1:playersNumber, options);
     
