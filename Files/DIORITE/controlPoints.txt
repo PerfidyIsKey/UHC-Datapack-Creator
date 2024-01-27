@@ -2,5 +2,5 @@
 -95,99,280,forest
 334,93,-171,mangrove_swamp
 275,69,475,bamboo_jungle
--247,61,95,cave
+-247,52,95,cave
 250,64,66,savanna
