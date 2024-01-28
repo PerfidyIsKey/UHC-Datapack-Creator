@@ -1,1043 +1,1069 @@
-*Note: Results from Season 1-32 are not considered anymore as they are more than four years old.*
+*Note: Results from Season 1-33 are not considered anymore as they are more than four years old.*
 
-**1 (+0) TheDinoGame** **- PB!**
+**1 (+0) TheDinoGame** **- PB!** 
 
-Rank: 165 (-2)
+Rank: 167 (+2)  
 
-Number of games: 15
+Number of games: 16 
 
-Total number of wins: 5
+Total number of wins: 5 
 
-Best performance: 7.22 (in UHC S39)
+Best performance: 7.22 (in UHC S39) 
 
-Total number of kills: 37
+Total number of kills: 39 
 
-Average number of kills: 2.47
+Average number of kills: 2.44 
 
-Highest number of kills in a game: 7 (in UHC S39)
+Highest number of kills in a game: 7 (in UHC S39) 
 
-Mean Survivalrate: 0.60
+Mean Survivalrate: 0.59 
 
-Peak ranking score: 222 (after UHC S42)
+Peak ranking score: 222 (after UHC S42) 
 
-Highest rank: 1st (x14, last achieved in UHC S51)
+Highest rank: 1st (x15, last achieved in UHC S52) 
 
-Last UHC season: S50 (30/09/2023)
+Last UHC season: S52 (27/01/2024) 
 
-&nbsp;
+&nbsp; 
 
-**2 (+0) \_HexGamer** **- PB!**
+**2 (+3) ICEturbo** **- PB!** 
 
-Rank: 104 (-1)
+Rank: 106 (+31)  **- PB!** 
 
-Number of games: 14
+Number of games: 3 
 
-Total number of wins: 4
+Total number of wins: 1 
 
-Best performance: 3.50 (in UHC S49)
+Best performance: 2.80 (in UHC S50) 
 
-Total number of kills: 13
+Total number of kills: 4 
 
-Average number of kills: 0.93
+Average number of kills: 1.33 
 
-Highest number of kills in a game: 4 (in UHC S49)
+Highest number of kills in a game: 2 (in UHC S50, S52) 
 
-Mean Survivalrate: 0.57
+Mean Survivalrate: 0.71 
 
-Peak ranking score: 116 (after UHC S49)
+Peak ranking score: 106 (after UHC S52) 
 
-Highest rank: 2nd (x3, last achieved in UHC S51)
+Highest rank: 2nd (x1, last achieved in UHC S52) 
 
-Last UHC season: S50 (30/09/2023)
+Last UHC season: S52 (27/01/2024) 
 
-&nbsp;
+&nbsp; 
 
-**3 (+0) Snodog627**
+**3 (-1) \_HexGamer** 
 
-Rank: 95 (-6)
+Rank: 102 (-2)  
 
-Number of games: 53
+Number of games: 14 
 
-Total number of wins: 23
+Total number of wins: 4 
 
-Best performance: 3.67 (in UHC S27)
+Best performance: 3.50 (in UHC S49) 
 
-Total number of kills: 50
+Total number of kills: 13 
 
-Average number of kills: 0.94
+Average number of kills: 0.93 
 
-Highest number of kills in a game: 4 (in UHC S42)
+Highest number of kills in a game: 4 (in UHC S49) 
 
-Mean Survivalrate: 0.62
+Mean Survivalrate: 0.57 
 
-Peak ranking score: 168 (after UHC S28)
+Peak ranking score: 116 (after UHC S49) 
 
-Highest rank: 1st (x30, last achieved in UHC S36)
+Highest rank: 2nd (x3, last achieved in UHC S51) 
 
-Last UHC season: S51 (28/10/2023)
+Last UHC season: S50 (30/09/2023) 
 
-&nbsp;
+&nbsp; 
 
-**4 (+1) Mr9Madness**
+**4 (-1) Snodog627** 
 
-Rank: 79 (+7)
+Rank: 90 (-5)  
 
-Number of games: 49
+Number of games: 54 
 
-Total number of wins: 15
+Total number of wins: 23 
 
-Best performance: 3.29 (in UHC S43)
+Best performance: 3.67 (in UHC S27) 
 
-Total number of kills: 21
+Total number of kills: 50 
 
-Average number of kills: 0.43
+Average number of kills: 0.93 
 
-Highest number of kills in a game: 4 (in UHC S43)
+Highest number of kills in a game: 4 (in UHC S42) 
 
-Mean Survivalrate: 0.53
+Mean Survivalrate: 0.62 
 
-Peak ranking score: 102 (after UHC S7)
+Peak ranking score: 168 (after UHC S28) 
 
-Highest rank: 1st (x5, last achieved in UHC S8)
+Highest rank: 1st (x30, last achieved in UHC S36) 
 
-Last UHC season: S51 (28/10/2023)
+Last UHC season: S52 (27/01/2024) 
 
-&nbsp;
+&nbsp; 
 
-**5 (-1) ICEturbo**
+**5 (NEW) blacksnake29** **- PB!** 
 
-Rank: 75 (-5)
+Rank: 86 (NEW)  **- PB!** 
 
-Number of games: 2
+Number of games: 1 
 
-Total number of wins: 1
+Total number of wins: 1 
 
-Best performance: 2.80 (in UHC S50)
+Best performance: 3.00 (in UHC S52) 
 
-Total number of kills: 2
+Total number of kills: 1 
 
-Average number of kills: 1.00
+Average number of kills: 1.00 
 
-Highest number of kills in a game: 2 (in UHC S50)
+Highest number of kills in a game: 1 (in UHC S52) 
 
-Mean Survivalrate: 0.80
+Mean Survivalrate: 1.00 
 
-Peak ranking score: 80 (after UHC S50)
+Peak ranking score: 86 (after UHC S52) 
 
-Highest rank: 4th (x1, last achieved in UHC S50)
+Highest rank: 5th (x1, last achieved in UHC S52) 
 
-Last UHC season: S51 (28/10/2023)
+Last UHC season: S52 (27/01/2024) 
 
-&nbsp;
+&nbsp; 
 
-**6 (+5) Kalazniq** **- PB!**
+**6 (-2) Mr9Madness** 
 
-Rank: 66 (+15)  **- PB!**
+Rank: 83 (+5)  
 
-Number of games: 31
+Number of games: 50 
 
-Total number of wins: 4
+Total number of wins: 15 
 
-Best performance: 2.50 (in UHC S19, S32, S45A)
+Best performance: 3.29 (in UHC S43) 
 
-Total number of kills: 10
+Total number of kills: 22 
 
-Average number of kills: 0.32
+Average number of kills: 0.44 
 
-Highest number of kills in a game: 2 (in UHC S19, S45A)
+Highest number of kills in a game: 4 (in UHC S43) 
 
-Mean Survivalrate: 0.40
+Mean Survivalrate: 0.53 
 
-Peak ranking score: 66 (after UHC S51)
+Peak ranking score: 102 (after UHC S7) 
 
-Highest rank: 6th (x2, last achieved in UHC S51)
+Highest rank: 1st (x5, last achieved in UHC S8) 
 
-Last UHC season: S51 (28/10/2023)
+Last UHC season: S52 (27/01/2024) 
 
-&nbsp;
+&nbsp; 
 
-**7 (+13) AurqSnqtcher** **- PB!**
+**7 (-1) Kalazniq** 
 
-Rank: 66 (+45)  **- PB!**
+Rank: 64 (-2)  
 
-Number of games: 4
+Number of games: 32 
 
-Total number of wins: 1
+Total number of wins: 4 
 
-Best performance: 2.83 (in UHC S51)
+Best performance: 2.50 (in UHC S19, S32, S45A) 
 
-Total number of kills: 3
+Total number of kills: 10 
 
-Average number of kills: 0.75
+Average number of kills: 0.31 
 
-Highest number of kills in a game: 2 (in UHC S51)
+Highest number of kills in a game: 2 (in UHC S19, S45A) 
 
-Mean Survivalrate: 0.44
+Mean Survivalrate: 0.40 
 
-Peak ranking score: 66 (after UHC S51)
+Peak ranking score: 66 (after UHC S51) 
 
-Highest rank: 7th (x1, last achieved in UHC S51)
+Highest rank: 6th (x2, last achieved in UHC S51) 
 
-Last UHC season: S51 (28/10/2023)
+Last UHC season: S52 (27/01/2024) 
 
-&nbsp;
+&nbsp; 
 
-**8 (-2) PerfidyIsKey**
+**8 (-1) AurqSnqtcher** 
 
-Rank: 63 (-4)
+Rank: 64 (-2)  
 
-Number of games: 27
+Number of games: 4 
 
-Total number of wins: 7
+Total number of wins: 1 
 
-Best performance: 2.50 (in UHC S35)
+Best performance: 2.83 (in UHC S51) 
 
-Total number of kills: 6
+Total number of kills: 3 
 
-Average number of kills: 0.22
+Average number of kills: 0.75 
 
-Highest number of kills in a game: 1 (in UHC S28, S31, S33, S40, S43, S50)
+Highest number of kills in a game: 2 (in UHC S51) 
 
-Mean Survivalrate: 0.45
+Mean Survivalrate: 0.44 
 
-Peak ranking score: 80 (after UHC S45A)
+Peak ranking score: 66 (after UHC S51) 
 
-Highest rank: 5th (x2, last achieved in UHC S45A)
+Highest rank: 7th (x1, last achieved in UHC S51) 
 
-Last UHC season: S51 (28/10/2023)
+Last UHC season: S51 (28/10/2023) 
 
-&nbsp;
+&nbsp; 
 
-**9 (-2) Bobdafish**
+**9 (-1) PerfidyIsKey** 
 
-Rank: 59 (-3)
+Rank: 57 (-6)  
 
-Number of games: 10
+Number of games: 28 
 
-Total number of wins: 3
+Total number of wins: 7 
 
-Best performance: 4.04 (in UHC S38)
+Best performance: 2.50 (in UHC S35) 
 
-Total number of kills: 9
+Total number of kills: 6 
 
-Average number of kills: 0.90
+Average number of kills: 0.21 
 
-Highest number of kills in a game: 4 (in UHC S37)
+Highest number of kills in a game: 1 (in UHC S28, S31, S33, S40, S43, S50) 
 
-Mean Survivalrate: 0.46
+Mean Survivalrate: 0.44 
 
-Peak ranking score: 198 (after UHC S38)
+Peak ranking score: 80 (after UHC S45A) 
 
-Highest rank: 1st (x2, last achieved in UHC S38)
+Highest rank: 5th (x2, last achieved in UHC S45A) 
 
-Last UHC season: S46 (22/07/2022)
+Last UHC season: S52 (27/01/2024) 
 
-&nbsp;
+&nbsp; 
 
-**10 (+4) NekoBotUwU** **- PB!**
+**10 (+0) NekoBotUwU** **- PB!** 
 
-Rank: 56 (+18)  **- PB!**
+Rank: 54 (-2)  
 
-Number of games: 2
+Number of games: 2 
 
-Total number of wins: 0
+Total number of wins: 0 
 
-Best performance: 1.33 (in UHC S50)
+Best performance: 1.33 (in UHC S50) 
 
-Total number of kills: 2
+Total number of kills: 2 
 
-Average number of kills: 1.00
+Average number of kills: 1.00 
 
-Highest number of kills in a game: 1 (in UHC S50, S51)
+Highest number of kills in a game: 1 (in UHC S50, S51) 
 
-Mean Survivalrate: 0.66
+Mean Survivalrate: 0.66 
 
-Peak ranking score: 56 (after UHC S51)
+Peak ranking score: 56 (after UHC S51) 
 
-Highest rank: 10th (x1, last achieved in UHC S51)
+Highest rank: 10th (x2, last achieved in UHC S52) 
 
-Last UHC season: S51 (28/10/2023)
+Last UHC season: S51 (28/10/2023) 
 
-&nbsp;
+&nbsp; 
 
-**11 (-3) SpookySpiker**
+**11 (+0) SpookySpiker** 
 
-Rank: 53 (-1)
+Rank: 51 (-3)  
 
-Number of games: 7
+Number of games: 7 
 
-Total number of wins: 1
+Total number of wins: 1 
 
-Best performance: 2.27 (in UHC S43)
+Best performance: 2.27 (in UHC S43) 
 
-Total number of kills: 5
+Total number of kills: 5 
 
-Average number of kills: 0.71
+Average number of kills: 0.71 
 
-Highest number of kills in a game: 3 (in UHC S43)
+Highest number of kills in a game: 3 (in UHC S43) 
 
-Mean Survivalrate: 0.46
+Mean Survivalrate: 0.46 
 
-Peak ranking score: 80 (after UHC S45B)
+Peak ranking score: 80 (after UHC S45B) 
 
-Highest rank: 5th (x1, last achieved in UHC S45B)
+Highest rank: 5th (x1, last achieved in UHC S45B) 
 
-Last UHC season: S49 (18/02/2023)
+Last UHC season: S49 (18/02/2023) 
 
-&nbsp;
+&nbsp; 
 
-**12 (-2) Th3Flash05**
+**12 (-3) Bobdafish** 
 
-Rank: 50 (-1)
+Rank: 50 (-9)  
 
-Number of games: 6
+Number of games: 10 
 
-Total number of wins: 1
+Total number of wins: 3 
 
-Best performance: 2.50 (in UHC S35)
+Best performance: 4.04 (in UHC S38) 
 
-Total number of kills: 2
+Total number of kills: 9 
 
-Average number of kills: 0.33
+Average number of kills: 0.90 
 
-Highest number of kills in a game: 2 (in UHC S46)
+Highest number of kills in a game: 4 (in UHC S37) 
 
-Mean Survivalrate: 0.61
+Mean Survivalrate: 0.46 
 
-Peak ranking score: 75 (after UHC S35)
+Peak ranking score: 198 (after UHC S38) 
 
-Highest rank: 4th (x1, last achieved in UHC S35)
+Highest rank: 1st (x2, last achieved in UHC S38) 
 
-Last UHC season: S46 (22/07/2022)
+Last UHC season: S46 (22/07/2022) 
 
-&nbsp;
+&nbsp; 
 
-**13 (NEW) JOPONOS** **- PB!**
+**13 (+0) JOPONOS** **- PB!** 
 
-Rank: 49 (NEW)  **- PB!**
+Rank: 49 (-1)  
 
-Number of games: 1
+Number of games: 2 
 
-Total number of wins: 0
+Total number of wins: 0 
 
-Best performance: 1.72 (in UHC S51)
+Best performance: 1.72 (in UHC S51) 
 
-Total number of kills: 2
+Total number of kills: 2 
 
-Average number of kills: 2.00
+Average number of kills: 1.00 
 
-Highest number of kills in a game: 2 (in UHC S51)
+Highest number of kills in a game: 2 (in UHC S51) 
 
-Mean Survivalrate: 0.50
+Mean Survivalrate: 0.52 
 
-Peak ranking score: 49 (after UHC S51)
+Peak ranking score: 49 (after UHC S51) 
 
-Highest rank: 13th (x1, last achieved in UHC S51)
+Highest rank: 13th (x2, last achieved in UHC S52) 
 
-Last UHC season: S51 (28/10/2023)
+Last UHC season: S52 (27/01/2024) 
 
-&nbsp;
+&nbsp; 
 
-**14 (-5) Vladik71**
+**14 (+0) Vladik71** 
 
-Rank: 47 (-7)
+Rank: 45 (-2)  
 
-Number of games: 20
+Number of games: 20 
 
-Total number of wins: 4
+Total number of wins: 4 
 
-Best performance: 1.62 (in UHC S24)
+Best performance: 1.62 (in UHC S24) 
 
-Total number of kills: 3
+Total number of kills: 3 
 
-Average number of kills: 0.15
+Average number of kills: 0.15 
 
-Highest number of kills in a game: 1 (in UHC S14, S29, S49)
+Highest number of kills in a game: 1 (in UHC S14, S29, S49) 
 
-Mean Survivalrate: 0.47
+Mean Survivalrate: 0.47 
 
-Peak ranking score: 55 (after UHC S24)
+Peak ranking score: 55 (after UHC S24) 
 
-Highest rank: 7th (x1, last achieved in UHC S31)
+Highest rank: 7th (x1, last achieved in UHC S31) 
 
-Last UHC season: S51 (28/10/2023)
+Last UHC season: S51 (28/10/2023) 
 
-&nbsp;
+&nbsp; 
 
-**15 (-3) Pimmie36**
+**15 (-3) Th3Flash05** 
 
-Rank: 41 (-1)
+Rank: 45 (-6)  
 
-Number of games: 2
+Number of games: 6 
 
-Total number of wins: 1
+Total number of wins: 1 
 
-Best performance: 2.17 (in UHC S44)
+Best performance: 2.50 (in UHC S35) 
 
-Total number of kills: 0
+Total number of kills: 2 
 
-Average number of kills: 0.00
+Average number of kills: 0.33 
 
-Highest number of kills in a game: 0
+Highest number of kills in a game: 2 (in UHC S46) 
 
-Mean Survivalrate: 0.75
+Mean Survivalrate: 0.61 
 
-Peak ranking score: 60 (after UHC S44)
+Peak ranking score: 75 (after UHC S35) 
 
-Highest rank: 8th (x1, last achieved in UHC S44)
+Highest rank: 4th (x1, last achieved in UHC S35) 
 
-Last UHC season: S44 (12/02/2022)
+Last UHC season: S46 (22/07/2022) 
 
-&nbsp;
+&nbsp; 
 
-**16 (-3) CorruptUncle**
+**16 (-1) Pimmie36** 
 
-Rank: 39 (-1)
+Rank: 39 (-2)  
 
-Number of games: 3
+Number of games: 2 
 
-Total number of wins: 0
+Total number of wins: 1 
 
-Best performance: 1.32 (in UHC S44)
+Best performance: 2.17 (in UHC S44) 
 
-Total number of kills: 2
+Total number of kills: 0 
 
-Average number of kills: 0.67
+Average number of kills: 0.00 
 
-Highest number of kills in a game: 1 (in UHC S41, S44)
+Highest number of kills in a game: 0 
 
-Mean Survivalrate: 0.41
+Mean Survivalrate: 0.75 
 
-Peak ranking score: 55 (after UHC S44)
+Peak ranking score: 60 (after UHC S44) 
 
-Highest rank: 10th (x1, last achieved in UHC S44)
+Highest rank: 8th (x1, last achieved in UHC S44) 
 
-Last UHC season: S44 (12/02/2022)
+Last UHC season: S44 (12/02/2022) 
 
-&nbsp;
+&nbsp; 
 
-**17 (-2) viccietors**
+**17 (-1) CorruptUncle** 
 
-Rank: 35 (-2)
+Rank: 36 (-3)  
 
-Number of games: 9
+Number of games: 3 
 
-Total number of wins: 1
+Total number of wins: 0 
 
-Best performance: 2.88 (in UHC S38)
+Best performance: 1.32 (in UHC S44) 
 
-Total number of kills: 1
+Total number of kills: 2 
 
-Average number of kills: 0.11
+Average number of kills: 0.67 
 
-Highest number of kills in a game: 1 (in UHC S49)
+Highest number of kills in a game: 1 (in UHC S41, S44) 
 
-Mean Survivalrate: 0.36
+Mean Survivalrate: 0.41 
 
-Peak ranking score: 63 (after UHC S38)
+Peak ranking score: 55 (after UHC S44) 
 
-Highest rank: 7th (x1, last achieved in UHC S38)
+Highest rank: 10th (x1, last achieved in UHC S44) 
 
-Last UHC season: S51 (28/10/2023)
+Last UHC season: S44 (12/02/2022) 
 
-&nbsp;
+&nbsp; 
 
-**18 (-1) PbQuinn**
+**18 (-1) viccietors** 
 
-Rank: 25 (+0)
+Rank: 32 (-3)  
 
-Number of games: 4
+Number of games: 9 
 
-Total number of wins: 1
+Total number of wins: 1 
 
-Best performance: 1.12 (in UHC S48)
+Best performance: 2.88 (in UHC S38) 
 
-Total number of kills: 0
+Total number of kills: 1 
 
-Average number of kills: 0.00
+Average number of kills: 0.11 
 
-Highest number of kills in a game: 0
+Highest number of kills in a game: 1 (in UHC S49) 
 
-Mean Survivalrate: 0.33
+Mean Survivalrate: 0.36 
 
-Peak ranking score: 27 (after UHC S48)
+Peak ranking score: 63 (after UHC S38) 
 
-Highest rank: 15th (x1, last achieved in UHC S49)
+Highest rank: 7th (x1, last achieved in UHC S38) 
 
-Last UHC season: S50 (30/09/2023)
+Last UHC season: S51 (28/10/2023) 
 
-&nbsp;
+&nbsp; 
 
-**19 (-3) jonmo0105**
+**19 (-1) PbQuinn** 
 
-Rank: 23 (-3)
+Rank: 29 (+4)  **- PB!** 
 
-Number of games: 11
+Number of games: 5 
 
-Total number of wins: 4
+Total number of wins: 1 
 
-Best performance: 3.57 (in UHC S33)
+Best performance: 1.12 (in UHC S48) 
 
-Total number of kills: 8
+Total number of kills: 0 
 
-Average number of kills: 0.73
+Average number of kills: 0.00 
 
-Highest number of kills in a game: 5 (in UHC S33)
+Highest number of kills in a game: 0 
 
-Mean Survivalrate: 0.53
+Mean Survivalrate: 0.37 
 
-Peak ranking score: 133 (after UHC S34)
+Peak ranking score: 29 (after UHC S52) 
 
-Highest rank: 2nd (x3, last achieved in UHC S35)
+Highest rank: 15th (x1, last achieved in UHC S49) 
 
-Last UHC season: S42 (06/08/2021)
+Last UHC season: S52 (27/01/2024) 
 
-&nbsp;
+&nbsp; 
 
-**20 (-2) cat\_person**
+**20 (+0) cat\_person** 
 
-Rank: 22 (+0)
+Rank: 21 (-1)  
 
-Number of games: 4
+Number of games: 4 
 
-Total number of wins: 0
+Total number of wins: 0 
 
-Best performance: 0.94 (in UHC S47)
+Best performance: 0.94 (in UHC S47) 
 
-Total number of kills: 1
+Total number of kills: 1 
 
-Average number of kills: 0.25
+Average number of kills: 0.25 
 
-Highest number of kills in a game: 1 (in UHC S47)
+Highest number of kills in a game: 1 (in UHC S47) 
 
-Mean Survivalrate: 0.23
+Mean Survivalrate: 0.23 
 
-Peak ranking score: 34 (after UHC S47)
+Peak ranking score: 34 (after UHC S47) 
 
-Highest rank: 14th (x1, last achieved in UHC S47)
+Highest rank: 14th (x1, last achieved in UHC S47) 
 
-Last UHC season: S50 (30/09/2023)
+Last UHC season: S50 (30/09/2023) 
 
-&nbsp;
+&nbsp; 
 
-**21 (-2) TheTolstar**
+**21 (+0) TheTolstar** 
 
-Rank: 20 (+0)
+Rank: 20 (-1)  
 
-Number of games: 1
+Number of games: 1 
 
-Total number of wins: 0
+Total number of wins: 0 
 
-Best performance: 0.73 (in UHC S50)
+Best performance: 0.73 (in UHC S50) 
 
-Total number of kills: 0
+Total number of kills: 0 
 
-Average number of kills: 0.00
+Average number of kills: 0.00 
 
-Highest number of kills in a game: 0
+Highest number of kills in a game: 0 
 
-Mean Survivalrate: 0.73
+Mean Survivalrate: 0.73 
 
-Peak ranking score: 21 (after UHC S50)
+Peak ranking score: 21 (after UHC S50) 
 
-Highest rank: 19th (x1, last achieved in UHC S50)
+Highest rank: 19th (x1, last achieved in UHC S50) 
 
-Last UHC season: S50 (30/09/2023)
+Last UHC season: S50 (30/09/2023) 
 
-&nbsp;
+&nbsp; 
 
-**22 (-1) GoldBard2474348**
+**22 (+3) Vermeil\_Chan** 
 
-Rank: 18 (+0)
+Rank: 19 (+6)  **- PB!** 
 
-Number of games: 1
+Number of games: 4 
 
-Total number of wins: 0
+Total number of wins: 0 
 
-Best performance: 0.83 (in UHC S46)
+Best performance: 0.57 (in UHC S48) 
 
-Total number of kills: 0
+Total number of kills: 0 
 
-Average number of kills: 0.00
+Average number of kills: 0.00 
 
-Highest number of kills in a game: 0
+Highest number of kills in a game: 0 
 
-Mean Survivalrate: 0.83
+Mean Survivalrate: 0.33 
 
-Peak ranking score: 24 (after UHC S46)
+Peak ranking score: 19 (after UHC S52) 
 
-Highest rank: 17th (x1, last achieved in UHC S46)
+Highest rank: 21st (x2, last achieved in UHC S49) 
 
-Last UHC season: S46 (22/07/2022)
+Last UHC season: S52 (27/01/2024) 
 
-&nbsp;
+&nbsp; 
 
-**23 (-1) ThurianBodan**
+**23 (-4) jonmo0105** 
 
-Rank: 17 (-1)
+Rank: 19 (-4)  
 
-Number of games: 17
+Number of games: 12 
 
-Total number of wins: 5
+Total number of wins: 4 
 
-Best performance: 3.00 (in UHC S25)
+Best performance: 3.57 (in UHC S33) 
 
-Total number of kills: 5
+Total number of kills: 8 
 
-Average number of kills: 0.29
+Average number of kills: 0.67 
 
-Highest number of kills in a game: 1 (in UHC S25, S26, S28, S31, S33)
+Highest number of kills in a game: 5 (in UHC S33) 
 
-Mean Survivalrate: 0.44
+Mean Survivalrate: 0.52 
 
-Peak ranking score: 95 (after UHC S26)
+Peak ranking score: 133 (after UHC S34) 
 
-Highest rank: 2nd (x3, last achieved in UHC S31)
+Highest rank: 2nd (x3, last achieved in UHC S35) 
 
-Last UHC season: S45A (22/04/2022)
+Last UHC season: S52 (27/01/2024) 
 
-&nbsp;
+&nbsp; 
 
-**24 (-1) jk20028**
+**24 (-2) GoldBard2474348** 
 
-Rank: 15 (+0)
+Rank: 17 (-1)  
 
-Number of games: 4
+Number of games: 1 
 
-Total number of wins: 0
+Total number of wins: 0 
 
-Best performance: 0.70 (in UHC S42)
+Best performance: 0.83 (in UHC S46) 
 
-Total number of kills: 0
+Total number of kills: 0 
 
-Average number of kills: 0.00
+Average number of kills: 0.00 
 
-Highest number of kills in a game: 0
+Highest number of kills in a game: 0 
 
-Mean Survivalrate: 0.36
+Mean Survivalrate: 0.83 
 
-Peak ranking score: 22 (after UHC S42)
+Peak ranking score: 24 (after UHC S46) 
 
-Highest rank: 15th (x1, last achieved in UHC S43)
+Highest rank: 17th (x1, last achieved in UHC S46) 
 
-Last UHC season: S42 (06/08/2021)
+Last UHC season: S46 (22/07/2022) 
 
-&nbsp;
+&nbsp; 
 
-**25 (-1) Vermeil\_Chan**
+**25 (-2) ThurianBodan** 
 
-Rank: 14 (+0)
+Rank: 15 (-2)  
 
-Number of games: 3
+Number of games: 17 
 
-Total number of wins: 0
+Total number of wins: 5 
 
-Best performance: 0.57 (in UHC S48)
+Best performance: 3.00 (in UHC S25) 
 
-Total number of kills: 0
+Total number of kills: 5 
 
-Average number of kills: 0.00
+Average number of kills: 0.29 
 
-Highest number of kills in a game: 0
+Highest number of kills in a game: 1 (in UHC S25, S26, S28, S31, S33) 
 
-Mean Survivalrate: 0.29
+Mean Survivalrate: 0.44 
 
-Peak ranking score: 16 (after UHC S48)
+Peak ranking score: 95 (after UHC S26) 
 
-Highest rank: 21st (x2, last achieved in UHC S49)
+Highest rank: 2nd (x3, last achieved in UHC S31) 
 
-Last UHC season: S48 (03/12/2022)
+Last UHC season: S45A (22/04/2022) 
 
-&nbsp;
+&nbsp; 
 
-**26 (-1) CrimsonCid**
+**26 (-2) jk20028** 
 
-Rank: 10 (+0)
+Rank: 13 (-1)  
 
-Number of games: 1
+Number of games: 4 
 
-Total number of wins: 0
+Total number of wins: 0 
 
-Best performance: 0.43 (in UHC S47)
+Best performance: 0.70 (in UHC S42) 
 
-Total number of kills: 0
+Total number of kills: 0 
 
-Average number of kills: 0.00
+Average number of kills: 0.00 
 
-Highest number of kills in a game: 0
+Highest number of kills in a game: 0 
 
-Mean Survivalrate: 0.43
+Mean Survivalrate: 0.36 
 
-Peak ranking score: 12 (after UHC S47)
+Peak ranking score: 22 (after UHC S42) 
 
-Highest rank: 23rd (x1, last achieved in UHC S47)
+Highest rank: 15th (x1, last achieved in UHC S43) 
 
-Last UHC season: S47 (18/09/2022)
+Last UHC season: S42 (06/08/2021) 
 
-&nbsp;
+&nbsp; 
 
-**27 (+1) Eason950116**
+**27 (-1) CrimsonCid** 
 
-Rank: 9 (+0)
+Rank: 9 (-1)  
 
-Number of games: 3
+Number of games: 1 
 
-Total number of wins: 0
+Total number of wins: 0 
 
-Best performance: 0.69 (in UHC S39)
+Best performance: 0.43 (in UHC S47) 
 
-Total number of kills: 0
+Total number of kills: 0 
 
-Average number of kills: 0.00
+Average number of kills: 0.00 
 
-Highest number of kills in a game: 0
+Highest number of kills in a game: 0 
 
-Mean Survivalrate: 0.31
+Mean Survivalrate: 0.43 
 
-Peak ranking score: 20 (after UHC S39)
+Peak ranking score: 12 (after UHC S47) 
 
-Highest rank: 18th (x1, last achieved in UHC S39)
+Highest rank: 23rd (x1, last achieved in UHC S47) 
 
-Last UHC season: S44 (12/02/2022)
+Last UHC season: S47 (18/09/2022) 
 
-&nbsp;
+&nbsp; 
 
-**28 (-1) Rayqson**
+**28 (NEW) Bertje13** **- PB!** 
 
-Rank: 9 (+0)
+Rank: 9 (NEW)  **- PB!** 
 
-Number of games: 4
+Number of games: 1 
 
-Total number of wins: 0
+Total number of wins: 0 
 
-Best performance: 0.62 (in UHC S39)
+Best performance: 0.31 (in UHC S52) 
 
-Total number of kills: 0
+Total number of kills: 0 
 
-Average number of kills: 0.00
+Average number of kills: 0.00 
 
-Highest number of kills in a game: 0
+Highest number of kills in a game: 0 
 
-Mean Survivalrate: 0.29
+Mean Survivalrate: 0.31 
 
-Peak ranking score: 18 (after UHC S39)
+Peak ranking score: 9 (after UHC S52) 
 
-Highest rank: 19th (x4, last achieved in UHC S45B)
+Highest rank: 28th (x1, last achieved in UHC S52) 
 
-Last UHC season: S39 (02/01/2021)
+Last UHC season: S52 (27/01/2024) 
 
-&nbsp;
+&nbsp; 
 
-**29 (-3) W0omy**
+**29 (-2) Eason950116** 
 
-Rank: 9 (-1)
+Rank: 8 (-1)  
 
-Number of games: 13
+Number of games: 3 
 
-Total number of wins: 5
+Total number of wins: 0 
 
-Best performance: 2.50 (in UHC S6, S7, S20)
+Best performance: 0.69 (in UHC S39) 
 
-Total number of kills: 3
+Total number of kills: 0 
 
-Average number of kills: 0.23
+Average number of kills: 0.00 
 
-Highest number of kills in a game: 2 (in UHC S6)
+Highest number of kills in a game: 0 
 
-Mean Survivalrate: 0.49
+Mean Survivalrate: 0.31 
 
-Peak ranking score: 83 (after UHC S20)
+Peak ranking score: 20 (after UHC S39) 
 
-Highest rank: 3rd (x5, last achieved in UHC S11)
+Highest rank: 18th (x1, last achieved in UHC S39) 
 
-Last UHC season: S38 (07/11/2020)
+Last UHC season: S44 (12/02/2022) 
 
-&nbsp;
+&nbsp; 
 
-**30 (-1) Jobbo2002**
+**30 (+0) Jobbo2002** 
 
-Rank: 8 (+0)
+Rank: 7 (+0)  
 
-Number of games: 3
+Number of games: 3 
 
-Total number of wins: 0
+Total number of wins: 0 
 
-Best performance: 0.29 (in UHC S47)
+Best performance: 0.29 (in UHC S47) 
 
-Total number of kills: 0
+Total number of kills: 0 
 
-Average number of kills: 0.00
+Average number of kills: 0.00 
 
-Highest number of kills in a game: 0
+Highest number of kills in a game: 0 
 
-Mean Survivalrate: 0.17
+Mean Survivalrate: 0.17 
 
-Peak ranking score: 9 (after UHC S47)
+Peak ranking score: 9 (after UHC S47) 
 
-Highest rank: 26th (x2, last achieved in UHC S49)
+Highest rank: 26th (x2, last achieved in UHC S49) 
 
-Last UHC season: S47 (18/09/2022)
+Last UHC season: S47 (18/09/2022) 
 
-&nbsp;
+&nbsp; 
 
-**31 (-1) Clockweiz**
+**31 (-3) Rayqson** 
 
-Rank: 5 (+0)
+Rank: 7 (-2)  
 
-Number of games: 1
+Number of games: 4 
 
-Total number of wins: 0
+Total number of wins: 0 
 
-Best performance: 0.46 (in UHC S39)
+Best performance: 0.62 (in UHC S39) 
 
-Total number of kills: 0
+Total number of kills: 0 
 
-Average number of kills: 0.00
+Average number of kills: 0.00 
 
-Highest number of kills in a game: 0
+Highest number of kills in a game: 0 
 
-Mean Survivalrate: 0.46
+Mean Survivalrate: 0.29 
 
-Peak ranking score: 13 (after UHC S39)
+Peak ranking score: 18 (after UHC S39) 
 
-Highest rank: 22nd (x2, last achieved in UHC S40)
+Highest rank: 19th (x4, last achieved in UHC S45B) 
 
-Last UHC season: S39 (02/01/2021)
+Last UHC season: S39 (02/01/2021) 
 
-&nbsp;
+&nbsp; 
 
-**32 (-1) Uncle\_Lolly**
+**32 (NEW) Dan\_Fingerman** **- PB!** 
 
-Rank: 3 (+0)
+Rank: 7 (NEW)  **- PB!** 
 
-Number of games: 1
+Number of games: 1 
 
-Total number of wins: 1
+Total number of wins: 0 
 
-Best performance: 0.13 (in UHC S46)
+Best performance: 0.23 (in UHC S52) 
 
-Total number of kills: 0
+Total number of kills: 0 
 
-Average number of kills: 0.00
+Average number of kills: 0.00 
 
-Highest number of kills in a game: 0
+Highest number of kills in a game: 0 
 
-Mean Survivalrate: 0.08
+Mean Survivalrate: 0.23 
 
-Peak ranking score: 4 (after UHC S46)
+Peak ranking score: 7 (after UHC S52) 
 
-Highest rank: 31st (x1, last achieved in UHC S50)
+Highest rank: 32nd (x1, last achieved in UHC S52) 
 
-Last UHC season: S46 (22/07/2022)
+Last UHC season: S52 (27/01/2024) 
 
-&nbsp;
+&nbsp; 
 
-**33 (-1) N\_G0n**
+**33 (-4) W0omy** 
 
-Rank: 3 (+0)
+Rank: 6 (-2)  
 
-Number of games: 1
+Number of games: 13 
 
-Total number of wins: 0
+Total number of wins: 5 
 
-Best performance: 0.29 (in UHC S38)
+Best performance: 2.50 (in UHC S6, S7, S20) 
 
-Total number of kills: 0
+Total number of kills: 3 
 
-Average number of kills: 0.00
+Average number of kills: 0.23 
 
-Highest number of kills in a game: 0
+Highest number of kills in a game: 2 (in UHC S6) 
 
-Mean Survivalrate: 0.29
+Mean Survivalrate: 0.49 
 
-Peak ranking score: 8 (after UHC S38)
+Peak ranking score: 83 (after UHC S20) 
 
-Highest rank: 25th (x2, last achieved in UHC S40)
+Highest rank: 3rd (x5, last achieved in UHC S11) 
 
-Last UHC season: S38 (07/11/2020)
+Last UHC season: S38 (07/11/2020) 
 
-&nbsp;
+&nbsp; 
 
-**34 (-1) Smashking242**
+**34 (-3) Clockweiz** 
 
-Rank: 2 (-1)
+Rank: 4 (-1)  
 
-Number of games: 5
+Number of games: 1 
 
-Total number of wins: 2
+Total number of wins: 0 
 
-Best performance: 3.73 (in UHC S20)
+Best performance: 0.46 (in UHC S39) 
 
-Total number of kills: 4
+Total number of kills: 0 
 
-Average number of kills: 0.80
+Average number of kills: 0.00 
 
-Highest number of kills in a game: 2 (in UHC S20)
+Highest number of kills in a game: 0 
 
-Mean Survivalrate: 0.62
+Mean Survivalrate: 0.46 
 
-Peak ranking score: 117 (after UHC S20)
+Peak ranking score: 13 (after UHC S39) 
 
-Highest rank: 2nd (x7, last achieved in UHC S27)
+Highest rank: 22nd (x2, last achieved in UHC S40) 
 
-Last UHC season: S33 (15/12/2019)
+Last UHC season: S39 (02/01/2021) 
 
-&nbsp;
+&nbsp; 
 
-**35 (-1) BAAPABUGGETS**
+**35 (-3) Uncle\_Lolly** 
 
-Rank: 1 (-1)
+Rank: 3 (+0)  
 
-Number of games: 1
+Number of games: 1 
 
-Total number of wins: 0
+Total number of wins: 1 
 
-Best performance: 0.64 (in UHC S33)
+Best performance: 0.13 (in UHC S46) 
 
-Total number of kills: 0
+Total number of kills: 0 
 
-Average number of kills: 0.00
+Average number of kills: 0.00 
 
-Highest number of kills in a game: 0
+Highest number of kills in a game: 0 
 
-Mean Survivalrate: 0.64
+Mean Survivalrate: 0.08 
 
-Peak ranking score: 18 (after UHC S33)
+Peak ranking score: 4 (after UHC S46) 
 
-Highest rank: 18th (x1, last achieved in UHC S35)
+Highest rank: 31st (x1, last achieved in UHC S50) 
 
-Last UHC season: S33 (15/12/2019)
+Last UHC season: S46 (22/07/2022) 
 
-&nbsp;
+&nbsp; 
 
-**36 (-1) Pfalz\_**
+**36 (NEW) marckstef** **- PB!** 
 
-Rank: 1 (+0)
+Rank: 2 (NEW)  **- PB!** 
 
-Number of games: 4
+Number of games: 1 
 
-Total number of wins: 1
+Total number of wins: 0 
 
-Best performance: 1.12 (in UHC S32)
+Best performance: 0.08 (in UHC S52) 
 
-Total number of kills: 1
+Total number of kills: 0 
 
-Average number of kills: 0.25
+Average number of kills: 0.00 
 
-Highest number of kills in a game: 1 (in UHC S32)
+Highest number of kills in a game: 0 
 
-Mean Survivalrate: 0.18
+Mean Survivalrate: 0.08 
 
-Peak ranking score: 24 (after UHC S33)
+Peak ranking score: 2 (after UHC S52) 
 
-Highest rank: 13th (x1, last achieved in UHC S35)
+Highest rank: 36th (x1, last achieved in UHC S52) 
 
-Last UHC season: S33 (15/12/2019)
+Last UHC season: S52 (27/01/2024) 
 
-&nbsp;
+&nbsp; 
 
-**37 (-1) Tiba101**
+**37 (-4) N\_G0n** 
 
-Rank: 0 (+0)
+Rank: 2 (-1)  
 
-Number of games: 14
+Number of games: 1 
 
-Total number of wins: 3
+Total number of wins: 0 
 
-Best performance: 4.00 (in UHC S13)
+Best performance: 0.29 (in UHC S38) 
 
-Total number of kills: 8
+Total number of kills: 0 
 
-Average number of kills: 0.57
+Average number of kills: 0.00 
 
-Highest number of kills in a game: 3 (in UHC S13)
+Highest number of kills in a game: 0 
 
-Mean Survivalrate: 0.36
+Mean Survivalrate: 0.29 
 
-Peak ranking score: 95 (after UHC S13)
+Peak ranking score: 8 (after UHC S38) 
 
-Highest rank: 1st (x1, last achieved in UHC S2)
+Highest rank: 25th (x2, last achieved in UHC S40) 
 
-Last UHC season: S33 (15/12/2019)
+Last UHC season: S38 (07/11/2020) 
 
-&nbsp;
+&nbsp; 
 
-**38 (-1) Alanaenae**
+**38 (+0) Alanaenae** 
 
-Rank: 0 (+0)  **- PB!**
+Rank: 0 (+0)  **- PB!** 
 
-Number of games: 1
+Number of games: 1 
 
-Total number of wins: 0
+Total number of wins: 0 
 
-Best performance: 0.00 (in UHC S38)
+Best performance: 0.00 (in UHC S38) 
 
-Total number of kills: 0
+Total number of kills: 0 
 
-Average number of kills: 0.00
+Average number of kills: 0.00 
 
-Highest number of kills in a game: 0
+Highest number of kills in a game: 0 
 
-Mean Survivalrate: 0.00
+Mean Survivalrate: 0.00 
 
-Peak ranking score: 0 (after UHC S38)
+Peak ranking score: 0 (after UHC S38) 
 
-Highest rank: 29th (x1, last achieved in UHC S41)
+Highest rank: 29th (x1, last achieved in UHC S41) 
 
-Last UHC season: S38 (07/11/2020)
+Last UHC season: S38 (07/11/2020) 
 
-&nbsp;
+&nbsp; 
 
-**38 (-1) Jayroon123**
+**38 (+0) Jayroon123** 
 
-Rank: 0 (+0)  **- PB!**
+Rank: 0 (+0)  **- PB!** 
 
-Number of games: 1
+Number of games: 1 
 
-Total number of wins: 0
+Total number of wins: 0 
 
-Best performance: 0.00 (in UHC S43)
+Best performance: 0.00 (in UHC S43) 
 
-Total number of kills: 0
+Total number of kills: 0 
 
-Average number of kills: 0.00
+Average number of kills: 0.00 
 
-Highest number of kills in a game: 0
+Highest number of kills in a game: 0 
 
-Mean Survivalrate: 0.00
+Mean Survivalrate: 0.00 
 
-Peak ranking score: 0 (after UHC S43)
+Peak ranking score: 0 (after UHC S43) 
 
-Highest rank: 30th (x3, last achieved in UHC S45A)
+Highest rank: 30th (x3, last achieved in UHC S45A) 
 
-Last UHC season: S43 (18/12/2021)
+Last UHC season: S43 (18/12/2021) 
 
-&nbsp;
+&nbsp; 
 
-**38 (NEW) mrminebase** **- PB!**
+**38 (+0) mrminebase** **- PB!** 
 
-Rank: 0 (NEW)  **- PB!**
+Rank: 0 (+0)  **- PB!** 
 
-Number of games: 1
+Number of games: 1 
 
-Total number of wins: 0
+Total number of wins: 0 
 
-Best performance: 0.00 (in UHC S51)
+Best performance: 0.00 (in UHC S51) 
 
-Total number of kills: 0
+Total number of kills: 0 
 
-Average number of kills: 0.00
+Average number of kills: 0.00 
 
-Highest number of kills in a game: 0
+Highest number of kills in a game: 0 
 
-Mean Survivalrate: 0.00
+Mean Survivalrate: 0.00 
 
-Peak ranking score: 0 (after UHC S51)
+Peak ranking score: 0 (after UHC S51) 
 
-Highest rank: 38th (x1, last achieved in UHC S51)
+Highest rank: 38th (x2, last achieved in UHC S52) 
 
-Last UHC season: S51 (28/10/2023)
+Last UHC season: S51 (28/10/2023) 
 
-&nbsp;
+&nbsp; 
 
-**No longer classified: redblack5, Jonzillah, BV502, REZYC, zozozofun, SGT\_Prostidude, MTM707, P\_Earl\_, naaktgeboren, Xytaes, Mr8Madness, k3hba, lilskrut, PR0BA, MissTutuPrincess, deuce\_\_**
+**38 (NEW) neokneipies** **- PB!** 
+
+Rank: 0 (NEW)  **- PB!** 
+
+Number of games: 1 
+
+Total number of wins: 0 
+
+Best performance: 0.00 (in UHC S52) 
+
+Total number of kills: 0 
+
+Average number of kills: 0.00 
+
+Highest number of kills in a game: 0 
+
+Mean Survivalrate: 0.00 
+
+Peak ranking score: 0 (after UHC S52) 
+
+Highest rank: 38th (x1, last achieved in UHC S52) 
+
+Last UHC season: S52 (27/01/2024) 
+
+&nbsp; 
+
+**No longer classified: redblack5, Jonzillah, BV502, REZYC, zozozofun, SGT\_Prostidude, MTM707, P\_Earl\_, naaktgeboren, Xytaes, Mr8Madness, k3hba, lilskrut, PR0BA, MissTutuPrincess, deuce\_\_, Tiba101, Smashking242, Pfalz\_, BAAPABUGGETS**

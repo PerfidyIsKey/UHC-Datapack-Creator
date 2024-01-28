@@ -10,7 +10,7 @@ close all
 % times they played together. Player indices are given in the comments.
 
 %% Import data
-loadName = "DataS50.mat";   % Indicate .mat data file
+loadName = "DataS52.mat";   % Indicate .mat data file
 load(fullfile("Data", loadName), "Players", "PlayerConnectivity")
 
 %% Finding constant parameters

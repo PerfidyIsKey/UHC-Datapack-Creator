@@ -4,16 +4,16 @@ close all
 addpath("Functions", "Documents", "Data")
 
 Players = struct;
-load("DataS51.mat")
+load("DataS52.mat")
 
 %% Input
 % Enter the players that are participating (corresponding numbers with
 % PlayerName variable in Players struct)
-participantIndex = [1, 2, 17, 25, 44, 45, 48, 54, 56];
+participantIndex = [1, 2, 17, 25, 27, 28, 44, 45, 54, 56, 57:61];
 
 %%% Enter the names of new players
-newPlayers = ["Dan_Fingerman", "marckstef", "neokneipies", "blacksnake29", "BuildingBard300"];
-estimatedRank = [40, 20, 10, 20, 60];
+newPlayers = [];
+estimatedRank = [];
 
 %%% Algorithm settings
 teamPlayer          = 3;                    % Number of players per team
@@ -116,24 +116,21 @@ while true
         assignedIndex           = [1, length(I)];       % Take best and worst player
         assignedPlayers(1:2)    = I(assignedIndex);     % Assign actual player indices
         I(assignedIndex)        = [];                   % Remove players from callback list
-        
-        % Populate teams larger than two players
-        if teamPlayer > 2
-            % Add extra team mates to team in case of inbalance
-            if teamNumber - assignedTeam >= mod(playersNumber, teamPlayer)
-                extraTeamPlayers = 0;
-            else
-                extraTeamPlayers = 1;
-            end
 
-            for teamIndex = 3:(teamPlayer + extraTeamPlayers)
-                % Find next best players
-                teamScores                  = (sum(scores(assignedPlayers(1:teamIndex-1))) +...
-                    scores(I))/teamIndex;                                               % Find team scores with all possible team mates
-                [~, addedPlayer]            = min(abs(teamScores - meanPlayerScore));   % Find best player to add
-                assignedPlayers(teamIndex)  = I(addedPlayer);                           % Add player to list
-                I(addedPlayer) = [];                                                    % Remove players from callback list
-            end
+        % Add extra team mates to team in case of inbalance
+        if teamNumber - assignedTeam >= mod(playersNumber, teamPlayer)
+            extraTeamPlayers = 0;
+        else
+            extraTeamPlayers = 1;
+        end
+
+        for teamIndex = 3:(teamPlayer + extraTeamPlayers)
+            % Find next best players
+            teamScores                  = (sum(scores(assignedPlayers(1:teamIndex-1))) +...
+                scores(I))/teamIndex;                                               % Find team scores with all possible team mates
+            [~, addedPlayer]            = min(abs(teamScores - meanPlayerScore));   % Find best player to add
+            assignedPlayers(teamIndex)  = I(addedPlayer);                           % Add player to list
+            I(addedPlayer) = [];                                                    % Remove players from callback list
         end
 
         % Assign team to initial population

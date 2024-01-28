@@ -8,7 +8,7 @@ close all
 % is used: identifier, number of players, year, month, day.
 
 %% Import data
-loadName = "DataS50.mat";   % Indicate .mat data file
+loadName = "DataS52.mat";   % Indicate .mat data file
 load(fullfile("Data", loadName), "Seasons")
 
 %% Finding constant parameters
