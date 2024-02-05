@@ -682,18 +682,18 @@ public class Main {
 
     private FileData BossBarValue() {
         ArrayList<String> fileCommands = new ArrayList<>();
+
         for (Team t : teams) {
-            fileCommands.add(execute.If(new Score("@r[limit=1,gamemode=!spectator,team=" + t.getName() + "]", "ControlPoint1", ">", "@p[scores={Admin=1}] Highscore1")) +
+            fileCommands.add(execute.If(new Score("@p[scores={Admin=1}]", "CP1" + t.getName(), ">", "@p[scores={Admin=1}] Highscore1")) +
                     getBossbarByName("cp1").setColor(t.getBossbarColor()));
-            fileCommands.add(execute.If(new Score("@r[limit=1,gamemode=!spectator,team=" + t.getName() + "]", "ControlPoint2", ">", "@p[scores={Admin=1,Highscore1=14400..}] Highscore2")) +
+            fileCommands.add(execute.If(new Score("@p[scores={Admin=1}]", "CP2" + t.getName(), ">", "@p[scores={Admin=1,Highscore1=14400..}] Highscore2")) +
                     getBossbarByName("cp2").setColor(t.getBossbarColor()));
+            fileCommands.add("scoreboard players operation @p[scores={Admin=1}] Highscore1 > @p[scores={Admin=1}] CP1" + t.getName());
+            fileCommands.add("scoreboard players operation @p[scores={Admin=1}] Highscore2 > @p[scores={Admin=1}] CP2" + t.getName());
         }
-        fileCommands.add(execute.As("@r[limit=1,gamemode=!spectator]") +
-                "scoreboard players operation @p[scores={Admin=1}] Highscore1 > @s ControlPoint1");
+
         fileCommands.add(execute.StoreResult(getBossbarByName("cp1")
                 .setValue("run scoreboard players get @p[scores={Admin=1}] Highscore1")));
-        fileCommands.add(execute.As("@r[limit=1,gamemode=!spectator]") +
-                "scoreboard players operation @p[scores={Admin=1}] Highscore2 > @s ControlPoint2");
         fileCommands.add(execute.StoreResult(getBossbarByName("cp2")
                 .setValue("run scoreboard players get @p[scores={Admin=1,Highscore2=14400..}] Highscore2")));
 
@@ -965,7 +965,7 @@ public class Main {
         texts.add(bannerText);
         texts.add(new Text(Color.gold, true, false, communityName + " UHC"));
         texts.add(bannerText);
-        texts.add(new Text(Color.light_purple, true, false, i + " minute(s) remaining"));
+        texts.add(new Text(Color.light_purple, true, false, i + " MINUTE(S) REMAINING"));
         texts.add(bannerText);
 
         fileCommands.add(new TellRaw("@a", texts).sendRaw());
@@ -1034,7 +1034,6 @@ public class Main {
             fileCommands.add(execute.In(controlPoints.get(i - 1).getCoordinate().getDimension(), false) +
                     execute.AsNext("@a[gamemode=!spectator,team=" + team.getName() + "]", false) +
                     execute.IfNext(new Selector("@a[gamemode=!spectator,x=" + (controlPoints.get(i - 1).getCoordinate().getX() - 6) + ",y=" + (controlPoints.get(i - 1).getCoordinate().getY() - 1) + ",z=" + (controlPoints.get(i - 1).getCoordinate().getZ() - 6) + ",dx=12,dy=12,dz=12]")) +
-                    execute.AtNext(new Location("@s")) +
                     execute.UnlessNext(new Selector("@a[gamemode=!spectator,x=" + (controlPoints.get(i - 1).getCoordinate().getX() - 6) + ",y=" + (controlPoints.get(i - 1).getCoordinate().getY() - 1) + ",z=" + (controlPoints.get(i - 1).getCoordinate().getZ() - 6) + ",dx=12,dy=12,dz=12,team=!" + team.getName() + "]"), true) +
                     "scoreboard players add @s ControlPoint" + i + " " + controlPoints.get(i - 1).getAddRate());
 
