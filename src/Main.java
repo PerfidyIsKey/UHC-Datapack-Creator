@@ -695,7 +695,7 @@ public class Main {
         fileCommands.add(execute.StoreResult(getBossbarByName("cp1")
                 .setValue("run scoreboard players get @p[scores={Admin=1}] Highscore1")));
         fileCommands.add(execute.StoreResult(getBossbarByName("cp2")
-                .setValue("run scoreboard players get @p[scores={Admin=1,Highscore2=14400..}] Highscore2")));
+                .setValue("run scoreboard players get @p[scores={Admin=1,Highscore1=14400..}] Highscore2")));
 
         return new FileData(FileName.bbvalue, fileCommands);
     }
