@@ -31,7 +31,7 @@
 51,CrimsonCid,9,0,false
 52,NekoBotUwU,54,0,false
 53,TheTolstar,20,0,false
-54,ICEturbo,106,0,true
+54,Vogelfan,106,0,true
 55,mrminebase,0,0,false
 56,JOPONOS,49,51,true
 57,neokneipies,0,0,true

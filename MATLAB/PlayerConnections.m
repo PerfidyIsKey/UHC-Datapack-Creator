@@ -9,7 +9,7 @@ close all
 
 %% Load data
 addpath('Data','Emotes')	% Add playerhead directory
-load('DataS50.mat')            % Load data
+load('DataS52.mat')            % Load data
 ActiveOnly = 1;           % Only display active players
 
 %% Create adjacency matrix
@@ -63,9 +63,9 @@ for i = 1:NoP
     end
 end
 
-for i = 1:NoP
-    newAxis = [normalAxis(1)+normalAxis(3)*redCoords(i,1)-headOffset...
-        normalAxis(2)+normalAxis(4)*redCoords(i,2)-headOffset 2*headOffset 2*headOffset];
-    axes('Position',newAxis)
-    imshow([Players(PlayersActive(i)).PlayerName '.png'])
-end
+% for i = 1:NoP
+%     newAxis = [normalAxis(1)+normalAxis(3)*redCoords(i,1)-headOffset...
+%         normalAxis(2)+normalAxis(4)*redCoords(i,2)-headOffset 2*headOffset 2*headOffset];
+%     axes('Position',newAxis)
+%     imshow([Players(PlayersActive(i)).PlayerName '.png'])
+% end
