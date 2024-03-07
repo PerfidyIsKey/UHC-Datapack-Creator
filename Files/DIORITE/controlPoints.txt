@@ -1,6 +1,7 @@
-155,64,-129,mangrove_swamp
--95,99,280,forest
-334,93,-171,mangrove_swamp
-275,69,475,bamboo_jungle
--247,52,95,cave
-250,64,66,savanna
+-26,124,396,forest
+-108,81,321,plains
+-260,127,182,cherry_grove
+252,106,201,dripstone_caves
+353,128,-361,meadow
+427,63,98,river
+-424,71,-316,stony_shore

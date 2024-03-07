@@ -48,7 +48,8 @@ switch flag
             headOffset      = 0.12;                     % Offset to plot the images correctly
 
             %% Initialize figure
-            figure("Name", "Final team composition", "Tag", "teamDisplay")
+            figure("Name", "Final team composition", "Tag", "teamDisplay",...
+                "Position", [660, 275, 788, 639])
             hold("on")
             plot(coords(:, 1), coords(:, 2), "Visible", false, "Tag", "connections")
             axis("equal")
