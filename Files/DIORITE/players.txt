@@ -21,11 +21,11 @@
 41,CorruptUncle,36,44,false
 42,Pimmie36,39,0,false
 43,Jayroon123,0,43,false
-44,PbQuinn,29,0,false
+44,PbQuinn,29,0,true
 45,Vermeil_Chan,19,0,true
 46,Jobbo2002,7,0,false
 47,Uncle_Lolly,3,0,false
-48,AurqSnqtcher,64,49,true
+48,AurqSnqtcher,64,49,false
 49,cat_person,21,0,false
 50,GoldBard2474348,17,0,false
 51,CrimsonCid,9,0,false
@@ -41,6 +41,5 @@
 61,blacksnake29,86,0,true
 62,BlueBlacky,20,0,true
 63,x_Mylan_x,60,0,true
-64,PwodY_,40,0,true
+64,PwodY_,60,0,true
 65,EarthKun1,40,0,true
-66,ummmbrella,10,0,true
