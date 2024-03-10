@@ -4,16 +4,16 @@ close all
 addpath("Functions", "Documents", "Data")
 
 Players = struct;
-load("DataS52.mat")
+load("DataS53.mat")
 
 %% Input
 % Enter the players that are participating (corresponding numbers with
 % PlayerName variable in Players struct)
-participantIndex = [1, 2, 17, 18, 25, 27, 38, 44, 45, 52, 54, 57, 58];
+participantIndex = [1, 2, 17, 18, 25, 38, 44, 45, 48, 52, 54, 58, 61:66];
 
 %%% Enter the names of new players
-newPlayers = ["PwodY_", "EarthKun1"];
-estimatedRank = [60, 40];
+newPlayers = [];
+estimatedRank = [];
 
 %%% Algorithm settings
 teamPlayer          = 3;                    % Number of players per team
