@@ -31,17 +31,14 @@ else
 end
 
 %%% Define adjacency matrix
-TeamCheck = zeros(playerNumber);
-TeamCheck(sub2ind(size(TeamCheck), playerConnectivity(:, 1), playerConnectivity(:, 2))) = playerConnectivity(:, 3);
-TeamCheck(sub2ind(size(TeamCheck), playerConnectivity(:, 2), playerConnectivity(:, 1))) = playerConnectivity(:, 3);
-TeamCheck = TeamCheck(participantIndex, :);
-TeamCheck = TeamCheck(:, participantIndex);
+A = createConnectivityAdjancencyMatrix(playerNumber, playerConnectivity, ...
+    participantIndex);
 
 gTeam = zeros(participantNumber);    % Preallocation
 for i = 1:participantNumber
     for ii = 1:participantNumber
         if  x(i) == x(ii)   % If players are together in a team, check how often they played together
-            gTeam(i, ii) = TeamCheck(i, ii) - settings.connections;
+            gTeam(i, ii) = A(i, ii) - settings.connections;
         end
     end
 end

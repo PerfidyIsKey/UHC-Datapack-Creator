@@ -9,7 +9,7 @@ load("DataS53.mat")
 %% Input
 % Enter the players that are participating (corresponding numbers with
 % PlayerName variable in Players struct)
-participantIndex = [1, 2, 17, 18, 25, 38, 44, 45, 48, 52, 54, 58, 61:66];
+participantIndex = [1, 2, 17, 18, 25, 28, 31, 33, 38, 44, 45, 48, 52, 54, 58, 61:66];
 
 %%% Enter the names of new players
 newPlayers = [];
@@ -146,11 +146,11 @@ while true
         Players, participantIndex, PlayerConnectivity, settings);   % Constraints
     
     %%% Genetic Algorithm
-    [x, fval, exitflag, output, population, popScores] = ga(fun, playersNumber, [], [], [], [], ...
+    [finalPopulation, fval, exitflag, output, population, popScores] = ga(fun, playersNumber, [], [], [], [], ...
         lb, ub, nonlcon, 1:playersNumber, options);
     
     %%% Retrieve constraints on exit
-    [g, h] = constrainTeams(x, scores, teamNumber, teamSize, ...
+    [g, h] = constrainTeams(finalPopulation, scores, teamNumber, teamSize, ...
         Players, participantIndex, PlayerConnectivity, settings);
     
     %%% Check which constraints are violated
@@ -195,39 +195,46 @@ end
 
 %% Display results
 %%% Display results in command window
-teamScore = getTeamScore(x, scores, teamNumber, teamSize, 2);   % Get team scores
+fprintf("No constraints:\n")
+displayResults(initialPopulation, participantIndex, playerName, ...
+    scores, PlayerConnectivity, settings)
 
-colVec = ["Yellow", "Blue", "Red", "Purple", "Green", "Pink", "Black", "Orange", "Gray",...
-    "Aqua", "D.Red", "D.Blue", "D.Aqua", "D.Green", "D.Gray", "White"];   % Team colors
-fprintf("The mean score of all players is %3.0f.\n", meanPlayerScore)
+fprintf("\n")
+fprintf("Team up constraint:\n")
+displayResults(finalPopulation, participantIndex, playerName, ...
+    scores, PlayerConnectivity, settings)
 
-printName	= strings(playersNumber, 1); % Preallocation
-pCount      = 0;                        % Initialization
+fprintf("\n")
+
+%% Pick team selection
+% Choose a team
+fprintf("Which team should be picked? (1) no constraints, (2) team up constraint: ")
+teamChoice = input("");
+if ~any(teamChoice == [1, 2])
+    teamChoice = 2; % Assign team choice if no valid answer was given
+end
+
+% Assign chosen team
+if teamChoice == 1
+    finalTeams = initialPopulation;
+else
+    finalTeams = finalPopulation;
+end
+
+printName	= strings(playersNumber, 1);    % Preallocation
+pCount      = 0;                            % Initialization
 for i = 1:teamNumber
-    names = strings(1, settings.players);   % Preallocation
-    count = 0;                              % Initialization
-    for ii = 1:playersNumber
-        if x(ii) == i	% Add player if they are in this team
-            % Update counters
-            count   = count + 1;
-            pCount	= pCount + 1;
-            
-            names(count)   = convertCharsToStrings(playerName(ii)); % Add player name to display list
-            if count == 1   % Update display operators
-                oper = '%s';
-            else
-                oper((end + 1):(end + 4)) = ', %s';
-            end
-            printName(pCount)   = "team join Team" + num2str(i-1) + " " + playerName(ii);   % Add player name to command list
-        end
-    end
+    % Find indices of the players in the current team
+    currentPlayerIndex  = find(finalTeams == i);
 
-    % Convert scores to strings
-    score       = num2str(teamScore(i), "%3.0f");
-    devScore	= num2str(teamScore(i) - meanPlayerScore, "%+2.0f");
-    printChar = "Team %7s: " + oper + " Team score: %s (%s)\n";
-    names(names == "") = [];
-    fprintf(printChar, [colVec(i), names, score, devScore])
+    for ii = 1:length(currentPlayerIndex)
+        % Update counter
+        pCount	= pCount + 1;
+        
+        % Print to mcfunction
+        printName(pCount)   = "team join Team" + num2str(i-1) + " " + ...
+            playerName(currentPlayerIndex(ii));   % Add player name to command list
+    end
 end
 
 %% Write to file
