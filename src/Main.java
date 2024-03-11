@@ -284,6 +284,7 @@ public class Main {
         scoreboardObjectives.add(new ScoreboardObjective("CollarCheck1", "dummy"));
         scoreboardObjectives.add(new ScoreboardObjective("MinHealth", "dummy"));
         scoreboardObjectives.add(new ScoreboardObjective("Victory", "dummy"));
+        scoreboardObjectives.add(new ScoreboardObjective("WolfAge", "dummy"));
 
         // Status effects
         effects.add(new StatusEffect(Effect.glowing, 30, 1));
@@ -583,6 +584,7 @@ public class Main {
         files.add(ClearSchedule());
         files.add(LocateTeammate());
         files.add(UnleashLava());
+        files.add(EliminateBabyWolf());
     }
 
     private FileData Initialize() {
@@ -1421,6 +1423,7 @@ public class Main {
                 new TellRaw("@a", texts).sendRaw());
         fileCommands.add(callFunction(FileName.display_quotes));
         fileCommands.add(callFunction(FileName.locate_teammate));
+        fileCommands.add(callFunction(FileName.eliminate_baby_wolf));
 
         return new FileData(FileName.timer, fileCommands);
     }
@@ -1651,6 +1654,22 @@ public class Main {
         fileCommands.add(setBlockRelative(0, -1, 0, BlockType.lava));
 
         return new FileData(FileName.unleash_lava, fileCommands);
+    }
+
+    private FileData EliminateBabyWolf() {
+        ArrayList<String> fileCommands = new ArrayList<>();
+
+        String babyWolf = "@e[type=wolf, scores={WolfAge=..-1}]";
+
+        fileCommands.add(execute.As("@e[limit=1, type=wolf, sort=random]", false) +
+                "store result score @s WolfAge run " +
+                "data get entity @s Age");
+        fileCommands.add(execute.At(babyWolf) +
+                "summon minecraft:dolphin ~ ~ ~");
+        fileCommands.add(execute.As(babyWolf) +
+                "kill @s");
+
+        return new FileData(FileName.eliminate_baby_wolf, fileCommands);
     }
 
 }

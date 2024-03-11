@@ -55,6 +55,6 @@ public enum FileName {
     clear_schedule,
     locate_teammate,
     unleash_lava,
-
-    teams
+    teams,
+    eliminate_baby_wolf
 }

@@ -181,6 +181,15 @@ public class Execute {
         return "store result " + execution;
     }
 
+    public String StoreResultNext(String execution, boolean run) {
+        String result = "store result " + execution;
+        if (run)
+        {
+            result += " run ";
+        }
+        return result;
+    }
+
     public String Facing(Location location, boolean run) {
         return Standard(FacingNext(location), run);
     }
