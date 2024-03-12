@@ -2,20 +2,21 @@ clear
 close all
 
 addpath("Functions", "Documents", "Data")
+addpath("..\Files\DIORITE")
 
+% Specify file names
+filePlayers      = "players.txt";
+filePreAssigned  = "preAssignedTeams.txt";
+
+% Load data
 Players = struct;
 load("DataS53.mat")
 
 %% Input
-% Enter the players that are participating (corresponding numbers with
-% PlayerName variable in Players struct)
-participantIndex = [1, 2, 17, 18, 25, 28, 31, 33, 38, 44, 45, 48, 52, 54, 58, 61:66];
+% Import players
+[participantIndex, name, rank] = importPlayers(filePlayers);
 
-%%% Enter the names of new players
-newPlayers = [];
-estimatedRank = [];
-
-%%% Algorithm settings
+% Algorithm settings
 teamPlayer          = 3;                    % Number of players per team
 rankLowerBound      = 5;                    % Maximum negative deviation of score median
 rankUpperBound      = 10;                   % Maximum positive deviation of score mean
@@ -31,18 +32,16 @@ settings = struct("players", teamPlayer, "rank", struct("LB", rankLowerBound, ..
     "UB", rankUpperBound, "LT", rankLowerTolerance, "UT", rankUpperTolerance), ...
     "connections", maxConnections, "noise", scoreNoise);
 
-newAmount           = length(newPlayers);           % Number of new players
 playerDataNumber    = length(Players);              % Number of players in the data base
-totalAmount         = playerDataNumber + newAmount; % Total number of players
 participantAmount   = length(participantIndex);	    % Number of returning participants
 seasonNumber        = length(Seasons);              % Define number of seasons played
 
 %% Participation criteria
 % Pull the players that are participating in this season
-playerName	= strings(participantAmount + newAmount, 1);
-ranks       = zeros(participantAmount + newAmount, 1);
-for i = 1:participantAmount + newAmount
-    if i <= participantAmount
+playerName	= strings(participantAmount, 1);
+ranks       = zeros(participantAmount, 1);
+for i = 1:participantAmount
+    if participantIndex(i) <= playerDataNumber
         playerName(i) = Players(participantIndex(i)).PlayerName;
         if ~isnan(Players(participantIndex(i)).Rank)
             ranks(i) = Players(participantIndex(i)).Rank;
@@ -52,9 +51,8 @@ for i = 1:participantAmount + newAmount
         end
 
     else
-        playerName(i)       = newPlayers(i - participantAmount);
-        ranks(i)            = estimatedRank(i - participantAmount);
-        participantIndex(i) = totalAmount - newAmount + i - participantAmount;
+        playerName(i)       = name(i);
+        ranks(i)            = rank(i);
     end
 end
 
@@ -76,26 +74,31 @@ for i = seasonNumber:-1:1
     end
 end
 
+%% Create pre-assigned teams
+% Import pre-assigned teams
+preAssignedTeams    = importTeams(filePreAssigned);
+preAssignedNumber   = size(preAssignedTeams, 1);    % Number of pre-assigned teams
+
 %% Set up Genetic Algorithm
 players	= 1:length(ranks);      % Label players
 scores	= ranks;                % Label ranks
 
 teamSize        = settings.players;                 % Number of players per team
-playersNumber	= length(players);                  % Number of players
-teamNumber      = floor(playersNumber / teamSize);  % Number of teams
+optimizeAmount	= length(players);                  % Number of players
+teamNumber      = floor(optimizeAmount / teamSize);  % Number of teams
 
-%%% Specify bounds
-lb = ones(playersNumber, 1);                % Lower bound (team 1)
-ub = teamNumber * ones(playersNumber, 1);   % Upper bound (last team)
+% Specify bounds
+lb = ones(optimizeAmount, 1);                % Lower bound (team 1)
+ub = teamNumber * ones(optimizeAmount, 1);   % Upper bound (last team)
 
-%%% Specify Genetic Algorithm options
+% Specify Genetic Algorithm options
 options = optimoptions("ga", "Display", "none",...
     "OutputFcn",  @(x,  y,  z) gaoutfun(x,  y,  z,  playerName));
 
 %% Evaluate Genetic Algorithm
 while true
-    %%% Add noise to the rank
-    for i = 1:playersNumber
+    % Add noise to the rank
+    for i = 1:optimizeAmount
         if participantIndex(i) <= playerDataNumber
             experience = numel(find(Players(participantIndex(i)).Participation(participationIndexing) == true));    % Determine experience
         else
@@ -106,11 +109,11 @@ while true
         scores(i)   = max(ranks(i) + noise,  0);
     end
 
-    %%% Create manual initial population
+    % Create manual initial population
     [~, I] = sort(scores, "descend");   % Get player ranking order
     meanPlayerScore = mean(scores);     % Get mean player scores
 
-    initialPopulation = zeros(1, playersNumber);    % Preallocation
+    initialPopulation = zeros(1, optimizeAmount);    % Preallocation
     for assignedTeam = 1:teamNumber
         assignedPlayers         = zeros(1, teamPlayer); % Initialize
         assignedIndex           = [1, length(I)];       % Take best and worst player
@@ -118,7 +121,7 @@ while true
         I(assignedIndex)        = [];                   % Remove players from callback list
 
         % Add extra team mates to team in case of inbalance
-        if teamNumber - assignedTeam >= mod(playersNumber, teamPlayer)
+        if teamNumber - assignedTeam >= mod(optimizeAmount, teamPlayer)
             extraTeamPlayers = 0;
         else
             extraTeamPlayers = 1;
@@ -140,20 +143,20 @@ while true
     % Add initial population option
     options = optimoptions(options, "InitialPopulationMatrix", initialPopulation);
 
-    %%% Define functions
+    % Define functions
     fun     = @(x) groupPlayers(x, scores, teamNumber, teamSize);   % Objective function
     nonlcon = @(x) constrainTeams(x, scores, teamNumber, teamSize, ...
         Players, participantIndex, PlayerConnectivity, settings);   % Constraints
     
-    %%% Genetic Algorithm
-    [finalPopulation, fval, exitflag, output, population, popScores] = ga(fun, playersNumber, [], [], [], [], ...
-        lb, ub, nonlcon, 1:playersNumber, options);
+    % Genetic Algorithm
+    [finalPopulation, fval, exitflag, output, population, popScores] = ga(fun, optimizeAmount, [], [], [], [], ...
+        lb, ub, nonlcon, 1:optimizeAmount, options);
     
-    %%% Retrieve constraints on exit
+    % Retrieve constraints on exit
     [g, h] = constrainTeams(finalPopulation, scores, teamNumber, teamSize, ...
         Players, participantIndex, PlayerConnectivity, settings);
     
-    %%% Check which constraints are violated
+    % Check which constraints are violated
     sizeBool    = isempty(find(g(1:2*teamNumber) > 0, 1));
     topBool     = isempty(find(g((1:teamNumber) + 2*teamNumber) > settings.rank.UT, 1));
     downBool	= isempty(find(g((1:teamNumber) + 3*teamNumber) > settings.rank.LT, 1));
@@ -194,7 +197,7 @@ while true
 end
 
 %% Display results
-%%% Display results in command window
+% Display results in command window
 fprintf("No constraints:\n")
 displayResults(initialPopulation, participantIndex, playerName, ...
     scores, PlayerConnectivity, settings)
@@ -221,7 +224,7 @@ else
     finalTeams = finalPopulation;
 end
 
-printName	= strings(playersNumber, 1);    % Preallocation
+printName	= strings(optimizeAmount, 1);    % Preallocation
 pCount      = 0;                            % Initialization
 for i = 1:teamNumber
     % Find indices of the players in the current team
