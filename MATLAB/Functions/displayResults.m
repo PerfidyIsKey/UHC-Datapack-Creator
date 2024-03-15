@@ -1,14 +1,13 @@
 function displayResults(playerInput, participantIndex, playerName, scores, ...
-    playerConnectivity, settings)
+    Players, playerConnectivity, settings)
 
 % Team colors
 colVec = ["Yellow", "Blue", "Red", "Purple", "Green", "Pink", "Black", "Orange", "Gray",...
     "Aqua", "D.Red", "D.Blue", "D.Aqua", "D.Green", "D.Gray", "White"];
 
 % Get sizes
-playersNumber	= length(playerInput);              % Number of players
-teamSize        = settings.players;                 % Number of players per team
-teamNumber      = floor(playersNumber / teamSize);  % Number of teams
+teamSize        = settings.players; % Number of players per team
+teamNumber      = max(playerInput); % Number of teams
 
 % Get team scores
 teamScore = getTeamScore(playerInput, scores, teamNumber, teamSize, 2);
@@ -20,8 +19,8 @@ for i = 1:teamNumber
     thisTeamAmount      = length(currentPlayerIndex);   % Number of players in current team
    
     % Create connectivity adjacency matrix
-    A = createConnectivityAdjancencyMatrix(max(participantIndex), playerConnectivity, ...
-        participantIndex(currentPlayerIndex));
+    A = createConnectivityAdjancencyMatrix(max([participantIndex, length(Players)]),...
+        playerConnectivity, participantIndex(currentPlayerIndex));
 
     % String preallocation
     names = strings(1, thisTeamAmount);
