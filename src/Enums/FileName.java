@@ -56,5 +56,6 @@ public enum FileName {
     locate_teammate,
     unleash_lava,
     teams,
-    eliminate_baby_wolf
+    eliminate_baby_wolf,
+    update_public_cp_score
 }

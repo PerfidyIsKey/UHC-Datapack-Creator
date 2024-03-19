@@ -188,8 +188,9 @@ public class Main {
         String[] glassColors = {"yellow", "light_blue", "red", "purple", "green", "pink", "black", "orange", "gray", "cyan", "red", "blue", "blue"};
         String[] collarColors = {"4", "3", "14", "10", "13", "6", "15", "1", "7", "9", "2", "11", "9"};
         String[] jsonColors = {"YELLOW", "BLUE", "RED", "PURPLE", "GREEN", "PINK", "BLACK", "ORANGE", "GRAY", "AQUA", "DARK RED", "DARK BLUE", "DARK AQUA"};
+        String[] playerColors = {"Yellow", "Blue", "Red", "Purple", "Green", "Pink", "Black", "Orange", "Gray", "Aqua", "DarkRed", "DarkBlue", "DarkAqua"};
         for (int i = 0; i < colors.length; i++) {
-            Team team = new Team("Team" + i, colors[i], bossbarColors[i], glassColors[i], collarColors[i], jsonColors[i]);
+            Team team = new Team("Team" + i, colors[i], bossbarColors[i], glassColors[i], collarColors[i], jsonColors[i], playerColors[i]);
             teams.add(team);
         }
 
@@ -260,13 +261,14 @@ public class Main {
         scoreboardObjectives.add(new ScoreboardObjective("SideDum", "dummy"));
         scoreboardObjectives.add(new ScoreboardObjective("ControlPoint1", "dummy"));
         scoreboardObjectives.add(new ScoreboardObjective("ControlPoint2", "dummy"));
+        scoreboardObjectives.add(new ScoreboardObjective("CPScore", "dummy", "\"Control Point score\"", true));
         scoreboardObjectives.add(new ScoreboardObjective("MSGDum1CP1", "dummy"));
         scoreboardObjectives.add(new ScoreboardObjective("MSGDum2CP1", "dummy"));
         scoreboardObjectives.add(new ScoreboardObjective("MSGDum1CP2", "dummy"));
         scoreboardObjectives.add(new ScoreboardObjective("MSGDum2CP2", "dummy"));
         scoreboardObjectives.add(new ScoreboardObjective("Highscore1", "dummy"));
         scoreboardObjectives.add(new ScoreboardObjective("Highscore2", "dummy"));
-        scoreboardObjectives.add(new ScoreboardObjective("Hearts", "health", true));
+        scoreboardObjectives.add(new ScoreboardObjective("Hearts", "health"));
         scoreboardObjectives.add(new ScoreboardObjective("Apples", "minecraft.used:minecraft.golden_apple", "\"Golden Apple\"", true));
         scoreboardObjectives.add(new ScoreboardObjective("Stone", "minecraft.mined:minecraft.stone"));
         scoreboardObjectives.add(new ScoreboardObjective("Diorite", "minecraft.mined:minecraft.diorite"));
@@ -585,6 +587,7 @@ public class Main {
         files.add(LocateTeammate());
         files.add(UnleashLava());
         files.add(EliminateBabyWolf());
+        files.add(UpdatePublicCPScore());
     }
 
     private FileData Initialize() {
@@ -798,6 +801,19 @@ public class Main {
         for (int i = 0; i < 4; i++) {
             fileCommands.add("tag @a remove ReceivedPerk" + (i + 1));
         }
+
+        for (Team t : teams)
+        {
+            fileCommands.add("scoreboard players reset " + t.getPlayerColor() + " CPScore");
+            fileCommands.add("team join " + t.getName() + " " + t.getPlayerColor());
+        }
+
+        int minToCPScore = secPerMinute * tickPerSecond * controlPoints.get(0).getAddRate();
+        fileCommands.add("scoreboard players set Perk1 CPScore " + 3*minToCPScore);
+        fileCommands.add("scoreboard players set Perk2 CPScore " + 6*minToCPScore);
+        fileCommands.add("scoreboard players set Perk3 CPScore " + 12*minToCPScore);
+        fileCommands.add("scoreboard players set Perk4 CPScore " + 15*minToCPScore);
+        fileCommands.add("scoreboard players set TimeVictory CPScore " + 20*minToCPScore);
 
         //for (CarePackage carepackage : carePackages) {
         //    fileCommands.addAll(forceLoadAndSet(carepackage.getX(), carepackage.getY(), carepackage.getZ(), BlockType.air, SetBlockType.replace));
@@ -1395,6 +1411,9 @@ public class Main {
                 new TellRaw("@p[nbt={SelectedItem:{id:\"minecraft:crossbow\",tag:{Enchantments:[{id:\"minecraft:piercing\"}]}}}]", new Text(Color.red, true, false, "PIERCING IS NOT ALLOWED, YOU NAUGHTY BUM!")).sendRaw());
         fileCommands.add("item replace entity @p[nbt={SelectedItem:{id:\"minecraft:crossbow\",tag:{Enchantments:[{id:\"minecraft:piercing\"}]}}}] weapon.mainhand with minecraft:crossbow");
 
+        // Update public team CP scores
+        fileCommands.add(callFunction(FileName.update_public_cp_score));
+
         return new FileData(FileName.update_sidebar, fileCommands);
     }
 
@@ -1670,6 +1689,19 @@ public class Main {
                 "kill @s");
 
         return new FileData(FileName.eliminate_baby_wolf, fileCommands);
+    }
+
+    private FileData UpdatePublicCPScore() {
+        ArrayList<String> fileCommands = new ArrayList<>();
+
+        for (Team t : teams)
+        {
+            for (int i = 1; i < controlPoints.size() + 1; i++) {
+                fileCommands.add("scoreboard players operation " + t.getPlayerColor() + " CPScore > @p[scores={Admin=1}] CP" + i + t.getName());
+            }
+        }
+
+        return new FileData(FileName.update_public_cp_score, fileCommands);
     }
 
 }

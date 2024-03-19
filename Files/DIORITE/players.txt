@@ -1,6 +1,6 @@
 1,Snodog627,85,52,true
 2,Mr9Madness,82,52,true
-5,W0omy,5,0,true
+5,W0omy,5,0,false
 17,Kalazniq,66,53,true
 18,Vladik71,42,0,true
 24,ThurianBodan,14,0,false
