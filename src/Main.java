@@ -1472,7 +1472,7 @@ public class Main {
         perks.add(new Perk(1, "minecraft:" + Effect.speed + " 999999 0 false", "effect give", Sound.BASALT, 3 * minToCPScore));
         perks.add(new Perk(2, "minecraft:" + Effect.resistance + " " + (10 * secPerMinute) + " 0 false", "effect give", Sound.CRIMSON, 6 * minToCPScore));
         perks.add(new Perk(3, "minecraft:" + Effect.haste + " 999999 2 false", "effect give", Sound.WARPED, 12 * minToCPScore));
-        perks.add(new Perk(4, "minecraft:golden_apple", "give", Sound.WITHER, 15 * minToCPScore));
+        perks.add(new Perk(4, "minecraft:" + Effect.absorption + " 999999 1 false", "effect give", Sound.WITHER, 15 * minToCPScore));
 
         for (int i = 0; i < controlPoints.size(); i++) {
             for (Team team : teams) {

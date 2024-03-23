@@ -8,8 +8,8 @@ public enum Effect {
     glowing,
     fire_resistance,
     nausea,
-
     regeneration,
-    saturation
+    saturation,
+    absorption
 
 }
