@@ -2,6 +2,8 @@ package HelperClasses;
 
 import Enums.Dimension;
 import Enums.EntityAnchor;
+import Enums.ExecuteStore;
+import Enums.BossBarStore;
 import HelperClasses.Condition;
 
 public class Execute {
@@ -173,21 +175,42 @@ public class Execute {
         return UnlessNext(condition, false);
     }
 
-    public String StoreResult(String execution) {
-        return wrap(StoreResultNext(execution), true, false);
+    /*
+        Store
+     */
+    // Bossbar
+    public String Store(ExecuteStore storeType, BossBar bossbar, BossBarStore bossBarStoreType) {
+        return Store(storeType, bossbar, bossBarStoreType, true);
     }
 
-    public String StoreResultNext(String execution) {
-        return "store result " + execution;
+    public String Store(ExecuteStore storeType, BossBar bossbar, BossBarStore bossBarStoreType, Boolean run) {
+        return Standard(StoreNext(storeType, bossbar, bossBarStoreType), run);
     }
 
-    public String StoreResultNext(String execution, boolean run) {
-        String result = "store result " + execution;
-        if (run)
-        {
-            result += " run ";
-        }
-        return result;
+    public String StoreNext(ExecuteStore storeType, BossBar bossbar, BossBarStore bossBarStoreType) {
+        return StoreNext(storeType, bossbar, bossBarStoreType, false);
+    }
+
+    public String StoreNext(ExecuteStore storeType, BossBar bossbar, BossBarStore bossBarStoreType, Boolean run) {
+        return wrap("store " + storeType + " bossbar " + bossbar.getName() + " " + bossBarStoreType + " ", false, run);
+    }
+
+    // Score
+    public String Store(ExecuteStore storeType, ScoreboardPlayers score) {
+        return Store(storeType, score, true);
+    }
+
+    public String Store(ExecuteStore storeType, ScoreboardPlayers score, Boolean run) {
+        return Standard(StoreNext(storeType, score), run);
+    }
+
+    public String StoreNext(ExecuteStore storeType, ScoreboardPlayers score) {
+        return StoreNext(storeType, score, false);
+    }
+
+
+    public String StoreNext(ExecuteStore storeType, ScoreboardPlayers score, Boolean run) {
+        return wrap("store " + storeType + " score " + score.getText() + " ", false, run);
     }
 
     public String Facing(Location location, boolean run) {

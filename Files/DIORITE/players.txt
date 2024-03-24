@@ -1,6 +1,6 @@
 1,Snodog627,85,52,true
 2,Mr9Madness,82,52,true
-5,W0omy,5,0,false
+5,W0omy,5,0,true
 17,Kalazniq,66,53,true
 18,Vladik71,42,0,true
 24,ThurianBodan,14,0,false
@@ -8,7 +8,7 @@
 27,jonmo0105,17,0,true
 28,TheDinoGame,163,50,true
 30,Th3Flash05,41,46,false
-31,viccietors,31,49,false
+31,viccietors,31,49,true
 32,Rayqson,7,0,false
 33,_HexGamer,100,50,true
 34,Bobdafish,46,46,false
@@ -16,7 +16,7 @@
 36,jk20028,13,0,false
 37,N_G0n,2,0,false
 38,SpookySpiker,52,53,true
-39,Clockweiz,4,0,false
+39,Clockweiz,4,0,true
 40,Eason950116,7,0,false
 41,CorruptUncle,34,44,false
 42,Pimmie36,37,0,false
@@ -44,3 +44,6 @@
 64,BlueBlacky,5,0,true
 65,x_Mylan_x,7,0,true
 66,Leavd,17,0,true
+67,Joker447xd9,18,0,true
+68,ANDRIQS,60,0,true
+69,baskoerts245,60,0,true

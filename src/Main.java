@@ -349,8 +349,13 @@ public class Main {
         files.add(fileData);
     }
 
+    // Get by name functions
     private BossBar getBossbarByName(String name) {
         return bossBars.stream().filter(bossBar -> name.equals(bossBar.getName())).findAny().orElse(null);
+    }
+
+    private ScoreboardObjective getObjectiveByName(String name) {
+        return scoreboardObjectives.stream().filter(objective -> name.equals(objective.getName())).findAny().orElse(null);
     }
 
     private String callFunction(String functionName) {
@@ -697,10 +702,11 @@ public class Main {
             fileCommands.add("scoreboard players operation @p[scores={Admin=1}] Highscore2 > @p[scores={Admin=1}] CP2" + t.getName());
         }
 
-        fileCommands.add(execute.StoreResult(getBossbarByName("cp1")
-                .setValue("run scoreboard players get @p[scores={Admin=1}] Highscore1")));
-        fileCommands.add(execute.StoreResult(getBossbarByName("cp2")
-                .setValue("run scoreboard players get @p[scores={Admin=1,Highscore1=14400..}] Highscore2")));
+        // Update value of bossbars
+        fileCommands.add(execute.Store(ExecuteStore.result, getBossbarByName("cp1"), BossBarStore.value) +
+                "scoreboard players get @p[scores={Admin=1}] Highscore1");
+        fileCommands.add(execute.Store(ExecuteStore.result, getBossbarByName("cp2"), BossBarStore.value) +
+                "scoreboard players get @p[scores={Admin=1,Highscore1=14400..}] Highscore2");
 
         return new FileData(FileName.bbvalue, fileCommands);
     }
@@ -1363,16 +1369,20 @@ public class Main {
 
     private FileData WolfCollarExecute() {
         ArrayList<String> fileCommands = new ArrayList<>();
-        fileCommands.add(execute.As("@e[type=minecraft:wolf]", false) +
-                execute.StoreResultNext("score @s CollarCheck0 run data get entity @s Owner[0]"));
-        fileCommands.add(execute.As("@e[type=minecraft:wolf]", false) +
-                execute.StoreResultNext("score @s CollarCheck1 run data get entity @s Owner[1]"));
-        for (Team t : teams) {
-            fileCommands.add(execute.As("@a[team=" + t.getName() + "]", false) +
-                    execute.StoreResultNext("score @s CollarCheck0 run data get entity @s UUID[0]"));
-            fileCommands.add(execute.As("@a[team=" + t.getName() + "]", false) +
-                    execute.StoreResultNext("score @s CollarCheck1 run data get entity @s UUID[1]"));
+        for (int i = 0; i < 2; i++) {
+            fileCommands.add(execute.As("@e[type=minecraft:wolf]", false) +
+                    execute.StoreNext(ExecuteStore.result, new ScoreboardPlayers("@s", getObjectiveByName("CollarCheck" + i)), true) +
+                    "data get entity @s Owner[" + i + "]");
 
+            for (Team t : teams) {
+                fileCommands.add(execute.As("@a[team=" + t.getName() + "]", false) +
+                        execute.StoreNext(ExecuteStore.result, new ScoreboardPlayers("@s", getObjectiveByName("CollarCheck" + i)), true) +
+                        "data get entity @s UUID[" + i + "]");
+
+
+            }
+        }
+        for (Team t : teams) {
             fileCommands.add("tag @a[team=" + t.getName() + "] add CollarCheck");
             fileCommands.add(execute.As("@e[type=wolf]", false) +
                     execute.IfNext(new Score("@s", "CollarCheck0", "=", "@p[tag=CollarCheck] CollarCheck0")) +
@@ -1423,7 +1433,8 @@ public class Main {
         fileCommands.add("scoreboard players add @p[scores={Admin=1}] TimDum 1");
         fileCommands.add(execute.If(new Selector("@p[scores={TimDum=" + tickPerSecond + "}]")) +
                 "scoreboard players add @p[scores={Admin=1}] TimeDum 1");
-        fileCommands.add(execute.StoreResult("score CurrentTime Time run scoreboard players get @p[scores={Admin=1}] TimeDum"));
+        fileCommands.add(execute.Store(ExecuteStore.result, new ScoreboardPlayers("CurrentTime", getObjectiveByName("Time"))) +
+                "scoreboard players get @p[scores={Admin=1}] TimeDum");
         fileCommands.add(execute.If(new Selector("@p[scores={TimDum=" + tickPerSecond + "..}]")) +
                 "scoreboard players reset @p[scores={Admin=1}] TimDum");
 
@@ -1540,8 +1551,10 @@ public class Main {
     private FileData UpdateMinHealth() {
         ArrayList<String> fileCommands = new ArrayList<>();
 
-        fileCommands.add("execute as @r[gamemode=!spectator] if score @s Hearts < @p[scores={Admin=1}] MinHealth store" +
-                " result score @p[scores={Admin=1}] MinHealth run scoreboard players get @s Hearts");
+        fileCommands.add(execute.As("@r[gamemode=!spectator]", false) +
+                execute.IfNext(new Condition("score @s Hearts < @p[scores={Admin=1}] MinHealth")) +
+                execute.StoreNext(ExecuteStore.result, new ScoreboardPlayers("@p[scores={Admin=1}]", getObjectiveByName("MinHealth")), true) +
+                "scoreboard players get @s Hearts");
 
         return new FileData(FileName.update_min_health, fileCommands);
     }
@@ -1681,7 +1694,7 @@ public class Main {
         String babyWolf = "@e[type=wolf, scores={WolfAge=..-1}]";
 
         fileCommands.add(execute.As("@e[limit=1, type=wolf, sort=random]", false) +
-                "store result score @s WolfAge run " +
+                execute.StoreNext(ExecuteStore.result, new ScoreboardPlayers("@s", getObjectiveByName("WolfAge")), true) +
                 "data get entity @s Age");
         fileCommands.add(execute.At(babyWolf) +
                 "summon minecraft:dolphin ~ ~ ~");
