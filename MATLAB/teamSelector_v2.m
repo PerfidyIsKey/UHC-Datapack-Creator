@@ -17,7 +17,7 @@ load("DataS53.mat")
 [participantIndex, name, rank] = importPlayers(filePlayers);
 
 % Algorithm settings
-teamPlayer          = 3;                    % Number of players per team
+teamPlayer          = 2;                    % Number of players per team
 rankLowerBound      = 5;                    % Maximum negative deviation of score median
 rankUpperBound      = 10;                   % Maximum positive deviation of score mean
 rankLowerTolerance	= rankLowerBound + 10;  % Maximum allowed negative deviation
@@ -44,10 +44,9 @@ for i = 1:participantAmount
     if participantIndex(i) <= playerDataNumber
         playerName(i) = Players(participantIndex(i)).PlayerName;
         if ~isnan(Players(participantIndex(i)).Rank)
-            ranks(i) = Players(participantIndex(i)).Rank;
+            ranks(i)    = Players(participantIndex(i)).Rank;
         else
-            lastActive  = find(Players(participantIndex(i)).Participation == true, 1, "last");
-            ranks(i)    = Players(participantIndex(i)).RankHistory(lastActive);
+            ranks(i)    = rank(i);
         end
 
     else
@@ -80,7 +79,11 @@ for i = 1:participantAmount
     % Determine experience of player
     if participantIndex(i) <= playerDataNumber
         thisParticipation = Players(participantIndex(i)).Participation(participationIndexing);
-        experience = numel(find(thisParticipation == true));    % Determine experience
+        if any(thisParticipation == true)
+            experience = numel(find(thisParticipation == true));    % Determine experience
+        else
+            experience = 0;                                         % Returning player
+        end
     else
         experience = 0; % New players have no experience
     end
@@ -133,11 +136,13 @@ end
 preAssignedTeams                            = preAssignedTeams';
 preAssignedTeams                            = preAssignedTeams(:)';
 preAssignedTeams(isnan(preAssignedTeams))   = [];
+preAssignedScores                           = zeros(1, exPlayers);
 for i = 1:exPlayers
-    index = participationIndex == preAssignedTeams(i);    % Index player to be removed
-    optimRank(index)        = [];   % Remove rank
-    playerNames(index)      = [];   % Remove player name
-    participationIndex(index) = [];   % Remove participation index
+    index = participationIndex == preAssignedTeams(i);  % Index player to be removed
+    preAssignedScores(i)        = optimRank(index);     % Store score for pre-assigned players
+    optimRank(index)            = [];                   % Remove rank
+    playerNames(index)          = [];                   % Remove player name
+    participationIndex(index)   = [];                   % Remove participation index
 end
 
 %% Set up Genetic Algorithm
@@ -268,7 +273,7 @@ end
 
 % Put pre-assigned players back in the data
 participationIndex  = [participationIndex, preAssignedTeams];
-optimRank           = [optimRank, Players(preAssignedTeams).Rank];
+optimRank           = [optimRank, preAssignedScores];
 for i = 1:exPlayers
     playerNames(optimizeAmount + i)         = string(Players(preAssignedTeams(i)).PlayerName);
 end
