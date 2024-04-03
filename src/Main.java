@@ -1299,10 +1299,10 @@ public class Main {
                 thisBlock.setCoordinate(c.getX(), i, c.getZ());
 
                 fileCommands.add(execute.In(thisBlock.getDimension(), false) +
-                        execute.UnlessNext(thisBlock, BlockType.air)) +
-                        execute.UnlessNext(thisBlock, BlockType.cave_air)) +
-                        execute.UnlessNext(thisBlock, BlockType.void_air)) +
-                        execute.UnlessNext(thisBlock, BlockType.bedrock), true) +
+                        execute.UnlessNext(thisBlock, BlockType.air) +
+                        execute.UnlessNext(thisBlock, BlockType.cave_air) +
+                        execute.UnlessNext(thisBlock, BlockType.void_air) +
+                        execute.UnlessNext(thisBlock, BlockType.bedrock, true) +
                         setBlock(c.getX(), i, c.getZ(), BlockType.glass));
             }
             fileCommands.add(execute.In(c.getDimension()) +
