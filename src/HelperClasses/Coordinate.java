@@ -11,6 +11,15 @@ public class Coordinate {
     private ReferenceFrame ref;
     private Enums.Dimension dimension;
 
+    // Constructors
+    public Coordinate() {
+        this.x = 0;
+        this.y = 0;
+        this.z = 0;
+        this.ref = ReferenceFrame.absolute;
+        this.dimension = Dimension.overworld;
+    }
+
     public Coordinate(int x, int y, int z) {
         this.x = x;
         this.y = y;
@@ -65,6 +74,12 @@ public class Coordinate {
 
     public void setDimension(Dimension dimension) {
         this.dimension = dimension;
+    }
+
+    public void setCoordinate(int x, int y, int z) {
+        this.x = x;
+        this.y = y;
+        this.z = z;
     }
 
     public String getCoordinateString() {

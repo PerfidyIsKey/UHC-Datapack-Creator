@@ -1,9 +1,6 @@
 package HelperClasses;
 
-import Enums.Dimension;
-import Enums.EntityAnchor;
-import Enums.ExecuteStore;
-import Enums.BossBarStore;
+import Enums.*;
 import HelperClasses.Condition;
 
 import javax.swing.text.Position;
@@ -192,23 +189,6 @@ public class Execute {
         return IfNext(condition, false);
     }
 
-    // if score
-    public String If(ScoreboardPlayersComp comp) {
-        return If(comp, true);
-    }
-
-    public String If(ScoreboardPlayersComp comp, Boolean run) {
-        return Standard(IfNext(comp), run);
-    }
-
-    public String IfNext(ScoreboardPlayersComp comp) {
-        return IfNext(comp, false);
-    }
-
-    public String IfNext(ScoreboardPlayersComp comp, Boolean run) {
-        return Next("if score " + comp.getComparison() + " ", run);
-    }
-
     // if entity
     public String If(Entity entity) {
         return If(entity, true);
@@ -224,6 +204,23 @@ public class Execute {
 
     public String IfNext(Entity entity, Boolean run) {
         return Next("if entity " + entity.getEntity() + " ", run);
+    }
+
+    // if score
+    public String If(ScoreboardPlayersComp comp) {
+        return If(comp, true);
+    }
+
+    public String If(ScoreboardPlayersComp comp, Boolean run) {
+        return Standard(IfNext(comp), run);
+    }
+
+    public String IfNext(ScoreboardPlayersComp comp) {
+        return IfNext(comp, false);
+    }
+
+    public String IfNext(ScoreboardPlayersComp comp, Boolean run) {
+        return Next("if score " + comp.getComparison() + " ", run);
     }
 
     /*
@@ -369,6 +366,23 @@ public class Execute {
 
     public String UnlessNext(Condition condition) {
         return UnlessNext(condition, false);
+    }
+
+    // unless block
+    public String Unless(Coordinate coordinate, BlockType blockType) {
+        return Unless(coordinate, blockType, true);
+    }
+
+    public String Unless(Coordinate coordinate, BlockType blockType, Boolean run) {
+        return Standard(UnlessNext(coordinate, blockType), run);
+    }
+
+    public String UnlessNext(Coordinate coordinate, BlockType blockType) {
+        return UnlessNext(coordinate, blockType, false);
+    }
+
+    public String UnlessNext(Coordinate coordinate, BlockType blockType, Boolean run) {
+        return Next("unless block " + coordinate.getCoordinateString() + " minecraft:" + blockType + " ", run);
     }
 
     // unless entity
