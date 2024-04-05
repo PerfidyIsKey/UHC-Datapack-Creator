@@ -66,6 +66,7 @@ public class Main {
     private static final int traitorMode = 1;
     private String communityName;
     private static final Execute execute = new Execute();
+    private static final Scoreboard scoreboard = new Scoreboard();
 
     private final Text bannerText = new Text(Color.dark_gray, true, false, " | ");
 
@@ -668,10 +669,11 @@ public class Main {
                 playSound(Sound.THUNDER, SoundSource.master, "@a", "~", "~50", "~", "100", "1", "0"));
         fileCommands.add("gamemode spectator @a[scores={Deaths=1},gamemode=!spectator]");
         fileCommands.add("scoreboard players set @a[scores={Deaths=1}] ControlPoint1 0");
-        fileCommands.add("scoreboard players set @a[scores={Deaths=1}] ControlPoint2 0");
-        fileCommands.add("scoreboard players set @p[scores={Admin=1}] Highscore1 1");
-        fileCommands.add("scoreboard players set @p[scores={Admin=1}] Highscore2 1");
-        fileCommands.add("scoreboard players set @p[scores={Admin=1}] MinHealth 20");
+        fileCommands.add(scoreboard.Set(new Entity("@a[scores={Deaths=1}]"), getObjectiveByName("ControlPoint1"), 0));
+        fileCommands.add(scoreboard.Set(new Entity("@a[scores={Deaths=1}]"), getObjectiveByName("ControlPoint2"), 0));
+        fileCommands.add(scoreboard.Set(new Entity("@p[scores={Admin=1}]"), getObjectiveByName("Highscore1"), 1));
+        fileCommands.add(scoreboard.Set(new Entity("@p[scores={Admin=1}]"), getObjectiveByName("Highscore2"), 1));
+        fileCommands.add(scoreboard.Set(new Entity("@p[scores={Admin=1}]"), getObjectiveByName("MinHealth"), 20));
 
         ArrayList<TextItem> texts = new ArrayList<>();
         texts.add(bannerText);
