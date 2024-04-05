@@ -1,9 +1,6 @@
 package HelperClasses;
 
 import Enums.*;
-import HelperClasses.Condition;
-
-import javax.swing.text.Position;
 
 public class Execute {
 
@@ -33,22 +30,6 @@ public class Execute {
     /*
         execute as
      */
-    public String As(String entity, boolean run) {
-        return Standard(AsNext(entity), run);
-    }
-
-    public String As(String entity) {
-        return Standard(AsNext(entity), true);
-    }
-
-    public String AsNext(String entity, boolean run) {
-        return Next("as " + entity + " ", run);
-    }
-
-    public String AsNext(String entity) {
-        return Next("as " + entity + " ", false);
-    }
-
     // as entity
     public String As(Entity entity) {
         return As(entity, true);
@@ -69,38 +50,6 @@ public class Execute {
     /*
         execute at
      */
-    public String At(Location location, boolean run) {
-        return Standard(AtNext(location), run);
-    }
-
-    public String At(String targets, boolean run) {
-        return Standard(AtNext(targets), run);
-    }
-
-    public String At(Location location) {
-        return At(location, true);
-    }
-
-    public String At(String targets) {
-        return At(targets, true);
-    }
-
-    public String AtNext(Location location, boolean run) {
-        return Next("at " + location.getLocation() + " ", run);
-    }
-
-    public String AtNext(String targets, boolean run) {
-        return Next("at " + targets + " ", run);
-    }
-
-    public String AtNext(Location location) {
-        return AtNext(location, false);
-    }
-
-    public String AtNext(String targets) {
-        return AtNext(targets, false);
-    }
-
     // at entity
     public String At(Entity entity) {
         return At(entity, true);
@@ -121,38 +70,6 @@ public class Execute {
     /*
         execute facing
      */
-    public String Facing(Location location, boolean run) {
-        return Standard(FacingNext(location), run);
-    }
-
-    public String Facing(Location location) {
-        return Standard(FacingNext(location), true);
-    }
-
-    public String Facing(Condition target, EntityAnchor anchor, boolean run) {
-        return Standard(FacingNext(target, anchor), run);
-    }
-
-    public String Facing(Condition target, EntityAnchor anchor) {
-        return Standard(FacingNext(target, anchor), true);
-    }
-
-    public String FacingNext(Location location, boolean run) {
-        return Next("facing " + location.getLocation() + " ", run);
-    }
-
-    public String FacingNext(Location location) {
-        return FacingNext(location, false);
-    }
-
-    public String FacingNext(Condition target, EntityAnchor anchor, boolean run) {
-        return Next("facing " + target.getText() + " " + anchor + " ", run);
-    }
-
-    public String FacingNext(Condition target, EntityAnchor anchor) {
-        return FacingNext(target, anchor, false);
-    }
-
     // facing entity
     public String Facing(Entity entity, EntityAnchor anchor) {
         return Facing(entity, anchor, true);
@@ -167,28 +84,12 @@ public class Execute {
     }
 
     public String FacingNext(Entity entity, EntityAnchor anchor, Boolean run) {
-        return Next("facing " + entity.getEntity() + " " + anchor + " ", run);
+        return Next("facing entity " + entity.getEntity() + " " + anchor + " ", run);
     }
 
     /*
         execute if
      */
-    public String If(Condition condition, boolean run) {
-        return Standard(IfNext(condition), run);
-    }
-
-    public String If(Condition condition) {
-        return If(condition, true);
-    }
-
-    public String IfNext(Condition condition, boolean run) {
-        return Next("if " + condition.getText() + " ", run);
-    }
-
-    public String IfNext(Condition condition) {
-        return IfNext(condition, false);
-    }
-
     // if entity
     public String If(Entity entity) {
         return If(entity, true);
@@ -246,54 +147,6 @@ public class Execute {
     /*
         execute positioned
      */
-    public String Positioned(int x, int y, int z, boolean run) {
-        return Standard(PositionedNext(x, y, z), run);
-    }
-
-    public String Positioned(int x, int y, int z) {
-        return Standard(PositionedNext(x, y, z), true);
-    }
-
-    public String PositionedNext(int x, int y, int z, boolean run) {
-        return Next("positioned " + x + " " + y + " " + z + " ", run);
-    }
-
-    public String PositionedNext(int x, int y, int z) {
-        return Next("positioned " + x + " " + y + " " + z + " ", false);
-    }
-
-    public String PositionedRelative(int x, int y, int z, boolean run) {
-        return Standard(PositionedRelativeNext(x, y, z), run);
-    }
-
-    public String PositionedRelative(int x, int y, int z) {
-        return Standard(PositionedRelativeNext(x, y, z), true);
-    }
-
-    public String PositionedRelativeNext(int x, int y, int z, boolean run) {
-        return Next("positioned ~" + x + " ~" + y + " ~" + z + " ", run);
-    }
-
-    public String PositionedRelativeNext(int x, int y, int z) {
-        return Next("positioned ~" + x + " ~" + y + " ~" + z + " ", false);
-    }
-
-    public String PositionedRelativeFacing(int x, int y, int z, boolean run) {
-        return Standard(PositionedRelativeFacingNext(x, y, z), run);
-    }
-
-    public String PositionedRelativeFacing(int x, int y, int z) {
-        return Standard(PositionedRelativeFacingNext(x, y, z), true);
-    }
-
-    public String PositionedRelativeFacingNext(int x, int y, int z, boolean run) {
-        return Next("positioned ^" + x + " ^" + y + " ^" + z + " ", run);
-    }
-
-    public String PositionedRelativeFacingNext(int x, int y, int z) {
-        return Next("positioned ^" + x + " ^" + y + " ^" + z + " ", false);
-    }
-
     // positioned coordinate
     public String Positioned(Coordinate coordinate) {
         return Positioned(coordinate, true);
@@ -314,7 +167,7 @@ public class Execute {
     /*
        execute store
     */
-    // Bossbar
+    // store bossbar
     public String Store(ExecuteStore storeType, BossBar bossbar, BossBarStore bossBarStoreType) {
         return Store(storeType, bossbar, bossBarStoreType, true);
     }
@@ -331,7 +184,7 @@ public class Execute {
         return wrap("store " + storeType + " bossbar " + bossbar.getName() + " " + bossBarStoreType + " ", false, run);
     }
 
-    // Score
+    // store score
     public String Store(ExecuteStore storeType, ScoreboardPlayers score) {
         return Store(storeType, score, true);
     }
@@ -352,22 +205,6 @@ public class Execute {
     /*
         execute unless
      */
-    public String Unless(Condition condition, boolean run) {
-        return Standard(UnlessNext(condition), run);
-    }
-
-    public String Unless(Condition condition) {
-        return Unless(condition, true);
-    }
-
-    public String UnlessNext(Condition condition, boolean run) {
-        return Next("unless " + condition.getText() + " ", run);
-    }
-
-    public String UnlessNext(Condition condition) {
-        return UnlessNext(condition, false);
-    }
-
     // unless block
     public String Unless(Coordinate coordinate, BlockType blockType) {
         return Unless(coordinate, blockType, true);
