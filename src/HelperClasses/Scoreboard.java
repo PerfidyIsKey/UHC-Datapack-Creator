@@ -38,11 +38,11 @@ public class Scoreboard {
     }
 
     // players reset
-    public String Reset(Entity entity, ScoreboardObjective objective) {
+    public String Reset(Entity entity, ScoreboardObjective objective) { // Reset one objective
         return Standard("players reset " + entity.getEntity() + " " + objective.getName());
     }
 
-    public String Reset(Entity entity) {
+    public String Reset(Entity entity) {    // Reset all objectives
         return Standard("players reset " + entity.getEntity());
     }
 

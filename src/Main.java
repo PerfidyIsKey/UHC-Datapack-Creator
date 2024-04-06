@@ -33,7 +33,7 @@ public class Main {
     private String dataPackName;
 
     private String fileLocation;
-    private GameMode gameMode = GameMode.DIORITE;
+    private CommunityMode communityMode = CommunityMode.DIORITE;
     //DatapackData>
 
     //GameData<
@@ -41,11 +41,9 @@ public class Main {
     private static final String commandCenter = "s52";
     private String admin;
     private Coordinate startCoordinate;
-    private Coordinate netherPortal;
     private ArrayList<Team> teams = new ArrayList<>();
     private ArrayList<ControlPoint> cpList = new ArrayList<>();
     private ArrayList<ControlPoint> controlPoints = new ArrayList<>();
-    //private ArrayList<CarePackage> carePackages = new ArrayList<>();
     private ArrayList<ScoreboardObjective> scoreboardObjectives = new ArrayList<>();
     private ArrayList<Player> players = new ArrayList<>();
     private ArrayList<Season> seasons = new ArrayList<>();
@@ -90,7 +88,7 @@ public class Main {
             String input;
             while (menuRunning) {
                 System.out.println("-----------------\n");
-                System.out.println("Gamemode: " + gameMode);
+                System.out.println("Gamemode: " + communityMode);
                 System.out.println("Options:\n");
                 System.out.println("Change Gamemode (c[n])");
                 System.out.println("Re-run (r)");
@@ -112,27 +110,27 @@ public class Main {
                     createDatapack();
                     System.out.println("Datapack created");
                 } else if (input.equals("t")) {
-                    teamGenerator = new TeamGenerator(Double.parseDouble(uhcNumber), fileLocation, teams, gameMode);
+                    teamGenerator = new TeamGenerator(Double.parseDouble(uhcNumber), fileLocation, teams, communityMode);
                     teamGenerator.run();
                 } else {
                     System.out.println("Input not recognized.");
                 }
             }
         } else {
-            teamGenerator = new TeamGenerator(Double.parseDouble(uhcNumber), fileLocation, teams, gameMode);
+            teamGenerator = new TeamGenerator(Double.parseDouble(uhcNumber), fileLocation, teams, communityMode);
             teamGenerator.run(args);
         }
     }
 
     private void changeGamemode(int num) {
         if (num == 0) {
-            gameMode = GameMode.DIORITE;
+            communityMode = CommunityMode.DIORITE;
         }
         if (num == 1) {
-            gameMode = GameMode.URE;
+            communityMode = CommunityMode.URE;
         }
         if (num == 2) {
-            gameMode = GameMode.KINJIN;
+            communityMode = CommunityMode.KINJIN;
         }
 
         gameModeChange();
@@ -162,8 +160,8 @@ public class Main {
         if (fileTools == null) {
             fileTools = new FileTools();
         }
-        uhcNumber = fileTools.getContentOutOfFile("Files\\" + gameMode + "\\uhc_data.txt", "uhcNumber");
-        admin = fileTools.getContentOutOfFile("Files\\" + gameMode + "\\uhc_data.txt", "admin");
+        uhcNumber = fileTools.getContentOutOfFile("Files\\" + communityMode + "\\uhc_data.txt", "uhcNumber");
+        admin = fileTools.getContentOutOfFile("Files\\" + communityMode + "\\uhc_data.txt", "admin");
 
         worldLocation = "Server\\world\\";
 
@@ -206,23 +204,21 @@ public class Main {
         bossBars.add(new BossBar("carepackage"));
 
         // Data
-        String[] splitStartCoordinates = fileTools.splitLineOnComma(fileTools.getContentOutOfFile("Files\\" + gameMode + "\\uhc_data.txt", "startCoordinate"));
+        String[] splitStartCoordinates = fileTools.splitLineOnComma(fileTools.getContentOutOfFile("Files\\" + communityMode + "\\uhc_data.txt", "startCoordinate"));
         startCoordinate = new Coordinate(Integer.parseInt(splitStartCoordinates[0]), Integer.parseInt(splitStartCoordinates[1]), Integer.parseInt(splitStartCoordinates[2]));
-        String[] splitNetherPortal = fileTools.splitLineOnComma(fileTools.getContentOutOfFile("Files\\" + gameMode + "\\uhc_data.txt", "netherPortal"));
-        netherPortal = new Coordinate(Integer.parseInt(splitNetherPortal[0]), Integer.parseInt(splitNetherPortal[1]), Integer.parseInt(splitNetherPortal[2]));
-        minTraitorRank = Integer.parseInt(fileTools.getContentOutOfFile("Files\\" + gameMode + "\\uhc_data.txt", "minTraitorRank"));
-        traitorWaitTime = Integer.parseInt(fileTools.getContentOutOfFile("Files\\" + gameMode + "\\uhc_data.txt", "traitorWaitTime"));
-        communityName = fileTools.getContentOutOfFile("Files\\" + gameMode + "\\uhc_data.txt", "communityName");
+        minTraitorRank = Integer.parseInt(fileTools.getContentOutOfFile("Files\\" + communityMode + "\\uhc_data.txt", "minTraitorRank"));
+        traitorWaitTime = Integer.parseInt(fileTools.getContentOutOfFile("Files\\" + communityMode + "\\uhc_data.txt", "traitorWaitTime"));
+        communityName = fileTools.getContentOutOfFile("Files\\" + communityMode + "\\uhc_data.txt", "communityName");
 
         // ControlPoints
-        ArrayList<String> controlPointString = fileTools.GetLinesFromFile("Files\\" + gameMode + "\\controlPoints.txt");
+        ArrayList<String> controlPointString = fileTools.GetLinesFromFile("Files\\" + communityMode + "\\controlPoints.txt");
         for (String controlPoint : controlPointString) {
             String[] controlPointSplit = fileTools.splitLineOnComma(controlPoint);
             cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, new Coordinate(Integer.parseInt(controlPointSplit[0]), Integer.parseInt(controlPointSplit[1]), Integer.parseInt(controlPointSplit[2])), Biome.valueOf(controlPointSplit[3])));
         }
 
         // Players
-        ArrayList<String> playersString = fileTools.GetLinesFromFile("Files\\" + gameMode + "\\players.txt");
+        ArrayList<String> playersString = fileTools.GetLinesFromFile("Files\\" + communityMode + "\\players.txt");
         for (String player : playersString) {
             String[] playerSplit = fileTools.splitLineOnComma(player);
             boolean isPlaying = Boolean.parseBoolean(playerSplit[4]);
@@ -232,14 +228,14 @@ public class Main {
         }
 
         // Seasons
-        ArrayList<String> seasonsString = fileTools.GetLinesFromFile("Files\\" + gameMode + "\\seasonData.txt");
+        ArrayList<String> seasonsString = fileTools.GetLinesFromFile("Files\\" + communityMode + "\\seasonData.txt");
         for (String season : seasonsString) {
             String[] seasonSplit = fileTools.splitLineOnComma(season);
             seasons.add(new Season(Double.parseDouble(seasonSplit[0]), Integer.parseInt(seasonSplit[1]), new Date(Integer.parseInt(seasonSplit[2]), Integer.parseInt(seasonSplit[3]), Integer.parseInt(seasonSplit[4]))));
         }
 
         // Quotes
-        quotes = fileTools.GetLinesFromFile("Files\\" + gameMode + "\\quotes.txt");
+        quotes = fileTools.GetLinesFromFile("Files\\" + communityMode + "\\quotes.txt");
 
         int[] addRates = {2, 3};
         Collections.shuffle(cpList);
@@ -518,6 +514,18 @@ public class Main {
         return "playsound " + sound.getValue() + " " + source + " " + entity + " " + x + " " + y + " " + z + " " + x1 + " " + y1 + " " + z1;
     }
 
+    private String setDifficulty(Difficulty difficulty) {
+        return "difficulty " + difficulty;
+    }
+
+    private String setDefaultGameMode(GameMode gamemode) {
+        return "defaultgamemode " + gamemode;
+    }
+
+    private String setWorldSpawn(Coordinate coordinate) {
+        return "setworldspawn " + coordinate.getCoordinateString();
+    }
+
     private void makeFunctionFiles() {
         files.add(Initialize());
         files.add(DropPlayerHeads());
@@ -584,9 +592,9 @@ public class Main {
         fileCommands.add(setGameRule(GameRule.doPatrolSpawning, false));
         fileCommands.add(setGameRule(GameRule.doMobSpawning, false));
         fileCommands.add(setGameRule(GameRule.doWeatherCycle, false));
-        fileCommands.add("difficulty hard");
-        fileCommands.add("defaultgamemode adventure");
-        fileCommands.add("setworldspawn 0 221 0");
+        fileCommands.add(setDifficulty(Difficulty.hard));
+        fileCommands.add(setDefaultGameMode(GameMode.adventure));
+        fileCommands.add(setWorldSpawn(new Coordinate(0, 221, 0)));
 
         //scoreboard
         for (ScoreboardObjective objective : scoreboardObjectives) {
