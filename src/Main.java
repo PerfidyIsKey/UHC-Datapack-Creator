@@ -587,42 +587,54 @@ public class Main {
 
     private FileData Initialize() {
         ArrayList<String> fileCommands = new ArrayList<>();
-        fileCommands.add(setGameRule(GameRule.naturalRegeneration, false));
-        fileCommands.add(setGameRule(GameRule.doImmediateRespawn, true));
-        fileCommands.add(setGameRule(GameRule.doPatrolSpawning, false));
-        fileCommands.add(setGameRule(GameRule.doMobSpawning, false));
-        fileCommands.add(setGameRule(GameRule.doWeatherCycle, false));
+
+        // Modify gamerules
+        fileCommands.add(setGameRule(GameRule.naturalRegeneration, false)); // Disable natural health regeneration
+        fileCommands.add(setGameRule(GameRule.doImmediateRespawn, true));   // Enable immediate respawn
+        fileCommands.add(setGameRule(GameRule.doPatrolSpawning, false));    // Disable pillager patrol spawning
+        fileCommands.add(setGameRule(GameRule.doMobSpawning, false));       // Disable mob spawning
+        fileCommands.add(setGameRule(GameRule.doWeatherCycle, false));      // Disable weather changes
+
+        // Set difficulty
         fileCommands.add(setDifficulty(Difficulty.hard));
+
+        // Set default game mode
         fileCommands.add(setDefaultGameMode(GameMode.adventure));
+
+        // Set world spawn
         fileCommands.add(setWorldSpawn(new Coordinate(0, 221, 0)));
 
-        //scoreboard
+        // Create scoreboard objectives
         for (ScoreboardObjective objective : scoreboardObjectives) {
             fileCommands.add(objective.add());
         }
-        fileCommands.add(new ScoreboardObjective().setDisplay("below_name", "Hearts"));
-        fileCommands.add(new ScoreboardObjective().setDisplay("list", "Hearts"));
-        //end scoreboard
-        //bossbar
 
+        // Display scoreboard objectives
+        fileCommands.add(new ScoreboardObjective().setDisplay(ObjectiveDisplay.below_name, "Hearts")); // Display hearts below player name
+        fileCommands.add(new ScoreboardObjective().setDisplay(ObjectiveDisplay.list, "Hearts"));       // Display hearts in player list
+
+        // Remove old bossbars
         fileCommands.add(getBossbarByName("cp1").remove());
         fileCommands.add(getBossbarByName("cp2").remove());
+
+        // Add CP1 bossbar and modify maximum value
         fileCommands.add(getBossbarByName("cp1").add(controlPoints.get(0).getName() + ": " + controlPoints.get(0).getCoordinate().getX() + ", " + controlPoints.get(0).getCoordinate().getY() + ", " + controlPoints.get(0).getCoordinate().getZ() + " (" + controlPoints.get(0).getCoordinate().getDimensionName() + ")"));
         fileCommands.add(getBossbarByName("cp1").setMax(controlPoints.get(0).getMaxVal()));
+
+        // Add CP2 bossbar and modify maximum value
         fileCommands.add(getBossbarByName("cp2").add(controlPoints.get(1).getName() + " soon: " + controlPoints.get(1).getCoordinate().getX() + ", " + controlPoints.get(1).getCoordinate().getY() + ", " + controlPoints.get(1).getCoordinate().getZ() + " (" + controlPoints.get(1).getCoordinate().getDimensionName() + ")"));
         fileCommands.add(getBossbarByName("cp2").setMax(controlPoints.get(1).getMaxVal()));
-        fileCommands.add(getBossbarByName("carepackage").add("Care Package available at x, y, z"));
-        //end bossbar
-        //teams
+
+        // Create teams
         for (Team t : teams) {
-            fileCommands.add(t.add());
-            fileCommands.add("team modify " + t.getName() + " color " + t.getColor());
+            fileCommands.add(t.add());                          // Add teams
+            fileCommands.add(t.modify(TeamModification.color)); // Modify team color
             for (int i = 1; i < controlPoints.size() + 1; i++) {
-                scoreboardObjectives.add(new ScoreboardObjective("CP" + i + t.getName(), "dummy"));
+                scoreboardObjectives.add(new ScoreboardObjective("CP" + i + t.getName(), "dummy")); // Add individual CP scores for each team
                 fileCommands.add(scoreboardObjectives.get(scoreboardObjectives.size() - 1).add());
             }
         }
-        //end teams
+
         //structure
         // Staging area
         fileCommands.add(execute.In(Dimension.overworld) +
@@ -657,7 +669,6 @@ public class Main {
         fileCommands.add(execute.If(new Entity("@p[scores={Deaths=1}]")) +
                 playSound(Sound.THUNDER, SoundSource.master, "@a", "~", "~50", "~", "100", "1", "0"));
         fileCommands.add("gamemode spectator @a[scores={Deaths=1},gamemode=!spectator]");
-        fileCommands.add("scoreboard players set @a[scores={Deaths=1}] ControlPoint1 0");
         fileCommands.add(scoreboard.Set(new Entity("@a[scores={Deaths=1}]"), getObjectiveByName("ControlPoint1"), 0));
         fileCommands.add(scoreboard.Set(new Entity("@a[scores={Deaths=1}]"), getObjectiveByName("ControlPoint2"), 0));
         fileCommands.add(scoreboard.Set(new Entity("@p[scores={Admin=1}]"), getObjectiveByName("Highscore1"), 1));
@@ -1254,7 +1265,7 @@ public class Main {
         for (Player p : players) {
             fileCommands.add(scoreboard.Set(new Entity("p.getPlayerName()"), getObjectiveByName("Rank"), p.getRank()));
         }
-        fileCommands.add(new ScoreboardObjective().setDisplay("sidebar", "Rank"));
+        fileCommands.add(new ScoreboardObjective().setDisplay(ObjectiveDisplay.sidebar, "Rank"));
 
         return new FileData(FileName.display_rank, fileCommands);
     }
@@ -1332,7 +1343,7 @@ public class Main {
             if (s.getDisplaySideBar()) {
                 i++;
                 fileCommands.add(execute.If(new Entity("@p[scores={SideDum=" + (5 * tickPerSecond * i) + "}]")) +
-                        s.setDisplay("sidebar"));
+                        s.setDisplay(ObjectiveDisplay.sidebar));
             }
         }
         fileCommands.add(execute.If(new Entity("@p[scores={SideDum=" + (5 * tickPerSecond * i + 1) + "}]")) +

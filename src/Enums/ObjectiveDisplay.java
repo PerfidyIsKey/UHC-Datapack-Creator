@@ -1,5 +1,7 @@
 package Enums;
 
 public enum ObjectiveDisplay {
-    sidebar
+    sidebar,
+    below_name,
+    list
 }

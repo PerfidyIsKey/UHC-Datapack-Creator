@@ -2,6 +2,7 @@ package HelperClasses;
 
 import Enums.BossBarColor;
 import Enums.Color;
+import Enums.TeamModification;
 
 public class Team {
 
@@ -76,7 +77,27 @@ public class Team {
 
     public void setPlayerColor(String playerColor) { this.playerColor = playerColor; }
 
+    private String standard(String content) {
+        return "team " + content;
+    }
+
     public String add(){
-        return "team add " + this.name;
+        return standard("add " + this.name);
+    }
+
+    public String modify(TeamModification modification) {
+        String change;
+        switch (modification) {
+            case color:
+                change = color.name();
+                break;
+
+            default:
+                modification = TeamModification.color;
+                change = color.name();
+        }
+
+
+        return standard("modify " + this.name + " " + modification + " " + change);
     }
 }
