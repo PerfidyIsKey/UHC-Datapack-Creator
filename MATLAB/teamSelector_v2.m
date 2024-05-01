@@ -137,9 +137,11 @@ preAssignedTeams                            = preAssignedTeams';
 preAssignedTeams                            = preAssignedTeams(:)';
 preAssignedTeams(isnan(preAssignedTeams))   = [];
 preAssignedScores                           = zeros(1, exPlayers);
+preAssignedNames                            = strings(1, exPlayers);
 for i = 1:exPlayers
     index = participationIndex == preAssignedTeams(i);  % Index player to be removed
     preAssignedScores(i)        = optimRank(index);     % Store score for pre-assigned players
+    preAssignedNames(i)         = playerNames(index);   % Store name for pre-assigned players
     optimRank(index)            = [];                   % Remove rank
     playerNames(index)          = [];                   % Remove player name
     participationIndex(index)   = [];                   % Remove participation index
@@ -275,7 +277,7 @@ end
 participationIndex  = [participationIndex, preAssignedTeams];
 optimRank           = [optimRank, preAssignedScores];
 for i = 1:exPlayers
-    playerNames(optimizeAmount + i)         = string(Players(preAssignedTeams(i)).PlayerName);
+    playerNames(optimizeAmount + i)         = preAssignedNames(i);
 end
 
 % Sort data
