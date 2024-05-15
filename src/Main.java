@@ -1293,21 +1293,23 @@ public class Main {
             fileCommands.add(execute.In(c.getDimension()) +
                     setBlock(c.getX(), c.getY() + 11, c.getZ(), "minecraft:structure_block[mode=load]{metadata:\"\",mirror:\"NONE\",ignoreEntities:1b,powered:0b,seed:0L,author:\"?\",rotation:\"NONE\",posX:-6,mode:\"LOAD\",posY:-13,sizeX:13,posZ:-6,integrity:1.0f,showair:0b,name:\"" + cp.getStructureName() + "\",sizeY:14,sizeZ:13,showboundingbox:1b}", SetBlockType.destroy));
 
-            // Initialize object
-            Coordinate thisBlock = c;
-            for (int i = c.getY() + 12; i < worldHeight; i++) {
-                // Specify block to be changed
-                thisBlock.setCoordinate(c.getX(), i, c.getZ());
-
-                fileCommands.add(execute.In(thisBlock.getDimension(), false) +
-                        execute.UnlessNext(thisBlock, BlockType.air) +
-                        execute.UnlessNext(thisBlock, BlockType.cave_air) +
-                        execute.UnlessNext(thisBlock, BlockType.void_air) +
-                        execute.UnlessNext(thisBlock, BlockType.bedrock, true) +
-                        setBlock(c.getX(), i, c.getZ(), BlockType.glass));
-            }
+            // Activate structure block
             fileCommands.add(execute.In(c.getDimension()) +
                     setBlock(c.getX(), c.getY() + 10, c.getZ(), BlockType.redstone_block, SetBlockType.destroy));
+
+            // Initialize object
+            for (int i = c.getY() + 12; i < worldHeight; i++) {
+                // Specify block to be changed
+                c.setCoordinate(c.getX(), i, c.getZ());
+
+                fileCommands.add(execute.In(c.getDimension(), false) +
+                        execute.UnlessNext(c, BlockType.air) +
+                        execute.UnlessNext(c, BlockType.cave_air) +
+                        execute.UnlessNext(c, BlockType.void_air) +
+                        execute.UnlessNext(c, BlockType.bedrock, true) +
+                        setBlock(c.getX(), i, c.getZ(), BlockType.glass));
+            }
+
             fileCommands.add(execute.In(c.getDimension()) +
                     "forceload remove " + c.getX() + " " + c.getZ() + " " + c.getX() + " " + c.getZ());
         }
