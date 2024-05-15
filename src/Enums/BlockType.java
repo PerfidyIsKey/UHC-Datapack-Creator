@@ -9,5 +9,7 @@ public enum BlockType {
     bedrock,
     ice,
     barrier,
-    lava
+    lava,
+    emerald_block,
+    beacon
 }

@@ -1,18 +1,30 @@
 package HelperClasses;
 
 import Enums.Dimension;
+import Enums.ReferenceFrame;
 
 public class Coordinate {
 
     private int x;
     private int y;
     private int z;
+    private ReferenceFrame ref;
     private Enums.Dimension dimension;
+
+    // Constructors
+    public Coordinate() {
+        this.x = 0;
+        this.y = 0;
+        this.z = 0;
+        this.ref = ReferenceFrame.absolute;
+        this.dimension = Dimension.overworld;
+    }
 
     public Coordinate(int x, int y, int z) {
         this.x = x;
         this.y = y;
         this.z = z;
+        this.ref = ReferenceFrame.absolute;
         this.dimension = Dimension.overworld;
     }
 
@@ -21,6 +33,15 @@ public class Coordinate {
         this.y = y;
         this.z = z;
         this.dimension = dimension;
+        this.ref = ReferenceFrame.absolute;
+    }
+
+    public Coordinate(int x, int y, int z, ReferenceFrame ref) {
+        this.x = x;
+        this.y = y;
+        this.z = z;
+        this.dimension = Dimension.overworld;
+        this.ref = ref;
     }
 
     public int getX() {
@@ -55,8 +76,21 @@ public class Coordinate {
         this.dimension = dimension;
     }
 
+    public void setCoordinate(int x, int y, int z) {
+        this.x = x;
+        this.y = y;
+        this.z = z;
+    }
+
     public String getCoordinateString() {
-        return this.x + " " + this.y + " " + this.z;
+        String prefix = "";
+        if (this.ref == ReferenceFrame.relative)
+        {
+            prefix = "~";
+        } else if (this.ref == ReferenceFrame.relative_facing) {
+            prefix = "^";
+        }
+        return prefix + this.x + " " + prefix + this.y + " " + prefix + this.z;
     }
 
     public String getDimensionName() {

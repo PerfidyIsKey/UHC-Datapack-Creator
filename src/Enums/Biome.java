@@ -64,5 +64,6 @@ public enum Biome {
     end_highlands,
     end_midlands,
     small_end_islands,
-    end_barrens
+    end_barrens,
+    cherry_grove
 }

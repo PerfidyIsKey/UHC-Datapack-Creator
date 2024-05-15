@@ -35,3 +35,6 @@ Server/world_nether
 Server/world_the_end
 Server/.console_history
 Server/*.yml
+
+# Copy files
+playerConnections_copy.txt

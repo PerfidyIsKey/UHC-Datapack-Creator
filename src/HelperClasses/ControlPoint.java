@@ -162,6 +162,10 @@ public class ControlPoint {
                 result = "snow";
                 break;
 
+            case cherry_grove:
+                result = "nature_cherry";
+                break;
+
             default:
                 result = "legacy";
         }

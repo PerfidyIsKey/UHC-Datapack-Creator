@@ -54,5 +54,8 @@ public enum FileName {
     spawn_nether_portal,
     clear_schedule,
     locate_teammate,
-    unleash_lava
+    unleash_lava,
+    teams,
+    eliminate_baby_wolf,
+    update_public_cp_score
 }

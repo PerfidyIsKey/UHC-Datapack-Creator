@@ -1,6 +1,8 @@
--182,87,-281,windswept_hills
-288,114,-314,birch_forest
-335,115,-172,dark_forest
--407,70,449,savanna
-39,77,-210,old_growth_birch_forest
--160,62,236,river
+-26,124,396,forest
+-108,81,321,plains
+-260,127,182,cherry_grove
+252,106,201,dripstone_caves
+353,128,-361,meadow
+427,63,98,river
+-424,71,-316,stony_shore
+39,63,36,river

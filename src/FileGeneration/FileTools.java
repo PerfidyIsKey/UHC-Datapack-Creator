@@ -2,6 +2,8 @@ package FileGeneration;
 
 import FileGeneration.FileData;
 import FileGeneration.Recipe;
+import HelperClasses.PlayerConnection;
+import TeamGeneration.Season;
 
 import javax.swing.*;
 import java.io.*;
@@ -10,6 +12,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class FileTools {
@@ -21,8 +24,6 @@ public class FileTools {
 
     public FileTools() {
     }
-
-    ;
 
     public FileTools(String version, String dataPackLocation, String dataPackName, String worldLocation) {
         this.version = version;
@@ -42,14 +43,12 @@ public class FileTools {
         Recipe recipe = new Recipe("crafting_shaped", grid, keys, "dragon_head", 1);
         recipes.add(recipe);
 
-        /*
         String[] grid2 = {" ", "1", " ", "1", "2", "1", " ", "1", " "};
         ArrayList<String> keys2 = new ArrayList<>();
         keys2.add("gold_ingot");
         keys2.add("player_head");
         FileGeneration.Recipe recipe2 = new FileGeneration.Recipe("crafting_shaped", grid2, keys2, "golden_apple", 1);
         recipes.add(recipe2);
-        */
 
         for (Recipe r : recipes) {
             ArrayList<String> fileCommands = new ArrayList<>();
@@ -215,8 +214,13 @@ public class FileTools {
     }
 
     public void createDatapack(ArrayList<FileData> files, String fileLocation) throws IOException {
-        File file = new File(dataPackLocation + dataPackName);
-        if (file.mkdir()) {
+
+
+        File file = new File(dataPackLocation);
+        file.mkdir();
+
+        File file2 = new File(dataPackLocation + dataPackName);
+        if (file2.mkdir()) {
             File pack = new File(dataPackLocation + dataPackName + "\\pack.mcmeta");
             BufferedWriter writer = new BufferedWriter(new FileWriter(pack));
             writer.write(" {");
@@ -317,5 +321,62 @@ public class FileTools {
         }
         writer.close();
         System.out.println("File \"" + fileData.getName() + "\" Updated.");
+    }
+
+    public void createPlayerConnection(String fileLocation, String fileName, PlayerConnection playerConnection) throws IOException {
+        File file = new File(fileLocation + fileName + ".txt");
+        ArrayList<String> fileContents = getFileContents(file);
+        double seasonID = playerConnection.getSeasons().get(0).getID();
+        fileContents.add(playerConnection.getPlayer1().getInternalID() + "," + playerConnection.getPlayer2().getInternalID() + ",[" + seasonID +"]");
+        writeFileContents(file, fileContents);
+    }
+
+    public void updatePlayerConnections(String fileLocation, String fileName, ArrayList<PlayerConnection> playerConnections) throws IOException {
+        File file = new File(fileLocation + fileName + ".txt");
+        ArrayList<String> fileContents = getFileContents(file);
+        ArrayList<String> outputFileContents = new ArrayList<>();
+        for (String s : fileContents) {
+            for (PlayerConnection p : playerConnections) {
+                if (s.startsWith(p.getPlayer1().getInternalID() + "," + p.getPlayer2().getInternalID())) {
+                    StringBuilder stringBuilder = new StringBuilder();
+                    for (Season season: p.getSeasons()) {
+                        stringBuilder.append(season.getID());
+                        stringBuilder.append(",");
+                    }
+                    stringBuilder.setLength(stringBuilder.length() - 1);
+                    s = p.getPlayer1().getInternalID() + "," + p.getPlayer2().getInternalID() + ",[" + stringBuilder + "]";
+                }
+            }
+            outputFileContents.add(s);
+        }
+        writeFileContents(file, outputFileContents);
+
+        System.out.println("File \"" + fileName + "\" Updated.");
+    }
+
+    public void makeFileCopy(String fileLocation, String fileName) throws IOException {
+        File file = new File(fileLocation + fileName + ".txt");
+        File fileCopy = new File(fileLocation + fileName + "_copy.txt");
+        ArrayList<String> fileContents = getFileContents(file);
+        writeFileContents(fileCopy, fileContents);
+    }
+
+    private ArrayList<String> getFileContents(File file) throws IOException {
+        Scanner scanner = new Scanner(file);
+        ArrayList<String> fileContents = new ArrayList<>();
+        while (scanner.hasNextLine()) {
+            fileContents.add(scanner.nextLine());
+        }
+        scanner.close();
+        return fileContents;
+    }
+
+    private void writeFileContents(File file, List<String> fileContents) throws IOException {
+        BufferedWriter writer = new BufferedWriter(new FileWriter(file));
+        for (String s : fileContents) {
+            writer.write(s);
+            writer.newLine();
+        }
+        writer.close();
     }
 }
