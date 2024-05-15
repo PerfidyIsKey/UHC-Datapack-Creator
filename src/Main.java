@@ -1578,21 +1578,24 @@ public class Main {
     private FileData ResetRespawnHealth() {
         ArrayList<String> fileCommands = new ArrayList<>();
 
+        // Define player that needs to be respawned
+        String respawnPlayer = "@p[tag=Respawn]";
+
         // Teleport player to their team
         for (Team t : teams) {
-            fileCommands.add(execute.As("@p[tag=Respawn]", false) +
-                    execute.IfNext(new Selector("@s[team=" + t.getName() + "]"), true) +
+            fileCommands.add(execute.As(new Entity(respawnPlayer), false) +
+                    execute.IfNext(new Entity("@s[team=" + t.getName() + "]"), true) +
                     "tp @s @r[gamemode=!spectator, team=" + t.getName() + "]");
         }
 
         // Set player's gamemode to survival
-        fileCommands.add(execute.As("@p[tag=Respawn]") +
+        fileCommands.add(execute.As(new Entity(respawnPlayer)) +
                 "gamemode survival @s");
 
         // Remove player heads
-        fileCommands.add(execute.As("@a[nbt={Inventory:[{id:\"minecraft:player_head\"}]}]") +
+        fileCommands.add(execute.As(new Entity("@a[nbt={Inventory:[{id:\"minecraft:player_head\"}]}]")) +
                 "clear @s minecraft:player_head");  // Remove from inventory
-        fileCommands.add(execute.As("@e[type=item,nbt={Item:{id:\"minecraft:player_head\"}}]") +
+        fileCommands.add(execute.As(new Entity("@e[type=item,nbt={Item:{id:\"minecraft:player_head\"}}]")) +
                 "kill @s"); // Remove item
 
         // Reset respawn health
