@@ -1058,6 +1058,8 @@ public class Main {
                     execute.IfNext(new Score("@r[limit=1,gamemode=!spectator,team=" + team.getName() + "]", "ControlPoint" + i, ">", "@p[scores={Admin=1}] Highscore" + i), true) +
                     setBlock(controlPoints.get(i - 1).getCoordinate().getX(), controlPoints.get(i - 1).getCoordinate().getY() + 1, controlPoints.get(i - 1).getCoordinate().getZ(), "minecraft:" + team.getGlassColor() + "_stained_glass", SetBlockType.replace));
         }
+        fileCommands.add(fill(controlPoints.get(i - 1).getCoordinate().getX() - 1, controlPoints.get(i - 1).getCoordinate().getY() - 1, controlPoints.get(i - 1).getCoordinate().getZ() - 1, controlPoints.get(i - 1).getCoordinate().getX() + 1, controlPoints.get(i - 1).getCoordinate().getY() - 1, controlPoints.get(i - 1).getCoordinate().getZ() + 1, BlockType.emerald_block));
+        fileCommands.add(fill(controlPoints.get(i - 1).getCoordinate().getX(), controlPoints.get(i - 1).getCoordinate().getY(), controlPoints.get(i - 1).getCoordinate().getZ(), controlPoints.get(i - 1).getCoordinate().getX() , controlPoints.get(i - 1).getCoordinate().getY(), controlPoints.get(i - 1).getCoordinate().getZ(), BlockType.beacon));
         fileCommands.add(execute.In(controlPoints.get(i - 1).getCoordinate().getDimension(), false) +
                 execute.IfNext(new Selector("@p[x=" + (controlPoints.get(i - 1).getCoordinate().getX() - 6) + ",y=" + (controlPoints.get(i - 1).getCoordinate().getY() - 1) + ",z=" + (controlPoints.get(i - 1).getCoordinate().getZ() - 6) + ",dx=12,dy=12,dz=12,gamemode=!spectator]"), true) +
                 "scoreboard players add @a[x=" + (controlPoints.get(i - 1).getCoordinate().getX() - 6) + ",y=" + (controlPoints.get(i - 1).getCoordinate().getY() - 1) + ",z=" + (controlPoints.get(i - 1).getCoordinate().getZ() - 6) + ",dx=12,dy=12,dz=12,gamemode=!spectator] MSGDum1CP" + i + " 1");
@@ -1550,6 +1552,24 @@ public class Main {
     private FileData ResetRespawnHealth() {
         ArrayList<String> fileCommands = new ArrayList<>();
 
+        // Teleport player to their team
+        for (Team t : teams) {
+            fileCommands.add(execute.As("@p[tag=Respawn]", false) +
+                    execute.IfNext(new Selector("@s[team=" + t.getName() + "]"), true) +
+                    "tp @s @r[gamemode=!spectator, team=" + t.getName() + "]");
+        }
+
+        // Set player's gamemode to survival
+        fileCommands.add(execute.As("@p[tag=Respawn]") +
+                "gamemode survival @s");
+
+        // Remove player heads
+        fileCommands.add(execute.As("@a[nbt={Inventory:[{id:\"minecraft:player_head\"}]}]") +
+                "clear @s minecraft:player_head");  // Remove from inventory
+        fileCommands.add(execute.As("@e[type=item,nbt={Item:{id:\"minecraft:player_head\"}}]") +
+                "kill @s"); // Remove item
+
+        // Reset respawn health
         for (int i = 0; i < 10; i++) {
             int indexFront = 2 * i + 1;
             int indexRear = 2 * (i + 1);
@@ -1560,6 +1580,8 @@ public class Main {
         fileCommands.add("effect give @p[tag=Respawn] minecraft:" + Effect.health_boost + " 1 0");
         fileCommands.add("effect clear @p[tag=Respawn] minecraft:" + Effect.health_boost);
         fileCommands.add("attribute @p[tag=Respawn] generic.max_health base set 20");
+
+        // Remove respawn tag
         fileCommands.add("tag @p[tag=Respawn] remove Respawn");
 
         return new FileData(FileName.reset_respawn_health, fileCommands);
