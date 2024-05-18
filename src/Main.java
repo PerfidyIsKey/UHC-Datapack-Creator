@@ -52,7 +52,7 @@ public class Main {
     private ArrayList<StatusEffect> effects = new ArrayList<>();
     private ArrayList<String> quotes = new ArrayList<>();
     private ArrayList<BossBar> bossBars = new ArrayList<>();
-    private static final int worldSize = 1500;
+    private static final int worldSize = 1000;  // Maximum possible coordinate
     private static final int worldHeight = 257;
     private static final int worldBottom = -64;
     private static final int tickPerSecond = 20;
@@ -802,7 +802,7 @@ public class Main {
                 setBlock(startCoordinate, "minecraft:jukebox[has_record=true]{RecordItem:{Count:1b,id:\"minecraft:music_disc_stal\"}}", SetBlockType.replace));
         fileCommands.add("tag @a remove Traitor");
         fileCommands.add("tag @a remove DontMakeTraitor");
-        fileCommands.add("worldborder set " + worldSize + " 1");
+        fileCommands.add("worldborder set " + 2*worldSize + " 1");
         fileCommands.add("team leave @a");
         fileCommands.add(callFunction(FileName.display_rank));
         fileCommands.add("scoreboard players set NightTime Time 600");
@@ -875,7 +875,7 @@ public class Main {
     private static FileData SpreadPlayers() {
         ArrayList<String> fileCommands = new ArrayList<>();
         fileCommands.add(execute.In(Dimension.overworld) +
-                "spreadplayers 0 0 300 700 true @a");
+                "spreadplayers 0 0 " + 0.3*worldSize + " " + 0.9*worldSize + " true @a");
         fileCommands.add("scoreboard players set @p[scores={Admin=1}] Highscore 1");
         fileCommands.add("scoreboard players set @p[scores={Admin=1}] MinHealth 20");
 
@@ -935,7 +935,7 @@ public class Main {
                 "gamemode survival @a[distance=..20,gamemode=!creative]");
         fileCommands.add(execute.In(Dimension.overworld, false) +
                 execute.PositionedNext(new Coordinate(0, 151, 0), true) +
-                "spreadplayers 0 0 300 700 true @a[distance=..20,gamemode=survival]");
+                "spreadplayers 0 0 " + 0.3*worldSize + " " + 0.9*worldSize + " true @a[distance=..20,gamemode=survival]");
 
         return new FileData(FileName.battle_royale, fileCommands);
     }
@@ -1349,7 +1349,7 @@ public class Main {
         fileCommands.add("scoreboard players add @a[gamemode=creative] WorldLoad 1");
         fileCommands.add("scoreboard players add @a[gamemode=creative] Time 1");
         fileCommands.add(execute.If(new Entity("@p[scores={WorldLoad=400..}]")) +
-                "spreadplayers 0 0 5 750 false @a");
+                "spreadplayers 0 0 5 " + worldSize + " false @a");
         fileCommands.add(execute.If(new Entity("@p[scores={Time=12000..}]"), false) +
                 execute.InNext(Dimension.overworld, true) +
                 setBlock(6, worldBottom + 2, 15, BlockType.bedrock));

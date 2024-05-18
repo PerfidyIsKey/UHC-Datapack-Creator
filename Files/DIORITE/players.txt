@@ -11,7 +11,7 @@
 31,viccietors,31,49,false
 32,Rayqson,7,0,false
 33,_HexGamer,100,50,true
-34,Bobdafish,46,46,false
+34,Bobdafish,46,46,true
 35,Alanaenae,0,0,false
 36,jk20028,13,0,false
 37,N_G0n,2,0,false
@@ -26,7 +26,7 @@
 46,Jobbo2002,7,0,false
 47,Uncle_Lolly,3,0,false
 48,AurqSnqtcher,86,49,true
-49,cat_person,21,0,false
+49,cat_person,21,0,true
 50,GoldBard2474348,16,0,false
 51,CrimsonCid,9,0,false
 52,NekoBotUwU,60,0,true
@@ -37,7 +37,7 @@
 57,neokneipies,0,0,false
 58,marckstef,14,0,false
 59,Dan_Fingerman,6,0,false
-60,Bertje13,9,0,false
+60,Bertje13,9,0,true
 61,blacksnake29,67,0,true
 62,PwodY_,0,0,false
 63,EarthKun1,3,0,true
@@ -48,4 +48,5 @@
 68,DAABlockshomes,40,0,true
 69,amiazukiN,5,0,true
 70,Joker447xd9,18,0,true
-71,Drummer003,20,0,true
+71,Cthuleric,20,0,true
+72,Mosu_2000,20,0,true
