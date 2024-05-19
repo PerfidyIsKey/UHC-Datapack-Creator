@@ -19,12 +19,12 @@ load("DataS54.mat")
 % Algorithm settings
 teamPlayer          = 3;                    % Number of players per team
 rankLowerBound      = 5;                    % Maximum negative deviation of score median
-rankUpperBound      = 10;                   % Maximum positive deviation of score mean
-rankLowerTolerance	= rankLowerBound + 10;  % Maximum allowed negative deviation
-rankUpperTolerance  = rankUpperBound + 15;  % Maximum allowed positive deviation
+rankUpperBound      = 5;                   % Maximum positive deviation of score mean
+rankLowerTolerance	= rankLowerBound + 5;  % Maximum allowed negative deviation
+rankUpperTolerance  = rankUpperBound + 5;   % Maximum allowed positive deviation
 maxConnections      = 2;                    % Maximum number of times players have played together
 scoreNoise          = 20;                   % Additional score noise to account for inaccuracies
-plotResults         = true;                 % Visualize results in real time
+plotResults         = false;                % Visualize results
 verboseMode         = false;                % Allow messages
 
 % Conversion
@@ -208,8 +208,9 @@ while true
     sizeBool    = isempty(find(g(1:2*teamNumber) > 0, 1));
     topBool     = isempty(find(g((1:teamNumber) + 2*teamNumber) > settings.rank.UT, 1));
     downBool	= isempty(find(g((1:teamNumber) + 3*teamNumber) > settings.rank.LT, 1));
+    maxBool     = isempty(find(g(end-teamNumber:end) > 0, 1)); % Smaller teams for higher rank
     
-    if ~sizeBool
+    if ~sizeBool || ~maxBool
         % Team size violated
         if verboseMode == true
             fprintf("Team sizes are not correct.\n")
@@ -293,8 +294,10 @@ displayResults(finalTeams, participationIndex, playerNames, ...
 
 fprintf("\n")
 
-% Display team connectivity diagram
-teamConnectivityDiagram(finalTeams, playerNames)
+if plotResults == true
+    % Display team connectivity diagram
+    teamConnectivityDiagram(finalTeams, playerNames)
+end
 
 
 %% Create file content

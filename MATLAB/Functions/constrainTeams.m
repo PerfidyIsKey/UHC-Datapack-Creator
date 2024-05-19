@@ -8,14 +8,15 @@ for i = 1:teamNumber
 end
 cp = teamGroups - teamSize; % Check if number of players per team is equal to the desired
 extraUP = 1;
+extraDOWN = 1;
 
 grep = [
     cp - extraUP    % Allow for one extra player
-    -cp             % The team size may not be smaller than the specified team size
+    -cp - extraDOWN % The team size may not be smaller than the specified team size
     ];
 
 %% Team score deviation constraint
-teamScore = getTeamScore(x, scores, teamNumber, teamSize, 2);   % Get team scores
+teamScore = getTeamScore(x, scores, teamNumber, teamSize);   % Get team scores
 
 %%% Score bounds
 gUp = teamScore - (mean(scores) + settings.rank.UB);        % Upper bound
@@ -43,11 +44,34 @@ for i = 1:participantNumber
     end
 end
 
+%%  Only allow players with a rank of over 100 to have a smaller team
+% Define maximum rank for getting a team penalty
+maxRank = 100;
+
+gGood = zeros(teamNumber, 1);   % Preallocation
+for i = 1:teamNumber
+    % Loop through all teams
+    thesePlayers = x == i;              % Players in current team
+
+    if length(thesePlayers) < teamSize
+        % Only look at smaller teams
+        theseRanks = scores(thesePlayers);  % Ranks of players in current team
+        if any(theseRanks >= maxRank)
+            gGood(i) = 0;                   % Allow small teams for skilled players
+        else
+            gGood(i) = 1;                   % Refuse small teams for lower-rated players
+        end
+    else
+        gGood(i) = 0;   % Team is not smaller
+    end
+end
+
 %% Define constraints
 g = [   % Inequality constraints
     grep
     gdev
     gTeam(:)
+    gGood
     ];
 
 h = []; % Equality constraints

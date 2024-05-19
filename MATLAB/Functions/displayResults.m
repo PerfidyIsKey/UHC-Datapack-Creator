@@ -10,7 +10,7 @@ teamSize        = settings.players; % Number of players per team
 teamNumber      = max(playerInput); % Number of teams
 
 % Get team scores
-teamScore = getTeamScore(playerInput, scores, teamNumber, teamSize, 2);
+teamScore = getTeamScore(playerInput, scores, teamNumber, teamSize);
 
 % Loop through all teams
 for i = 1:teamNumber
