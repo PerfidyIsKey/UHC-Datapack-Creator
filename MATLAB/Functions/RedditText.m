@@ -13,6 +13,11 @@ for i = 1:NN
     j = find(PlayerOrder == i);
     jnot = j;
     NoJ = size(j,1);
+
+    % Amount of players with this rank
+    currentAmount = length(j);
+
+    % for UwU = 1:currentAmount
     if ~isempty(j)
         for iii = 1:NoJ
             if iii > 1
@@ -105,7 +110,8 @@ for i = 1:NN
             ClassifiedPlayers = i - 1;
             text = text(~cellfun('isempty',text));
         end
-        break
+        % break
+    % end
     end
 end
 

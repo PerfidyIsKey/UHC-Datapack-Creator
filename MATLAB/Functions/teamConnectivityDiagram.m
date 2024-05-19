@@ -1,21 +1,21 @@
 function teamConnectivityDiagram(playerInput, playerName)
 %% Define color array
 colors = [
-    255, 255, 0     % Yellow
-    0, 0, 255       % Blue
-    255, 0, 0       % Red
-    128, 0, 128     % Purple
-    0, 128, 0       % Green
-    255, 192, 203   % Pink
+    255, 255, 85    % Yellow
+    85, 85, 255     % Blue
+    255, 85, 85     % Red
+    170, 0, 170     % Purple
+    85, 255, 85     % Green
+    255, 85, 255    % Pink
     0, 0, 0         % Black
-    255, 165, 0     % Orange
-    128, 128, 128   % Gray
-    0, 255, 255     % Aqua
-    139, 0, 0       % Dark Red
-    0, 0, 139       % Dark Blue
-    0, 139, 139     % Dark Aqua
-    0, 100, 0       % Dark Green
-    169, 169, 169   % Dark Gray
+    255, 170, 0     % Orange
+    170, 170, 170   % Gray
+    85, 255, 255    % Aqua
+    170, 0, 0       % Dark Red
+    0, 0, 170       % Dark Blue
+    0, 170, 170     % Dark Aqua
+    0, 170, 0       % Dark Green
+    85, 85, 85      % Dark Gray
     255, 255, 255   % White
     ]/255;
 
@@ -34,7 +34,8 @@ headOffset      = 0.12;                     % Offset to plot the images correctl
 figure("Name", "Final team composition", "Tag", "teamDisplay",...
     "Position", [660, 275, 788, 639])
 hold("on")
-plot(coords(:, 1), coords(:, 2), "Visible", false, "Tag", "connections")
+plot(coords(:, 1), coords(:, 2), "Visible", false, "Tag", "connections",...
+    "LineWidth", 1.5)
 axis("equal")
 ax          = gca;
 xlim([0, maxCanvas] + headOffset*[-1, +1])

@@ -1,8 +1,7 @@
--26,124,396,forest
--108,81,321,plains
--260,127,182,cherry_grove
-252,106,201,dripstone_caves
-353,128,-361,meadow
-427,63,98,river
--424,71,-316,stony_shore
-39,63,36,river
+-57,80,-218,river
+99,72,-338,old_growth_birch_forest
+310,90,384,cherry_grove
+104,57,601,savanna
+123,87,182,plains
+-345,71,43,stony_shore
+-220,81,-504,forest
