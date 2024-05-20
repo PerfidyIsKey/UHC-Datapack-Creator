@@ -688,6 +688,12 @@ public class Main {
         }
         fileCommands.add("scoreboard players reset @a[scores={Deaths=1}] Deaths");
 
+        // Add respawn tag to players who die before eternal day
+        fileCommands.add(execute.If(new Entity("@p[scores={Time2=..24000}]")) +
+                "tag @p[scores={Deaths=1}] add Respawn");
+        fileCommands.add(execute.If(new Entity("@p[scores={Time2=..24000}]")) +
+                "scoreboard players reset @p[scores={Deaths=1}] Deaths");
+
         return new FileData(FileName.drop_player_heads, fileCommands);
     }
 
@@ -1470,6 +1476,10 @@ public class Main {
         fileCommands.add(callFunction(FileName.locate_teammate));
         fileCommands.add(callFunction(FileName.eliminate_baby_wolf));
 
+        // Do automatic respawn before the first PVP kill
+        fileCommands.add(execute.If(new Entity("@p[scores={Time2=..24000}]")) +
+                callFunction(FileName.reset_respawn_health));
+
         return new FileData(FileName.timer, fileCommands);
     }
 
@@ -1597,6 +1607,9 @@ public class Main {
                 "clear @s minecraft:player_head");  // Remove from inventory
         fileCommands.add(execute.As(new Entity("@e[type=item,nbt={Item:{id:\"minecraft:player_head\"}}]")) +
                 "kill @s"); // Remove item
+
+        // Give new bundle to people who respawn
+        fileCommands.add("give @p[tag=Respawn] minecraft:bundle{tag:LocateTeammate}");
 
         // Reset respawn health
         for (int i = 0; i < 10; i++) {
