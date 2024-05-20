@@ -8,7 +8,11 @@ for i = 1:teamNumber
 end
 cp = teamGroups - teamSize; % Check if number of players per team is equal to the desired
 extraUP = 1;
-extraDOWN = 1;
+if teamSize > 2
+    extraDOWN = 1;
+else
+    extraDOWN = 0;
+end
 
 grep = [
     cp - extraUP    % Allow for one extra player
