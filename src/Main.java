@@ -593,6 +593,7 @@ public class Main {
         files.add(UnleashLava());
         files.add(EliminateBabyWolf());
         files.add(UpdatePublicCPScore());
+        files.add(DisableRespawn());
     }
 
     private FileData Initialize() {
@@ -664,6 +665,12 @@ public class Main {
 
     private FileData DropPlayerHeads() {
         ArrayList<String> fileCommands = new ArrayList<>();
+
+        // Indicate when first blood has been taken
+        fileCommands.add(execute.If(new Entity("@p[scores={Kills=1}]"), false) +
+                execute.UnlessNext(new Entity("@p[tag=" + Tag.FirstBloodInitiated + "]"), true) +
+                callFunction(FileName.disable_respawn));
+
         fileCommands.add(execute.If(new Entity("@p[scores={Deaths=1}]")) +
                 playSound(Sound.THUNDER, SoundSource.master, "@a", "~", "~50", "~", "100", "1", "0"));
         fileCommands.add("gamemode spectator @a[scores={Deaths=1},gamemode=!spectator]");
@@ -671,7 +678,6 @@ public class Main {
         fileCommands.add("scoreboard players set @a[scores={Deaths=1}] ControlPoint2 0");
         fileCommands.add("scoreboard players set @p[scores={Admin=1}] Highscore1 1");
         fileCommands.add("scoreboard players set @p[scores={Admin=1}] Highscore2 1");
-        fileCommands.add("scoreboard players set @p[scores={Admin=1}] MinHealth 20");
 
         ArrayList<TextItem> texts = new ArrayList<>();
         texts.add(bannerText);
@@ -686,13 +692,20 @@ public class Main {
             fileCommands.add(execute.At(new Entity("@p[name=" + p.getPlayerName() + ",scores={Deaths=1}]")) +
                     "summon minecraft:item ~ ~ ~ {Item:{id:player_head,Count:1,tag:{SkullOwner:" + p.getPlayerName() + "}}}");
         }
-        fileCommands.add("scoreboard players reset @a[scores={Deaths=1}] Deaths");
 
-        // Add respawn tag to players who die before eternal day
-        fileCommands.add(execute.If(new Entity("@p[scores={Time2=..24000}]")) +
-                "tag @p[scores={Deaths=1}] add Respawn");
-        fileCommands.add(execute.If(new Entity("@p[scores={Time2=..24000}]")) +
-                "scoreboard players reset @p[scores={Deaths=1}] Deaths");
+        // Add respawn tag to players who die before first blood
+        fileCommands.add(execute.Unless(new Entity("@p[tag=" + Tag.FirstBloodInitiated + "]")) +
+                "tag @p[scores={Deaths=1}] add " + Tag.Respawn);
+        fileCommands.add("scoreboard players reset @p[scores={Deaths=1}] Deaths");
+
+        // TODO: Teleport player head to player with first blood
+
+        // Update minimum health
+        fileCommands.add(callFunction(FileName.update_min_health));
+
+        // Do automatic respawn before first blood
+        fileCommands.add(execute.Unless(new Entity("@p[tag=" + Tag.FirstBloodInitiated + "]")) +
+                callFunction(FileName.reset_respawn_health, 1));
 
         return new FileData(FileName.drop_player_heads, fileCommands);
     }
@@ -806,8 +819,9 @@ public class Main {
         fileCommands.add(bossBarCarePackage.setPlayers("@a"));
         fileCommands.add(execute.In(Dimension.overworld) +
                 setBlock(startCoordinate, "minecraft:jukebox[has_record=true]{RecordItem:{Count:1b,id:\"minecraft:music_disc_stal\"}}", SetBlockType.replace));
-        fileCommands.add("tag @a remove Traitor");
-        fileCommands.add("tag @a remove DontMakeTraitor");
+        fileCommands.add("tag @a remove " + Tag.Traitor);
+        fileCommands.add("tag @a remove " + Tag.DontMakeTraitor);
+        fileCommands.add("tag @a remove " + Tag.FirstBloodInitiated);
         fileCommands.add("worldborder set " + 2*worldSize + " 1");
         fileCommands.add("team leave @a");
         fileCommands.add(callFunction(FileName.display_rank));
@@ -898,7 +912,7 @@ public class Main {
         fileCommands.add(setGameRule(GameRule.drowningDamage, true));
         fileCommands.add(setGameRule(GameRule.fallDamage, true));
         fileCommands.add(setGameRule(GameRule.fireDamage, true));
-        fileCommands.add(setGameRule(GameRule.doImmediateRespawn, false));
+        fileCommands.add(setGameRule(GameRule.doImmediateRespawn, true));
         fileCommands.add(callFunction(FileName.clear_enderchest));
 
         fileCommands.add("recipe give @a uhc:golden_apple");
@@ -1434,9 +1448,6 @@ public class Main {
         fileCommands.add(execute.As(new Entity("@a")) +
                 callFunction(FileName.update_mine_count));
 
-        // Update minimum health
-        fileCommands.add(callFunction(FileName.update_min_health));
-
         // Remove piercing enchantment
         fileCommands.add(execute.If(new Entity("@p[nbt={SelectedItem:{id:\"minecraft:crossbow\",tag:{Enchantments:[{id:\"minecraft:piercing\"}]}}}]")) +
                 new TellRaw("@p[nbt={SelectedItem:{id:\"minecraft:crossbow\",tag:{Enchantments:[{id:\"minecraft:piercing\"}]}}}]", new Text(Color.red, true, false, "PIERCING IS NOT ALLOWED, YOU NAUGHTY BUM!")).sendRaw());
@@ -1450,6 +1461,11 @@ public class Main {
 
     private FileData Timer() {
         ArrayList<String> fileCommands = new ArrayList<>();
+
+        // Announce dead players
+        fileCommands.add(execute.If(new Entity("@p[scores={Deaths=1}]")) +
+                callFunction(FileName.drop_player_heads));
+
         fileCommands.add("scoreboard players add @p[scores={Admin=1}] Time2 1");
         fileCommands.add("scoreboard players add @p[scores={Admin=1}] TimDum 1");
         fileCommands.add(execute.If(new Entity("@p[scores={TimDum=" + tickPerSecond + "}]")) +
@@ -1475,10 +1491,6 @@ public class Main {
         fileCommands.add(callFunction(FileName.display_quotes));
         fileCommands.add(callFunction(FileName.locate_teammate));
         fileCommands.add(callFunction(FileName.eliminate_baby_wolf));
-
-        // Do automatic respawn before the first PVP kill
-        fileCommands.add(execute.If(new Entity("@p[scores={Time2=..24000}]")) +
-                callFunction(FileName.reset_respawn_health));
 
         return new FileData(FileName.timer, fileCommands);
     }
@@ -1576,6 +1588,10 @@ public class Main {
     private FileData UpdateMinHealth() {
         ArrayList<String> fileCommands = new ArrayList<>();
 
+        // Reset player with lowest health
+        fileCommands.add("scoreboard players set @p[scores={Admin=1}] MinHealth 20");
+
+        // Find player with lowest health
         fileCommands.add(execute.As(new Entity("@r[gamemode=!spectator]"), false) +
                 execute.IfNext(new ScoreboardPlayersComp( new ScoreboardPlayers("@s", getObjectiveByName("Hearts")), "<", new ScoreboardPlayers("@p[scores={Admin=1}]", getObjectiveByName("MinHealth")))) +
                 execute.StoreNext(ExecuteStore.result, new ScoreboardPlayers("@p[scores={Admin=1}]", getObjectiveByName("MinHealth")), true) +
@@ -1768,4 +1784,20 @@ public class Main {
         return new FileData(FileName.update_public_cp_score, fileCommands);
     }
 
+    private FileData DisableRespawn() {
+        ArrayList<String> fileCommands = new ArrayList<>();
+
+        // Add first blood tag
+        fileCommands.add("tag @p[scores={Admin=1}] add " + Tag.FirstBloodInitiated);
+
+        // Award first blood to player with first kill
+        fileCommands.add(execute.As(new Entity("@p[scores={Kills=1}]")) +
+                "tag @p[scores={Kills=1}] add " + Tag.FirstBlood);
+
+        // Update immediate respawn
+        fileCommands.add(setGameRule(GameRule.doImmediateRespawn, false));
+
+        return new FileData(FileName.disable_respawn, fileCommands);
+    }
 }
+

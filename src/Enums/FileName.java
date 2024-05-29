@@ -57,5 +57,6 @@ public enum FileName {
     unleash_lava,
     teams,
     eliminate_baby_wolf,
-    update_public_cp_score
+    update_public_cp_score,
+    disable_respawn
 }
