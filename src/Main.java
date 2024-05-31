@@ -699,6 +699,8 @@ public class Main {
         fileCommands.add("scoreboard players reset @p[scores={Deaths=1}] Deaths");
 
         // TODO: Teleport player head to player with first blood
+        fileCommands.add(execute.At(new Entity("@p[tag=" + Tag.FirstBlood + "]")) +
+                "tp @e[type=item,nbt={Item:{id:\"minecraft:player_head\"}}] ~ ~ ~");
 
         // Update minimum health
         fileCommands.add(callFunction(FileName.update_min_health));
@@ -822,6 +824,7 @@ public class Main {
         fileCommands.add("tag @a remove " + Tag.Traitor);
         fileCommands.add("tag @a remove " + Tag.DontMakeTraitor);
         fileCommands.add("tag @a remove " + Tag.FirstBloodInitiated);
+        fileCommands.add("tag @a remove " + Tag.FirstBlood);
         fileCommands.add("worldborder set " + 2*worldSize + " 1");
         fileCommands.add("team leave @a");
         fileCommands.add(callFunction(FileName.display_rank));
