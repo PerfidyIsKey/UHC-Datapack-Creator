@@ -46,7 +46,7 @@ public enum FileName {
     display_quotes,
     update_mine_count,
     update_min_health,
-    reset_respawn_health,
+    respawn_player,
     control_point_captured,
     traitor_check,
     teams_alive_check,
@@ -58,5 +58,6 @@ public enum FileName {
     teams,
     eliminate_baby_wolf,
     update_public_cp_score,
-    disable_respawn
+    disable_respawn,
+    handle_player_death
 }
