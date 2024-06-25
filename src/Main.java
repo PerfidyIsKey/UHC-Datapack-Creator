@@ -48,11 +48,12 @@ public class Main {
     //private ArrayList<CarePackage> carePackages = new ArrayList<>();
     private ArrayList<ScoreboardObjective> scoreboardObjectives = new ArrayList<>();
     private ArrayList<Player> players = new ArrayList<>();
+    private int teamAmount;
     private ArrayList<Season> seasons = new ArrayList<>();
     private ArrayList<StatusEffect> effects = new ArrayList<>();
     private ArrayList<String> quotes = new ArrayList<>();
     private ArrayList<BossBar> bossBars = new ArrayList<>();
-    private static final int worldSize = 1000;  // Maximum possible coordinate
+    private static int worldSize;  // Maximum possible coordinate
     private static final int worldHeight = 257;
     private static final int worldBottom = -64;
     private static final int tickPerSecond = 20;
@@ -60,7 +61,8 @@ public class Main {
     private static final int maxCPScore = 2400;
     private static final int maxCPScoreBossbar = 20 * secPerMinute * tickPerSecond * 2;
 
-    private static final int carePackageAmount = 200;
+    private static int carePackageAmount;
+    private static int carePackageSpread;
     private int minTraitorRank;
     private int traitorWaitTime;
     private static final int traitorMode = 1;
@@ -229,6 +231,21 @@ public class Main {
             }
         }
 
+        // Teams
+        teamAmount = players.size()/determineAmountOfPlayersPerTeam();
+
+        // Team dependent data
+        if (teamAmount <= 6) {
+            worldSize = 750;
+            carePackageAmount = 200;
+        }
+        else {
+            worldSize = 750 + (teamAmount - 6)*50;
+            carePackageAmount = 200 + (teamAmount - 6)*30;
+        }
+        carePackageSpread = worldSize - 250;
+
+
         // Seasons
         ArrayList<String> seasonsString = fileTools.GetLinesFromFile("Files\\" + gameMode + "\\seasonData.txt");
         for (String season : seasonsString) {
@@ -293,6 +310,20 @@ public class Main {
         effects.add(new StatusEffect(Effect.fire_resistance, 20, 1));
         effects.add(new StatusEffect(Effect.nausea, 10, 1));
         effects.add(new StatusEffect(Effect.speed, 20, 1));
+    }
+
+    private int determineAmountOfPlayersPerTeam() {
+        // Define variable
+        int playerAmount;
+
+        int totalPlayers = players.size();
+        if ((totalPlayers % 4) == 0 && totalPlayers >= 16) playerAmount = 4;
+        else if ((totalPlayers % 3) == 0) playerAmount = 3;
+        else if ((totalPlayers % 2) == 0) playerAmount = 2;
+        else if (totalPlayers % 3 == 1) playerAmount = 3;
+        else playerAmount = 2;
+
+        return playerAmount;
     }
 
     private void makeLootTableFiles() {
@@ -1211,7 +1242,7 @@ public class Main {
 
         fileCommands.add(execute.In(Dimension.overworld, false) +
                 execute.IfNext(new Entity("@e[type=minecraft:falling_block,distance=..2]"), true) +
-                "spreadplayers 0 0 10 500 false @e[type=minecraft:falling_block,distance=..2]");
+                "spreadplayers 0 0 10 " + carePackageSpread + " false @e[type=minecraft:falling_block,distance=..2]");
 
         return new FileData(FileName.carepackage_distributor, fileCommands);
     }
