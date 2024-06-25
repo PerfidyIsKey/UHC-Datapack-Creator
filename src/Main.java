@@ -907,10 +907,17 @@ public class Main {
 
     private FileData IntoCalls() {
         ArrayList<String> fileCommands = new ArrayList<>();
+
+        // Teleport to starting coordinates
         fileCommands.add(execute.In(Dimension.overworld) +
                 "tp @a " + startCoordinate.getCoordinateString());
+
+        // Reset scores
         fileCommands.add("scoreboard players reset @a Deaths");
         fileCommands.add("scoreboard players reset @a Kills");
+
+        // Make players invulnerable
+        fileCommands.add("effect give @a minecraft:" + Effect.resistance + " 99999 4 true");
 
         return new FileData(FileName.into_calls, fileCommands);
     }
@@ -966,7 +973,9 @@ public class Main {
         fileCommands.add("xp set @a 0 points");
         fileCommands.add("scoreboard players set @p[scores={Admin=1}] Victory 1");
         fileCommands.add("give @a minecraft:bundle{tag:LocateTeammate}");
-        //fileCommands.add("execute as @a at @s run function uhc:give_instructions");
+
+        // Remove resistance
+        fileCommands.add("effect clear @a minecraft:" + Effect.resistance);
 
         return new FileData(FileName.start_game, fileCommands);
     }
