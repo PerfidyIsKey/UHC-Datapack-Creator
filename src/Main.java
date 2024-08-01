@@ -60,7 +60,7 @@ public class Main {
     private static final int secPerMinute = 60;
     private static final int maxCPScore = 2400;
     private static final int maxCPScoreBossbar = 20 * secPerMinute * tickPerSecond * 2;
-    private static final int cpMessageThreshold = 20 * tickPerSecond;
+    private static final int cpMessageThreshold = 5 * tickPerSecond;
     private static int carePackageAmount;
     private static int carePackageSpread;
     private int minTraitorRank;
@@ -1008,7 +1008,7 @@ public class Main {
 
         // Initialize CP messaging dummies
         for (int i = 1; i < controlPoints.size() + 1; i++) {
-            for (int ii = 0; ii < 2; ii++) {
+            for (int ii = 1; ii < 3; ii++) {
                 fileCommands.add("scoreboard players set @a MSGDum" + ii + "CP" + i + " 1");
             }
         }
@@ -1178,21 +1178,59 @@ public class Main {
 
         for (Team team : teams) {
             /* Under attack message */
-            // Increment counter if team is on CP and message is not sent
+            // Increment attacking counter if team is on CP and message is not sent
             fileCommands.add(execute.As(new Entity("@a[gamemode=!spectator,team=" + team.getName() + "]"), false) +
-                    execute.IfNext(new Entity("@s[gamemode=!spectator,x=" + (controlPoints.get(i - 1).getCoordinate().getX() - 6) + ",y=" + (controlPoints.get(i - 1).getCoordinate().getY() - 1) + ",z=" + (controlPoints.get(i - 1).getCoordinate().getZ() - 6) + ",dx=12,dy=12,dz=12,scores={MSGDum1CP" + i + "=.." + cpMessageThreshold + "}]"), true) +
+                    execute.IfNext(new Entity("@s[x=" + (controlPoints.get(i - 1).getCoordinate().getX() - 6) + ",y=" + (controlPoints.get(i - 1).getCoordinate().getY() - 1) + ",z=" + (controlPoints.get(i - 1).getCoordinate().getZ() - 6) + ",dx=12,dy=12,dz=12,scores={MSGDum1CP" + i + "=.." + cpMessageThreshold + "}]"), true) +
                     "scoreboard players add @a[team=" + team.getName() + "] MSGDum1CP" + i + " 1");
 
-            // Define CP under attack message
+            // Reset abandonment counter
+            fileCommands.add(execute.As(new Entity("@a[gamemode=!spectator,team=" + team.getName() + "]"), false) +
+                    execute.IfNext(new Entity("@s[x=" + (controlPoints.get(i - 1).getCoordinate().getX() - 6) + ",y=" + (controlPoints.get(i - 1).getCoordinate().getY() - 1) + ",z=" + (controlPoints.get(i - 1).getCoordinate().getZ() - 6) + ",dx=12,dy=12,dz=12]"), true) +
+                    "scoreboard players set @a[gamemode=!spectator,team=" + team.getName() + "] MSGDum2CP" + i + " 1");
+
+            // Define CP attacking message
             ArrayList<TextItem> texts = new ArrayList<>();
             texts.add(new Text(Color.light_purple, false, false, "TEAM "));
             texts.add(new Text(team.getColor(), false, false, team.getJSONColor()));
-            texts.add(new Text(Color.light_purple, true, false, " IS ATTACKING CONTROL POINT " + i + "!"));
+            texts.add(new Text(Color.light_purple, false, false, " IS ATTACKING CONTROL POINT " + i + "!"));
 
             // Display message in chat if time threshold has been exceeded
             fileCommands.add(execute.As(new Entity("@a[team=" + team.getName() + ",limit=1]"), false) +
                     execute.IfNext(new Entity("@s[scores={MSGDum1CP" + i + "=" + cpMessageThreshold + "}]"), true) +
                     new TellRaw("@a", texts).sendRaw());
+
+            // Grant attacking players Attacking tag
+            fileCommands.add(execute.As(new Entity("@a[team=" + team.getName() + ",limit=1]"), false) +
+                    execute.IfNext(new Entity("@s[scores={MSGDum1CP" + i + "=" + cpMessageThreshold + "}]"), true) +
+                    "tag @a[team=" + team.getName() + "] add " + Tag.AttackingCP + i);
+
+            /* Abandoned message */
+            // Increment abandonment counter unless team is on the CP
+            fileCommands.add(execute.If(new Entity("@p[gamemode=!spectator,team=" + team.getName() + ",tag=" + Tag.AttackingCP + i + "]"), false) +
+                    execute.UnlessNext(new Entity("@p[gamemode=!spectator,team=" + team.getName() + ",x=" + (controlPoints.get(i - 1).getCoordinate().getX() - 6) + ",y=" + (controlPoints.get(i - 1).getCoordinate().getY() - 1) + ",z=" + (controlPoints.get(i - 1).getCoordinate().getZ() - 6) + ",dx=12,dy=12,dz=12]"), true) +
+                    "scoreboard players add @a[team=" + team.getName() + "] MSGDum2CP" + i + " 1");
+
+            // Define CP abandonment message
+            texts.clear();
+            texts.add(new Text(Color.light_purple, false, false, "TEAM "));
+            texts.add(new Text(team.getColor(), false, false, team.getJSONColor()));
+            texts.add(new Text(Color.light_purple, false, false, " HAS ABANDONED CONTROL POINT " + i + "!"));
+
+            // Display message in chat if time threshold has been exceeded
+            fileCommands.add(execute.As(new Entity("@a[team=" + team.getName() + ",limit=1]"), false) +
+                    execute.IfNext(new Entity("@s[scores={MSGDum2CP" + i + "=" + (cpMessageThreshold - 1) + "}]"), true) +
+                    new TellRaw("@a", texts).sendRaw());
+
+            // Reset attacking counter
+            fileCommands.add(execute.As(new Entity("@a[team=" + team.getName() + ",limit=1]"), false) +
+                    execute.IfNext(new Entity("@s[scores={MSGDum2CP" + i + "=" + cpMessageThreshold + "}]"), true) +
+                    "scoreboard players set @a[gamemode=!spectator,team=" + team.getName() + "] MSGDum1CP" + i + " 1");
+
+            // Remove Attacking tag
+            fileCommands.add(execute.As(new Entity("@a[team=" + team.getName() + ",limit=1]"), false) +
+                    execute.IfNext(new Entity("@s[scores={MSGDum2CP" + i + "=" + cpMessageThreshold + "}]"), true) +
+                    "tag @a[team=" + team.getName() + "] remove " + Tag.AttackingCP + i);
+
         }
         return new FileData("" + FileName.controlpoint_messages_ + i, fileCommands);
     }
