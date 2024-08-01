@@ -24,7 +24,7 @@ rankLowerTolerance	= rankLowerBound + 5;  % Maximum allowed negative deviation
 rankUpperTolerance  = rankUpperBound + 5;   % Maximum allowed positive deviation
 maxConnections      = 2;                    % Maximum number of times players have played together
 scoreNoise          = 20;                   % Additional score noise to account for inaccuracies
-plotResults         = false;                % Visualize results
+plotResults         = true;                % Visualize results
 verboseMode         = false;                % Allow messages
 
 % Conversion
@@ -245,6 +245,10 @@ while true
     end
 end
 
+%% Post-processing results
+% Eliminate empty teams
+finalPopulation = eliminateEmptyTeams(finalPopulation, teamNumber);
+
 %% Display results
 % Display results in command window
 fprintf("No constraints:\n")
@@ -286,6 +290,9 @@ end
 finalTeams                  = finalTeams(order);
 optimRank                   = optimRank(order);
 playerNames                 = playerNames(order);
+
+% Eliminate empty teams
+finalTeams = eliminateEmptyTeams(finalTeams, max(finalTeams));
 
 % Display final result
 fprintf("Final teams:\n")

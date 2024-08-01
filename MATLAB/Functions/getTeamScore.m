@@ -27,7 +27,7 @@ for i = 1:teamNumber
             teamScore(i) = teamScore(i)/teamSize;
         end
     else
-        teamScore(i) = 1e9;
+        teamScore(i) = mean(scores);
     end
 end
 end
