@@ -5,5 +5,6 @@ public enum Tag {
     Respawn,
     Traitor,
     DontMakeTraitor,
-    FirstBlood
+    FirstBlood,
+    AttackingCP
 }
