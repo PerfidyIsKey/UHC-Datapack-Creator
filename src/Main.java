@@ -735,10 +735,6 @@ public class Main {
         // Drop player head
         fileCommands.add(callFunction(FileName.drop_player_heads));
 
-        // TODO: Teleport player head to player with first blood
-        //fileCommands.add(execute.At(new Entity("@p[tag=" + Tag.FirstBlood + "]")) +
-        //        "tp @e[type=item,nbt={Item:{id:\"minecraft:player_head\"}}] ~ ~ ~");
-
         // Update minimum health
         fileCommands.add(callFunction(FileName.update_min_health));
 
@@ -1537,6 +1533,11 @@ public class Main {
         fileCommands.add(execute.If(new Entity("@p[nbt={SelectedItem:{id:\"minecraft:crossbow\",tag:{Enchantments:[{id:\"minecraft:piercing\"}]}}}]")) +
                 new TellRaw("@p[nbt={SelectedItem:{id:\"minecraft:crossbow\",tag:{Enchantments:[{id:\"minecraft:piercing\"}]}}}]", new Text(Color.red, true, false, "PIERCING IS NOT ALLOWED, YOU NAUGHTY BUM!")).sendRaw());
         fileCommands.add("item replace entity @p[nbt={SelectedItem:{id:\"minecraft:crossbow\",tag:{Enchantments:[{id:\"minecraft:piercing\"}]}}}] weapon.mainhand with minecraft:crossbow");
+
+        // Remove power enchantment
+        fileCommands.add(execute.If(new Entity("@p[nbt={SelectedItem:{id:\"minecraft:bow\",tag:{Enchantments:[{id:\"minecraft:power\"}]}}}]")) +
+                new TellRaw("@p[nbt={SelectedItem:{id:\"minecraft:bow\",tag:{Enchantments:[{id:\"minecraft:power\"}]}}}]", new Text(Color.red, true, false, "POWER IS NOT ALLOWED, YOU NAUGHTY BUM!")).sendRaw());
+        fileCommands.add("item replace entity @p[nbt={SelectedItem:{id:\"minecraft:bow\",tag:{Enchantments:[{id:\"minecraft:power\"}]}}}] weapon.mainhand with minecraft:bow");
 
         // Update public team CP scores
         fileCommands.add(callFunction(FileName.update_public_cp_score));

@@ -7,16 +7,28 @@ for i = 1:teamNumber
     teamGroups(i) = numel(x(x == i)); % Find number of players in each team
 end
 cp = teamGroups - teamSize; % Check if number of players per team is equal to the desired
-extraUP = 1;
+
+% Upper bound
+extraUP = 1;            % Allow for one extra player
+teamUB = cp - extraUP;
+
+% Lower bound
 if teamSize > 2
+    % Only allow for smaller teams when average team size is bigger than 2
     extraDOWN = 1;
 else
     extraDOWN = 0;
 end
 
+emptyTeams = teamGroups == 0;   % Define empty teams
+teamLB = -cp - extraDOWN;
+teamLB(emptyTeams) = 0;         % Teams may be empty
+
+
+% Group constraints
 grep = [
-    cp - extraUP    % Allow for one extra player
-    -cp - extraDOWN % The team size may not be smaller than the specified team size
+    teamUB 
+    teamLB
     ];
 
 %% Team score deviation constraint
