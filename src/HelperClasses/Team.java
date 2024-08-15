@@ -11,10 +11,10 @@ public class Team {
     private String glassColor;
     private String collarColor;
     private String jsonColor;
-
     private String playerColor;
+    private String dustColor;
 
-    public Team(String name, Color color, BossBarColor bossbarColor, String glassColor, String collarColor, String jsonColor, String playerColor) {
+    public Team(String name, Color color, BossBarColor bossbarColor, String glassColor, String collarColor, String jsonColor, String playerColor, String dustColor) {
         this.name = name;
         this.color = color;
         this.bossbarColor = bossbarColor;
@@ -22,6 +22,7 @@ public class Team {
         this.collarColor = collarColor;
         this.jsonColor = jsonColor;
         this.playerColor = playerColor;
+        this.dustColor = dustColor;
     }
 
     public String getName() {
@@ -75,6 +76,10 @@ public class Team {
     public String getPlayerColor() { return playerColor; }
 
     public void setPlayerColor(String playerColor) { this.playerColor = playerColor; }
+
+    public String getDustColor() { return dustColor; }
+
+    public void setDustColor(String dustColor) { this.dustColor = dustColor; }
 
     public String add(){
         return "team add " + this.name;

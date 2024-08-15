@@ -5,7 +5,7 @@
 18,Vladik71,41,0,true
 24,ThurianBodan,13,0,false
 25,PerfidyIsKey,79,51,true
-27,jonmo0105,27,0,false
+27,jonmo0105,27,0,true
 28,TheDinoGame,140,50,false
 30,Th3Flash05,37,46,false
 31,viccietors,29,49,false
@@ -29,7 +29,7 @@
 49,cat_person,20,0,false
 50,GoldBard2474348,15,0,false
 51,CrimsonCid,8,0,false
-52,NekoBotUwU,62,54,false
+52,NekoBotUwU,62,54,true
 53,TheTolstar,18,0,false
 54,Vogelfan,141,0,true
 55,mrminebase,0,0,false
@@ -53,3 +53,6 @@
 73,Xenitoru,60,54,true
 74,sau_cos,20,54,true
 75,Sachi_Senpai,60,54,true
+76,Arrownymes,40,54,true
+77,superelectra,60,54,true
+78,1iemand,40,54,true

@@ -38,7 +38,7 @@ public class Main {
 
     //GameData<
     private static final int chestSize = 27;
-    private static final String commandCenter = "s52";
+    private static final String commandCenter = "s55";
     private String admin;
     private Coordinate startCoordinate;
     private Coordinate netherPortal;
@@ -191,8 +191,9 @@ public class Main {
         String[] collarColors = {"4", "3", "14", "10", "13", "6", "15", "1", "7", "9", "2", "11", "9"};
         String[] jsonColors = {"YELLOW", "BLUE", "RED", "PURPLE", "GREEN", "PINK", "BLACK", "ORANGE", "GRAY", "AQUA", "DARK RED", "DARK BLUE", "DARK AQUA"};
         String[] playerColors = {"Yellow", "Blue", "Red", "Purple", "Green", "Pink", "Black", "Orange", "Gray", "Aqua", "DarkRed", "DarkBlue", "DarkAqua"};
+        String[] dustColors = {"1.0,1.0,0.3", "0.3,0.3,1.0", "1.0,0.3,0.3", "0.7,0.0,0.7", "0.3,1.0,0.3", "1.0,0.3,1.0", "0.0,0.0,0.0", "1.0,0.7,0.0", "0.7,0.7,0.7", "0.3,1.0,1.0", "0.7,0.0,0.0", "0.0,0.0,0.7", "0.0,0.7,0.7"};
         for (int i = 0; i < colors.length; i++) {
-            Team team = new Team("Team" + i, colors[i], bossbarColors[i], glassColors[i], collarColors[i], jsonColors[i], playerColors[i]);
+            Team team = new Team("Team" + i, colors[i], bossbarColors[i], glassColors[i], collarColors[i], jsonColors[i], playerColors[i], dustColors[i]);
             teams.add(team);
         }
 
@@ -754,7 +755,7 @@ public class Main {
         // Summon a player head upon dying
         for (Player p : players) {
             fileCommands.add(execute.At(new Entity("@p[name=" + p.getPlayerName() + ",scores={Deaths=1}]")) +
-                    "summon minecraft:item ~ ~ ~ {Item:{id:player_head,Count:1,tag:{SkullOwner:" + p.getPlayerName() + "}}}");
+                    "summon minecraft:item ~ ~ ~ {Item:{id:\"minecraft:player_head\",count:1,components:{\"minecraft:profile\":{name:" + p.getPlayerName() + "}}}}");
         }
 
         return new FileData(FileName.drop_player_heads, fileCommands);
@@ -902,6 +903,9 @@ public class Main {
         //}
 
         fileCommands.add("gamemode creative @s");
+
+        // Clear scheduled commands
+        fileCommands.add(callFunction(FileName.clear_schedule));
 
         return new FileData(FileName.developer_mode, fileCommands);
     }
@@ -1529,16 +1533,17 @@ public class Main {
         fileCommands.add(execute.As(new Entity("@a")) +
                 callFunction(FileName.update_mine_count));
 
-        // Remove piercing enchantment
-        fileCommands.add(execute.If(new Entity("@p[nbt={SelectedItem:{id:\"minecraft:crossbow\",tag:{Enchantments:[{id:\"minecraft:piercing\"}]}}}]")) +
-                new TellRaw("@p[nbt={SelectedItem:{id:\"minecraft:crossbow\",tag:{Enchantments:[{id:\"minecraft:piercing\"}]}}}]", new Text(Color.red, true, false, "PIERCING IS NOT ALLOWED, YOU NAUGHTY BUM!")).sendRaw());
-        fileCommands.add("item replace entity @p[nbt={SelectedItem:{id:\"minecraft:crossbow\",tag:{Enchantments:[{id:\"minecraft:piercing\"}]}}}] weapon.mainhand with minecraft:crossbow");
+        for (int ii = 0; ii < 5; ii++) {
+            // Remove piercing enchantment
+            fileCommands.add(execute.If(new Entity("@p[nbt={SelectedItem:{id:\"minecraft:crossbow\",count:1,components:{\"minecraft:enchantments\":{levels:{\"minecraft:piercing\":" + (ii + 1) + "}}}}}]")) +
+                    new TellRaw("@p[nbt={SelectedItem:{id:\"minecraft:crossbow\",count:1,components:{\"minecraft:enchantments\":{levels:{\"minecraft:piercing\":" + (ii + 1) + "}}}}}]", new Text(Color.red, true, false, "PIERCING IS NOT ALLOWED, YOU NAUGHTY BUM!")).sendRaw());
+            fileCommands.add("item replace entity @p[nbt={SelectedItem:{id:\"minecraft:crossbow\",count:1,components:{\"minecraft:enchantments\":{levels:{\"minecraft:piercing\":" + (ii + 1) + "}}}}}] weapon.mainhand with minecraft:crossbow");
 
-        // Remove power enchantment
-        fileCommands.add(execute.If(new Entity("@p[nbt={SelectedItem:{id:\"minecraft:bow\",tag:{Enchantments:[{id:\"minecraft:power\"}]}}}]")) +
-                new TellRaw("@p[nbt={SelectedItem:{id:\"minecraft:bow\",tag:{Enchantments:[{id:\"minecraft:power\"}]}}}]", new Text(Color.red, true, false, "POWER IS NOT ALLOWED, YOU NAUGHTY BUM!")).sendRaw());
-        fileCommands.add("item replace entity @p[nbt={SelectedItem:{id:\"minecraft:bow\",tag:{Enchantments:[{id:\"minecraft:power\"}]}}}] weapon.mainhand with minecraft:bow");
-
+            // Remove power enchantment
+            fileCommands.add(execute.If(new Entity("@p[nbt={SelectedItem:{id:\"minecraft:bow\",count:1,components:{\"minecraft:enchantments\":{levels:{\"minecraft:power\":" + (ii + 1) + "}}}}}]")) +
+                    new TellRaw("@p[nbt={SelectedItem:{id:\"minecraft:bow\",count:1,components:{\"minecraft:enchantments\":{levels:{\"minecraft:power\":" + (ii + 1) + "}}}}}]", new Text(Color.red, true, false, "POWER IS NOT ALLOWED, YOU NAUGHTY BUM!")).sendRaw());
+            fileCommands.add("item replace entity @p[nbt={SelectedItem:{id:\"minecraft:bow\",count:1,components:{\"minecraft:enchantments\":{levels:{\"minecraft:power\":" + (ii + 1) + "}}}}}] weapon.mainhand with minecraft:bow");
+        }
         // Update public team CP scores
         fileCommands.add(callFunction(FileName.update_public_cp_score));
 
@@ -1577,6 +1582,12 @@ public class Main {
         fileCommands.add(callFunction(FileName.display_quotes));
         fileCommands.add(callFunction(FileName.locate_teammate));
         fileCommands.add(callFunction(FileName.eliminate_baby_wolf));
+
+        // Update wolf collars
+        fileCommands.add(callFunction(FileName.wolf_collar_execute));
+
+        // Horse frost walker
+        fileCommands.add(callFunction(FileName.horse_frost_walker));
 
         return new FileData(FileName.timer, fileCommands);
     }
@@ -1821,13 +1832,13 @@ public class Main {
         ArrayList<String> fileCommands = new ArrayList<>();
         for (Team team : teams) {
             for (int i = 0; i < 3; i++) {
-                fileCommands.add(execute.As(new Entity("@a[team=" + team.getName() + ",nbt={SelectedItem:{id:\"minecraft:bundle\",custom_data:{locateTeammate:1b}}}]"), false) +
+                fileCommands.add(execute.As(new Entity("@a[team=" + team.getName() + ",nbt={SelectedItem:{id:\"minecraft:bundle\",components:{\"minecraft:custom_data\":{locateTeammate:1b}}}}]"), false) +
                         execute.AtNext(new Entity("@s")) +
                         execute.IfNext(new Entity("@a[team=" + team.getName() + ",distance=0.1..,gamemode=!spectator]")) +
                         execute.FacingNext(new Entity("@a[team=" + team.getName() + ",distance=0.1..,gamemode=!spectator,limit=1,sort=nearest]"), EntityAnchor.eyes) +
                         execute.PositionedNext(new Coordinate(0, 1, 0, ReferenceFrame.relative)) +
                         execute.PositionedNext(new Coordinate(0, 0, i + 1, ReferenceFrame.relative_facing), true) +
-                        "particle dust{color:[1.0,1.0,1.0],scale:1} ~ ~1 ~ 0 0 0 0 1 normal @s");
+                        "particle dust{color:[" + team.getDustColor() + "],scale:1} ~ ~ ~ 0 0 0 0 1 normal @s");
             }
         }
 
@@ -1882,6 +1893,12 @@ public class Main {
 
         // Update immediate respawn
         fileCommands.add(setGameRule(GameRule.doImmediateRespawn, false));
+
+        // Give first blood the head of the player they killed
+        for (Player p : players) {
+            fileCommands.add(execute.If(new Entity("@p[name=" + p.getPlayerName() + ",scores={Deaths=1}]")) +
+                    "give @p[tag=FirstBlood] player_head[profile={name:\"" + p.getPlayerName() + "\"}] 1");
+        }
 
         return new FileData(FileName.disable_respawn, fileCommands);
     }
