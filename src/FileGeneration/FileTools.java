@@ -240,15 +240,15 @@ public class FileTools {
             if (data.mkdir()) {
                 File uhc = new File(dataPackLocation + dataPackName + "\\data\\uhc");
                 if (uhc.mkdir()) {
-                    File functions = new File(dataPackLocation + dataPackName + "\\data\\uhc\\functions");
+                    File functions = new File(dataPackLocation + dataPackName + "\\data\\uhc\\function");
                     if (!functions.mkdir()) {
                         System.out.println("No functions dir");
                     }
-                    File recipes = new File(dataPackLocation + dataPackName + "\\data\\uhc\\recipes");
+                    File recipes = new File(dataPackLocation + dataPackName + "\\data\\uhc\\recipe");
                     if (!recipes.mkdir()) {
                         System.out.println("No recipes dir");
                     }
-                    File lootTables = new File(dataPackLocation + dataPackName + "\\data\\uhc\\loot_tables");
+                    File lootTables = new File(dataPackLocation + dataPackName + "\\data\\uhc\\loot_table");
                     if (lootTables.mkdir()) {
                         updateAllFiles(files, fileLocation);
                     } else {
@@ -299,11 +299,11 @@ public class FileTools {
         ArrayList<String> fileText = fileData.getFileText();
         File file;
         if (fileData.getType().equals("recipe")) {
-            file = new File(fileLocation + "recipes\\" + fileData.getName() + ".json");
-        } else if (fileData.getType().equals("loot_tables")) {
-            file = new File(fileLocation + "loot_tables\\" + fileData.getName() + ".json");
+            file = new File(fileLocation + "recipe\\" + fileData.getName() + ".json");
+        } else if (fileData.getType().equals("loot_table")) {
+            file = new File(fileLocation + "loot_table\\" + fileData.getName() + ".json");
         } else {
-            file = new File(fileLocation + "functions\\" + fileData.getName() + ".mcfunction");
+            file = new File(fileLocation + "function\\" + fileData.getName() + ".mcfunction");
         }
         BufferedWriter writer = new BufferedWriter(new FileWriter(file));
         for (String s : fileText) {

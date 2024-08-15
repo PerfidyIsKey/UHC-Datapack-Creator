@@ -1,7 +1,7 @@
 @echo off
 cd..
 cd Server
-start java -Xmx4000M -Xms4000M -jar paper-1.20.4-401.jar nogui
+start java -Xmx8000M -Xms8000M -jar paper-1.21.1-15.jar nogui
 
 pause
 
