@@ -376,7 +376,7 @@ public class Main {
 
         ArrayList<String> fileCommands = fileTools.generateLootTable(lootEntry);
 
-        FileData fileData = new FileData("supply_drop", fileCommands, "loot_tables");
+        FileData fileData = new FileData("supply_drop", fileCommands, "loot_table");
         files.add(fileData);
     }
 
@@ -1000,7 +1000,7 @@ public class Main {
         fileCommands.add("advancement revoke @a everything");
         fileCommands.add("xp set @a 0 points");
         fileCommands.add("scoreboard players set @p[scores={Admin=1}] Victory 1");
-        fileCommands.add("give @a minecraft:bundle[tag:LocateTeammate]");
+        fileCommands.add("give @a minecraft:bundle[custom_data={locateTeammate:1b}]");
 
         // Initialize CP messaging dummies
         for (int i = 1; i < controlPoints.size() + 1; i++) {
@@ -1711,7 +1711,7 @@ public class Main {
                 "kill @s"); // Remove item
 
         // Give new bundle to people who respawn
-        fileCommands.add("give @p[tag=Respawn] minecraft:bundle[tag:LocateTeammate]");
+        fileCommands.add("give @p[tag=Respawn] minecraft:bundle[custom_data={locateTeammate:1b}]");
 
         // Set respawn health
         for (int i = 0; i < 10; i++) {
@@ -1821,13 +1821,13 @@ public class Main {
         ArrayList<String> fileCommands = new ArrayList<>();
         for (Team team : teams) {
             for (int i = 0; i < 3; i++) {
-                fileCommands.add(execute.As(new Entity("@a[team=" + team.getName() + ",nbt={SelectedItem:{id:\"minecraft:bundle\",tag:{tag:LocateTeammate}}}]"), false) +
+                fileCommands.add(execute.As(new Entity("@a[team=" + team.getName() + ",nbt={SelectedItem:{id:\"minecraft:bundle\",custom_data:{locateTeammate:1b}}}]"), false) +
                         execute.AtNext(new Entity("@s")) +
                         execute.IfNext(new Entity("@a[team=" + team.getName() + ",distance=0.1..,gamemode=!spectator]")) +
                         execute.FacingNext(new Entity("@a[team=" + team.getName() + ",distance=0.1..,gamemode=!spectator,limit=1,sort=nearest]"), EntityAnchor.eyes) +
                         execute.PositionedNext(new Coordinate(0, 1, 0, ReferenceFrame.relative)) +
                         execute.PositionedNext(new Coordinate(0, 0, i + 1, ReferenceFrame.relative_facing), true) +
-                        "particle minecraft:dust 1.0 1.0 1.0 1.0 ~ ~ ~ 0 0 0 0 1 normal @s");
+                        "particle dust{color:[1.0,1.0,1.0],scale:1} ~ ~1 ~ 0 0 0 0 1 normal @s");
             }
         }
 
