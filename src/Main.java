@@ -807,7 +807,7 @@ public class Main {
     private static FileData GodMode() {
         ArrayList<String> fileCommands = new ArrayList<>();
         fileCommands.add("effect give @s minecraft:" + Effect.resistance + " 99999 4 true");
-        fileCommands.add("item replace entity @s weapon.mainhand with trident{display:{Name:\"{\\\"text\\\":\\\"The Impaler\\\"}\"}, Enchantments:[{id:sharpness,lvl:999999},{id:fire_aspect,lvl:999999},{id:unbreaking,lvl:999999},{id:loyalty,lvl:999999},{id:impaling,lvl:999999}]}");
+        fileCommands.add("item replace entity @s weapon.mainhand with trident[display:{Name:\"{\\\"text\\\":\\\"The Impaler\\\"}\"}, Enchantments:[{id:sharpness,lvl:999999},{id:fire_aspect,lvl:999999},{id:unbreaking,lvl:999999},{id:loyalty,lvl:999999},{id:impaling,lvl:999999}]]");
 
         return new FileData(FileName.god_mode, fileCommands);
     }
@@ -1000,7 +1000,7 @@ public class Main {
         fileCommands.add("advancement revoke @a everything");
         fileCommands.add("xp set @a 0 points");
         fileCommands.add("scoreboard players set @p[scores={Admin=1}] Victory 1");
-        fileCommands.add("give @a minecraft:bundle{tag:LocateTeammate}");
+        fileCommands.add("give @a minecraft:bundle[tag:LocateTeammate]");
 
         // Initialize CP messaging dummies
         for (int i = 1; i < controlPoints.size() + 1; i++) {
@@ -1236,7 +1236,7 @@ public class Main {
 
         fileCommands.add(new Title("@a", TitleType.title, new Text(Color.gold, true, true, carepackage.getDisplayName() + "!")).displayTitle());
         fileCommands.add(new Title("@a", TitleType.subtitle, new Text(Color.light_purple, true, true, "Delivered now on the surface!")).displayTitle());
-        fileCommands.add("give @a[gamemode=!spectator] minecraft:compass{display:{Name:\"{\\\"text\\\":\\\"" + carepackage.getDisplayName() + " available at " + carepackage.getX() + ", " + carepackage.getY() + ", " + carepackage.getZ() + "\\\"}\"}, LodestoneDimension:\"minecraft:" + Dimension.overworld + "\",LodestoneTracked:0b,LodestonePos:{X:" + carepackage.getX() + ",Y:" + carepackage.getY() + ",Z:" + carepackage.getZ() + "}}");
+        fileCommands.add("give @a[gamemode=!spectator] minecraft:compass[display:{Name:\"{\\\"text\\\":\\\"" + carepackage.getDisplayName() + " available at " + carepackage.getX() + ", " + carepackage.getY() + ", " + carepackage.getZ() + "\\\"}\"}, LodestoneDimension:\"minecraft:" + Dimension.overworld + "\",LodestoneTracked:0b,LodestonePos:{X:" + carepackage.getX() + ",Y:" + carepackage.getY() + ",Z:" + carepackage.getZ() + "}]");
 
         return new FileData("" + FileName.carepackage_ + carepackage.getName(), fileCommands);
     }
@@ -1711,7 +1711,7 @@ public class Main {
                 "kill @s"); // Remove item
 
         // Give new bundle to people who respawn
-        fileCommands.add("give @p[tag=Respawn] minecraft:bundle{tag:LocateTeammate}");
+        fileCommands.add("give @p[tag=Respawn] minecraft:bundle[tag:LocateTeammate]");
 
         // Set respawn health
         for (int i = 0; i < 10; i++) {
