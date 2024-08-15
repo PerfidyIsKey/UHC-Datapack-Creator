@@ -807,7 +807,7 @@ public class Main {
     private static FileData GodMode() {
         ArrayList<String> fileCommands = new ArrayList<>();
         fileCommands.add("effect give @s minecraft:" + Effect.resistance + " 99999 4 true");
-        fileCommands.add("item replace entity @s weapon.mainhand with trident[display:{Name:\"{\\\"text\\\":\\\"The Impaler\\\"}\"}, Enchantments:[{id:sharpness,lvl:999999},{id:fire_aspect,lvl:999999},{id:unbreaking,lvl:999999},{id:loyalty,lvl:999999},{id:impaling,lvl:999999}]]");
+        fileCommands.add("item replace entity @s weapon.mainhand with trident[custom_name='[{\"bold\":false,\"color\":\"white\",\"italic\":false,\"obfuscated\":true,\"text\":\"aA\"},{\"bold\":true,\"color\":\"#8C3CC1\",\"obfuscated\":false,\"text\":\" The\"},{\"bold\":true,\"color\":\"#E280FF\",\"obfuscated\":false,\"text\":\" Impaler \"},{\"color\":\"white\",\"obfuscated\":true,\"text\":\"Aa\"}]',lore=['{\"text\":\"This holy weapon impales anything it touches\"}'],unbreakable={show_in_tooltip:false},damage=0,enchantments={levels:{\"minecraft:fire_aspect\":255,\"minecraft:sharpness\":255,\"minecraft:efficiency\":255,'impaling':255},show_in_tooltip:false},attribute_modifiers={modifiers:[{id:\"armor\",type:\"generic.attack_damage\",amount:1000,operation:\"add_value\",slot:\"mainhand\"}],show_in_tooltip:false}]");
 
         return new FileData(FileName.god_mode, fileCommands);
     }
