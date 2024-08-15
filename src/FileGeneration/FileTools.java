@@ -73,7 +73,7 @@ public class FileTools {
             }
             fileCommands.add("        },");
             fileCommands.add("        \"result\": {");
-            fileCommands.add("            \"item\": \"" + r.getResultItem() + "\",");
+            fileCommands.add("            \"id\": \"" + r.getResultItem() + "\",");
             fileCommands.add("            \"count\": " + r.getResultAmount());
             fileCommands.add("        }");
             fileCommands.add("    }");
