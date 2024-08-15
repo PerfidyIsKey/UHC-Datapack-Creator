@@ -102,9 +102,9 @@ public class FileTools {
         for (LootTableEntry l : lootEntry) {
             fileCommands.add("        {");
             fileCommands.add("          \"type\": \"minecraft:item\",");
-            fileCommands.add("          \"weight\": " + l.getWeight() + ",");
+            fileCommands.add("          \"name\": \"minecraft:" + l.getName() + "\",");
             if (l.getFunction() != null) {
-                fileCommands.add("          \"name\": \"minecraft:" + l.getName() + "\",");
+                fileCommands.add("          \"weight\": " + l.getWeight() + ",");
                 fileCommands.add("          \"functions\": [");
                 fileCommands.add("            {");
                 fileCommands.add("              \"function\": \"minecraft:set_count\",");
@@ -122,7 +122,7 @@ public class FileTools {
                 fileCommands.add("            }");
                 fileCommands.add("          ]");
             } else {
-                fileCommands.add("          \"name\": \"minecraft:" + l.getName() + "\"");
+                fileCommands.add("          \"weight\": " + l.getWeight());
             }
             if (counter < lootEntry.size()) {
                 fileCommands.add("        },");
@@ -152,13 +152,13 @@ public class FileTools {
                             name = l.getName() + " x" + l.getFunction().getCount();
                             dispWeight = currentWeight / sumWeight * 100;
                             checkWeight += dispWeight;
-                            fileCommands.add("# Weight " + name + " = " + dispWeight + "%");
+                            fileCommands.add("// Weight " + name + " = " + dispWeight + "%");
                         } else {
                             currentWeight = l.getWeight() * (1 - l.getFunction().getChance());
                             name = l.getName() + " x1";
                             dispWeight = currentWeight / sumWeight * 100;
                             checkWeight += dispWeight;
-                            fileCommands.add("# Weight " + name + " = " + dispWeight + "%");
+                            fileCommands.add("// Weight " + name + " = " + dispWeight + "%");
                         }
                     }
                 } else {
@@ -166,18 +166,18 @@ public class FileTools {
                     dispWeight = currentWeight / sumWeight * 100;
                     checkWeight += dispWeight;
                     name = l.getName() + " x" + l.getFunction().getCount();
-                    fileCommands.add("# Weight " + name + " = " + dispWeight + "%");
+                    fileCommands.add("// Weight " + name + " = " + dispWeight + "%");
                 }
             } else {
                 currentWeight = l.getWeight();
                 dispWeight = currentWeight / sumWeight * 100;
                 checkWeight += dispWeight;
                 name = l.getName() + " x1";
-                fileCommands.add("# Weight " + name + " = " + dispWeight + "%");
+                fileCommands.add("// Weight " + name + " = " + dispWeight + "%");
             }
 
         }
-        fileCommands.add("#Total weight = " + totalWeight);
+        fileCommands.add("//Total weight = " + totalWeight);
         return fileCommands;
     }
 
