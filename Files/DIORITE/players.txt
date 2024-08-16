@@ -35,7 +35,7 @@
 55,mrminebase,0,0,false
 56,JOPONOS,92,51,true
 57,neokneipies,0,0,false
-58,marckstef,13,0,false
+58,marckstef,13,0,true
 59,Dan_Fingerman,6,0,false
 60,Bertje13,48,0,false
 61,blacksnake29,51,0,false
@@ -51,7 +51,7 @@
 71,Joker447xd9,46,0,true
 72,Cthuleric,46,0,false
 73,Xenitoru,60,54,true
-74,sau_cos,20,54,true
+74,smilerification,20,54,true
 75,Sachi_Senpai,60,54,true
 76,Arrownymes,40,54,true
 77,superelectra,60,54,true
