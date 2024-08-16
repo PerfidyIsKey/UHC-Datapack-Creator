@@ -233,22 +233,28 @@ public class Main {
         }
 
         // Teams
-        teamAmount = players.size()/determineAmountOfPlayersPerTeam();
+        teamAmount = players.size() / determineAmountOfPlayersPerTeam();
+        int relativeTeamAmount = teamAmount - 6;
+        if (relativeTeamAmount < 0) relativeTeamAmount = 0;
+        if (relativeTeamAmount > 10) relativeTeamAmount = 10;
 
         // Desired chest density
         double desiredChestDensity = 0.0002;
 
-        // Team dependent data
-        if (teamAmount <= 4) {
-            worldSize = 750;
-            carePackageAmount = 200;
-        }
-        else {
-            worldSize = 750 + (teamAmount - 4)*50;
-            carePackageAmount = (int)(desiredChestDensity*(worldSize - 250)*(worldSize - 250)*4);
-        }
-        carePackageSpread = worldSize - 250;
+        int baseWorldSize = 750;
+        int baseCarePackageSpread = 500;
 
+        int maxTeamAmount = 10;
+        int maxWorldSize = 1500;
+        int maxCarePackageSpread = 800;
+
+        int worldSizeStep = (maxWorldSize - baseWorldSize) / maxTeamAmount;
+        int carePackageSpreadStep = (maxCarePackageSpread - baseCarePackageSpread) / maxTeamAmount;
+
+        worldSize = baseWorldSize + worldSizeStep * relativeTeamAmount;
+        carePackageSpread = baseCarePackageSpread + carePackageSpreadStep * relativeTeamAmount;
+
+        carePackageAmount = (int) (desiredChestDensity * (carePackageSpread * 2) * (carePackageSpread * 2));
 
         // Seasons
         ArrayList<String> seasonsString = fileTools.GetLinesFromFile("Files\\" + gameMode + "\\seasonData.txt");
@@ -768,7 +774,7 @@ public class Main {
         ArrayList<String> fileCommands = new ArrayList<>();
 
         for (Team t : teams) {
-            fileCommands.add(execute.If(new ScoreboardPlayersComp(new ScoreboardPlayers("@p[scores={Admin=1}]", getObjectiveByName("CP1" + t.getName())) , ">", new ScoreboardPlayers("@p[scores={Admin=1}]", getObjectiveByName("Highscore1")))) +
+            fileCommands.add(execute.If(new ScoreboardPlayersComp(new ScoreboardPlayers("@p[scores={Admin=1}]", getObjectiveByName("CP1" + t.getName())), ">", new ScoreboardPlayers("@p[scores={Admin=1}]", getObjectiveByName("Highscore1")))) +
                     getBossbarByName("cp1").setColor(t.getBossbarColor()));
             fileCommands.add(execute.If(new ScoreboardPlayersComp(new ScoreboardPlayers("@p[scores={Admin=1}]", getObjectiveByName("CP2" + t.getName())), ">", new ScoreboardPlayers("@p[scores={Admin=1,Highscore1=14400..}]", getObjectiveByName("Highscore2")))) +
                     getBossbarByName("cp2").setColor(t.getBossbarColor()));
@@ -877,7 +883,7 @@ public class Main {
         fileCommands.add("tag @a remove " + Tag.DontMakeTraitor);
         fileCommands.add("tag @a remove " + Tag.FirstBloodInitiated);
         fileCommands.add("tag @a remove " + Tag.FirstBlood);
-        fileCommands.add("worldborder set " + 2*worldSize + " 1");
+        fileCommands.add("worldborder set " + 2 * worldSize + " 1");
         fileCommands.add("team leave @a");
         fileCommands.add(callFunction(FileName.display_rank));
         fileCommands.add("scoreboard players set NightTime Time 600");
@@ -888,18 +894,17 @@ public class Main {
             fileCommands.add("tag @a remove ReceivedPerk" + (i + 1));
         }
 
-        for (Team t : teams)
-        {
+        for (Team t : teams) {
             fileCommands.add("scoreboard players reset " + t.getPlayerColor() + " CPScore");
             fileCommands.add("team join " + t.getName() + " " + t.getPlayerColor());
         }
 
         int minToCPScore = secPerMinute * tickPerSecond * controlPoints.get(0).getAddRate();
-        fileCommands.add("scoreboard players set Perk1 CPScore " + 3*minToCPScore);
-        fileCommands.add("scoreboard players set Perk2 CPScore " + 6*minToCPScore);
-        fileCommands.add("scoreboard players set Perk3 CPScore " + 12*minToCPScore);
-        fileCommands.add("scoreboard players set Perk4 CPScore " + 15*minToCPScore);
-        fileCommands.add("scoreboard players set TimeVictory CPScore " + 20*minToCPScore);
+        fileCommands.add("scoreboard players set Perk1 CPScore " + 3 * minToCPScore);
+        fileCommands.add("scoreboard players set Perk2 CPScore " + 6 * minToCPScore);
+        fileCommands.add("scoreboard players set Perk3 CPScore " + 12 * minToCPScore);
+        fileCommands.add("scoreboard players set Perk4 CPScore " + 15 * minToCPScore);
+        fileCommands.add("scoreboard players set TimeVictory CPScore " + 20 * minToCPScore);
 
         //for (CarePackage carepackage : carePackages) {
         //    fileCommands.addAll(forceLoadAndSet(carepackage.getX(), carepackage.getY(), carepackage.getZ(), BlockType.air, SetBlockType.replace));
@@ -960,7 +965,7 @@ public class Main {
     private static FileData SpreadPlayers() {
         ArrayList<String> fileCommands = new ArrayList<>();
         fileCommands.add(execute.In(Dimension.overworld) +
-                "spreadplayers 0 0 " + 0.3*worldSize + " " + 0.9*worldSize + " true @a");
+                "spreadplayers 0 0 " + 0.3 * worldSize + " " + 0.9 * worldSize + " true @a");
         fileCommands.add("scoreboard players set @p[scores={Admin=1}] Highscore 1");
         fileCommands.add("scoreboard players set @p[scores={Admin=1}] MinHealth 20");
 
@@ -1029,7 +1034,7 @@ public class Main {
                 "gamemode survival @a[distance=..20,gamemode=!creative]");
         fileCommands.add(execute.In(Dimension.overworld, false) +
                 execute.PositionedNext(new Coordinate(0, 151, 0), true) +
-                "spreadplayers 0 0 " + 0.3*worldSize + " " + 0.9*worldSize + " true @a[distance=..20,gamemode=survival]");
+                "spreadplayers 0 0 " + 0.3 * worldSize + " " + 0.9 * worldSize + " true @a[distance=..20,gamemode=survival]");
 
         return new FileData(FileName.battle_royale, fileCommands);
     }
@@ -1168,7 +1173,7 @@ public class Main {
 
         // Keep beacon active
         fileCommands.add(fill(controlPoints.get(i - 1).getCoordinate().getX() - 1, controlPoints.get(i - 1).getCoordinate().getY() - 1, controlPoints.get(i - 1).getCoordinate().getZ() - 1, controlPoints.get(i - 1).getCoordinate().getX() + 1, controlPoints.get(i - 1).getCoordinate().getY() - 1, controlPoints.get(i - 1).getCoordinate().getZ() + 1, BlockType.emerald_block));
-        fileCommands.add(fill(controlPoints.get(i - 1).getCoordinate().getX(), controlPoints.get(i - 1).getCoordinate().getY(), controlPoints.get(i - 1).getCoordinate().getZ(), controlPoints.get(i - 1).getCoordinate().getX() , controlPoints.get(i - 1).getCoordinate().getY(), controlPoints.get(i - 1).getCoordinate().getZ(), BlockType.beacon));
+        fileCommands.add(fill(controlPoints.get(i - 1).getCoordinate().getX(), controlPoints.get(i - 1).getCoordinate().getY(), controlPoints.get(i - 1).getCoordinate().getZ(), controlPoints.get(i - 1).getCoordinate().getX(), controlPoints.get(i - 1).getCoordinate().getY(), controlPoints.get(i - 1).getCoordinate().getZ(), BlockType.beacon));
 
         // Update CP messaging
         fileCommands.add(callFunction("" + FileName.controlpoint_messages_ + i));
@@ -1693,7 +1698,7 @@ public class Main {
 
         // Find player with lowest health
         fileCommands.add(execute.As(new Entity("@r[gamemode=!spectator]"), false) +
-                execute.IfNext(new ScoreboardPlayersComp( new ScoreboardPlayers("@s", getObjectiveByName("Hearts")), "<", new ScoreboardPlayers("@p[scores={Admin=1}]", getObjectiveByName("MinHealth")))) +
+                execute.IfNext(new ScoreboardPlayersComp(new ScoreboardPlayers("@s", getObjectiveByName("Hearts")), "<", new ScoreboardPlayers("@p[scores={Admin=1}]", getObjectiveByName("MinHealth")))) +
                 execute.StoreNext(ExecuteStore.result, new ScoreboardPlayers("@p[scores={Admin=1}]", getObjectiveByName("MinHealth")), true) +
                 "scoreboard players get @s Hearts");
 
@@ -1874,8 +1879,7 @@ public class Main {
     private FileData UpdatePublicCPScore() {
         ArrayList<String> fileCommands = new ArrayList<>();
 
-        for (Team t : teams)
-        {
+        for (Team t : teams) {
             for (int i = 1; i < controlPoints.size() + 1; i++) {
                 fileCommands.add("scoreboard players operation " + t.getPlayerColor() + " CPScore > @p[scores={Admin=1}] CP" + i + t.getName());
             }
