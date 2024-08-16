@@ -235,14 +235,17 @@ public class Main {
         // Teams
         teamAmount = players.size()/determineAmountOfPlayersPerTeam();
 
+        // Desired chest density
+        double desiredChestDensity = 0.0002;
+
         // Team dependent data
-        if (teamAmount <= 6) {
+        if (teamAmount <= 4) {
             worldSize = 750;
             carePackageAmount = 200;
         }
         else {
-            worldSize = 750 + (teamAmount - 6)*50;
-            carePackageAmount = 200 + (teamAmount - 6)*30;
+            worldSize = 750 + (teamAmount - 4)*50;
+            carePackageAmount = (int)(desiredChestDensity*(worldSize - 250)*(worldSize - 250)*4);
         }
         carePackageSpread = worldSize - 250;
 
