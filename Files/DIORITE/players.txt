@@ -50,6 +50,6 @@
 70,ANDRIQS,161,54,true
 71,Joker447xd9,46,0,true
 72,Cthuleric,46,0,false
-73,Arrownymes,60,55,true
-74,smilerification,20,0,true
-75,Sachi_Senpai,60,0,true
+73,smilerification,15,0,true
+74,Sachi_Senpai,35,0,true
+75,Arrownymes,89,55,true
