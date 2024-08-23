@@ -597,42 +597,28 @@ public class Main {
             files.add(ControlPointMessages(i));
         }
 
-        //for (CarePackage carepackage : carePackages) {
-        //    files.add(Carepackage(carepackage));
-        //}
-        //files.add(ControlpointMessages());
         files.add(DropCarepackages());
         files.add(CarepackageDistributor());
-        //files.add(GiveInstructions());
-        files.add(InstructionHandoutLoop());
         files.add(TraitorHandout());
         files.add(TraitorActionBar());
-        //files.add(TeamScoreLegacy());
         files.add(TeamScore());
 
         files.add(SpawnControlPoints());
         files.add(DisplayRank());
 
-        // Effects given when the target blocks are hit on the Control Point
-        for (int i = 0; i < 4; i++) {
-            files.add(GiveStatusEffect(i));
-        }
         files.add(WorldPreload());
         files.add(WorldPreLoadActivation());
         files.add(HorseFrostWalker());
         files.add(WolfCollarExecute());
         files.add(UpdateSidebar());
         files.add(Timer());
-        //files.add(CreateControlpointRedstone());
         files.add(ControlPointPerks());
         files.add(DisplayQuotes());
         files.add(UpdateMineCount());
         files.add(RespawnPlayer());
         files.add(UpdateMinHealth());
-        //files.add(SpawnNetherPortal());
         files.add(ClearSchedule());
         files.add(LocateTeammate());
-        files.add(UnleashLava());
         files.add(EliminateBabyWolf());
         files.add(UpdatePublicCPScore());
         files.add(DisableRespawn());
@@ -905,9 +891,10 @@ public class Main {
         fileCommands.add("scoreboard players set Perk4 CPScore " + 15 * minToCPScore);
         fileCommands.add("scoreboard players set TimeVictory CPScore " + 20 * minToCPScore);
 
-        //for (CarePackage carepackage : carePackages) {
-        //    fileCommands.addAll(forceLoadAndSet(carepackage.getX(), carepackage.getY(), carepackage.getZ(), BlockType.air, SetBlockType.replace));
-        //}
+        // Reset player scales
+        for (Player p : players) {
+            fileCommands.add("attribute @p[name=" + p.getPlayerName() + "] minecraft:generic.scale base set 1");
+        }
 
         fileCommands.add("gamemode creative @s");
 
@@ -1079,9 +1066,6 @@ public class Main {
                 setBlock(15, worldBottom + 2, 11, BlockType.redstone_block, SetBlockType.replace));
         fileCommands.addAll(forceLoadAndSet(controlPoints.get(1).getCoordinate().getX(), controlPoints.get(1).getCoordinate().getY() + 3, controlPoints.get(1).getCoordinate().getZ(), controlPoints.get(1).getCoordinate().getDimension(), BlockType.air, SetBlockType.replace));
         fileCommands.add(getBossbarByName("cp2").setTitle("CP2: " + controlPoints.get(1).getCoordinate().getX() + ", " + controlPoints.get(1).getCoordinate().getY() + ", " + controlPoints.get(1).getCoordinate().getZ() + " (" + controlPoints.get(1).getCoordinate().getDimensionName() + ") - FASTER!!"));
-        //fileCommands.add("give @a[scores={ControlPoint1=14400..}] minecraft:splash_potion{CustomPotionEffects:[{Id:11,Duration:1200},{Id:24,Duration:1200}],CustomPotionColor:15462415,display:{Name:\"\\\"Hero of the First Control Point\\\"\",Lore:[\"Thank you for enabling the second Control Point! Good luck with winning the match!\"]}}");
-        //fileCommands.add(callFunction(FileName.carepackage_ + carePackages.get(0).getName()));
-
 
         return new FileData(FileName.second_controlpoint, fileCommands);
     }
@@ -1242,16 +1226,6 @@ public class Main {
         return new FileData("" + FileName.controlpoint_messages_ + i, fileCommands);
     }
 
-    private FileData Carepackage(CarePackage carepackage) {
-        ArrayList<String> fileCommands = forceLoadAndSet(carepackage.getX(), carepackage.getY(), carepackage.getZ(), "chest{CustomName:\"\\\"" + carepackage.getDisplayName() + "\\\"\",Items:" + carepackage.getNbtTag() + "}");
-
-        fileCommands.add(new Title("@a", TitleType.title, new Text(Color.gold, true, true, carepackage.getDisplayName() + "!")).displayTitle());
-        fileCommands.add(new Title("@a", TitleType.subtitle, new Text(Color.light_purple, true, true, "Delivered now on the surface!")).displayTitle());
-        fileCommands.add("give @a[gamemode=!spectator] minecraft:compass[display:{Name:\"{\\\"text\\\":\\\"" + carepackage.getDisplayName() + " available at " + carepackage.getX() + ", " + carepackage.getY() + ", " + carepackage.getZ() + "\\\"}\"}, LodestoneDimension:\"minecraft:" + Dimension.overworld + "\",LodestoneTracked:0b,LodestonePos:{X:" + carepackage.getX() + ",Y:" + carepackage.getY() + ",Z:" + carepackage.getZ() + "}]");
-
-        return new FileData("" + FileName.carepackage_ + carepackage.getName(), fileCommands);
-    }
-
     private static FileData DropCarepackages() {
         ArrayList<String> fileCommands = new ArrayList<>();
 
@@ -1274,23 +1248,6 @@ public class Main {
                 "spreadplayers 0 0 10 " + carePackageSpread + " false @e[type=minecraft:falling_block,distance=..2]");
 
         return new FileData(FileName.carepackage_distributor, fileCommands);
-    }
-
-    private FileData GiveInstructions() {
-        ArrayList<String> fileCommands = new ArrayList<>();
-
-        fileCommands.add("give @p written_book{pages:['[\"\",{\"text\":\"The Diorite Experts\",\"bold\":true},{\"text\":\"\\\\nUltraHardCore S38\\\\nSa 07/11/2020\\\\n\\\\n\\\\n\",\"color\":\"reset\"},{\"text\":\"Rules & Information\",\"bold\":true,\"underlined\":true},{\"text\":\"\\\\n\\\\n\\\\n\\\\nWritten by: Snodog627\",\"color\":\"reset\"}]','[\"\",{\"text\":\"Contents\",\"bold\":true,\"underlined\":true},{\"text\":\"\\\\n\\\\n\",\"color\":\"reset\"},{\"text\":\"Introduction.......................3\",\"clickEvent\":{\"action\":\"change_page\",\"value\":3},\"hoverEvent\":{\"action\":\"show_text\",\"contents\":\"Go to Page 3\"}},{\"text\":\"\\\\n\"},{\"text\":\"Victory conditions........6\",\"clickEvent\":{\"action\":\"change_page\",\"value\":6},\"hoverEvent\":{\"action\":\"show_text\",\"contents\":\"Go to Page 6\"}},{\"text\":\"\\\\n\"},{\"text\":\"Rules........................................8\",\"clickEvent\":{\"action\":\"change_page\",\"value\":8},\"hoverEvent\":{\"action\":\"show_text\",\"contents\":\"Go to Page 8\"}},{\"text\":\"\\\\n\"},{\"text\":\"Utility.....................................10\",\"clickEvent\":{\"action\":\"change_page\",\"value\":10},\"hoverEvent\":{\"action\":\"show_text\",\"contents\":\"Go to Page 10\"}},{\"text\":\"\\\\n\"},{\"text\":\"Control Point.................11\",\"clickEvent\":{\"action\":\"change_page\",\"value\":11},\"hoverEvent\":{\"action\":\"show_text\",\"contents\":\"Go to Page 11\"}},{\"text\":\"\\\\n\"},{\"text\":\"Care Package...............16\",\"clickEvent\":{\"action\":\"change_page\",\"value\":16},\"hoverEvent\":{\"action\":\"show_text\",\"contents\":\"Go to Page 16\"}},{\"text\":\"\\\\n\"},{\"text\":\"Change log.....................19\",\"clickEvent\":{\"action\":\"change_page\",\"value\":19},\"hoverEvent\":{\"action\":\"show_text\",\"contents\":\"Go to Page 19\"}},{\"text\":\"\\\\n\"},{\"text\":\"Statistics...........................20\",\"clickEvent\":{\"action\":\"change_page\",\"value\":20},\"hoverEvent\":{\"action\":\"show_text\",\"contents\":\"Go to Page 20\"}},{\"text\":\"\\\\n \"}]','[\"\",{\"text\":\"Introduction\",\"bold\":true,\"underlined\":true},{\"text\":\"\\\\nWelcome to the 38th season of The Diorite Experts UltraHardCore! UHC is a survival/PvP game in Minecraft and is special because of its non-natural health regeneration. After the survival period where players get geared up it is time for the final PvP battle that can\",\"color\":\"reset\"}]','{\"text\":\"happen at any moment. The team of the last player standing wins the match. In addition to that, it is also possible to win the game by capturing Control Points. On the side, players can also gather loot by completing side quests: Care Package drops.\"}','[\"\",{\"text\":\"We hope you will have a wonderful time and good luck taking the crown!\\\\n\\\\n\\\\n\"},{\"text\":\"GLHF\",\"bold\":true},{\"text\":\"\\\\n~Bas, Luc, Wouter\\\\nS38 UHC Committee\\\\n \",\"color\":\"reset\"}]','[\"\",{\"text\":\"Victory Conditions\",\"bold\":true,\"underlined\":true},{\"text\":\"\\\\nThere are two ways to win UHC:\\\\n\",\"color\":\"reset\"},{\"text\":\"1.\",\"bold\":true},{\"text\":\" Be the last team standing\\\\n\",\"color\":\"reset\"},{\"text\":\"2. \",\"bold\":true},{\"text\":\"Earn 2400CP on the Control Points\\\\n\\\\n\\\\nCondition \",\"color\":\"reset\"},{\"text\":\"1.\",\"bold\":true},{\"text\":\" can only be claimed if condition \",\"color\":\"reset\"},{\"text\":\"2.\",\"bold\":true},{\"text\":\" has not been achieved yet.\",\"color\":\"reset\"}]','[\"\",{\"text\":\"The spoils:\",\"underlined\":true},{\"text\":\"\\\\nAs an appreciation of their skill, the winners of UltraHardCore will receive a role on Discord which elevates their spirits into divinity.\\\\n \",\"color\":\"reset\"}]','[\"\",{\"text\":\"Rules\",\"bold\":true,\"underlined\":true},{\"text\":\"\\\\nBanned items:\\\\n- Potion of regeneration,\\\\n- Potion of strength.\\\\n\\\\nA player cannot:\\\\n- trap a nether portal,\\\\n- share information that is not public after dying.\",\"color\":\"reset\"}]','[\"\",{\"text\":\"Other rules:\",\"underlined\":true},{\"text\":\"\\\\n- PvP is not allowed until the second day,\\\\n- Deaths due to PvE or glitches can be reversible, but respawns are handicapped,\\\\n- Players are not allowed to enter the spawn after the match has started.\",\"color\":\"reset\"}]','[\"\",{\"text\":\"Utility\",\"bold\":true,\"underlined\":true},{\"text\":\"\\\\n- Eternal day is enabled after 20 minutes,\\\\n- World size: 1500x1500\\\\n- A golden apple can be crafted like:\\\\n \\\\u0020 \\\\u0020 \\\\u0020 \\\\u0020 \\\\u0020\\\\u2610\\\\u2612\\\\u2610\\\\n \\\\u0020 \\\\u0020 \\\\u0020 \\\\u0020 \\\\u0020\\\\u2612\\\\u2611\\\\u2612\\\\n \\\\u0020 \\\\u0020 \\\\u0020 \\\\u0020 \\\\u0020\\\\u2610\\\\u2612\\\\u2610\\\\nwhere \\\\u2612 is a gold bar, \\\\u2611 is a playerhead.\",\"color\":\"reset\"}]','[\"\",{\"text\":\"Control Point\",\"bold\":true,\"underlined\":true},{\"text\":\"\\\\nThere are two Control Points in this game. When a player is within 5 blocks from the Control Point, they are awarded a CP score every second.\\\\n\\\\nCP1 awards 2CP per second and CP2 awards 3CP per second.\",\"color\":\"reset\"}]','[\"\",{\"text\":\"CP1 is enabled after 30 minutes of game time. After a team accumulates 720CP on CP1, CP2 will also be enabled.\\\\n\\\\nThe coordinates of both CP will be revealed after 30 minutes of game time.\\\\n\\\\n\"},{\"text\":\"Tip: When CP2 has just\",\"italic\":true}]','[\"\",{\"text\":\"been enabled it is faster to immediately control CP2!\",\"italic\":true},{\"text\":\"\\\\n\\\\nThe team that manages to first score 720CP receives a splash potion of resistance.\\\\n\\\\nControl Points are recognized by the beam of an end crystal.\",\"color\":\"reset\"}]','[\"\",{\"text\":\"When a team reaches 2400CP, they win the game. The remaining teams get 3 minutes to prepare and will afterwards be spread into a shrinking area for a final battle.\\\\n\\\\n\"},{\"text\":\"Note: It is not possible to capture a Control \",\"italic\":true}]','{\"text\":\"Point when players of other teams are present on that CP.\",\"italic\":true}','[\"\",{\"text\":\"Care Package\",\"bold\":true,\"underlined\":true},{\"text\":\"\\\\nThis game contains two Care Packages:\\\\n- \",\"color\":\"reset\"},{\"text\":\"Enchanting\",\"underlined\":true,\"clickEvent\":{\"action\":\"open_url\",\"value\":\"https://media.discordapp.net/attachments/505386630736248834/746784653922533506/unknown.png\"},\"hoverEvent\":{\"action\":\"show_text\",\"contents\":\"Click for preview of the contents\"}},{\"text\":\"\\\\n- \",\"color\":\"reset\"},{\"text\":\"Anti-ControlPoint\",\"underlined\":true,\"clickEvent\":{\"action\":\"open_url\",\"value\":\"https://media.discordapp.net/attachments/505386630736248834/746784937646096404/unknown.png\"},\"hoverEvent\":{\"action\":\"show_text\",\"contents\":\"Click for preview of the contents\"}},{\"text\":\"\\\\n\\\\nThe enchanting Care Package is deployed after 20 minutes of gametime. Its purpose is for those who are either unlucky or bored with caving. Its\",\"color\":\"reset\"}]','{\"text\":\"coordinates will be made available through a bossbar which shows up every 30 seconds.\\\\n\\\\nThe anti-ControlPoint Care Package is deployed after CP2 is enabled and contains all kind of havoc that makes CP capturers sweat. Its coordinates will be displayed in the\"}','[\"\",{\"text\":\"same aforementioned bossbar.\\\\n\\\\n\"},{\"text\":\"Tip: If you are not doing so well or late to the Control Point race, you might want to check these out!\",\"italic\":true}]','[\"\",{\"text\":\"Change log\",\"bold\":true,\"underlined\":true},{\"text\":\"\\\\n- Removed Traitor faction (will be tested in again in December!)\\\\n- CP bug fixed\\\\n- Team generation is now done through an algorithm made in MATLAB\",\"color\":\"reset\"}]','[\"\",{\"text\":\"Statistics\",\"bold\":true,\"underlined\":true},{\"text\":\"\\\\nFor more statistics check out \",\"color\":\"reset\"},{\"text\":\"/r/TheDioriteExpertsUHC\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"https://old.reddit.com/r/TheDioriteExpertsUHC/\"}},{\"text\":\"\\\\n\\\\n\"},{\"text\":\"Current Rankings:\",\"bold\":true},{\"text\":\"\\\\n1. Bobdafish (166)\\\\n2. Snodog627 (115)\\\\n3. TheDinoGame (113)\\\\n4. jonmo0105 (99)\\\\n5. Thurian (72)\\\\n\\\\n\\\\n\\\\n \",\"color\":\"reset\"}]','[\"\",{\"text\":\"Previous winners:\",\"bold\":true},{\"text\":\"\\\\n\",\"color\":\"reset\"},{\"text\":\"S33\",\"bold\":true},{\"text\":\": jonmo0105, PerfidyIsKey, Snodog627\\\\n\",\"color\":\"reset\"},{\"text\":\"S34\",\"bold\":true},{\"text\":\": jonmo0105\\\\n\",\"color\":\"reset\"},{\"text\":\"S35\",\"bold\":true},{\"text\":\": Kakarot057, PerfidyIsKey\\\\n\",\"color\":\"reset\"},{\"text\":\"S36\",\"bold\":true},{\"text\":\": Bobdafish, TheDinoGame, W0omy\\\\n\",\"color\":\"reset\"},{\"text\":\"S37:\",\"bold\":true},{\"text\":\" Bobdafish, TheDinoGame\\\\n\\\\n\\\\n\\\\n \",\"color\":\"reset\"}]','[\"\",{\"text\":\"Most Wins:\",\"bold\":true},{\"text\":\"\\\\n1. Snodog627 (18)\\\\n2. Mr9Madness (11)\\\\n3. PR0BA (5)\\\\n4. W0omy (5)\\\\n5. Thurian (4)\\\\n\\\\n\",\"color\":\"reset\"},{\"text\":\"Most Kills:\",\"bold\":true},{\"text\":\"\\\\n1. Snodog627 (40)\\\\n2. Mr9Madness (17)\\\\n3. TheDinoGame (9)\\\\n4. Tiba101 (8)\\\\n5. jonmo0105 (8)\\\\n\\\\n\\\\n\\\\n\\\\n \",\"color\":\"reset\"}]'],title:\"The Diorite Experts UHC RuleBook\",author:Snodog627,display:{Lore:[\"Information and rules on the 38th season of The Diorite Experts UltraHardCore\"]}}");
-        fileCommands.add("give @p minecraft:compass");
-        return new FileData(FileName.give_instructions, fileCommands);
-    }
-
-    private static FileData InstructionHandoutLoop() {
-        ArrayList<String> fileCommands = new ArrayList<>();
-
-        //fileCommands.add("execute as @a[scores={Quits=1..}] at @s run function uhc:give_instructions");
-        fileCommands.add("scoreboard players set @a[scores={Quits=1..}] Quits 0");
-
-        return new FileData(FileName.instruction_handout_loop, fileCommands);
     }
 
     private FileData TraitorHandout() {
@@ -1356,19 +1313,6 @@ public class Main {
                 callFunction(FileName.traitor_check));
 
         return new FileData(FileName.traitor_actionbar, fileCommands);
-    }
-
-    private FileData TeamScoreLegacy() {
-        ArrayList<String> fileCommands = new ArrayList<>();
-        for (Team t : teams) {
-            fileCommands.add(execute.As(new Entity("@r[limit=1,gamemode=!spectator]")) +
-                    "scoreboard players operation @p[scores={Admin=1}] CP" + t.getName() + " > @s[team=" + t.getName() + "] ControlPoint");
-
-            fileCommands.add(execute.As(new Entity("@r[limit=1,gamemode=!spectator]")) +
-                    "scoreboard players operation @s[team=" + t.getName() + "] ControlPoint > @p[scores={Admin=1}] CP" + t.getName());
-        }
-
-        return new FileData(FileName.team_score, fileCommands);
     }
 
     private FileData TeamScore() {
@@ -1440,20 +1384,6 @@ public class Main {
         fileCommands.add(new ScoreboardObjective().setDisplay("sidebar", "Rank"));
 
         return new FileData(FileName.display_rank, fileCommands);
-    }
-
-    private FileData GiveStatusEffect(int i) {
-        ArrayList<String> fileCommands = new ArrayList<>();
-
-        for (ControlPoint cp : controlPoints) {
-            Coordinate c = cp.getCoordinate();
-            fileCommands.add(execute.In(c.getDimension(), false) +
-                    execute.PositionedNext(c, true) +
-                    "effect give @p[gamemode=!spectator] minecraft:" + effects.get(i).getEffect() + " " + effects.get(i).getDuration() + " " + effects.get(i).getAmplification());
-        }
-
-
-        return new FileData("" + FileName.give_status_effect + i, fileCommands);
     }
 
     private FileData WorldPreload() {
@@ -1600,18 +1530,6 @@ public class Main {
         fileCommands.add(callFunction(FileName.update_min_health));
 
         return new FileData(FileName.timer, fileCommands);
-    }
-
-    // Sad function for Control Point spawning
-    private FileData CreateControlpointRedstone() {
-        ArrayList<String> fileCommands = new ArrayList<>();
-        for (ControlPoint cp : controlPoints) {
-            Coordinate c = cp.getCoordinate();
-            fileCommands.add(execute.In(c.getDimension()) +
-                    setBlock(c.getX(), c.getY() + 10, c.getZ(), BlockType.redstone_block, SetBlockType.destroy));
-        }
-
-        return new FileData(FileName.controlpoint_redstone, fileCommands);
     }
 
     // Perks for being on the Control Point
@@ -1811,21 +1729,6 @@ public class Main {
         return new FileData(FileName.teams_highscore_alive_check, fileCommands);
     }
 
-    private FileData SpawnNetherPortal() {
-        ArrayList<String> fileCommands = new ArrayList<>();
-        fileCommands.add(execute.In(Dimension.overworld) +
-                "forceload add " + netherPortal.getX() + " " + netherPortal.getZ() + " " + netherPortal.getX() + " " + netherPortal.getZ());
-        fileCommands.add(execute.In(Dimension.overworld) +
-                setBlock(netherPortal, "minecraft:structure_block[mode=load]{author:\"?\",ignoreEntities:1b,integrity:1.0f,metadata:\"\",mirror:\"NONE\",mode:\"LOAD\",name:\"minecraft:nether_portal\",posX:-1,posY:0,posZ:0,powered:0b,rotation:\"NONE\",seed:0L,showair:0b,showboundingbox:1b,sizeX:4,sizeY:5,sizeZ:1}"));
-        fileCommands.add(execute.In(Dimension.overworld) +
-                setBlock(netherPortal.getX() - 1, netherPortal.getY(), netherPortal.getZ(), BlockType.redstone_block));
-        fileCommands.add("give @a[gamemode=!spectator] minecraft:compass{display:{Name:\"{\\\"text\\\":\\\"Nether Portal -  located at " + netherPortal.getX() + ", " + netherPortal.getY() + ", " + netherPortal.getZ() + "\\\"}\"}, LodestoneDimension:\"minecraft:" + Dimension.overworld + "\",LodestoneTracked:0b,LodestonePos:{X:" + netherPortal.getX() + ",Y:" + netherPortal.getY() + ",Z:" + netherPortal.getZ() + "}}");
-        fileCommands.add(execute.In(Dimension.overworld) +
-                "forceload remove " + netherPortal.getX() + " " + netherPortal.getZ() + " " + netherPortal.getX() + " " + netherPortal.getZ());
-
-        return new FileData(FileName.spawn_nether_portal, fileCommands);
-    }
-
     private FileData ClearSchedule() {
         ArrayList<String> fileCommands = new ArrayList<>();
         fileCommands.add(clearFunction(FileName.minute_ + "2"));
@@ -1850,13 +1753,6 @@ public class Main {
         }
 
         return new FileData(FileName.locate_teammate, fileCommands);
-    }
-
-    private FileData UnleashLava() {
-        ArrayList<String> fileCommands = new ArrayList<>();
-        fileCommands.add(setBlockRelative(0, -1, 0, BlockType.lava));
-
-        return new FileData(FileName.unleash_lava, fileCommands);
     }
 
     private FileData EliminateBabyWolf() {

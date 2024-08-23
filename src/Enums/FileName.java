@@ -1,12 +1,10 @@
 package Enums;
 
 public enum FileName {
+    // Start up world
     initialize,
-    drop_player_heads,
-    bbvalue,
-    clear_enderchest,
-    equip_gear,
-    god_mode,
+
+    // Start up game
     developer_mode,
     random_teams,
     predictions,
@@ -14,50 +12,66 @@ public enum FileName {
     spread_players,
     survival_mode,
     start_game,
-    battle_royale,
-    initialize_controlpoint,
-    second_controlpoint,
-    minute_,
-    victory,
-    victory_message_,
-    victory_message_traitor,
-    death_match,
-    controlpoint_,
-    carepackage_,
-    drop_carepackages,
-    carepackage_distributor,
-    give_instructions,
-    instruction_handout_loop,
-    traitor_handout,
-    traitor_actionbar,
-    team_score,
-    spawn_controlpoints,
-    display_rank,
-    give_status_effect,
-    world_pre_load,
-    world_pre_load_activation,
+
+    // Timer
     horse_frost_walker,
     wolf_collar_execute,
     update_sidebar,
     timer,
-    controlpoint_redstone,
-    controlpoint_perks,
-    controlpoint_messages_,
     display_quotes,
     update_mine_count,
     update_min_health,
+    eliminate_baby_wolf,
+
+    // Death
+    handle_player_death,
+    drop_player_heads,
     respawn_player,
-    control_point_captured,
+    disable_respawn,
+
+    // Control Point
+    spawn_controlpoints,
+    initialize_controlpoint,
+    controlpoint_,
+    team_score,
+    second_controlpoint,
+    bbvalue,
+    controlpoint_perks,
+    controlpoint_messages_,
+    update_public_cp_score,
+
+    // Care Packages
+    drop_carepackages,
+    carepackage_distributor,
+
+    // Traitor Faction
+    traitor_handout,
+    traitor_actionbar,
+
+    // Victory
     traitor_check,
     teams_alive_check,
+    control_point_captured,
     teams_highscore_alive_check,
-    spawn_nether_portal,
+    victory,
+    victory_message_,
+    victory_message_traitor,
+    minute_,
+    death_match,
+
+    // World loading
+    world_pre_load,
+    world_pre_load_activation,
+
+    // Misc (gameplay critical)
+    clear_enderchest,
+    display_rank,
     clear_schedule,
     locate_teammate,
-    unleash_lava,
     teams,
-    eliminate_baby_wolf,
-    update_public_cp_score,
-    disable_respawn,
-    handle_player_death
+
+    // Misc (for fun)
+    equip_gear,
+    god_mode,
+    battle_royale,
 }
