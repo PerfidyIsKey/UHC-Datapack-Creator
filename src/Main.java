@@ -38,7 +38,7 @@ public class Main {
 
     //GameData<
     private static final int chestSize = 27;
-    private static final String commandCenter = "s55";
+    private static final String commandCenter = "s56";
     private String admin;
     private Coordinate startCoordinate;
     private Coordinate netherPortal;
