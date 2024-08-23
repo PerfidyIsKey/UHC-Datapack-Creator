@@ -715,8 +715,7 @@ public class Main {
                 callFunction(FileName.disable_respawn));
 
         // Play thunder sound
-        fileCommands.add(execute.If(new Entity("@p[scores={Deaths=1}]")) +
-                playSound(Sound.THUNDER, SoundSource.master, "@a", "~", "~50", "~", "100", "1", "0"));
+        fileCommands.add(playSound(Sound.THUNDER, SoundSource.master, "@a", "~", "~50", "~", "100", "1", "0"));
 
         // Set all dead players to spectator mode
         fileCommands.add("gamemode spectator @a[scores={Deaths=1},gamemode=!spectator]");
@@ -726,6 +725,9 @@ public class Main {
         fileCommands.add("scoreboard players set @a[scores={Deaths=1}] ControlPoint2 0");
         fileCommands.add("scoreboard players set @p[scores={Admin=1}] Highscore1 1");
         fileCommands.add("scoreboard players set @p[scores={Admin=1}] Highscore2 1");
+
+        // Reset player with lowest health
+        fileCommands.add("scoreboard players set @p[scores={Admin=1}] MinHealth 20");
 
         // Announce traitor deaths
         ArrayList<TextItem> texts = new ArrayList<>();
@@ -744,9 +746,6 @@ public class Main {
 
         // Drop player head
         fileCommands.add(callFunction(FileName.drop_player_heads));
-
-        // Update minimum health
-        fileCommands.add(callFunction(FileName.update_min_health));
 
         // Reset death count
         fileCommands.add("scoreboard players reset @p[scores={Deaths=1}] Deaths");
@@ -1597,6 +1596,9 @@ public class Main {
         // Horse frost walker
         fileCommands.add(callFunction(FileName.horse_frost_walker));
 
+        // Update minimum health
+        fileCommands.add(callFunction(FileName.update_min_health));
+
         return new FileData(FileName.timer, fileCommands);
     }
 
@@ -1692,9 +1694,6 @@ public class Main {
     // Update minimum health
     private FileData UpdateMinHealth() {
         ArrayList<String> fileCommands = new ArrayList<>();
-
-        // Reset player with lowest health
-        fileCommands.add("scoreboard players set @p[scores={Admin=1}] MinHealth 20");
 
         // Find player with lowest health
         fileCommands.add(execute.As(new Entity("@r[gamemode=!spectator]"), false) +
@@ -1900,12 +1899,6 @@ public class Main {
 
         // Update immediate respawn
         fileCommands.add(setGameRule(GameRule.doImmediateRespawn, false));
-
-        // Give first blood the head of the player they killed
-        for (Player p : players) {
-            fileCommands.add(execute.If(new Entity("@p[name=" + p.getPlayerName() + ",scores={Deaths=1}]")) +
-                    "give @p[tag=FirstBlood] player_head[profile={name:\"" + p.getPlayerName() + "\"}] 1");
-        }
 
         return new FileData(FileName.disable_respawn, fileCommands);
     }

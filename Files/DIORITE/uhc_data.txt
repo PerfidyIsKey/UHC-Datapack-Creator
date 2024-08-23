@@ -1,5 +1,5 @@
 uhcNumber:55
-admin:PerfidyIsKey
+admin:Snodog627
 startCoordinate:0,63,0
 netherPortal:5,71,-11
 minTraitorRank:30
