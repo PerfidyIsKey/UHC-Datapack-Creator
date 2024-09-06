@@ -696,8 +696,8 @@ public class Main {
         ArrayList<String> fileCommands = new ArrayList<>();
 
         // Indicate when first blood has been taken
-        fileCommands.add(execute.If(new Entity("@p[scores={Kills=1}]"), false) +
-                execute.UnlessNext(new Entity("@p[tag=" + Tag.FirstBloodInitiated + "]"), true) +
+        fileCommands.add(execute.If(new Entity("@p[scores={Time2=24000..}]"), false) +
+                execute.UnlessNext(new Entity("@p[tag=" + Tag.RespawnDisabled + "]"), true) +
                 callFunction(FileName.disable_respawn));
 
         // Play thunder sound
@@ -727,7 +727,7 @@ public class Main {
                 new TellRaw("@a", texts).sendRaw());
 
         // Add respawn tag to players who die before first blood
-        fileCommands.add(execute.Unless(new Entity("@p[tag=" + Tag.FirstBloodInitiated + "]")) +
+        fileCommands.add(execute.Unless(new Entity("@p[tag=" + Tag.RespawnDisabled + "]")) +
                 "tag @p[scores={Deaths=1}] add " + Tag.Respawn);
 
         // Drop player head
@@ -737,7 +737,7 @@ public class Main {
         fileCommands.add("scoreboard players reset @p[scores={Deaths=1}] Deaths");
 
         // Do automatic respawn before first blood
-        fileCommands.add(execute.Unless(new Entity("@p[tag=" + Tag.FirstBloodInitiated + "]")) +
+        fileCommands.add(execute.Unless(new Entity("@p[tag=" + Tag.RespawnDisabled + "]")) +
                 callFunction(FileName.respawn_player, 1));
 
         return new FileData(FileName.handle_player_death, fileCommands);
@@ -866,8 +866,7 @@ public class Main {
                 setBlock(startCoordinate, "minecraft:jukebox[has_record=true]{RecordItem:{Count:1b,id:\"minecraft:music_disc_stal\"}}", SetBlockType.replace));
         fileCommands.add("tag @a remove " + Tag.Traitor);
         fileCommands.add("tag @a remove " + Tag.DontMakeTraitor);
-        fileCommands.add("tag @a remove " + Tag.FirstBloodInitiated);
-        fileCommands.add("tag @a remove " + Tag.FirstBlood);
+        fileCommands.add("tag @a remove " + Tag.RespawnDisabled);
         fileCommands.add("worldborder set " + 2 * worldSize + " 1");
         fileCommands.add("team leave @a");
         fileCommands.add(callFunction(FileName.display_rank));
@@ -1787,11 +1786,7 @@ public class Main {
         ArrayList<String> fileCommands = new ArrayList<>();
 
         // Add first blood tag
-        fileCommands.add("tag @p[scores={Admin=1}] add " + Tag.FirstBloodInitiated);
-
-        // Award first blood to player with first kill
-        fileCommands.add(execute.As(new Entity("@p[scores={Kills=1}]")) +
-                "tag @p[scores={Kills=1}] add " + Tag.FirstBlood);
+        fileCommands.add("tag @p[scores={Admin=1}] add " + Tag.RespawnDisabled);
 
         // Update immediate respawn
         fileCommands.add(setGameRule(GameRule.doImmediateRespawn, false));
