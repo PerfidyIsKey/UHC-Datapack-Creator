@@ -1,8 +1,7 @@
-232,26,445,dripstone_caves
--447,111,196,plains
--252,69,-69,sunflower_plains
-233,92,-326,bamboo_jungle
-121,89,211,cherry_grove
--102,88,-143,savanna
-387,78,-427,wooded_badlands
--267,73,328,cherry_grove
+176,72,230,plains
+355,90,10,forest
+-157,63,-346,plains
+351,78,-117,forest
+114,70,455,bamboo_jungle
+259,110,-236,savanna
+-137,71,207,savanna
