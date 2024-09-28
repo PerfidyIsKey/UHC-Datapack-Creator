@@ -19,12 +19,12 @@ load("DataS55.mat")
 % Algorithm settings
 teamPlayer          = 3;                    % Number of players per team
 rankLowerBound      = 5;                    % Maximum negative deviation of score median
-rankUpperBound      = 5;                   % Maximum positive deviation of score mean
-rankLowerTolerance	= rankLowerBound + 5;  % Maximum allowed negative deviation
+rankUpperBound      = 5;                    % Maximum positive deviation of score mean
+rankLowerTolerance	= rankLowerBound + 5;   % Maximum allowed negative deviation
 rankUpperTolerance  = rankUpperBound + 5;   % Maximum allowed positive deviation
 maxConnections      = 2;                    % Maximum number of times players have played together
 scoreNoise          = 20;                   % Additional score noise to account for inaccuracies
-plotResults         = true;                % Visualize results
+plotResults         = true;                 % Visualize results
 verboseMode         = false;                % Allow messages
 
 % Conversion

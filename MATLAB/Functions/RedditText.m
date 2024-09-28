@@ -25,37 +25,37 @@ for i = 1:NN
             end
             j = jnot(iii);
             if Players(j).Rank == max(Players(j).RankHistory)
-                BestRank = ' **- PB!**';
+                BestRank = " **- PB!**";
             else
-                BestRank = '';
+                BestRank = "";
             end
             
             if Players(j).RankPosition(N) == min(Players(j).RankPosition)
-                BestRankPosition = ' **- PB!**';
+                BestRankPosition = " **- PB!**";
             else
-                BestRankPosition = '';
+                BestRankPosition = "";
             end
             
             BestPerformanceAmount = find(Players(j).PerformanceScore == max(Players(j).PerformanceScore));
-            PerformanceSeason = '';
+            PerformanceSeason = "";
             for ii = 1:size(BestPerformanceAmount,1)
                 BestPerformance = Seasons(BestPerformanceAmount(ii)).Season;
                 if ii ~= size(BestPerformanceAmount,1)
-                    PerformanceSeason = [PerformanceSeason BestPerformance ', '];
+                    PerformanceSeason = PerformanceSeason + BestPerformance + ", ";
                 else
-                    PerformanceSeason = [PerformanceSeason BestPerformance];
+                    PerformanceSeason = PerformanceSeason + BestPerformance;
                 end
             end
             
             if max(Players(j).Kills) ~= 0
                 BestKillAmount = find(Players(j).Kills == max(Players(j).Kills));
-                KillSeason = ' (in UHC ';
+                KillSeason = " (in UHC ";
                 for ii = 1:size(BestKillAmount,1)
                     BestKills = Seasons(BestKillAmount(ii)).Season;
                     if ii ~= size(BestKillAmount,1)
-                        KillSeason = [KillSeason BestKills ', '];
+                        KillSeason = KillSeason + BestKills + ", ";
                     else
-                        KillSeason = [KillSeason BestKills ')'];
+                        KillSeason = KillSeason + BestKills + ")";
                     end
                 end
             else
@@ -64,22 +64,22 @@ for i = 1:NN
             
             if length(Players(j).RankPosition) > 1
                 if isnan(Players(j).RankPosition(end-1) - Players(j).RankPosition(end))
-                    RankChange = 'NEW';
+                    RankChange = "NEW";
                 else
                     RankChange = num2str(Players(j).RankPosition(end-1) - Players(j).RankPosition(end),'%+i');
                 end
             else
-                RankChange = 'NEW';
+                RankChange = "NEW";
             end
             
             if length(Players(j).RankPosition) > 1
                 if isnan(Players(j).RankPosition(end-1) - Players(j).RankPosition(end))
-                    RankChangeNum = 'NEW';
+                    RankChangeNum = "NEW";
                 else
                     RankChangeNum = num2str(int8(Players(j).Rank - Players(j).RankHistory(end-1)),'%+d');
                 end
             else
-                RankChangeNum = 'NEW';
+                RankChangeNum = "NEW";
             end
             
             if max(uint8(Players(j).RankHistory)) == 0
@@ -89,19 +89,21 @@ for i = 1:NN
             end
             
             if ~isnan(Players(j).Rank)
-                text{i} = {['**' num2str(Players(j).RankPosition(end)) ' (' RankChange ') ' strrep(Players(j).PlayerName,'_','\_') '**' BestRankPosition]
-                    ['Rank: ' num2str(uint8(Players(j).Rank),'%u') ' (' RankChangeNum ') ' BestRank]
-                    ['Number of games: ' num2str(sum(Players(j).Participation))]
-                    ['Total number of wins: ' num2str(sum(Players(j).Winner))]
-                    ['Best performance: ' num2str(max(Players(j).PerformanceScore),'%.2f') ' (in UHC ' PerformanceSeason ')']
-                    ['Total number of kills: ' num2str(sum(Players(j).Kills))]
-                    ['Average number of kills: ' num2str(sum(Players(j).Kills)/sum(Players(j).Participation),'%.2f')]
-                    ['Highest number of kills in a game: ' num2str(max(Players(j).Kills)) KillSeason]
-                    ['Mean Survivalrate: ' num2str(Players(j).SurvivalRate,'%.2f')]
-                    ['Peak ranking score: ' num2str(max(uint8(Players(j).RankHistory)),'%u') ' (after UHC ' Seasons(BestSeason).Season ')']
-                    ['Highest rank: ' iptnum2ordinal(min(Players(j).RankPosition)) ' (x' num2str(size(find(Players(j).RankPosition == min(Players(j).RankPosition)),1)) ', last achieved in UHC ' Seasons(find(Players(j).RankPosition == min(Players(j).RankPosition,[],'omitnan'),1,'last')).Season ')']
-                    ['Last UHC season: ' num2str(Seasons(find(Players(j).Participation == 1,1,'last')).Season) ' (' datestr(Seasons(find(Players(j).Participation == 1,1,'last')).Date, 24) ')']
-                    '&nbsp;'};
+                text{i} = [
+                    "**" + num2str(Players(j).RankPosition(end)) + " (" + RankChange + ") " + strrep(Players(j).PlayerName,'_','\_') + "**" + BestRankPosition
+                    "Rank: " + num2str(uint8(Players(j).Rank),'%u') + " (" + RankChangeNum + ") " + BestRank
+                    "Number of games: " + num2str(sum(Players(j).Participation))
+                    "Total number of wins: " + num2str(sum(Players(j).Winner))
+                    "Best performance: " + num2str(max(Players(j).PerformanceScore),'%.2f') + " (in UHC " + PerformanceSeason + ")"
+                    "Total number of kills: " + num2str(sum(Players(j).Kills))
+                    "Average number of kills: " + num2str(sum(Players(j).Kills)/sum(Players(j).Participation),'%.2f')
+                    "Highest number of kills in a game: " + num2str(max(Players(j).Kills)) + KillSeason
+                    "Mean Survivalrate: " + num2str(Players(j).SurvivalRate,'%.2f')
+                    "Peak ranking score: " + num2str(max(uint8(Players(j).RankHistory)),'%u') + " (after UHC " + Seasons(BestSeason).Season + ")"
+                    "Highest rank: " + iptnum2ordinal(min(Players(j).RankPosition)) + " (x" + num2str(size(find(Players(j).RankPosition == min(Players(j).RankPosition)),1)) + ", last achieved in UHC " + Seasons(find(Players(j).RankPosition == min(Players(j).RankPosition,[],'omitnan'),1,'last')).Season + ")"
+                    "Last UHC season: " + num2str(Seasons(find(Players(j).Participation == 1,1,'last')).Season) + " (" + datestr(Seasons(find(Players(j).Participation == 1,1,'last')).Date, 24) + ")"
+                    "&nbsp;"
+                    ];
             end
             ClassifiedPlayers = i;
         end
@@ -121,8 +123,12 @@ j = 1;
 for ii = 1:ClassifiedPlayers
     for i = 1:StringEntries
         
-        char = text{ii,1}{i};
+        char = text{ii,1}(i);
+        try
         string(j) = convertCharsToStrings(char);
+        catch
+            fprintf("j = %3.0f\n", j)
+        end
         j = j + 1;
     end
 end
