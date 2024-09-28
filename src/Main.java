@@ -327,8 +327,7 @@ public class Main {
         int playerAmount;
 
         int totalPlayers = players.size();
-        if ((totalPlayers % 4) == 0 && totalPlayers >= 16) playerAmount = 4;
-        else if ((totalPlayers % 3) == 0) playerAmount = 3;
+        if ((totalPlayers % 3) == 0) playerAmount = 3;
         else if ((totalPlayers % 2) == 0) playerAmount = 2;
         else if (totalPlayers % 3 == 1) playerAmount = 3;
         else playerAmount = 2;

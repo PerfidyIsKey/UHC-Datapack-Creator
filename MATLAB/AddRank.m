@@ -17,18 +17,18 @@ addpath('Data','Functions')
 Players             = struct;       % Preallocation
 Seasons             = struct;       % Preallocation
 PlayerConnectivity	= zeros(1,3);   % Preallocation
-load('DataS54.mat')                    % Load data
+load('DataS55.mat')                    % Load data
 
 %% Define season data
 %%% Season data
 NoS                     = size(Seasons,2) + 1;  % New season index
-Seasons(NoS).Season     = 'S55';    % Season name
-Seasons(NoS).Players    = 22;                    % Total number of players
-Seasons(NoS).Date       = datetime(2024,8,17); % Date of the season
+Seasons(NoS).Season     = 'S56';    % Season name
+Seasons(NoS).Players    = 15;                    % Total number of players
+Seasons(NoS).Date       = datetime(2024,9,28); % Date of the season
 Seasons(NoS).TeamAmount = 2;	% Needs to be equal to the amount of members in the winning team
 
 %%% New Players
-PlayersNew = [];     % Define the username of new players
+PlayersNew = ["ThunderZinogre"];     % Define the username of new players
 
 NoN     = length(PlayersNew);	% Number of new players
 NoP     = length(Players);      % Old total number of players
@@ -40,14 +40,28 @@ for i = 1:NoN
 end
 
 %%% Player data
-ParticipantIndex	= [NewIndex'];    % Define index of the participants
-Kills               = [];              % Indicate amount of kills per player
-Position            = [];              % Indicate final position
-Winner              = [];              % Indicate whether the player won the season
+ParticipantIndex	= [01,02,17,18,25,33,45,48,54,55,63,72,73,74,NewIndex'];    % Define index of the participants
+Kills               = [01;03;00;00;00;00;01;02;00;00;00;00;00;00;00];              % Indicate amount of kills per player
+Position            = [07;01;09;13;08;11;10;06;12;15;14;05;05;01;05];              % Indicate final position
+Winner              = [00;01;00;00;00;00;00;00;00;00;00;00;00;01;00];              % Indicate whether the player won the season
 NoPar               = size(ParticipantIndex,2);             % Indicate number of participants
 
 PC = [      % Indicate which players were in a team together
-    
+    1 17
+    1 18
+    2 45
+    2 48
+    17 18
+    25 33
+    25 63
+    33 63
+    45 48
+    54 55
+    54 72
+    55 72
+    73 74
+    73 76
+    74 76
     ];
 
 %% Update data
