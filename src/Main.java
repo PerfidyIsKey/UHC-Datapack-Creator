@@ -890,9 +890,8 @@ public class Main {
         fileCommands.add("scoreboard players set TimeVictory CPScore " + 20 * minToCPScore);
 
         // Reset player scales
-        for (Player p : players) {
-            fileCommands.add("attribute @p[name=" + p.getPlayerName() + "] minecraft:generic.scale base set 1");
-        }
+        fileCommands.add(execute.As(new Entity("@a")) +
+                        "attribute @s minecraft:generic.scale base set 1");
 
         fileCommands.add("gamemode creative @s");
 
@@ -1539,39 +1538,48 @@ public class Main {
     private FileData ControlPointPerks() {
         ArrayList<String> fileCommands = new ArrayList<>();
 
-        // Activation period
-        int actPeriod = 50;
-
         // Define perk activation times
         int minToCPScore = secPerMinute * tickPerSecond * controlPoints.get(0).getAddRate();
         ArrayList<Perk> perks = new ArrayList<>();
         perks.add(new Perk(1, "minecraft:" + Effect.speed + " 999999 0 false", "effect give", Sound.BASALT, 3 * minToCPScore));
-        perks.add(new Perk(2, "minecraft:" + Effect.resistance + " " + (10 * secPerMinute) + " 0 false", "effect give", Sound.CRIMSON, 6 * minToCPScore));
+        perks.add(new Perk(2, "run attribute @s minecraft:generic.scale base set 0.8", "execute as", Sound.CRIMSON, 6 * minToCPScore));
         perks.add(new Perk(3, "minecraft:" + Effect.haste + " 999999 2 false", "effect give", Sound.WARPED, 12 * minToCPScore));
         perks.add(new Perk(4, "minecraft:" + Effect.absorption + " 999999 1 false", "effect give", Sound.WITHER, 15 * minToCPScore));
+
+
+        Entity currentScoreCheck = new Entity("");
 
         for (int i = 0; i < controlPoints.size(); i++) {
             for (Team team : teams) {
                 // Display team receiving perk
                 for (Perk perk : perks) {
+                    // Change which score is being checked
+                    currentScoreCheck.setEntity("@p[scores={CP" + (i + 1) + team.getName() + "=" + perk.getActivationTime() + "..}]");
+
+                    // Create text to be displayed
                     ArrayList<TextItem> texts = new ArrayList<>();
                     texts.add(new Text(Color.light_purple, false, false, "TEAM "));
                     texts.add(new Text(team.getColor(), false, false, team.getJSONColor()));
                     texts.add(new Text(Color.light_purple, false, false, " HAS REACHED"));
                     texts.add(new Text(Color.gold, false, false, " PERK " + perk.getId() + "!"));
 
-                    fileCommands.add(execute.If(new Entity("@p[scores={CP" + (i + 1) + team.getName() + "=" + perk.getActivationTime() + ".." + (perk.getActivationTime() + actPeriod) + "}]"), false) +
-                            execute.IfNext(new Entity("@p[team=" + team.getName() + ",tag=!ReceivedPerk" + perk.getId() + "]"), true) +
+                    // Display text
+                    fileCommands.add(execute.If(currentScoreCheck, false) +
+                            execute.IfNext(new Entity("@p[team=" + team.getName() + ",tag=!" + Tag.ReceivedPerk + perk.getId() + "]"), true) +
                             new TellRaw("@a", texts).sendRaw());
 
-                    // give rewards
-                    fileCommands.add(execute.If(new Entity("@p[scores={CP" + (i + 1) + team.getName() + "=" + perk.getActivationTime() + ".." + (perk.getActivationTime() + actPeriod) + "}]")) +
-                            perk.getRewardType() + " @a[team=" + team.getName() + ",tag=!ReceivedPerk" + perk.getId() + "] " + perk.getReward());
-                    fileCommands.add(execute.If(new Entity("@p[scores={CP" + (i + 1) + team.getName() + "=" + perk.getActivationTime() + ".." + (perk.getActivationTime() + actPeriod) + "}]"), false) +
-                            execute.IfNext(new Entity("@p[team=" + team.getName() + ",tag=!ReceivedPerk" + perk.getId() + "]"), true) +
+                    // Give rewards
+                    fileCommands.add(execute.If(currentScoreCheck) +
+                            perk.getRewardType() + " @a[team=" + team.getName() + ",tag=!" + Tag.ReceivedPerk + perk.getId() + "] " + perk.getReward());
+
+                    // Play sound
+                    fileCommands.add(execute.If(currentScoreCheck, false) +
+                            execute.IfNext(new Entity("@p[team=" + team.getName() + ",tag=!" + Tag.ReceivedPerk + perk.getId() + "]"), true) +
                             playSound(perk.getSound(), SoundSource.master, "@a", "~", "~50", "~", "100", "1", "0"));
-                    fileCommands.add(execute.If(new Entity("@p[scores={CP" + (i + 1) + team.getName() + "=" + perk.getActivationTime() + ".." + (perk.getActivationTime() + actPeriod) + "}]")) +
-                            "tag @a[team=" + team.getName() + "] add ReceivedPerk" + perk.getId());
+
+                    // Add tag
+                    fileCommands.add(execute.If(currentScoreCheck) +
+                            "tag @a[team=" + team.getName() + "] add " + Tag.ReceivedPerk + perk.getId());
                 }
             }
         }

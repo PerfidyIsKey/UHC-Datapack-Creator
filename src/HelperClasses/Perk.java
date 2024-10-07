@@ -38,4 +38,6 @@ public class Perk {
     public int getId() {
         return id;
     }
+
+    public void setRewardType(String rewardType) { this.rewardType = rewardType; }
 }

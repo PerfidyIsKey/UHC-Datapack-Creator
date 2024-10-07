@@ -5,5 +5,6 @@ public enum Tag {
     Traitor,
     DontMakeTraitor,
     AttackingCP,
-    RespawnDisabled
+    RespawnDisabled,
+    ReceivedPerk
 }
