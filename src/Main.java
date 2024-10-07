@@ -1479,6 +1479,11 @@ public class Main {
                     new TellRaw("@p[nbt={SelectedItem:{id:\"minecraft:bow\",count:1,components:{\"minecraft:enchantments\":{levels:{\"minecraft:power\":" + (ii + 1) + "}}}}}]", new Text(Color.red, true, false, "POWER IS NOT ALLOWED, YOU NAUGHTY BUM!")).sendRaw());
             fileCommands.add("item replace entity @p[nbt={SelectedItem:{id:\"minecraft:bow\",count:1,components:{\"minecraft:enchantments\":{levels:{\"minecraft:power\":" + (ii + 1) + "}}}}}] weapon.mainhand with minecraft:bow");
         }
+        // Remove wolf armor
+        fileCommands.add(execute.If(new Entity("@p[nbt={SelectedItem:{id:\"minecraft:wolf_armor\",count:1}}]")) +
+                new TellRaw("@p[nbt={SelectedItem:{id:\"minecraft:wolf_armor\",count:1}}]", new Text(Color.red, true, false, "WOLF ARMOR IS NOT ALLOWED, YOU NAUGHTY BUM!")).sendRaw());
+        fileCommands.add("item replace entity @p[nbt={SelectedItem:{id:\"minecraft:wolf_armor\",count:1}}] weapon.mainhand with minecraft:leather_horse_armor");
+
         // Update public team CP scores
         fileCommands.add(callFunction(FileName.update_public_cp_score));
 
