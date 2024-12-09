@@ -2,7 +2,7 @@
 2,Mr9Madness,104,56,true
 5,W0omy,0,0,false
 17,Kalazniq,64,53,true
-18,Vladik71,35,0,true
+18,Vladik71,35,0,false
 24,ThurianBodan,11,0,false
 25,PerfidyIsKey,74,51,true
 27,jonmo0105,25,0,false
@@ -32,8 +32,8 @@
 52,NekoBotUwU,59,54,false
 53,TheTolstar,17,0,false
 54,Vogelfan,120,0,true
-55,mrminebase,0,0,true
-56,JOPONOS,88,55,false
+55,mrminebase,0,0,false
+56,JOPONOS,88,55,true
 57,neokneipies,0,0,false
 58,marckstef,12,0,false
 59,Dan_Fingerman,6,0,false
@@ -47,10 +47,11 @@
 67,amiazukiN,1,0,false
 68,Mosu_2000,2,0,false
 69,DAABlocksholmes,12,0,false
-70,ANDRIQS,151,54,false
+70,ANDRIQss,151,54,true
 71,Joker447xd9,43,0,false
-72,Cthuleric,49,0,true
-73,smilerification,20,0,true
-74,Sachi_Senpai,52,56,true
+72,Cthuleric,49,0,false
+73,smilerification,20,0,false
+74,Sachi_Senpai,52,56,false
 75,Arrownymes,89,55,false
-76,ThunderZinogre,20,0,true
+76,ThunderZinogre,20,0,false
+77,JackTheShitter,20,0,true
