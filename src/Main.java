@@ -801,7 +801,7 @@ public class Main {
     private static FileData GodMode() {
         ArrayList<String> fileCommands = new ArrayList<>();
         fileCommands.add("effect give @s minecraft:" + Effect.resistance + " 99999 4 true");
-        fileCommands.add("item replace entity @s weapon.mainhand with trident[custom_name='[{\"bold\":false,\"color\":\"white\",\"italic\":false,\"obfuscated\":true,\"text\":\"aA\"},{\"bold\":true,\"color\":\"#8C3CC1\",\"obfuscated\":false,\"text\":\" The\"},{\"bold\":true,\"color\":\"#E280FF\",\"obfuscated\":false,\"text\":\" Impaler \"},{\"color\":\"white\",\"obfuscated\":true,\"text\":\"Aa\"}]',lore=['{\"text\":\"This holy weapon impales anything it touches\"}'],unbreakable={show_in_tooltip:false},damage=0,enchantments={levels:{\"minecraft:fire_aspect\":255,\"minecraft:sharpness\":255,\"minecraft:efficiency\":255,'impaling':255},show_in_tooltip:false},attribute_modifiers={modifiers:[{id:\"armor\",type:\"generic.attack_damage\",amount:1000,operation:\"add_value\",slot:\"mainhand\"}],show_in_tooltip:false}]");
+        fileCommands.add("item replace entity @s weapon.mainhand with trident[custom_name='[{\"bold\":false,\"color\":\"white\",\"italic\":false,\"obfuscated\":true,\"text\":\"aA\"},{\"bold\":true,\"color\":\"#8C3CC1\",\"obfuscated\":false,\"text\":\" The\"},{\"bold\":true,\"color\":\"#E280FF\",\"obfuscated\":false,\"text\":\" Impaler \"},{\"color\":\"white\",\"obfuscated\":true,\"text\":\"Aa\"}]',lore=['{\"text\":\"This holy weapon impales anything it touches\"}'],unbreakable={show_in_tooltip:false},damage=0,enchantments={levels:{\"minecraft:fire_aspect\":255,\"minecraft:sharpness\":255,\"minecraft:efficiency\":255,'impaling':255},show_in_tooltip:false},attribute_modifiers={modifiers:[{id:\"armor\",type:\"attack_damage\",amount:1000,operation:\"add_value\",slot:\"mainhand\"}],show_in_tooltip:false}]");
 
         return new FileData(FileName.god_mode, fileCommands);
     }
@@ -891,7 +891,7 @@ public class Main {
 
         // Reset player scales
         fileCommands.add(execute.As(new Entity("@a")) +
-                        "attribute @s minecraft:generic.scale base set 1");
+                        "attribute @s minecraft:scale base set 1");
 
         fileCommands.add("gamemode creative @s");
 
@@ -1542,7 +1542,7 @@ public class Main {
         int minToCPScore = secPerMinute * tickPerSecond * controlPoints.get(0).getAddRate();
         ArrayList<Perk> perks = new ArrayList<>();
         perks.add(new Perk(1, "minecraft:" + Effect.speed + " 999999 0 false", "effect give", Sound.BASALT, 3 * minToCPScore));
-        perks.add(new Perk(2, "run attribute @s minecraft:generic.scale base set 0.8", "execute as", Sound.CRIMSON, 6 * minToCPScore));
+        perks.add(new Perk(2, "run attribute @s minecraft:scale base set 0.8", "execute as", Sound.CRIMSON, 6 * minToCPScore));
         perks.add(new Perk(3, "minecraft:" + Effect.haste + " 999999 2 false", "effect give", Sound.WARPED, 12 * minToCPScore));
         perks.add(new Perk(4, "minecraft:" + Effect.absorption + " 999999 1 false", "effect give", Sound.WITHER, 15 * minToCPScore));
 
@@ -1666,11 +1666,11 @@ public class Main {
             int indexRear = 2 * (i + 1);
 
             fileCommands.add(execute.If(new Entity("@p[scores={MinHealth=" + indexFront + ".." + indexRear + "}]")) +
-                    "attribute @p[tag=Respawn] generic.max_health base set " + (i + 1));
+                    "attribute @p[tag=Respawn] max_health base set " + (i + 1));
         }
         fileCommands.add("effect give @p[tag=Respawn] minecraft:" + Effect.health_boost + " 1 0");
         fileCommands.add("effect clear @p[tag=Respawn] minecraft:" + Effect.health_boost);
-        fileCommands.add("attribute @p[tag=Respawn] generic.max_health base set 20");
+        fileCommands.add("attribute @p[tag=Respawn] max_health base set 20");
 
         // Remove respawn tag
         fileCommands.add("tag @p[tag=Respawn] remove Respawn");
