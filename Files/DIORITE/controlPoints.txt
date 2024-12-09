@@ -1,7 +1,8 @@
-176,72,230,plains
-355,90,10,forest
--157,63,-346,plains
-351,78,-117,forest
-114,70,455,bamboo_jungle
-259,110,-236,savanna
--137,74,207,savanna
+230,64,-351,beach
+288,74,68,cave
+-270,90,-209,plains
+-363,68,15,plains
+-250,69,447,beach
+221,64,-164,river
+409,64,-2,dark_forest
+15,64,-451,forest
