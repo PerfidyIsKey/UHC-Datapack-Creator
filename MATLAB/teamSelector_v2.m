@@ -116,7 +116,8 @@ finalTeams = zeros(1, participantAmount);
 % Add pre-assigned teams to final team composition
 count = 1;  % Initialize counter
 for i = 1:preAssignedNumber
-    for ii = 1:3
+    preTeamSize = size(preAssignedTeams, 2);  % Size of current pre-assigned team
+    for ii = 1:preTeamSize
         if isnan(preAssignedTeams(i, ii))
             % Break loop if player is found
             break
