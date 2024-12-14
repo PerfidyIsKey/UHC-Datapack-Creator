@@ -51,10 +51,9 @@
 71,Joker447xd9,43,0,true
 72,Cthuleric,49,0,false
 73,smilerification,20,0,false
-74,Sachi_Senpai,52,56,false
+74,Sachi_Senpai,52,56,true
 75,Arrownymes,89,55,false
 76,ThunderZinogre,20,0,false
 77,sanswithagun,40,0,true
 78,iron_crate,40,0,true
 79,ItsCeptus,20,0,true
-80,idiot_lawnmower,20,0,true

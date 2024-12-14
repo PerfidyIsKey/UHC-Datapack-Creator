@@ -17,7 +17,7 @@ load("DataS56.mat")
 [participantIndex, name, rank] = importPlayers(filePlayers);
 
 % Algorithm settings
-teamPlayer          = 3;                    % Number of players per team
+teamPlayer          = 2;                    % Number of players per team
 rankLowerBound      = 5;                    % Maximum negative deviation of score median
 rankUpperBound      = 5;                    % Maximum positive deviation of score mean
 rankLowerTolerance	= rankLowerBound + 5;   % Maximum allowed negative deviation
