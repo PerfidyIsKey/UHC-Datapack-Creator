@@ -77,7 +77,6 @@ public class ControlPoint {
             case badlands:
             case eroded_badlands:
             case wooded_badlands:
-            case beach:
                 result = "desert";
                 break;
 

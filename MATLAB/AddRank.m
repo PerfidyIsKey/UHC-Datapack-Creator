@@ -17,18 +17,18 @@ addpath('Data','Functions')
 Players             = struct;       % Preallocation
 Seasons             = struct;       % Preallocation
 PlayerConnectivity	= zeros(1,3);   % Preallocation
-load('DataS55.mat')                    % Load data
+load('DataS56.mat')                    % Load data
 
 %% Define season data
 %%% Season data
 NoS                     = size(Seasons,2) + 1;  % New season index
-Seasons(NoS).Season     = 'S56';    % Season name
-Seasons(NoS).Players    = 15;                    % Total number of players
-Seasons(NoS).Date       = datetime(2024,9,28); % Date of the season
+Seasons(NoS).Season     = 'S57';    % Season name
+Seasons(NoS).Players    = 17;                    % Total number of players
+Seasons(NoS).Date       = datetime(2024,12,14); % Date of the season
 Seasons(NoS).TeamAmount = 2;	% Needs to be equal to the amount of members in the winning team
 
 %%% New Players
-PlayersNew = ["ThunderZinogre"];     % Define the username of new players
+PlayersNew = ["JacobWouter","iron_crate","sanswithagun"];     % Define the username of new players
 
 NoN     = length(PlayersNew);	% Number of new players
 NoP     = length(Players);      % Old total number of players
@@ -40,28 +40,29 @@ for i = 1:NoN
 end
 
 %%% Player data
-ParticipantIndex	= [01,02,17,18,25,33,45,48,54,55,63,72,73,74,NewIndex'];    % Define index of the participants
-Kills               = [01;03;00;00;00;00;01;02;00;00;00;00;00;00;00];              % Indicate amount of kills per player
-Position            = [07;01;09;13;08;11;10;06;12;15;14;05;05;01;05];              % Indicate final position
-Winner              = [00;01;00;00;00;00;00;00;00;00;00;00;00;01;00];              % Indicate whether the player won the season
+ParticipantIndex	= [01,02,17,25,27,45,48,54,55,56,63,70,71,74,NewIndex'];    % Define index of the participants
+Kills               = [00;00;01;02;00;00;00;01;00;02;00;08;00;01;00;00;01];              % Indicate amount of kills per player
+Position            = [03;08;11;04;12;06;09;02;13;14;07;01;15;05;17;16;10];              % Indicate final position
+Winner              = [00;00;00;00;00;00;00;00;00;00;00;01;01;00;00;00;00];              % Indicate whether the player won the season
 NoPar               = size(ParticipantIndex,2);             % Indicate number of participants
 
 PC = [      % Indicate which players were in a team together
-    1 17
-    1 18
+    1 48
+    1 77
     2 45
-    2 48
-    17 18
-    25 33
+    2 74
+    17 78
+    17 79
+    25 54
     25 63
-    33 63
-    45 48
-    54 55
-    54 72
-    55 72
-    73 74
-    73 76
-    74 76
+    27 55
+    27 56
+    45 74
+    48 77
+    54 63
+    55 56
+    70 71
+    78 79
     ];
 
 %% Update data
