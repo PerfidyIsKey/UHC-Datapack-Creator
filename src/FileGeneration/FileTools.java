@@ -48,7 +48,7 @@ public class FileTools {
         keys2.add("gold_ingot");
         keys2.add("player_head");
         FileGeneration.Recipe recipe2 = new FileGeneration.Recipe("crafting_shaped", grid2, keys2, "golden_apple", 1);
-        recipes.add(recipe2);
+        //recipes.add(recipe2);
 
         for (Recipe r : recipes) {
             ArrayList<String> fileCommands = new ArrayList<>();

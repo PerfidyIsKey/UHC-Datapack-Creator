@@ -968,7 +968,7 @@ public class Main {
         fileCommands.add(setGameRule(GameRule.doImmediateRespawn, true));
         fileCommands.add(callFunction(FileName.clear_enderchest));
 
-        fileCommands.add("recipe give @a uhc:golden_apple");
+        // fileCommands.add("recipe give @a uhc:golden_apple");
         fileCommands.add("recipe take @a uhc:dragon_head");
 
         return new FileData(FileName.survival_mode, fileCommands);
