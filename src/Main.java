@@ -368,18 +368,16 @@ public class Main {
         lootEntry.add(new LootTableEntry(3, "spectral_arrow", new LootTableFunction(10)));
         lootEntry.add(new LootTableEntry(3, "horse_spawn_egg"));
         lootEntry.add(new LootTableEntry(3, "glowstone_dust", new LootTableFunction(6)));
-        lootEntry.add(new LootTableEntry(1, "diamond_horse_armor"));
+        lootEntry.add(new LootTableEntry(3, "ender_pearl", new LootTableFunction(2, 0.5)));
         lootEntry.add(new LootTableEntry(2, "nether_wart", new LootTableFunction(5)));
         lootEntry.add(new LootTableEntry(2, "blaze_rod", new LootTableFunction(2, 0.1)));
         lootEntry.add(new LootTableEntry(2, "golden_apple"));
         lootEntry.add(new LootTableEntry(2, "anvil"));
         lootEntry.add(new LootTableEntry(2, "spyglass"));
         lootEntry.add(new LootTableEntry(2, "wolf_spawn_egg", new LootTableFunction(2, 0.01)));
-        lootEntry.add(new LootTableEntry(1, "ender_pearl", new LootTableFunction(2, 0.5)));
+        lootEntry.add(new LootTableEntry(1, "diamond_horse_armor"));
         lootEntry.add(new LootTableEntry(1, "netherite_hoe"));
         lootEntry.add(new LootTableEntry(1, "trident"));
-        lootEntry.add(new LootTableEntry(1, "diamond_chestplate"));
-        lootEntry.add(new LootTableEntry(1, "diamond_leggings"));
         lootEntry.add(new LootTableEntry(1, "netherite_upgrade_smithing_template"));
         lootEntry.add(new LootTableEntry(1, "netherite_scrap", new LootTableFunction(4, 0.001)));
 
