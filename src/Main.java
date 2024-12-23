@@ -978,6 +978,7 @@ public class Main {
         fileCommands.add("xp set @a 0 levels");
         fileCommands.add("effect give @a minecraft:" + Effect.regeneration + " 1 255");
         fileCommands.add("effect give @a minecraft:" + Effect.saturation + " 1 255");
+        fileCommands.add("effect give @a minecraft:" + Effect.resistance + " " + (20*60) + " 2");
         fileCommands.add("clear @a");
         fileCommands.add(new Title("@a", TitleType.title, new Text(Color.gold, true, true, "Game Starting Now!")).displayTitle());
         fileCommands.add("gamemode survival @a");
