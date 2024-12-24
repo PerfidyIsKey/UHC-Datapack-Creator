@@ -1,6 +1,6 @@
 package Enums;
 
-public enum Attribute {
+public enum AttributeType {
     armor,
     attack_damage,
     max_health,

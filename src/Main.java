@@ -555,7 +555,7 @@ public class Main {
         return "playsound " + sound.getValue() + " " + source + " " + entity + " " + x + " " + y + " " + z + " " + x1 + " " + y1 + " " + z1;
     }
 
-    private String setAttributeBase(String entity, Attribute attribute, double value) {
+    private String setAttributeBase(String entity, AttributeType attribute, double value) {
         return "attribute " + entity + " minecraft:" + attribute + " base set " + value;
     }
 
@@ -820,7 +820,7 @@ public class Main {
     private FileData GodMode() {
         ArrayList<String> fileCommands = new ArrayList<>();
         fileCommands.add(giveEffect("@s", Effect.resistance, 99999, 4, true));
-        fileCommands.add("item replace entity @s weapon.mainhand with trident[custom_name='[{\"bold\":false,\"color\":\"white\",\"italic\":false,\"obfuscated\":true,\"text\":\"aA\"},{\"bold\":true,\"color\":\"#8C3CC1\",\"obfuscated\":false,\"text\":\" The\"},{\"bold\":true,\"color\":\"#E280FF\",\"obfuscated\":false,\"text\":\" Impaler \"},{\"color\":\"white\",\"obfuscated\":true,\"text\":\"Aa\"}]',lore=['{\"text\":\"This holy weapon impales anything it touches\"}'],unbreakable={show_in_tooltip:false},damage=0,enchantments={levels:{\"minecraft:fire_aspect\":255,\"minecraft:sharpness\":255,\"minecraft:efficiency\":255,'impaling':255},show_in_tooltip:false},attribute_modifiers={modifiers:[{id:\"" + Attribute.armor + "\",type:\"" + Attribute.attack_damage + "\",amount:1000,operation:\"add_value\",slot:\"mainhand\"}],show_in_tooltip:false}]");
+        fileCommands.add("item replace entity @s weapon.mainhand with trident[custom_name='[{\"bold\":false,\"color\":\"white\",\"italic\":false,\"obfuscated\":true,\"text\":\"aA\"},{\"bold\":true,\"color\":\"#8C3CC1\",\"obfuscated\":false,\"text\":\" The\"},{\"bold\":true,\"color\":\"#E280FF\",\"obfuscated\":false,\"text\":\" Impaler \"},{\"color\":\"white\",\"obfuscated\":true,\"text\":\"Aa\"}]',lore=['{\"text\":\"This holy weapon impales anything it touches\"}'],unbreakable={show_in_tooltip:false},damage=0,enchantments={levels:{\"minecraft:fire_aspect\":255,\"minecraft:sharpness\":255,\"minecraft:efficiency\":255,'impaling':255},show_in_tooltip:false},attribute_modifiers={modifiers:[{id:\"" + AttributeType.armor + "\",type:\"" + AttributeType.attack_damage + "\",amount:1000,operation:\"add_value\",slot:\"mainhand\"}],show_in_tooltip:false}]");
 
         return new FileData(FileName.god_mode, fileCommands);
     }
@@ -910,7 +910,7 @@ public class Main {
 
         // Reset player scales
         fileCommands.add(execute.As(new Entity("@a")) +
-                        setAttributeBase("@s", Attribute.scale, 1));
+                        setAttributeBase("@s", AttributeType.scale, 1));
 
         fileCommands.add("gamemode creative @s");
 
@@ -1554,7 +1554,7 @@ public class Main {
         // Set tamed wolf base health
         fileCommands.add(execute.As(new Entity("@e[type=wolf]"), false) +
                 execute.IfNext(DataClasses.entity, "@s Owner", true) +
-                setAttributeBase("@s", Attribute.max_health, 20));
+                setAttributeBase("@s", AttributeType.max_health, 20));
 
         return new FileData(FileName.timer, fileCommands);
     }
@@ -1566,19 +1566,21 @@ public class Main {
         // Define perk activation times
         int minToCPScore = secPerMinute * tickPerSecond * controlPoints.get(0).getAddRate();
         ArrayList<Perk> perks = new ArrayList<>();
-        perks.add(new Perk(1, "minecraft:" + Effect.speed + " 999999 0 false", "effect give", Sound.BASALT, 3 * minToCPScore));
-        perks.add(new Perk(2, "run " + setAttributeBase("@s", Attribute.scale, 0.8), "execute as", Sound.CRIMSON, 6 * minToCPScore));
-        perks.add(new Perk(3, "minecraft:" + Effect.haste + " 999999 2 false", "effect give", Sound.WARPED, 12 * minToCPScore));
-        perks.add(new Perk(4, "minecraft:" + Effect.absorption + " 999999 1 false", "effect give", Sound.WITHER, 15 * minToCPScore));
+        perks.add(new Perk(1, new StatusEffect(Effect.speed, 999999, 0, false), Sound.BASALT, 3 * minToCPScore));
+        perks.add(new Perk(2, new Attribute(AttributeType.scale, 0.8), Sound.CRIMSON, 6 * minToCPScore));
+        perks.add(new Perk(3, new StatusEffect(Effect.haste, 999999, 2, false), Sound.WARPED, 12 * minToCPScore));
+        perks.add(new Perk(4, new StatusEffect(Effect.absorption, 999999, 1, false), Sound.WITHER, 15 * minToCPScore));
 
 
+        Entity currentPlayer = new Entity("");
         Entity currentScoreCheck = new Entity("");
 
         for (int i = 0; i < controlPoints.size(); i++) {
             for (Team team : teams) {
                 // Display team receiving perk
                 for (Perk perk : perks) {
-                    // Change which score is being checked
+                    // Set variables
+                    currentPlayer.setEntity("@p[team=" + team.getName() + ",tag=!" + Tag.ReceivedPerk + perk.getId() + "]");
                     currentScoreCheck.setEntity("@p[scores={CP" + (i + 1) + team.getName() + "=" + perk.getActivationTime() + "..}]");
 
                     // Create text to be displayed
@@ -1590,16 +1592,17 @@ public class Main {
 
                     // Display text
                     fileCommands.add(execute.If(currentScoreCheck, false) +
-                            execute.IfNext(new Entity("@p[team=" + team.getName() + ",tag=!" + Tag.ReceivedPerk + perk.getId() + "]"), true) +
+                            execute.IfNext(currentPlayer, true) +
                             new TellRaw("@a", texts).sendRaw());
 
                     // Give rewards
+                    String perkReceivers = "@a[team=" + team.getName() + ",tag=!" + Tag.ReceivedPerk + perk.getId() + "]";
                     fileCommands.add(execute.If(currentScoreCheck) +
-                            perk.getRewardType() + " @a[team=" + team.getName() + ",tag=!" + Tag.ReceivedPerk + perk.getId() + "] " + perk.getReward());
+                            perk.getReward(perkReceivers));
 
                     // Play sound
                     fileCommands.add(execute.If(currentScoreCheck, false) +
-                            execute.IfNext(new Entity("@p[team=" + team.getName() + ",tag=!" + Tag.ReceivedPerk + perk.getId() + "]"), true) +
+                            execute.IfNext(currentPlayer, true) +
                             playSound(perk.getSound(), SoundSource.master, "@a", "~", "~50", "~", "100", "1", "0"));
 
                     // Add tag
@@ -1691,11 +1694,11 @@ public class Main {
             int indexRear = 2 * (i + 1);
 
             fileCommands.add(execute.If(new Entity("@p[scores={MinHealth=" + indexFront + ".." + indexRear + "}]")) +
-                    setAttributeBase(respawnPlayer, Attribute.max_health, i + 1));
+                    setAttributeBase(respawnPlayer, AttributeType.max_health, i + 1));
         }
         fileCommands.add(giveEffect(respawnPlayer, Effect.health_boost, 1, 0));
         fileCommands.add(clearEffect(respawnPlayer, Effect.health_boost));
-        fileCommands.add(setAttributeBase(respawnPlayer, Attribute.max_health, 20));
+        fileCommands.add(setAttributeBase(respawnPlayer, AttributeType.max_health, 20));
 
         // Remove respawn tag
         fileCommands.add("tag @p[tag=Respawn] remove Respawn");
