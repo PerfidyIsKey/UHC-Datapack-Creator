@@ -1454,11 +1454,11 @@ public class Main {
         for (ScoreboardObjective s : scoreboardObjectives) {
             if (s.getDisplaySideBar()) {
                 i++;
-                fileCommands.add(execute.If(new Entity("@p[scores={SideDum=" + (5 * tickPerSecond * i) + "}]")) +
+                fileCommands.add(execute.If(new Entity("@p[scores={SideDum=" + (10 * tickPerSecond * i) + "}]")) +
                         s.setDisplay("sidebar"));
             }
         }
-        fileCommands.add(execute.If(new Entity("@p[scores={SideDum=" + (5 * tickPerSecond * i + 1) + "}]")) +
+        fileCommands.add(execute.If(new Entity("@p[scores={SideDum=" + (10 * tickPerSecond * i + 1) + "}]")) +
                 "scoreboard players reset @p[scores={Admin=1}] SideDum");
 
         // Update stripmine count
