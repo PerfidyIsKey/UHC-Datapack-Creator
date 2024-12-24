@@ -1530,6 +1530,11 @@ public class Main {
         // Update minimum health
         fileCommands.add(callFunction(FileName.update_min_health));
 
+        // Set tamed wolf base health
+        fileCommands.add(execute.As(new Entity("@e[type=wolf]"), false) +
+                execute.IfNext(DataClasses.entity, "@s Owner", true) +
+                "attribute @s minecraft:max_health base set 20");
+
         return new FileData(FileName.timer, fileCommands);
     }
 

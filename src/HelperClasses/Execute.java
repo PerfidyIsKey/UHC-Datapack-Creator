@@ -90,6 +90,15 @@ public class Execute {
     /*
         execute if
      */
+    // if data
+    public String If(DataClasses data, String command) { return If(data, command, true); }
+
+    public String If(DataClasses data, String command, Boolean run) { return Standard(IfNext(data, command), run); }
+
+    public String IfNext(DataClasses data, String command) { return IfNext(data, command, false); }
+
+    public String IfNext(DataClasses data, String command, Boolean run) { return Next("if data " + data + " " + command + " ", run); }
+
     // if entity
     public String If(Entity entity) {
         return If(entity, true);
