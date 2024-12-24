@@ -559,6 +559,22 @@ public class Main {
         return "attribute " + entity + " minecraft:" + attribute + " base set " + value;
     }
 
+    private String giveEffect(String entity, Effect effect, int duration, int amplifier) {
+        return giveEffect(entity, effect, duration, amplifier, false);
+    }
+
+    private String giveEffect(String entity, Effect effect, int duration, int amplifier, Boolean hideParticles) {
+        return "effect give " + entity + " minecraft:" + effect + " " + duration + " " + amplifier + " " + hideParticles;
+    }
+
+    private String clearEffect(String entity, Effect effect) {
+        return "effect clear " + entity + " minecraft:" + effect;
+    }
+
+    private String clearEffect(String entity) {
+        return "effect clear " + entity;
+    }
+
     private void makeFunctionFiles() {
         files.add(Initialize());
         files.add(DropPlayerHeads());
@@ -787,7 +803,7 @@ public class Main {
         return new FileData(FileName.clear_enderchest, fileCommands);
     }
 
-    private static FileData EquipGear() {
+    private FileData EquipGear() {
         ArrayList<String> fileCommands = new ArrayList<>();
         fileCommands.add("item replace entity @a armor.chest with minecraft:iron_chestplate");
         fileCommands.add("item replace entity @a armor.feet with minecraft:iron_boots");
@@ -796,14 +812,14 @@ public class Main {
         fileCommands.add("item replace entity @a weapon.offhand with minecraft:shield");
         fileCommands.add("item replace entity @a weapon.mainhand with minecraft:iron_axe");
         fileCommands.add("item replace entity @a inventory.0 with minecraft:iron_sword");
-        fileCommands.add("effect give @a minecraft:" + Effect.regeneration + " 1 255 true");
+        fileCommands.add(giveEffect("@a", Effect.regeneration, 1, 255, true));
 
         return new FileData(FileName.equip_gear, fileCommands);
     }
 
-    private static FileData GodMode() {
+    private FileData GodMode() {
         ArrayList<String> fileCommands = new ArrayList<>();
-        fileCommands.add("effect give @s minecraft:" + Effect.resistance + " 99999 4 true");
+        fileCommands.add(giveEffect("@s", Effect.resistance, 99999, 4, true));
         fileCommands.add("item replace entity @s weapon.mainhand with trident[custom_name='[{\"bold\":false,\"color\":\"white\",\"italic\":false,\"obfuscated\":true,\"text\":\"aA\"},{\"bold\":true,\"color\":\"#8C3CC1\",\"obfuscated\":false,\"text\":\" The\"},{\"bold\":true,\"color\":\"#E280FF\",\"obfuscated\":false,\"text\":\" Impaler \"},{\"color\":\"white\",\"obfuscated\":true,\"text\":\"Aa\"}]',lore=['{\"text\":\"This holy weapon impales anything it touches\"}'],unbreakable={show_in_tooltip:false},damage=0,enchantments={levels:{\"minecraft:fire_aspect\":255,\"minecraft:sharpness\":255,\"minecraft:efficiency\":255,'impaling':255},show_in_tooltip:false},attribute_modifiers={modifiers:[{id:\"" + Attribute.armor + "\",type:\"" + Attribute.attack_damage + "\",amount:1000,operation:\"add_value\",slot:\"mainhand\"}],show_in_tooltip:false}]");
 
         return new FileData(FileName.god_mode, fileCommands);
@@ -915,7 +931,7 @@ public class Main {
 
     private FileData Predictions() {
         ArrayList<String> fileCommands = new ArrayList<>();
-        fileCommands.add("effect clear @a");
+        fileCommands.add(clearEffect("@a"));
         fileCommands.add(execute.In(Dimension.overworld) +
                 "tp @a 0 -100 0");
 
@@ -943,7 +959,7 @@ public class Main {
         fileCommands.add("scoreboard players reset @a Kills");
 
         // Make players invulnerable
-        fileCommands.add("effect give @a minecraft:" + Effect.resistance + " 99999 4 true");
+        fileCommands.add(giveEffect("@a", Effect.resistance, 99999, 4, true));
 
         return new FileData(FileName.into_calls, fileCommands);
     }
@@ -974,6 +990,9 @@ public class Main {
         // fileCommands.add("recipe give @a uhc:golden_apple");
         fileCommands.add("recipe take @a uhc:dragon_head");
 
+        // Remove resistance
+        fileCommands.add(clearEffect("@a", Effect.resistance));
+
         return new FileData(FileName.survival_mode, fileCommands);
     }
 
@@ -981,9 +1000,9 @@ public class Main {
         ArrayList<String> fileCommands = new ArrayList<>();
         fileCommands.add("time set 0");
         fileCommands.add("xp set @a 0 levels");
-        fileCommands.add("effect give @a minecraft:" + Effect.regeneration + " 1 255");
-        fileCommands.add("effect give @a minecraft:" + Effect.saturation + " 1 255");
-        fileCommands.add("effect give @a minecraft:" + Effect.resistance + " " + (20*60) + " 2");
+        fileCommands.add(giveEffect("@a", Effect.regeneration, 1, 255));
+        fileCommands.add(giveEffect("@a", Effect.saturation, 1, 255));
+        fileCommands.add(giveEffect("@a", Effect.resistance, 20*60, 2));
         fileCommands.add("clear @a");
         fileCommands.add(new Title("@a", TitleType.title, new Text(Color.gold, true, true, "Game Starting Now!")).displayTitle());
         fileCommands.add("gamemode survival @a");
@@ -1007,9 +1026,6 @@ public class Main {
                 fileCommands.add("scoreboard players set @a MSGDum" + ii + "CP" + i + " 1");
             }
         }
-
-        // Remove resistance
-        fileCommands.add("effect clear @a minecraft:" + Effect.resistance);
 
         return new FileData(FileName.start_game, fileCommands);
     }
@@ -1677,8 +1693,8 @@ public class Main {
             fileCommands.add(execute.If(new Entity("@p[scores={MinHealth=" + indexFront + ".." + indexRear + "}]")) +
                     setAttributeBase(respawnPlayer, Attribute.max_health, i + 1));
         }
-        fileCommands.add("effect give @p[tag=Respawn] minecraft:" + Effect.health_boost + " 1 0");
-        fileCommands.add("effect clear @p[tag=Respawn] minecraft:" + Effect.health_boost);
+        fileCommands.add(giveEffect(respawnPlayer, Effect.health_boost, 1, 0));
+        fileCommands.add(clearEffect(respawnPlayer, Effect.health_boost));
         fileCommands.add(setAttributeBase(respawnPlayer, Attribute.max_health, 20));
 
         // Remove respawn tag
