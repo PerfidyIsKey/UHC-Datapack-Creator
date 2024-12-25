@@ -1,4 +1,4 @@
-import Enums.GameMode;
+import Enums.CommunityMode;
 import FileGeneration.FileTools;
 import HelperClasses.Player;
 import HelperClasses.PlayerConnection;
@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 
 public class QuickTest {
 
-    private final GameMode gameMode = GameMode.DIORITE;
+    private final CommunityMode communityMode = CommunityMode.DIORITE;
     ArrayList<Player> players = new ArrayList<>();
     ArrayList<PlayerConnection> playerConnections = new ArrayList<>();
 
@@ -162,7 +162,7 @@ public class QuickTest {
 
     private ArrayList<PlayerConnection> determinePlayerConnections() {
         ArrayList<PlayerConnection> playerConnections = new ArrayList<>();
-        ArrayList<String> playerConnectionsString = fileTools.GetLinesFromFile("Files\\" + gameMode + "\\playerConnections.txt");
+        ArrayList<String> playerConnectionsString = fileTools.GetLinesFromFile("Files\\" + communityMode + "\\playerConnections.txt");
         for (String string : playerConnectionsString) {
             String seasons = string.split("\\[")[1];
             seasons = seasons.substring(0, seasons.length() - 1);
@@ -195,7 +195,7 @@ public class QuickTest {
     }
 
     private void importSeasons() {
-        ArrayList<String> seasonsString = fileTools.GetLinesFromFile("Files\\" + gameMode + "\\seasonData.txt");
+        ArrayList<String> seasonsString = fileTools.GetLinesFromFile("Files\\" + communityMode + "\\seasonData.txt");
         for (String season : seasonsString) {
             String[] seasonSplit = fileTools.splitLineOnComma(season);
             seasons.add(new Season(Double.parseDouble(seasonSplit[0]), Integer.parseInt(seasonSplit[1]), new Date(Integer.parseInt(seasonSplit[2]), Integer.parseInt(seasonSplit[3]), Integer.parseInt(seasonSplit[4]))));
@@ -206,7 +206,7 @@ public class QuickTest {
     }
 
     private void importPlayerData() {
-        ArrayList<String> string = fileTools.GetLinesFromFile("Files\\" + gameMode + "\\playerData.txt");
+        ArrayList<String> string = fileTools.GetLinesFromFile("Files\\" + communityMode + "\\playerData.txt");
         for (String s : string) {
             String[] split = fileTools.splitLineOnComma(s);
             String[] split2 = s.split("\\[");
@@ -251,7 +251,7 @@ public class QuickTest {
     }
 
     private void importPlayers() {
-        ArrayList<String> playersString = fileTools.GetLinesFromFile("Files\\" + gameMode + "\\players.txt");
+        ArrayList<String> playersString = fileTools.GetLinesFromFile("Files\\" + communityMode + "\\players.txt");
         for (String player : playersString) {
             String[] playerSplit = fileTools.splitLineOnComma(player);
             players.add(new Player(Integer.parseInt(playerSplit[0]), playerSplit[1], Integer.parseInt(playerSplit[2]), Double.parseDouble(playerSplit[3]), Boolean.parseBoolean(playerSplit[4])));
@@ -280,7 +280,7 @@ public class QuickTest {
     }
 
     private void json() {
-        File file = new File("Files\\" + GameMode.DIORITE + "\\playerData_JSON.txt");
+        File file = new File("Files\\" + CommunityMode.DIORITE + "\\playerData_JSON.txt");
         StringBuilder stringBuilder2 = new StringBuilder();
         stringBuilder2.append("[");
 

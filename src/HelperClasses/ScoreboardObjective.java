@@ -1,5 +1,7 @@
 package HelperClasses;
 
+import Enums.ScoreboardLocation;
+
 public class ScoreboardObjective {
     private String name;
     private String type;
@@ -42,11 +44,11 @@ public class ScoreboardObjective {
         return "scoreboard objectives add " + name + " " + type;
     }
 
-    public String setDisplay(String location) {
+    public String setDisplay(ScoreboardLocation location) {
         return "scoreboard objectives setdisplay " + location + " " + name;
     }
 
-    public String setDisplay(String location, String name) {
+    public String setDisplay(ScoreboardLocation location, String name) {
         return "scoreboard objectives setdisplay " + location + " " + name;
     }
 

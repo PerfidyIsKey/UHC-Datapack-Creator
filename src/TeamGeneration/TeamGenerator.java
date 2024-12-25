@@ -1,7 +1,7 @@
 package TeamGeneration;
 
 import Enums.FileName;
-import Enums.GameMode;
+import Enums.CommunityMode;
 import FileGeneration.FileData;
 import FileGeneration.FileTools;
 import HelperClasses.Player;
@@ -39,15 +39,15 @@ public class TeamGenerator {
     String fileLocation;
     String[] args;
 
-    GameMode gameMode;
+    CommunityMode communityMode;
 
     private double seasonID;
 
-    public TeamGenerator(double seasonID, String fileLocation, ArrayList<Team> teams, GameMode gameMode) {
+    public TeamGenerator(double seasonID, String fileLocation, ArrayList<Team> teams, CommunityMode communityMode) {
         this.seasonID = seasonID;
         this.teams = teams;
         this.fileLocation = fileLocation;
-        this.gameMode = gameMode;
+        this.communityMode = communityMode;
     }
 
     public void run() {
@@ -96,7 +96,7 @@ public class TeamGenerator {
 
     //TODO: generate Season data in files.
     private void updatePlayerConnections(ArrayList<TeamGeneratorTeam> teams, boolean shouldUpdate) {
-        String fileLocation = "Files\\" + gameMode + "\\";
+        String fileLocation = "Files\\" + communityMode + "\\";
         String fileName = "playerConnections";
         if (!shouldUpdate) {
             try {
@@ -153,7 +153,7 @@ public class TeamGenerator {
     private ArrayList<TeamGeneratorTeam> preAssignedTeams() {
         ArrayList<TeamGeneratorTeam> teamGeneratorTeams = new ArrayList<>();
 
-        ArrayList<String> preAssignedString = fileTools.GetLinesFromFile("Files\\" + gameMode + "\\preAssignedTeams.txt");
+        ArrayList<String> preAssignedString = fileTools.GetLinesFromFile("Files\\" + communityMode + "\\preAssignedTeams.txt");
         for (String team : preAssignedString) {
             String[] teamSplit = fileTools.splitLineOnComma(team);
 
@@ -194,7 +194,7 @@ public class TeamGenerator {
     }
 
     private void importPlayers() {
-        ArrayList<String> playersString = fileTools.GetLinesFromFile("Files\\" + gameMode + "\\players.txt");
+        ArrayList<String> playersString = fileTools.GetLinesFromFile("Files\\" + communityMode + "\\players.txt");
         for (String player : playersString) {
             String[] playerSplit = fileTools.splitLineOnComma(player);
             players.add(new Player(Integer.parseInt(playerSplit[0]), playerSplit[1], Integer.parseInt(playerSplit[2]), Double.parseDouble(playerSplit[3]), Boolean.parseBoolean(playerSplit[4])));
@@ -211,7 +211,7 @@ public class TeamGenerator {
     }
 
     private void importSeasons() {
-        ArrayList<String> seasonsString = fileTools.GetLinesFromFile("Files\\" + gameMode + "\\seasonData.txt");
+        ArrayList<String> seasonsString = fileTools.GetLinesFromFile("Files\\" + communityMode + "\\seasonData.txt");
         for (String season : seasonsString) {
             String[] seasonSplit = fileTools.splitLineOnComma(season);
             seasons.add(new Season(Double.parseDouble(seasonSplit[0]), Integer.parseInt(seasonSplit[1]), new Date(Integer.parseInt(seasonSplit[2]), Integer.parseInt(seasonSplit[3]), Integer.parseInt(seasonSplit[4]))));
@@ -248,7 +248,7 @@ public class TeamGenerator {
 
     private ArrayList<PlayerConnection> determinePlayerConnections() {
         ArrayList<PlayerConnection> playerConnections = new ArrayList<>();
-        ArrayList<String> playerConnectionsString = fileTools.GetLinesFromFile("Files\\" + gameMode + "\\playerConnections.txt");
+        ArrayList<String> playerConnectionsString = fileTools.GetLinesFromFile("Files\\" + communityMode + "\\playerConnections.txt");
         for (String string : playerConnectionsString) {
             String seasons = string.split("\\[")[1];
             seasons = seasons.substring(0, seasons.length() - 1);

@@ -47,6 +47,22 @@ public class Execute {
         return Next("as " + entity.getEntity() + " ", run);
     }
 
+    public String As(String entity) {
+        return As(entity, true);
+    }
+
+    public String As(String entity, Boolean run) {
+        return Standard(AsNext(entity), run);
+    }
+
+    public String AsNext(String entity) {
+        return AsNext(entity, false);
+    }
+
+    public String AsNext(String entity, Boolean run) {
+        return Next("as " + entity + " ", run);
+    }
+
     /*
         execute at
      */
@@ -67,6 +83,22 @@ public class Execute {
         return Next("at " + entity.getEntity() + " ", run);
     }
 
+    public String At(String entity) {
+        return At(entity, true);
+    }
+
+    public String At(String entity, Boolean run) {
+        return Standard(AtNext(entity), run);
+    }
+
+    public String AtNext(String entity) {
+        return AtNext(entity, false);
+    }
+
+    public String AtNext(String entity, Boolean run) {
+        return Next("at " + entity + " ", run);
+    }
+
     /*
         execute facing
      */
@@ -85,6 +117,22 @@ public class Execute {
 
     public String FacingNext(Entity entity, EntityAnchor anchor, Boolean run) {
         return Next("facing entity " + entity.getEntity() + " " + anchor + " ", run);
+    }
+
+    public String Facing(String entity, EntityAnchor anchor) {
+        return Facing(entity, anchor, true);
+    }
+
+    public String Facing(String entity, EntityAnchor anchor, Boolean run) {
+        return Standard(FacingNext(entity, anchor), run);
+    }
+
+    public String FacingNext(String entity, EntityAnchor anchor) {
+        return FacingNext(entity, anchor, false);
+    }
+
+    public String FacingNext(String entity, EntityAnchor anchor, Boolean run) {
+        return Next("facing entity " + entity + " " + anchor + " ", run);
     }
 
     /*
@@ -116,21 +164,37 @@ public class Execute {
         return Next("if entity " + entity.getEntity() + " ", run);
     }
 
+    public String If(String entity) {
+        return If(entity, true);
+    }
+
+    public String If(String entity, Boolean run) {
+        return Standard(IfNext(entity), run);
+    }
+
+    public String IfNext(String entity) {
+        return IfNext(entity, false);
+    }
+
+    public String IfNext(String entity, Boolean run) {
+        return Next("if entity " + entity + " ", run);
+    }
+
     // if score
-    public String If(ScoreboardPlayersComp comp) {
-        return If(comp, true);
+    public String If(String entity1, ScoreboardObjective objective1, ComparatorType comp, String entity2, ScoreboardObjective objective2) {
+        return If(entity1, objective1, comp, entity2, objective2, true);
     }
 
-    public String If(ScoreboardPlayersComp comp, Boolean run) {
-        return Standard(IfNext(comp), run);
+    public String If(String entity1, ScoreboardObjective objective1, ComparatorType comp, String entity2, ScoreboardObjective objective2, Boolean run) {
+        return Standard(IfNext(entity1, objective1, comp, entity2, objective2), run);
     }
 
-    public String IfNext(ScoreboardPlayersComp comp) {
-        return IfNext(comp, false);
+    public String IfNext(String entity1, ScoreboardObjective objective1, ComparatorType comp, String entity2, ScoreboardObjective objective2) {
+        return IfNext(entity1, objective1, comp, entity2, objective2, false);
     }
 
-    public String IfNext(ScoreboardPlayersComp comp, Boolean run) {
-        return Next("if score " + comp.getComparison() + " ", run);
+    public String IfNext(String entity1, ScoreboardObjective objective1, ComparatorType comp, String entity2, ScoreboardObjective objective2, Boolean run) {
+        return Next("if score " + entity1 + " " + objective1.getName() + " " + comp + " " + entity2 + " " + objective2.getName() + " ", run);
     }
 
     /*
@@ -194,21 +258,21 @@ public class Execute {
     }
 
     // store score
-    public String Store(ExecuteStore storeType, ScoreboardPlayers score) {
-        return Store(storeType, score, true);
+    public String Store(ExecuteStore storeType, String entity, ScoreboardObjective objective) {
+        return Store(storeType, entity, objective, true);
     }
 
-    public String Store(ExecuteStore storeType, ScoreboardPlayers score, Boolean run) {
-        return Standard(StoreNext(storeType, score), run);
+    public String Store(ExecuteStore storeType, String entity, ScoreboardObjective objective, Boolean run) {
+        return Standard(StoreNext(storeType, entity, objective), run);
     }
 
-    public String StoreNext(ExecuteStore storeType, ScoreboardPlayers score) {
-        return StoreNext(storeType, score, false);
+    public String StoreNext(ExecuteStore storeType, String entity, ScoreboardObjective objective) {
+        return StoreNext(storeType, entity, objective, false);
     }
 
 
-    public String StoreNext(ExecuteStore storeType, ScoreboardPlayers score, Boolean run) {
-        return wrap("store " + storeType + " score " + score.getText() + " ", false, run);
+    public String StoreNext(ExecuteStore storeType, String entity, ScoreboardObjective objective, Boolean run) {
+        return wrap("store " + storeType + " score " + entity + " " + objective.getName() + " ", false, run);
     }
 
     /*
@@ -232,20 +296,20 @@ public class Execute {
     }
 
     // unless entity
-    public String Unless(Entity entity) {
+    public String Unless(String entity) {
         return Unless(entity, true);
     }
 
-    public String Unless(Entity entity, Boolean run) {
+    public String Unless(String entity, Boolean run) {
         return Standard(UnlessNext(entity), run);
     }
 
-    public String UnlessNext(Entity entity) {
+    public String UnlessNext(String entity) {
         return UnlessNext(entity, false);
     }
 
-    public String UnlessNext(Entity entity, Boolean run) {
-        return Next("unless entity " + entity.getEntity() + " ", run);
+    public String UnlessNext(String entity, Boolean run) {
+        return Next("unless entity " + entity + " ", run);
     }
 
 }
