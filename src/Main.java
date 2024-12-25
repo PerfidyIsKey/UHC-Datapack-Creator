@@ -27,14 +27,12 @@ public class Main {
 
     private String uhcNumber;
     private static final String version = "4.0";
-    private String userFolder;
-    private String worldName;
     private String dataPackLocation;
     private String worldLocation;
     private String dataPackName;
 
     private String fileLocation;
-    private GameMode gameMode = GameMode.DIORITE;
+    private CommunityMode communityMode = CommunityMode.DIORITE;
     //DatapackData>
 
     //GameData<
@@ -42,16 +40,13 @@ public class Main {
     private static final String commandCenter = "s56";
     private String admin;
     private Coordinate startCoordinate;
-    private Coordinate netherPortal;
     private ArrayList<Team> teams = new ArrayList<>();
     private ArrayList<ControlPoint> cpList = new ArrayList<>();
     private ArrayList<ControlPoint> controlPoints = new ArrayList<>();
-    //private ArrayList<CarePackage> carePackages = new ArrayList<>();
     private ArrayList<ScoreboardObjective> scoreboardObjectives = new ArrayList<>();
     private ArrayList<Player> players = new ArrayList<>();
     private int teamAmount;
     private ArrayList<Season> seasons = new ArrayList<>();
-    private ArrayList<StatusEffect> effects = new ArrayList<>();
     private ArrayList<String> quotes = new ArrayList<>();
     private ArrayList<BossBar> bossBars = new ArrayList<>();
     private static int worldSize;  // Maximum possible coordinate
@@ -82,7 +77,7 @@ public class Main {
 
     private void run(String[] args) {
 
-        gameModeChange();
+        communityModeChange();
         createDatapack();
         System.out.println("Datapack created");
         if (args.length == 0) {
@@ -91,7 +86,7 @@ public class Main {
             String input;
             while (menuRunning) {
                 System.out.println("-----------------\n");
-                System.out.println("Gamemode: " + gameMode);
+                System.out.println("Gamemode: " + communityMode);
                 System.out.println("Options:\n");
                 System.out.println("Change Gamemode (c[n])");
                 System.out.println("Re-run (r)");
@@ -105,38 +100,38 @@ public class Main {
                 } else if (input.startsWith("c")) {
                     String command = input.replace("c", "");
                     int num = parseInt(command);
-                    changeGamemode(num);
+                    changeCommunitymode(num);
                     createDatapack();
                     System.out.println("Datapack created");
                 } else if (input.equals("r")) {
-                    gameModeChange();
+                    communityModeChange();
                     createDatapack();
                     System.out.println("Datapack created");
                 } else if (input.equals("t")) {
-                    teamGenerator = new TeamGenerator(Double.parseDouble(uhcNumber), fileLocation, teams, gameMode);
+                    teamGenerator = new TeamGenerator(Double.parseDouble(uhcNumber), fileLocation, teams, communityMode);
                     teamGenerator.run();
                 } else {
                     System.out.println("Input not recognized.");
                 }
             }
         } else {
-            teamGenerator = new TeamGenerator(Double.parseDouble(uhcNumber), fileLocation, teams, gameMode);
+            teamGenerator = new TeamGenerator(Double.parseDouble(uhcNumber), fileLocation, teams, communityMode);
             teamGenerator.run(args);
         }
     }
 
-    private void changeGamemode(int num) {
+    private void changeCommunitymode(int num) {
         if (num == 0) {
-            gameMode = GameMode.DIORITE;
+            communityMode = CommunityMode.DIORITE;
         }
         if (num == 1) {
-            gameMode = GameMode.URE;
+            communityMode = CommunityMode.URE;
         }
         if (num == 2) {
-            gameMode = GameMode.KINJIN;
+            communityMode = CommunityMode.KINJIN;
         }
 
-        gameModeChange();
+        communityModeChange();
     }
 
 
@@ -148,7 +143,7 @@ public class Main {
         }
     }
 
-    private void gameModeChange() {
+    private void communityModeChange() {
         files = new ArrayList<>();
         initSaveDir();
         fileTools = new FileTools(version, dataPackLocation, dataPackName, worldLocation);
@@ -163,8 +158,8 @@ public class Main {
         if (fileTools == null) {
             fileTools = new FileTools();
         }
-        uhcNumber = fileTools.getContentOutOfFile("Files\\" + gameMode + "\\uhc_data.txt", "uhcNumber");
-        admin = fileTools.getContentOutOfFile("Files\\" + gameMode + "\\uhc_data.txt", "admin");
+        uhcNumber = fileTools.getContentOutOfFile("Files\\" + communityMode + "\\uhc_data.txt", "uhcNumber");
+        admin = fileTools.getContentOutOfFile("Files\\" + communityMode + "\\uhc_data.txt", "admin");
 
         worldLocation = "Server\\world\\";
 
@@ -181,7 +176,6 @@ public class Main {
         cpList = new ArrayList<>();
         controlPoints = new ArrayList<>();
         scoreboardObjectives = new ArrayList<>();
-        effects = new ArrayList<>();
         players = new ArrayList<>();
         seasons = new ArrayList<>();
         quotes = new ArrayList<>();
@@ -198,33 +192,25 @@ public class Main {
             teams.add(team);
         }
 
-        CarePackage carePackage2 = new CarePackage("anti_cp", "Anti Controlpoint Drop",
-                "[{Slot:1b,id:\"minecraft:gunpowder\",Count:1b},{Slot:2b,id:\"minecraft:gunpowder\",Count:1b},{Slot:3b,id:\"minecraft:tnt\",Count:1b},{Slot:4b,id:\"minecraft:flint_and_steel\",Count:1b},{Slot:5b,id:\"minecraft:tnt\",Count:1b},{Slot:6b,id:\"minecraft:sand\",Count:1b},{Slot:7b,id:\"minecraft:sand\",Count:1b},{Slot:11b,id:\"minecraft:enchanted_book\",Count:1b,tag:{StoredEnchantments:[{lvl:4s,id:\"minecraft:blast_protection\"}]}},{Slot:12b,id:\"minecraft:lava_bucket\",Count:1b},{Slot:13b,id:\"minecraft:tnt\",Count:1b},{Slot:14b,id:\"minecraft:lava_bucket\",Count:1b},{Slot:15b,id:\"minecraft:enchanted_book\",Count:1b,tag:{StoredEnchantments:[{lvl:4s,id:\"minecraft:blast_protection\"}]}},{Slot:19b,id:\"minecraft:sand\",Count:1b},{Slot:20b,id:\"minecraft:sand\",Count:1b},{Slot:21b,id:\"minecraft:tnt\",Count:1b},{Slot:22b,id:\"minecraft:flint_and_steel\",Count:1b},{Slot:23b,id:\"minecraft:tnt\",Count:1b},{Slot:24b,id:\"minecraft:gunpowder\",Count:1b},{Slot:25b,id:\"minecraft:gunpowder\",Count:1b}]",
-                0, 0, 0);
-
-        bossBars.add(new BossBar("cp"));
         bossBars.add(new BossBar("cp1"));
         bossBars.add(new BossBar("cp2"));
-        bossBars.add(new BossBar("carepackage"));
 
         // Data
-        String[] splitStartCoordinates = fileTools.splitLineOnComma(fileTools.getContentOutOfFile("Files\\" + gameMode + "\\uhc_data.txt", "startCoordinate"));
+        String[] splitStartCoordinates = fileTools.splitLineOnComma(fileTools.getContentOutOfFile("Files\\" + communityMode + "\\uhc_data.txt", "startCoordinate"));
         startCoordinate = new Coordinate(Integer.parseInt(splitStartCoordinates[0]), Integer.parseInt(splitStartCoordinates[1]), Integer.parseInt(splitStartCoordinates[2]));
-        String[] splitNetherPortal = fileTools.splitLineOnComma(fileTools.getContentOutOfFile("Files\\" + gameMode + "\\uhc_data.txt", "netherPortal"));
-        netherPortal = new Coordinate(Integer.parseInt(splitNetherPortal[0]), Integer.parseInt(splitNetherPortal[1]), Integer.parseInt(splitNetherPortal[2]));
-        minTraitorRank = Integer.parseInt(fileTools.getContentOutOfFile("Files\\" + gameMode + "\\uhc_data.txt", "minTraitorRank"));
-        traitorWaitTime = Integer.parseInt(fileTools.getContentOutOfFile("Files\\" + gameMode + "\\uhc_data.txt", "traitorWaitTime"));
-        communityName = fileTools.getContentOutOfFile("Files\\" + gameMode + "\\uhc_data.txt", "communityName");
+        minTraitorRank = Integer.parseInt(fileTools.getContentOutOfFile("Files\\" + communityMode + "\\uhc_data.txt", "minTraitorRank"));
+        traitorWaitTime = Integer.parseInt(fileTools.getContentOutOfFile("Files\\" + communityMode + "\\uhc_data.txt", "traitorWaitTime"));
+        communityName = fileTools.getContentOutOfFile("Files\\" + communityMode + "\\uhc_data.txt", "communityName");
 
         // ControlPoints
-        ArrayList<String> controlPointString = fileTools.GetLinesFromFile("Files\\" + gameMode + "\\controlPoints.txt");
+        ArrayList<String> controlPointString = fileTools.GetLinesFromFile("Files\\" + communityMode + "\\controlPoints.txt");
         for (String controlPoint : controlPointString) {
             String[] controlPointSplit = fileTools.splitLineOnComma(controlPoint);
             cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, new Coordinate(Integer.parseInt(controlPointSplit[0]), Integer.parseInt(controlPointSplit[1]), Integer.parseInt(controlPointSplit[2])), Biome.valueOf(controlPointSplit[3])));
         }
 
         // Players
-        ArrayList<String> playersString = fileTools.GetLinesFromFile("Files\\" + gameMode + "\\players.txt");
+        ArrayList<String> playersString = fileTools.GetLinesFromFile("Files\\" + communityMode + "\\players.txt");
         for (String player : playersString) {
             String[] playerSplit = fileTools.splitLineOnComma(player);
             boolean isPlaying = Boolean.parseBoolean(playerSplit[4]);
@@ -258,14 +244,14 @@ public class Main {
         carePackageAmount = (int) (desiredChestDensity * (carePackageSpread * 2) * (carePackageSpread * 2));
 
         // Seasons
-        ArrayList<String> seasonsString = fileTools.GetLinesFromFile("Files\\" + gameMode + "\\seasonData.txt");
+        ArrayList<String> seasonsString = fileTools.GetLinesFromFile("Files\\" + communityMode + "\\seasonData.txt");
         for (String season : seasonsString) {
             String[] seasonSplit = fileTools.splitLineOnComma(season);
             seasons.add(new Season(Double.parseDouble(seasonSplit[0]), Integer.parseInt(seasonSplit[1]), new Date(Integer.parseInt(seasonSplit[2]), Integer.parseInt(seasonSplit[3]), Integer.parseInt(seasonSplit[4]))));
         }
 
         // Quotes
-        quotes = fileTools.GetLinesFromFile("Files\\" + gameMode + "\\quotes.txt");
+        quotes = fileTools.GetLinesFromFile("Files\\" + communityMode + "\\quotes.txt");
 
         int[] addRates = {2, 3};
         Collections.shuffle(cpList);
@@ -274,11 +260,6 @@ public class Main {
             controlPoints.get(i).setAddRate(addRates[i]);
             controlPoints.get(i).setName("CP" + (i + 1));
         }
-
-        CarePackage carePackage1 = new CarePackage("enchanting", "Enchanting Drop",
-                "[{Slot:3b,id:\"minecraft:enchanted_book\",Count:1b,tag:{StoredEnchantments:[{lvl:1s,id:\"minecraft:power\"}]}},{Slot:4b,id:\"minecraft:golden_apple\",Count:1b},{Slot:5b,id:\"minecraft:enchanted_book\",Count:1b,tag:{StoredEnchantments:[{lvl:2s,id:\"minecraft:sharpness\"}]}},{Slot:12b,id:\"minecraft:apple\",Count:1b},{Slot:13b,id:\"minecraft:anvil\",Count:1b},{Slot:14b,id:\"minecraft:apple\",Count:1b},{Slot:21b,id:\"minecraft:enchanted_book\",Count:1b,tag:{StoredEnchantments:[{lvl:2s,id:\"minecraft:sharpness\"}]}},{Slot:22b,id:\"minecraft:book\",Count:1b},{Slot:23b,id:\"minecraft:enchanted_book\",Count:1b,tag:{StoredEnchantments:[{lvl:1s,id:\"minecraft:protection\"}]}}]",
-                16, 70, 236);
-        //carePackages.add(carePackage1);
 
         // Scoreboard objectives
         scoreboardObjectives.add(new ScoreboardObjective("Admin", "dummy"));
@@ -306,8 +287,6 @@ public class Main {
         scoreboardObjectives.add(new ScoreboardObjective("Mining", "dummy", "\"I like mining-leaderboard\"", true));
         scoreboardObjectives.add(new ScoreboardObjective("Deaths", "deathCount"));
         scoreboardObjectives.add(new ScoreboardObjective("Kills", "playerKillCount", true));
-        scoreboardObjectives.add(new ScoreboardObjective("Crystal", "dummy"));
-        scoreboardObjectives.add(new ScoreboardObjective("Quits", "minecraft.custom:minecraft.leave_game"));
         scoreboardObjectives.add(new ScoreboardObjective("Rank", "dummy"));
         scoreboardObjectives.add(new ScoreboardObjective("WorldLoad", "dummy"));
         scoreboardObjectives.add(new ScoreboardObjective("CollarCheck0", "dummy"));
@@ -315,12 +294,6 @@ public class Main {
         scoreboardObjectives.add(new ScoreboardObjective("MinHealth", "dummy"));
         scoreboardObjectives.add(new ScoreboardObjective("Victory", "dummy"));
         scoreboardObjectives.add(new ScoreboardObjective("WolfAge", "dummy"));
-
-        // Status effects
-        effects.add(new StatusEffect(Effect.glowing, 30, 1));
-        effects.add(new StatusEffect(Effect.fire_resistance, 20, 1));
-        effects.add(new StatusEffect(Effect.nausea, 10, 1));
-        effects.add(new StatusEffect(Effect.speed, 20, 1));
     }
 
     private int determineAmountOfPlayersPerTeam() {
@@ -575,6 +548,12 @@ public class Main {
         return "effect clear " + entity;
     }
 
+    private String setDifficulty(Difficulty difficulty) {return "difficulty " + difficulty;}
+
+    private String setDefaultGameMode(GameMode gameMode) {return "defaultgamemode " + gameMode;}
+
+    private String setWorldSpawn(Coordinate coordinate) {return "setworldspawn " + coordinate.getCoordinateString();}
+
     private void makeFunctionFiles() {
         files.add(Initialize());
         files.add(DropPlayerHeads());
@@ -650,16 +629,16 @@ public class Main {
         fileCommands.add(setGameRule(GameRule.doPatrolSpawning, false));
         fileCommands.add(setGameRule(GameRule.doMobSpawning, false));
         fileCommands.add(setGameRule(GameRule.doWeatherCycle, false));
-        fileCommands.add("difficulty hard");
-        fileCommands.add("defaultgamemode adventure");
-        fileCommands.add("setworldspawn 0 221 0");
+        fileCommands.add(setDifficulty(Difficulty.hard));
+        fileCommands.add(setDefaultGameMode(GameMode.adventure));
+        fileCommands.add(setWorldSpawn(new Coordinate(0, 221, 0)));
 
         //scoreboard
         for (ScoreboardObjective objective : scoreboardObjectives) {
             fileCommands.add(objective.add());
         }
-        fileCommands.add(new ScoreboardObjective().setDisplay("below_name", "Hearts"));
-        fileCommands.add(new ScoreboardObjective().setDisplay("list", "Hearts"));
+        fileCommands.add(new ScoreboardObjective().setDisplay(ScoreboardLocation.below_name, "Hearts"));
+        fileCommands.add(new ScoreboardObjective().setDisplay(ScoreboardLocation.list, "Hearts"));
         //end scoreboard
         //bossbar
 
@@ -669,7 +648,6 @@ public class Main {
         fileCommands.add(getBossbarByName("cp1").setMax(controlPoints.get(0).getMaxVal()));
         fileCommands.add(getBossbarByName("cp2").add(controlPoints.get(1).getName() + " soon: " + controlPoints.get(1).getCoordinate().getX() + ", " + controlPoints.get(1).getCoordinate().getY() + ", " + controlPoints.get(1).getCoordinate().getZ() + " (" + controlPoints.get(1).getCoordinate().getDimensionName() + ")"));
         fileCommands.add(getBossbarByName("cp2").setMax(controlPoints.get(1).getMaxVal()));
-        fileCommands.add(getBossbarByName("carepackage").add("Care Package available at x, y, z"));
         //end bossbar
         //teams
         for (Team t : teams) {
@@ -869,7 +847,6 @@ public class Main {
                 "forceload remove " + controlPoints.get(1).getCoordinate().getX() + " " + controlPoints.get(1).getCoordinate().getZ() + " " + controlPoints.get(1).getCoordinate().getX() + " " + controlPoints.get(1).getCoordinate().getZ());
         BossBar bossBarCp1 = getBossbarByName("cp1");
         BossBar bossBarCp2 = getBossbarByName("cp2");
-        BossBar bossBarCarePackage = getBossbarByName("carepackage");
         fileCommands.add(bossBarCp1.setColor(BossBarColor.white));
         fileCommands.add(bossBarCp1.setVisible(false));
         fileCommands.add(bossBarCp1.setPlayers("@a"));
@@ -878,8 +855,6 @@ public class Main {
         fileCommands.add(bossBarCp2.setVisible(false));
         fileCommands.add(bossBarCp2.setPlayers("@a"));
         fileCommands.add(bossBarCp2.setTitle(controlPoints.get(1).getName() + " soon: " + controlPoints.get(1).getCoordinate().getX() + ", " + controlPoints.get(1).getCoordinate().getY() + ", " + controlPoints.get(1).getCoordinate().getZ() + " (" + controlPoints.get(1).getCoordinate().getDimensionName() + ")"));
-        fileCommands.add(bossBarCarePackage.setVisible(false));
-        fileCommands.add(bossBarCarePackage.setPlayers("@a"));
         fileCommands.add(execute.In(Dimension.overworld) +
                 setBlock(startCoordinate, "minecraft:jukebox[has_record=true]{RecordItem:{Count:1b,id:\"minecraft:music_disc_stal\"}}", SetBlockType.replace));
         fileCommands.add("tag @a remove " + Tag.Traitor);
@@ -1271,7 +1246,6 @@ public class Main {
         ArrayList<String> fileCommands = new ArrayList<>();
         ArrayList<Season> seasons = new ArrayList<>(this.seasons);
         seasons.sort(Comparator.comparing(Season::getID));
-        //fileCommands.add("tag @r[limit=1,tag=!DontMakeTraitor] add Traitor");
         for (Player p : players) {
             if (p.getLastTraitorSeason() >= seasons.get(seasons.size() - traitorWaitTime).getID()) {
                 fileCommands.add("tag " + p.getPlayerName() + " add DontMakeTraitor");
@@ -1284,7 +1258,6 @@ public class Main {
             fileCommands.add(execute.If(new Entity("@p[tag=Traitor,team=" + t.getName() + "]")) +
                     "tag @a[team=" + t.getName() + "] add DontMakeTraitor");
         }
-        //fileCommands.add("tag @r[limit=1,tag=!DontMakeTraitor] add Traitor");
         fileCommands.add("tag @r[limit=1,tag=!DontMakeTraitor,scores={Rank=" + minTraitorRank + "..},gamemode=!spectator] add Traitor");
 
         // Add additional traitor
@@ -1398,7 +1371,7 @@ public class Main {
         for (Player p : players) {
             fileCommands.add("scoreboard players set " + p.getPlayerName() + " Rank " + p.getRank());
         }
-        fileCommands.add(new ScoreboardObjective().setDisplay("sidebar", "Rank"));
+        fileCommands.add(new ScoreboardObjective().setDisplay(ScoreboardLocation.sidebar, "Rank"));
 
         return new FileData(FileName.display_rank, fileCommands);
     }
@@ -1476,7 +1449,7 @@ public class Main {
             if (s.getDisplaySideBar()) {
                 i++;
                 fileCommands.add(execute.If(new Entity("@p[scores={SideDum=" + (10 * tickPerSecond * i) + "}]")) +
-                        s.setDisplay("sidebar"));
+                        s.setDisplay(ScoreboardLocation.sidebar));
             }
         }
         fileCommands.add(execute.If(new Entity("@p[scores={SideDum=" + (10 * tickPerSecond * i + 1) + "}]")) +
