@@ -3,6 +3,7 @@ import FileGeneration.*;
 import HelperClasses.*;
 import TeamGeneration.Season;
 import TeamGeneration.TeamGenerator;
+import org.w3c.dom.Attr;
 
 
 import java.io.IOException;
@@ -368,18 +369,16 @@ public class Main {
         lootEntry.add(new LootTableEntry(3, "spectral_arrow", new LootTableFunction(10)));
         lootEntry.add(new LootTableEntry(3, "horse_spawn_egg"));
         lootEntry.add(new LootTableEntry(3, "glowstone_dust", new LootTableFunction(6)));
-        lootEntry.add(new LootTableEntry(1, "diamond_horse_armor"));
+        lootEntry.add(new LootTableEntry(3, "ender_pearl", new LootTableFunction(2, 0.5)));
         lootEntry.add(new LootTableEntry(2, "nether_wart", new LootTableFunction(5)));
         lootEntry.add(new LootTableEntry(2, "blaze_rod", new LootTableFunction(2, 0.1)));
         lootEntry.add(new LootTableEntry(2, "golden_apple"));
         lootEntry.add(new LootTableEntry(2, "anvil"));
         lootEntry.add(new LootTableEntry(2, "spyglass"));
         lootEntry.add(new LootTableEntry(2, "wolf_spawn_egg", new LootTableFunction(2, 0.01)));
-        lootEntry.add(new LootTableEntry(1, "ender_pearl", new LootTableFunction(2, 0.5)));
+        lootEntry.add(new LootTableEntry(1, "diamond_horse_armor"));
         lootEntry.add(new LootTableEntry(1, "netherite_hoe"));
         lootEntry.add(new LootTableEntry(1, "trident"));
-        lootEntry.add(new LootTableEntry(1, "diamond_chestplate"));
-        lootEntry.add(new LootTableEntry(1, "diamond_leggings"));
         lootEntry.add(new LootTableEntry(1, "netherite_upgrade_smithing_template"));
         lootEntry.add(new LootTableEntry(1, "netherite_scrap", new LootTableFunction(4, 0.001)));
 
@@ -554,6 +553,26 @@ public class Main {
 
     private String playSound(Sound sound, SoundSource source, String entity, String x, String y, String z, String x1, String y1, String z1) {
         return "playsound " + sound.getValue() + " " + source + " " + entity + " " + x + " " + y + " " + z + " " + x1 + " " + y1 + " " + z1;
+    }
+
+    private String setAttributeBase(String entity, AttributeType attribute, double value) {
+        return "attribute " + entity + " minecraft:" + attribute + " base set " + value;
+    }
+
+    private String giveEffect(String entity, Effect effect, int duration, int amplifier) {
+        return giveEffect(entity, effect, duration, amplifier, false);
+    }
+
+    private String giveEffect(String entity, Effect effect, int duration, int amplifier, Boolean hideParticles) {
+        return "effect give " + entity + " minecraft:" + effect + " " + duration + " " + amplifier + " " + hideParticles;
+    }
+
+    private String clearEffect(String entity, Effect effect) {
+        return "effect clear " + entity + " minecraft:" + effect;
+    }
+
+    private String clearEffect(String entity) {
+        return "effect clear " + entity;
     }
 
     private void makeFunctionFiles() {
@@ -784,7 +803,7 @@ public class Main {
         return new FileData(FileName.clear_enderchest, fileCommands);
     }
 
-    private static FileData EquipGear() {
+    private FileData EquipGear() {
         ArrayList<String> fileCommands = new ArrayList<>();
         fileCommands.add("item replace entity @a armor.chest with minecraft:iron_chestplate");
         fileCommands.add("item replace entity @a armor.feet with minecraft:iron_boots");
@@ -793,15 +812,15 @@ public class Main {
         fileCommands.add("item replace entity @a weapon.offhand with minecraft:shield");
         fileCommands.add("item replace entity @a weapon.mainhand with minecraft:iron_axe");
         fileCommands.add("item replace entity @a inventory.0 with minecraft:iron_sword");
-        fileCommands.add("effect give @a minecraft:" + Effect.regeneration + " 1 255 true");
+        fileCommands.add(giveEffect("@a", Effect.regeneration, 1, 255, true));
 
         return new FileData(FileName.equip_gear, fileCommands);
     }
 
-    private static FileData GodMode() {
+    private FileData GodMode() {
         ArrayList<String> fileCommands = new ArrayList<>();
-        fileCommands.add("effect give @s minecraft:" + Effect.resistance + " 99999 4 true");
-        fileCommands.add("item replace entity @s weapon.mainhand with trident[custom_name='[{\"bold\":false,\"color\":\"white\",\"italic\":false,\"obfuscated\":true,\"text\":\"aA\"},{\"bold\":true,\"color\":\"#8C3CC1\",\"obfuscated\":false,\"text\":\" The\"},{\"bold\":true,\"color\":\"#E280FF\",\"obfuscated\":false,\"text\":\" Impaler \"},{\"color\":\"white\",\"obfuscated\":true,\"text\":\"Aa\"}]',lore=['{\"text\":\"This holy weapon impales anything it touches\"}'],unbreakable={show_in_tooltip:false},damage=0,enchantments={levels:{\"minecraft:fire_aspect\":255,\"minecraft:sharpness\":255,\"minecraft:efficiency\":255,'impaling':255},show_in_tooltip:false},attribute_modifiers={modifiers:[{id:\"armor\",type:\"generic.attack_damage\",amount:1000,operation:\"add_value\",slot:\"mainhand\"}],show_in_tooltip:false}]");
+        fileCommands.add(giveEffect("@s", Effect.resistance, 99999, 4, true));
+        fileCommands.add("item replace entity @s weapon.mainhand with trident[custom_name='[{\"bold\":false,\"color\":\"white\",\"italic\":false,\"obfuscated\":true,\"text\":\"aA\"},{\"bold\":true,\"color\":\"#8C3CC1\",\"obfuscated\":false,\"text\":\" The\"},{\"bold\":true,\"color\":\"#E280FF\",\"obfuscated\":false,\"text\":\" Impaler \"},{\"color\":\"white\",\"obfuscated\":true,\"text\":\"Aa\"}]',lore=['{\"text\":\"This holy weapon impales anything it touches\"}'],unbreakable={show_in_tooltip:false},damage=0,enchantments={levels:{\"minecraft:fire_aspect\":255,\"minecraft:sharpness\":255,\"minecraft:efficiency\":255,'impaling':255},show_in_tooltip:false},attribute_modifiers={modifiers:[{id:\"" + AttributeType.armor + "\",type:\"" + AttributeType.attack_damage + "\",amount:1000,operation:\"add_value\",slot:\"mainhand\"}],show_in_tooltip:false}]");
 
         return new FileData(FileName.god_mode, fileCommands);
     }
@@ -890,9 +909,8 @@ public class Main {
         fileCommands.add("scoreboard players set TimeVictory CPScore " + 20 * minToCPScore);
 
         // Reset player scales
-        for (Player p : players) {
-            fileCommands.add("attribute @p[name=" + p.getPlayerName() + "] minecraft:generic.scale base set 1");
-        }
+        fileCommands.add(execute.As(new Entity("@a")) +
+                        setAttributeBase("@s", AttributeType.scale, 1));
 
         fileCommands.add("gamemode creative @s");
 
@@ -913,7 +931,7 @@ public class Main {
 
     private FileData Predictions() {
         ArrayList<String> fileCommands = new ArrayList<>();
-        fileCommands.add("effect clear @a");
+        fileCommands.add(clearEffect("@a"));
         fileCommands.add(execute.In(Dimension.overworld) +
                 "tp @a 0 -100 0");
 
@@ -941,7 +959,7 @@ public class Main {
         fileCommands.add("scoreboard players reset @a Kills");
 
         // Make players invulnerable
-        fileCommands.add("effect give @a minecraft:" + Effect.resistance + " 99999 4 true");
+        fileCommands.add(giveEffect("@a", Effect.resistance, 99999, 4, true));
 
         return new FileData(FileName.into_calls, fileCommands);
     }
@@ -969,8 +987,11 @@ public class Main {
         fileCommands.add(setGameRule(GameRule.doImmediateRespawn, true));
         fileCommands.add(callFunction(FileName.clear_enderchest));
 
-        fileCommands.add("recipe give @a uhc:golden_apple");
+        // fileCommands.add("recipe give @a uhc:golden_apple");
         fileCommands.add("recipe take @a uhc:dragon_head");
+
+        // Remove resistance
+        fileCommands.add(clearEffect("@a", Effect.resistance));
 
         return new FileData(FileName.survival_mode, fileCommands);
     }
@@ -979,8 +1000,9 @@ public class Main {
         ArrayList<String> fileCommands = new ArrayList<>();
         fileCommands.add("time set 0");
         fileCommands.add("xp set @a 0 levels");
-        fileCommands.add("effect give @a minecraft:" + Effect.regeneration + " 1 255");
-        fileCommands.add("effect give @a minecraft:" + Effect.saturation + " 1 255");
+        fileCommands.add(giveEffect("@a", Effect.regeneration, 1, 255));
+        fileCommands.add(giveEffect("@a", Effect.saturation, 1, 255));
+        fileCommands.add(giveEffect("@a", Effect.resistance, 20*60, 2));
         fileCommands.add("clear @a");
         fileCommands.add(new Title("@a", TitleType.title, new Text(Color.gold, true, true, "Game Starting Now!")).displayTitle());
         fileCommands.add("gamemode survival @a");
@@ -1004,9 +1026,6 @@ public class Main {
                 fileCommands.add("scoreboard players set @a MSGDum" + ii + "CP" + i + " 1");
             }
         }
-
-        // Remove resistance
-        fileCommands.add("effect clear @a minecraft:" + Effect.resistance);
 
         return new FileData(FileName.start_game, fileCommands);
     }
@@ -1456,11 +1475,11 @@ public class Main {
         for (ScoreboardObjective s : scoreboardObjectives) {
             if (s.getDisplaySideBar()) {
                 i++;
-                fileCommands.add(execute.If(new Entity("@p[scores={SideDum=" + (5 * tickPerSecond * i) + "}]")) +
+                fileCommands.add(execute.If(new Entity("@p[scores={SideDum=" + (10 * tickPerSecond * i) + "}]")) +
                         s.setDisplay("sidebar"));
             }
         }
-        fileCommands.add(execute.If(new Entity("@p[scores={SideDum=" + (5 * tickPerSecond * i + 1) + "}]")) +
+        fileCommands.add(execute.If(new Entity("@p[scores={SideDum=" + (10 * tickPerSecond * i + 1) + "}]")) +
                 "scoreboard players reset @p[scores={Admin=1}] SideDum");
 
         // Update stripmine count
@@ -1532,6 +1551,11 @@ public class Main {
         // Update minimum health
         fileCommands.add(callFunction(FileName.update_min_health));
 
+        // Set tamed wolf base health
+        fileCommands.add(execute.As(new Entity("@e[type=wolf]"), false) +
+                execute.IfNext(DataClasses.entity, "@s Owner", true) +
+                setAttributeBase("@s", AttributeType.max_health, 20));
+
         return new FileData(FileName.timer, fileCommands);
     }
 
@@ -1539,39 +1563,51 @@ public class Main {
     private FileData ControlPointPerks() {
         ArrayList<String> fileCommands = new ArrayList<>();
 
-        // Activation period
-        int actPeriod = 50;
-
         // Define perk activation times
         int minToCPScore = secPerMinute * tickPerSecond * controlPoints.get(0).getAddRate();
         ArrayList<Perk> perks = new ArrayList<>();
-        perks.add(new Perk(1, "minecraft:" + Effect.speed + " 999999 0 false", "effect give", Sound.BASALT, 3 * minToCPScore));
-        perks.add(new Perk(2, "minecraft:" + Effect.resistance + " " + (10 * secPerMinute) + " 0 false", "effect give", Sound.CRIMSON, 6 * minToCPScore));
-        perks.add(new Perk(3, "minecraft:" + Effect.haste + " 999999 2 false", "effect give", Sound.WARPED, 12 * minToCPScore));
-        perks.add(new Perk(4, "minecraft:" + Effect.absorption + " 999999 1 false", "effect give", Sound.WITHER, 15 * minToCPScore));
+        perks.add(new Perk(1, new StatusEffect(Effect.speed, 999999, 0, false), Sound.BASALT, 3 * minToCPScore));
+        perks.add(new Perk(2, new Attribute(AttributeType.scale, 0.8), Sound.CRIMSON, 6 * minToCPScore));
+        perks.add(new Perk(3, new StatusEffect(Effect.haste, 999999, 2, false), Sound.WARPED, 12 * minToCPScore));
+        perks.add(new Perk(4, new StatusEffect(Effect.absorption, 999999, 1, false), Sound.WITHER, 15 * minToCPScore));
+
+
+        Entity currentPlayer = new Entity("");
+        Entity currentScoreCheck = new Entity("");
 
         for (int i = 0; i < controlPoints.size(); i++) {
             for (Team team : teams) {
                 // Display team receiving perk
                 for (Perk perk : perks) {
+                    // Set variables
+                    currentPlayer.setEntity("@p[team=" + team.getName() + ",tag=!" + Tag.ReceivedPerk + perk.getId() + "]");
+                    currentScoreCheck.setEntity("@p[scores={CP" + (i + 1) + team.getName() + "=" + perk.getActivationTime() + "..}]");
+
+                    // Create text to be displayed
                     ArrayList<TextItem> texts = new ArrayList<>();
                     texts.add(new Text(Color.light_purple, false, false, "TEAM "));
                     texts.add(new Text(team.getColor(), false, false, team.getJSONColor()));
                     texts.add(new Text(Color.light_purple, false, false, " HAS REACHED"));
                     texts.add(new Text(Color.gold, false, false, " PERK " + perk.getId() + "!"));
 
-                    fileCommands.add(execute.If(new Entity("@p[scores={CP" + (i + 1) + team.getName() + "=" + perk.getActivationTime() + ".." + (perk.getActivationTime() + actPeriod) + "}]"), false) +
-                            execute.IfNext(new Entity("@p[team=" + team.getName() + ",tag=!ReceivedPerk" + perk.getId() + "]"), true) +
+                    // Display text
+                    fileCommands.add(execute.If(currentScoreCheck, false) +
+                            execute.IfNext(currentPlayer, true) +
                             new TellRaw("@a", texts).sendRaw());
 
-                    // give rewards
-                    fileCommands.add(execute.If(new Entity("@p[scores={CP" + (i + 1) + team.getName() + "=" + perk.getActivationTime() + ".." + (perk.getActivationTime() + actPeriod) + "}]")) +
-                            perk.getRewardType() + " @a[team=" + team.getName() + ",tag=!ReceivedPerk" + perk.getId() + "] " + perk.getReward());
-                    fileCommands.add(execute.If(new Entity("@p[scores={CP" + (i + 1) + team.getName() + "=" + perk.getActivationTime() + ".." + (perk.getActivationTime() + actPeriod) + "}]"), false) +
-                            execute.IfNext(new Entity("@p[team=" + team.getName() + ",tag=!ReceivedPerk" + perk.getId() + "]"), true) +
+                    // Give rewards
+                    String perkReceivers = "@a[team=" + team.getName() + ",tag=!" + Tag.ReceivedPerk + perk.getId() + "]";
+                    fileCommands.add(execute.If(currentScoreCheck) +
+                            perk.getReward(perkReceivers));
+
+                    // Play sound
+                    fileCommands.add(execute.If(currentScoreCheck, false) +
+                            execute.IfNext(currentPlayer, true) +
                             playSound(perk.getSound(), SoundSource.master, "@a", "~", "~50", "~", "100", "1", "0"));
-                    fileCommands.add(execute.If(new Entity("@p[scores={CP" + (i + 1) + team.getName() + "=" + perk.getActivationTime() + ".." + (perk.getActivationTime() + actPeriod) + "}]")) +
-                            "tag @a[team=" + team.getName() + "] add ReceivedPerk" + perk.getId());
+
+                    // Add tag
+                    fileCommands.add(execute.If(currentScoreCheck) +
+                            "tag @a[team=" + team.getName() + "] add " + Tag.ReceivedPerk + perk.getId());
                 }
             }
         }
@@ -1658,11 +1694,11 @@ public class Main {
             int indexRear = 2 * (i + 1);
 
             fileCommands.add(execute.If(new Entity("@p[scores={MinHealth=" + indexFront + ".." + indexRear + "}]")) +
-                    "attribute @p[tag=Respawn] generic.max_health base set " + (i + 1));
+                    setAttributeBase(respawnPlayer, AttributeType.max_health, i + 1));
         }
-        fileCommands.add("effect give @p[tag=Respawn] minecraft:" + Effect.health_boost + " 1 0");
-        fileCommands.add("effect clear @p[tag=Respawn] minecraft:" + Effect.health_boost);
-        fileCommands.add("attribute @p[tag=Respawn] generic.max_health base set 20");
+        fileCommands.add(giveEffect(respawnPlayer, Effect.health_boost, 1, 0));
+        fileCommands.add(clearEffect(respawnPlayer, Effect.health_boost));
+        fileCommands.add(setAttributeBase(respawnPlayer, AttributeType.max_health, 20));
 
         // Remove respawn tag
         fileCommands.add("tag @p[tag=Respawn] remove Respawn");

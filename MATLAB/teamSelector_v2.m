@@ -10,14 +10,14 @@ filePreAssigned  = "preAssignedTeams.txt";
 
 % Load data
 Players = struct;
-load("DataS56.mat")
+load("DataS57.mat")
 
 %% Input
 % Import players
 [participantIndex, name, rank] = importPlayers(filePlayers);
 
 % Algorithm settings
-teamPlayer          = 3;                    % Number of players per team
+teamPlayer          = 2;                    % Number of players per team
 rankLowerBound      = 5;                    % Maximum negative deviation of score median
 rankUpperBound      = 5;                    % Maximum positive deviation of score mean
 rankLowerTolerance	= rankLowerBound + 5;   % Maximum allowed negative deviation
@@ -116,7 +116,8 @@ finalTeams = zeros(1, participantAmount);
 % Add pre-assigned teams to final team composition
 count = 1;  % Initialize counter
 for i = 1:preAssignedNumber
-    for ii = 1:3
+    preTeamSize = size(preAssignedTeams, 2);  % Size of current pre-assigned team
+    for ii = 1:preTeamSize
         if isnan(preAssignedTeams(i, ii))
             % Break loop if player is found
             break

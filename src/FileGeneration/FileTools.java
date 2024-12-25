@@ -48,35 +48,36 @@ public class FileTools {
         keys2.add("gold_ingot");
         keys2.add("player_head");
         FileGeneration.Recipe recipe2 = new FileGeneration.Recipe("crafting_shaped", grid2, keys2, "golden_apple", 1);
-        recipes.add(recipe2);
+        //recipes.add(recipe2);
 
         for (Recipe r : recipes) {
             ArrayList<String> fileCommands = new ArrayList<>();
-            fileCommands.add(" {");
-            fileCommands.add("        \"type\": \"" + r.getType() + "\",");
-            fileCommands.add("        \"pattern\": [");
-            fileCommands.add("            \"" + r.getGrid()[0] + r.getGrid()[1] + r.getGrid()[2] + "\",");
-            fileCommands.add("            \"" + r.getGrid()[3] + r.getGrid()[4] + r.getGrid()[5] + "\",");
-            fileCommands.add("            \"" + r.getGrid()[6] + r.getGrid()[7] + r.getGrid()[8] + "\"");
-            fileCommands.add("        ],");
-            fileCommands.add("        \"key\": {");
+            fileCommands.add("{");
+            fileCommands.add("  \"type\": \"" + r.getType() + "\",");
+            fileCommands.add("  \"category\": \"equipment\",");
+            fileCommands.add("  \"pattern\": [");
+            fileCommands.add("    \"" + r.getGrid()[0] + r.getGrid()[1] + r.getGrid()[2] + "\",");
+            fileCommands.add("    \"" + r.getGrid()[3] + r.getGrid()[4] + r.getGrid()[5] + "\",");
+            fileCommands.add("    \"" + r.getGrid()[6] + r.getGrid()[7] + r.getGrid()[8] + "\"");
+            fileCommands.add("],");
+            fileCommands.add("\"key\": {");
             int counter = 1;
+            String keyEntry;
             for (String key : r.getKeys()) {
-                fileCommands.add("            \"" + counter + "\": {");
-                fileCommands.add("                \"item\": \"" + key + "\"");
-                if (r.getKeys().size() == counter) {
-                    fileCommands.add("            }");
-                } else {
-                    fileCommands.add("            },");
+                keyEntry = "  \"" + counter + "\": \"" + key + "\"";
+                if (r.getKeys().size() > counter) {
+                    keyEntry += ",";
                 }
+                fileCommands.add(keyEntry);
+
                 counter++;
             }
-            fileCommands.add("        },");
-            fileCommands.add("        \"result\": {");
-            fileCommands.add("            \"id\": \"" + r.getResultItem() + "\",");
-            fileCommands.add("            \"count\": " + r.getResultAmount());
-            fileCommands.add("        }");
-            fileCommands.add("    }");
+            fileCommands.add("},");
+            fileCommands.add("  \"result\": {");
+            fileCommands.add("    \"id\": \"" + r.getResultItem() + "\",");
+            fileCommands.add("    \"count\": " + r.getResultAmount());
+            fileCommands.add("  }");
+            fileCommands.add("}");
 
             FileData fileData = new FileData(r.getResultItem() + r.getResultAmount(), fileCommands, "recipe");
             files.add(fileData);
@@ -91,6 +92,7 @@ public class FileTools {
         fileCommands.add("  \"pools\": [");
         fileCommands.add("    {");
         fileCommands.add("      \"rolls\": {");
+        fileCommands.add("        \"type\": \"minecraft:uniform\",");
         fileCommands.add("        \"min\": 3,");
         fileCommands.add("        \"max\": 5");
         fileCommands.add("      },");
@@ -138,6 +140,7 @@ public class FileTools {
         fileCommands.add("  ]");
         fileCommands.add("}");
 
+        /*
         double currentWeight;
         double sumWeight = totalWeight;
         double dispWeight;
@@ -178,6 +181,8 @@ public class FileTools {
 
         }
         fileCommands.add("//Total weight = " + totalWeight);
+
+         */
         return fileCommands;
     }
 

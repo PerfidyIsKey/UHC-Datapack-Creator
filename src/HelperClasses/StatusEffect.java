@@ -10,13 +10,23 @@ public class StatusEffect {
 
     private int amplification;
 
+    private Boolean hideParticles;
+
     public StatusEffect(Effect effect, int duration, int amplification){
         this.effect = effect;
         this.duration = duration;
         this.amplification = amplification;
+        this.hideParticles = false;
     }
 
-    public Effect getEffect() {
+    public StatusEffect(Effect effect, int duration, int amplification, Boolean particles){
+        this.effect = effect;
+        this.duration = duration;
+        this.amplification = amplification;
+        this.hideParticles = particles;
+    }
+
+    public Effect getEffectName() {
         return this.effect;
     }
 
@@ -36,5 +46,9 @@ public class StatusEffect {
 
     public void setAmplification(int amplification) {
         this.amplification = amplification;
+    }
+
+    public String giveEffect(String entity) {
+        return "effect give " + entity + " minecraft:" + effect + " " + duration + " " + amplification + " " + hideParticles;
     }
 }
