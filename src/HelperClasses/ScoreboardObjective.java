@@ -1,6 +1,7 @@
 package HelperClasses;
 
 import Enums.ScoreboardLocation;
+import Enums.Objective;
 
 public class ScoreboardObjective {
     private String name;
@@ -36,6 +37,30 @@ public class ScoreboardObjective {
         this.displaySideBar = displaySideBar;
     }
 
+    public ScoreboardObjective(Objective name, String type) {
+        this.name = name.toString();
+        this.type = type;
+    }
+
+    public ScoreboardObjective(Objective name, String type, String customName) {
+        this.name = name.toString();
+        this.type = type;
+        this.customName = customName;
+    }
+
+    public ScoreboardObjective(Objective name, String type, boolean displaySideBar) {
+        this.name = name.toString();
+        this.type = type;
+        this.displaySideBar = displaySideBar;
+    }
+
+    public ScoreboardObjective(Objective name, String type, String customName, boolean displaySideBar) {
+        this.name = name.toString();
+        this.type = type;
+        this.customName = customName;
+        this.displaySideBar = displaySideBar;
+    }
+
     public String add() {
         return "scoreboard objectives add " + name + " " + type + " " + customName;
     }
@@ -50,6 +75,10 @@ public class ScoreboardObjective {
 
     public String setDisplay(ScoreboardLocation location, String name) {
         return "scoreboard objectives setdisplay " + location + " " + name;
+    }
+
+    public String setDisplay(ScoreboardLocation location, Objective name) {
+        return "scoreboard objectives setdisplay " + location + " " + name.toString();
     }
 
     public String getName() {

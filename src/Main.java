@@ -180,6 +180,7 @@ public class Main {
         seasons = new ArrayList<>();
         quotes = new ArrayList<>();
 
+        // Colors
         Color[] colors = {Color.yellow, Color.blue, Color.red, Color.dark_purple, Color.dark_green, Color.light_purple, Color.black, Color.gold, Color.gray, Color.aqua, Color.dark_red, Color.dark_blue, Color.dark_aqua};
         BossBarColor[] bossbarColors = {BossBarColor.yellow, BossBarColor.blue, BossBarColor.red, BossBarColor.purple, BossBarColor.green, BossBarColor.pink, BossBarColor.white, BossBarColor.white, BossBarColor.white, BossBarColor.white, BossBarColor.white, BossBarColor.white, BossBarColor.white};
         String[] glassColors = {"yellow", "light_blue", "red", "purple", "green", "pink", "black", "orange", "gray", "cyan", "red", "blue", "blue"};
@@ -192,6 +193,7 @@ public class Main {
             teams.add(team);
         }
 
+        // Bossbars
         bossBars.add(new BossBar("cp1"));
         bossBars.add(new BossBar("cp2"));
 
@@ -262,37 +264,38 @@ public class Main {
         }
 
         // Scoreboard objectives
-        scoreboardObjectives.add(new ScoreboardObjective("TimDum", "dummy"));
-        scoreboardObjectives.add(new ScoreboardObjective("TimeDum", "dummy", "\"Elapsed Time\""));
-        scoreboardObjectives.add(new ScoreboardObjective("Time", "dummy", "\"Elapsed Time\"", true));
-        scoreboardObjectives.add(new ScoreboardObjective("Time2", "dummy", "\"Elapsed Time\""));
-        scoreboardObjectives.add(new ScoreboardObjective("SideDum", "dummy"));
-        scoreboardObjectives.add(new ScoreboardObjective("ControlPoint1", "dummy"));
-        scoreboardObjectives.add(new ScoreboardObjective("ControlPoint2", "dummy"));
-        scoreboardObjectives.add(new ScoreboardObjective("CPScore", "dummy", "\"Control Point score\"", true));
-        scoreboardObjectives.add(new ScoreboardObjective("MSGDum1CP1", "dummy"));
-        scoreboardObjectives.add(new ScoreboardObjective("MSGDum2CP1", "dummy"));
-        scoreboardObjectives.add(new ScoreboardObjective("MSGDum1CP2", "dummy"));
-        scoreboardObjectives.add(new ScoreboardObjective("MSGDum2CP2", "dummy"));
-        scoreboardObjectives.add(new ScoreboardObjective("Highscore1", "dummy"));
-        scoreboardObjectives.add(new ScoreboardObjective("Highscore2", "dummy"));
-        scoreboardObjectives.add(new ScoreboardObjective("Hearts", "health"));
-        scoreboardObjectives.add(new ScoreboardObjective("Apples", "minecraft.used:minecraft.golden_apple", "\"Golden Apple\"", true));
-        scoreboardObjectives.add(new ScoreboardObjective("Stone", "minecraft.mined:minecraft.stone"));
-        scoreboardObjectives.add(new ScoreboardObjective("Diorite", "minecraft.mined:minecraft.diorite"));
-        scoreboardObjectives.add(new ScoreboardObjective("Andesite", "minecraft.mined:minecraft.andesite"));
-        scoreboardObjectives.add(new ScoreboardObjective("Granite", "minecraft.mined:minecraft.granite"));
-        scoreboardObjectives.add(new ScoreboardObjective("Deepslate", "minecraft.mined:minecraft.deepslate"));
-        scoreboardObjectives.add(new ScoreboardObjective("Mining", "dummy", "\"I like mining-leaderboard\"", true));
-        scoreboardObjectives.add(new ScoreboardObjective("Deaths", "deathCount"));
-        scoreboardObjectives.add(new ScoreboardObjective("Kills", "playerKillCount", true));
-        scoreboardObjectives.add(new ScoreboardObjective("Rank", "dummy"));
-        scoreboardObjectives.add(new ScoreboardObjective("WorldLoad", "dummy"));
-        scoreboardObjectives.add(new ScoreboardObjective("CollarCheck0", "dummy"));
-        scoreboardObjectives.add(new ScoreboardObjective("CollarCheck1", "dummy"));
-        scoreboardObjectives.add(new ScoreboardObjective("MinHealth", "dummy"));
-        scoreboardObjectives.add(new ScoreboardObjective("Victory", "dummy"));
-        scoreboardObjectives.add(new ScoreboardObjective("WolfAge", "dummy"));
+        scoreboardObjectives.add(new ScoreboardObjective(Objective.TimDum, "dummy"));
+        scoreboardObjectives.add(new ScoreboardObjective(Objective.TimeDum, "dummy", "\"Elapsed Time\""));
+        scoreboardObjectives.add(new ScoreboardObjective(Objective.Time, "dummy", "\"Elapsed Time\"", true));
+        scoreboardObjectives.add(new ScoreboardObjective(Objective.Time2, "dummy", "\"Elapsed Time\""));
+        scoreboardObjectives.add(new ScoreboardObjective(Objective.SideDum, "dummy"));
+        for (int i = 0; i < 2; i++) {
+
+        }
+        scoreboardObjectives.add(new ScoreboardObjective(Objective.CPScore, "dummy", "\"Control Point score\"", true));
+        for (int i = 0; i < 2; i++) {
+            scoreboardObjectives.add(new ScoreboardObjective(Objective.Highscore.toString() + (i + 1), "dummy"));
+            scoreboardObjectives.add(new ScoreboardObjective(Objective.ControlPoint.toString() + (i + 1), "dummy"));
+            scoreboardObjectives.add(new ScoreboardObjective(Objective.CollarCheck.toString() + i, "dummy"));
+            for (int j = 0; j < 2; j++) {
+                scoreboardObjectives.add(new ScoreboardObjective(Objective.MSGDum.toString() + (i + 1) + "CP" + (j + 1), "dummy"));
+            }
+        }
+        scoreboardObjectives.add(new ScoreboardObjective(Objective.Hearts, "health"));
+        scoreboardObjectives.add(new ScoreboardObjective(Objective.Apples, "minecraft.used:minecraft.golden_apple", "\"Golden Apple\"", true));
+        scoreboardObjectives.add(new ScoreboardObjective(Objective.Stone, "minecraft.mined:minecraft.stone"));
+        scoreboardObjectives.add(new ScoreboardObjective(Objective.Diorite, "minecraft.mined:minecraft.diorite"));
+        scoreboardObjectives.add(new ScoreboardObjective(Objective.Andesite, "minecraft.mined:minecraft.andesite"));
+        scoreboardObjectives.add(new ScoreboardObjective(Objective.Granite, "minecraft.mined:minecraft.granite"));
+        scoreboardObjectives.add(new ScoreboardObjective(Objective.Deepslate, "minecraft.mined:minecraft.deepslate"));
+        scoreboardObjectives.add(new ScoreboardObjective(Objective.Mining, "dummy", "\"I like mining-leaderboard\"", true));
+        scoreboardObjectives.add(new ScoreboardObjective(Objective.Deaths, "deathCount"));
+        scoreboardObjectives.add(new ScoreboardObjective(Objective.Kills, "playerKillCount", true));
+        scoreboardObjectives.add(new ScoreboardObjective(Objective.Rank, "dummy"));
+        scoreboardObjectives.add(new ScoreboardObjective(Objective.WorldLoad, "dummy"));
+        scoreboardObjectives.add(new ScoreboardObjective(Objective.MinHealth, "dummy"));
+        scoreboardObjectives.add(new ScoreboardObjective(Objective.Victory, "dummy"));
+        scoreboardObjectives.add(new ScoreboardObjective(Objective.WolfAge, "dummy"));
     }
 
     private int determineAmountOfPlayersPerTeam() {
@@ -369,6 +372,11 @@ public class Main {
         return scoreboardObjectives.stream().filter(objective -> name.equals(objective.getName())).findAny().orElse(null);
     }
 
+    private ScoreboardObjective getObjectiveByName(Objective name) {
+        return scoreboardObjectives.stream().filter(objective -> name.toString().equals(objective.getName())).findAny().orElse(null);
+    }
+
+    // Call function through other function
     private String callFunction(String functionName) {
         return "function uhc:" + functionName;
     }
@@ -385,6 +393,7 @@ public class Main {
         return callFunction("" + functionName, delayInSeconds);
     }
 
+   // Clear schedule
     private String clearFunction(String functionName) {
         return "schedule clear uhc:" + functionName;
     }
@@ -393,6 +402,7 @@ public class Main {
         return clearFunction("" + functionName);
     }
 
+   // Setblock
     private ArrayList<String> forceLoadAndSet(int x, int y, int z, String blockType) {
         return forceLoadAndSet(x, y, z, Dimension.overworld, blockType);
     }
@@ -479,6 +489,7 @@ public class Main {
         return setBlockRelative(x, y, z, "minecraft:" + blockType);
     }
 
+    // Fill blocks
     private String fill(String x1, String y1, String z1, String x2, String y2, String z2, String blockType) {
         return "fill " + x1 + " " + y1 + " " + z1 + " " + x2 + " " + y2 + " " + z2 + " " + blockType;
     }
@@ -511,6 +522,7 @@ public class Main {
         return fill("~" + x1, "~" + y1, "~" + z1, "~" + x2, "~" + y2, "~" + z2, blockType) + " " + type + " " + blockToReplace;
     }
 
+    // Gamerules
     private String setGameRule(GameRule gamerule, boolean bool) {
         return setGameRule(gamerule, "" + bool);
     }
@@ -523,6 +535,7 @@ public class Main {
         return "gamerule " + gamerule + " " + string;
     }
 
+    // Play sound
     private String playSound(Sound sound, SoundSource source, String entity, String x, String y, String z, String x1, String y1, String z1) {
         return "playsound " + sound.getValue() + " " + source + " " + entity + " " + x + " " + y + " " + z + " " + x1 + " " + y1 + " " + z1;
     }
@@ -531,6 +544,7 @@ public class Main {
         return "attribute " + entity + " minecraft:" + attribute + " base set " + value;
     }
 
+    // Status effects
     private String giveEffect(String entity, Effect effect, int duration, int amplifier) {
         return giveEffect(entity, effect, duration, amplifier, false);
     }
@@ -547,12 +561,16 @@ public class Main {
         return "effect clear " + entity;
     }
 
+    // Difficulty
     private String setDifficulty(Difficulty difficulty) {return "difficulty " + difficulty; }
 
+    // Gamemode
     private String setDefaultGameMode(GameMode gameMode) {return "defaultgamemode " + gameMode; }
 
+    // Set world spawn
     private String setWorldSpawn(Coordinate coordinate) {return "setworldspawn " + coordinate.getCoordinateString(); }
 
+    // Entities
     private String summonEntity(String entity) {return "summon minecraft:" + entity + " ~ ~ ~"; }
 
     private String summonEntity(String entity, Coordinate coordinate) {return "summon minecraft:" + entity + " " + coordinate.getCoordinateString(); }
@@ -563,6 +581,7 @@ public class Main {
 
     private String killEntity(String entity) {return "kill " + entity;}
 
+    // Create function files
     private void makeFunctionFiles() {
         files.add(Initialize());
         files.add(DropPlayerHeads());
@@ -646,8 +665,8 @@ public class Main {
         for (ScoreboardObjective objective : scoreboardObjectives) {
             fileCommands.add(objective.add());
         }
-        fileCommands.add(new ScoreboardObjective().setDisplay(ScoreboardLocation.below_name, "Hearts"));
-        fileCommands.add(new ScoreboardObjective().setDisplay(ScoreboardLocation.list, "Hearts"));
+        fileCommands.add(new ScoreboardObjective().setDisplay(ScoreboardLocation.below_name, Objective.Hearts));
+        fileCommands.add(new ScoreboardObjective().setDisplay(ScoreboardLocation.list, Objective.Hearts));
         //end scoreboard
         //bossbar
 
@@ -663,7 +682,7 @@ public class Main {
             fileCommands.add(t.add());
             fileCommands.add("team modify " + t.getName() + " color " + t.getColor());
             for (int i = 1; i < controlPoints.size() + 1; i++) {
-                scoreboardObjectives.add(new ScoreboardObjective("CP" + i + t.getName(), "dummy"));
+                scoreboardObjectives.add(new ScoreboardObjective(Objective.CP.toString() + i + t.getName(), "dummy"));
                 fileCommands.add(scoreboardObjectives.get(scoreboardObjectives.size() - 1).add());
             }
         }
@@ -764,9 +783,9 @@ public class Main {
         ArrayList<String> fileCommands = new ArrayList<>();
 
         for (Team t : teams) {
-            fileCommands.add(execute.If(adminSingle, getObjectiveByName("CP1" + t.getName()), ComparatorType.greater,adminSingle, getObjectiveByName("Highscore1")) +
+            fileCommands.add(execute.If(adminSingle, getObjectiveByName(Objective.CP.toString() + 1 + t.getName()), ComparatorType.greater,adminSingle, getObjectiveByName(Objective.Highscore.toString() + 1)) +
                     getBossbarByName("cp1").setColor(t.getBossbarColor()));
-            fileCommands.add(execute.If(adminSingle, getObjectiveByName("CP2" + t.getName()), ComparatorType.greater, "@e[limit=1,scores={Highscore1=14400..}]", getObjectiveByName("Highscore2")) +
+            fileCommands.add(execute.If(adminSingle, getObjectiveByName(Objective.CP.toString() + 2 + t.getName()), ComparatorType.greater, "@e[limit=1,scores={Highscore1=14400..}]", getObjectiveByName(Objective.Highscore.toString() + 2)) +
                     getBossbarByName("cp2").setColor(t.getBossbarColor()));
             fileCommands.add("scoreboard players operation " + admin + " Highscore1 > " + admin + " CP1" + t.getName());
             fileCommands.add("scoreboard players operation " + admin + " Highscore2 > " + admin + " CP2" + t.getName());
@@ -849,7 +868,6 @@ public class Main {
                 setBlock(11, worldBottom + 2, 0, BlockType.bedrock, SetBlockType.destroy));
         fileCommands.add(execute.In(Dimension.overworld) +
                 setBlock(10, worldBottom + 2, 0, BlockType.bedrock, SetBlockType.destroy));
-        //fileCommands.add(getBossbarByName("cp").setTitle(cp1.getName() + ": " + cp1.getX() + ", " + cp1.getY() + ", " + cp1.getZ() + "; " + cp2.getName() + " soon: " + cp2.getX() + ", " + cp2.getY() + ", " + cp2.getZ()));
         fileCommands.add(execute.In(controlPoints.get(0).getCoordinate().getDimension()) +
                 "forceload add " + controlPoints.get(0).getCoordinate().getX() + " " + controlPoints.get(0).getCoordinate().getZ() + " " + controlPoints.get(0).getCoordinate().getX() + " " + controlPoints.get(0).getCoordinate().getZ());
         fileCommands.add(execute.In(controlPoints.get(1).getCoordinate().getDimension()) +
@@ -1155,7 +1173,7 @@ public class Main {
 
             // Update CP glass color
             fileCommands.add(execute.In(controlPoints.get(i - 1).getCoordinate().getDimension(), false) +
-                    execute.IfNext("@r[limit=1,gamemode=!spectator,team=" + team.getName() + "]", getObjectiveByName("ControlPoint" + i), ComparatorType.greater, adminSingle, getObjectiveByName("Highscore" + i), true) +
+                    execute.IfNext("@r[limit=1,gamemode=!spectator,team=" + team.getName() + "]", getObjectiveByName(Objective.ControlPoint.toString() + i), ComparatorType.greater, adminSingle, getObjectiveByName(Objective.Highscore.toString() + i), true) +
                     setBlock(controlPoints.get(i - 1).getCoordinate().getX(), controlPoints.get(i - 1).getCoordinate().getY() + 1, controlPoints.get(i - 1).getCoordinate().getZ(), "minecraft:" + team.getGlassColor() + "_stained_glass", SetBlockType.replace));
         }
 
@@ -1384,7 +1402,7 @@ public class Main {
         for (Player p : players) {
             fileCommands.add("scoreboard players set " + p.getPlayerName() + " Rank " + p.getRank());
         }
-        fileCommands.add(new ScoreboardObjective().setDisplay(ScoreboardLocation.sidebar, "Rank"));
+        fileCommands.add(new ScoreboardObjective().setDisplay(ScoreboardLocation.sidebar, Objective.Rank));
 
         return new FileData(FileName.display_rank, fileCommands);
     }
@@ -1431,12 +1449,12 @@ public class Main {
         ArrayList<String> fileCommands = new ArrayList<>();
         for (int i = 0; i < 2; i++) {
             fileCommands.add(execute.As(new Entity("@e[type=minecraft:wolf]"), false) +
-                    execute.StoreNext(ExecuteStore.result, "@s", getObjectiveByName("CollarCheck" + i), true) +
+                    execute.StoreNext(ExecuteStore.result, "@s", getObjectiveByName(Objective.CollarCheck.toString() + i), true) +
                     "data get entity @s Owner[" + i + "]");
 
             for (Team t : teams) {
                 fileCommands.add(execute.As(new Entity("@a[team=" + t.getName() + "]"), false) +
-                        execute.StoreNext(ExecuteStore.result, "@s", getObjectiveByName("CollarCheck" + i), true) +
+                        execute.StoreNext(ExecuteStore.result, "@s", getObjectiveByName(Objective.CollarCheck.toString() + i), true) +
                         "data get entity @s UUID[" + i + "]");
 
 
@@ -1445,8 +1463,8 @@ public class Main {
         for (Team t : teams) {
             fileCommands.add("tag @a[team=" + t.getName() + "] add CollarCheck");
             fileCommands.add(execute.As(new Entity("@e[type=wolf]"), false) +
-                    execute.IfNext("@s", getObjectiveByName("CollarCheck0"), ComparatorType.equal, "@p[tag=CollarCheck]", getObjectiveByName("CollarCheck0")) +
-                    execute.IfNext("@s", getObjectiveByName("CollarCheck1"), ComparatorType.equal, "@p[tag=CollarCheck]", getObjectiveByName("CollarCheck1"), true) +
+                    execute.IfNext("@s", getObjectiveByName(Objective.CollarCheck.toString() + 0), ComparatorType.equal, "@p[tag=CollarCheck]", getObjectiveByName(Objective.CollarCheck.toString() + 0)) +
+                    execute.IfNext("@s", getObjectiveByName(Objective.CollarCheck.toString() + 1), ComparatorType.equal, "@p[tag=CollarCheck]", getObjectiveByName(Objective.CollarCheck.toString() + 1), true) +
                     "data modify entity @s CollarColor set value " + t.getCollarColor() + "b");
             fileCommands.add("tag @a[team=" + t.getName() + "] remove CollarCheck");
         }
@@ -1506,7 +1524,7 @@ public class Main {
         fileCommands.add("scoreboard players add " + admin + " TimDum 1");
         fileCommands.add(execute.If(new Entity("@e[scores={TimDum=" + tickPerSecond + "}]")) +
                 "scoreboard players add " + admin + " TimeDum 1");
-        fileCommands.add(execute.Store(ExecuteStore.result, "CurrentTime", getObjectiveByName("Time")) +
+        fileCommands.add(execute.Store(ExecuteStore.result, "CurrentTime", getObjectiveByName(Objective.Time)) +
                 "scoreboard players get " + adminSingle + " TimeDum");
         fileCommands.add(execute.If(new Entity("@e[scores={TimDum=" + tickPerSecond + "..}]")) +
                 "scoreboard players reset " + admin + " TimDum");
@@ -1640,8 +1658,8 @@ public class Main {
 
         // Find player with lowest health
         fileCommands.add(execute.As(new Entity("@r[gamemode=!spectator]"), false) +
-                execute.IfNext("@s", getObjectiveByName("Hearts"), ComparatorType.less, adminSingle, getObjectiveByName("MinHealth")) +
-                execute.StoreNext(ExecuteStore.result, admin, getObjectiveByName("MinHealth"), true) +
+                execute.IfNext("@s", getObjectiveByName(Objective.Hearts), ComparatorType.less, adminSingle, getObjectiveByName(Objective.MinHealth)) +
+                execute.StoreNext(ExecuteStore.result, admin, getObjectiveByName(Objective.MinHealth), true) +
                 "scoreboard players get @s Hearts");
 
         return new FileData(FileName.update_min_health, fileCommands);
@@ -1786,7 +1804,7 @@ public class Main {
         Entity babyWolf = new Entity("@e[type=wolf, scores={WolfAge=..-1}]");
 
         fileCommands.add(execute.As(new Entity("@e[limit=1, type=wolf, sort=random]"), false) +
-                execute.StoreNext(ExecuteStore.result, "@s", getObjectiveByName("WolfAge"), true) +
+                execute.StoreNext(ExecuteStore.result, "@s", getObjectiveByName(Objective.WolfAge), true) +
                 "data get entity @s Age");
         fileCommands.add(execute.At(babyWolf) +
                 summonEntity("dolphin"));
