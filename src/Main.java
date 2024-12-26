@@ -37,8 +37,9 @@ public class Main {
 
     //GameData<
     private static final int chestSize = 27;
-    private static final String commandCenter = "s56";
-    private static final String admin = "@e[type=marker,limit=1]";
+    private static final String commandCenter = "s58";
+    private static final String admin = "@e[type=marker]";
+    private static final String adminSingle = "@e[type=marker,limit=1]";
     private Coordinate startCoordinate;
     private ArrayList<Team> teams = new ArrayList<>();
     private ArrayList<ControlPoint> cpList = new ArrayList<>();
@@ -159,7 +160,6 @@ public class Main {
             fileTools = new FileTools();
         }
         uhcNumber = fileTools.getContentOutOfFile("Files\\" + communityMode + "\\uhc_data.txt", "uhcNumber");
-        //admin = fileTools.getContentOutOfFile("Files\\" + communityMode + "\\uhc_data.txt", "admin");
 
         worldLocation = "Server\\world\\";
 
@@ -262,7 +262,6 @@ public class Main {
         }
 
         // Scoreboard objectives
-        scoreboardObjectives.add(new ScoreboardObjective("Admin", "dummy"));
         scoreboardObjectives.add(new ScoreboardObjective("TimDum", "dummy"));
         scoreboardObjectives.add(new ScoreboardObjective("TimeDum", "dummy", "\"Elapsed Time\""));
         scoreboardObjectives.add(new ScoreboardObjective("Time", "dummy", "\"Elapsed Time\"", true));
@@ -702,8 +701,8 @@ public class Main {
         ArrayList<String> fileCommands = new ArrayList<>();
 
         // Indicate when first blood has been taken
-        fileCommands.add(execute.If("@p[scores={Time2=24000..}]", false) +
-                execute.UnlessNext("@p[tag=" + Tag.RespawnDisabled + "]", true) +
+        fileCommands.add(execute.If("@e[scores={Time2=24000..}]", false) +
+                execute.UnlessNext("@e[tag=" + Tag.RespawnDisabled + "]", true) +
                 callFunction(FileName.disable_respawn));
 
         // Play thunder sound
@@ -715,8 +714,8 @@ public class Main {
         // Reset scores
         fileCommands.add("scoreboard players set @a[scores={Deaths=1}] ControlPoint1 0");
         fileCommands.add("scoreboard players set @a[scores={Deaths=1}] ControlPoint2 0");
-        fileCommands.add("scoreboard players set @p[scores={Admin=1}] Highscore1 1");
-        fileCommands.add("scoreboard players set @p[scores={Admin=1}] Highscore2 1");
+        fileCommands.add("scoreboard players set " + admin + " Highscore1 1");
+        fileCommands.add("scoreboard players set " + admin + " Highscore2 1");
 
         // Reset player with lowest health
         fileCommands.add("scoreboard players set " + admin + " MinHealth 20");
@@ -733,7 +732,7 @@ public class Main {
                 new TellRaw("@a", texts).sendRaw());
 
         // Add respawn tag to players who die before first blood
-        fileCommands.add(execute.Unless("@p[tag=" + Tag.RespawnDisabled + "]") +
+        fileCommands.add(execute.Unless("@e[tag=" + Tag.RespawnDisabled + "]") +
                 "tag @p[scores={Deaths=1}] add " + Tag.Respawn);
 
         // Drop player head
@@ -743,7 +742,7 @@ public class Main {
         fileCommands.add("scoreboard players reset @p[scores={Deaths=1}] Deaths");
 
         // Do automatic respawn before first blood
-        fileCommands.add(execute.Unless("@p[tag=" + Tag.RespawnDisabled + "]") +
+        fileCommands.add(execute.Unless("@e[tag=" + Tag.RespawnDisabled + "]") +
                 callFunction(FileName.respawn_player, 1));
 
         return new FileData(FileName.handle_player_death, fileCommands);
@@ -765,19 +764,19 @@ public class Main {
         ArrayList<String> fileCommands = new ArrayList<>();
 
         for (Team t : teams) {
-            fileCommands.add(execute.If("@p[scores={Admin=1}]", getObjectiveByName("CP1" + t.getName()), ComparatorType.greater,"@p[scores={Admin=1}]", getObjectiveByName("Highscore1")) +
+            fileCommands.add(execute.If(adminSingle, getObjectiveByName("CP1" + t.getName()), ComparatorType.greater,adminSingle, getObjectiveByName("Highscore1")) +
                     getBossbarByName("cp1").setColor(t.getBossbarColor()));
-            fileCommands.add(execute.If("@p[scores={Admin=1}]", getObjectiveByName("CP2" + t.getName()), ComparatorType.greater, "@p[scores={Admin=1,Highscore1=14400..}]", getObjectiveByName("Highscore2")) +
+            fileCommands.add(execute.If(adminSingle, getObjectiveByName("CP2" + t.getName()), ComparatorType.greater, "@e[limit=1,scores={Highscore1=14400..}]", getObjectiveByName("Highscore2")) +
                     getBossbarByName("cp2").setColor(t.getBossbarColor()));
-            fileCommands.add("scoreboard players operation @p[scores={Admin=1}] Highscore1 > @p[scores={Admin=1}] CP1" + t.getName());
-            fileCommands.add("scoreboard players operation @p[scores={Admin=1}] Highscore2 > @p[scores={Admin=1}] CP2" + t.getName());
+            fileCommands.add("scoreboard players operation " + admin + " Highscore1 > " + admin + " CP1" + t.getName());
+            fileCommands.add("scoreboard players operation " + admin + " Highscore2 > " + admin + " CP2" + t.getName());
         }
 
         // Update value of bossbars
         fileCommands.add(execute.Store(ExecuteStore.result, getBossbarByName("cp1"), BossBarStore.value) +
-                "scoreboard players get @p[scores={Admin=1}] Highscore1");
+                "scoreboard players get " + adminSingle + " Highscore1");
         fileCommands.add(execute.Store(ExecuteStore.result, getBossbarByName("cp2"), BossBarStore.value) +
-                "scoreboard players get @p[scores={Admin=1,Highscore1=14400..}] Highscore2");
+                "scoreboard players get @e[limit=1,scores={Highscore1=14400..}] Highscore2");
 
         return new FileData(FileName.bbvalue, fileCommands);
     }
@@ -824,7 +823,7 @@ public class Main {
 
         // Create marker entity
         fileCommands.add(killEntity("@e[type=marker]"));
-        fileCommands.add(summonEntity("marker", new Coordinate(0, worldBottom, 0)));
+        fileCommands.add(summonEntity("marker", new Coordinate(0, worldBottom, 0), "{CustomName:\"\\\"Admin\\\"\"}"));
 
         // Set gamerules
         fileCommands.add(setGameRule(GameRule.commandBlockOutput, true));
@@ -844,7 +843,6 @@ public class Main {
                 fill(2, worldBottom + 2, 0, 8, worldBottom + 2, 0, BlockType.bedrock, SetBlockType.replace));
         fileCommands.add(execute.In(Dimension.overworld) +
                 fill(15, worldBottom + 2, 3, 15, worldBottom + 2, 11, BlockType.bedrock, SetBlockType.replace));
-        fileCommands.add("scoreboard players set " + admin + " Admin 1");
         fileCommands.add(execute.In(Dimension.overworld) +
                 fill(15, worldBottom + 2, 15, 9, worldBottom + 2, 15, BlockType.redstone_block, SetBlockType.replace));
         fileCommands.add(execute.In(Dimension.overworld) +
@@ -959,7 +957,7 @@ public class Main {
         ArrayList<String> fileCommands = new ArrayList<>();
         fileCommands.add(execute.In(Dimension.overworld) +
                 "spreadplayers 0 0 " + 0.3 * worldSize + " " + 0.9 * worldSize + " true @a");
-        fileCommands.add("scoreboard players set @p[scores={Admin=1}] Highscore 1");
+        fileCommands.add("scoreboard players set " + admin + " Highscore 1");
         fileCommands.add("scoreboard players set " + admin + " MinHealth 20");
 
         return new FileData(FileName.spread_players, fileCommands);
@@ -1008,7 +1006,7 @@ public class Main {
                 setBlock(10, worldBottom + 2, 0, BlockType.redstone_block, SetBlockType.destroy));
         fileCommands.add("advancement revoke @a everything");
         fileCommands.add("xp set @a 0 points");
-        fileCommands.add("scoreboard players set @p[scores={Admin=1}] Victory 1");
+        fileCommands.add("scoreboard players set " + admin + " Victory 1");
         fileCommands.add("give @a minecraft:bundle[custom_data={locateTeammate:1b}]");
 
         // Initialize CP messaging dummies
@@ -1094,7 +1092,7 @@ public class Main {
 
     private FileData Victory() {
         ArrayList<String> fileCommands = new ArrayList<>();
-        fileCommands.add("scoreboard players set @p[scores={Admin=1}] Victory 2");
+        fileCommands.add("scoreboard players set " + admin + " Victory 2");
         fileCommands.add(callFunction(FileName.minute_ + "2", 60));
         fileCommands.add(callFunction(FileName.minute_ + "1", 60 * 2));
         fileCommands.add(callFunction(FileName.death_match, 60 * 3));
@@ -1157,7 +1155,7 @@ public class Main {
 
             // Update CP glass color
             fileCommands.add(execute.In(controlPoints.get(i - 1).getCoordinate().getDimension(), false) +
-                    execute.IfNext("@r[limit=1,gamemode=!spectator,team=" + team.getName() + "]", getObjectiveByName("ControlPoint" + i), ComparatorType.greater, "@p[scores={Admin=1}]", getObjectiveByName("Highscore" + i), true) +
+                    execute.IfNext("@r[limit=1,gamemode=!spectator,team=" + team.getName() + "]", getObjectiveByName("ControlPoint" + i), ComparatorType.greater, adminSingle, getObjectiveByName("Highscore" + i), true) +
                     setBlock(controlPoints.get(i - 1).getCoordinate().getX(), controlPoints.get(i - 1).getCoordinate().getY() + 1, controlPoints.get(i - 1).getCoordinate().getZ(), "minecraft:" + team.getGlassColor() + "_stained_glass", SetBlockType.replace));
         }
 
@@ -1314,7 +1312,7 @@ public class Main {
         fileCommands.add(execute.As(new Entity("@a[tag=Traitor]")) +
                 new Title("@s", TitleType.actionbar, texts).displayTitle());
 
-        fileCommands.add(execute.If(new Entity("@p[scores={Admin=1,Victory=1}]")) +
+        fileCommands.add(execute.If(new Entity("@e[scores={Victory=1}]")) +
                 callFunction(FileName.traitor_check));
 
         return new FileData(FileName.traitor_actionbar, fileCommands);
@@ -1325,21 +1323,21 @@ public class Main {
         for (int i = 1; i < controlPoints.size() + 1; i++) {
             for (Team t : teams) {
                 fileCommands.add(execute.As(new Entity("@r[limit=1,gamemode=!spectator]")) +
-                        "scoreboard players operation @p[scores={Admin=1}] CP" + i + t.getName() + " > @s[team=" + t.getName() + "] ControlPoint" + i);
+                        "scoreboard players operation " + admin + " CP" + i + t.getName() + " > @s[team=" + t.getName() + "] ControlPoint" + i);
 
                 fileCommands.add(execute.As(new Entity("@r[limit=1,gamemode=!spectator]")) +
-                        "scoreboard players operation @s[team=" + t.getName() + "] ControlPoint" + i + " > @p[scores={Admin=1}] CP" + i + t.getName());
+                        "scoreboard players operation @s[team=" + t.getName() + "] ControlPoint" + i + " > " + admin + " CP" + i + t.getName());
             }
         }
 
         for (Team t : teams) {
             fileCommands.add(execute.In(controlPoints.get(0).getCoordinate().getDimension(), false) +
                     execute.AsNext(new Entity("@r[limit=1,gamemode=!spectator,x=" + (controlPoints.get(0).getCoordinate().getX() - 6) + ",y=" + (controlPoints.get(0).getCoordinate().getY() - 1) + ",z=" + (controlPoints.get(0).getCoordinate().getZ() - 6) + ",dx=12,dy=12,dz=12,team=" + t.getName() + "]"), true) +
-                    "scoreboard players operation @p[scores={Admin=1}] CP1" + t.getName() + " > @p[scores={Admin=1}] CP2" + t.getName());
+                    "scoreboard players operation " + admin + " CP1" + t.getName() + " > " + admin + " CP2" + t.getName());
 
             fileCommands.add(execute.In(controlPoints.get(1).getCoordinate().getDimension(), false) +
                     execute.AsNext(new Entity("@r[limit=1,gamemode=!spectator,x=" + (controlPoints.get(1).getCoordinate().getX() - 6) + ",y=" + (controlPoints.get(1).getCoordinate().getY() - 1) + ",z=" + (controlPoints.get(1).getCoordinate().getZ() - 6) + ",dx=12,dy=12,dz=12,team=" + t.getName() + "]"), true) +
-                    "scoreboard players operation @p[scores={Admin=1}] CP2" + t.getName() + " > @p[scores={Admin=1}] CP1" + t.getName());
+                    "scoreboard players operation " + admin + " CP2" + t.getName() + " > " + admin + " CP1" + t.getName());
         }
         fileCommands.add(callFunction(FileName.controlpoint_perks));
 
@@ -1393,20 +1391,20 @@ public class Main {
 
     private FileData WorldPreload() {
         ArrayList<String> fileCommands = new ArrayList<>();
-        fileCommands.add("scoreboard players add @a[gamemode=creative] WorldLoad 1");
-        fileCommands.add("scoreboard players add @a[gamemode=creative] Time 1");
-        fileCommands.add(execute.If(new Entity("@p[scores={WorldLoad=400..}]")) +
+        fileCommands.add("scoreboard players add " + admin + " WorldLoad 1");
+        fileCommands.add("scoreboard players add " + admin + " Time 1");
+        fileCommands.add(execute.If(new Entity("@e[scores={WorldLoad=400..}]")) +
                 "spreadplayers 0 0 5 " + worldSize + " false @a");
-        fileCommands.add(execute.If(new Entity("@p[scores={Time=12000..}]"), false) +
+        fileCommands.add(execute.If(new Entity("@e[scores={Time=12000..}]"), false) +
                 execute.InNext(Dimension.overworld, true) +
                 setBlock(6, worldBottom + 2, 15, BlockType.bedrock));
-        fileCommands.add(execute.If(new Entity("@p[scores={Time=12000..}]"), false) +
+        fileCommands.add(execute.If(new Entity("@e[scores={Time=12000..}]"), false) +
                 execute.InNext(Dimension.overworld, true) +
                 "tp @a[gamemode=creative] 0 221 0");
-        fileCommands.add(execute.If(new Entity("@p[scores={Time=12000..}]")) +
+        fileCommands.add(execute.If(new Entity("@e[scores={Time=12000..}]")) +
                 setGameRule(GameRule.commandBlockOutput, true));
-        fileCommands.add(execute.If(new Entity("@p[scores={WorldLoad=400..}]")) +
-                "scoreboard players reset @a WorldLoad");
+        fileCommands.add(execute.If(new Entity("@e[scores={WorldLoad=400..}]")) +
+                "scoreboard players reset @e WorldLoad");
 
         return new FileData(FileName.world_pre_load, fileCommands);
     }
@@ -1458,17 +1456,17 @@ public class Main {
 
     private FileData UpdateSidebar() {
         ArrayList<String> fileCommands = new ArrayList<>();
-        fileCommands.add("scoreboard players add @p[scores={Admin=1}] SideDum 1");
+        fileCommands.add("scoreboard players add " + admin + " SideDum 1");
         int i = 0;
         for (ScoreboardObjective s : scoreboardObjectives) {
             if (s.getDisplaySideBar()) {
                 i++;
-                fileCommands.add(execute.If(new Entity("@p[scores={SideDum=" + (10 * tickPerSecond * i) + "}]")) +
+                fileCommands.add(execute.If(new Entity("@e[scores={SideDum=" + (10 * tickPerSecond * i) + "}]")) +
                         s.setDisplay(ScoreboardLocation.sidebar));
             }
         }
-        fileCommands.add(execute.If(new Entity("@p[scores={SideDum=" + (10 * tickPerSecond * i + 1) + "}]")) +
-                "scoreboard players reset @p[scores={Admin=1}] SideDum");
+        fileCommands.add(execute.If(new Entity("@e[scores={SideDum=" + (10 * tickPerSecond * i + 1) + "}]")) +
+                "scoreboard players reset " + admin + " SideDum");
 
         // Update stripmine count
         fileCommands.add("scoreboard players set @a[scores={Mining=1..}] Mining 0");
@@ -1504,17 +1502,17 @@ public class Main {
         fileCommands.add(execute.If(new Entity("@p[scores={Deaths=1}]")) +
                 callFunction(FileName.handle_player_death));
 
-        fileCommands.add("scoreboard players add @p[scores={Admin=1}] Time2 1");
-        fileCommands.add("scoreboard players add @p[scores={Admin=1}] TimDum 1");
-        fileCommands.add(execute.If(new Entity("@p[scores={TimDum=" + tickPerSecond + "}]")) +
-                "scoreboard players add @p[scores={Admin=1}] TimeDum 1");
+        fileCommands.add("scoreboard players add " + admin + " Time2 1");
+        fileCommands.add("scoreboard players add " + admin + " TimDum 1");
+        fileCommands.add(execute.If(new Entity("@e[scores={TimDum=" + tickPerSecond + "}]")) +
+                "scoreboard players add " + admin + " TimeDum 1");
         fileCommands.add(execute.Store(ExecuteStore.result, "CurrentTime", getObjectiveByName("Time")) +
-                "scoreboard players get @p[scores={Admin=1}] TimeDum");
-        fileCommands.add(execute.If(new Entity("@p[scores={TimDum=" + tickPerSecond + "..}]")) +
-                "scoreboard players reset @p[scores={Admin=1}] TimDum");
+                "scoreboard players get " + adminSingle + " TimeDum");
+        fileCommands.add(execute.If(new Entity("@e[scores={TimDum=" + tickPerSecond + "..}]")) +
+                "scoreboard players reset " + admin + " TimDum");
 
 
-        fileCommands.add(execute.If(new Entity("@p[scores={Time2=" + (300 * tickPerSecond) + "}]")) +
+        fileCommands.add(execute.If(new Entity("@e[scores={Time2=" + (300 * tickPerSecond) + "}]")) +
                 new TellRaw("@a", new Text(Color.gray, false, false, "PVP IS NOT ALLOWED UNTIL DAY 2!")).sendRaw());
 
         ArrayList<TextItem> texts = new ArrayList<>();
@@ -1524,7 +1522,7 @@ public class Main {
         texts.add(new Text(Color.light_purple, true, false, "DAY TIME HAS ARRIVED & ETERNAL DAY ENABLED!"));
         texts.add(bannerText);
 
-        fileCommands.add(execute.If(new Entity("@p[scores={Time2=" + (1200 * tickPerSecond) + "}]")) +
+        fileCommands.add(execute.If(new Entity("@e[scores={Time2=" + (1200 * tickPerSecond) + "}]")) +
                 new TellRaw("@a", texts).sendRaw());
         fileCommands.add(callFunction(FileName.display_quotes));
         fileCommands.add(callFunction(FileName.locate_teammate));
@@ -1569,7 +1567,7 @@ public class Main {
                 for (Perk perk : perks) {
                     // Set variables
                     currentPlayer.setEntity("@p[team=" + team.getName() + ",tag=!" + Tag.ReceivedPerk + perk.getId() + "]");
-                    currentScoreCheck.setEntity("@p[scores={CP" + (i + 1) + team.getName() + "=" + perk.getActivationTime() + "..}]");
+                    currentScoreCheck.setEntity("@e[scores={CP" + (i + 1) + team.getName() + "=" + perk.getActivationTime() + "..}]");
 
                     // Create text to be displayed
                     ArrayList<TextItem> texts = new ArrayList<>();
@@ -1610,7 +1608,7 @@ public class Main {
 
         for (int i = 0; i < 36; i++) {
             int index = (int) (Math.random() * quotes.size());
-            fileCommands.add(execute.If(new Entity("@p[scores={Time2=" + (7 * secPerMinute * tickPerSecond * (i + 1)) + "}]")) +
+            fileCommands.add(execute.If(new Entity("@e[scores={Time2=" + (7 * secPerMinute * tickPerSecond * (i + 1)) + "}]")) +
                     new TellRaw("@a", new Text(Color.white, false, false, quotes.get(index))).sendRaw());
             quotes.remove(index);
         }
@@ -1642,7 +1640,7 @@ public class Main {
 
         // Find player with lowest health
         fileCommands.add(execute.As(new Entity("@r[gamemode=!spectator]"), false) +
-                execute.IfNext("@s", getObjectiveByName("Hearts"), ComparatorType.less, admin, getObjectiveByName("MinHealth")) +
+                execute.IfNext("@s", getObjectiveByName("Hearts"), ComparatorType.less, adminSingle, getObjectiveByName("MinHealth")) +
                 execute.StoreNext(ExecuteStore.result, admin, getObjectiveByName("MinHealth"), true) +
                 "scoreboard players get @s Hearts");
 
@@ -1681,7 +1679,7 @@ public class Main {
             int indexFront = 2 * i + 1;
             int indexRear = 2 * (i + 1);
 
-            fileCommands.add(execute.If(new Entity("@e[type=marker,limit=1,scores={MinHealth=" + indexFront + ".." + indexRear + "}]")) +
+            fileCommands.add(execute.If(new Entity("@e[scores={MinHealth=" + indexFront + ".." + indexRear + "}]")) +
                     setAttributeBase(respawnPlayer, AttributeType.max_health, i + 1));
         }
         fileCommands.add(giveEffect(respawnPlayer, Effect.health_boost, 1, 0));
@@ -1744,10 +1742,10 @@ public class Main {
         ArrayList<String> fileCommands = new ArrayList<>();
         for (int i = 0; i < teams.size(); i++) {
             for (int j = 1; j < 3; j++) {
-                fileCommands.add(execute.If(new Entity("@a[limit=1,scores={Admin=1,Victory=1}]"), false) +
+                fileCommands.add(execute.If(new Entity("@e[scores={Victory=1}]"), false) +
                         execute.IfNext(new Entity("@p[team=" + teams.get(i).getName() + ",gamemode=!spectator,scores={ControlPoint" + j + "=" + (maxCPScore * tickPerSecond) + "..},tag=!Traitor]"), true) +
                         callFunction("" + FileName.victory_message_ + i));
-                fileCommands.add(execute.If(new Entity("@a[limit=1,scores={Admin=1,Victory=1}]"), false) +
+                fileCommands.add(execute.If(new Entity("@e[scores={Victory=1}]"), false) +
                         execute.IfNext("@p[team=" + teams.get(i).getName() + ",gamemode=!spectator,scores={ControlPoint" + j + "=" + (maxCPScore * tickPerSecond) + "..},tag=Traitor]") +
                         execute.UnlessNext("@p[team=" + teams.get(i).getName() + ",gamemode=!spectator,scores={ControlPoint" + j + "=" + (maxCPScore * tickPerSecond) + "..},tag=!Traitor]", true) +
                         callFunction(FileName.victory_message_traitor));
@@ -1803,7 +1801,7 @@ public class Main {
 
         for (Team t : teams) {
             for (int i = 1; i < controlPoints.size() + 1; i++) {
-                fileCommands.add("scoreboard players operation " + t.getPlayerColor() + " CPScore > @p[scores={Admin=1}] CP" + i + t.getName());
+                fileCommands.add("scoreboard players operation " + t.getPlayerColor() + " CPScore > " + admin + " CP" + i + t.getName());
             }
         }
 
@@ -1814,7 +1812,7 @@ public class Main {
         ArrayList<String> fileCommands = new ArrayList<>();
 
         // Add first blood tag
-        fileCommands.add("tag @p[scores={Admin=1}] add " + Tag.RespawnDisabled);
+        fileCommands.add("tag " + admin + " add " + Tag.RespawnDisabled);
 
         // Update immediate respawn
         fileCommands.add(setGameRule(GameRule.doImmediateRespawn, false));
