@@ -38,7 +38,7 @@ public class Main {
     //GameData<
     private static final int chestSize = 27;
     private static final String commandCenter = "s56";
-    private String admin;
+    private static final String admin = "@e[type=marker,limit=1]";
     private Coordinate startCoordinate;
     private ArrayList<Team> teams = new ArrayList<>();
     private ArrayList<ControlPoint> cpList = new ArrayList<>();
@@ -159,7 +159,7 @@ public class Main {
             fileTools = new FileTools();
         }
         uhcNumber = fileTools.getContentOutOfFile("Files\\" + communityMode + "\\uhc_data.txt", "uhcNumber");
-        admin = fileTools.getContentOutOfFile("Files\\" + communityMode + "\\uhc_data.txt", "admin");
+        //admin = fileTools.getContentOutOfFile("Files\\" + communityMode + "\\uhc_data.txt", "admin");
 
         worldLocation = "Server\\world\\";
 
@@ -548,11 +548,21 @@ public class Main {
         return "effect clear " + entity;
     }
 
-    private String setDifficulty(Difficulty difficulty) {return "difficulty " + difficulty;}
+    private String setDifficulty(Difficulty difficulty) {return "difficulty " + difficulty; }
 
-    private String setDefaultGameMode(GameMode gameMode) {return "defaultgamemode " + gameMode;}
+    private String setDefaultGameMode(GameMode gameMode) {return "defaultgamemode " + gameMode; }
 
-    private String setWorldSpawn(Coordinate coordinate) {return "setworldspawn " + coordinate.getCoordinateString();}
+    private String setWorldSpawn(Coordinate coordinate) {return "setworldspawn " + coordinate.getCoordinateString(); }
+
+    private String summonEntity(String entity) {return "summon minecraft:" + entity + " ~ ~ ~"; }
+
+    private String summonEntity(String entity, Coordinate coordinate) {return "summon minecraft:" + entity + " " + coordinate.getCoordinateString(); }
+
+    private String summonEntity(String entity, String nbt) {return "summon minecraft:" + entity + " ~ ~ ~ " + nbt; }
+
+    private String summonEntity(String entity, Coordinate coordinate, String nbt) {return "summon minecraft:" + entity + " " + coordinate.getCoordinateString() + " " + nbt; }
+
+    private String killEntity(String entity) {return "kill " + entity;}
 
     private void makeFunctionFiles() {
         files.add(Initialize());
@@ -709,7 +719,7 @@ public class Main {
         fileCommands.add("scoreboard players set @p[scores={Admin=1}] Highscore2 1");
 
         // Reset player with lowest health
-        fileCommands.add("scoreboard players set @p[scores={Admin=1}] MinHealth 20");
+        fileCommands.add("scoreboard players set " + admin + " MinHealth 20");
 
         // Announce traitor deaths
         ArrayList<TextItem> texts = new ArrayList<>();
@@ -745,7 +755,7 @@ public class Main {
         // Summon a player head upon dying
         for (Player p : players) {
             fileCommands.add(execute.At(new Entity("@p[name=" + p.getPlayerName() + ",scores={Deaths=1}]")) +
-                    "summon minecraft:item ~ ~ ~ {Item:{id:\"minecraft:player_head\",count:1,components:{\"minecraft:profile\":{name:" + p.getPlayerName() + "}}}}");
+                    summonEntity("item", "{Item:{id:\"minecraft:player_head\",count:1,components:{\"minecraft:profile\":{name:" + p.getPlayerName() + "}}}}"));
         }
 
         return new FileData(FileName.drop_player_heads, fileCommands);
@@ -811,6 +821,12 @@ public class Main {
 
     private FileData DeveloperMode() {
         ArrayList<String> fileCommands = new ArrayList<>();
+
+        // Create marker entity
+        fileCommands.add(killEntity("@e[type=marker]"));
+        fileCommands.add(summonEntity("marker", new Coordinate(0, worldBottom, 0)));
+
+        // Set gamerules
         fileCommands.add(setGameRule(GameRule.commandBlockOutput, true));
         fileCommands.add(setGameRule(GameRule.doDaylightCycle, false));
         fileCommands.add(setGameRule(GameRule.keepInventory, true));
@@ -944,7 +960,7 @@ public class Main {
         fileCommands.add(execute.In(Dimension.overworld) +
                 "spreadplayers 0 0 " + 0.3 * worldSize + " " + 0.9 * worldSize + " true @a");
         fileCommands.add("scoreboard players set @p[scores={Admin=1}] Highscore 1");
-        fileCommands.add("scoreboard players set @p[scores={Admin=1}] MinHealth 20");
+        fileCommands.add("scoreboard players set " + admin + " MinHealth 20");
 
         return new FileData(FileName.spread_players, fileCommands);
     }
@@ -1126,7 +1142,6 @@ public class Main {
                 "tp @a[gamemode=!spectator] 3 153 3");
         fileCommands.add(execute.In(Dimension.overworld) +
                 "spreadplayers 0 0 75 150 true @a[gamemode=!spectator]");
-        fileCommands.add(getBossbarByName("cp").setVisible(false));
 
         return new FileData(FileName.death_match, fileCommands);
     }
@@ -1136,8 +1151,8 @@ public class Main {
         for (Team team : teams) {
             // Give players on the Control Point score
             fileCommands.add(execute.As("@a[gamemode=!spectator,team=" + team.getName() + "]", false) +
-                    execute.IfNext("@s[gamemode=!spectator,x=" + (controlPoints.get(i - 1).getCoordinate().getX() - 6) + ",y=" + (controlPoints.get(i - 1).getCoordinate().getY() - 1) + ",z=" + (controlPoints.get(i - 1).getCoordinate().getZ() - 6) + ",dx=12,dy=12,dz=12]" +
-                    execute.UnlessNext("@a[gamemode=!spectator,x=" + (controlPoints.get(i - 1).getCoordinate().getX() - 6) + ",y=" + (controlPoints.get(i - 1).getCoordinate().getY() - 1) + ",z=" + (controlPoints.get(i - 1).getCoordinate().getZ() - 6) + ",dx=12,dy=12,dz=12,team=!" + team.getName() + "]"), true) +
+                    execute.IfNext("@s[gamemode=!spectator,x=" + (controlPoints.get(i - 1).getCoordinate().getX() - 6) + ",y=" + (controlPoints.get(i - 1).getCoordinate().getY() - 1) + ",z=" + (controlPoints.get(i - 1).getCoordinate().getZ() - 6) + ",dx=12,dy=12,dz=12]") +
+                    execute.UnlessNext("@a[gamemode=!spectator,x=" + (controlPoints.get(i - 1).getCoordinate().getX() - 6) + ",y=" + (controlPoints.get(i - 1).getCoordinate().getY() - 1) + ",z=" + (controlPoints.get(i - 1).getCoordinate().getZ() - 6) + ",dx=12,dy=12,dz=12,team=!" + team.getName() + "]", true) +
                     "scoreboard players add @s ControlPoint" + i + " " + controlPoints.get(i - 1).getAddRate());
 
             // Update CP glass color
@@ -1218,7 +1233,7 @@ public class Main {
         return new FileData("" + FileName.controlpoint_messages_ + i, fileCommands);
     }
 
-    private static FileData DropCarepackages() {
+    private FileData DropCarepackages() {
         ArrayList<String> fileCommands = new ArrayList<>();
 
         fileCommands.add(new Title("@a", TitleType.title, new Text(Color.gold, true, true, carePackageAmount + " Supply Drops!")).displayTitle());
@@ -1226,7 +1241,7 @@ public class Main {
 
         for (int i = 0; i < carePackageAmount; i++) {
             fileCommands.add(execute.In(Dimension.overworld) +
-                    "summon minecraft:area_effect_cloud ~ ~5 ~ {Passengers:[{id:falling_block,Time:1,DropItem:0b,BlockState:{Name:\"minecraft:chest\"},TileEntityData:{CustomName:\"\\\"Loot chest\\\"\",LootTable:\"uhc:supply_drop\"}}]}");
+                    summonEntity("area_effect_cloud", new Coordinate(0, 5, 0, ReferenceFrame.relative), "{Passengers:[{id:falling_block,Time:1,DropItem:0b,BlockState:{Name:\"minecraft:chest\"},TileEntityData:{CustomName:\"\\\"Loot chest\\\"\",LootTable:\"uhc:supply_drop\"}}]}"));
         }
 
         return new FileData(FileName.drop_carepackages, fileCommands);
@@ -1627,8 +1642,8 @@ public class Main {
 
         // Find player with lowest health
         fileCommands.add(execute.As(new Entity("@r[gamemode=!spectator]"), false) +
-                execute.IfNext("@s", getObjectiveByName("Hearts"), ComparatorType.less, "@p[scores={Admin=1}]", getObjectiveByName("MinHealth")) +
-                execute.StoreNext(ExecuteStore.result, "@p[scores={Admin=1}]", getObjectiveByName("MinHealth"), true) +
+                execute.IfNext("@s", getObjectiveByName("Hearts"), ComparatorType.less, admin, getObjectiveByName("MinHealth")) +
+                execute.StoreNext(ExecuteStore.result, admin, getObjectiveByName("MinHealth"), true) +
                 "scoreboard players get @s Hearts");
 
         return new FileData(FileName.update_min_health, fileCommands);
@@ -1656,7 +1671,7 @@ public class Main {
         fileCommands.add(execute.As(new Entity("@a[nbt={Inventory:[{id:\"minecraft:player_head\"}]}]")) +
                 "clear @s minecraft:player_head");  // Remove from inventory
         fileCommands.add(execute.As(new Entity("@e[type=item,nbt={Item:{id:\"minecraft:player_head\"}}]")) +
-                "kill @s"); // Remove item
+                killEntity("@s")); // Remove item
 
         // Give new bundle to people who respawn
         fileCommands.add("give @p[tag=Respawn] minecraft:bundle[custom_data={locateTeammate:1b}]");
@@ -1666,7 +1681,7 @@ public class Main {
             int indexFront = 2 * i + 1;
             int indexRear = 2 * (i + 1);
 
-            fileCommands.add(execute.If(new Entity("@p[scores={MinHealth=" + indexFront + ".." + indexRear + "}]")) +
+            fileCommands.add(execute.If(new Entity("@e[type=marker,limit=1,scores={MinHealth=" + indexFront + ".." + indexRear + "}]")) +
                     setAttributeBase(respawnPlayer, AttributeType.max_health, i + 1));
         }
         fileCommands.add(giveEffect(respawnPlayer, Effect.health_boost, 1, 0));
@@ -1776,9 +1791,9 @@ public class Main {
                 execute.StoreNext(ExecuteStore.result, "@s", getObjectiveByName("WolfAge"), true) +
                 "data get entity @s Age");
         fileCommands.add(execute.At(babyWolf) +
-                "summon minecraft:dolphin ~ ~ ~");
+                summonEntity("dolphin"));
         fileCommands.add(execute.As(babyWolf) +
-                "kill @s");
+                killEntity("@s"));
 
         return new FileData(FileName.eliminate_baby_wolf, fileCommands);
     }

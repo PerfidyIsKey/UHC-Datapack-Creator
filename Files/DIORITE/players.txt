@@ -41,7 +41,7 @@
 64,BlueBlacky,16,0,false
 65,x_Mylan_x,4,0,false
 66,Leavd,39,0,false
-67,amiazukiN,1,0,false
+67,amiazukiN,1,0,true
 68,Mosu_2000,2,0,false
 69,DAABlocksholmes,11,0,false
 70,HopliteNPC,231,54,true
