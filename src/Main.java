@@ -264,38 +264,38 @@ public class Main {
         }
 
         // Scoreboard objectives
-        scoreboardObjectives.add(new ScoreboardObjective(Objective.TimDum, "dummy"));
-        scoreboardObjectives.add(new ScoreboardObjective(Objective.TimeDum, "dummy", "\"Elapsed Time\""));
-        scoreboardObjectives.add(new ScoreboardObjective(Objective.Time, "dummy", "\"Elapsed Time\"", true));
-        scoreboardObjectives.add(new ScoreboardObjective(Objective.Time2, "dummy", "\"Elapsed Time\""));
-        scoreboardObjectives.add(new ScoreboardObjective(Objective.SideDum, "dummy"));
+        scoreboardObjectives.add(new ScoreboardObjective(Objective.TimDum, ObjectiveType.dummy));
+        scoreboardObjectives.add(new ScoreboardObjective(Objective.TimeDum, ObjectiveType.dummy, "\"Elapsed Time\""));
+        scoreboardObjectives.add(new ScoreboardObjective(Objective.Time, ObjectiveType.dummy, "\"Elapsed Time\"", true));
+        scoreboardObjectives.add(new ScoreboardObjective(Objective.Time2, ObjectiveType.dummy, "\"Elapsed Time\""));
+        scoreboardObjectives.add(new ScoreboardObjective(Objective.SideDum, ObjectiveType.dummy));
         for (int i = 0; i < 2; i++) {
 
         }
-        scoreboardObjectives.add(new ScoreboardObjective(Objective.CPScore, "dummy", "\"Control Point score\"", true));
+        scoreboardObjectives.add(new ScoreboardObjective(Objective.CPScore, ObjectiveType.dummy, "\"Control Point score\"", true));
         for (int i = 0; i < 2; i++) {
-            scoreboardObjectives.add(new ScoreboardObjective(Objective.Highscore.toString() + (i + 1), "dummy"));
-            scoreboardObjectives.add(new ScoreboardObjective(Objective.ControlPoint.toString() + (i + 1), "dummy"));
-            scoreboardObjectives.add(new ScoreboardObjective(Objective.CollarCheck.toString() + i, "dummy"));
+            scoreboardObjectives.add(new ScoreboardObjective(Objective.Highscore.toString() + (i + 1), ObjectiveType.dummy));
+            scoreboardObjectives.add(new ScoreboardObjective(Objective.ControlPoint.toString() + (i + 1), ObjectiveType.dummy));
+            scoreboardObjectives.add(new ScoreboardObjective(Objective.CollarCheck.toString() + i, ObjectiveType.dummy));
             for (int j = 0; j < 2; j++) {
-                scoreboardObjectives.add(new ScoreboardObjective(Objective.MSGDum.toString() + (i + 1) + "CP" + (j + 1), "dummy"));
+                scoreboardObjectives.add(new ScoreboardObjective(Objective.MSGDum.toString() + (i + 1) + "CP" + (j + 1), ObjectiveType.dummy));
             }
         }
-        scoreboardObjectives.add(new ScoreboardObjective(Objective.Hearts, "health"));
+        scoreboardObjectives.add(new ScoreboardObjective(Objective.Hearts, ObjectiveType.health));
         scoreboardObjectives.add(new ScoreboardObjective(Objective.Apples, "minecraft.used:minecraft.golden_apple", "\"Golden Apple\"", true));
         scoreboardObjectives.add(new ScoreboardObjective(Objective.Stone, "minecraft.mined:minecraft.stone"));
         scoreboardObjectives.add(new ScoreboardObjective(Objective.Diorite, "minecraft.mined:minecraft.diorite"));
         scoreboardObjectives.add(new ScoreboardObjective(Objective.Andesite, "minecraft.mined:minecraft.andesite"));
         scoreboardObjectives.add(new ScoreboardObjective(Objective.Granite, "minecraft.mined:minecraft.granite"));
         scoreboardObjectives.add(new ScoreboardObjective(Objective.Deepslate, "minecraft.mined:minecraft.deepslate"));
-        scoreboardObjectives.add(new ScoreboardObjective(Objective.Mining, "dummy", "\"I like mining-leaderboard\"", true));
-        scoreboardObjectives.add(new ScoreboardObjective(Objective.Deaths, "deathCount"));
-        scoreboardObjectives.add(new ScoreboardObjective(Objective.Kills, "playerKillCount", true));
-        scoreboardObjectives.add(new ScoreboardObjective(Objective.Rank, "dummy"));
-        scoreboardObjectives.add(new ScoreboardObjective(Objective.WorldLoad, "dummy"));
-        scoreboardObjectives.add(new ScoreboardObjective(Objective.MinHealth, "dummy"));
-        scoreboardObjectives.add(new ScoreboardObjective(Objective.Victory, "dummy"));
-        scoreboardObjectives.add(new ScoreboardObjective(Objective.WolfAge, "dummy"));
+        scoreboardObjectives.add(new ScoreboardObjective(Objective.Mining, ObjectiveType.dummy, "\"I like mining-leaderboard\"", true));
+        scoreboardObjectives.add(new ScoreboardObjective(Objective.Deaths, ObjectiveType.deathCount));
+        scoreboardObjectives.add(new ScoreboardObjective(Objective.Kills, ObjectiveType.playerKillCount, true));
+        scoreboardObjectives.add(new ScoreboardObjective(Objective.Rank, ObjectiveType.dummy));
+        scoreboardObjectives.add(new ScoreboardObjective(Objective.WorldLoad, ObjectiveType.dummy));
+        scoreboardObjectives.add(new ScoreboardObjective(Objective.MinHealth, ObjectiveType.dummy));
+        scoreboardObjectives.add(new ScoreboardObjective(Objective.Victory, ObjectiveType.dummy));
+        scoreboardObjectives.add(new ScoreboardObjective(Objective.WolfAge, ObjectiveType.dummy));
     }
 
     private int determineAmountOfPlayersPerTeam() {
@@ -682,7 +682,7 @@ public class Main {
             fileCommands.add(t.add());
             fileCommands.add("team modify " + t.getName() + " color " + t.getColor());
             for (int i = 1; i < controlPoints.size() + 1; i++) {
-                scoreboardObjectives.add(new ScoreboardObjective(Objective.CP.toString() + i + t.getName(), "dummy"));
+                scoreboardObjectives.add(new ScoreboardObjective(Objective.CP.toString() + i + t.getName(), ObjectiveType.dummy));
                 fileCommands.add(scoreboardObjectives.get(scoreboardObjectives.size() - 1).add());
             }
         }
