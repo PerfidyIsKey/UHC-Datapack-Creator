@@ -680,7 +680,7 @@ public class Main {
         //teams
         for (Team t : teams) {
             fileCommands.add(t.add());
-            fileCommands.add("team modify " + t.getName() + " color " + t.getColor());
+            fileCommands.add(t.setTeamColor());
             for (int i = 1; i < controlPoints.size() + 1; i++) {
                 scoreboardObjectives.add(new ScoreboardObjective(Objective.CP.toString() + i + t.getName(), ObjectiveType.dummy));
                 fileCommands.add(scoreboardObjectives.get(scoreboardObjectives.size() - 1).add());
@@ -905,7 +905,7 @@ public class Main {
 
         for (Team t : teams) {
             fileCommands.add("scoreboard players reset " + t.getPlayerColor() + " CPScore");
-            fileCommands.add("team join " + t.getName() + " " + t.getPlayerColor());
+            fileCommands.add(t.joinTeam(t.getPlayerColor()));
         }
 
         int minToCPScore = secPerMinute * tickPerSecond * controlPoints.get(0).getAddRate();
@@ -930,7 +930,7 @@ public class Main {
     private FileData RandomTeams(int i) {
         ArrayList<String> fileCommands = new ArrayList<>();
         for (Team t : teams) {
-            fileCommands.add("team join " + t.getName() + " @r[limit=" + i + ",team=]");
+            fileCommands.add(t.joinTeam("@r[limit=" + i + ",team=]"));
         }
 
         return new FileData("" + FileName.random_teams + i, fileCommands);
