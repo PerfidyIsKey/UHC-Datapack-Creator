@@ -1,10 +1,11 @@
 package Enums;
 
 public enum Tag {
-    Respawn,
-    Traitor,
-    DontMakeTraitor,
     AttackingCP,
+    CollarCheck,
+    DontMakeTraitor,
+    ReceivedPerk,
+    Respawn,
     RespawnDisabled,
-    ReceivedPerk
+    Traitor
 }

@@ -594,6 +594,15 @@ public class Main {
 
     private String teleportEntity(String entity1, String entity2) { return "tp " + entity1 + " " + entity2; }
 
+    // Tags
+    private String addTag(String entity, Tag tag) { return "tag " + entity + " add " + tag; }
+
+    private String addTag(String entity, String tag) { return "tag " + entity + " add " + tag; }
+
+    private String removeTag(String entity, Tag tag) { return "tag " + entity + " remove " + tag; }
+
+    private String removeTag(String entity, String tag) { return "tag " + entity + " remove " + tag; }
+
     // Create function files
     private void makeFunctionFiles() {
         files.add(Initialize());
@@ -760,12 +769,12 @@ public class Main {
         texts.add(new Text(Color.gold, true, false, "WELL DONE"));
         texts.add(bannerText);
 
-        fileCommands.add(execute.If(new Entity("@p[scores={Deaths=1},tag=Traitor]")) +
+        fileCommands.add(execute.If(new Entity("@p[scores={Deaths=1},tag=" + Tag.Traitor + "]")) +
                 new TellRaw("@a", texts).sendRaw());
 
         // Add respawn tag to players who die before first blood
         fileCommands.add(execute.Unless("@e[tag=" + Tag.RespawnDisabled + "]") +
-                "tag @p[scores={Deaths=1}] add " + Tag.Respawn);
+                addTag("@p[scores={Deaths=1}]", Tag.Respawn));
 
         // Drop player head
         fileCommands.add(callFunction(FileName.drop_player_heads));
@@ -902,9 +911,9 @@ public class Main {
         fileCommands.add(bossBarCp2.setTitle(controlPoints.get(1).getName() + " soon: " + controlPoints.get(1).getCoordinate().getX() + ", " + controlPoints.get(1).getCoordinate().getY() + ", " + controlPoints.get(1).getCoordinate().getZ() + " (" + controlPoints.get(1).getCoordinate().getDimensionName() + ")"));
         fileCommands.add(execute.In(Dimension.overworld) +
                 setBlock(startCoordinate,  BlockType.jukebox + "[has_record=true]{RecordItem:{Count:1b,id:\"minecraft:music_disc_stal\"}}", SetBlockType.replace));
-        fileCommands.add("tag @a remove " + Tag.Traitor);
-        fileCommands.add("tag @a remove " + Tag.DontMakeTraitor);
-        fileCommands.add("tag @a remove " + Tag.RespawnDisabled);
+        fileCommands.add(removeTag("@a", Tag.Traitor));
+        fileCommands.add(removeTag("@a", Tag.DontMakeTraitor));
+        fileCommands.add(removeTag("@a", Tag.RespawnDisabled));
         fileCommands.add("worldborder set " + 2 * worldSize + " 1");
         fileCommands.add("team leave @a");
         fileCommands.add(callFunction(FileName.display_rank));
@@ -913,7 +922,7 @@ public class Main {
         fileCommands.add("scoreboard players set ControlPoints Time 1800");
         fileCommands.add("scoreboard players set TraitorFaction Time 2400");
         for (int i = 0; i < 4; i++) {
-            fileCommands.add("tag @a remove ReceivedPerk" + (i + 1));
+            fileCommands.add(removeTag("@a", "" + Tag.ReceivedPerk + (i + 1)));
         }
 
         for (Team t : teams) {
@@ -1229,7 +1238,7 @@ public class Main {
             // Grant attacking players Attacking tag
             fileCommands.add(execute.As(new Entity("@a[team=" + team.getName() + ",limit=1]"), false) +
                     execute.IfNext(new Entity("@s[scores={MSGDum1CP" + i + "=" + cpMessageThreshold + "}]"), true) +
-                    "tag @a[team=" + team.getName() + "] add " + Tag.AttackingCP + i);
+                    addTag("@a[team=" + team.getName() + "]", "" + Tag.AttackingCP + i));
 
             /* Abandoned message */
             // Increment abandonment counter unless team is on the CP
@@ -1256,7 +1265,7 @@ public class Main {
             // Remove Attacking tag
             fileCommands.add(execute.As(new Entity("@a[team=" + team.getName() + ",limit=1]"), false) +
                     execute.IfNext(new Entity("@s[scores={MSGDum2CP" + i + "=" + cpMessageThreshold + "}]"), true) +
-                    "tag @a[team=" + team.getName() + "] remove " + Tag.AttackingCP + i);
+                    removeTag("@a[team=" + team.getName() + "]", "" + Tag.AttackingCP + i));
 
         }
         return new FileData("" + FileName.controlpoint_messages_ + i, fileCommands);
@@ -1292,36 +1301,36 @@ public class Main {
         seasons.sort(Comparator.comparing(Season::getID));
         for (Player p : players) {
             if (p.getLastTraitorSeason() >= seasons.get(seasons.size() - traitorWaitTime).getID()) {
-                fileCommands.add("tag " + p.getPlayerName() + " add DontMakeTraitor");
+                fileCommands.add(addTag(p.getPlayerName(), Tag.DontMakeTraitor));
             }
         }
 
-        fileCommands.add("tag @r[limit=1,tag=!DontMakeTraitor,scores={Rank=" + minTraitorRank + "..},gamemode=!spectator] add Traitor");
+        fileCommands.add(addTag("@r[limit=1,tag=!" + Tag.DontMakeTraitor + ",scores={Rank=" + minTraitorRank + "..},gamemode=!spectator]", Tag.Traitor));
 
         for (Team t : teams) {
-            fileCommands.add(execute.If(new Entity("@p[tag=Traitor,team=" + t.getName() + "]")) +
-                    "tag @a[team=" + t.getName() + "] add DontMakeTraitor");
+            fileCommands.add(execute.If(new Entity("@p[tag=" + Tag.Traitor + ",team=" + t.getName() + "]")) +
+                    addTag("@a[team=" + t.getName() + "]", Tag.DontMakeTraitor));
         }
-        fileCommands.add("tag @r[limit=1,tag=!DontMakeTraitor,scores={Rank=" + minTraitorRank + "..},gamemode=!spectator] add Traitor");
+        fileCommands.add(addTag("@r[limit=1,tag=!" + Tag.DontMakeTraitor + ",scores={Rank=" + minTraitorRank + "..},gamemode=!spectator]", Tag.Traitor));
 
         // Add additional traitor
         if (traitorMode == 2) {
-            fileCommands.add("tag @a remove DontMakeTraitor");
+            fileCommands.add(removeTag("@a", Tag.DontMakeTraitor));
             for (Player p : players) {
                 if (p.getLastTraitorSeason() >= seasons.get(seasons.size() - traitorWaitTime).getID()) {
-                    fileCommands.add("tag " + p.getPlayerName() + " add DontMakeTraitor");
+                    fileCommands.add(addTag(p.getPlayerName(), Tag.DontMakeTraitor));
                 }
             }
-            fileCommands.add("tag @a[tag=Traitor] add DontMakeTraitor");
-            fileCommands.add("tag @r[limit=1,tag=!DontMakeTraitor,gamemode=!spectator] add Traitor");
+            fileCommands.add(addTag("@a[tag=" + Tag.Traitor + "]", Tag.DontMakeTraitor));
+            fileCommands.add(addTag("@r[limit=1,tag=!" + Tag.DontMakeTraitor + ",gamemode=!spectator]", Tag.Traitor));
         }
 
         ArrayList<TextItem> texts = new ArrayList<>();
         texts.add(new Text(Color.red, false, true, "You feel like betrayal today. You have become a Traitor. Your faction consists of: "));
-        texts.add(new Select(Color.red, false, true, "@a[tag=Traitor]"));
+        texts.add(new Select(Color.red, false, true, "@a[tag=" + Tag.Traitor + "]"));
         texts.add(new Text(Color.red, false, true, "."));
 
-        fileCommands.add(execute.As(new Entity("@a[tag=Traitor]")) +
+        fileCommands.add(execute.As(new Entity("@a[tag=" + Tag.Traitor + "]")) +
                 new TellRaw("@s", texts).sendRaw());
 
         fileCommands.add(new Title("@a", TitleType.title, new Text(Color.red, true, false, "A Traitor Faction")).displayTitle());
@@ -1337,10 +1346,10 @@ public class Main {
         ArrayList<TextItem> texts = new ArrayList<>();
         texts.add(new Text(Color.gold, false, false, ">>> "));
         texts.add(new Text(Color.light_purple, false, false, "Traitor Faction: "));
-        texts.add(new Select(false, false, "@a[tag=Traitor]"));
+        texts.add(new Select(false, false, "@a[tag=" + Tag.Traitor + "]"));
         texts.add(new Text(Color.gold, false, false, " <<<"));
 
-        fileCommands.add(execute.As(new Entity("@a[tag=Traitor]")) +
+        fileCommands.add(execute.As(new Entity("@a[tag=" + Tag.Traitor + "]")) +
                 new Title("@s", TitleType.actionbar, texts).displayTitle());
 
         fileCommands.add(execute.If(new Entity("@e[scores={Victory=1}]")) +
@@ -1474,12 +1483,12 @@ public class Main {
             }
         }
         for (Team t : teams) {
-            fileCommands.add("tag @a[team=" + t.getName() + "] add CollarCheck");
+            fileCommands.add(addTag("@a[team=" + t.getName() + "]", Tag.CollarCheck));
             fileCommands.add(execute.As(new Entity("@e[type=wolf]"), false) +
-                    execute.IfNext("@s", getObjectiveByName(Objective.CollarCheck.toString() + 0), ComparatorType.equal, "@p[tag=CollarCheck]", getObjectiveByName(Objective.CollarCheck.toString() + 0)) +
-                    execute.IfNext("@s", getObjectiveByName(Objective.CollarCheck.toString() + 1), ComparatorType.equal, "@p[tag=CollarCheck]", getObjectiveByName(Objective.CollarCheck.toString() + 1), true) +
+                    execute.IfNext("@s", getObjectiveByName(Objective.CollarCheck.toString() + 0), ComparatorType.equal, "@p[tag=" + Tag.CollarCheck + "]", getObjectiveByName(Objective.CollarCheck.toString() + 0)) +
+                    execute.IfNext("@s", getObjectiveByName(Objective.CollarCheck.toString() + 1), ComparatorType.equal, "@p[tag=" + Tag.CollarCheck + "]", getObjectiveByName(Objective.CollarCheck.toString() + 1), true) +
                     "data modify entity @s CollarColor set value " + t.getCollarColor() + "b");
-            fileCommands.add("tag @a[team=" + t.getName() + "] remove CollarCheck");
+            fileCommands.add(removeTag("@a[team=" + t.getName() + "]", Tag.CollarCheck));
         }
 
         return new FileData(FileName.wolf_collar_execute, fileCommands);
@@ -1624,7 +1633,7 @@ public class Main {
 
                     // Add tag
                     fileCommands.add(execute.If(currentScoreCheck) +
-                            "tag @a[team=" + team.getName() + "] add " + Tag.ReceivedPerk + perk.getId());
+                            addTag("@a[team=" + team.getName() + "]", "" + Tag.ReceivedPerk + perk.getId()));
                 }
             }
         }
@@ -1683,7 +1692,7 @@ public class Main {
         ArrayList<String> fileCommands = new ArrayList<>();
 
         // Define player that needs to be respawned
-        String respawnPlayer = "@p[tag=Respawn]";
+        String respawnPlayer = "@p[tag=" + Tag.Respawn + "]";
 
         // Teleport player to their team
         for (Team t : teams) {
@@ -1703,7 +1712,7 @@ public class Main {
                 killEntity("@s")); // Remove item
 
         // Give new bundle to people who respawn
-        fileCommands.add("give @p[tag=Respawn] minecraft:bundle[custom_data={locateTeammate:1b}]");
+        fileCommands.add("give " + respawnPlayer + " " + BlockType.bundle + "[custom_data={locateTeammate:1b}]");
 
         // Set respawn health
         for (int i = 0; i < 10; i++) {
@@ -1718,7 +1727,7 @@ public class Main {
         fileCommands.add(setAttributeBase(respawnPlayer, AttributeType.max_health, 20));
 
         // Remove respawn tag
-        fileCommands.add("tag @p[tag=Respawn] remove Respawn");
+        fileCommands.add(removeTag(respawnPlayer, Tag.Respawn));
 
         return new FileData(FileName.respawn_player, fileCommands);
     }
@@ -1751,10 +1760,10 @@ public class Main {
         ArrayList<String> fileCommands = new ArrayList<>();
 
         //When no traitors remain start teams_alive_check
-        fileCommands.add(execute.Unless("@a[limit=1,tag=Traitor,gamemode=!spectator]") +
+        fileCommands.add(execute.Unless("@a[limit=1,tag=" + Tag.Traitor + ",gamemode=!spectator]") +
                 callFunction(FileName.teams_alive_check));
 
-        fileCommands.add(execute.Unless("@a[limit=1,tag=!Traitor,gamemode=!spectator]") +
+        fileCommands.add(execute.Unless("@a[limit=1,tag=!" + Tag.Traitor + ",gamemode=!spectator]") +
                 callFunction(FileName.victory_message_traitor));
 
         return new FileData(FileName.traitor_check, fileCommands);
@@ -1774,11 +1783,11 @@ public class Main {
         for (int i = 0; i < teams.size(); i++) {
             for (int j = 1; j < 3; j++) {
                 fileCommands.add(execute.If(new Entity("@e[scores={Victory=1}]"), false) +
-                        execute.IfNext(new Entity("@p[team=" + teams.get(i).getName() + ",gamemode=!spectator,scores={ControlPoint" + j + "=" + (maxCPScore * tickPerSecond) + "..},tag=!Traitor]"), true) +
+                        execute.IfNext(new Entity("@p[team=" + teams.get(i).getName() + ",gamemode=!spectator,scores={ControlPoint" + j + "=" + (maxCPScore * tickPerSecond) + "..},tag=!" + Tag.Traitor + "]"), true) +
                         callFunction("" + FileName.victory_message_ + i));
                 fileCommands.add(execute.If(new Entity("@e[scores={Victory=1}]"), false) +
-                        execute.IfNext("@p[team=" + teams.get(i).getName() + ",gamemode=!spectator,scores={ControlPoint" + j + "=" + (maxCPScore * tickPerSecond) + "..},tag=Traitor]") +
-                        execute.UnlessNext("@p[team=" + teams.get(i).getName() + ",gamemode=!spectator,scores={ControlPoint" + j + "=" + (maxCPScore * tickPerSecond) + "..},tag=!Traitor]", true) +
+                        execute.IfNext("@p[team=" + teams.get(i).getName() + ",gamemode=!spectator,scores={ControlPoint" + j + "=" + (maxCPScore * tickPerSecond) + "..},tag=" + Tag.Traitor + "]") +
+                        execute.UnlessNext("@p[team=" + teams.get(i).getName() + ",gamemode=!spectator,scores={ControlPoint" + j + "=" + (maxCPScore * tickPerSecond) + "..},tag=!" + Tag.Traitor + "]", true) +
                         callFunction(FileName.victory_message_traitor));
             }
         }
@@ -1843,7 +1852,7 @@ public class Main {
         ArrayList<String> fileCommands = new ArrayList<>();
 
         // Add first blood tag
-        fileCommands.add("tag " + admin + " add " + Tag.RespawnDisabled);
+        fileCommands.add(addTag(admin, Tag.RespawnDisabled));
 
         // Update immediate respawn
         fileCommands.add(setGameRule(GameRule.doImmediateRespawn, false));

@@ -5,6 +5,7 @@ public enum BlockType {
     barrier,
     beacon,
     bedrock,
+    bundle,
     cave_air,
     cherry_wall_sign,
     emerald_block,
