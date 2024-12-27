@@ -2,14 +2,17 @@ package Enums;
 
 public enum BlockType {
     air,
-    cave_air,
-    void_air,
-    redstone_block,
-    glass,
-    bedrock,
-    ice,
     barrier,
-    lava,
+    beacon,
+    bedrock,
+    cave_air,
+    cherry_wall_sign,
     emerald_block,
-    beacon
+    glass,
+    ice,
+    jukebox,
+    lava,
+    redstone_block,
+    structure_block,
+    void_air,
 }

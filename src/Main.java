@@ -571,13 +571,21 @@ public class Main {
     private String setWorldSpawn(Coordinate coordinate) {return "setworldspawn " + coordinate.getCoordinateString(); }
 
     // Entities
-    private String summonEntity(String entity) {return "summon minecraft:" + entity + " ~ ~ ~"; }
+    private String summonEntity(String entity) {return summonEntity(entity, new Coordinate(0, 0, 0, ReferenceFrame.relative)); }
 
     private String summonEntity(String entity, Coordinate coordinate) {return "summon minecraft:" + entity + " " + coordinate.getCoordinateString(); }
 
-    private String summonEntity(String entity, String nbt) {return "summon minecraft:" + entity + " ~ ~ ~ " + nbt; }
+    private String summonEntity(String entity, String nbt) {return summonEntity(entity, new Coordinate(0, 0, 0, ReferenceFrame.relative), nbt); }
 
     private String summonEntity(String entity, Coordinate coordinate, String nbt) {return "summon minecraft:" + entity + " " + coordinate.getCoordinateString() + " " + nbt; }
+
+    private String summonEntity(EntityType entity) {return summonEntity(entity, new Coordinate(0, 0, 0, ReferenceFrame.relative)); }
+
+    private String summonEntity(EntityType entity, Coordinate coordinate) {return "summon minecraft:" + entity + " " + coordinate.getCoordinateString(); }
+
+    private String summonEntity(EntityType entity, String nbt) {return summonEntity(entity, new Coordinate(0, 0, 0, ReferenceFrame.relative), nbt); }
+
+    private String summonEntity(EntityType entity, Coordinate coordinate, String nbt) {return "summon minecraft:" + entity + " " + coordinate.getCoordinateString() + " " + nbt; }
 
     private String killEntity(String entity) {return "kill " + entity;}
 
@@ -699,11 +707,11 @@ public class Main {
         fileCommands.add(execute.In(Dimension.overworld) +
                 fill(-5, 221, -5, 5, 226, 5, BlockType.air));
         fileCommands.add(execute.In(Dimension.overworld) +
-                setBlock(0, 222, -5, "cherry_wall_sign[facing=south,waterlogged=false]{back_text:{messages:['{\"text\":\"You have\"}','{\"text\":\"angered\"}','{\"text\":\"the Gods!\"}','{\"text\":\"\"}']},front_text:{messages:['{\"text\":\"Teleport\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"" + teleportEntity("@s", new Coordinate(5, worldBottom + 5, 5)) + "\"}}','{\"text\":\"to the\"}','{\"text\":\"Command center\"}','{\"text\":\"\"}']},is_waxed:0b}"));
+                setBlock(0, 222, -5, BlockType.cherry_wall_sign + "[facing=south,waterlogged=false]{back_text:{messages:['{\"text\":\"You have\"}','{\"text\":\"angered\"}','{\"text\":\"the Gods!\"}','{\"text\":\"\"}']},front_text:{messages:['{\"text\":\"Teleport\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"" + teleportEntity("@s", new Coordinate(5, worldBottom + 5, 5)) + "\"}}','{\"text\":\"to the\"}','{\"text\":\"Command center\"}','{\"text\":\"\"}']},is_waxed:0b}"));
 
         // Command center
         fileCommands.add(execute.In(Dimension.overworld) +
-                setBlock(-2, worldBottom, -2, "minecraft:structure_block[mode=load]{metadata:\"\",mirror:\"NONE\",ignoreEnti" +
+                setBlock(-2, worldBottom, -2, BlockType.structure_block + "[mode=load]{metadata:\"\",mirror:\"NONE\",ignoreEnti" +
                         "ties:0b,powered:0b,seed:0L,author:\"?\",rotation:\"NONE\",posX:1,mode:\"LOAD\",posY:1,sizeX:18,posZ:1," +
                         "integrity:1.0f,showair:0b,name:\"minecraft:commandcenter_" + commandCenter + "\",sizeY:31,sizeZ:18,showboundingbox:1b}"));
         fileCommands.add(execute.In(Dimension.overworld) +
@@ -778,7 +786,7 @@ public class Main {
         // Summon a player head upon dying
         for (Player p : players) {
             fileCommands.add(execute.At(new Entity("@p[name=" + p.getPlayerName() + ",scores={Deaths=1}]")) +
-                    summonEntity("item", "{Item:{id:\"minecraft:player_head\",count:1,components:{\"minecraft:profile\":{name:" + p.getPlayerName() + "}}}}"));
+                    summonEntity(EntityType.item, "{Item:{id:\"minecraft:player_head\",count:1,components:{\"minecraft:profile\":{name:" + p.getPlayerName() + "}}}}"));
         }
 
         return new FileData(FileName.drop_player_heads, fileCommands);
@@ -847,7 +855,7 @@ public class Main {
 
         // Create marker entity
         fileCommands.add(killEntity("@e[type=marker]"));
-        fileCommands.add(summonEntity("marker", new Coordinate(0, worldBottom, 0), "{CustomName:\"\\\"Admin\\\"\"}"));
+        fileCommands.add(summonEntity(EntityType.marker, new Coordinate(0, worldBottom, 0), "{CustomName:\"\\\"Admin\\\"\"}"));
 
         // Set gamerules
         fileCommands.add(setGameRule(GameRule.commandBlockOutput, true));
@@ -893,7 +901,7 @@ public class Main {
         fileCommands.add(bossBarCp2.setPlayers("@a"));
         fileCommands.add(bossBarCp2.setTitle(controlPoints.get(1).getName() + " soon: " + controlPoints.get(1).getCoordinate().getX() + ", " + controlPoints.get(1).getCoordinate().getY() + ", " + controlPoints.get(1).getCoordinate().getZ() + " (" + controlPoints.get(1).getCoordinate().getDimensionName() + ")"));
         fileCommands.add(execute.In(Dimension.overworld) +
-                setBlock(startCoordinate, "minecraft:jukebox[has_record=true]{RecordItem:{Count:1b,id:\"minecraft:music_disc_stal\"}}", SetBlockType.replace));
+                setBlock(startCoordinate,  BlockType.jukebox + "[has_record=true]{RecordItem:{Count:1b,id:\"minecraft:music_disc_stal\"}}", SetBlockType.replace));
         fileCommands.add("tag @a remove " + Tag.Traitor);
         fileCommands.add("tag @a remove " + Tag.DontMakeTraitor);
         fileCommands.add("tag @a remove " + Tag.RespawnDisabled);
@@ -1262,7 +1270,7 @@ public class Main {
 
         for (int i = 0; i < carePackageAmount; i++) {
             fileCommands.add(execute.In(Dimension.overworld) +
-                    summonEntity("area_effect_cloud", new Coordinate(0, 5, 0, ReferenceFrame.relative), "{Passengers:[{id:falling_block,Time:1,DropItem:0b,BlockState:{Name:\"minecraft:chest\"},TileEntityData:{CustomName:\"\\\"Loot chest\\\"\",LootTable:\"uhc:supply_drop\"}}]}"));
+                    summonEntity(EntityType.area_effect_cloud, new Coordinate(0, 5, 0, ReferenceFrame.relative), "{Passengers:[{id:falling_block,Time:1,DropItem:0b,BlockState:{Name:\"minecraft:chest\"},TileEntityData:{CustomName:\"\\\"Loot chest\\\"\",LootTable:\"uhc:supply_drop\"}}]}"));
         }
 
         return new FileData(FileName.drop_carepackages, fileCommands);
@@ -1375,7 +1383,7 @@ public class Main {
             fileCommands.add(execute.In(c.getDimension()) +
                     "forceload add " + c.getX() + " " + c.getZ() + " " + c.getX() + " " + c.getZ());
             fileCommands.add(execute.In(c.getDimension()) +
-                    setBlock(c.getX(), c.getY() + 11, c.getZ(), "minecraft:structure_block[mode=load]{metadata:\"\",mirror:\"NONE\",ignoreEntities:1b,powered:0b,seed:0L,author:\"?\",rotation:\"NONE\",posX:-6,mode:\"LOAD\",posY:-13,sizeX:13,posZ:-6,integrity:1.0f,showair:0b,name:\"" + cp.getStructureName() + "\",sizeY:14,sizeZ:13,showboundingbox:1b}", SetBlockType.destroy));
+                    setBlock(c.getX(), c.getY() + 11, c.getZ(), BlockType.structure_block + "[mode=load]{metadata:\"\",mirror:\"NONE\",ignoreEntities:1b,powered:0b,seed:0L,author:\"?\",rotation:\"NONE\",posX:-6,mode:\"LOAD\",posY:-13,sizeX:13,posZ:-6,integrity:1.0f,showair:0b,name:\"" + cp.getStructureName() + "\",sizeY:14,sizeZ:13,showboundingbox:1b}", SetBlockType.destroy));
 
             // Activate structure block
             fileCommands.add(execute.In(c.getDimension()) +
@@ -1812,7 +1820,7 @@ public class Main {
                 execute.StoreNext(ExecuteStore.result, "@s", getObjectiveByName(Objective.WolfAge), true) +
                 "data get entity @s Age");
         fileCommands.add(execute.At(babyWolf) +
-                summonEntity("dolphin"));
+                summonEntity(EntityType.dolphin));
         fileCommands.add(execute.As(babyWolf) +
                 killEntity("@s"));
 
