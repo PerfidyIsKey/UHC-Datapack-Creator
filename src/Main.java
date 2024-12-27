@@ -581,6 +581,11 @@ public class Main {
 
     private String killEntity(String entity) {return "kill " + entity;}
 
+    // Teleportation
+    private String teleportEntity(String entity, Coordinate coordinate) {return "tp " + entity + " " + coordinate.getCoordinateString();}
+
+    private String teleportEntity(String entity1, String entity2) { return "tp " + entity1 + " " + entity2; }
+
     // Create function files
     private void makeFunctionFiles() {
         files.add(Initialize());
@@ -694,7 +699,7 @@ public class Main {
         fileCommands.add(execute.In(Dimension.overworld) +
                 fill(-5, 221, -5, 5, 226, 5, BlockType.air));
         fileCommands.add(execute.In(Dimension.overworld) +
-                setBlock(0, 222, -5, "cherry_wall_sign[facing=south,waterlogged=false]{back_text:{messages:['{\"text\":\"You have\"}','{\"text\":\"angered\"}','{\"text\":\"the Gods!\"}','{\"text\":\"\"}']},front_text:{messages:['{\"text\":\"Teleport\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"tp @s 5 " + (worldBottom + 5) + " 5\"}}','{\"text\":\"to the\"}','{\"text\":\"Command center\"}','{\"text\":\"\"}']},is_waxed:0b}"));
+                setBlock(0, 222, -5, "cherry_wall_sign[facing=south,waterlogged=false]{back_text:{messages:['{\"text\":\"You have\"}','{\"text\":\"angered\"}','{\"text\":\"the Gods!\"}','{\"text\":\"\"}']},front_text:{messages:['{\"text\":\"Teleport\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"" + teleportEntity("@s", new Coordinate(5, worldBottom + 5, 5)) + "\"}}','{\"text\":\"to the\"}','{\"text\":\"Command center\"}','{\"text\":\"\"}']},is_waxed:0b}"));
 
         // Command center
         fileCommands.add(execute.In(Dimension.overworld) +
@@ -940,7 +945,7 @@ public class Main {
         ArrayList<String> fileCommands = new ArrayList<>();
         fileCommands.add(clearEffect("@a"));
         fileCommands.add(execute.In(Dimension.overworld) +
-                "tp @a 0 -100 0");
+                teleportEntity("@a", new Coordinate(0, -100, 0)));
 
         ArrayList<TextItem> texts = new ArrayList<>();
         texts.add(bannerText);
@@ -959,7 +964,7 @@ public class Main {
 
         // Teleport to starting coordinates
         fileCommands.add(execute.In(Dimension.overworld) +
-                "tp @a " + startCoordinate.getCoordinateString());
+                teleportEntity("@a", startCoordinate));
 
         // Reset scores
         fileCommands.add("scoreboard players reset @a Deaths");
@@ -1155,7 +1160,7 @@ public class Main {
         fileCommands.add("worldborder set 400");
         fileCommands.add("worldborder set 20 180");
         fileCommands.add(execute.In(Dimension.overworld) +
-                "tp @a[gamemode=!spectator] 3 153 3");
+                teleportEntity("@a[gamemode=!spectator]", new Coordinate(3, 153, 3)));
         fileCommands.add(execute.In(Dimension.overworld) +
                 "spreadplayers 0 0 75 150 true @a[gamemode=!spectator]");
 
@@ -1418,7 +1423,7 @@ public class Main {
                 setBlock(6, worldBottom + 2, 15, BlockType.bedrock));
         fileCommands.add(execute.If(new Entity("@e[scores={Time=12000..}]"), false) +
                 execute.InNext(Dimension.overworld, true) +
-                "tp @a[gamemode=creative] 0 221 0");
+                teleportEntity("@a[gamemode=creative]", new Coordinate(0, 221, 0)));
         fileCommands.add(execute.If(new Entity("@e[scores={Time=12000..}]")) +
                 setGameRule(GameRule.commandBlockOutput, true));
         fileCommands.add(execute.If(new Entity("@e[scores={WorldLoad=400..}]")) +
@@ -1676,7 +1681,7 @@ public class Main {
         for (Team t : teams) {
             fileCommands.add(execute.As(new Entity(respawnPlayer), false) +
                     execute.IfNext(new Entity("@s[team=" + t.getName() + "]"), true) +
-                    "tp @s @r[gamemode=!spectator, team=" + t.getName() + "]");
+                    teleportEntity("@s", "@r[gamemode=!spectator, team=" + t.getName() + "]"));
         }
 
         // Set player's gamemode to survival
