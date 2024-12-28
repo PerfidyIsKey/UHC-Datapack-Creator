@@ -90,4 +90,6 @@ public class Team {
     public String leaveTeam(String entity) { return "team leave " + entity; }
 
     public String joinTeam(String entity) { return "team join " + this.name + " " + entity; }
+
+    public String emptyTeam() { return "team empty " + this.name; }
 }

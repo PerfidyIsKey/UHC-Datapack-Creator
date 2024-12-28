@@ -614,6 +614,23 @@ public class Main {
 
     private String giveItem(String entity, BlockType item, String nbt) { return "give " + entity + " " + item + nbt; }
 
+    private String replaceItem(String targets, InventorySlot slot, BlockType item) { return "item replace entity " + targets + " " + slot + " with " + item; }
+
+    private String replaceItem(String targets, String slot, BlockType item) { return "item replace entity " + targets + " " + slot + " with " + item; }
+
+    private String replaceItem(String targets, InventorySlot slot, BlockType item, int count) { return "item replace entity " + targets + " " + slot + " with " + item + " " + count; }
+
+    private String replaceItem(String targets, String slot, BlockType item, int count) { return "item replace entity " + targets + " " + slot + " with " + item + " " + count; }
+
+    private String replaceItem(String targets, InventorySlot slot, String item) { return "item replace entity " + targets + " " + slot + " with " + item; }
+
+    private String replaceItem(String targets, String slot, String item) { return "item replace entity " + targets + " " + slot + " with " + item; }
+
+    private String replaceItem(String targets, InventorySlot slot, String item, int count) { return "item replace entity " + targets + " " + slot + " with " + item + " " + count; }
+
+    private String replaceItem(String targets, String slot, String item, int count) { return "item replace entity " + targets + " " + slot + " with " + item + " " + count; }
+
+
     // Worldborder
     private String setWorldBorder(int size, int duration) { return "worldborder set " + size + " " + duration; }
 
@@ -632,6 +649,32 @@ public class Main {
     private String getData(String target, String path) { return "data get entity " + target + " " + path; }
 
     private String modifyData(String target, String targetPath, String value) { return "data modify entity " + target + " " + targetPath + " set value " + value + "b"; }
+
+    // Clear inventory
+    private String clearInventory(String targets, BlockType item) { return "clear " + targets + " " + item; }
+
+    private String clearInventory(String targets) { return "clear " + targets; }
+
+    // Game time
+    private String setTime(int time) { return "time set " + time; }
+
+    // Recipes
+    private String giveRecipe(String targets, BlockType recipe) { return "recipe give " + targets + " " + recipe; }
+
+    private String giveRecipe(String targets, String recipe) { return "recipe give " + targets + " " + recipe; }
+
+    private String takeRecipe(String targets, BlockType recipe) { return "recipe take " + targets + " " + recipe; }
+
+    private String takeRecipe(String targets, String recipe) { return "recipe take " + targets + " " + recipe; }
+
+    // Particle
+    private String createParticle(Particle name, Coordinate pos, Coordinate delta, int speed, int count, String viewers) {
+        return "particle " + name + " " + pos.getCoordinateString() + " " + delta.getCoordinateString() + " " + speed + " " + count + " normal " + viewers;
+    }
+
+    private String createParticle(String name, Coordinate pos, Coordinate delta, int speed, int count, String viewers) {
+        return "particle " + name + " " + pos.getCoordinateString() + " " + delta.getCoordinateString() + " " + speed + " " + count + " normal " + viewers;
+    }
 
     // Create function files
     private void makeFunctionFiles() {
@@ -855,21 +898,21 @@ public class Main {
     private FileData ClearEnderChest() {
         ArrayList<String> fileCommands = new ArrayList<>();
         for (int i = 0; i < chestSize; i++) {
-            fileCommands.add("item replace entity @a enderchest." + i + " with air 1");
-        }
+            fileCommands.add(replaceItem("@a", InventorySlot.setIndex(InventorySlot.enderchest, i), BlockType.air, 1));
+            }
 
         return new FileData(FileName.clear_enderchest, fileCommands);
     }
 
     private FileData EquipGear() {
         ArrayList<String> fileCommands = new ArrayList<>();
-        fileCommands.add("item replace entity @a armor.chest with minecraft:iron_chestplate");
-        fileCommands.add("item replace entity @a armor.feet with minecraft:iron_boots");
-        fileCommands.add("item replace entity @a armor.head with minecraft:iron_helmet");
-        fileCommands.add("item replace entity @a armor.legs with minecraft:iron_leggings");
-        fileCommands.add("item replace entity @a weapon.offhand with minecraft:shield");
-        fileCommands.add("item replace entity @a weapon.mainhand with minecraft:iron_axe");
-        fileCommands.add("item replace entity @a inventory.0 with minecraft:iron_sword");
+        fileCommands.add(replaceItem("@a", InventorySlot.chest, BlockType.iron_chestplate));
+        fileCommands.add(replaceItem("@a", InventorySlot.feet, BlockType.iron_boots));
+        fileCommands.add(replaceItem("@a", InventorySlot.head, BlockType.iron_helmet));
+        fileCommands.add(replaceItem("@a", InventorySlot.legs, BlockType.iron_leggings));
+        fileCommands.add(replaceItem("@a", InventorySlot.offhand, BlockType.shield));
+        fileCommands.add(replaceItem("@a", InventorySlot.mainhand, BlockType.iron_axe));
+        fileCommands.add(replaceItem("@a", InventorySlot.setIndex(InventorySlot.inventory, 0), BlockType.iron_sword));
         fileCommands.add(giveEffect("@a", Effect.regeneration, 1, 255, true));
 
         return new FileData(FileName.equip_gear, fileCommands);
@@ -878,7 +921,7 @@ public class Main {
     private FileData GodMode() {
         ArrayList<String> fileCommands = new ArrayList<>();
         fileCommands.add(giveEffect("@s", Effect.resistance, 99999, 4, true));
-        fileCommands.add("item replace entity @s weapon.mainhand with trident[custom_name='[{\"bold\":false,\"color\":\"white\",\"italic\":false,\"obfuscated\":true,\"text\":\"aA\"},{\"bold\":true,\"color\":\"#8C3CC1\",\"obfuscated\":false,\"text\":\" The\"},{\"bold\":true,\"color\":\"#E280FF\",\"obfuscated\":false,\"text\":\" Impaler \"},{\"color\":\"white\",\"obfuscated\":true,\"text\":\"Aa\"}]',lore=['{\"text\":\"This holy weapon impales anything it touches\"}'],unbreakable={show_in_tooltip:false},damage=0,enchantments={levels:{\"minecraft:fire_aspect\":255,\"minecraft:sharpness\":255,\"minecraft:efficiency\":255,'impaling':255},show_in_tooltip:false},attribute_modifiers={modifiers:[{id:\"" + AttributeType.armor + "\",type:\"" + AttributeType.attack_damage + "\",amount:1000,operation:\"add_value\",slot:\"mainhand\"}],show_in_tooltip:false}]");
+        fileCommands.add(replaceItem("@s", InventorySlot.mainhand, BlockType.trident + "[custom_name='[{\"bold\":false,\"color\":\"white\",\"italic\":false,\"obfuscated\":true,\"text\":\"aA\"},{\"bold\":true,\"color\":\"#8C3CC1\",\"obfuscated\":false,\"text\":\" The\"},{\"bold\":true,\"color\":\"#E280FF\",\"obfuscated\":false,\"text\":\" Impaler \"},{\"color\":\"white\",\"obfuscated\":true,\"text\":\"Aa\"}]',lore=['{\"text\":\"This holy weapon impales anything it touches\"}'],unbreakable={show_in_tooltip:false},damage=0,enchantments={levels:{\"minecraft:fire_aspect\":255,\"minecraft:sharpness\":255,\"minecraft:efficiency\":255,'impaling':255},show_in_tooltip:false},attribute_modifiers={modifiers:[{id:\"" + AttributeType.armor + "\",type:\"" + AttributeType.attack_damage + "\",amount:1000,operation:\"add_value\",slot:\"mainhand\"}],show_in_tooltip:false}]"));
 
         return new FileData(FileName.god_mode, fileCommands);
     }
@@ -945,7 +988,6 @@ public class Main {
         fileCommands.add(removeTag("@a", Tag.DontMakeTraitor));
         fileCommands.add(removeTag("@a", Tag.RespawnDisabled));
         fileCommands.add(setWorldBorder(2 * worldSize));
-        fileCommands.add("team leave @a");
         fileCommands.add(callFunction(FileName.display_rank));
         fileCommands.add("scoreboard players set NightTime Time 600");
         fileCommands.add("scoreboard players set CarePackages Time 1200");
@@ -956,6 +998,7 @@ public class Main {
         }
 
         for (Team t : teams) {
+            fileCommands.add(t.emptyTeam());
             fileCommands.add("scoreboard players reset " + t.getPlayerColor() + " CPScore");
             fileCommands.add(t.joinTeam(t.getPlayerColor()));
         }
@@ -1046,8 +1089,9 @@ public class Main {
         fileCommands.add(setGameRule(GameRule.doImmediateRespawn, true));
         fileCommands.add(callFunction(FileName.clear_enderchest));
 
-        // fileCommands.add("recipe give @a uhc:golden_apple");
-        fileCommands.add("recipe take @a uhc:dragon_head");
+        // Recipes
+        // fileCommands.add(giveRecipe("@a", BlockType.setNamespace(Namespace.uhc, BlockType.golden_apple)));
+        fileCommands.add(takeRecipe("@a", BlockType.setNamespace(Namespace.uhc, BlockType.dragon_head)));
 
         // Remove resistance
         fileCommands.add(clearEffect("@a", Effect.resistance));
@@ -1057,11 +1101,11 @@ public class Main {
 
     private FileData StartGame() {
         ArrayList<String> fileCommands = new ArrayList<>();
-        fileCommands.add("time set 0");
+        fileCommands.add(setTime(0));
         fileCommands.add(giveEffect("@a", Effect.regeneration, 1, 255));
         fileCommands.add(giveEffect("@a", Effect.saturation, 1, 255));
         fileCommands.add(giveEffect("@a", Effect.resistance, 20*60, 2));
-        fileCommands.add("clear @a");
+        fileCommands.add(clearInventory("@a"));
         fileCommands.add(new Title("@a", TitleType.title, new Text(Color.gold, true, true, "Game Starting Now!")).displayTitle());
         fileCommands.add(setGameMode(GameMode.survival, "@a"));
         fileCommands.add(setGameRule(GameRule.sendCommandFeedback, false));
@@ -1549,17 +1593,17 @@ public class Main {
             // Remove piercing enchantment
             fileCommands.add(execute.If(new Entity("@p[nbt={SelectedItem:{id:\"minecraft:crossbow\",count:1,components:{\"minecraft:enchantments\":{levels:{\"minecraft:piercing\":" + (ii + 1) + "}}}}}]")) +
                     new TellRaw("@p[nbt={SelectedItem:{id:\"minecraft:crossbow\",count:1,components:{\"minecraft:enchantments\":{levels:{\"minecraft:piercing\":" + (ii + 1) + "}}}}}]", new Text(Color.red, true, false, "PIERCING IS NOT ALLOWED, YOU NAUGHTY BUM!")).sendRaw());
-            fileCommands.add("item replace entity @p[nbt={SelectedItem:{id:\"minecraft:crossbow\",count:1,components:{\"minecraft:enchantments\":{levels:{\"minecraft:piercing\":" + (ii + 1) + "}}}}}] weapon.mainhand with minecraft:crossbow");
+            fileCommands.add(replaceItem("@p[nbt={SelectedItem:{id:\"minecraft:crossbow\",count:1,components:{\"minecraft:enchantments\":{levels:{\"minecraft:piercing\":" + (ii + 1) + "}}}}}]", InventorySlot.mainhand, BlockType.crossbow));
 
             // Remove power enchantment
             fileCommands.add(execute.If(new Entity("@p[nbt={SelectedItem:{id:\"minecraft:bow\",count:1,components:{\"minecraft:enchantments\":{levels:{\"minecraft:power\":" + (ii + 1) + "}}}}}]")) +
                     new TellRaw("@p[nbt={SelectedItem:{id:\"minecraft:bow\",count:1,components:{\"minecraft:enchantments\":{levels:{\"minecraft:power\":" + (ii + 1) + "}}}}}]", new Text(Color.red, true, false, "POWER IS NOT ALLOWED, YOU NAUGHTY BUM!")).sendRaw());
-            fileCommands.add("item replace entity @p[nbt={SelectedItem:{id:\"minecraft:bow\",count:1,components:{\"minecraft:enchantments\":{levels:{\"minecraft:power\":" + (ii + 1) + "}}}}}] weapon.mainhand with minecraft:bow");
+            fileCommands.add(replaceItem("@p[nbt={SelectedItem:{id:\"minecraft:bow\",count:1,components:{\"minecraft:enchantments\":{levels:{\"minecraft:power\":" + (ii + 1) + "}}}}}]", InventorySlot.mainhand, BlockType.bow));
         }
         // Remove wolf armor
         fileCommands.add(execute.If(new Entity("@p[nbt={SelectedItem:{id:\"minecraft:wolf_armor\",count:1}}]")) +
                 new TellRaw("@p[nbt={SelectedItem:{id:\"minecraft:wolf_armor\",count:1}}]", new Text(Color.red, true, false, "WOLF ARMOR IS NOT ALLOWED, YOU NAUGHTY BUM!")).sendRaw());
-        fileCommands.add("item replace entity @p[nbt={SelectedItem:{id:\"minecraft:wolf_armor\",count:1}}] weapon.mainhand with minecraft:leather_horse_armor");
+        fileCommands.add(replaceItem("@p[nbt={SelectedItem:{id:\"minecraft:wolf_armor\",count:1}}]", InventorySlot.mainhand,  BlockType.leather_horse_armor));
 
         // Update public team CP scores
         fileCommands.add(callFunction(FileName.update_public_cp_score));
@@ -1739,7 +1783,7 @@ public class Main {
 
         // Remove player heads
         fileCommands.add(execute.As(new Entity("@a[nbt={Inventory:[{id:\"minecraft:player_head\"}]}]")) +
-                "clear @s minecraft:player_head");  // Remove from inventory
+                clearInventory("@s", BlockType.player_head));  // Remove from inventory
         fileCommands.add(execute.As(new Entity("@e[type=item,nbt={Item:{id:\"minecraft:player_head\"}}]")) +
                 killEntity("@s")); // Remove item
 
@@ -1845,7 +1889,7 @@ public class Main {
                         execute.FacingNext(new Entity("@a[team=" + team.getName() + ",distance=0.1..,gamemode=!spectator,limit=1,sort=nearest]"), EntityAnchor.eyes) +
                         execute.PositionedNext(new Coordinate(0, 1, 0, ReferenceFrame.relative)) +
                         execute.PositionedNext(new Coordinate(0, 0, i + 1, ReferenceFrame.relative_facing), true) +
-                        "particle dust{color:[" + team.getDustColor() + "],scale:1} ~ ~ ~ 0 0 0 0 1 normal @s");
+                        createParticle(Particle.dust + "{color:[" + team.getDustColor() + "],scale:1}", new Coordinate(0, 0, 0, ReferenceFrame.relative), new Coordinate(0, 0, 0), 0, 1, "@s"));
             }
         }
 
