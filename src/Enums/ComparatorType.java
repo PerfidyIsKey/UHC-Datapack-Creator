@@ -1,6 +1,7 @@
 package Enums;
 
 public enum ComparatorType {
+    add("+="),
     equal("="),
     greater(">"),
     less("<");

@@ -3,7 +3,7 @@ package Enums;
 import HelperClasses.ScoreboardObjective;
 
 public enum Objective {
-    TimDum,
+        TimDum,
         TimeDum,
         Time,
         Time2,
@@ -28,5 +28,5 @@ public enum Objective {
         MinHealth,
         Victory,
         WolfAge,
-    CP
+        CP
 }
