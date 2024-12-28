@@ -449,6 +449,10 @@ public class Main {
         return forceLoadAndSet(x, y, z, dimension, blockType + "", type);
     }
 
+    private String addForceLoad(int x1, int z1, int x2, int z2) { return "forceload add " + x1 + " " + z1 + " " + x2 + " " + z2; }
+
+    private String removeForceLoad(int x1, int z1, int x2, int z2) { return "forceload remove " + x1 + " " + z1 + " " + x2 + " " + z2; }
+
     private String setBlock(String x, String y, String z, String blockType) {
         return "setblock " + x + " " + y + " " + z + " " + blockType;
     }
@@ -562,35 +566,37 @@ public class Main {
     }
 
     // Difficulty
-    private String setDifficulty(Difficulty difficulty) {return "difficulty " + difficulty; }
+    private String setDifficulty(Difficulty difficulty) { return "difficulty " + difficulty; }
 
     // Gamemode
-    private String setDefaultGameMode(GameMode gameMode) {return "defaultgamemode " + gameMode; }
+    private String setDefaultGameMode(GameMode gameMode) { return "defaultgamemode " + gameMode; }
+
+    private String setGameMode(GameMode gameMode, String entity) { return "gamemode " + gameMode + " " + entity; }
 
     // Set world spawn
-    private String setWorldSpawn(Coordinate coordinate) {return "setworldspawn " + coordinate.getCoordinateString(); }
+    private String setWorldSpawn(Coordinate coordinate) { return "setworldspawn " + coordinate.getCoordinateString(); }
 
     // Entities
-    private String summonEntity(String entity) {return summonEntity(entity, new Coordinate(0, 0, 0, ReferenceFrame.relative)); }
+    private String summonEntity(String entity) { return summonEntity(entity, new Coordinate(0, 0, 0, ReferenceFrame.relative)); }
 
-    private String summonEntity(String entity, Coordinate coordinate) {return "summon minecraft:" + entity + " " + coordinate.getCoordinateString(); }
+    private String summonEntity(String entity, Coordinate coordinate) { return "summon minecraft:" + entity + " " + coordinate.getCoordinateString(); }
 
-    private String summonEntity(String entity, String nbt) {return summonEntity(entity, new Coordinate(0, 0, 0, ReferenceFrame.relative), nbt); }
+    private String summonEntity(String entity, String nbt) { return summonEntity(entity, new Coordinate(0, 0, 0, ReferenceFrame.relative), nbt); }
 
-    private String summonEntity(String entity, Coordinate coordinate, String nbt) {return "summon minecraft:" + entity + " " + coordinate.getCoordinateString() + " " + nbt; }
+    private String summonEntity(String entity, Coordinate coordinate, String nbt) { return "summon minecraft:" + entity + " " + coordinate.getCoordinateString() + " " + nbt; }
 
-    private String summonEntity(EntityType entity) {return summonEntity(entity, new Coordinate(0, 0, 0, ReferenceFrame.relative)); }
+    private String summonEntity(EntityType entity) { return summonEntity(entity, new Coordinate(0, 0, 0, ReferenceFrame.relative)); }
 
-    private String summonEntity(EntityType entity, Coordinate coordinate) {return "summon minecraft:" + entity + " " + coordinate.getCoordinateString(); }
+    private String summonEntity(EntityType entity, Coordinate coordinate) { return "summon minecraft:" + entity + " " + coordinate.getCoordinateString(); }
 
-    private String summonEntity(EntityType entity, String nbt) {return summonEntity(entity, new Coordinate(0, 0, 0, ReferenceFrame.relative), nbt); }
+    private String summonEntity(EntityType entity, String nbt) { return summonEntity(entity, new Coordinate(0, 0, 0, ReferenceFrame.relative), nbt); }
 
-    private String summonEntity(EntityType entity, Coordinate coordinate, String nbt) {return "summon minecraft:" + entity + " " + coordinate.getCoordinateString() + " " + nbt; }
+    private String summonEntity(EntityType entity, Coordinate coordinate, String nbt) { return "summon minecraft:" + entity + " " + coordinate.getCoordinateString() + " " + nbt; }
 
-    private String killEntity(String entity) {return "kill " + entity;}
+    private String killEntity(String entity) { return "kill " + entity; }
 
     // Teleportation
-    private String teleportEntity(String entity, Coordinate coordinate) {return "tp " + entity + " " + coordinate.getCoordinateString();}
+    private String teleportEntity(String entity, Coordinate coordinate) { return "tp " + entity + " " + coordinate.getCoordinateString(); }
 
     private String teleportEntity(String entity1, String entity2) { return "tp " + entity1 + " " + entity2; }
 
@@ -602,6 +608,30 @@ public class Main {
     private String removeTag(String entity, Tag tag) { return "tag " + entity + " remove " + tag; }
 
     private String removeTag(String entity, String tag) { return "tag " + entity + " remove " + tag; }
+
+    // Give item
+    private String giveItem(String entity, BlockType item) { return giveItem(entity, item, ""); }
+
+    private String giveItem(String entity, BlockType item, String nbt) { return "give " + entity + " " + item + nbt; }
+
+    // Worldborder
+    private String setWorldBorder(int size, int duration) { return "worldborder set " + size + " " + duration; }
+
+    private String setWorldBorder(int size) { return "worldborder set " + size; }
+
+    // Spreadplayers
+    private String spreadPlayers(int xCenter, int yCenter, int minRange, int maxRange, Boolean respectTeam, String entities) { return "spreadplayers " + xCenter + " " + yCenter + " " + minRange + " " + maxRange + " " + respectTeam + " " + entities; }
+
+    // Experience
+    private String setExperience(String target, int amount, ExperienceType type) { return "xp set " + target + " " + amount + " " + type; }
+
+    // Advancements
+    private String revokeAdvancement(String target) { return "advancement revoke " + target + " everything"; }
+
+    // Data
+    private String getData(String target, String path) { return "data get entity " + target + " " + path; }
+
+    private String modifyData(String target, String targetPath, String value) { return "data modify entity " + target + " " + targetPath + " set value " + value + "b"; }
 
     // Create function files
     private void makeFunctionFiles() {
@@ -750,7 +780,7 @@ public class Main {
         fileCommands.add(playSound(Sound.THUNDER, SoundSource.master, "@a", "~", "~50", "~", "100", "1", "0"));
 
         // Set all dead players to spectator mode
-        fileCommands.add("gamemode spectator @a[scores={Deaths=1},gamemode=!spectator]");
+        fileCommands.add(setGameMode(GameMode.spectator, "@a[scores={Deaths=1},gamemode=!spectator]"));
 
         // Reset scores
         fileCommands.add("scoreboard players set @a[scores={Deaths=1}] ControlPoint1 0");
@@ -891,14 +921,14 @@ public class Main {
         fileCommands.add(execute.In(Dimension.overworld) +
                 setBlock(10, worldBottom + 2, 0, BlockType.bedrock, SetBlockType.destroy));
         fileCommands.add(execute.In(controlPoints.get(0).getCoordinate().getDimension()) +
-                "forceload add " + controlPoints.get(0).getCoordinate().getX() + " " + controlPoints.get(0).getCoordinate().getZ() + " " + controlPoints.get(0).getCoordinate().getX() + " " + controlPoints.get(0).getCoordinate().getZ());
+                addForceLoad(controlPoints.get(0).getCoordinate().getX(), controlPoints.get(0).getCoordinate().getZ(), controlPoints.get(0).getCoordinate().getX(), controlPoints.get(0).getCoordinate().getZ()));
         fileCommands.add(execute.In(controlPoints.get(1).getCoordinate().getDimension()) +
-                "forceload add " + controlPoints.get(1).getCoordinate().getX() + " " + controlPoints.get(1).getCoordinate().getZ() + " " + controlPoints.get(1).getCoordinate().getX() + " " + controlPoints.get(1).getCoordinate().getZ());
+                addForceLoad(controlPoints.get(1).getCoordinate().getX(), controlPoints.get(1).getCoordinate().getZ(), controlPoints.get(1).getCoordinate().getX(), controlPoints.get(1).getCoordinate().getZ()));
         fileCommands.add(callFunction(FileName.spawn_controlpoints));
         fileCommands.add(execute.In(controlPoints.get(0).getCoordinate().getDimension()) +
-                "forceload remove " + controlPoints.get(0).getCoordinate().getX() + " " + controlPoints.get(0).getCoordinate().getZ() + " " + controlPoints.get(0).getCoordinate().getX() + " " + controlPoints.get(0).getCoordinate().getZ());
+                removeForceLoad(controlPoints.get(0).getCoordinate().getX(), controlPoints.get(0).getCoordinate().getZ(), controlPoints.get(0).getCoordinate().getX(), controlPoints.get(0).getCoordinate().getZ()));
         fileCommands.add(execute.In(controlPoints.get(1).getCoordinate().getDimension()) +
-                "forceload remove " + controlPoints.get(1).getCoordinate().getX() + " " + controlPoints.get(1).getCoordinate().getZ() + " " + controlPoints.get(1).getCoordinate().getX() + " " + controlPoints.get(1).getCoordinate().getZ());
+                removeForceLoad(controlPoints.get(1).getCoordinate().getX(), controlPoints.get(1).getCoordinate().getZ(), controlPoints.get(1).getCoordinate().getX(), controlPoints.get(1).getCoordinate().getZ()));
         BossBar bossBarCp1 = getBossbarByName("cp1");
         BossBar bossBarCp2 = getBossbarByName("cp2");
         fileCommands.add(bossBarCp1.setColor(BossBarColor.white));
@@ -914,7 +944,7 @@ public class Main {
         fileCommands.add(removeTag("@a", Tag.Traitor));
         fileCommands.add(removeTag("@a", Tag.DontMakeTraitor));
         fileCommands.add(removeTag("@a", Tag.RespawnDisabled));
-        fileCommands.add("worldborder set " + 2 * worldSize + " 1");
+        fileCommands.add(setWorldBorder(2 * worldSize));
         fileCommands.add("team leave @a");
         fileCommands.add(callFunction(FileName.display_rank));
         fileCommands.add("scoreboard players set NightTime Time 600");
@@ -941,7 +971,7 @@ public class Main {
         fileCommands.add(execute.As(new Entity("@a")) +
                         setAttributeBase("@s", AttributeType.scale, 1));
 
-        fileCommands.add("gamemode creative @s");
+        fileCommands.add(setGameMode(GameMode.creative, "@s"));
 
         // Clear scheduled commands
         fileCommands.add(callFunction(FileName.clear_schedule));
@@ -993,10 +1023,10 @@ public class Main {
         return new FileData(FileName.into_calls, fileCommands);
     }
 
-    private static FileData SpreadPlayers() {
+    private FileData SpreadPlayers() {
         ArrayList<String> fileCommands = new ArrayList<>();
         fileCommands.add(execute.In(Dimension.overworld) +
-                "spreadplayers 0 0 " + 0.3 * worldSize + " " + 0.9 * worldSize + " true @a");
+                spreadPlayers(0, 0, (int) (0.3 * worldSize), (int) (0.9 * worldSize), true, "@a"));
         fileCommands.add("scoreboard players set " + admin + " Highscore 1");
         fileCommands.add("scoreboard players set " + admin + " MinHealth 20");
 
@@ -1028,13 +1058,12 @@ public class Main {
     private FileData StartGame() {
         ArrayList<String> fileCommands = new ArrayList<>();
         fileCommands.add("time set 0");
-        fileCommands.add("xp set @a 0 levels");
         fileCommands.add(giveEffect("@a", Effect.regeneration, 1, 255));
         fileCommands.add(giveEffect("@a", Effect.saturation, 1, 255));
         fileCommands.add(giveEffect("@a", Effect.resistance, 20*60, 2));
         fileCommands.add("clear @a");
         fileCommands.add(new Title("@a", TitleType.title, new Text(Color.gold, true, true, "Game Starting Now!")).displayTitle());
-        fileCommands.add("gamemode survival @a");
+        fileCommands.add(setGameMode(GameMode.survival, "@a"));
         fileCommands.add(setGameRule(GameRule.sendCommandFeedback, false));
         fileCommands.add(execute.In(Dimension.overworld) +
                 fill(0, worldBottom + 2, 15, 0, worldBottom + 2, 2, BlockType.redstone_block, SetBlockType.replace));
@@ -1044,10 +1073,13 @@ public class Main {
                 fill(15, worldBottom + 2, 15, 9, worldBottom + 2, 15, BlockType.bedrock));
         fileCommands.add(execute.In(Dimension.overworld) +
                 setBlock(10, worldBottom + 2, 0, BlockType.redstone_block, SetBlockType.destroy));
-        fileCommands.add("advancement revoke @a everything");
-        fileCommands.add("xp set @a 0 points");
+        fileCommands.add(revokeAdvancement("@a"));
+
+        // Experience
+        fileCommands.add(setExperience("@a", 0, ExperienceType.levels));
+        fileCommands.add(setExperience("@a", 0, ExperienceType.points));
         fileCommands.add("scoreboard players set " + admin + " Victory 1");
-        fileCommands.add("give @a minecraft:bundle[custom_data={locateTeammate:1b}]");
+        fileCommands.add(giveItem("@a", BlockType.bundle, "[custom_data={locateTeammate:1b}]"));
 
         // Initialize CP messaging dummies
         for (int i = 1; i < controlPoints.size() + 1; i++) {
@@ -1059,14 +1091,14 @@ public class Main {
         return new FileData(FileName.start_game, fileCommands);
     }
 
-    private static FileData BattleRoyale() {
+    private FileData BattleRoyale() {
         ArrayList<String> fileCommands = new ArrayList<>();
         fileCommands.add(execute.In(Dimension.overworld, false) +
                 execute.PositionedNext(new Coordinate(0, 151, 0), true) +
-                "gamemode survival @a[distance=..20,gamemode=!creative]");
+                setGameMode(GameMode.survival, "@a[distance=..20,gamemode=!creative]"));
         fileCommands.add(execute.In(Dimension.overworld, false) +
                 execute.PositionedNext(new Coordinate(0, 151, 0), true) +
-                "spreadplayers 0 0 " + 0.3 * worldSize + " " + 0.9 * worldSize + " true @a[distance=..20,gamemode=survival]");
+                spreadPlayers(0, 0, (int) (0.3 * worldSize), (int) (0.9 * worldSize), true, "@a[distance=..20,gamemode=survival]"));
 
         return new FileData(FileName.battle_royale, fileCommands);
     }
@@ -1174,12 +1206,12 @@ public class Main {
 
     private FileData DeathMatch() {
         ArrayList<String> fileCommands = new ArrayList<>();
-        fileCommands.add("worldborder set 400");
-        fileCommands.add("worldborder set 20 180");
+        fileCommands.add(setWorldBorder(400));
+        fileCommands.add(setWorldBorder(20, 180));
         fileCommands.add(execute.In(Dimension.overworld) +
                 teleportEntity("@a[gamemode=!spectator]", new Coordinate(3, 153, 3)));
         fileCommands.add(execute.In(Dimension.overworld) +
-                "spreadplayers 0 0 75 150 true @a[gamemode=!spectator]");
+                spreadPlayers(0, 0, 75, 150, true, "@a[gamemode=!spectator]"));
 
         return new FileData(FileName.death_match, fileCommands);
     }
@@ -1285,12 +1317,12 @@ public class Main {
         return new FileData(FileName.drop_carepackages, fileCommands);
     }
 
-    private static FileData CarepackageDistributor() {
+    private FileData CarepackageDistributor() {
         ArrayList<String> fileCommands = new ArrayList<>();
 
         fileCommands.add(execute.In(Dimension.overworld, false) +
-                execute.IfNext(new Entity("@e[type=minecraft:falling_block,distance=..2]"), true) +
-                "spreadplayers 0 0 10 " + carePackageSpread + " false @e[type=minecraft:falling_block,distance=..2]");
+                execute.IfNext(new Entity("@e[type=" + EntityType.falling_block + ",distance=..2]"), true) +
+                spreadPlayers(0, 0, 10, carePackageSpread, false, "@e[type=" + EntityType.falling_block + ",distance=..2]"));
 
         return new FileData(FileName.carepackage_distributor, fileCommands);
     }
@@ -1390,7 +1422,7 @@ public class Main {
         for (ControlPoint cp : cpList) {
             Coordinate c = cp.getCoordinate();
             fileCommands.add(execute.In(c.getDimension()) +
-                    "forceload add " + c.getX() + " " + c.getZ() + " " + c.getX() + " " + c.getZ());
+                    addForceLoad(c.getX(), c.getZ(), c.getX(), c.getZ()));
             fileCommands.add(execute.In(c.getDimension()) +
                     setBlock(c.getX(), c.getY() + 11, c.getZ(), BlockType.structure_block + "[mode=load]{metadata:\"\",mirror:\"NONE\",ignoreEntities:1b,powered:0b,seed:0L,author:\"?\",rotation:\"NONE\",posX:-6,mode:\"LOAD\",posY:-13,sizeX:13,posZ:-6,integrity:1.0f,showair:0b,name:\"" + cp.getStructureName() + "\",sizeY:14,sizeZ:13,showboundingbox:1b}", SetBlockType.destroy));
 
@@ -1412,7 +1444,7 @@ public class Main {
             }
 
             fileCommands.add(execute.In(c.getDimension()) +
-                    "forceload remove " + c.getX() + " " + c.getZ() + " " + c.getX() + " " + c.getZ());
+                    removeForceLoad(c.getX(), c.getZ(), c.getX(), c.getZ()));
         }
 
         return new FileData(FileName.spawn_controlpoints, fileCommands);
@@ -1434,7 +1466,7 @@ public class Main {
         fileCommands.add("scoreboard players add " + admin + " WorldLoad 1");
         fileCommands.add("scoreboard players add " + admin + " Time 1");
         fileCommands.add(execute.If(new Entity("@e[scores={WorldLoad=400..}]")) +
-                "spreadplayers 0 0 5 " + worldSize + " false @a");
+                spreadPlayers(0, 0, 5, worldSize, false, "@a"));
         fileCommands.add(execute.If(new Entity("@e[scores={Time=12000..}]"), false) +
                 execute.InNext(Dimension.overworld, true) +
                 setBlock(6, worldBottom + 2, 15, BlockType.bedrock));
@@ -1472,12 +1504,12 @@ public class Main {
         for (int i = 0; i < 2; i++) {
             fileCommands.add(execute.As(new Entity("@e[type=minecraft:wolf]"), false) +
                     execute.StoreNext(ExecuteStore.result, "@s", getObjectiveByName(Objective.CollarCheck.toString() + i), true) +
-                    "data get entity @s Owner[" + i + "]");
+                    getData("@s", "Owner[" + i + "]"));
 
             for (Team t : teams) {
                 fileCommands.add(execute.As(new Entity("@a[team=" + t.getName() + "]"), false) +
                         execute.StoreNext(ExecuteStore.result, "@s", getObjectiveByName(Objective.CollarCheck.toString() + i), true) +
-                        "data get entity @s UUID[" + i + "]");
+                        getData("@s", "UUID[" + i + "]"));
 
 
             }
@@ -1487,7 +1519,7 @@ public class Main {
             fileCommands.add(execute.As(new Entity("@e[type=wolf]"), false) +
                     execute.IfNext("@s", getObjectiveByName(Objective.CollarCheck.toString() + 0), ComparatorType.equal, "@p[tag=" + Tag.CollarCheck + "]", getObjectiveByName(Objective.CollarCheck.toString() + 0)) +
                     execute.IfNext("@s", getObjectiveByName(Objective.CollarCheck.toString() + 1), ComparatorType.equal, "@p[tag=" + Tag.CollarCheck + "]", getObjectiveByName(Objective.CollarCheck.toString() + 1), true) +
-                    "data modify entity @s CollarColor set value " + t.getCollarColor() + "b");
+                    modifyData("@s", "CollarColor", t.getCollarColor()));
             fileCommands.add(removeTag("@a[team=" + t.getName() + "]", Tag.CollarCheck));
         }
 
@@ -1703,7 +1735,7 @@ public class Main {
 
         // Set player's gamemode to survival
         fileCommands.add(execute.As(new Entity(respawnPlayer)) +
-                "gamemode survival @s");
+                setGameMode(GameMode.survival, "@s"));
 
         // Remove player heads
         fileCommands.add(execute.As(new Entity("@a[nbt={Inventory:[{id:\"minecraft:player_head\"}]}]")) +
@@ -1712,7 +1744,7 @@ public class Main {
                 killEntity("@s")); // Remove item
 
         // Give new bundle to people who respawn
-        fileCommands.add("give " + respawnPlayer + " " + BlockType.bundle + "[custom_data={locateTeammate:1b}]");
+        fileCommands.add(giveItem(respawnPlayer, BlockType.bundle, "[custom_data={locateTeammate:1b}]"));
 
         // Set respawn health
         for (int i = 0; i < 10; i++) {
@@ -1827,7 +1859,7 @@ public class Main {
 
         fileCommands.add(execute.As(new Entity("@e[limit=1, type=wolf, sort=random]"), false) +
                 execute.StoreNext(ExecuteStore.result, "@s", getObjectiveByName(Objective.WolfAge), true) +
-                "data get entity @s Age");
+                getData("@s", "Age"));
         fileCommands.add(execute.At(babyWolf) +
                 summonEntity(EntityType.dolphin));
         fileCommands.add(execute.As(babyWolf) +
