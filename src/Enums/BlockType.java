@@ -27,6 +27,7 @@ public enum BlockType {
     player_head,
     redstone_block,
     shield,
+    splash_potion,
     structure_block,
     trident,
     void_air,

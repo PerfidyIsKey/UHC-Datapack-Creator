@@ -46,7 +46,6 @@ public class Main {
     private ArrayList<ControlPoint> controlPoints = new ArrayList<>();
     private ArrayList<ScoreboardObjective> scoreboardObjectives = new ArrayList<>();
     private ArrayList<Player> players = new ArrayList<>();
-    private int teamAmount;
     private ArrayList<Season> seasons = new ArrayList<>();
     private ArrayList<String> quotes = new ArrayList<>();
     private ArrayList<BossBar> bossBars = new ArrayList<>();
@@ -222,7 +221,7 @@ public class Main {
         }
 
         // Teams
-        teamAmount = players.size() / determineAmountOfPlayersPerTeam();
+        int teamAmount = players.size() / determineAmountOfPlayersPerTeam();
         int relativeTeamAmount = teamAmount - 6;
         if (relativeTeamAmount < 0) relativeTeamAmount = 0;
         if (relativeTeamAmount > 10) relativeTeamAmount = 10;
@@ -676,6 +675,14 @@ public class Main {
         return "particle " + name + " " + pos.getCoordinateString() + " " + delta.getCoordinateString() + " " + speed + " " + count + " normal " + viewers;
     }
 
+    // Potions
+    private String giveSplashPotion(String targets, int slotNumber, Effect effect, String colorHex, String displayName, String lore) {
+        // Convert hex to decimal
+        int potionColor = Integer.parseInt(colorHex, 16);
+
+        return "item replace entity " + targets + " " + InventorySlot.hotbar.setSlotNumber(slotNumber) + " with " + BlockType.splash_potion + "[potion_contents={custom_color:" + potionColor + ",custom_effects:[{id:" + effect + ",amplifier:0,duration:200,show_particles:0b,show_icon:0b,ambient:0b}]},lore=['\"" + lore + "\"'],custom_name='\"" + displayName + "\"']";
+    }
+
     // Create function files
     private void makeFunctionFiles() {
         files.add(Initialize());
@@ -685,6 +692,7 @@ public class Main {
         files.add(EquipGear());
         files.add(GodMode());
         files.add(DeveloperMode());
+        files.add(GetStartPotions());
 
         for (int i = 1; i < 9; i++) {
             files.add(RandomTeams(i));
@@ -898,7 +906,7 @@ public class Main {
     private FileData ClearEnderChest() {
         ArrayList<String> fileCommands = new ArrayList<>();
         for (int i = 0; i < chestSize; i++) {
-            fileCommands.add(replaceItem("@a", InventorySlot.setIndex(InventorySlot.enderchest, i), BlockType.air, 1));
+            fileCommands.add(replaceItem("@a", InventorySlot.enderchest.setSlotNumber(i), BlockType.air, 1));
             }
 
         return new FileData(FileName.clear_enderchest, fileCommands);
@@ -912,7 +920,7 @@ public class Main {
         fileCommands.add(replaceItem("@a", InventorySlot.legs, BlockType.iron_leggings));
         fileCommands.add(replaceItem("@a", InventorySlot.offhand, BlockType.shield));
         fileCommands.add(replaceItem("@a", InventorySlot.mainhand, BlockType.iron_axe));
-        fileCommands.add(replaceItem("@a", InventorySlot.setIndex(InventorySlot.inventory, 0), BlockType.iron_sword));
+        fileCommands.add(replaceItem("@a", InventorySlot.inventory.setSlotNumber(0), BlockType.iron_sword));
         fileCommands.add(giveEffect("@a", Effect.regeneration, 1, 255, true));
 
         return new FileData(FileName.equip_gear, fileCommands);
@@ -926,10 +934,22 @@ public class Main {
         return new FileData(FileName.god_mode, fileCommands);
     }
 
-    private static FileData GetStartPotions() {
+    private FileData GetStartPotions() {
         ArrayList<String> fileCommands = new ArrayList<>();
-        //TODO: create;
-        return new FileData(FileName.god_mode, fileCommands);
+
+        // Clear inventory
+        fileCommands.add(clearInventory("@s"));
+
+        // Give potions
+        fileCommands.add(giveSplashPotion("@s", 0, Effect.speed, "808080", "Developer Mode", "Set operational mode to Developer Mode."));
+        fileCommands.add(giveSplashPotion("@s", 1, Effect.weakness, "FF9933", "Assign Teams", "Assign players to teams."));
+        fileCommands.add(giveSplashPotion("@s", 2, Effect.slow_falling, "6633CC", "Predictions", "Who will win this season?."));
+        fileCommands.add(giveSplashPotion("@s", 3, Effect.invisibility, "3399FF", "Into Calls", "Allow players to gather in their Discord channel."));
+        fileCommands.add(giveSplashPotion("@s", 4, Effect.poison, "00CC66", "Spread players", "Spread players across the map."));
+        fileCommands.add(giveSplashPotion("@s", 5, Effect.strength, "CC3333", "Survival Mode", "Set operational mode to Ready to Play."));
+        fileCommands.add(giveSplashPotion("@s", 6, Effect.slowness, "00FF7F", "Start Game", "Start the game. Good luck!"));
+
+        return new FileData(FileName.start_potions, fileCommands);
     }
 
     private FileData DeveloperMode() {
@@ -1018,6 +1038,9 @@ public class Main {
 
         // Clear scheduled commands
         fileCommands.add(callFunction(FileName.clear_schedule));
+
+        // Clear all player effects
+        fileCommands.add(clearEffect("@a"));
 
         return new FileData(FileName.developer_mode, fileCommands);
     }

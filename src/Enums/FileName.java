@@ -12,6 +12,7 @@ public enum FileName {
     spread_players,
     survival_mode,
     start_game,
+    start_potions,
 
     // Timer
     horse_frost_walker,

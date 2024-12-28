@@ -5,6 +5,7 @@ public enum InventorySlot {
     enderchest("enderchest"),
     feet("armor.feet"),
     head("armor.head"),
+    hotbar("hotbar"),
     inventory("inventory"),
     legs("armor.legs"),
     mainhand("weapon.mainhand"),
@@ -16,8 +17,8 @@ public enum InventorySlot {
         this.symbol = symbol;
     }
 
-    public static String setIndex(InventorySlot type, int slot) {
-        return type + "." + slot;
+    public String setSlotNumber(int slotNumber) {
+        return symbol + "." + slotNumber;
     }
 
     public String toString() {
