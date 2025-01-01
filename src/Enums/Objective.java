@@ -3,30 +3,43 @@ package Enums;
 import HelperClasses.ScoreboardObjective;
 
 public enum Objective {
-        TimDum,
-        TimeDum,
-        Time,
-        Time2,
-        SideDum,
-        ControlPoint,
-        CPScore,
-        MSGDum,
-        Highscore,
-        Hearts,
-        Apples,
-        Stone,
-        Diorite,
-        Andesite,
-        Granite,
-        Deepslate,
-        Mining,
-        Deaths,
-        Kills,
-        Rank,
-        WorldLoad,
-        CollarCheck,
-        MinHealth,
-        Victory,
-        WolfAge,
-        CP
+        TimDum("TimDum"),
+        TimeDum("TimeDum"),
+        Time("Time"),
+        SideDum("SideDum"),
+        ControlPoint("ControlPoint"),
+        CPScore("CPScore"),
+        MSGDum("MSGDum"),
+        Highscore("Highscore"),
+        Hearts("Hearts"),
+        Apples("Apples"),
+        Stone("Stone"),
+        Diorite("Diorite"),
+        Andesite("Andesite"),
+        Granite("Granite"),
+        Deepslate("Deepslate"),
+        Mining("Mining"),
+        Deaths("Deaths"),
+        Kills("Kills"),
+        Rank("Rank"),
+        WorldLoad("WorldLoad"),
+        CollarCheck("CollarCheck"),
+        MinHealth("MinHealth"),
+        Victory("Victory"),
+        WolfAge("WolfAge"),
+        CP("CP");
+
+        private final String symbol;
+
+        Objective(String symbol) {
+                this.symbol = symbol;
+        }
+
+        public String extendName(int number) {
+                return symbol + number;
+        }
+
+        public String extendName(String content) {
+                return symbol + content;
+        }
 }

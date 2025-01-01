@@ -54,6 +54,12 @@ public class ScoreboardObjective {
         this.customName = customName;
     }
 
+    public ScoreboardObjective(String name, ObjectiveType type, String customName) {
+        this.name = name;
+        this.type = type.toString();
+        this.customName = customName;
+    }
+
     public ScoreboardObjective(Objective name, String type, boolean displaySideBar) {
         this.name = name.toString();
         this.type = type;

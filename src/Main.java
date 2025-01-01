@@ -267,18 +267,15 @@ public class Main {
         scoreboardObjectives.add(new ScoreboardObjective(Objective.TimDum, ObjectiveType.dummy));
         scoreboardObjectives.add(new ScoreboardObjective(Objective.TimeDum, ObjectiveType.dummy, "\"Elapsed Time\""));
         scoreboardObjectives.add(new ScoreboardObjective(Objective.Time, ObjectiveType.dummy, "\"Elapsed Time\"", true));
-        scoreboardObjectives.add(new ScoreboardObjective(Objective.Time2, ObjectiveType.dummy, "\"Elapsed Time\""));
+        scoreboardObjectives.add(new ScoreboardObjective(Objective.Time.extendName(2), ObjectiveType.dummy, "\"Elapsed Time\""));
         scoreboardObjectives.add(new ScoreboardObjective(Objective.SideDum, ObjectiveType.dummy));
-        for (int i = 0; i < 2; i++) {
-
-        }
         scoreboardObjectives.add(new ScoreboardObjective(Objective.CPScore, ObjectiveType.dummy, "\"Control Point score\"", true));
         for (int i = 0; i < 2; i++) {
-            scoreboardObjectives.add(new ScoreboardObjective(Objective.Highscore.toString() + (i + 1), ObjectiveType.dummy));
-            scoreboardObjectives.add(new ScoreboardObjective(Objective.ControlPoint.toString() + (i + 1), ObjectiveType.dummy));
-            scoreboardObjectives.add(new ScoreboardObjective(Objective.CollarCheck.toString() + i, ObjectiveType.dummy));
+            scoreboardObjectives.add(new ScoreboardObjective(Objective.Highscore.extendName(i + 1), ObjectiveType.dummy));
+            scoreboardObjectives.add(new ScoreboardObjective(Objective.ControlPoint.extendName(i + 1), ObjectiveType.dummy));
+            scoreboardObjectives.add(new ScoreboardObjective(Objective.CollarCheck.extendName(i), ObjectiveType.dummy));
             for (int j = 0; j < 2; j++) {
-                scoreboardObjectives.add(new ScoreboardObjective(Objective.MSGDum.toString() + (i + 1) + "CP" + (j + 1), ObjectiveType.dummy));
+                scoreboardObjectives.add(new ScoreboardObjective(Objective.MSGDum.extendName((i + 1) + "CP" + (j + 1)), ObjectiveType.dummy));
             }
         }
         scoreboardObjectives.add(new ScoreboardObjective(Objective.Hearts, ObjectiveType.health));
@@ -836,8 +833,8 @@ public class Main {
 
         // Reset scores
         for (int i = 0; i < 2; i++) {
-            fileCommands.add(scoreboard.Set("@a[scores={Deaths=1}]", getObjectiveByName("" + Objective.ControlPoint + (i + 1)), 0));
-            fileCommands.add(scoreboard.Set(admin, getObjectiveByName("" + Objective.Highscore + (i + 1)), 1));
+            fileCommands.add(scoreboard.Set("@a[scores={Deaths=1}]", getObjectiveByName(Objective.ControlPoint.extendName(i + 1)), 0));
+            fileCommands.add(scoreboard.Set(admin, getObjectiveByName(Objective.Highscore.extendName(i + 1)), 1));
         }
 
         // Reset player with lowest health
@@ -887,20 +884,20 @@ public class Main {
         ArrayList<String> fileCommands = new ArrayList<>();
 
         for (Team t : teams) {
-            fileCommands.add(execute.If(adminSingle, getObjectiveByName(Objective.CP.toString() + 1 + t.getName()), ComparatorType.greater,adminSingle, getObjectiveByName(Objective.Highscore.toString() + 1)) +
+            fileCommands.add(execute.If(adminSingle, getObjectiveByName(Objective.CP.toString() + 1 + t.getName()), ComparatorType.greater,adminSingle, getObjectiveByName(Objective.Highscore.extendName(1))) +
                     getBossbarByName("cp1").setColor(t.getBossbarColor()));
-            fileCommands.add(execute.If(adminSingle, getObjectiveByName(Objective.CP.toString() + 2 + t.getName()), ComparatorType.greater, "@e[limit=1,scores={Highscore1=14400..}]", getObjectiveByName(Objective.Highscore.toString() + 2)) +
+            fileCommands.add(execute.If(adminSingle, getObjectiveByName(Objective.CP.toString() + 2 + t.getName()), ComparatorType.greater, "@e[limit=1,scores={Highscore1=14400..}]", getObjectiveByName(Objective.Highscore.extendName(2))) +
                     getBossbarByName("cp2").setColor(t.getBossbarColor()));
             for (int i = 0; i < 2; i++) {
-                fileCommands.add(scoreboard.Operation(admin, getObjectiveByName("" + Objective.Highscore + (i + 1)), ComparatorType.greater, admin, getObjectiveByName("" + Objective.CP + (i + 1) + t.getName())));
+                fileCommands.add(scoreboard.Operation(admin, getObjectiveByName(Objective.Highscore.extendName(i + 1)), ComparatorType.greater, admin, getObjectiveByName("" + Objective.CP + (i + 1) + t.getName())));
             }
         }
 
         // Update value of bossbars
         fileCommands.add(execute.Store(ExecuteStore.result, getBossbarByName("cp1"), BossBarStore.value) +
-                scoreboard.Get(adminSingle, getObjectiveByName("" + Objective.Highscore + 1)));
+                scoreboard.Get(adminSingle, getObjectiveByName(Objective.Highscore.extendName(1))));
         fileCommands.add(execute.Store(ExecuteStore.result, getBossbarByName("cp2"), BossBarStore.value) +
-                scoreboard.Get("@e[limit=1,scores={Highscore1=14400..}]", getObjectiveByName("" + Objective.Highscore + 2)));
+                scoreboard.Get("@e[limit=1,scores={Highscore1=14400..}]", getObjectiveByName(Objective.Highscore.extendName(2))));
 
         return new FileData(FileName.bbvalue, fileCommands);
     }
@@ -1016,7 +1013,7 @@ public class Main {
         fileCommands.add(scoreboard.Set("ControlPoints", getObjectiveByName(Objective.Time), 1800));
         fileCommands.add(scoreboard.Set("TraitorFaction", getObjectiveByName(Objective.Time), 2400));
         for (int i = 0; i < 4; i++) {
-            fileCommands.add(removeTag("@a", "" + Tag.ReceivedPerk + (i + 1)));
+            fileCommands.add(removeTag("@a", Tag.ReceivedPerk.extendName(i + 1)));
         }
 
         for (Team t : teams) {
@@ -1034,9 +1031,9 @@ public class Main {
 
         // Reset comparative objectives
         for (int i = 1; i < controlPoints.size() + 1; i++) {
-            fileCommands.add(scoreboard.Set(admin, getObjectiveByName("" + Objective.Highscore + i), 1));
+            fileCommands.add(scoreboard.Set(admin, getObjectiveByName(Objective.Highscore.extendName(i)), 1));
             for (int ii = 1; ii < 3; ii++) {
-                fileCommands.add(scoreboard.Set("@a", getObjectiveByName("" + Objective.MSGDum + ii + "CP" + i), 1));
+                fileCommands.add(scoreboard.Set("@a", getObjectiveByName(Objective.MSGDum.extendName(ii + "CP" + i)), 1));
             }
         }
         fileCommands.add(scoreboard.Set(admin, getObjectiveByName(Objective.MinHealth), 20));
@@ -1123,8 +1120,8 @@ public class Main {
         fileCommands.add(callFunction(FileName.clear_enderchest));
 
         // Recipes
-        // fileCommands.add(giveRecipe("@a", BlockType.setNamespace(Namespace.uhc, BlockType.golden_apple)));
-        fileCommands.add(takeRecipe("@a", BlockType.setNamespace(Namespace.uhc, BlockType.dragon_head)));
+        // fileCommands.add(giveRecipe("@a", BlockType.golden_apple.setNamespace(Namespace.uhc)));
+        fileCommands.add(takeRecipe("@a", BlockType.dragon_head.setNamespace(Namespace.uhc)));
 
         // Remove resistance
         fileCommands.add(clearEffect("@a", Effect.resistance));
@@ -1294,11 +1291,11 @@ public class Main {
             fileCommands.add(execute.As("@a[gamemode=!spectator,team=" + team.getName() + "]", false) +
                     execute.IfNext("@s[gamemode=!spectator,x=" + (controlPoints.get(i - 1).getCoordinate().getX() - 6) + ",y=" + (controlPoints.get(i - 1).getCoordinate().getY() - 1) + ",z=" + (controlPoints.get(i - 1).getCoordinate().getZ() - 6) + ",dx=12,dy=12,dz=12]") +
                     execute.UnlessNext("@a[gamemode=!spectator,x=" + (controlPoints.get(i - 1).getCoordinate().getX() - 6) + ",y=" + (controlPoints.get(i - 1).getCoordinate().getY() - 1) + ",z=" + (controlPoints.get(i - 1).getCoordinate().getZ() - 6) + ",dx=12,dy=12,dz=12,team=!" + team.getName() + "]", true) +
-                    scoreboard.Add("@s", getObjectiveByName("" + Objective.ControlPoint + i), controlPoints.get(i - 1).getAddRate()));
+                    scoreboard.Add("@s", getObjectiveByName(Objective.ControlPoint.extendName(i)), controlPoints.get(i - 1).getAddRate()));
 
             // Update CP glass color
             fileCommands.add(execute.In(controlPoints.get(i - 1).getCoordinate().getDimension(), false) +
-                    execute.IfNext("@r[limit=1,gamemode=!spectator,team=" + team.getName() + "]", getObjectiveByName(Objective.ControlPoint.toString() + i), ComparatorType.greater, adminSingle, getObjectiveByName(Objective.Highscore.toString() + i), true) +
+                    execute.IfNext("@r[limit=1,gamemode=!spectator,team=" + team.getName() + "]", getObjectiveByName(Objective.ControlPoint.extendName(i)), ComparatorType.greater, adminSingle, getObjectiveByName(Objective.Highscore.extendName(i)), true) +
                     setBlock(controlPoints.get(i - 1).getCoordinate().getX(), controlPoints.get(i - 1).getCoordinate().getY() + 1, controlPoints.get(i - 1).getCoordinate().getZ(), "minecraft:" + team.getGlassColor() + "_stained_glass", SetBlockType.replace));
         }
 
@@ -1320,12 +1317,12 @@ public class Main {
             // Increment attacking counter if team is on CP and message is not sent
             fileCommands.add(execute.As(new Entity("@a[gamemode=!spectator,team=" + team.getName() + "]"), false) +
                     execute.IfNext(new Entity("@s[x=" + (controlPoints.get(i - 1).getCoordinate().getX() - 6) + ",y=" + (controlPoints.get(i - 1).getCoordinate().getY() - 1) + ",z=" + (controlPoints.get(i - 1).getCoordinate().getZ() - 6) + ",dx=12,dy=12,dz=12,scores={MSGDum1CP" + i + "=.." + cpMessageThreshold + "}]"), true) +
-                    scoreboard.Add("@a[team=" + team.getName() + "]", getObjectiveByName(Objective.MSGDum + "1CP" + i), 1));
+                    scoreboard.Add("@a[team=" + team.getName() + "]", getObjectiveByName(Objective.MSGDum.extendName("1CP" + i)), 1));
 
             // Reset abandonment counter
             fileCommands.add(execute.As(new Entity("@a[gamemode=!spectator,team=" + team.getName() + "]"), false) +
                     execute.IfNext(new Entity("@s[x=" + (controlPoints.get(i - 1).getCoordinate().getX() - 6) + ",y=" + (controlPoints.get(i - 1).getCoordinate().getY() - 1) + ",z=" + (controlPoints.get(i - 1).getCoordinate().getZ() - 6) + ",dx=12,dy=12,dz=12]"), true) +
-                    scoreboard.Set("@a[gamemode=!spectator,team=" + team.getName() + "]", getObjectiveByName(Objective.MSGDum + "2CP" + i), 1));
+                    scoreboard.Set("@a[gamemode=!spectator,team=" + team.getName() + "]", getObjectiveByName(Objective.MSGDum.extendName("2CP" + i)), 1));
 
             // Define CP attacking message
             ArrayList<TextItem> texts = new ArrayList<>();
@@ -1341,13 +1338,13 @@ public class Main {
             // Grant attacking players Attacking tag
             fileCommands.add(execute.As(new Entity("@a[team=" + team.getName() + ",limit=1]"), false) +
                     execute.IfNext(new Entity("@s[scores={MSGDum1CP" + i + "=" + cpMessageThreshold + "}]"), true) +
-                    addTag("@a[team=" + team.getName() + "]", "" + Tag.AttackingCP + i));
+                    addTag("@a[team=" + team.getName() + "]", Tag.AttackingCP.extendName(i)));
 
             /* Abandoned message */
             // Increment abandonment counter unless team is on the CP
-            fileCommands.add(execute.If("@p[gamemode=!spectator,team=" + team.getName() + ",tag=" + Tag.AttackingCP + i + "]", false) +
+            fileCommands.add(execute.If("@p[gamemode=!spectator,team=" + team.getName() + ",tag=" + Tag.AttackingCP.extendName(i) + "]", false) +
                     execute.UnlessNext("@p[gamemode=!spectator,team=" + team.getName() + ",x=" + (controlPoints.get(i - 1).getCoordinate().getX() - 6) + ",y=" + (controlPoints.get(i - 1).getCoordinate().getY() - 1) + ",z=" + (controlPoints.get(i - 1).getCoordinate().getZ() - 6) + ",dx=12,dy=12,dz=12]", true) +
-                    scoreboard.Add("@a[team=" + team.getName() + "]", getObjectiveByName(Objective.MSGDum + "2CP" + i), 1));
+                    scoreboard.Add("@a[team=" + team.getName() + "]", getObjectiveByName(Objective.MSGDum.extendName("2CP" + i)), 1));
 
             // Define CP abandonment message
             texts.clear();
@@ -1363,12 +1360,12 @@ public class Main {
             // Reset attacking counter
             fileCommands.add(execute.As(new Entity("@a[team=" + team.getName() + ",limit=1]"), false) +
                     execute.IfNext(new Entity("@s[scores={MSGDum2CP" + i + "=" + cpMessageThreshold + "}]"), true) +
-                    scoreboard.Set("@a[gamemode=!spectator,team=" + team.getName() + "]", getObjectiveByName(Objective.MSGDum + "1CP" + i), 1));
+                    scoreboard.Set("@a[gamemode=!spectator,team=" + team.getName() + "]", getObjectiveByName(Objective.MSGDum.extendName("1CP" + i)), 1));
 
             // Remove Attacking tag
             fileCommands.add(execute.As(new Entity("@a[team=" + team.getName() + ",limit=1]"), false) +
                     execute.IfNext(new Entity("@s[scores={MSGDum2CP" + i + "=" + cpMessageThreshold + "}]"), true) +
-                    removeTag("@a[team=" + team.getName() + "]", "" + Tag.AttackingCP + i));
+                    removeTag("@a[team=" + team.getName() + "]", Tag.AttackingCP.extendName(i)));
 
         }
         return new FileData("" + FileName.controlpoint_messages_ + i, fileCommands);
@@ -1466,10 +1463,10 @@ public class Main {
         for (int i = 1; i < controlPoints.size() + 1; i++) {
             for (Team t : teams) {
                 fileCommands.add(execute.As(new Entity("@r[limit=1,gamemode=!spectator]")) +
-                        scoreboard.Operation(admin, getObjectiveByName("" + Objective.CP + i + t.getName()), ComparatorType.greater, "@s[team=" + t.getName() + "]", getObjectiveByName("" + Objective.ControlPoint + i)));
+                        scoreboard.Operation(admin, getObjectiveByName("" + Objective.CP + i + t.getName()), ComparatorType.greater, "@s[team=" + t.getName() + "]", getObjectiveByName(Objective.ControlPoint.extendName(i))));
 
                 fileCommands.add(execute.As(new Entity("@r[limit=1,gamemode=!spectator]")) +
-                        scoreboard.Operation("@s[team=" + t.getName() + "]", getObjectiveByName("" + Objective.ControlPoint + i), ComparatorType.greater, admin, getObjectiveByName("" + Objective.CP + i + t.getName())));
+                        scoreboard.Operation("@s[team=" + t.getName() + "]", getObjectiveByName(Objective.ControlPoint.extendName(i)), ComparatorType.greater, admin, getObjectiveByName("" + Objective.CP + i + t.getName())));
             }
         }
 
@@ -1574,12 +1571,12 @@ public class Main {
         ArrayList<String> fileCommands = new ArrayList<>();
         for (int i = 0; i < 2; i++) {
             fileCommands.add(execute.As(new Entity("@e[type=minecraft:wolf]"), false) +
-                    execute.StoreNext(ExecuteStore.result, "@s", getObjectiveByName(Objective.CollarCheck.toString() + i), true) +
+                    execute.StoreNext(ExecuteStore.result, "@s", getObjectiveByName(Objective.CollarCheck.extendName(i)), true) +
                     getData("@s", "Owner[" + i + "]"));
 
             for (Team t : teams) {
                 fileCommands.add(execute.As(new Entity("@a[team=" + t.getName() + "]"), false) +
-                        execute.StoreNext(ExecuteStore.result, "@s", getObjectiveByName(Objective.CollarCheck.toString() + i), true) +
+                        execute.StoreNext(ExecuteStore.result, "@s", getObjectiveByName(Objective.CollarCheck.extendName(i)), true) +
                         getData("@s", "UUID[" + i + "]"));
 
 
@@ -1588,8 +1585,8 @@ public class Main {
         for (Team t : teams) {
             fileCommands.add(addTag("@a[team=" + t.getName() + "]", Tag.CollarCheck));
             fileCommands.add(execute.As(new Entity("@e[type=wolf]"), false) +
-                    execute.IfNext("@s", getObjectiveByName(Objective.CollarCheck.toString() + 0), ComparatorType.equal, "@p[tag=" + Tag.CollarCheck + "]", getObjectiveByName(Objective.CollarCheck.toString() + 0)) +
-                    execute.IfNext("@s", getObjectiveByName(Objective.CollarCheck.toString() + 1), ComparatorType.equal, "@p[tag=" + Tag.CollarCheck + "]", getObjectiveByName(Objective.CollarCheck.toString() + 1), true) +
+                    execute.IfNext("@s", getObjectiveByName(Objective.CollarCheck.extendName(0)), ComparatorType.equal, "@p[tag=" + Tag.CollarCheck + "]", getObjectiveByName(Objective.CollarCheck.extendName(0))) +
+                    execute.IfNext("@s", getObjectiveByName(Objective.CollarCheck.extendName(1)), ComparatorType.equal, "@p[tag=" + Tag.CollarCheck + "]", getObjectiveByName(Objective.CollarCheck.extendName(1)), true) +
                     modifyData("@s", "CollarColor", t.getCollarColor()));
             fileCommands.add(removeTag("@a[team=" + t.getName() + "]", Tag.CollarCheck));
         }
@@ -1645,7 +1642,7 @@ public class Main {
         fileCommands.add(execute.If(new Entity("@p[scores={Deaths=1}]")) +
                 callFunction(FileName.handle_player_death));
 
-        fileCommands.add(scoreboard.Add(admin, getObjectiveByName(Objective.Time2), 1));
+        fileCommands.add(scoreboard.Add(admin, getObjectiveByName(Objective.Time.extendName(2)), 1));
         fileCommands.add(scoreboard.Add(admin, getObjectiveByName(Objective.TimDum), 1));
         fileCommands.add(execute.If(new Entity("@e[scores={TimDum=" + tickPerSecond + "}]")) +
                 scoreboard.Add(admin, getObjectiveByName(Objective.TimeDum), 1));
@@ -1709,7 +1706,7 @@ public class Main {
                 // Display team receiving perk
                 for (Perk perk : perks) {
                     // Set variables
-                    currentPlayer.setEntity("@p[team=" + team.getName() + ",tag=!" + Tag.ReceivedPerk + perk.getId() + "]");
+                    currentPlayer.setEntity("@p[team=" + team.getName() + ",tag=!" + Tag.ReceivedPerk.extendName(perk.getId()) + "]");
                     currentScoreCheck.setEntity("@e[scores={CP" + (i + 1) + team.getName() + "=" + perk.getActivationTime() + "..}]");
 
                     // Create text to be displayed
@@ -1725,7 +1722,7 @@ public class Main {
                             new TellRaw("@a", texts).sendRaw());
 
                     // Give rewards
-                    String perkReceivers = "@a[team=" + team.getName() + ",tag=!" + Tag.ReceivedPerk + perk.getId() + "]";
+                    String perkReceivers = "@a[team=" + team.getName() + ",tag=!" + Tag.ReceivedPerk.extendName(perk.getId()) + "]";
                     fileCommands.add(execute.If(currentScoreCheck) +
                             perk.getReward(perkReceivers));
 
@@ -1736,7 +1733,7 @@ public class Main {
 
                     // Add tag
                     fileCommands.add(execute.If(currentScoreCheck) +
-                            addTag("@a[team=" + team.getName() + "]", "" + Tag.ReceivedPerk + perk.getId()));
+                            addTag("@a[team=" + team.getName() + "]", Tag.ReceivedPerk.extendName(perk.getId())));
                 }
             }
         }
