@@ -7,7 +7,8 @@ public enum Tag {
     ReceivedPerk("ReceivedPerk"),
     Respawn("Respawn"),
     RespawnDisabled("RespawnDisabled"),
-    Traitor("Traitor");
+    Traitor("Traitor"),
+    IronManCandidate("IronManCandidate");
 
     private final String symbol;
 

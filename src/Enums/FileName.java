@@ -70,6 +70,9 @@ public enum FileName {
     clear_schedule,
     locate_teammate,
     teams,
+    join_team,
+    announce_iron_man,
+    check_iron_man,
 
     // Misc (for fun)
     equip_gear,

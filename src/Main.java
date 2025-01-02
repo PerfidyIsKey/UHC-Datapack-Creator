@@ -293,6 +293,7 @@ public class Main {
         scoreboardObjectives.add(new ScoreboardObjective(Objective.MinHealth, ObjectiveType.dummy));
         scoreboardObjectives.add(new ScoreboardObjective(Objective.Victory, ObjectiveType.dummy));
         scoreboardObjectives.add(new ScoreboardObjective(Objective.WolfAge, ObjectiveType.dummy));
+        scoreboardObjectives.add(new ScoreboardObjective(Objective.FoundTeam, ObjectiveType.dummy));
     }
 
     private int determineAmountOfPlayersPerTeam() {
@@ -681,6 +682,11 @@ public class Main {
         return "item replace entity " + targets + " " + InventorySlot.hotbar.setSlotNumber(slotNumber) + " with " + BlockType.splash_potion + "[potion_contents={custom_color:" + potionColor + ",custom_effects:[{id:" + effect + ",amplifier:0,duration:200,show_particles:0b,show_icon:0b,ambient:0b}]},lore=['\"" + lore + "\"'],custom_name='\"" + displayName + "\"']";
     }
 
+    // Trigger
+    private String setTrigger(ScoreboardObjective objective) {
+        return "trigger " + objective.getName();
+    }
+
     // Create function files
     private void makeFunctionFiles() {
         files.add(Initialize());
@@ -749,6 +755,9 @@ public class Main {
         files.add(UpdatePublicCPScore());
         files.add(DisableRespawn());
         files.add(PlayerDeathHandler());
+        files.add(JoinTeam());
+        files.add(AnnounceIronMan());
+        files.add(CheckIronMan());
     }
 
     private FileData Initialize() {
@@ -1156,6 +1165,9 @@ public class Main {
         // Give players teammate tracker
         fileCommands.add(giveItem("@a", BlockType.bundle, "[custom_data={locateTeammate:1b}]"));
 
+        // Make players iron man candidate
+        fileCommands.add(addTag("@a", Tag.IronManCandidate));
+
         return new FileData(FileName.start_game, fileCommands);
     }
 
@@ -1232,10 +1244,18 @@ public class Main {
 
     private FileData Victory() {
         ArrayList<String> fileCommands = new ArrayList<>();
+
+        // Set objective to victory achieved
         fileCommands.add(scoreboard.Set(admin, getObjectiveByName(Objective.Victory), 2));
+
+        // Call deathmatch functions
         fileCommands.add(callFunction(FileName.minute_ + "2", 60));
         fileCommands.add(callFunction(FileName.minute_ + "1", 60 * 2));
         fileCommands.add(callFunction(FileName.death_match, 60 * 3));
+
+        // Announce iron man
+        fileCommands.add(callFunction(FileName.announce_iron_man));
+
         return new FileData(FileName.victory, fileCommands);
     }
 
@@ -1374,9 +1394,11 @@ public class Main {
     private FileData DropCarepackages() {
         ArrayList<String> fileCommands = new ArrayList<>();
 
+        // Announce Care Packages
         fileCommands.add(new Title("@a", TitleType.title, new Text(Color.gold, true, true, carePackageAmount + " Supply Drops!")).displayTitle());
         fileCommands.add(new Title("@a", TitleType.subtitle, new Text(Color.light_purple, true, true, "Delivered NOW on the surface!")).displayTitle());
 
+        // Summon Care Package entities
         for (int i = 0; i < carePackageAmount; i++) {
             fileCommands.add(execute.In(Dimension.overworld) +
                     summonEntity(EntityType.area_effect_cloud, new Coordinate(0, 5, 0, ReferenceFrame.relative), "{Passengers:[{id:falling_block,Time:1,DropItem:0b,BlockState:{Name:\"minecraft:chest\"},TileEntityData:{CustomName:\"\\\"Loot chest\\\"\",LootTable:\"uhc:supply_drop\"}}]}"));
@@ -1388,6 +1410,7 @@ public class Main {
     private FileData CarepackageDistributor() {
         ArrayList<String> fileCommands = new ArrayList<>();
 
+        // Spread Care Packages
         fileCommands.add(execute.In(Dimension.overworld, false) +
                 execute.IfNext(new Entity("@e[type=" + EntityType.falling_block + ",distance=..2]"), true) +
                 spreadPlayers(0, 0, 10, carePackageSpread, false, "@e[type=" + EntityType.falling_block + ",distance=..2]"));
@@ -1397,20 +1420,27 @@ public class Main {
 
     private FileData TraitorHandout() {
         ArrayList<String> fileCommands = new ArrayList<>();
+
+        // Check if player can become traitor
         ArrayList<Season> seasons = new ArrayList<>(this.seasons);
         seasons.sort(Comparator.comparing(Season::getID));
         for (Player p : players) {
             if (p.getLastTraitorSeason() >= seasons.get(seasons.size() - traitorWaitTime).getID()) {
+                // Exclude players who cannot become traitor
                 fileCommands.add(addTag(p.getPlayerName(), Tag.DontMakeTraitor));
             }
         }
 
+        // Assign first traitor
         fileCommands.add(addTag("@r[limit=1,tag=!" + Tag.DontMakeTraitor + ",scores={Rank=" + minTraitorRank + "..},gamemode=!spectator]", Tag.Traitor));
 
+        // Make traitor teammates ineligible for becoming traitor
         for (Team t : teams) {
             fileCommands.add(execute.If(new Entity("@p[tag=" + Tag.Traitor + ",team=" + t.getName() + "]")) +
                     addTag("@a[team=" + t.getName() + "]", Tag.DontMakeTraitor));
         }
+
+        // Assign second traitor
         fileCommands.add(addTag("@r[limit=1,tag=!" + Tag.DontMakeTraitor + ",scores={Rank=" + minTraitorRank + "..},gamemode=!spectator]", Tag.Traitor));
 
         // Add additional traitor
@@ -1425,6 +1455,7 @@ public class Main {
             fileCommands.add(addTag("@r[limit=1,tag=!" + Tag.DontMakeTraitor + ",gamemode=!spectator]", Tag.Traitor));
         }
 
+        // Announce Traitor Faction
         ArrayList<TextItem> texts = new ArrayList<>();
         texts.add(new Text(Color.red, false, true, "You feel like betrayal today. You have become a Traitor. Your faction consists of: "));
         texts.add(new Select(Color.red, false, true, "@a[tag=" + Tag.Traitor + "]"));
@@ -1438,6 +1469,7 @@ public class Main {
         fileCommands.add(execute.In(Dimension.overworld) +
                 setBlock(11, worldBottom + 2, 0, BlockType.redstone_block, SetBlockType.destroy));
         fileCommands.add(callFunction(FileName.traitor_check));
+
         return new FileData(FileName.traitor_handout, fileCommands);
     }
 
@@ -1682,6 +1714,10 @@ public class Main {
                 execute.IfNext(DataClasses.entity, "@s Owner", true) +
                 setAttributeBase("@s", AttributeType.max_health, 20));
 
+        // Let united players make a team
+        fileCommands.add(execute.If("@p[scores={FoundTeam=1},team=]") +
+                callFunction(FileName.join_team));
+
         return new FileData(FileName.timer, fileCommands);
     }
 
@@ -1905,15 +1941,15 @@ public class Main {
 
     private FileData LocateTeammate() {
         ArrayList<String> fileCommands = new ArrayList<>();
-        for (Team team : teams) {
+        for (Team t : teams) {
             for (int i = 0; i < 3; i++) {
-                fileCommands.add(execute.As(new Entity("@a[team=" + team.getName() + ",nbt={SelectedItem:{id:\"minecraft:bundle\",components:{\"minecraft:custom_data\":{locateTeammate:1b}}}}]"), false) +
+                fileCommands.add(execute.As(new Entity("@a[team=" + t.getName() + ",nbt={SelectedItem:{id:\"minecraft:bundle\",components:{\"minecraft:custom_data\":{locateTeammate:1b}}}}]"), false) +
                         execute.AtNext(new Entity("@s")) +
-                        execute.IfNext(new Entity("@a[team=" + team.getName() + ",distance=0.1..,gamemode=!spectator]")) +
-                        execute.FacingNext(new Entity("@a[team=" + team.getName() + ",distance=0.1..,gamemode=!spectator,limit=1,sort=nearest]"), EntityAnchor.eyes) +
+                        execute.IfNext(new Entity("@a[team=" + t.getName() + ",distance=0.1..,gamemode=!spectator]")) +
+                        execute.FacingNext(new Entity("@a[team=" + t.getName() + ",distance=0.1..,gamemode=!spectator,limit=1,sort=nearest]"), EntityAnchor.eyes) +
                         execute.PositionedNext(new Coordinate(0, 1, 0, ReferenceFrame.relative)) +
                         execute.PositionedNext(new Coordinate(0, 0, i + 1, ReferenceFrame.relative_facing), true) +
-                        createParticle(Particle.dust + "{color:[" + team.getDustColor() + "],scale:1}", new Coordinate(0, 0, 0, ReferenceFrame.relative), new Coordinate(0, 0, 0), 0, 1, "@s"));
+                        createParticle(Particle.dust + "{color:[" + t.getDustColor() + "],scale:1}", new Coordinate(0, 0, 0, ReferenceFrame.relative), new Coordinate(0, 0, 0), 0, 1, "@s"));
             }
         }
 
@@ -1923,7 +1959,7 @@ public class Main {
     private FileData EliminateBabyWolf() {
         ArrayList<String> fileCommands = new ArrayList<>();
 
-        Entity babyWolf = new Entity("@e[type=wolf, scores={WolfAge=..-1}]");
+        Entity babyWolf = new Entity("@e[type=wolf,scores={WolfAge=..-1}]");
 
         fileCommands.add(execute.As(new Entity("@e[limit=1, type=wolf, sort=random]"), false) +
                 execute.StoreNext(ExecuteStore.result, "@s", getObjectiveByName(Objective.WolfAge), true) +
@@ -1958,6 +1994,52 @@ public class Main {
         fileCommands.add(setGameRule(GameRule.doImmediateRespawn, false));
 
         return new FileData(FileName.disable_respawn, fileCommands);
+    }
+
+    private FileData JoinTeam() {
+        ArrayList<String> fileCommands = new ArrayList<>();
+
+        String foundPlayer = "@p[scores={FoundTeam=1},team=]";
+
+        String filledTeams = execute.Unless("@p[team=" + teams.get(0).getName() + "]", false);
+        for (int i = 0; i < (teams.size() - 1); i++) {
+            fileCommands.add(filledTeams +
+                    execute.AsNext(foundPlayer, true) +
+                    teams.get(i).joinTeam("@p[limit=2]"));
+
+            if (i < (teams.size() - 1)) {
+                filledTeams += execute.UnlessNext("@p[team=" + teams.get(i + 1).getName() + "]");
+            }
+        }
+
+        fileCommands.add(scoreboard.Reset(foundPlayer, getObjectiveByName(Objective.FoundTeam)));
+
+        return new FileData(FileName.join_team, fileCommands);
+    }
+
+    private FileData CheckIronMan() {
+        ArrayList<String> fileCommands = new ArrayList<>();
+
+        // Remove iron man candidate tag from players who lost health
+        fileCommands.add(execute.As("@a[scores={Hearts=..20}]") +
+                removeTag("@s", Tag.IronManCandidate));
+
+        return new FileData(FileName.check_iron_man, fileCommands);
+    }
+
+    private FileData AnnounceIronMan() {
+        ArrayList<String> fileCommands = new ArrayList<>();
+
+        // Define iron man
+        String ironMan = "@a[tag=" + Tag.IronManCandidate + "]";
+
+        // Announce iron man
+        ArrayList<TextItem> texts = new ArrayList<>();
+        texts.add(new Select(false, false, ironMan));
+        texts.add(new Text(Color.white, false, false, " is S" + uhcNumber + " iron man!"));
+        fileCommands.add(new TellRaw("@a", texts).sendRaw());
+
+        return new FileData(FileName.announce_iron_man, fileCommands);
     }
 }
 

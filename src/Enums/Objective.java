@@ -27,7 +27,8 @@ public enum Objective {
         MinHealth("MinHealth"),
         Victory("Victory"),
         WolfAge("WolfAge"),
-        CP("CP");
+        CP("CP"),
+        FoundTeam("FoundTeam");
 
         private final String symbol;
 
