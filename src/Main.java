@@ -1124,8 +1124,18 @@ public class Main {
 
     private FileData SpreadPlayers() {
         ArrayList<String> fileCommands = new ArrayList<>();
+
+        // Spread teams together in assigned mode, separate in unassigned mode
+        Boolean respectTeams = true;
+        if (teamMode == 1) {
+            respectTeams = true;
+        }
+        else if (teamMode == 2) {
+            respectTeams = false;
+        }
+
         fileCommands.add(execute.In(Dimension.overworld) +
-                spreadPlayers(0, 0, (int) (0.3 * worldSize), (int) (0.9 * worldSize), true, "@a"));
+                spreadPlayers(0, 0, (int) (0.3 * worldSize), (int) (0.9 * worldSize), respectTeams, "@a"));
 
         return new FileData(FileName.spread_players, fileCommands);
     }
@@ -1184,7 +1194,7 @@ public class Main {
         }
         else if (teamMode == 2) {
             // Team caller
-            fileCommands.add(giveItem("@a", BlockType.goat_horn));
+            fileCommands.add(giveItem("@a", BlockType.goat_horn, "[instrument=\"minecraft:ponder_goat_horn\",use_cooldown={seconds:30}]"));
         }
 
         // Make players iron man candidate
@@ -1737,8 +1747,8 @@ public class Main {
                 setAttributeBase("@s", AttributeType.max_health, 20));
 
         // Let united players make a team
-        fileCommands.add(execute.If("@p[scores={FoundTeam=1},team=]") +
-                callFunction(FileName.join_team));
+        fileCommands.add(execute.If("@p[scores={TimesCalled=1..}]") +
+                callFunction(FileName.update_player_distance));
 
         return new FileData(FileName.timer, fileCommands);
     }
@@ -1879,7 +1889,7 @@ public class Main {
         else if (teamMode == 2) {
             // Team caller
             fileCommands.add(execute.If("@p[tag=" + Tag.Respawn + ",team=]") +
-                    giveItem(respawnPlayer, BlockType.goat_horn));
+                    giveItem(respawnPlayer, BlockType.goat_horn, "[instrument=\"minecraft:ponder_goat_horn\",use_cooldown={seconds:30}]"));
 
             // Teammate tracker
             fileCommands.add(execute.If("@p[tag=" + Tag.Respawn + ",team=!]") +
@@ -2043,7 +2053,7 @@ public class Main {
 
             fileCommands.add(filledTeam +
                     execute.AsNext(lookingPlayer, true) +
-                    teams.get(i).joinTeam("@p[limit=2]"));
+                    teams.get(i).joinTeam("@p[limit=2,team=]"));
         }
 
         fileCommands.add(execute.As(lookingPlayer) +
@@ -2068,7 +2078,7 @@ public class Main {
         // Loop through Cartesian coordinates
         for (int i = 0; i < cartesian.length; i++) {
             // Find positions of each player
-            fileCommands.add(execute.As("@a", false) +
+            fileCommands.add(execute.As("@a[team=]", false) +
                     execute.StoreNext(ExecuteStore.result, "@s", getObjectiveByName(Objective.Pos + cartesian[i]), true) +
                     getData("@s", "Pos[" + i + "]", 1));
 
@@ -2111,8 +2121,8 @@ public class Main {
                 new TellRaw(playerInTeam, texts).sendRaw());
 
         // Reset tag and call scoreboard objective
-        fileCommands.add(removeTag(checkingPlayer, Tag.LookingForTeamMate));
-        fileCommands.add(scoreboard.Reset(checkingPlayer, getObjectiveByName(Objective.TimesCalled)));
+        fileCommands.add(removeTag("@p[scores={TimesCalled=1..}]", Tag.LookingForTeamMate));
+        fileCommands.add(scoreboard.Reset("@p[scores={TimesCalled=1..}]", getObjectiveByName(Objective.TimesCalled)));
 
         return new FileData(FileName.update_player_distance, fileCommands);
     }
