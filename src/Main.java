@@ -33,6 +33,7 @@ public class Main {
 
     private String fileLocation;
     private CommunityMode communityMode = CommunityMode.DIORITE;
+    private int teamMode;
     //DatapackData>
 
     //GameData<
@@ -190,6 +191,9 @@ public class Main {
         String[] jsonColors = {"YELLOW", "BLUE", "RED", "PURPLE", "GREEN", "PINK", "BLACK", "ORANGE", "GRAY", "AQUA", "DARK RED", "DARK BLUE", "DARK AQUA"};
         String[] playerColors = {"Yellow", "Blue", "Red", "Purple", "Green", "Pink", "Black", "Orange", "Gray", "Aqua", "DarkRed", "DarkBlue", "DarkAqua"};
         String[] dustColors = {"1.0,1.0,0.3", "0.3,0.3,1.0", "1.0,0.3,0.3", "0.7,0.0,0.7", "0.3,1.0,0.3", "1.0,0.3,1.0", "0.0,0.0,0.0", "1.0,0.7,0.0", "0.7,0.7,0.7", "0.3,1.0,1.0", "0.7,0.0,0.0", "0.0,0.0,0.7", "0.0,0.7,0.7"};
+
+        // Teams
+        teamMode = Integer.parseInt(fileTools.getContentOutOfFile("Files\\" + communityMode + "\\uhc_data.txt", "teamMode"));
         for (int i = 0; i < colors.length; i++) {
             Team team = new Team("Team" + i, colors[i], bossbarColors[i], glassColors[i], collarColors[i], jsonColors[i], playerColors[i], dustColors[i]);
             teams.add(team);
@@ -1173,8 +1177,15 @@ public class Main {
         fileCommands.add(setExperience("@a", 0, ExperienceType.levels));
         fileCommands.add(setExperience("@a", 0, ExperienceType.points));
 
-        // Give players teammate tracker
-        fileCommands.add(giveItem("@a", BlockType.bundle, "[custom_data={locateTeammate:1b}]"));
+        // Give players teammate tools
+        if (teamMode == 1) {
+            // Teammate tracker
+            fileCommands.add(giveItem("@a", BlockType.bundle, "[custom_data={locateTeammate:1b}]"));
+        }
+        else if (teamMode == 2) {
+            // Team caller
+            fileCommands.add(giveItem("@a", BlockType.goat_horn));
+        }
 
         // Make players iron man candidate
         fileCommands.add(addTag("@a", Tag.IronManCandidate));
@@ -1860,6 +1871,20 @@ public class Main {
 
         // Give new bundle to people who respawn
         fileCommands.add(giveItem(respawnPlayer, BlockType.bundle, "[custom_data={locateTeammate:1b}]"));
+        // Give players teammate tools
+        if (teamMode == 1) {
+            // Teammate tracker
+            fileCommands.add(giveItem(respawnPlayer, BlockType.bundle, "[custom_data={locateTeammate:1b}]"));
+        }
+        else if (teamMode == 2) {
+            // Team caller
+            fileCommands.add(execute.If("@p[tag=" + Tag.Respawn + ",team=]") +
+                    giveItem(respawnPlayer, BlockType.goat_horn));
+
+            // Teammate tracker
+            fileCommands.add(execute.If("@p[tag=" + Tag.Respawn + ",team=!]") +
+                    giveItem(respawnPlayer, BlockType.bundle, "[custom_data={locateTeammate:1b}]"));
+        }
 
         // Set respawn health
         for (int i = 0; i < 10; i++) {
@@ -2010,28 +2035,25 @@ public class Main {
     private FileData JoinTeam() {
         ArrayList<String> fileCommands = new ArrayList<>();
 
+        String lookingPlayer = "@p[tag=LookingForTeamMate]";
+
         String filledTeam;
         for (int i = 0; i < (teams.size() - 1); i++) {
             filledTeam = execute.Unless("@p[team=" + teams.get(i).getName() + "]", false);
 
             fileCommands.add(filledTeam +
-                    execute.AsNext("@a[tag=LookingForTeamMate,team=]", true) +
-                    teams.get(i).joinTeam("@s"));
+                    execute.AsNext(lookingPlayer, true) +
+                    teams.get(i).joinTeam("@p[limit=2]"));
         }
 
-        fileCommands.add(removeTag("@a[tag=LookingForTeamMate]", Tag.LookingForTeamMate));
+        fileCommands.add(execute.As(lookingPlayer) +
+                clearInventory("@p[limit=2]", BlockType.goat_horn));
+
+
+        fileCommands.add(execute.As(lookingPlayer) +
+                giveItem("@p[limit=2]", BlockType.bundle, "[custom_data={locateTeammate:1b}]"));
 
         return new FileData(FileName.join_team, fileCommands);
-    }
-
-    private FileData CallTeamMates() {
-        ArrayList<String> fileCommands = new ArrayList<>();
-
-        String callingPlayer = "@p[team=,scores={TimesCalled=1..}]";
-
-        fileCommands.add(execute.If(callingPlayer));
-
-        return new FileData(FileName.call_teammates, fileCommands);
     }
 
     private FileData UpdatePlayerDistance() {
@@ -2068,15 +2090,28 @@ public class Main {
                     scoreboard.Operation("@s", getObjectiveByName(Objective.Distance), comparator, "@s", getObjectiveByName(Objective.Square + cartesian[i])));
         }
 
-        // Give nearest player tag if they are inside minimum distance
-        fileCommands.add(execute.If("@p[tag=LookingForTeamMate,scores={Distance=.." + (minJoinDistance * minJoinDistance) + "}]", false) +
-                execute.AsNext(checkingPlayer, true) +
-                addTag("@p[tag=!LookingForTeamMate]", Tag.LookingForTeamMate));
+        // Call join team function if other player is in range
+        fileCommands.add(execute.If("@p[tag=LookingForTeamMate,scores={Distance=.." + (minJoinDistance * minJoinDistance) + "},team=]") +
+                callFunction(FileName.join_team));
 
-        // Call join team function
-        fileCommands.add(callFunction(FileName.join_team));
+        // Refuse call if player is too far away
+        ArrayList<TextItem> texts = new ArrayList<>();
+        texts.add(new Text(Color.red, true, false, "You need to be within " + minJoinDistance + " blocks of a player to join a team!"));
 
-        // Reset call scoreboard objective
+        String playerTooFar = "@p[tag=LookingForTeamMate,scores={Distance=" + (minJoinDistance * minJoinDistance) + "..},team=]";
+        fileCommands.add(execute.If(playerTooFar) +
+                new TellRaw(playerTooFar, texts).sendRaw());
+        texts.clear();
+
+        // Ignore players that are already in a team
+        texts.add(new Text(Color.red, true, false, "You are already on a team! Don't be greedy!"));
+
+        String playerInTeam = "@p[tag=LookingForTeamMate,team=!]";
+        fileCommands.add(execute.If(playerInTeam) +
+                new TellRaw(playerInTeam, texts).sendRaw());
+
+        // Reset tag and call scoreboard objective
+        fileCommands.add(removeTag(checkingPlayer, Tag.LookingForTeamMate));
         fileCommands.add(scoreboard.Reset(checkingPlayer, getObjectiveByName(Objective.TimesCalled)));
 
         return new FileData(FileName.update_player_distance, fileCommands);

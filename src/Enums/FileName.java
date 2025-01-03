@@ -73,7 +73,6 @@ public enum FileName {
     join_team,
     announce_iron_man,
     check_iron_man,
-    call_teammates,
     update_player_distance,
 
     // Misc (for fun)
