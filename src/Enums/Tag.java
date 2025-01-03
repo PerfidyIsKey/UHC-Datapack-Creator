@@ -8,7 +8,8 @@ public enum Tag {
     Respawn("Respawn"),
     RespawnDisabled("RespawnDisabled"),
     Traitor("Traitor"),
-    IronManCandidate("IronManCandidate");
+    IronManCandidate("IronManCandidate"),
+    LookingForTeamMate("LookingForTeamMate");
 
     private final String symbol;
 

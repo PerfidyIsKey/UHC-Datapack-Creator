@@ -28,7 +28,11 @@ public enum Objective {
         Victory("Victory"),
         WolfAge("WolfAge"),
         CP("CP"),
-        FoundTeam("FoundTeam");
+        FoundTeam("FoundTeam"),
+        TimesCalled("TimesCalled"),
+        Distance("Distance"),
+        Pos("Pos"),
+        Square("Square");
 
         private final String symbol;
 

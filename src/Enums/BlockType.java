@@ -13,6 +13,7 @@ public enum BlockType {
     emerald_block("emerald_block"),
     dragon_head("dragon_head"),
     glass("glass"),
+    goat_horn("goat_horn"),
     golden_apple("golden_apple"),
     ice("ice"),
     iron_axe("iron_axe"),

@@ -57,6 +57,8 @@ public class Main {
     private static final int maxCPScore = 2400;
     private static final int maxCPScoreBossbar = 20 * secPerMinute * tickPerSecond * 2;
     private static final int cpMessageThreshold = 5 * tickPerSecond;
+    private static final int minJoinDistance = 10;
+    private static final String[] cartesian = {"X", "Y", "Z"};
     private static int carePackageAmount;
     private static int carePackageSpread;
     private int minTraitorRank;
@@ -294,6 +296,12 @@ public class Main {
         scoreboardObjectives.add(new ScoreboardObjective(Objective.Victory, ObjectiveType.dummy));
         scoreboardObjectives.add(new ScoreboardObjective(Objective.WolfAge, ObjectiveType.dummy));
         scoreboardObjectives.add(new ScoreboardObjective(Objective.FoundTeam, ObjectiveType.dummy));
+        scoreboardObjectives.add(new ScoreboardObjective(Objective.Distance, ObjectiveType.dummy));
+        scoreboardObjectives.add(new ScoreboardObjective(Objective.TimesCalled, "minecraft.used:minecraft.goat_horn"));
+        for (String s : cartesian) {
+            scoreboardObjectives.add(new ScoreboardObjective(Objective.Pos + s, ObjectiveType.dummy));
+            scoreboardObjectives.add(new ScoreboardObjective(Objective.Square + s, ObjectiveType.dummy));
+        }
     }
 
     private int determineAmountOfPlayersPerTeam() {
@@ -646,6 +654,8 @@ public class Main {
     // Data
     private String getData(String target, String path) { return "data get entity " + target + " " + path; }
 
+    private String getData(String target, String path, int scale) { return "data get entity " + target + " " + path + " " + scale; }
+
     private String modifyData(String target, String targetPath, String value) { return "data modify entity " + target + " " + targetPath + " set value " + value + "b"; }
 
     // Clear inventory
@@ -758,6 +768,7 @@ public class Main {
         files.add(JoinTeam());
         files.add(AnnounceIronMan());
         files.add(CheckIronMan());
+        files.add(UpdatePlayerDistance());
     }
 
     private FileData Initialize() {
@@ -1999,22 +2010,78 @@ public class Main {
     private FileData JoinTeam() {
         ArrayList<String> fileCommands = new ArrayList<>();
 
-        String foundPlayer = "@p[scores={FoundTeam=1},team=]";
-
         String filledTeams = execute.Unless("@p[team=" + teams.get(0).getName() + "]", false);
         for (int i = 0; i < (teams.size() - 1); i++) {
             fileCommands.add(filledTeams +
-                    execute.AsNext(foundPlayer, true) +
-                    teams.get(i).joinTeam("@p[limit=2]"));
+                    execute.AsNext("@a[tag=LookingForTeamMate,team=]", true) +
+                    teams.get(i).joinTeam("@s"));
 
             if (i < (teams.size() - 1)) {
                 filledTeams += execute.UnlessNext("@p[team=" + teams.get(i + 1).getName() + "]");
             }
         }
 
-        fileCommands.add(scoreboard.Reset(foundPlayer, getObjectiveByName(Objective.FoundTeam)));
+        fileCommands.add(removeTag("@a[tag=LookingForTeamMate]", Tag.LookingForTeamMate));
 
         return new FileData(FileName.join_team, fileCommands);
+    }
+
+    private FileData CallTeamMates() {
+        ArrayList<String> fileCommands = new ArrayList<>();
+
+        String callingPlayer = "@p[team=,scores={TimesCalled=1..}]";
+
+        fileCommands.add(execute.If(callingPlayer));
+
+        return new FileData(FileName.call_teammates, fileCommands);
+    }
+
+    private FileData UpdatePlayerDistance() {
+        ArrayList<String> fileCommands = new ArrayList<>();
+
+        String checkingPlayer = "@p[team=,scores={TimesCalled=1..}]";
+        ComparatorType comparator;
+
+        // Give player playing the horn a tag
+        fileCommands.add(addTag(checkingPlayer, Tag.LookingForTeamMate));
+
+        // Loop through Cartesian coordinates
+        for (int i = 0; i < cartesian.length; i++) {
+            // Find positions of each player
+            fileCommands.add(execute.As("@a", false) +
+                    execute.StoreNext(ExecuteStore.result, "@s", getObjectiveByName(Objective.Pos + cartesian[i]), true) +
+                    getData("@s", "Pos[" + i + "]", 1));
+
+            // Subtract distance of nearest player in Cartesian coordinate
+            fileCommands.add(execute.As(checkingPlayer) +
+                    scoreboard.Operation("@s", getObjectiveByName(Objective.Pos + cartesian[i]), ComparatorType.subtract, "@p[tag=!LookingForTeamMate]", getObjectiveByName(Objective.Pos + cartesian[i])));
+
+            // Square the difference in Cartesian coordinates
+            fileCommands.add(execute.As(checkingPlayer) +
+                    scoreboard.Operation("@s", getObjectiveByName(Objective.Square + cartesian[i]), ComparatorType.equal, "@s", getObjectiveByName(Objective.Pos + cartesian[i])));
+            fileCommands.add(execute.As(checkingPlayer) +
+                    scoreboard.Operation("@s", getObjectiveByName(Objective.Square + cartesian[i]), ComparatorType.multiply, "@s", getObjectiveByName(Objective.Pos + cartesian[i])));
+
+            if (i == 0) { comparator = ComparatorType.equal; }
+            else { comparator = ComparatorType.add; }
+
+            // Calculate distance to nearest player
+            fileCommands.add(execute.As(checkingPlayer) +
+                    scoreboard.Operation("@s", getObjectiveByName(Objective.Distance), comparator, "@s", getObjectiveByName(Objective.Square + cartesian[i])));
+        }
+
+        // Give nearest player tag if they are inside minimum distance
+        fileCommands.add(execute.If("@p[tag=LookingForTeamMate,scores={Distance=.." + (minJoinDistance * minJoinDistance) + "}]", false) +
+                execute.AsNext(checkingPlayer, true) +
+                addTag("@p[tag=!LookingForTeamMate]", Tag.LookingForTeamMate));
+
+        // Call join team function
+        fileCommands.add(callFunction(FileName.join_team));
+
+        // Reset call scoreboard objective
+        fileCommands.add(scoreboard.Reset(checkingPlayer, getObjectiveByName(Objective.TimesCalled)));
+
+        return new FileData(FileName.update_player_distance, fileCommands);
     }
 
     private FileData CheckIronMan() {
