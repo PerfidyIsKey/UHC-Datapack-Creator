@@ -2010,15 +2010,13 @@ public class Main {
     private FileData JoinTeam() {
         ArrayList<String> fileCommands = new ArrayList<>();
 
-        String filledTeams = execute.Unless("@p[team=" + teams.get(0).getName() + "]", false);
+        String filledTeam;
         for (int i = 0; i < (teams.size() - 1); i++) {
-            fileCommands.add(filledTeams +
+            filledTeam = execute.Unless("@p[team=" + teams.get(i).getName() + "]", false);
+
+            fileCommands.add(filledTeam +
                     execute.AsNext("@a[tag=LookingForTeamMate,team=]", true) +
                     teams.get(i).joinTeam("@s"));
-
-            if (i < (teams.size() - 1)) {
-                filledTeams += execute.UnlessNext("@p[team=" + teams.get(i + 1).getName() + "]");
-            }
         }
 
         fileCommands.add(removeTag("@a[tag=LookingForTeamMate]", Tag.LookingForTeamMate));
