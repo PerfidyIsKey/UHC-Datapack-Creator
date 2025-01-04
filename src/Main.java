@@ -1354,15 +1354,15 @@ public class Main {
         texts.add(bannerText);
         texts.add(new Text(Color.gold, true, false, communityName + " UHC"));
         texts.add(bannerText);
-        texts.add(new Select(Color.white, false, true, "@p[gamemode=!spectator]"));
+        texts.add(new Select(Color.white, false, true, "@s"));
         texts.add(new Text(Color.light_purple, true, false, " HAS ACHIEVED VICTORY!"));
         texts.add(bannerText);
 
         fileCommands.add(new TellRaw("@a", texts).sendRaw());
         texts.clear();
-        fileCommands.add(new Title("@a", TitleType.subtitle, new Text(Color.light_purple, true, true, "has been achieved!")).displayTitle());
+        fileCommands.add(new Title("@a", TitleType.subtitle, new Text(Color.light_purple, true, true, "Absolute chad.")).displayTitle());
 
-        texts.add(new Select(Color.white, false, true, "@p[gamemode=!spectator]"));
+        texts.add(new Select(Color.white, false, true, "@s"));
         texts.add(new Text(Color.gold, true, false, " victorious"));
         fileCommands.add(new Title("@a", TitleType.title, texts).displayTitle());
 
@@ -1595,7 +1595,7 @@ public class Main {
         ArrayList<TextItem> texts = new ArrayList<>();
         texts.add(new Text(Color.gold, false, false, ">>> "));
         texts.add(new Text(Color.light_purple, false, false, "Traitor Faction: "));
-        texts.add(new Select(false, false, "@a[tag=" + Tag.Traitor + "]"));
+        texts.add(new Select(Color.white, false, false, "@a[tag=" + Tag.Traitor + "]"));
         texts.add(new Text(Color.gold, false, false, " <<<"));
 
         fileCommands.add(execute.As(new Entity("@a[tag=" + Tag.Traitor + "]")) +
@@ -2082,8 +2082,6 @@ public class Main {
     private FileData TeamsAliveCheck() {
         ArrayList<String> fileCommands = new ArrayList<>();
 
-        // TODO Allow individual players
-
         // Players in teams
         for (int i = 0; i < teams.size(); i++) {
             fileCommands.add(execute.Unless("@a[limit=1,team=!" + teams.get(i).getName() + ",gamemode=!spectator]") +
@@ -2092,7 +2090,8 @@ public class Main {
 
         // Players without a team
         fileCommands.add(execute.If("@a[gamemode=!spectator]", false) +
-                execute.IfNext("@a[gamemode=!spectator,limit=1]", true) +
+                execute.IfNext("@a[gamemode=!spectator,limit=1]", false) +
+                execute.AsNext("@p[gamemode=!spectator]", true) +
                 callFunction(FileName.victory_message_solo));
 
         return new FileData(FileName.teams_alive_check, fileCommands);
@@ -2103,6 +2102,7 @@ public class Main {
 
         // TODO Allow individual players
 
+        // Players in teams
         for (int i = 0; i < teams.size(); i++) {
             for (int j = 1; j < 3; j++) {
                 fileCommands.add(execute.If(new Entity("@e[scores={Victory=1}]"), false) +
@@ -2114,6 +2114,18 @@ public class Main {
                         callFunction(FileName.victory_message_traitor));
             }
         }
+
+        // Individual players
+        for (int j = 1; j < 3; j++) {
+            fileCommands.add(execute.If(new Entity("@e[scores={Victory=1}]"), false) +
+                    execute.IfNext(new Entity("@p[team=,gamemode=!spectator,scores={ControlPoint" + j + "=" + (maxCPScore * tickPerSecond) + "..},tag=!" + Tag.Traitor + "]")) +
+                    execute.AsNext("@p[team=,gamemode=!spectator,scores={ControlPoint" + j + "=" + (maxCPScore * tickPerSecond) + "..},tag=!" + Tag.Traitor + "]", true) +
+                    callFunction(FileName.victory_message_solo));
+            fileCommands.add(execute.If(new Entity("@e[scores={Victory=1}]"), false) +
+                    execute.IfNext("@p[team=,gamemode=!spectator,scores={ControlPoint" + j + "=" + (maxCPScore * tickPerSecond) + "..},tag=" + Tag.Traitor + "]", true) +
+                    callFunction(FileName.victory_message_traitor));
+        }
+
         return new FileData(FileName.teams_highscore_alive_check, fileCommands);
     }
 
