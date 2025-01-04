@@ -1726,19 +1726,18 @@ public class Main {
     private FileData WolfCollarExecute() {
         ArrayList<String> fileCommands = new ArrayList<>();
 
-        // TODO Allow individual players
-
+        // Get data
         for (int i = 0; i < 2; i++) {
             fileCommands.add(execute.As(new Entity("@e[type=minecraft:wolf]"), false) +
                     execute.StoreNext(ExecuteStore.result, "@s", getObjectiveByName(Objective.CollarCheck.extendName(i)), true) +
                     getData("@s", "Owner[" + i + "]"));
 
-            for (Team t : teams) {
-                fileCommands.add(execute.As(new Entity("@a[team=" + t.getName() + "]"), false) +
-                        execute.StoreNext(ExecuteStore.result, "@s", getObjectiveByName(Objective.CollarCheck.extendName(i)), true) +
-                        getData("@s", "UUID[" + i + "]"));
-            }
+            fileCommands.add(execute.As(new Entity("@a"), false) +
+                    execute.StoreNext(ExecuteStore.result, "@s", getObjectiveByName(Objective.CollarCheck.extendName(i)), true) +
+                    getData("@s", "UUID[" + i + "]"));
+
         }
+        // Players in a team
         for (Team t : teams) {
             fileCommands.add(addTag("@a[team=" + t.getName() + "]", Tag.CollarCheck));
             fileCommands.add(execute.As(new Entity("@e[type=wolf]"), false) +
@@ -1747,6 +1746,14 @@ public class Main {
                     modifyData("@s", "CollarColor", t.getCollarColor()));
             fileCommands.add(removeTag("@a[team=" + t.getName() + "]", Tag.CollarCheck));
         }
+
+        // Individual players
+        fileCommands.add(addTag("@a[team=]", Tag.CollarCheck));
+        fileCommands.add(execute.As(new Entity("@e[type=wolf]"), false) +
+                execute.IfNext("@s", getObjectiveByName(Objective.CollarCheck.extendName(0)), ComparatorType.equal, "@p[tag=" + Tag.CollarCheck + "]", getObjectiveByName(Objective.CollarCheck.extendName(0))) +
+                execute.IfNext("@s", getObjectiveByName(Objective.CollarCheck.extendName(1)), ComparatorType.equal, "@p[tag=" + Tag.CollarCheck + "]", getObjectiveByName(Objective.CollarCheck.extendName(1)), true) +
+                modifyData("@s", "CollarColor", "0"));
+        fileCommands.add(removeTag("@a[team=]", Tag.CollarCheck));
 
         return new FileData(FileName.wolf_collar_execute, fileCommands);
     }
