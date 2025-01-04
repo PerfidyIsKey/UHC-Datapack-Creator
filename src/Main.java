@@ -2048,9 +2048,23 @@ public class Main {
         String lookingPlayer = "@p[tag=LookingForTeamMate]";
 
         String filledTeam;
+        ArrayList<TextItem> texts = new ArrayList<>();
         for (int i = 0; i < (teams.size() - 1); i++) {
             filledTeam = execute.Unless("@p[team=" + teams.get(i).getName() + "]", false);
 
+            // Announce that players formed a team
+            texts.add(new Select(false, false, "@p[limit=2,team=]"));
+            texts.add(new Text(Color.white, false, false, " have decided to join forces as team "));
+            texts.add(new Text(teams.get(i).getColor(), false, false, teams.get(i).getJSONColor()));
+            texts.add(new Text(Color.white, false, false, "!"));
+
+            fileCommands.add(filledTeam +
+                    execute.IfNext("@p[tag=LookingForTeamMate,team=]") +
+                    execute.AsNext(lookingPlayer, true) +
+                    new TellRaw("@a", texts).sendRaw());
+            texts.clear();
+
+            // Try to let players join team
             fileCommands.add(filledTeam +
                     execute.AsNext(lookingPlayer, true) +
                     teams.get(i).joinTeam("@p[limit=2,team=]"));
@@ -2100,25 +2114,25 @@ public class Main {
                     scoreboard.Operation("@s", getObjectiveByName(Objective.Distance), comparator, "@s", getObjectiveByName(Objective.Square + cartesian[i])));
         }
 
+        // Ignore players that are already in a team
+        ArrayList<TextItem> texts = new ArrayList<>();
+        texts.add(new Text(Color.red, true, false, "You are already on a team! Don't be greedy!"));
+
+        String playerInTeam = "@p[scores={TimesCalled=1..},team=!]";
+        fileCommands.add(execute.If(playerInTeam) +
+                new TellRaw(playerInTeam, texts).sendRaw());
+        texts.clear();
+
         // Call join team function if other player is in range
         fileCommands.add(execute.If("@p[tag=LookingForTeamMate,scores={Distance=.." + (minJoinDistance * minJoinDistance) + "},team=]") +
                 callFunction(FileName.join_team));
 
         // Refuse call if player is too far away
-        ArrayList<TextItem> texts = new ArrayList<>();
-        texts.add(new Text(Color.red, true, false, "You need to be within " + minJoinDistance + " blocks of a player to join a team!"));
+        texts.add(new Text(Color.red, true, false, "You need to be within " + minJoinDistance + " blocks of a player without a team to form a team!"));
 
         String playerTooFar = "@p[tag=LookingForTeamMate,scores={Distance=" + (minJoinDistance * minJoinDistance) + "..},team=]";
         fileCommands.add(execute.If(playerTooFar) +
                 new TellRaw(playerTooFar, texts).sendRaw());
-        texts.clear();
-
-        // Ignore players that are already in a team
-        texts.add(new Text(Color.red, true, false, "You are already on a team! Don't be greedy!"));
-
-        String playerInTeam = "@p[tag=LookingForTeamMate,team=!]";
-        fileCommands.add(execute.If(playerInTeam) +
-                new TellRaw(playerInTeam, texts).sendRaw());
 
         // Reset tag and call scoreboard objective
         fileCommands.add(removeTag("@p[scores={TimesCalled=1..}]", Tag.LookingForTeamMate));
