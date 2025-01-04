@@ -1869,6 +1869,11 @@ public class Main {
                     teleportEntity("@s", "@r[gamemode=!spectator, team=" + t.getName() + "]"));
         }
 
+        // Teleport player if they are not in a team
+        fileCommands.add(execute.As(new Entity(respawnPlayer), false) +
+                execute.IfNext(new Entity("@s[team=]"), true) +
+                spreadPlayers(0, 0, (int) (0.3*worldSize), (int) (0.7*worldSize), false, "@s"));
+
         // Set player's gamemode to survival
         fileCommands.add(execute.As(new Entity(respawnPlayer)) +
                 setGameMode(GameMode.survival, "@s"));
@@ -1878,9 +1883,7 @@ public class Main {
                 clearInventory("@s", BlockType.player_head));  // Remove from inventory
         fileCommands.add(execute.As(new Entity("@e[type=item,nbt={Item:{id:\"minecraft:player_head\"}}]")) +
                 killEntity("@s")); // Remove item
-
-        // Give new bundle to people who respawn
-        fileCommands.add(giveItem(respawnPlayer, BlockType.bundle, "[custom_data={locateTeammate:1b}]"));
+        
         // Give players teammate tools
         if (teamMode == 1) {
             // Teammate tracker
