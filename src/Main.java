@@ -735,7 +735,9 @@ public class Main {
         for (int i = 0; i < teams.size(); i++) {
             files.add(VictoryMessage(teams.get(i), i));
         }
+        files.add(VictoryMessageSolo());
         files.add(VictoryTraitor());
+        files.add(InitiateDeathMatch());
         files.add(DeathMatch());
 
         for (int i = 1; i < controlPoints.size() + 1; i++) {
@@ -907,14 +909,24 @@ public class Main {
     private FileData BossBarValue() {
         ArrayList<String> fileCommands = new ArrayList<>();
 
+        // Players in a team
         for (Team t : teams) {
             fileCommands.add(execute.If(adminSingle, getObjectiveByName(Objective.CP.toString() + 1 + t.getName()), ComparatorType.greater,adminSingle, getObjectiveByName(Objective.Highscore.extendName(1))) +
                     getBossbarByName("cp1").setColor(t.getBossbarColor()));
             fileCommands.add(execute.If(adminSingle, getObjectiveByName(Objective.CP.toString() + 2 + t.getName()), ComparatorType.greater, "@e[limit=1,scores={Highscore1=14400..}]", getObjectiveByName(Objective.Highscore.extendName(2))) +
                     getBossbarByName("cp2").setColor(t.getBossbarColor()));
-            for (int i = 0; i < 2; i++) {
+            for (int i = 0; i < controlPoints.size(); i++) {
                 fileCommands.add(scoreboard.Operation(admin, getObjectiveByName(Objective.Highscore.extendName(i + 1)), ComparatorType.greater, admin, getObjectiveByName("" + Objective.CP + (i + 1) + t.getName())));
             }
+        }
+
+        // Individual players
+        fileCommands.add(execute.If("@r[limit=1,team=]", getObjectiveByName(Objective.ControlPoint.extendName(1)), ComparatorType.greater, "@e[type=marker,limit=1]", getObjectiveByName(Objective.Highscore.extendName(1))) +
+                getBossbarByName("cp1").setColor(BossBarColor.white));
+        fileCommands.add(execute.If("@r[limit=1,team=]", getObjectiveByName(Objective.ControlPoint.extendName(2)), ComparatorType.greater, "@e[scores={Highscore1=14400..},limit=1]", getObjectiveByName(Objective.Highscore.extendName(2))) +
+                getBossbarByName("cp2").setColor(BossBarColor.white));
+        for (int i = 0; i < controlPoints.size(); i++) {
+            fileCommands.add(scoreboard.Operation(admin, getObjectiveByName(Objective.Highscore.extendName(i + 1)), ComparatorType.greater, "@r[limit=1,team=]", getObjectiveByName(Objective.ControlPoint.extendName(i + 1))));
         }
 
         // Update value of bossbars
@@ -964,13 +976,23 @@ public class Main {
         fileCommands.add(clearInventory("@s"));
 
         // Give potions
-        fileCommands.add(giveSplashPotion("@s", 0, Effect.speed, "808080", "Developer Mode", "Set operational mode to Developer Mode."));
-        fileCommands.add(giveSplashPotion("@s", 1, Effect.weakness, "FF9933", "Assign Teams", "Assign players to teams."));
-        fileCommands.add(giveSplashPotion("@s", 2, Effect.slow_falling, "6633CC", "Predictions", "Who will win this season?."));
-        fileCommands.add(giveSplashPotion("@s", 3, Effect.invisibility, "3399FF", "Into Calls", "Allow players to gather in their Discord channel."));
-        fileCommands.add(giveSplashPotion("@s", 4, Effect.poison, "00CC66", "Spread players", "Spread players across the map."));
-        fileCommands.add(giveSplashPotion("@s", 5, Effect.strength, "CC3333", "Survival Mode", "Set operational mode to Ready to Play."));
-        fileCommands.add(giveSplashPotion("@s", 6, Effect.slowness, "00FF7F", "Start Game", "Start the game. Good luck!"));
+        if (teamMode == 1) {
+            fileCommands.add(giveSplashPotion("@s", 0, Effect.speed, "808080", "Developer Mode", "Set operational mode to Developer Mode."));
+            fileCommands.add(giveSplashPotion("@s", 1, Effect.weakness, "FF9933", "Assign Teams", "Assign players to teams."));
+            fileCommands.add(giveSplashPotion("@s", 2, Effect.slow_falling, "6633CC", "Predictions", "Who will win this season?."));
+            fileCommands.add(giveSplashPotion("@s", 3, Effect.invisibility, "3399FF", "Into Calls", "Allow players to gather in their Discord channel."));
+            fileCommands.add(giveSplashPotion("@s", 4, Effect.poison, "00CC66", "Spread players", "Spread players across the map."));
+            fileCommands.add(giveSplashPotion("@s", 5, Effect.strength, "CC3333", "Survival Mode", "Set operational mode to Ready to Play."));
+            fileCommands.add(giveSplashPotion("@s", 6, Effect.slowness, "00FF7F", "Start Game", "Start the game. Good luck!"));
+        }
+        else if (teamMode == 2) {
+            fileCommands.add(giveSplashPotion("@s", 0, Effect.speed, "808080", "Developer Mode", "Set operational mode to Developer Mode."));
+            fileCommands.add(giveSplashPotion("@s", 1, Effect.slow_falling, "6633CC", "Predictions", "Who will win this season?."));
+            fileCommands.add(giveSplashPotion("@s", 2, Effect.invisibility, "3399FF", "Into Calls", "Allow players to gather in their Discord channel."));
+            fileCommands.add(giveSplashPotion("@s", 3, Effect.poison, "00CC66", "Spread players", "Spread players across the map."));
+            fileCommands.add(giveSplashPotion("@s", 4, Effect.strength, "CC3333", "Survival Mode", "Set operational mode to Ready to Play."));
+            fileCommands.add(giveSplashPotion("@s", 5, Effect.slowness, "00FF7F", "Start Game", "Start the game. Good luck!"));
+        }
 
         return new FileData(FileName.start_potions, fileCommands);
     }
@@ -1074,6 +1096,10 @@ public class Main {
 
         // Clear all player effects
         fileCommands.add(clearEffect("@a"));
+
+        // Give admin start potions
+        fileCommands.add(execute.As("@a[gamemode=creative]") +
+                callFunction(FileName.start_potions));
 
         return new FileData(FileName.developer_mode, fileCommands);
     }
@@ -1281,9 +1307,8 @@ public class Main {
         fileCommands.add(scoreboard.Set(admin, getObjectiveByName(Objective.Victory), 2));
 
         // Call deathmatch functions
-        fileCommands.add(callFunction(FileName.minute_ + "2", 60));
-        fileCommands.add(callFunction(FileName.minute_ + "1", 60 * 2));
-        fileCommands.add(callFunction(FileName.death_match, 60 * 3));
+        fileCommands.add(execute.If("@a[limit=2,gamemode=!spectator]") +
+                callFunction(FileName.initiate_deathmatch));
 
         // Announce iron man
         fileCommands.add(callFunction(FileName.announce_iron_man));
@@ -1291,8 +1316,20 @@ public class Main {
         return new FileData(FileName.victory, fileCommands);
     }
 
+    private FileData InitiateDeathMatch() {
+        ArrayList<String> fileCommands = new ArrayList<>();
+
+        // Call deathmatch functions
+        fileCommands.add(callFunction(FileName.minute_ + "2", 60));
+        fileCommands.add(callFunction(FileName.minute_ + "1", 60 * 2));
+        fileCommands.add(callFunction(FileName.death_match, 60 * 3));
+
+        return new FileData(FileName.initiate_deathmatch, fileCommands);
+    }
+
     private FileData VictoryMessage(Team team, int i) {
         ArrayList<String> fileCommands = new ArrayList<>();
+
         ArrayList<TextItem> texts = new ArrayList<>();
         texts.add(bannerText);
         texts.add(new Text(Color.gold, true, false, communityName + " UHC"));
@@ -1304,12 +1341,39 @@ public class Main {
         fileCommands.add(new TellRaw("@a", texts).sendRaw());
         fileCommands.add(new Title("@a", TitleType.subtitle, new Text(Color.light_purple, true, true, "has been achieved!")).displayTitle());
         fileCommands.add(new Title("@a", TitleType.title, new Text(Color.gold, true, true, team.getJSONColor() + " team victory")).displayTitle());
+
         fileCommands.add(callFunction(FileName.victory));
+
         return new FileData("" + FileName.victory_message_ + i, fileCommands);
+    }
+
+    private FileData VictoryMessageSolo() {
+        ArrayList<String> fileCommands = new ArrayList<>();
+
+        ArrayList<TextItem> texts = new ArrayList<>();
+        texts.add(bannerText);
+        texts.add(new Text(Color.gold, true, false, communityName + " UHC"));
+        texts.add(bannerText);
+        texts.add(new Select(Color.white, false, true, "@p[gamemode=!spectator]"));
+        texts.add(new Text(Color.light_purple, true, false, " HAS ACHIEVED VICTORY!"));
+        texts.add(bannerText);
+
+        fileCommands.add(new TellRaw("@a", texts).sendRaw());
+        texts.clear();
+        fileCommands.add(new Title("@a", TitleType.subtitle, new Text(Color.light_purple, true, true, "has been achieved!")).displayTitle());
+
+        texts.add(new Select(Color.white, false, true, "@p[gamemode=!spectator]"));
+        texts.add(new Text(Color.gold, true, false, " victorious"));
+        fileCommands.add(new Title("@a", TitleType.title, texts).displayTitle());
+
+        fileCommands.add(callFunction(FileName.victory));
+
+        return new FileData(FileName.victory_message_solo, fileCommands);
     }
 
     private FileData VictoryTraitor() {
         ArrayList<String> fileCommands = new ArrayList<>();
+
         ArrayList<TextItem> texts = new ArrayList<>();
         texts.add(bannerText);
         texts.add(new Text(Color.gold, true, false, communityName + " UHC"));
@@ -1320,24 +1384,31 @@ public class Main {
         fileCommands.add(new TellRaw("@a", texts).sendRaw());
         fileCommands.add(new Title("@a", TitleType.subtitle, new Text(Color.light_purple, true, true, "ggez")).displayTitle());
         fileCommands.add(new Title("@a", TitleType.title, new Text(Color.gold, true, true, "Traitors Win")).displayTitle());
+
         fileCommands.add(callFunction(FileName.victory));
+
         return new FileData(FileName.victory_message_traitor, fileCommands);
     }
 
     private FileData DeathMatch() {
         ArrayList<String> fileCommands = new ArrayList<>();
+
         fileCommands.add(setWorldBorder(400));
         fileCommands.add(setWorldBorder(20, 180));
         fileCommands.add(execute.In(Dimension.overworld) +
                 teleportEntity("@a[gamemode=!spectator]", new Coordinate(3, 153, 3)));
         fileCommands.add(execute.In(Dimension.overworld) +
-                spreadPlayers(0, 0, 75, 150, true, "@a[gamemode=!spectator]"));
+                spreadPlayers(0, 0, 75, 150, true, "@a[gamemode=!spectator,team=!]"));
+        fileCommands.add(execute.In(Dimension.overworld) +
+                spreadPlayers(0, 0, 75, 150, false, "@a[gamemode=!spectator,team=]"));
 
         return new FileData(FileName.death_match, fileCommands);
     }
 
     private FileData Controlpoint(int i) {
         ArrayList<String> fileCommands = new ArrayList<>();
+
+        // Players in teams
         for (Team team : teams) {
             // Give players on the Control Point score
             fileCommands.add(execute.As("@a[gamemode=!spectator,team=" + team.getName() + "]", false) +
@@ -1351,6 +1422,18 @@ public class Main {
                     setBlock(controlPoints.get(i - 1).getCoordinate().getX(), controlPoints.get(i - 1).getCoordinate().getY() + 1, controlPoints.get(i - 1).getCoordinate().getZ(), "minecraft:" + team.getGlassColor() + "_stained_glass", SetBlockType.replace));
         }
 
+        // Players without a team
+        // Give players on the Control Point score
+        fileCommands.add(execute.As("@a[gamemode=!spectator,team=]", false) +
+                execute.IfNext("@s[gamemode=!spectator,x=" + (controlPoints.get(i - 1).getCoordinate().getX() - 6) + ",y=" + (controlPoints.get(i - 1).getCoordinate().getY() - 1) + ",z=" + (controlPoints.get(i - 1).getCoordinate().getZ() - 6) + ",dx=12,dy=12,dz=12]") +
+                execute.UnlessNext("@a[gamemode=!spectator,x=" + (controlPoints.get(i - 1).getCoordinate().getX() - 6) + ",y=" + (controlPoints.get(i - 1).getCoordinate().getY() - 1) + ",z=" + (controlPoints.get(i - 1).getCoordinate().getZ() - 6) + ",dx=12,dy=12,dz=12,team=!]", true) +
+                scoreboard.Add("@s", getObjectiveByName(Objective.ControlPoint.extendName(i)), controlPoints.get(i - 1).getAddRate()));
+
+        // Update CP glass color
+        fileCommands.add(execute.In(controlPoints.get(i - 1).getCoordinate().getDimension(), false) +
+                execute.IfNext("@r[limit=1,gamemode=!spectator,team=]", getObjectiveByName(Objective.ControlPoint.extendName(i)), ComparatorType.greater, adminSingle, getObjectiveByName(Objective.Highscore.extendName(i)), true) +
+                setBlock(controlPoints.get(i - 1).getCoordinate().getX(), controlPoints.get(i - 1).getCoordinate().getY() + 1, controlPoints.get(i - 1).getCoordinate().getZ(), "minecraft:white_stained_glass", SetBlockType.replace));
+
         // Keep beacon active
         fileCommands.add(fill(controlPoints.get(i - 1).getCoordinate().getX() - 1, controlPoints.get(i - 1).getCoordinate().getY() - 1, controlPoints.get(i - 1).getCoordinate().getZ() - 1, controlPoints.get(i - 1).getCoordinate().getX() + 1, controlPoints.get(i - 1).getCoordinate().getY() - 1, controlPoints.get(i - 1).getCoordinate().getZ() + 1, BlockType.emerald_block));
         fileCommands.add(fill(controlPoints.get(i - 1).getCoordinate().getX(), controlPoints.get(i - 1).getCoordinate().getY(), controlPoints.get(i - 1).getCoordinate().getZ(), controlPoints.get(i - 1).getCoordinate().getX(), controlPoints.get(i - 1).getCoordinate().getY(), controlPoints.get(i - 1).getCoordinate().getZ(), BlockType.beacon));
@@ -1363,6 +1446,8 @@ public class Main {
 
     private FileData ControlPointMessages(int i) {
         ArrayList<String> fileCommands = new ArrayList<>();
+
+        // TODO Allow individual players
 
         for (Team team : teams) {
             /* Under attack message */
@@ -1524,6 +1609,9 @@ public class Main {
 
     private FileData TeamScore() {
         ArrayList<String> fileCommands = new ArrayList<>();
+
+        // TODO This can definitely be improved
+
         for (int i = 1; i < controlPoints.size() + 1; i++) {
             for (Team t : teams) {
                 fileCommands.add(execute.As(new Entity("@r[limit=1,gamemode=!spectator]")) +
@@ -1595,6 +1683,7 @@ public class Main {
 
     private FileData WorldPreload() {
         ArrayList<String> fileCommands = new ArrayList<>();
+
         fileCommands.add(scoreboard.Add(admin, getObjectiveByName(Objective.WorldLoad), 1));
         fileCommands.add(scoreboard.Add(admin, getObjectiveByName(Objective.Time), 1));
         fileCommands.add(execute.If(new Entity("@e[scores={WorldLoad=400..}]")) +
@@ -1615,6 +1704,7 @@ public class Main {
 
     private FileData WorldPreLoadActivation() {
         ArrayList<String> fileCommands = new ArrayList<>();
+
         fileCommands.add(setGameRule(GameRule.commandBlockOutput, false));
         fileCommands.add(execute.In(Dimension.overworld) +
                 setBlock(6, worldBottom + 2, 15, BlockType.redstone_block));
@@ -1625,6 +1715,7 @@ public class Main {
 
     private FileData HorseFrostWalker() {
         ArrayList<String> fileCommands = new ArrayList<>();
+
         fileCommands.add(execute.At(new Entity("@a[nbt={RootVehicle:{Entity:{id:\"minecraft:horse\"}}}]")) +
                 relativeFill(-2, -2, -2, 2, 0, 2, "ice", SetBlockType.replace, "water"));
 
@@ -1633,6 +1724,9 @@ public class Main {
 
     private FileData WolfCollarExecute() {
         ArrayList<String> fileCommands = new ArrayList<>();
+
+        // TODO Allow individual players
+
         for (int i = 0; i < 2; i++) {
             fileCommands.add(execute.As(new Entity("@e[type=minecraft:wolf]"), false) +
                     execute.StoreNext(ExecuteStore.result, "@s", getObjectiveByName(Objective.CollarCheck.extendName(i)), true) +
@@ -1642,8 +1736,6 @@ public class Main {
                 fileCommands.add(execute.As(new Entity("@a[team=" + t.getName() + "]"), false) +
                         execute.StoreNext(ExecuteStore.result, "@s", getObjectiveByName(Objective.CollarCheck.extendName(i)), true) +
                         getData("@s", "UUID[" + i + "]"));
-
-
             }
         }
         for (Team t : teams) {
@@ -1660,6 +1752,7 @@ public class Main {
 
     private FileData UpdateSidebar() {
         ArrayList<String> fileCommands = new ArrayList<>();
+
         fileCommands.add(scoreboard.Add(admin, getObjectiveByName(Objective.SideDum), 1));
         int i = 0;
         for (ScoreboardObjective s : scoreboardObjectives) {
@@ -1770,6 +1863,7 @@ public class Main {
         Entity currentScoreCheck = new Entity("");
 
         for (int i = 0; i < controlPoints.size(); i++) {
+            // Players in a team
             for (Team team : teams) {
                 // Display team receiving perk
                 for (Perk perk : perks) {
@@ -1803,6 +1897,37 @@ public class Main {
                     fileCommands.add(execute.If(currentScoreCheck) +
                             addTag("@a[team=" + team.getName() + "]", Tag.ReceivedPerk.extendName(perk.getId())));
                 }
+            }
+
+            // Individual players
+            for (Perk perk : perks) {
+                // Set variables
+                currentPlayer.setEntity("@p[team=,scores={ControlPoint" + (i + 1) + "=" + perk.getActivationTime() + "..},tag=!" + Tag.ReceivedPerk.extendName(perk.getId()) + "]");
+                currentScoreCheck.setEntity("@p[team=,scores={ControlPoint" + (i + 1) + "=" + perk.getActivationTime() + "..}]");
+
+                // Create text to be displayed
+                ArrayList<TextItem> texts = new ArrayList<>();
+                texts.add(new Select(false, false, currentPlayer.getEntity()));
+                texts.add(new Text(Color.light_purple, false, false, " HAS REACHED"));
+                texts.add(new Text(Color.gold, false, false, " PERK " + perk.getId() + "!"));
+
+                // Display text
+                fileCommands.add(execute.If(currentScoreCheck, false) +
+                        execute.IfNext(currentPlayer, true) +
+                        new TellRaw("@a", texts).sendRaw());
+
+                // Give rewards
+                fileCommands.add(execute.If(currentScoreCheck) +
+                        perk.getReward(currentPlayer.getEntity()));
+
+                // Play sound
+                fileCommands.add(execute.If(currentScoreCheck, false) +
+                        execute.IfNext(currentPlayer, true) +
+                        playSound(perk.getSound(), SoundSource.master, "@a", "~", "~50", "~", "100", "1", "0"));
+
+                // Add tag
+                fileCommands.add(execute.If(currentScoreCheck) +
+                        addTag(currentPlayer.getEntity(), Tag.ReceivedPerk.extendName(perk.getId())));
             }
         }
 
@@ -1883,7 +2008,7 @@ public class Main {
                 clearInventory("@s", BlockType.player_head));  // Remove from inventory
         fileCommands.add(execute.As(new Entity("@e[type=item,nbt={Item:{id:\"minecraft:player_head\"}}]")) +
                 killEntity("@s")); // Remove item
-        
+
         // Give players teammate tools
         if (teamMode == 1) {
             // Teammate tracker
@@ -1956,15 +2081,28 @@ public class Main {
 
     private FileData TeamsAliveCheck() {
         ArrayList<String> fileCommands = new ArrayList<>();
+
+        // TODO Allow individual players
+
+        // Players in teams
         for (int i = 0; i < teams.size(); i++) {
             fileCommands.add(execute.Unless("@a[limit=1,team=!" + teams.get(i).getName() + ",gamemode=!spectator]") +
                     callFunction("" + FileName.victory_message_ + i));
         }
+
+        // Players without a team
+        fileCommands.add(execute.If("@a[gamemode=!spectator]", false) +
+                execute.IfNext("@a[gamemode=!spectator,limit=1]", true) +
+                callFunction(FileName.victory_message_solo));
+
         return new FileData(FileName.teams_alive_check, fileCommands);
     }
 
     private FileData TeamsHighscoreCheck() {
         ArrayList<String> fileCommands = new ArrayList<>();
+
+        // TODO Allow individual players
+
         for (int i = 0; i < teams.size(); i++) {
             for (int j = 1; j < 3; j++) {
                 fileCommands.add(execute.If(new Entity("@e[scores={Victory=1}]"), false) +
@@ -1981,6 +2119,7 @@ public class Main {
 
     private FileData ClearSchedule() {
         ArrayList<String> fileCommands = new ArrayList<>();
+
         fileCommands.add(clearFunction(FileName.minute_ + "2"));
         fileCommands.add(clearFunction(FileName.minute_ + "1"));
         fileCommands.add(clearFunction(FileName.death_match));
@@ -1990,6 +2129,7 @@ public class Main {
 
     private FileData LocateTeammate() {
         ArrayList<String> fileCommands = new ArrayList<>();
+
         for (Team t : teams) {
             for (int i = 0; i < 3; i++) {
                 fileCommands.add(execute.As(new Entity("@a[team=" + t.getName() + ",nbt={SelectedItem:{id:\"minecraft:bundle\",components:{\"minecraft:custom_data\":{locateTeammate:1b}}}}]"), false) +
@@ -2023,6 +2163,8 @@ public class Main {
 
     private FileData UpdatePublicCPScore() {
         ArrayList<String> fileCommands = new ArrayList<>();
+
+        // TODO Allow individual players
 
         for (Team t : teams) {
             for (int i = 1; i < controlPoints.size() + 1; i++) {

@@ -56,8 +56,10 @@ public enum FileName {
     teams_highscore_alive_check,
     victory,
     victory_message_,
+    victory_message_solo,
     victory_message_traitor,
     minute_,
+    initiate_deathmatch,
     death_match,
 
     // World loading
