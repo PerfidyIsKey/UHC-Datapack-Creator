@@ -1067,6 +1067,7 @@ public class Main {
             fileCommands.add(scoreboard.Reset(t.getPlayerColor(), getObjectiveByName(Objective.CPScore)));
             fileCommands.add(t.joinTeam(t.getPlayerColor()));
         }
+        fileCommands.add(scoreboard.Reset("Solo", getObjectiveByName(Objective.CPScore)));
 
         int minToCPScore = secPerMinute * tickPerSecond * controlPoints.get(0).getAddRate();
         fileCommands.add(scoreboard.Set("Perk1", getObjectiveByName(Objective.CPScore), 3 * minToCPScore));
@@ -2100,8 +2101,6 @@ public class Main {
     private FileData TeamsHighscoreCheck() {
         ArrayList<String> fileCommands = new ArrayList<>();
 
-        // TODO Allow individual players
-
         // Players in teams
         for (int i = 0; i < teams.size(); i++) {
             for (int j = 1; j < 3; j++) {
@@ -2176,12 +2175,16 @@ public class Main {
     private FileData UpdatePublicCPScore() {
         ArrayList<String> fileCommands = new ArrayList<>();
 
-        // TODO Allow individual players
-
+        // Players in teams
         for (Team t : teams) {
             for (int i = 1; i < controlPoints.size() + 1; i++) {
                 fileCommands.add(scoreboard.Operation(t.getPlayerColor(), getObjectiveByName(Objective.CPScore), ComparatorType.greater, admin, getObjectiveByName("" + Objective.CP + i + t.getName())));
             }
+        }
+
+        // Players without a team
+        for (int i = 1; i < controlPoints.size() + 1; i++) {
+            fileCommands.add(scoreboard.Operation("Solo", getObjectiveByName(Objective.CPScore), ComparatorType.greater, "@r[team=]", getObjectiveByName(Objective.ControlPoint.extendName(i))));
         }
 
         return new FileData(FileName.update_public_cp_score, fileCommands);
