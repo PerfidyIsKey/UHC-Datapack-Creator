@@ -302,6 +302,7 @@ public class Main {
         scoreboardObjectives.add(new ScoreboardObjective(Objective.FoundTeam, ObjectiveType.dummy));
         scoreboardObjectives.add(new ScoreboardObjective(Objective.Distance, ObjectiveType.dummy));
         scoreboardObjectives.add(new ScoreboardObjective(Objective.TimesCalled, "minecraft.used:minecraft.goat_horn"));
+        scoreboardObjectives.add(new ScoreboardObjective(Objective.DamageTaken, "minecraft.custom:minecraft.damage_taken"));
         for (String s : cartesian) {
             scoreboardObjectives.add(new ScoreboardObjective(Objective.Pos + s, ObjectiveType.dummy));
             scoreboardObjectives.add(new ScoreboardObjective(Objective.Square + s, ObjectiveType.dummy));
@@ -1052,6 +1053,8 @@ public class Main {
         fileCommands.add(removeTag("@a", Tag.Traitor));
         fileCommands.add(removeTag("@a", Tag.DontMakeTraitor));
         fileCommands.add(removeTag("@a", Tag.RespawnDisabled));
+        fileCommands.add(removeTag("@a", Tag.IronManCandidate));
+        fileCommands.add(removeTag("@a", Tag.IronMan));
         fileCommands.add(setWorldBorder(2 * worldSize));
         fileCommands.add(callFunction(FileName.display_rank));
         fileCommands.add(scoreboard.Set("NightTime", getObjectiveByName(Objective.Time), 600));
@@ -1187,6 +1190,10 @@ public class Main {
         // Remove resistance
         fileCommands.add(clearEffect("@a", Effect.resistance));
 
+        // Set scoreboard values
+        fileCommands.add(scoreboard.Set("@a", getObjectiveByName(Objective.Hearts), 20));
+        fileCommands.add(scoreboard.Set("@a", getObjectiveByName(Objective.DamageTaken), 0));
+
         return new FileData(FileName.survival_mode, fileCommands);
     }
 
@@ -1223,9 +1230,6 @@ public class Main {
             // Team caller
             fileCommands.add(giveItem("@a", BlockType.goat_horn, "[instrument=\"minecraft:ponder_goat_horn\",use_cooldown={seconds:30}]"));
         }
-
-        // Make players iron man candidate
-        fileCommands.add(addTag("@a", Tag.IronManCandidate));
 
         return new FileData(FileName.start_game, fileCommands);
     }
@@ -1312,7 +1316,8 @@ public class Main {
                 callFunction(FileName.initiate_deathmatch));
 
         // Announce iron man
-        fileCommands.add(callFunction(FileName.announce_iron_man));
+        fileCommands.add(execute.As("@a[scores={DamageTaken=0}]") +
+                callFunction(FileName.announce_iron_man));
 
         return new FileData(FileName.victory, fileCommands);
     }
@@ -1447,8 +1452,6 @@ public class Main {
 
     private FileData ControlPointMessages(int i) {
         ArrayList<String> fileCommands = new ArrayList<>();
-
-        // TODO Allow individual players
 
         // Players in a team
         for (Team team : teams) {
@@ -1906,6 +1909,10 @@ public class Main {
         // Let united players make a team
         fileCommands.add(execute.If("@p[scores={TimesCalled=1..}]") +
                 callFunction(FileName.update_player_distance));
+
+        // Update iron man candidates
+        fileCommands.add(execute.Unless("@p[tag=IronMan]") +
+                callFunction(FileName.check_iron_man));
 
         return new FileData(FileName.timer, fileCommands);
     }
@@ -2367,24 +2374,31 @@ public class Main {
     private FileData CheckIronMan() {
         ArrayList<String> fileCommands = new ArrayList<>();
 
-        // Remove iron man candidate tag from players who lost health
-        fileCommands.add(execute.As("@a[scores={Hearts=..20}]") +
-                removeTag("@s", Tag.IronManCandidate));
+        // Give random player with no damage taken iron man candidate
+        fileCommands.add(addTag("@r[scores={DamageTaken=0}]", Tag.IronManCandidate));
 
+        // Check if there are other potential iron man candidates
+        fileCommands.add(execute.Unless("@a[tag=!IronManCandidate,scores={DamageTaken=0}]", false) +
+                execute.AsNext("@p[tag=IronManCandidate]", true) +
+                callFunction(FileName.announce_iron_man));
+
+        // Remove iron man candidate tag
+        fileCommands.add(removeTag("@p[tag=IronManCandidate]", Tag.IronManCandidate));
+        
         return new FileData(FileName.check_iron_man, fileCommands);
     }
 
     private FileData AnnounceIronMan() {
         ArrayList<String> fileCommands = new ArrayList<>();
 
-        // Define iron man
-        String ironMan = "@a[tag=" + Tag.IronManCandidate + "]";
-
         // Announce iron man
         ArrayList<TextItem> texts = new ArrayList<>();
-        texts.add(new Select(false, false, ironMan));
+        texts.add(new Select(false, false, "@s"));
         texts.add(new Text(Color.white, false, false, " is S" + uhcNumber + " iron man!"));
         fileCommands.add(new TellRaw("@a", texts).sendRaw());
+
+        // Award the iron man with their crown
+        fileCommands.add(addTag("@s", Tag.IronMan));
 
         return new FileData(FileName.announce_iron_man, fileCommands);
     }

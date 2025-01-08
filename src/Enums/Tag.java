@@ -4,12 +4,13 @@ public enum Tag {
     AttackingCP("AttackingCP"),
     CollarCheck("CollarCheck"),
     DontMakeTraitor("DontMakeTraitor"),
+    IronMan("IronMan"),
+    IronManCandidate("IronManCandidate"),
+    LookingForTeamMate("LookingForTeamMate"),
     ReceivedPerk("ReceivedPerk"),
     Respawn("Respawn"),
     RespawnDisabled("RespawnDisabled"),
-    Traitor("Traitor"),
-    IronManCandidate("IronManCandidate"),
-    LookingForTeamMate("LookingForTeamMate");
+    Traitor("Traitor");
 
     private final String symbol;
 
