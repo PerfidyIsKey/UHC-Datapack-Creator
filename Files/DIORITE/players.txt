@@ -53,4 +53,4 @@
 76,ThunderZinogre,19,0,false
 77,JacobWouter,0,0,true
 78,iron_crate,2,0,true
-79,sanswithagun,26,56,true
+79,sanswithagun,26,57,true

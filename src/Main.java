@@ -59,6 +59,7 @@ public class Main {
     private static final int maxCPScoreBossbar = 20 * secPerMinute * tickPerSecond * 2;
     private static final int cpMessageThreshold = 5 * tickPerSecond;
     private static final int minJoinDistance = 10;
+    private static final int minDamage = 10;
     private static final String[] cartesian = {"X", "Y", "Z"};
     private static int carePackageAmount;
     private static int carePackageSpread;
@@ -1316,7 +1317,7 @@ public class Main {
                 callFunction(FileName.initiate_deathmatch));
 
         // Announce iron man
-        fileCommands.add(execute.As("@a[scores={DamageTaken=0}]") +
+        fileCommands.add(execute.As("@a[scores={DamageTaken=.." + minDamage + "}]") +
                 callFunction(FileName.announce_iron_man));
 
         return new FileData(FileName.victory, fileCommands);
@@ -2375,16 +2376,16 @@ public class Main {
         ArrayList<String> fileCommands = new ArrayList<>();
 
         // Give random player with no damage taken iron man candidate
-        fileCommands.add(addTag("@r[scores={DamageTaken=0}]", Tag.IronManCandidate));
+        fileCommands.add(addTag("@r[scores={DamageTaken=.." + minDamage + "}]", Tag.IronManCandidate));
 
         // Check if there are other potential iron man candidates
-        fileCommands.add(execute.Unless("@a[tag=!IronManCandidate,scores={DamageTaken=0}]", false) +
+        fileCommands.add(execute.Unless("@a[tag=!IronManCandidate,scores={DamageTaken=.." + minDamage + "}]", false) +
                 execute.AsNext("@p[tag=IronManCandidate]", true) +
                 callFunction(FileName.announce_iron_man));
 
         // Remove iron man candidate tag
         fileCommands.add(removeTag("@p[tag=IronManCandidate]", Tag.IronManCandidate));
-        
+
         return new FileData(FileName.check_iron_man, fileCommands);
     }
 
