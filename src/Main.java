@@ -250,6 +250,9 @@ public class Main {
         worldSize = baseWorldSize + worldSizeStep * relativeTeamAmount;
         carePackageSpread = baseCarePackageSpread + carePackageSpreadStep * relativeTeamAmount;
 
+        worldSize = 500;
+        carePackageSpread = 450;
+
         carePackageAmount = (int) (desiredChestDensity * (carePackageSpread * 2) * (carePackageSpread * 2));
 
         // Seasons

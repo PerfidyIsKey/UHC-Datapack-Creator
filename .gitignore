@@ -24,8 +24,9 @@ Server/cache
 Server/config
 Server/libraries
 Server/logs
-Server/plugins
-Server/plugins/*.jar
+#Server/plugins
+#!Server/plugins/*.jar
+#!Server/plugins/OpenAudioMc/config.yml
 Server/versions
 Server/world
 Server/world_nether
