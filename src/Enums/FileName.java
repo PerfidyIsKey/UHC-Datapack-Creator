@@ -81,4 +81,8 @@ public enum FileName {
     equip_gear,
     god_mode,
     battle_royale,
+
+    // Developer
+    debug_give,
+    debug_remove
 }

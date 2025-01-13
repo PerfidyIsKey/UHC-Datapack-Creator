@@ -1,9 +1,9 @@
 1,Snodog627,75,52,true
-2,Mr9Madness,98,56,true
-17,Kalazniq,64,53,true
+2,Mr9Madness,98,56,false
+17,Kalazniq,64,53,false
 18,Vladik71,33,0,false
 24,ThurianBodan,9,0,false
-25,PerfidyIsKey,82,51,true
+25,PerfidyIsKey,82,51,false
 27,jonmo0105,25,0,false
 28,TheDinoGame,114,50,false
 30,Th3Flash05,29,46,false
@@ -37,11 +37,11 @@
 60,Bertje13,44,0,false
 61,blacksnake29,46,0,false
 62,PwodY_,0,0,false
-63,EarthKun1,15,0,true
+63,EarthKun1,15,0,false
 64,BlueBlacky,16,0,false
 65,x_Mylan_x,4,0,false
 66,Leavd,39,0,false
-67,amiazukiN,1,0,false
+67,amiazukiN,1,0,true
 68,Mosu_2000,2,0,false
 69,DAABlocksholmes,11,0,false
 70,HopliteNPC,231,54,false

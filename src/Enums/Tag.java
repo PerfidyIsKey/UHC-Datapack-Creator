@@ -3,6 +3,7 @@ package Enums;
 public enum Tag {
     AttackingCP("AttackingCP"),
     CollarCheck("CollarCheck"),
+    Debug("Debug"),
     DontMakeTraitor("DontMakeTraitor"),
     IronMan("IronMan"),
     IronManCandidate("IronManCandidate"),
