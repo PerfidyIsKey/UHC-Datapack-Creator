@@ -1341,19 +1341,22 @@ public class Main {
 
     private FileData VictoryMessage(Team team, int i) {
         ArrayList<String> fileCommands = new ArrayList<>();
-
         ArrayList<TextItem> texts = new ArrayList<>();
+
+        // Chat message
         texts.add(bannerText);
         texts.add(new Text(Color.gold, true, false, communityName + " UHC"));
         texts.add(bannerText);
         texts.add(new Text(team.getColor(), true, false, team.getJSONColor()));
         texts.add(new Text(Color.light_purple, true, false, " TEAM VICTORY HAS BEEN ACHIEVED! 3 MINUTES UNTIL THE FINAL DEATHMATCH"));
         texts.add(bannerText);
-
         fileCommands.add(new TellRaw("@a", texts).sendRaw());
+
+        // Title
         fileCommands.add(new Title("@a", TitleType.subtitle, new Text(Color.light_purple, true, true, "has been achieved!")).displayTitle());
         fileCommands.add(new Title("@a", TitleType.title, new Text(Color.gold, true, true, team.getJSONColor() + " team victory")).displayTitle());
 
+        // Proceed to victory mode
         fileCommands.add(callFunction(FileName.victory));
 
         return new FileData("" + FileName.victory_message_ + i, fileCommands);
@@ -1361,8 +1364,9 @@ public class Main {
 
     private FileData VictoryMessageSolo() {
         ArrayList<String> fileCommands = new ArrayList<>();
-
         ArrayList<TextItem> texts = new ArrayList<>();
+
+        // Chat message
         texts.add(bannerText);
         texts.add(new Text(Color.gold, true, false, communityName + " UHC"));
         texts.add(bannerText);
@@ -1370,14 +1374,15 @@ public class Main {
         texts.add(new Text(Color.light_purple, true, false, " HAS ACHIEVED VICTORY!"));
         texts.add(bannerText);
 
+        // Title
         fileCommands.add(new TellRaw("@a", texts).sendRaw());
         texts.clear();
         fileCommands.add(new Title("@a", TitleType.subtitle, new Text(Color.light_purple, true, true, "Absolute chad.")).displayTitle());
-
         texts.add(new Select(Color.white, false, true, "@s"));
         texts.add(new Text(Color.gold, true, false, " victorious"));
         fileCommands.add(new Title("@a", TitleType.title, texts).displayTitle());
 
+        // Proceed to victory mode
         fileCommands.add(callFunction(FileName.victory));
 
         return new FileData(FileName.victory_message_solo, fileCommands);
@@ -1385,18 +1390,21 @@ public class Main {
 
     private FileData VictoryTraitor() {
         ArrayList<String> fileCommands = new ArrayList<>();
-
         ArrayList<TextItem> texts = new ArrayList<>();
+
+        // Chat message
         texts.add(bannerText);
         texts.add(new Text(Color.gold, true, false, communityName + " UHC"));
         texts.add(bannerText);
         texts.add(new Text(Color.light_purple, true, false, " TRAITOR VICTORY HAS BEEN ACHIEVED! 3 MINUTES UNTIL THE FINAL DEATHMATCH"));
         texts.add(bannerText);
-
         fileCommands.add(new TellRaw("@a", texts).sendRaw());
+
+        // Title
         fileCommands.add(new Title("@a", TitleType.subtitle, new Text(Color.light_purple, true, true, "ggez")).displayTitle());
         fileCommands.add(new Title("@a", TitleType.title, new Text(Color.gold, true, true, "Traitors Win")).displayTitle());
 
+        // Proceed to victory mode
         fileCommands.add(callFunction(FileName.victory));
 
         return new FileData(FileName.victory_message_traitor, fileCommands);
@@ -1651,7 +1659,6 @@ public class Main {
         fileCommands.add(new Title("@a", TitleType.subtitle, new Text(Color.dark_red, true, false, "has been founded!")).displayTitle());
         fileCommands.add(execute.In(Dimension.overworld) +
                 setBlock(11, worldBottom + 2, 0, BlockType.redstone_block, SetBlockType.destroy));
-        fileCommands.add(callFunction(FileName.traitor_check));
 
         return new FileData(FileName.traitor_handout, fileCommands);
     }
@@ -1659,14 +1666,16 @@ public class Main {
     private FileData TraitorActionBar() {
         ArrayList<String> fileCommands = new ArrayList<>();
         ArrayList<TextItem> texts = new ArrayList<>();
+
+        // Show all traitors in actionbar
         texts.add(new Text(Color.gold, false, false, ">>> "));
         texts.add(new Text(Color.light_purple, false, false, "Traitor Faction: "));
         texts.add(new Select(Color.white, false, false, "@a[tag=" + Tag.Traitor + "]"));
         texts.add(new Text(Color.gold, false, false, " <<<"));
-
         fileCommands.add(execute.As(new Entity("@a[tag=" + Tag.Traitor + "]")) +
                 new Title("@s", TitleType.actionbar, texts).displayTitle());
 
+        // Check if traitors have won
         fileCommands.add(execute.If(new Entity("@e[scores={Victory=1}]")) +
                 callFunction(FileName.traitor_check));
 
@@ -1867,11 +1876,13 @@ public class Main {
 
     private FileData Timer() {
         ArrayList<String> fileCommands = new ArrayList<>();
+        ArrayList<TextItem> texts = new ArrayList<>();
 
         // Announce dead players
         fileCommands.add(execute.If(new Entity("@p[scores={Deaths=1}]")) +
                 callFunction(FileName.handle_player_death));
 
+        // Add time
         fileCommands.add(scoreboard.Add(admin, getObjectiveByName(Objective.Time.extendName(2)), 1));
         fileCommands.add(scoreboard.Add(admin, getObjectiveByName(Objective.TimDum), 1));
         fileCommands.add(execute.If(new Entity("@e[scores={TimDum=" + tickPerSecond + "}]")) +
@@ -1881,31 +1892,37 @@ public class Main {
         fileCommands.add(execute.If(new Entity("@e[scores={TimDum=" + tickPerSecond + "..}]")) +
                 scoreboard.Reset(admin, getObjectiveByName(Objective.TimDum)));
 
-
+        // PVP message
         fileCommands.add(execute.If(new Entity("@e[scores={Time2=" + (300 * tickPerSecond) + "}]")) +
                 new TellRaw("@a", new Text(Color.gray, false, false, "PVP IS NOT ALLOWED UNTIL DAY 2!")).sendRaw());
 
-        ArrayList<TextItem> texts = new ArrayList<>();
+        // Eternal day message
         texts.add(bannerText);
         texts.add(new Text(Color.gold, true, false, communityName + " UHC"));
         texts.add(bannerText);
         texts.add(new Text(Color.light_purple, true, false, "DAY TIME HAS ARRIVED & ETERNAL DAY ENABLED!"));
         texts.add(bannerText);
-
         fileCommands.add(execute.If(new Entity("@e[scores={Time2=" + (1200 * tickPerSecond) + "}]")) +
                 new TellRaw("@a", texts).sendRaw());
-        fileCommands.add(callFunction(FileName.display_quotes));
-        fileCommands.add(callFunction(FileName.locate_teammate));
-        fileCommands.add(callFunction(FileName.eliminate_baby_wolf));
+        texts.clear();
 
-        // Update wolf collars
-        fileCommands.add(callFunction(FileName.wolf_collar_execute));
+        // Display quotes
+        fileCommands.add(callFunction(FileName.display_quotes));
+
+        // Locate teammates with bundle
+        fileCommands.add(callFunction(FileName.locate_teammate));
 
         // Horse frost walker
         fileCommands.add(callFunction(FileName.horse_frost_walker));
 
         // Update minimum health
         fileCommands.add(callFunction(FileName.update_min_health));
+
+        // Kill baby wolves
+        fileCommands.add(callFunction(FileName.eliminate_baby_wolf));
+
+        // Update wolf collars
+        fileCommands.add(callFunction(FileName.wolf_collar_execute));
 
         // Set tamed wolf base health
         fileCommands.add(execute.As(new Entity("@e[type=wolf]"), false) +
@@ -2121,23 +2138,26 @@ public class Main {
 
     private FileData ControlPointCaptured() {
         ArrayList<String> fileCommands = new ArrayList<>();
+        ArrayList<TextItem> texts = new ArrayList<>();
+
+        // Disable command blocks
         fileCommands.add(execute.In(Dimension.overworld) +
                 setBlock(8, worldBottom + 2, 0, BlockType.bedrock, SetBlockType.replace));
+        fileCommands.add(execute.In(Dimension.overworld) +
+                fill(15, worldBottom + 2, 3, 15, worldBottom + 2, 4, BlockType.bedrock));
 
-        ArrayList<TextItem> texts = new ArrayList<>();
+        // Announce that Control Point has been captured
         texts.add(bannerText);
         texts.add(new Text(Color.gold, true, false, communityName + " UHC"));
         texts.add(bannerText);
         texts.add(new Text(Color.light_purple, true, false, "THE CONTROL POINT HAS BEEN CAPTURED!"));
         texts.add(bannerText);
-
         fileCommands.add(new TellRaw("@a", texts).sendRaw());
-        fileCommands.add(execute.In(Dimension.overworld) +
-                fill(15, worldBottom + 2, 3, 15, worldBottom + 2, 4, BlockType.bedrock));
-
+        texts.clear();
         fileCommands.add(new Title("@a", TitleType.subtitle, new Text(Color.light_purple, true, true, "has been captured!")).displayTitle());
         fileCommands.add(new Title("@a", TitleType.title, new Text(Color.gold, true, true, "The Control Point")).displayTitle());
 
+        // Check which team has captured the Control Point
         fileCommands.add(callFunction(FileName.teams_highscore_alive_check));
 
         return new FileData(FileName.control_point_captured, fileCommands);
@@ -2166,10 +2186,11 @@ public class Main {
         }
 
         // Players without a team
-        fileCommands.add(execute.If("@a[gamemode=!spectator]", false) +
-                execute.IfNext("@a[gamemode=!spectator,limit=1]", false) +
-                execute.AsNext("@p[gamemode=!spectator]", true) +
+        fileCommands.add(addTag("@p[team=,gamemode=!spectator]", Tag.AmIWinning));
+        fileCommands.add(execute.Unless("@p[tag=!AmIWinning,gamemode=!spectator]", false) +
+                execute.AsNext("@p[tag=AmIWinning]", true) +
                 callFunction(FileName.victory_message_solo));
+        fileCommands.add(removeTag("@p[tag=AmIWinning]", Tag.AmIWinning));
 
         return new FileData(FileName.teams_alive_check, fileCommands);
     }
@@ -2329,7 +2350,7 @@ public class Main {
     private FileData UpdatePlayerDistance() {
         ArrayList<String> fileCommands = new ArrayList<>();
         ArrayList<TextItem> texts = new ArrayList<>();
-        Boolean debug = true;
+        Boolean debug = false;
 
         String checkingPlayer = "@p[team=,scores={TimesCalled=1..}]";
         ComparatorType comparator;

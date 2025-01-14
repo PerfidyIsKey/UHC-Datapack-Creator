@@ -275,6 +275,40 @@ public class Execute {
         return wrap("store " + storeType + " score " + entity + " " + objective.getName() + " ", false, run);
     }
 
+    public String Store(ExecuteStore storeType, String entity, Objective objective) {
+        return Store(storeType, entity, objective, true);
+    }
+
+    public String Store(ExecuteStore storeType, String entity, Objective objective, Boolean run) {
+        return Standard(StoreNext(storeType, entity, objective), run);
+    }
+
+    public String StoreNext(ExecuteStore storeType, String entity, Objective objective) {
+        return StoreNext(storeType, entity, objective, false);
+    }
+
+
+    public String StoreNext(ExecuteStore storeType, String entity, Objective objective, Boolean run) {
+        return wrap("store " + storeType + " score " + entity + " " + objective + " ", false, run);
+    }
+
+    public String Store(ExecuteStore storeType, String entity, String objective) {
+        return Store(storeType, entity, objective, true);
+    }
+
+    public String Store(ExecuteStore storeType, String entity, String objective, Boolean run) {
+        return Standard(StoreNext(storeType, entity, objective), run);
+    }
+
+    public String StoreNext(ExecuteStore storeType, String entity, String objective) {
+        return StoreNext(storeType, entity, objective, false);
+    }
+
+
+    public String StoreNext(ExecuteStore storeType, String entity, String objective, Boolean run) {
+        return wrap("store " + storeType + " score " + entity + " " + objective + " ", false, run);
+    }
+
     /*
         execute unless
      */

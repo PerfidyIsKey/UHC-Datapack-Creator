@@ -1,6 +1,7 @@
 package Enums;
 
 public enum Tag {
+    AmIWinning("AmIWinning"),
     AttackingCP("AttackingCP"),
     CollarCheck("CollarCheck"),
     Debug("Debug"),
