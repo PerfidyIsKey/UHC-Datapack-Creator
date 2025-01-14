@@ -1108,8 +1108,7 @@ public class Main {
         fileCommands.add(clearEffect("@a"));
 
         // Give admin start potions
-        fileCommands.add(execute.As("@a[gamemode=creative]") +
-                callFunction(FileName.start_potions));
+        fileCommands.add(callFunction(FileName.start_potions));
 
         return new FileData(FileName.developer_mode, fileCommands);
     }
