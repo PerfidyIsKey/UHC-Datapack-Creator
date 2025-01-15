@@ -1647,6 +1647,9 @@ public class Main {
                     addTag("@a[team=" + t.getName() + "]", Tag.DontMakeTraitor));
         }
 
+        // Make solo traitors ineligible to become traitor again
+        fileCommands.add(addTag("@a[tag=" + Tag.Traitor + ",team=]", Tag.DontMakeTraitor));
+
         // Assign second traitor
         fileCommands.add(addTag("@r[limit=1,tag=!" + Tag.DontMakeTraitor + ",scores={Rank=" + minTraitorRank + "..},gamemode=!spectator]", Tag.Traitor));
 
