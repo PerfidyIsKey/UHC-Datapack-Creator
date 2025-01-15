@@ -59,7 +59,7 @@ public class Main {
     private static final int maxCPScoreBossbar = 20 * secPerMinute * tickPerSecond * 2;
     private static final int cpMessageThreshold = 5 * tickPerSecond;
     private static final int minJoinDistance = 10;
-    private static final int minDamage = 10;
+    private static final int minDamage = 9;
     private static final String[] cartesian = {"X", "Y", "Z"};
     private static int carePackageAmount;
     private static int carePackageSpread;
@@ -1021,6 +1021,9 @@ public class Main {
         // Create marker entity
         fileCommands.add(killEntity("@e[type=marker]"));
         fileCommands.add(summonEntity(EntityType.marker, new Coordinate(0, worldBottom, 0), "{CustomName:\"\\\"Admin\\\"\"}"));
+
+        // Set time
+        fileCommands.add(setTime(0));
 
         // Set gamerules
         fileCommands.add(setGameRule(GameRule.commandBlockOutput, true));
@@ -2467,7 +2470,9 @@ public class Main {
         // Call join team function if other player is in range
         String playerInRange = "@p[tag=LookingForTeamMate,scores={Distance=.." + (minJoinDistance * minJoinDistance) + "},team=]";
         fileCommands.add(execute.If(playerInRange, false) +
-                execute.UnlessNext(playerInRange, Objective.IsKiller, 1, true) +
+                execute.AtNext(playerInRange) +
+                execute.AsNext("@p[limit=2,team=]") +
+                execute.UnlessNext("@s", Objective.IsKiller, 1, true) +
                 callFunction(FileName.join_team));
 
         // Refuse call if player is too far away
@@ -2492,6 +2497,15 @@ public class Main {
         String playerKiller = "@p[tag=LookingForTeamMate,scores={IsKiller=1}]";
         fileCommands.add(execute.If(playerKiller) +
                 new TellRaw(playerKiller, texts).sendRaw());
+        texts.clear();
+
+        // Warn against killers
+        texts.add(new Text(Color.red, true, false, "Watch out! They are a killer!"));
+
+        fileCommands.add(execute.At(playerInRange, false) +
+                execute.AsNext("@p[limit=2,team=]") +
+                execute.IfNext("@s", Objective.IsKiller, 1, true) +
+                new TellRaw(playerInRange, texts).sendRaw());
         texts.clear();
 
         // Reset tag and call scoreboard objective

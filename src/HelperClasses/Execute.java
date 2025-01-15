@@ -197,6 +197,22 @@ public class Execute {
         return Next("if score " + entity1 + " " + objective1.getName() + " " + comp + " " + entity2 + " " + objective2.getName() + " ", run);
     }
 
+    public String If(String target, Objective targetObjective, int value) {
+        return If(target, targetObjective, value, true);
+    }
+
+    public String If(String target, Objective targetObjective, int value, Boolean run) {
+        return Standard(IfNext(target, targetObjective, value), run);
+    }
+
+    public String IfNext(String target, Objective targetObjective, int value) {
+        return IfNext(target, targetObjective, value, false);
+    }
+
+    public String IfNext(String target, Objective targetObjective, int value, Boolean run) {
+        return Next("if score " + target + " " + targetObjective + " matches " + value + " ", run);
+    }
+
     /*
         execute in
      */
