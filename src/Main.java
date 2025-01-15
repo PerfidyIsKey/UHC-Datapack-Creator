@@ -2318,7 +2318,7 @@ public class Main {
 
     private FileData JoinTeam() {
         ArrayList<String> fileCommands = new ArrayList<>();
-        Boolean debug = false;
+        Boolean debug = true;
 
         String lookingPlayer = "@p[tag=LookingForTeamMate]";
 
@@ -2367,7 +2367,7 @@ public class Main {
     private FileData UpdatePlayerDistance() {
         ArrayList<String> fileCommands = new ArrayList<>();
         ArrayList<TextItem> texts = new ArrayList<>();
-        Boolean debug = false;
+        Boolean debug = true;
 
         String checkingPlayer = "@p[team=,scores={TimesCalled=1..}]";
         ComparatorType comparator;
