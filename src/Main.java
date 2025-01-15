@@ -1612,12 +1612,14 @@ public class Main {
         ArrayList<String> fileCommands = new ArrayList<>();
 
         // Check if player can become traitor
-        ArrayList<Season> seasons = new ArrayList<>(this.seasons);
-        seasons.sort(Comparator.comparing(Season::getID));
-        for (Player p : players) {
-            if (p.getLastTraitorSeason() >= seasons.get(seasons.size() - traitorWaitTime).getID()) {
-                // Exclude players who cannot become traitor
-                fileCommands.add(addTag(p.getPlayerName(), Tag.DontMakeTraitor));
+        if (traitorWaitTime > 0) {
+            ArrayList<Season> seasons = new ArrayList<>(this.seasons);
+            seasons.sort(Comparator.comparing(Season::getID));
+            for (Player p : players) {
+                if (p.getLastTraitorSeason() >= seasons.get(seasons.size() - traitorWaitTime).getID()) {
+                    // Exclude players who cannot become traitor
+                    fileCommands.add(addTag(p.getPlayerName(), Tag.DontMakeTraitor));
+                }
             }
         }
 
@@ -1636,26 +1638,30 @@ public class Main {
         // Add additional traitor
         if (traitorMode == 2) {
             fileCommands.add(removeTag("@a", Tag.DontMakeTraitor));
-            for (Player p : players) {
-                if (p.getLastTraitorSeason() >= seasons.get(seasons.size() - traitorWaitTime).getID()) {
-                    fileCommands.add(addTag(p.getPlayerName(), Tag.DontMakeTraitor));
+            if (traitorWaitTime > 0) {
+                for (Player p : players) {
+                    if (p.getLastTraitorSeason() >= seasons.get(seasons.size() - traitorWaitTime).getID()) {
+                        fileCommands.add(addTag(p.getPlayerName(), Tag.DontMakeTraitor));
+                    }
                 }
             }
             fileCommands.add(addTag("@a[tag=" + Tag.Traitor + "]", Tag.DontMakeTraitor));
             fileCommands.add(addTag("@r[limit=1,tag=!" + Tag.DontMakeTraitor + ",gamemode=!spectator]", Tag.Traitor));
         }
 
-        // Announce Traitor Faction
+        // Inform traitors
         ArrayList<TextItem> texts = new ArrayList<>();
         texts.add(new Text(Color.red, false, true, "You feel like betrayal today. You have become a Traitor. Your faction consists of: "));
-        texts.add(new Select(Color.red, false, true, "@a[tag=" + Tag.Traitor + "]"));
+        texts.add(new Select(false, true, "@a[tag=" + Tag.Traitor + "]"));
         texts.add(new Text(Color.red, false, true, "."));
-
         fileCommands.add(execute.As(new Entity("@a[tag=" + Tag.Traitor + "]")) +
                 new TellRaw("@s", texts).sendRaw());
 
+        // Announce Traitor Faction
         fileCommands.add(new Title("@a", TitleType.title, new Text(Color.red, true, false, "A Traitor Faction")).displayTitle());
         fileCommands.add(new Title("@a", TitleType.subtitle, new Text(Color.dark_red, true, false, "has been founded!")).displayTitle());
+
+        // Disable traitor handout
         fileCommands.add(execute.In(Dimension.overworld) +
                 setBlock(11, worldBottom + 2, 0, BlockType.redstone_block, SetBlockType.destroy));
 
