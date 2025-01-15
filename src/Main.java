@@ -301,6 +301,7 @@ public class Main {
         scoreboardObjectives.add(new ScoreboardObjective(Objective.Rank, ObjectiveType.dummy));
         scoreboardObjectives.add(new ScoreboardObjective(Objective.WorldLoad, ObjectiveType.dummy));
         scoreboardObjectives.add(new ScoreboardObjective(Objective.MinHealth, ObjectiveType.dummy));
+        scoreboardObjectives.add(new ScoreboardObjective(Objective.IsKiller, ObjectiveType.dummy));
         scoreboardObjectives.add(new ScoreboardObjective(Objective.Victory, ObjectiveType.dummy));
         scoreboardObjectives.add(new ScoreboardObjective(Objective.WolfAge, ObjectiveType.dummy));
         scoreboardObjectives.add(new ScoreboardObjective(Objective.FoundTeam, ObjectiveType.dummy));
@@ -880,21 +881,31 @@ public class Main {
         texts.add(bannerText);
         texts.add(new Text(Color.gold, true, false, "WELL DONE"));
         texts.add(bannerText);
-
         fileCommands.add(execute.If(new Entity("@p[scores={Deaths=1},tag=" + Tag.Traitor + "]")) +
                 new TellRaw("@a", texts).sendRaw());
+        texts.clear();
 
-        // Add respawn tag to players who die before first blood
+        // Add respawn tag to players who die in the first 20 minutes
         fileCommands.add(execute.Unless("@e[tag=" + Tag.RespawnDisabled + "]") +
                 addTag("@p[scores={Deaths=1}]", Tag.Respawn));
 
         // Drop player head
         fileCommands.add(callFunction(FileName.drop_player_heads));
 
+        // Do not allow killers to form a team
+        if (teamMode == 2) {
+            texts.add(new Text(Color.red, true, false, "Looks like you do not want a teammate."));
+            fileCommands.add(execute.As("@a[team=,scores={Kills=1..}]", false) +
+                    execute.UnlessNext("@s", Objective.IsKiller, 1, true) +
+                    new TellRaw("@s", texts).sendRaw());
+
+            fileCommands.add(scoreboard.Set("@a[team=,scores={Kills=1..}]", Objective.IsKiller, 1));
+        }
+
         // Reset death count
         fileCommands.add(scoreboard.Reset("@p[scores={Deaths=1}]", getObjectiveByName(Objective.Deaths)));
 
-        // Do automatic respawn before first blood
+        // Do automatic respawn in the first 20 minutes
         fileCommands.add(execute.Unless("@e[tag=" + Tag.RespawnDisabled + "]") +
                 callFunction(FileName.respawn_player, 1));
 
@@ -1092,8 +1103,9 @@ public class Main {
                 fileCommands.add(scoreboard.Set("@a", getObjectiveByName(Objective.MSGDum.extendName(ii + "CP" + i)), 1));
             }
         }
-        fileCommands.add(scoreboard.Set(admin, getObjectiveByName(Objective.MinHealth), 20));
-        fileCommands.add(scoreboard.Set(admin, getObjectiveByName(Objective.Victory), 1));
+        fileCommands.add(scoreboard.Set(admin, Objective.MinHealth, 20));
+        fileCommands.add(scoreboard.Set(admin, Objective.Victory, 1));
+        fileCommands.add(scoreboard.Set("@a", Objective.IsKiller, 0));
 
         // Reset player scales
         fileCommands.add(execute.As(new Entity("@a")) +
@@ -2450,14 +2462,17 @@ public class Main {
         }
 
         // Call join team function if other player is in range
-        fileCommands.add(execute.If("@p[tag=LookingForTeamMate,scores={Distance=.." + (minJoinDistance * minJoinDistance) + "},team=]") +
+        String playerInRange = "@p[tag=LookingForTeamMate,scores={Distance=.." + (minJoinDistance * minJoinDistance) + "},team=]";
+        fileCommands.add(execute.If(playerInRange, false) +
+                execute.UnlessNext(playerInRange, Objective.IsKiller, 1, true) +
                 callFunction(FileName.join_team));
 
         // Refuse call if player is too far away
         texts.add(new Text(Color.red, true, false, "You need to be within " + minJoinDistance + " blocks of a player without a team to form a team!"));
 
         String playerTooFar = "@p[tag=LookingForTeamMate,scores={Distance=" + (minJoinDistance * minJoinDistance) + "..},team=]";
-        fileCommands.add(execute.If(playerTooFar) +
+        fileCommands.add(execute.If(playerTooFar, false) +
+                execute.UnlessNext(playerTooFar, Objective.IsKiller, 1, true) +
                 new TellRaw(playerTooFar, texts).sendRaw());
         texts.clear();
 
@@ -2467,6 +2482,14 @@ public class Main {
             fileCommands.add(new TellRaw("@a[tag=Debug]", texts).sendRaw());
             texts.clear();
         }
+
+        // Refuse killers
+        texts.add(new Text(Color.red, true, false, "You are a killer! No team for you!"));
+
+        String playerKiller = "@p[tag=LookingForTeamMate,scores={IsKiller=1}]";
+        fileCommands.add(execute.If(playerKiller) +
+                new TellRaw(playerKiller, texts).sendRaw());
+        texts.clear();
 
         // Reset tag and call scoreboard objective
         fileCommands.add(removeTag("@p[scores={TimesCalled=1..}]", Tag.LookingForTeamMate));

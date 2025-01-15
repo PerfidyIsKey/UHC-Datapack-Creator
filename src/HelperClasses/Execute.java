@@ -346,4 +346,21 @@ public class Execute {
         return Next("unless entity " + entity + " ", run);
     }
 
+    // unless score
+    public String Unless(String target, Objective targetObjective, int value) {
+        return Unless(target, targetObjective, value, true);
+    }
+
+    public String Unless(String target, Objective targetObjective, int value, Boolean run) {
+        return Standard(UnlessNext(target, targetObjective, value), run);
+    }
+
+    public String UnlessNext(String target, Objective targetObjective, int value) {
+        return UnlessNext(target, targetObjective, value, false);
+    }
+
+    public String UnlessNext(String target, Objective targetObjective, int value, Boolean run) {
+        return Next("unless score " + target + " " + targetObjective + " matches " + value + " ", run);
+    }
+
 }

@@ -37,4 +37,8 @@ public class Scoreboard {
     public String Set(String targets, ScoreboardObjective objective, int score) {
         return "scoreboard players set " + targets + " " + objective.getName() + " " + score;
     }
+
+    public String Set(String targets, Objective objective, int score) {
+        return "scoreboard players set " + targets + " " + objective + " " + score;
+    }
 }

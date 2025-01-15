@@ -33,7 +33,8 @@ public enum Objective {
         Distance("Distance"),
         Pos("Pos"),
         Square("Square"),
-        DamageTaken("DamageTaken");
+        DamageTaken("DamageTaken"),
+        IsKiller("IsKiller");
 
         private final String symbol;
 
