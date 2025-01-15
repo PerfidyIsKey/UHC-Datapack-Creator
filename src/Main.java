@@ -2343,22 +2343,22 @@ public class Main {
 
             fileCommands.add(filledTeam +
                     execute.IfNext("@p[tag=LookingForTeamMate,team=]") +
-                    execute.AsNext(lookingPlayer, true) +
+                    execute.AtNext(lookingPlayer, true) +
                     new TellRaw("@a", texts).sendRaw());
             texts.clear();
 
             // Try to let players join team
             fileCommands.add(filledTeam +
                     execute.IfNext("@p[tag=LookingForTeamMate,team=]") +
-                    execute.AsNext(lookingPlayer, true) +
+                    execute.AtNext(lookingPlayer, true) +
                     teams.get(i).joinTeam("@p[limit=2,team=]"));
         }
 
-        fileCommands.add(execute.As(lookingPlayer) +
+        fileCommands.add(execute.At(lookingPlayer) +
                 clearInventory("@p[limit=2]", BlockType.goat_horn));
 
 
-        fileCommands.add(execute.As(lookingPlayer) +
+        fileCommands.add(execute.At(lookingPlayer) +
                 giveItem("@p[limit=2]", BlockType.bundle, "[custom_data={locateTeammate:1b}]"));
 
         return new FileData(FileName.join_team, fileCommands);
@@ -2400,7 +2400,8 @@ public class Main {
             }
 
             // Subtract distance of nearest player in Cartesian coordinate
-            fileCommands.add(execute.As(checkingPlayer) +
+            fileCommands.add(execute.As(checkingPlayer, false) +
+                    execute.AtNext(checkingPlayer, true) +
                     scoreboard.Operation("@s", getObjectiveByName(Objective.Pos + cartesian[i]), ComparatorType.subtract, "@p[tag=!LookingForTeamMate,team=]", getObjectiveByName(Objective.Pos + cartesian[i])));
 
             if (debug) {
@@ -2411,7 +2412,8 @@ public class Main {
                 texts.add(new Text(Color.white, false, false, ".\\nThey are "));
                 texts.add(new Score(false, false, checkingPlayer, Objective.Pos.extendName(cartesian[i])));
                 texts.add(new Text(Color.white, false, false, " blocks away in the " + cartesian[i] + " direction."));
-                fileCommands.add(new TellRaw("@a[tag=Debug]", texts).sendRaw());
+                fileCommands.add(execute.At(checkingPlayer) +
+                        new TellRaw("@a[tag=Debug]", texts).sendRaw());
                 texts.clear();
             }
 
@@ -2437,7 +2439,8 @@ public class Main {
             texts.add(new Text(Color.white, false, false, " is "));
             texts.add(new Score(false, false, checkingPlayer, Objective.Distance));
             texts.add(new Text(Color.white, false, false, "\\nThe distance needs to be less than " + (minJoinDistance * minJoinDistance)));
-            fileCommands.add(new TellRaw("@a[tag=Debug]", texts).sendRaw());
+            fileCommands.add(execute.At(checkingPlayer) +
+                    new TellRaw("@a[tag=Debug]", texts).sendRaw());
             texts.clear();
         }
 
