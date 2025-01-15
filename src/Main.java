@@ -2468,11 +2468,10 @@ public class Main {
         }
 
         // Call join team function if other player is in range
-        String playerInRange = "@p[tag=LookingForTeamMate,scores={Distance=.." + (minJoinDistance * minJoinDistance) + "},team=]";
+        String playerInRange = "@p[tag=LookingForTeamMate,scores={Distance=.." + (minJoinDistance * minJoinDistance) + ",IsKiller=0},team=]";
         fileCommands.add(execute.If(playerInRange, false) +
                 execute.AtNext(playerInRange) +
-                execute.AsNext("@p[limit=2,team=]") +
-                execute.UnlessNext("@s", Objective.IsKiller, 1, true) +
+                execute.UnlessNext("@p[tag=!LookingForTeamMate]", Objective.IsKiller, 1, true) +
                 callFunction(FileName.join_team));
 
         // Refuse call if player is too far away
@@ -2503,8 +2502,7 @@ public class Main {
         texts.add(new Text(Color.red, true, false, "Watch out! They are a killer!"));
 
         fileCommands.add(execute.At(playerInRange, false) +
-                execute.AsNext("@p[limit=2,team=]") +
-                execute.IfNext("@s", Objective.IsKiller, 1, true) +
+                execute.IfNext("@p[tag=!LookingForTeamMate]", Objective.IsKiller, 1, true) +
                 new TellRaw(playerInRange, texts).sendRaw());
         texts.clear();
 
