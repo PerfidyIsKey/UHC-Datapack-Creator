@@ -298,6 +298,7 @@ public class Main {
         scoreboardObjectives.add(new ScoreboardObjective(Objective.Mining, ObjectiveType.dummy, "\"I like mining-leaderboard\"", true));
         scoreboardObjectives.add(new ScoreboardObjective(Objective.Deaths, ObjectiveType.deathCount));
         scoreboardObjectives.add(new ScoreboardObjective(Objective.Kills, ObjectiveType.playerKillCount, true));
+        scoreboardObjectives.add(new ScoreboardObjective(Objective.TempKills, ObjectiveType.playerKillCount));
         scoreboardObjectives.add(new ScoreboardObjective(Objective.Rank, ObjectiveType.dummy));
         scoreboardObjectives.add(new ScoreboardObjective(Objective.WorldLoad, ObjectiveType.dummy));
         scoreboardObjectives.add(new ScoreboardObjective(Objective.MinHealth, ObjectiveType.dummy));
@@ -853,8 +854,9 @@ public class Main {
 
     private FileData PlayerDeathHandler() {
         ArrayList<String> fileCommands = new ArrayList<>();
+        Boolean debug = false;
 
-        // Indicate when first blood has been taken
+        // Indicate when the first 20 minutes of the game have elapsed
         fileCommands.add(execute.If("@e[scores={Time2=24000..}]", false) +
                 execute.UnlessNext("@e[tag=" + Tag.RespawnDisabled + "]", true) +
                 callFunction(FileName.disable_respawn));
@@ -894,16 +896,50 @@ public class Main {
 
         // Do not allow killers to form a team
         if (teamMode == 2) {
-            texts.add(new Text(Color.red, true, false, "Looks like you do not want a teammate."));
-            fileCommands.add(execute.As("@a[team=,scores={Kills=1..}]", false) +
-                    execute.UnlessNext("@s", Objective.IsKiller, 1, true) +
-                    new TellRaw("@s", texts).sendRaw());
+            String killer = "@p[team=,scores={TempKills=1}]";
+            String dead = "@p[team=,scores={Deaths=1}]";
 
-            fileCommands.add(scoreboard.Set("@a[team=,scores={Kills=1..}]", Objective.IsKiller, 1));
+            if (debug) {
+                texts.add(new Select(false, false, killer));
+                texts.add(new Text(Color.white, false, false, " has killed and is not in a team."));
+                fileCommands.add(new TellRaw("@a[tag=Debug]", texts).sendRaw());
+                texts.clear();
+
+                texts.add(new Select(false, false, dead));
+                texts.add(new Text(Color.white, false, false, " has died and is not in a team."));
+                fileCommands.add(new TellRaw("@a[tag=Debug]", texts).sendRaw());
+                texts.clear();
+
+                texts.add(new Select(false, false, "@p[team=,scores={TempKills=1,IsKiller=1}]"));
+                texts.add(new Text(Color.white, false, false, " already has been assigned as a killer."));
+                fileCommands.add(new TellRaw("@a[tag=Debug]", texts).sendRaw());
+                texts.clear();
+            }
+
+            texts.add(new Text(Color.red, true, false, "Looks like you do not want a teammate."));
+            fileCommands.add(execute.If(killer, false) +
+                    execute.IfNext(dead) +
+                    execute.UnlessNext(killer, Objective.IsKiller, 1, true) +
+                    new TellRaw(killer, texts).sendRaw());
+            texts.clear();
+
+            fileCommands.add(execute.If(killer, false) +
+                    execute.IfNext(dead, true) +
+                    scoreboard.Set(killer, Objective.IsKiller, 1));
+
+            if (debug) {
+                texts.add(new Select(false, false, "@p[scores={IsKiller=1}]"));
+                texts.add(new Text(Color.white, false, false, " has been assigned as a killer."));
+                fileCommands.add(new TellRaw("@a[tag=Debug]", texts).sendRaw());
+                texts.clear();
+            }
         }
 
         // Reset death count
-        fileCommands.add(scoreboard.Reset("@p[scores={Deaths=1}]", getObjectiveByName(Objective.Deaths)));
+        fileCommands.add(scoreboard.Reset("@p[scores={Deaths=1}]", Objective.Deaths));
+
+        // Reset temporary kill count
+        fileCommands.add(scoreboard.Reset("@p[scores={TempKills=1}]", Objective.TempKills));
 
         // Do automatic respawn in the first 20 minutes
         fileCommands.add(execute.Unless("@e[tag=" + Tag.RespawnDisabled + "]") +
@@ -2324,7 +2360,7 @@ public class Main {
 
     private FileData JoinTeam() {
         ArrayList<String> fileCommands = new ArrayList<>();
-        Boolean debug = true;
+        Boolean debug = false;
 
         String lookingPlayer = "@p[tag=LookingForTeamMate]";
 
@@ -2373,7 +2409,7 @@ public class Main {
     private FileData UpdatePlayerDistance() {
         ArrayList<String> fileCommands = new ArrayList<>();
         ArrayList<TextItem> texts = new ArrayList<>();
-        Boolean debug = true;
+        Boolean debug = false;
 
         String checkingPlayer = "@p[team=,scores={TimesCalled=1..}]";
         ComparatorType comparator;

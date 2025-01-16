@@ -34,7 +34,8 @@ public enum Objective {
         Pos("Pos"),
         Square("Square"),
         DamageTaken("DamageTaken"),
-        IsKiller("IsKiller");
+        IsKiller("IsKiller"),
+        TempKills("TempKills");
 
         private final String symbol;
 

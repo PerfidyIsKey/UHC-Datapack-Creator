@@ -33,6 +33,10 @@ public class Scoreboard {
         return "scoreboard players reset " + targets + " " + objective.getName();
     }
 
+    public String Reset(String targets, Objective objective) {
+        return "scoreboard players reset " + targets + " " + objective;
+    }
+
     // players set
     public String Set(String targets, ScoreboardObjective objective, int score) {
         return "scoreboard players set " + targets + " " + objective.getName() + " " + score;
