@@ -318,19 +318,6 @@ public class Main {
         }
     }
 
-    private int determineAmountOfPlayersPerTeam() {
-        // Define variable
-        int playerAmount;
-
-        int totalPlayers = players.size();
-        if ((totalPlayers % 3) == 0) playerAmount = 3;
-        else if ((totalPlayers % 2) == 0) playerAmount = 2;
-        else if (totalPlayers % 3 == 1) playerAmount = 3;
-        else playerAmount = 2;
-
-        return playerAmount;
-    }
-
     private void makeLootTableFiles() {
         ArrayList<LootTableEntry> lootEntry = new ArrayList<>();
 
@@ -711,6 +698,19 @@ public class Main {
         return "trigger " + objective.getName();
     }
 
+    // Change title display time
+    private String changeTitleDisplayTime(String targets, int fadeIn, int duration, int fadeOut) {
+        return changeTitleDisplayTime(targets, fadeIn, duration, fadeOut, Duration.seconds);
+    }
+
+    private String changeTitleDisplayTime(String targets, int fadeIn, int duration, int fadeOut, Duration durationType) {
+        return "title " + targets + " times " + fadeIn + durationType +  " " + duration + durationType + " " + fadeOut + durationType;
+    }
+
+    private String changeTitleDisplayTime(String targets, String fadeIn, String duration, String fadeOut) {
+        return "title " + targets + " times " + fadeIn + " " + duration + " " + fadeOut;
+    }
+
     // Create function files
     private void makeFunctionFiles() {
         files.add(Initialize());
@@ -787,6 +787,7 @@ public class Main {
         files.add(UpdatePlayerDistance());
         files.add(DebugGive());
         files.add(DebugRemove());
+        files.add(TitleDefaultTiming());
     }
 
     private FileData Initialize() {
@@ -1258,22 +1259,35 @@ public class Main {
 
     private FileData StartGame() {
         ArrayList<String> fileCommands = new ArrayList<>();
+        ArrayList<TextItem> texts = new ArrayList<>();
+
+        // Set world time
         fileCommands.add(setTime(0));
+
+        // Give potion effect
         fileCommands.add(giveEffect("@a", Effect.regeneration, 1, 255));
         fileCommands.add(giveEffect("@a", Effect.saturation, 1, 255));
         fileCommands.add(giveEffect("@a", Effect.resistance, 20*60, 2));
+
+        // Clear player inventories
         fileCommands.add(clearInventory("@a"));
-        fileCommands.add(new Title("@a", TitleType.title, new Text(Color.gold, true, true, "Game Starting Now!")).displayTitle());
+
+        // Set all players to survival mode
         fileCommands.add(setGameMode(GameMode.survival, "@a"));
-        fileCommands.add(setGameRule(GameRule.sendCommandFeedback, false));
+
+        // Activate command blocks
         fileCommands.add(execute.In(Dimension.overworld) +
                 fill(0, worldBottom + 2, 15, 0, worldBottom + 2, 2, BlockType.redstone_block, SetBlockType.replace));
         fileCommands.add(execute.In(Dimension.overworld) +
                 fill(2, worldBottom + 2, 0, 6, worldBottom + 2, 0, BlockType.redstone_block, SetBlockType.replace));
         fileCommands.add(execute.In(Dimension.overworld) +
-                fill(15, worldBottom + 2, 15, 9, worldBottom + 2, 15, BlockType.bedrock));
-        fileCommands.add(execute.In(Dimension.overworld) +
                 setBlock(10, worldBottom + 2, 0, BlockType.redstone_block, SetBlockType.destroy));
+
+        // Deactivate startup command blocks
+        fileCommands.add(execute.In(Dimension.overworld) +
+                fill(15, worldBottom + 2, 15, 9, worldBottom + 2, 15, BlockType.bedrock));
+
+        // Revoke all advancements
         fileCommands.add(revokeAdvancement("@a"));
 
         // Experience
@@ -1289,6 +1303,22 @@ public class Main {
             // Team caller
             fileCommands.add(giveItem("@a", BlockType.goat_horn, "[instrument=\"minecraft:ponder_goat_horn\",use_cooldown={seconds:30}]"));
         }
+
+        // Show world border size in actionbar
+        texts.add(new Text(Color.light_purple, false, false, "World size: ±" + worldSize));
+        Title showWorldSize = new Title("@a", TitleType.subtitle, texts);
+
+        // Change title display time
+        fileCommands.add(changeTitleDisplayTime("@a", 1, 5, 2));
+
+        // Display world size
+        fileCommands.add(showWorldSize.displayTitle());
+
+        // Display game start
+        fileCommands.add(new Title("@a", TitleType.title, new Text(Color.gold, true, true, "Game Starting Now!")).displayTitle());
+
+        // Change title display time
+        fileCommands.add(callFunction(FileName.title_default_timing, 5));
 
         return new FileData(FileName.start_game, fileCommands);
     }
@@ -1637,10 +1667,23 @@ public class Main {
 
     private FileData DropCarepackages() {
         ArrayList<String> fileCommands = new ArrayList<>();
+        ArrayList<TextItem> texts = new ArrayList<>();
+
+        // Show world border size in actionbar
+        texts.add(new Text(Color.light_purple, false, false, "To be found at ±" + carePackageSpread));
+        Title showWorldSize = new Title("@a", TitleType.subtitle, texts);
+
+        // Change title display time
+        fileCommands.add(changeTitleDisplayTime("@a", 1, 5, 2));
+
+        // Display world size
+        fileCommands.add(showWorldSize.displayTitle());
 
         // Announce Care Packages
-        fileCommands.add(new Title("@a", TitleType.title, new Text(Color.gold, true, true, carePackageAmount + " Supply Drops!")).displayTitle());
-        fileCommands.add(new Title("@a", TitleType.subtitle, new Text(Color.light_purple, true, true, "Delivered NOW on the surface!")).displayTitle());
+        fileCommands.add(new Title("@a", TitleType.title, new Text(Color.gold, true, true, carePackageAmount + " Care Packages!")).displayTitle());
+
+        // Change title display time
+        fileCommands.add(callFunction(FileName.title_default_timing, 5));
 
         // Summon Care Package entities
         for (int i = 0; i < carePackageAmount; i++) {
@@ -2603,6 +2646,15 @@ public class Main {
         fileCommands.add(removeTag("@s", Tag.Debug));
 
         return new FileData(FileName.debug_remove, fileCommands);
+    }
+
+    private FileData TitleDefaultTiming() {
+        ArrayList<String> fileCommands = new ArrayList<>();
+
+        // Change title display time
+        fileCommands.add(changeTitleDisplayTime("@a", 10, 70, 20, Duration.ticks));
+
+        return new FileData(FileName.title_default_timing, fileCommands);
     }
 }
 
