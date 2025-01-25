@@ -228,32 +228,35 @@ public class Main {
             }
         }
 
-        // Teams
-        int teamAmount = players.size() / determineAmountOfPlayersPerTeam();
-        int relativeTeamAmount = teamAmount - 6;
-        if (relativeTeamAmount < 0) relativeTeamAmount = 0;
-        if (relativeTeamAmount > 10) relativeTeamAmount = 10;
+        // Number of players
+        int relativePlayerAmount = players.size() - 15;
+        if (players.size() <= 6) {
+            worldSize = 500;
+            carePackageSpread = 450;
+            carePackageAmount = 200;
+        }
+        else {
+            if (relativePlayerAmount < 0) relativePlayerAmount = 0;
+            if (relativePlayerAmount > 10) relativePlayerAmount = 10;
 
-        // Desired chest density
-        double desiredChestDensity = 0.0002;
+            // Desired chest density
+            double desiredChestDensity = 0.0002;
 
-        int baseWorldSize = 750;
-        int baseCarePackageSpread = 500;
+            int baseWorldSize = 750;
+            int baseCarePackageSpread = 500;
 
-        int maxTeamAmount = 10;
-        int maxWorldSize = 1500;
-        int maxCarePackageSpread = 800;
+            int maxPlayerAmount = 10;
+            int maxWorldSize = 1500;
+            int maxCarePackageSpread = 800;
 
-        int worldSizeStep = (maxWorldSize - baseWorldSize) / maxTeamAmount;
-        int carePackageSpreadStep = (maxCarePackageSpread - baseCarePackageSpread) / maxTeamAmount;
+            int worldSizeStep = (maxWorldSize - baseWorldSize) / maxPlayerAmount;
+            int carePackageSpreadStep = (maxCarePackageSpread - baseCarePackageSpread) / maxPlayerAmount;
 
-        worldSize = baseWorldSize + worldSizeStep * relativeTeamAmount;
-        carePackageSpread = baseCarePackageSpread + carePackageSpreadStep * relativeTeamAmount;
+            worldSize = baseWorldSize + worldSizeStep * relativePlayerAmount;
+            carePackageSpread = baseCarePackageSpread + carePackageSpreadStep * relativePlayerAmount;
 
-        worldSize = 500;
-        carePackageSpread = 450;
-
-        carePackageAmount = (int) (desiredChestDensity * (carePackageSpread * 2) * (carePackageSpread * 2));
+            carePackageAmount = (int) (desiredChestDensity * (carePackageSpread * 2) * (carePackageSpread * 2));
+        }
 
         // Seasons
         ArrayList<String> seasonsString = fileTools.GetLinesFromFile("Files\\" + communityMode + "\\seasonData.txt");
