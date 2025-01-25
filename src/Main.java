@@ -1305,7 +1305,7 @@ public class Main {
         }
 
         // Show world border size in actionbar
-        texts.add(new Text(Color.light_purple, false, false, "World size: ±" + worldSize));
+        texts.add(new Text(Color.light_purple, false, false, "World size: ±" + worldSize + " blocks"));
         Title showWorldSize = new Title("@a", TitleType.subtitle, texts);
 
         // Change title display time
@@ -1670,7 +1670,7 @@ public class Main {
         ArrayList<TextItem> texts = new ArrayList<>();
 
         // Show world border size in actionbar
-        texts.add(new Text(Color.light_purple, false, false, "To be found at ±" + carePackageSpread));
+        texts.add(new Text(Color.light_purple, false, false, "To be found at ±" + carePackageSpread + " blocks"));
         Title showWorldSize = new Title("@a", TitleType.subtitle, texts);
 
         // Change title display time
