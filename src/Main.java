@@ -2664,27 +2664,87 @@ public class Main {
 
         // /give @p written_book[written_book_content={title:"nice",author:"69",pages:['[{"text":"hyrtgy","bold":true},{"text":"ghjfygj","italic":true}]','[{"text":"hgfgcbvn","color":"gold"},{"text":"ooo","color":"white","underlined":true},{"selector":"@a"}]']}] 1
 
-        String title = "nice";
-        String author = "69";
+        String title = "Fifty Shades of Awkward";
+        String author = "Velvet Pennington";
 
         ArrayList<ArrayList<TextItem>> pages = new ArrayList<>();
         ArrayList<TextItem> texts = new ArrayList<>();
-        texts.add(new Text(true, false, "hyrtgy"));
-        texts.add(new Text(false, true, "ghjfygj"));
+        texts.add(new Text(false, false, "Anastasia stood in Christian Grey\\'s lavish penthouse. The skyline shimmered, but all she could focus on was him.\\\\n\\\\n" +
+                "\\\\\"I have something for you,\\\\\" Christian said. He reached into his pocket and pulled out... a contract.\\\\n\\\\n"));
 
         pages.add(texts);
         texts = new ArrayList<>();
 
-        texts.add(new Text(Color.gold, "hgfgcbvn"));
-        texts.add(new Text(Color.white, "ooo"));
-        texts.add(new Select(false, false, "@a"));
+        texts.add(new Text(false, false, "\\\\\"Another one?\\\\\" she asked.\\\\n\\\\n" +
+                "\\\\\"This one\\'s different,\\\\\" he whispered. \\\\\"It\\'s... a "));
+        texts.add(new Text(false, true, "cuddle contract"));
+        texts.add(new Text(false, false, ".\\\\\"\\\\n\\\\n" +
+                "Anastasia blinked. \\\\\"A cuddle contract?\\\\\"\\\\n\\\\n\\\\\"Yes. Unlimited. Any time. Any position.\\\\\" He leaned closer. \""));
+        texts.add(new Text(false, true, "Spooning is mandatory"));
+        texts.add(new Text(false, false, ".\""));
+
+        pages.add(texts);
+        texts = new ArrayList<>();
+
+        texts.add(new Text(false, false, "Her heart pounded. \\\\\"I... I don\\'t know what to say.\\\\\"\\\\n\\\\n" +
+                "\\\\\"Say yes,\\\\\" he whispered, \\\\\"or "));
+        texts.add(new Text(true, false, "no dessert for a week"));
+        texts.add(new Text(false, false, ".\\\\\"\\\\n\\\\n" +
+                "She gasped. No chocolate lava cake? \\\\\"Fine! I\\'ll sign it!\\\\\"\\\\n\\\\n"));
+
+        pages.add(texts);
+        texts = new ArrayList<>();
+
+        texts.add(new Text(false, false, "She grabbed the pen, only to find it read "));
+        texts.add(new Text(false, true, "Mr. Snugglemonster"));
+        texts.add(new Text(false, false, ".\\\\n\\\\n" +
+                "Christian coughed. \\\\\"Don\\'t ask.\\\\\"\\\\n\\\\n" +
+                "Suddenly, Taylor, his bodyguard, burst in. \\\\\"Sir, your meeting!\\\\\"\\\\n\\\\n"));
+
+        pages.add(texts);
+        texts = new ArrayList<>();
+
+        texts.add(new Text(false, false, "Christian groaned. \\\\\"Anastasia, stay here. Don\\'t touch anything... especially the "));
+        texts.add(new Text(false, true, "espresso machine"));
+        texts.add(new Text(false, false, ".\\\\\"\\\\n\\\\n" +
+                "As he left, Ana wandered around, finding a locked drawer. "));
+        texts.add(new Text(false, true, "What secrets does he hide?"));
+
+        pages.add(texts);
+        texts = new ArrayList<>();
+
+        texts.add(new Text(false, false, "Inside were DVDs. "));
+        texts.add(new Text(false, true, "The Notebook. Twilight."));
+        texts.add(new Text(false, false, "\\\\n\\\\n" +
+                "\\\\\"Oh my God... he\\'s a romantic,\\\\\" she whispered.\\\\n\\\\n" +
+                "From the doorway, Christian sighed. \\\\\"I told you not to touch anything.\\\\\"\\\\n\\\\n"));
+
+        pages.add(texts);
+        texts = new ArrayList<>();
+
+        texts.add(new Text(false, false, "\\\\\"You like rom-coms?\\\\\" Ana asked, grinning.\\\\n\\\\n" +
+                "Christian crossed his arms. \\\\\"It\\'s for... research.\\\\\"\\\\n\\\\n" +
+                "She held up "));
+        texts.add(new Text(false, true, "How to Lose a Guy in 10 Days."));
+
+        pages.add(texts);
+        texts = new ArrayList<>();
+
+        texts.add(new Text(false, false, "His jaw clenched. \\\\\"Fine. I love rom-coms. And cuddles. And... maybe you.\\\\\"\\\\n\\\\n" +
+                "She smiled. \\\\\"That\\'s all I needed to hear.\\\\\"\\\\n\\\\n" +
+                "As they cuddled, Christian whispered, \\\\\"No one must ever know.\\\\\"\\\\n\\\\n"));
+
+        pages.add(texts);
+        texts = new ArrayList<>();
+
+        texts.add(new Text(false, false, "She grinned. \\\\\"Your secret\\'s safe with me... if you share the popcorn.\\\\\""));
 
         pages.add(texts);
         texts = new ArrayList<>();
 
         WrittenBookContent book = new WrittenBookContent(title, author, pages);
 
-        fileCommands.add(book.generateNBT());
+        fileCommands.add("give @p written_book[" + book.generateNBT() + "]");
 
         return new FileData(FileName.current_test_function, fileCommands);
     }
