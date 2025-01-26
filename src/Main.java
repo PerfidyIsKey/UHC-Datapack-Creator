@@ -2679,22 +2679,23 @@ public class Main {
                 "\\\\\"This one\\'s different,\\\\\" he whispered. \\\\\"It\\'s... a "));
         texts.add(new Text(false, true, "cuddle contract"));
         texts.add(new Text(false, false, ".\\\\\"\\\\n\\\\n" +
-                "Anastasia blinked. \\\\\"A cuddle contract?\\\\\"\\\\n\\\\n\\\\\"Yes. Unlimited. Any time. Any position.\\\\\" He leaned closer. \""));
-        texts.add(new Text(false, true, "Spooning is mandatory"));
-        texts.add(new Text(false, false, ".\""));
+                "Anastasia blinked. \\\\\"A cuddle contract?\\\\\""));
 
         pages.add(texts);
         texts = new ArrayList<>();
 
+        texts.add(new Text(false, false, "\\\\\"Yes. Unlimited. Any time. Any position.\\\\\" He leaned closer. \\\\\""));
+        texts.add(new Text(false, true, "Spooning is mandatory"));
+        texts.add(new Text(false, false, ".\\\\\""));
         texts.add(new Text(false, false, "Her heart pounded. \\\\\"I... I don\\'t know what to say.\\\\\"\\\\n\\\\n" +
                 "\\\\\"Say yes,\\\\\" he whispered, \\\\\"or "));
         texts.add(new Text(true, false, "no dessert for a week"));
-        texts.add(new Text(false, false, ".\\\\\"\\\\n\\\\n" +
-                "She gasped. No chocolate lava cake? \\\\\"Fine! I\\'ll sign it!\\\\\"\\\\n\\\\n"));
+        texts.add(new Text(false, false, ".\\\\\""));
 
         pages.add(texts);
         texts = new ArrayList<>();
 
+        texts.add(new Text(false, false, "She gasped. No chocolate lava cake? \\\\\"Fine! I\\'ll sign it!\\\\\"\\\\n\\\\n"));
         texts.add(new Text(false, false, "She grabbed the pen, only to find it read "));
         texts.add(new Text(false, true, "Mr. Snugglemonster"));
         texts.add(new Text(false, false, ".\\\\n\\\\n" +
