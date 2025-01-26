@@ -17,6 +17,10 @@ public class TextItem {
         this.isItalic = isItalic;
     }
 
+    public TextItem(Color color) {
+        this.color = color;
+    }
+
     public TextItem(boolean isBold, boolean isItalic) {
         this.isBold = isBold;
         this.isItalic = isItalic;

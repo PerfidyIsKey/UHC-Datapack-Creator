@@ -85,5 +85,8 @@ public enum FileName {
 
     // Developer
     debug_give,
-    debug_remove
+    debug_remove,
+
+    // Testing
+    current_test_function
 }

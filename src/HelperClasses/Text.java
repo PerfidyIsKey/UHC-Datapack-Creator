@@ -13,6 +13,18 @@ public class Text extends TextItem {
 
     }
 
+    public Text(Color color, String text) {
+        super(color);
+        this.text = text;
+
+    }
+
+    public Text(boolean isBold, boolean isItalic, String text) {
+        super(isBold, isItalic);
+        this.text = text;
+
+    }
+
     public String getText() {
         return "{\"text\":\"" + text + "\"" + bold() + italic() + colorShow() + "}";
     }

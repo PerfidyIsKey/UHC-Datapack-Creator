@@ -1,6 +1,7 @@
 import Enums.*;
 import FileGeneration.*;
 import HelperClasses.*;
+import ItemClasses.WrittenBookContent;
 import TeamGeneration.Season;
 import TeamGeneration.TeamGenerator;
 import org.w3c.dom.Attr;
@@ -788,6 +789,7 @@ public class Main {
         files.add(DebugGive());
         files.add(DebugRemove());
         files.add(TitleDefaultTiming());
+        files.add(CurrentTestFunction());
     }
 
     private FileData Initialize() {
@@ -1267,7 +1269,7 @@ public class Main {
         // Give potion effect
         fileCommands.add(giveEffect("@a", Effect.regeneration, 1, 255));
         fileCommands.add(giveEffect("@a", Effect.saturation, 1, 255));
-        fileCommands.add(giveEffect("@a", Effect.resistance, 20*60, 2));
+        fileCommands.add(giveEffect("@a", Effect.resistance, 20*60, 2, true));
 
         // Clear player inventories
         fileCommands.add(clearInventory("@a"));
@@ -2655,6 +2657,36 @@ public class Main {
         fileCommands.add(changeTitleDisplayTime("@a", 10, 70, 20, Duration.ticks));
 
         return new FileData(FileName.title_default_timing, fileCommands);
+    }
+
+    private FileData CurrentTestFunction() {
+        ArrayList<String> fileCommands = new ArrayList<>();
+
+        // /give @p written_book[written_book_content={title:"nice",author:"69",pages:['[{"text":"hyrtgy","bold":true},{"text":"ghjfygj","italic":true}]','[{"text":"hgfgcbvn","color":"gold"},{"text":"ooo","color":"white","underlined":true},{"selector":"@a"}]']}] 1
+
+        String title = "nice";
+        String author = "69";
+
+        ArrayList<ArrayList<TextItem>> pages = new ArrayList<>();
+        ArrayList<TextItem> texts = new ArrayList<>();
+        texts.add(new Text(true, false, "hyrtgy"));
+        texts.add(new Text(false, true, "ghjfygj"));
+
+        pages.add(texts);
+        texts = new ArrayList<>();
+
+        texts.add(new Text(Color.gold, "hgfgcbvn"));
+        texts.add(new Text(Color.white, "ooo"));
+        texts.add(new Select(false, false, "@a"));
+
+        pages.add(texts);
+        texts = new ArrayList<>();
+
+        WrittenBookContent book = new WrittenBookContent(title, author, pages);
+
+        fileCommands.add(book.generateNBT());
+
+        return new FileData(FileName.current_test_function, fileCommands);
     }
 }
 
