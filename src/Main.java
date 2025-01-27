@@ -2662,11 +2662,11 @@ public class Main {
     private FileData CurrentTestFunction() {
         ArrayList<String> fileCommands = new ArrayList<>();
 
-        // /give @p written_book[written_book_content={title:"nice",author:"69",pages:['[{"text":"hyrtgy","bold":true},{"text":"ghjfygj","italic":true}]','[{"text":"hgfgcbvn","color":"gold"},{"text":"ooo","color":"white","underlined":true},{"selector":"@a"}]']}] 1
-
+        // Set title and author
         String title = "Fifty Shades of Awkward";
         String author = "Velvet Pennington";
 
+        // Compile pages
         ArrayList<ArrayList<TextItem>> pages = new ArrayList<>();
         ArrayList<TextItem> texts = new ArrayList<>();
         texts.add(new Text(false, false, "Anastasia stood in Christian Grey\\'s lavish penthouse. The skyline shimmered, but all she could focus on was him.\\\\n\\\\n" +
@@ -2746,6 +2746,8 @@ public class Main {
         WrittenBookContent book = new WrittenBookContent(title, author, pages);
 
         fileCommands.add("give @p written_book[" + book.generateNBT() + "]");
+
+        fileCommands.add(book.generateComponent());
 
         return new FileData(FileName.current_test_function, fileCommands);
     }

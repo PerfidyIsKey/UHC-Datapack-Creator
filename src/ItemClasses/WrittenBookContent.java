@@ -16,14 +16,32 @@ public class WrittenBookContent implements Components {
         this.pages = pages;
     }
 
-    // Make component tag
+    // Make Component tag
+    public String generateComponent() {
+
+        return "\"written_book_content\":{" +
+                "\"title\":\"" + title + "\",\n" +
+                "\"author\":\"" + author + "\",\n" +
+                "\"pages\":\"[\n" + generatePagesNBT(2) + "\n]\n}";
+    }
+
+    // Make NBT tag
     public String generateNBT() {
         return "written_book_content={title:\"" + title + "\"," +
                 "author:\"" + author + "\"," +
-                "pages:[" + generatePagesNBT() + "]}";
+                "pages:[" + generatePagesNBT(1) + "]}";
     }
 
-    private String generatePagesNBT() {
+    private String generatePagesNBT(int mode) {
+        // Pick mode
+        String terminationCharacter = "\"";
+        if (mode == 1) {    // NBT tag
+            terminationCharacter = "'";
+        }
+        else if (mode == 2) {   // Component
+            terminationCharacter = "\"";
+        }
+
         // Create pages NBT tag
         String pageContent = "";
         for (int i = 0; i < pages.size(); i++) {
@@ -31,7 +49,7 @@ public class WrittenBookContent implements Components {
             ArrayList<TextItem> currentPage = pages.get(i);
 
             // Open page
-            pageContent += "'";
+            pageContent += terminationCharacter;
 
             // Multiple fields per page
             int fieldsNumber = currentPage.size();
@@ -59,10 +77,10 @@ public class WrittenBookContent implements Components {
             }
 
             if (i < (pages.size() - 1)) {   // Extend to next page
-                pageContent += "',";
+                pageContent += terminationCharacter + ",";
             }
             else {  // Close pages NBT
-                pageContent += "'";
+                pageContent += terminationCharacter;
             }
         }
 
