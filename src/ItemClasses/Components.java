@@ -1,7 +1,7 @@
 package ItemClasses;
 
 public interface Components {
-    String generateNBT();
+    String GenerateNBT();
 
-    String generateComponent();
+    String GenerateComponent();
 }

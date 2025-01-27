@@ -1,7 +1,10 @@
 import Enums.*;
 import FileGeneration.*;
 import HelperClasses.*;
+import ItemClasses.Components;
 import ItemClasses.WrittenBookContent;
+import ItemModifiers.ItemModifier;
+import ItemModifiers.SetComponents;
 import TeamGeneration.Season;
 import TeamGeneration.TeamGenerator;
 import org.w3c.dom.Attr;
@@ -2745,9 +2748,29 @@ public class Main {
 
         WrittenBookContent book = new WrittenBookContent(title, author, pages);
 
-        fileCommands.add("give @p written_book[" + book.generateNBT() + "]");
+        fileCommands.add("give @p written_book[" + book.GenerateNBT() + "]");
 
-        fileCommands.add(book.generateComponent());
+        fileCommands.add(book.GenerateComponent());
+
+        // Build loot table
+        LootTableType type = LootTableType.chest;
+        LootTableRolls rolls = new LootTableRolls(DistributionType.uniform, 3, 5);
+        int bonusRolls = 3;
+
+
+
+        // Loot table entry
+        ArrayList<LootTableEntry> entries = new ArrayList<>();
+        ArrayList<ItemModifier> functions = new ArrayList<>();
+        ArrayList<Components> components = new ArrayList<>();
+
+        components.add(new WrittenBookContent(title, author, pages));
+        functions.add(new SetComponents(components));
+        entries.add(new LootTableEntry(1, BlockType.written_book, functions));
+
+        LootTable lTable = new LootTable(type, rolls, bonusRolls, entries);
+
+        fileCommands.add(lTable.generateLootTable());
 
         return new FileData(FileName.current_test_function, fileCommands);
     }

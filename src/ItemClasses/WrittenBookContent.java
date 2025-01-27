@@ -16,23 +16,25 @@ public class WrittenBookContent implements Components {
         this.pages = pages;
     }
 
-    // Make Component tag
-    public String generateComponent() {
-
-        return "\"written_book_content\":{" +
-                "\"title\":\"" + title + "\",\n" +
-                "\"author\":\"" + author + "\",\n" +
-                "\"pages\":\"[\n" + generatePagesNBT(2) + "\n]\n}";
-    }
-
     // Make NBT tag
-    public String generateNBT() {
+    public String GenerateNBT() {
         return "written_book_content={title:\"" + title + "\"," +
                 "author:\"" + author + "\"," +
-                "pages:[" + generatePagesNBT(1) + "]}";
+                "pages:[" + GeneratePages(1) + "]}";
     }
 
-    private String generatePagesNBT(int mode) {
+    // Make Component tag
+    public String GenerateComponent() {
+
+        return "\"written_book_content\":{\n" +
+                "\"title\":\"" + title + "\",\n" +
+                "\"author\":\"" + author + "\",\n" +
+                "\"pages\":[\n" + GeneratePages(2) + "\n" +
+                "]\n" +
+                "}";
+    }
+
+    private String GeneratePages(int mode) {
         // Pick mode
         String terminationCharacter = "\"";
         if (mode == 1) {    // NBT tag

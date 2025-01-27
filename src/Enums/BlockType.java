@@ -32,7 +32,8 @@ public enum BlockType {
     structure_block("structure_block"),
     trident("trident"),
     void_air("void_air"),
-    wolf_armor("wolf_armor");
+    wolf_armor("wolf_armor"),
+    written_book("written_book");
 
     private final String symbol;
 
