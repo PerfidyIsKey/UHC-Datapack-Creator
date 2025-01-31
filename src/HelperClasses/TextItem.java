@@ -10,6 +10,7 @@ public class TextItem {
     public String getText() {
         return "";
     }
+    public String getText(Boolean technical) {return ""; }
 
     public TextItem(Color color, boolean isBold, boolean isItalic) {
         this.color = color;

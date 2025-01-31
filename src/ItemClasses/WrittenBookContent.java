@@ -63,7 +63,12 @@ public class WrittenBookContent implements Components {
                     }
 
                     // Add content
-                    pageContent += currentPage.get(j).getText();
+                    if (mode == 1) {    // NBT tag
+                        pageContent += currentPage.get(j).getText();
+                    }
+                    else if (mode == 2) {   // Component
+                        pageContent += currentPage.get(j).getText(true);
+                    }
 
                     if (j < (fieldsNumber - 1)) {   // Extend to next field
                         pageContent += ",";
@@ -75,7 +80,12 @@ public class WrittenBookContent implements Components {
             }
             else {
                 // Add content
-                pageContent += pages.get(i).get(0).getText();
+                if (mode == 1) {    // NBT tag
+                    pageContent += pages.get(i).get(0).getText();
+                }
+                else if (mode == 2) {   // Component
+                    pageContent += pages.get(i).get(0).getText(true);
+                }
             }
 
             if (i < (pages.size() - 1)) {   // Extend to next page
