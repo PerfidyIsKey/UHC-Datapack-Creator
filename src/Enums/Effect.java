@@ -2,6 +2,7 @@ package Enums;
 
 public enum Effect {
     absorption(22),
+    blindness(15),
     fire_resistance(12),
     glowing(24),
     haste(3),

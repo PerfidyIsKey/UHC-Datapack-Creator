@@ -69,8 +69,7 @@ public class PotionContents implements Components {
                     "\"show_icon\":" + show_icon + "\n";
         }
 
-        return "{\n" +
-                "\"potion_contents\":{\n" +
+        return "\"potion_contents\":{\n" +
                 colorContent +
                 "\"custom_effects\":[\n" +
                 "{\n" +
@@ -80,7 +79,6 @@ public class PotionContents implements Components {
                 boolContent +
                 "}\n" +
                 "]\n" +
-                "}\n" +
-                "}";
+                "}\n";
     }
 }

@@ -31,7 +31,7 @@ public class SetComponents implements ItemModifier {
 
     private String GenerateComponents() {
         // Create component structure
-        String componentContent = "";
+        String componentContent = "{\n";
         for (int i = 0; i < components.size(); i++) {
             // Select current page
             Components currentComponent = components.get(i);
@@ -41,6 +41,10 @@ public class SetComponents implements ItemModifier {
 
             if (i < (components.size() - 1)) {   // Extend to next function
                 componentContent += ",\n";
+            }
+            else {
+                componentContent += "\n" +
+                "}\n";
             }
         }
 

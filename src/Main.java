@@ -546,6 +546,33 @@ public class Main {
 
         entries.add(new LootTableEntry(2, BlockType.splash_potion, functions));
 
+        // Entry #44
+        contents = new PotionContents(Effect.poison, 0, 5, "4E9331", false, true, true);
+        name = new SetName(new Text(false, false, "Potion of Poison"));
+
+        functions = new ArrayList<>();
+        functions.add(new SetComponents(contents));
+        functions.add(name);
+
+        entries.add(new LootTableEntry(2, BlockType.splash_potion, functions));
+
+        // Entry #45
+        contents = new PotionContents(Effect.blindness, 0, 10, "1F1F23", false, true, true);
+        MaxStackSize stack = new MaxStackSize(5);
+        name = new SetName(new Text(false, false, "Potion of Blindness"));
+        SetCount count = new SetCount(5, new RandomChance(0.3));
+
+        components = new ArrayList<>();
+        components.add(contents);
+        components.add(stack);
+
+        functions = new ArrayList<>();
+        functions.add(new SetComponents(components));
+        functions.add(name);
+        functions.add(count);
+
+        entries.add(new LootTableEntry(2, BlockType.splash_potion, functions));
+
         LootTable lTable = new LootTable(type, rolls, bonusRolls, entries);
 
         ArrayList<String> fileCommands = new ArrayList<>();
