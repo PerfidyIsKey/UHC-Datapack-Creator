@@ -12,13 +12,20 @@ public class SetComponents implements ItemModifier {
         this.components = components;
     }
 
+    public SetComponents(Components components) {
+        ArrayList<Components> componentList = new ArrayList<>();
+        componentList.add(components);
+        this.components = componentList;
+    }
+
     // Generate function text
     public String GenerateFunction() {
 
         return "{\n" +
                 "\"function\":\"set_components\",\n" +
-                "\"components\":{\n" + GenerateComponents() + "\n" +
-                "}\n" +
+                "\"components\":" +
+                GenerateComponents() +
+                "\n" +
                 "}";
     }
 

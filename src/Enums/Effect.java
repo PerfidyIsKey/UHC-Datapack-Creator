@@ -7,6 +7,7 @@ public enum Effect {
     haste(3),
     health_boost(21),
     invisibility(14),
+    luck(26),
     nausea(9),
     poison(19),
     regeneration(10),

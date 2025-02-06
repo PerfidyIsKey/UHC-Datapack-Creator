@@ -26,11 +26,13 @@ public class WrittenBookContent implements Components {
     // Make Component tag
     public String GenerateComponent() {
 
-        return "\"written_book_content\":{\n" +
+        return "{\n" +
+                "\"written_book_content\":{\n" +
                 "\"title\":\"" + title + "\",\n" +
                 "\"author\":\"" + author + "\",\n" +
                 "\"pages\":[\n" + GeneratePages(2) + "\n" +
                 "]\n" +
+                "}\n" +
                 "}";
     }
 

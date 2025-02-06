@@ -1,19 +1,12 @@
 import Enums.*;
 import FileGeneration.*;
 import HelperClasses.*;
-import ItemClasses.Components;
-import ItemClasses.WrittenBookContent;
-import ItemModifiers.ItemModifier;
-import ItemModifiers.SetComponents;
-import ItemModifiers.SetCount;
-import Predicates.RandomChance;
-import TeamGeneration.Season;
-import TeamGeneration.TeamGenerator;
-import org.w3c.dom.Attr;
-
+import ItemClasses.*;
+import ItemModifiers.*;
+import Predicates.*;
+import TeamGeneration.*;
 
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.*;
 
 import static java.lang.Integer.parseInt;
@@ -328,7 +321,7 @@ public class Main {
         // Build loot table
         LootTableType type = LootTableType.chest;
         LootTableRolls rolls = new LootTableRolls(DistributionType.uniform, 3, 5);
-        int bonusRolls = 3;
+        int bonusRolls = 2;
 
         // Loot table entry
         ArrayList<LootTableEntry> entries = new ArrayList<>();
@@ -543,6 +536,15 @@ public class Main {
         // Entry #42
         RandomChance condition = new RandomChance(0.001);
         entries.add(new LootTableEntry(1, BlockType.netherite_scrap, new SetCount(4, condition)));
+
+        // Entry #43
+        PotionContents contents = new PotionContents(Effect.luck, 0, 600, "59C106", true, false, true);
+        SetName name = new SetName(new Text(false, false, "Potion of Care Package luck"));
+        ArrayList<ItemModifier> functions = new ArrayList<>();
+        functions.add(new SetComponents(contents));
+        functions.add(name);
+
+        entries.add(new LootTableEntry(2, BlockType.splash_potion, functions));
 
         LootTable lTable = new LootTable(type, rolls, bonusRolls, entries);
 

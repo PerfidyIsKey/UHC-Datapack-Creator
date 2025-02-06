@@ -1,33 +1,15 @@
 package FileGeneration;
 
 import Enums.BlockType;
-import ItemClasses.Components;
 import ItemModifiers.ItemModifier;
-
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class LootTableEntry {
 
     private int weight;
-
-    private String itemName;
     private BlockType item;
 
-    private LootTableFunction function;
-
     private ArrayList<ItemModifier> functions;
-
-    public LootTableEntry(int weight, String itemName) {
-        this.weight = weight;
-        this.itemName = itemName;
-    }
-
-    public LootTableEntry(int weight, String itemName, LootTableFunction function) {
-        this.weight = weight;
-        this.itemName = itemName;
-        this.function = function;
-    }
 
     public LootTableEntry(int weight, BlockType item) {
         this.weight = weight;
@@ -92,19 +74,5 @@ public class LootTableEntry {
         this.weight = weight;
     }
 
-    public String getName() {
-        return itemName;
-    }
 
-    public void setName(String itemName) {
-        this.itemName = itemName;
-    }
-
-    public LootTableFunction getFunction() {
-        return function;
-    }
-
-    public void setFunction(LootTableFunction function) {
-        this.function = function;
-    }
 }
