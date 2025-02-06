@@ -28,7 +28,7 @@ public class LootTable {
                 rolls.GetRolls() + ",\n" +
                 "\"bonus_rolls\":" + bonusRolls + ",\n" +
                 "\"entries\":[\n" +
-                GenerateEntry() + "\n" +
+                GenerateEntry() +
                 "]\n" +
                 "}\n" +
                 "]\n" +
@@ -43,16 +43,13 @@ public class LootTable {
             // Select current entry
             LootTableEntry currentEntry = entries.get(i);
 
-            // Open entry
-            entryContent = "{\n";
-
             // Add content
             entryContent += currentEntry.GetEntry();
 
             if (i < (entries.size() - 1)) {   // Extend to next entry
-                entryContent += "},\n";
+                entryContent += ",\n";
             } else {  // Close entries
-                entryContent += "}";
+                entryContent += "\n";
             }
         }
 

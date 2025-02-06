@@ -28,6 +28,7 @@ public class Text extends TextItem {
     public String getText(Boolean technical) {
         if (technical) {
             text = convertSpecial(text);
+            text = convertSpecial(text);
         }
 
         String content = "{\"text\":\"" + text + "\"" + bold() + italic() + colorShow() + "}";

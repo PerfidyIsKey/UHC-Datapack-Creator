@@ -5,6 +5,8 @@ import ItemClasses.Components;
 import ItemClasses.WrittenBookContent;
 import ItemModifiers.ItemModifier;
 import ItemModifiers.SetComponents;
+import ItemModifiers.SetCount;
+import Predicates.RandomChance;
 import TeamGeneration.Season;
 import TeamGeneration.TeamGenerator;
 import org.w3c.dom.Attr;
@@ -323,52 +325,229 @@ public class Main {
     }
 
     private void makeLootTableFiles() {
-        ArrayList<LootTableEntry> lootEntry = new ArrayList<>();
+        // Build loot table
+        LootTableType type = LootTableType.chest;
+        LootTableRolls rolls = new LootTableRolls(DistributionType.uniform, 3, 5);
+        int bonusRolls = 3;
 
-        // Loot table items
-        lootEntry.add(new LootTableEntry(17, "egg"));
-        lootEntry.add(new LootTableEntry(17, "ladder", new LootTableFunction(10)));
-        lootEntry.add(new LootTableEntry(15, "stick", new LootTableFunction(8)));
-        lootEntry.add(new LootTableEntry(15, "diorite", new LootTableFunction(16)));
-        lootEntry.add(new LootTableEntry(15, "amethyst_block", new LootTableFunction(16)));
-        lootEntry.add(new LootTableEntry(15, "iron_ingot", new LootTableFunction(8)));
-        lootEntry.add(new LootTableEntry(14, "arrow", new LootTableFunction(10)));
-        lootEntry.add(new LootTableEntry(11, "bone", new LootTableFunction(3, 0.4)));
-        lootEntry.add(new LootTableEntry(10, "copper_block", new LootTableFunction(16)));
-        lootEntry.add(new LootTableEntry(10, "bread", new LootTableFunction(5)));
-        lootEntry.add(new LootTableEntry(10, "cobweb", new LootTableFunction(2, 0.4)));
-        lootEntry.add(new LootTableEntry(8, "fishing_rod"));
-        lootEntry.add(new LootTableEntry(8, "obsidian", new LootTableFunction(4)));
-        lootEntry.add(new LootTableEntry(7, "glass", new LootTableFunction(3)));
-        lootEntry.add(new LootTableEntry(7, "melon_slice", new LootTableFunction(3, 0.4)));
-        lootEntry.add(new LootTableEntry(5, "tnt", new LootTableFunction(4)));
-        lootEntry.add(new LootTableEntry(5, "experience_bottle", new LootTableFunction(3, 0.2)));
-        lootEntry.add(new LootTableEntry(5, "book"));
-        lootEntry.add(new LootTableEntry(5, "redstone", new LootTableFunction(16)));
-        lootEntry.add(new LootTableEntry(5, "gunpowder", new LootTableFunction(16)));
-        lootEntry.add(new LootTableEntry(5, "gold_ingot", new LootTableFunction(3, 0.3)));
-        lootEntry.add(new LootTableEntry(5, "lapis_lazuli", new LootTableFunction(10)));
-        lootEntry.add(new LootTableEntry(4, "lava_bucket"));
-        lootEntry.add(new LootTableEntry(4, "apple", new LootTableFunction(2, 0.3)));
-        lootEntry.add(new LootTableEntry(4, "diamond", new LootTableFunction(2, 0.3)));
-        lootEntry.add(new LootTableEntry(3, "saddle"));
-        lootEntry.add(new LootTableEntry(3, "spectral_arrow", new LootTableFunction(10)));
-        lootEntry.add(new LootTableEntry(3, "horse_spawn_egg"));
-        lootEntry.add(new LootTableEntry(3, "glowstone_dust", new LootTableFunction(6)));
-        lootEntry.add(new LootTableEntry(3, "ender_pearl", new LootTableFunction(2, 0.5)));
-        lootEntry.add(new LootTableEntry(2, "nether_wart", new LootTableFunction(5)));
-        lootEntry.add(new LootTableEntry(2, "blaze_rod", new LootTableFunction(2, 0.1)));
-        lootEntry.add(new LootTableEntry(2, "golden_apple"));
-        lootEntry.add(new LootTableEntry(2, "anvil"));
-        lootEntry.add(new LootTableEntry(2, "spyglass"));
-        lootEntry.add(new LootTableEntry(2, "wolf_spawn_egg", new LootTableFunction(2, 0.01)));
-        lootEntry.add(new LootTableEntry(1, "diamond_horse_armor"));
-        lootEntry.add(new LootTableEntry(1, "netherite_hoe"));
-        lootEntry.add(new LootTableEntry(1, "trident"));
-        lootEntry.add(new LootTableEntry(1, "netherite_upgrade_smithing_template"));
-        lootEntry.add(new LootTableEntry(1, "netherite_scrap", new LootTableFunction(4, 0.001)));
+        // Loot table entry
+        ArrayList<LootTableEntry> entries = new ArrayList<>();
+        ArrayList<Components> components = new ArrayList<>();
 
-        ArrayList<String> fileCommands = fileTools.generateLootTable(lootEntry);
+        // Entry #1
+        entries.add(new LootTableEntry(17, BlockType.egg));
+
+        // Entry #2
+        entries.add(new LootTableEntry(17, BlockType.ladder, new SetCount(10)));
+
+        // Entry #3
+        entries.add(new LootTableEntry(15, BlockType.stick, new SetCount(8)));
+
+        // Entry #4
+        entries.add(new LootTableEntry(15, BlockType.diorite, new SetCount(16)));
+
+        // Entry #5
+        entries.add(new LootTableEntry(15, BlockType.amethyst_block, new SetCount(16)));
+
+        // Entry #6
+        entries.add(new LootTableEntry(15, BlockType.iron_ingot, new SetCount(8)));
+
+        // Entry #7
+        entries.add(new LootTableEntry(14, BlockType.arrow, new SetCount(10)));
+
+        // Entry #8
+        entries.add(new LootTableEntry(11, BlockType.bone, new SetCount(3, new RandomChance(0.4))));
+
+        // Entry #9
+        entries.add(new LootTableEntry(10, BlockType.copper_block, new SetCount(16)));
+
+        // Entry #10
+        entries.add(new LootTableEntry(10, BlockType.bread, new SetCount(5)));
+
+        // Entry #11
+        entries.add(new LootTableEntry(10, BlockType.cobweb, new SetCount(2, new RandomChance(0.4))));
+
+        // Entry #12
+        entries.add(new LootTableEntry(8, BlockType.fishing_rod));
+
+        // Entry #13
+        entries.add(new LootTableEntry(8, BlockType.obsidian, new SetCount(4)));
+
+        // Entry #14
+        entries.add(new LootTableEntry(7, BlockType.glass, new SetCount(3)));
+
+        // Entry #15
+        entries.add(new LootTableEntry(7, BlockType.melon_slice, new SetCount(3, new RandomChance(0.4))));
+
+        // Entry #16
+        entries.add(new LootTableEntry(5, BlockType.tnt, new SetCount(4)));
+
+        // Entry #17
+        entries.add(new LootTableEntry(5, BlockType.experience_bottle, new SetCount(3, new RandomChance(0.2))));
+
+        // Entry #18
+        entries.add(new LootTableEntry(5, BlockType.book));
+
+        // Entry #19
+        entries.add(new LootTableEntry(5, BlockType.redstone, new SetCount(16)));
+
+        // Entry #20
+        entries.add(new LootTableEntry(5, BlockType.gunpowder, new SetCount(16)));
+
+        // Entry #21
+        entries.add(new LootTableEntry(5, BlockType.gold_ingot, new SetCount(4, new RandomChance(0.3))));
+
+        // Entry #22
+        entries.add(new LootTableEntry(5, BlockType.lapis_lazuli, new SetCount(10)));
+
+        // Entry #23
+        entries.add(new LootTableEntry(4, BlockType.lava_bucket));
+
+        // Entry #24
+        entries.add(new LootTableEntry(4, BlockType.apple, new SetCount(2, new RandomChance(0.3))));
+
+        // Entry #25
+        entries.add(new LootTableEntry(2, BlockType.diamond, new SetCount(2, new RandomChance(0.3))));
+
+        // Entry #26
+        entries.add(new LootTableEntry(3, BlockType.saddle));
+
+        // Entry #27
+        entries.add(new LootTableEntry(3, BlockType.spectral_arrow, new SetCount(10)));
+
+        // Entry #28
+        entries.add(new LootTableEntry(3, BlockType.horse_spawn_egg));
+
+        // Entry #29
+        entries.add(new LootTableEntry(3, BlockType.glowstone_dust, new SetCount(6)));
+
+        // Entry #30
+        entries.add(new LootTableEntry(3, BlockType.ender_pearl, new SetCount(2, new RandomChance(0.5))));
+
+        // Entry #31
+        entries.add(new LootTableEntry(2, BlockType.nether_wart, new SetCount(5)));
+
+        // Entry #32
+        entries.add(new LootTableEntry(2, BlockType.blaze_rod, new SetCount(2, new RandomChance(0.1))));
+
+        // Entry #33
+        entries.add(new LootTableEntry(2, BlockType.golden_apple));
+
+        // Entry #34
+        entries.add(new LootTableEntry(2, BlockType.anvil));
+
+        // Entry #35
+        entries.add(new LootTableEntry(2, BlockType.spyglass));
+
+        // Entry #36
+        entries.add(new LootTableEntry(2, BlockType.wolf_spawn_egg, new SetCount(2, new RandomChance(0.01))));
+
+        // Entry #37
+        entries.add(new LootTableEntry(1, BlockType.diamond_horse_armor));
+
+        // Entry #38
+        entries.add(new LootTableEntry(1, BlockType.netherite_hoe));
+
+        // Entry #39
+        entries.add(new LootTableEntry(1, BlockType.trident));
+
+        // Entry #40
+        entries.add(new LootTableEntry(1, BlockType.netherite_upgrade_smithing_template));
+
+        // Entry #41
+
+        // Set title and author
+        String title = "Fifty Shades of Awkward";
+        String author = "Velvet Pennington";
+
+        // Compile pages
+        ArrayList<ArrayList<TextItem>> pages = new ArrayList<>();
+        ArrayList<TextItem> texts = new ArrayList<>();
+        texts.add(new Text(false, false, "Anastasia stood in Christian Grey's lavish penthouse. The skyline shimmered, but all she could focus on was him.\\n\\n" +
+                "\"I have something for you,\" Christian said. He reached into his pocket and pulled out... a contract."));
+
+        pages.add(texts);
+        texts = new ArrayList<>();
+
+        texts.add(new Text(false, false, "\"Another one?\" she asked.\\n\\n" +
+                "\"This one's different,\" he whispered. \"It's... a "));
+        texts.add(new Text(false, true, "cuddle contract"));
+        texts.add(new Text(false, false, ".\"\\n\\n" +
+                "Anastasia blinked. \"A cuddle contract?\""));
+
+        pages.add(texts);
+        texts = new ArrayList<>();
+
+        texts.add(new Text(false, false, "\"Yes. Unlimited. Any time. Any position.\" He leaned closer. \""));
+        texts.add(new Text(false, true, "Spooning is mandatory"));
+        texts.add(new Text(false, false, ".\""));
+        texts.add(new Text(false, false, "Her heart pounded. \"I... I don't know what to say.\"\\n\\n" +
+                "\"Say yes,\" he whispered, \"or "));
+        texts.add(new Text(true, false, "no dessert for a week"));
+        texts.add(new Text(false, false, ".\""));
+
+        pages.add(texts);
+        texts = new ArrayList<>();
+
+        texts.add(new Text(false, false, "She gasped. No chocolate lava cake? \"Fine! I'll sign it!\"\\n\\n"));
+        texts.add(new Text(false, false, "She grabbed the pen, only to find it read "));
+        texts.add(new Text(false, true, "Mr. Snugglemonster"));
+        texts.add(new Text(false, false, ".\\n\\n" +
+                "Christian coughed. \"Don't ask.\"\\n\\n" +
+                "Suddenly, Taylor, his bodyguard, burst in. \"Sir, your meeting!\""));
+
+        pages.add(texts);
+        texts = new ArrayList<>();
+
+        texts.add(new Text(false, false, "Christian groaned. \"Anastasia, stay here. Don't touch anything... especially the "));
+        texts.add(new Text(false, true, "espresso machine"));
+        texts.add(new Text(false, false, ".\"\\n\\n" +
+                "As he left, Ana wandered around, finding a locked drawer. "));
+        texts.add(new Text(false, true, "What secrets does he hide?"));
+
+        pages.add(texts);
+        texts = new ArrayList<>();
+
+        texts.add(new Text(false, false, "Inside were DVDs. "));
+        texts.add(new Text(false, true, "The Notebook. Twilight."));
+        texts.add(new Text(false, false, "\\n\\n" +
+                "\"Oh my God... he's a romantic,\" she whispered.\\n\\n" +
+                "From the doorway, Christian sighed. \"I told you not to touch anything.\""));
+
+        pages.add(texts);
+        texts = new ArrayList<>();
+
+        texts.add(new Text(false, false, "\"You like rom-coms?\" Ana asked, grinning.\\n\\n" +
+                "Christian crossed his arms. \"It's for... research.\"\\n\\n" +
+                "She held up "));
+        texts.add(new Text(false, true, "How to Lose a Guy in 10 Days."));
+
+        pages.add(texts);
+        texts = new ArrayList<>();
+
+        texts.add(new Text(false, false, "His jaw clenched. \"Fine. I love rom-coms. And cuddles. And... maybe you.\"\\n\\n" +
+                "She smiled. \"That's all I needed to hear.\"\\n\\n" +
+                "As they cuddled, Christian whispered, \"No one must ever know.\""));
+
+        pages.add(texts);
+        texts = new ArrayList<>();
+
+        texts.add(new Text(false, false, "She grinned. \"Your secret's safe with me... if you share the popcorn.\""));
+
+        pages.add(texts);
+        texts = new ArrayList<>();
+
+        components.add(new WrittenBookContent(title, author, pages));
+        entries.add(new LootTableEntry(1, BlockType.written_book, new SetComponents(components)));
+
+        // Entry #42
+        RandomChance condition = new RandomChance(0.001);
+        entries.add(new LootTableEntry(1, BlockType.netherite_scrap, new SetCount(4, condition)));
+
+        LootTable lTable = new LootTable(type, rolls, bonusRolls, entries);
+
+        ArrayList<String> fileCommands = new ArrayList<>();
+        fileCommands.add(lTable.generateLootTable());
 
         FileData fileData = new FileData("supply_drop", fileCommands, "loot_table");
         files.add(fileData);
@@ -2664,113 +2843,6 @@ public class Main {
 
     private FileData CurrentTestFunction() {
         ArrayList<String> fileCommands = new ArrayList<>();
-
-        // Set title and author
-        String title = "Fifty Shades of Awkward";
-        String author = "Velvet Pennington";
-
-        // Compile pages
-        ArrayList<ArrayList<TextItem>> pages = new ArrayList<>();
-        ArrayList<TextItem> texts = new ArrayList<>();
-        texts.add(new Text(false, false, "Anastasia stood in Christian Grey's lavish penthouse. The skyline shimmered, but all she could focus on was him.\\n\\n" +
-                "\"I have something for you,\" Christian said. He reached into his pocket and pulled out... a contract."));
-
-        pages.add(texts);
-        texts = new ArrayList<>();
-
-        texts.add(new Text(false, false, "\"Another one?\" she asked.\\n\\n" +
-                "\"This one's different,\" he whispered. \"It's... a "));
-        texts.add(new Text(false, true, "cuddle contract"));
-        texts.add(new Text(false, false, ".\"\\n\\n" +
-                "Anastasia blinked. \"A cuddle contract?\""));
-
-        pages.add(texts);
-        texts = new ArrayList<>();
-
-        texts.add(new Text(false, false, "\"Yes. Unlimited. Any time. Any position.\" He leaned closer. \""));
-        texts.add(new Text(false, true, "Spooning is mandatory"));
-        texts.add(new Text(false, false, ".\""));
-        texts.add(new Text(false, false, "Her heart pounded. \"I... I don't know what to say.\"\\n\\n" +
-                "\"Say yes,\" he whispered, \"or "));
-        texts.add(new Text(true, false, "no dessert for a week"));
-        texts.add(new Text(false, false, ".\""));
-
-        pages.add(texts);
-        texts = new ArrayList<>();
-
-        texts.add(new Text(false, false, "She gasped. No chocolate lava cake? \"Fine! I'll sign it!\"\\n\\n"));
-        texts.add(new Text(false, false, "She grabbed the pen, only to find it read "));
-        texts.add(new Text(false, true, "Mr. Snugglemonster"));
-        texts.add(new Text(false, false, ".\\n\\n" +
-                "Christian coughed. \"Don't ask.\"\\n\\n" +
-                "Suddenly, Taylor, his bodyguard, burst in. \"Sir, your meeting!\""));
-
-        pages.add(texts);
-        texts = new ArrayList<>();
-
-        texts.add(new Text(false, false, "Christian groaned. \"Anastasia, stay here. Don't touch anything... especially the "));
-        texts.add(new Text(false, true, "espresso machine"));
-        texts.add(new Text(false, false, ".\"\\n\\n" +
-                "As he left, Ana wandered around, finding a locked drawer. "));
-        texts.add(new Text(false, true, "What secrets does he hide?"));
-
-        pages.add(texts);
-        texts = new ArrayList<>();
-
-        texts.add(new Text(false, false, "Inside were DVDs. "));
-        texts.add(new Text(false, true, "The Notebook. Twilight."));
-        texts.add(new Text(false, false, "\\n\\n" +
-                "\"Oh my God... he's a romantic,\" she whispered.\\n\\n" +
-                "From the doorway, Christian sighed. \"I told you not to touch anything.\""));
-
-        pages.add(texts);
-        texts = new ArrayList<>();
-
-        texts.add(new Text(false, false, "\"You like rom-coms?\" Ana asked, grinning.\\n\\n" +
-                "Christian crossed his arms. \"It's for... research.\"\\n\\n" +
-                "She held up "));
-        texts.add(new Text(false, true, "How to Lose a Guy in 10 Days."));
-
-        pages.add(texts);
-        texts = new ArrayList<>();
-
-        texts.add(new Text(false, false, "His jaw clenched. \"Fine. I love rom-coms. And cuddles. And... maybe you.\"\\n\\n" +
-                "She smiled. \"That's all I needed to hear.\"\\n\\n" +
-                "As they cuddled, Christian whispered, \"No one must ever know.\""));
-
-        pages.add(texts);
-        texts = new ArrayList<>();
-
-        texts.add(new Text(false, false, "She grinned. \"Your secret's safe with me... if you share the popcorn.\""));
-
-        pages.add(texts);
-        texts = new ArrayList<>();
-
-        WrittenBookContent book = new WrittenBookContent(title, author, pages);
-
-        fileCommands.add("give @p written_book[" + book.GenerateNBT() + "]");
-
-        fileCommands.add(book.GenerateComponent());
-
-        // Build loot table
-        LootTableType type = LootTableType.chest;
-        LootTableRolls rolls = new LootTableRolls(DistributionType.uniform, 3, 5);
-        int bonusRolls = 3;
-
-
-
-        // Loot table entry
-        ArrayList<LootTableEntry> entries = new ArrayList<>();
-        ArrayList<ItemModifier> functions = new ArrayList<>();
-        ArrayList<Components> components = new ArrayList<>();
-
-        components.add(new WrittenBookContent(title, author, pages));
-        functions.add(new SetComponents(components));
-        entries.add(new LootTableEntry(1, BlockType.written_book, functions));
-
-        LootTable lTable = new LootTable(type, rolls, bonusRolls, entries);
-
-        fileCommands.add(lTable.generateLootTable());
 
         return new FileData(FileName.current_test_function, fileCommands);
     }
