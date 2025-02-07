@@ -8,8 +8,8 @@ import java.util.ArrayList;
 
 public class Mob extends EntityData{
     // Fields
-    float Health;
-    ArrayList<Attributes> attributes;   // Attributes the entity possesses
+    float Health; // Number of health the entity has.
+    ArrayList<Attributes> attributes;   // A list of Attributes for this mob. These are used for many purposes in internal calculations, and can be considered a mob's "statistics".
 
     // Constructors
     public Mob(EntityName id, float health, Text name, ArrayList<Attributes> attributes) {

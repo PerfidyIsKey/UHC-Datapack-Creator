@@ -604,12 +604,19 @@ public class Main {
 
         entries.add(new LootTableEntry(2, BlockType.horse_spawn_egg, functions));
 
+        // Make loot table
         LootTable lTable = new LootTable(type, rolls, bonusRolls, entries);
 
         ArrayList<String> fileCommands = new ArrayList<>();
         fileCommands.add(lTable.generateLootTable());
 
         FileData fileData = new FileData("supply_drop", fileCommands, "loot_table");
+        files.add(fileData);
+
+        // Percentages
+        fileCommands = new ArrayList<>();
+        fileCommands.add(lTable.GenerateRates());
+        fileData = new FileData("supply_drop_rates", fileCommands, "loot_table");
         files.add(fileData);
     }
 

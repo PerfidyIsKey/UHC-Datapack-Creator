@@ -55,4 +55,26 @@ public class LootTable {
 
         return entryContent;
     }
+
+    public String GenerateRates() {
+        // Determine total rates
+        double totalWeight = 0;
+        for (LootTableEntry entry : entries) {
+            totalWeight += entry.getWeight();
+        }
+
+        // Determine individual rates
+        String individualRates = "";
+        for (int i = 0; i < entries.size(); i++) {
+            LootTableEntry thisEntry = entries.get(i);
+            individualRates += "#" + (i + 1) + " " + thisEntry.getItem() + " " + ((double)thisEntry.getWeight()*100/totalWeight) + "%";
+
+            if (i < (entries.size() - 1)) {   // Extend to next entry
+                individualRates += "\n";
+            }
+        }
+
+        return "# Total weight: " + totalWeight + "\n" +
+                individualRates;
+    }
 }

@@ -74,5 +74,7 @@ public class LootTableEntry {
         this.weight = weight;
     }
 
-
+    public BlockType getItem() {
+        return item;
+    }
 }

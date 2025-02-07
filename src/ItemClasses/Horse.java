@@ -8,8 +8,8 @@ import java.util.ArrayList;
 
 public class Horse extends Mob{
     // Fields
-    int Tame;
-    int Variant;
+    int Tame;       // 1 or 0 (true/false) – true if the horse is tamed.
+    int Variant;    // The variant of the horse. Determines colors. Stored as baseColor | (markings << 8). Unused values lead to white horses.
 
     // Constructors
     public Horse(float health, Boolean tame, int variant, Text name, ArrayList<Attributes> attributes) {

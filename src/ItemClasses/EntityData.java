@@ -1,15 +1,12 @@
 package ItemClasses;
 
-import EntityClasses.Attributes;
 import Enums.EntityName;
 import HelperClasses.Text;
-
-import java.util.ArrayList;
 
 public class EntityData implements Components{
     // Fields
     EntityName id;  // String representation of the entity's ID. Does not exist for the Player entity.
-    Text CustomName;    // Entity name
+    Text CustomName;    // The custom name JSON text component of this entity. Appears in player death messages and villager trading interfaces, as well as above the entity when the player's cursor is over it. May be empty or not exist.
 
     // Constructor
     public EntityData(EntityName id, Text name) {
