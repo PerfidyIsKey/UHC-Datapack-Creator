@@ -25,7 +25,6 @@ public class SetComponents implements ItemModifier {
                 "\"function\":\"set_components\",\n" +
                 "\"components\":" +
                 GenerateComponents() +
-                "\n" +
                 "}";
     }
 

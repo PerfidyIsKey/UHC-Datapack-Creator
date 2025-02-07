@@ -1,5 +1,6 @@
 package Enums;
 
 public enum EnchantmentType {
-    loyalty
+    loyalty,
+    lure
 }

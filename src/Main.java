@@ -365,7 +365,8 @@ public class Main {
         entries.add(new LootTableEntry(10, BlockType.cobweb, new SetCount(2, new RandomChance(0.4))));
 
         // Entry #12
-        entries.add(new LootTableEntry(8, BlockType.fishing_rod));
+        Enchantments enchantment = new Enchantments(EnchantmentType.lure, 3);
+        entries.add(new LootTableEntry(8, BlockType.fishing_rod, new SetComponents(enchantment)));
 
         // Entry #13
         entries.add(new LootTableEntry(8, BlockType.obsidian, new SetCount(4)));
@@ -417,7 +418,7 @@ public class Main {
         attributes.add(new JumpStrength(1));
         attributes.add(new MovementSpeed(0.1));
         Text text = new Text(false, false, "Driftwood");
-        EntityData horse = new EntityData(EntityName.horse, 60, true, 5, text, attributes);
+        EntityData horse = new Horse(60, true, 5, text, attributes);
 
         SetName name = new SetName(new Text(false, false, "Driftwood's return"));
 
@@ -445,7 +446,7 @@ public class Main {
         entries.add(new LootTableEntry(2, BlockType.anvil));
 
         // Entry #35
-        entries.add(new LootTableEntry(2, BlockType.spyglass));
+        entries.add(new LootTableEntry(4, BlockType.spyglass));
 
         // Entry #36
         entries.add(new LootTableEntry(2, BlockType.wolf_spawn_egg, new SetCount(2, new RandomChance(0.01))));
@@ -457,7 +458,7 @@ public class Main {
         entries.add(new LootTableEntry(1, BlockType.netherite_hoe));
 
         // Entry #39
-        Enchantments enchantment = new Enchantments(EnchantmentType.loyalty, 3);
+        enchantment = new Enchantments(EnchantmentType.loyalty, 3);
         entries.add(new LootTableEntry(1, BlockType.trident, new SetComponents(enchantment)));
 
         // Entry #40
@@ -594,7 +595,7 @@ public class Main {
         attributes.add(new JumpStrength(0.7));
         attributes.add(new MovementSpeed(0.34));
         text = new Text(false, false, "Scuderia");
-        horse = new EntityData(EntityName.horse, 5, true, 4, text, attributes);
+        horse = new Horse(5, true, 4, text, attributes);
 
         name = new SetName(new Text(false, false, "Grazie Ragazzi"));
 
