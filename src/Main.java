@@ -457,7 +457,8 @@ public class Main {
         entries.add(new LootTableEntry(1, BlockType.netherite_hoe));
 
         // Entry #39
-        entries.add(new LootTableEntry(1, BlockType.trident));
+        Enchantments enchantment = new Enchantments(EnchantmentType.loyalty, 3);
+        entries.add(new LootTableEntry(1, BlockType.trident, new SetComponents(enchantment)));
 
         // Entry #40
         entries.add(new LootTableEntry(1, BlockType.netherite_upgrade_smithing_template));
@@ -600,7 +601,7 @@ public class Main {
         functions.add(new SetComponents(horse));
         functions.add(name);
 
-        entries.add(new LootTableEntry(200, BlockType.horse_spawn_egg, functions));
+        entries.add(new LootTableEntry(2, BlockType.horse_spawn_egg, functions));
 
         LootTable lTable = new LootTable(type, rolls, bonusRolls, entries);
 
