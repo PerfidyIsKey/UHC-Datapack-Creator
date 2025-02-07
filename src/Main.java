@@ -1,3 +1,6 @@
+import EntityClasses.Attributes;
+import EntityClasses.JumpStrength;
+import EntityClasses.MovementSpeed;
 import Enums.*;
 import FileGeneration.*;
 import HelperClasses.*;
@@ -326,6 +329,7 @@ public class Main {
         // Loot table entry
         ArrayList<LootTableEntry> entries = new ArrayList<>();
         ArrayList<Components> components = new ArrayList<>();
+        ArrayList<ItemModifier> functions = new ArrayList<>();
 
         // Entry #1
         entries.add(new LootTableEntry(17, BlockType.egg));
@@ -409,7 +413,18 @@ public class Main {
         entries.add(new LootTableEntry(3, BlockType.spectral_arrow, new SetCount(10)));
 
         // Entry #28
-        entries.add(new LootTableEntry(3, BlockType.horse_spawn_egg));
+        ArrayList<Attributes> attributes = new ArrayList<>();
+        attributes.add(new JumpStrength(1));
+        attributes.add(new MovementSpeed(0.1));
+        Text text = new Text(false, false, "Driftwood");
+        EntityData horse = new EntityData(EntityName.horse, 60, true, 5, text, attributes);
+
+        SetName name = new SetName(new Text(false, false, "Driftwood's return"));
+
+        functions.add(new SetComponents(horse));
+        functions.add(name);
+
+        entries.add(new LootTableEntry(10, BlockType.horse_spawn_egg, functions));
 
         // Entry #29
         entries.add(new LootTableEntry(3, BlockType.glowstone_dust, new SetCount(6)));
@@ -539,8 +554,8 @@ public class Main {
 
         // Entry #43
         PotionContents contents = new PotionContents(Effect.luck, 0, 600, "59C106", true, false, true);
-        SetName name = new SetName(new Text(false, false, "Potion of Care Package luck"));
-        ArrayList<ItemModifier> functions = new ArrayList<>();
+        name = new SetName(new Text(false, false, "Potion of Care Package luck"));
+        functions = new ArrayList<>();
         functions.add(new SetComponents(contents));
         functions.add(name);
 
@@ -572,6 +587,20 @@ public class Main {
         functions.add(count);
 
         entries.add(new LootTableEntry(2, BlockType.splash_potion, functions));
+
+        // Entry #46
+        attributes = new ArrayList<>();
+        attributes.add(new JumpStrength(0.7));
+        attributes.add(new MovementSpeed(0.34));
+        text = new Text(false, false, "Scuderia");
+        horse = new EntityData(EntityName.horse, 5, true, 4, text, attributes);
+
+        name = new SetName(new Text(false, false, "Grazie Ragazzi"));
+
+        functions.add(new SetComponents(horse));
+        functions.add(name);
+
+        entries.add(new LootTableEntry(200, BlockType.horse_spawn_egg, functions));
 
         LootTable lTable = new LootTable(type, rolls, bonusRolls, entries);
 
@@ -1532,6 +1561,9 @@ public class Main {
 
         // Change title display time
         fileCommands.add(callFunction(FileName.title_default_timing, 5));
+
+        // Destroy all ground items
+        fileCommands.add(killEntity("@e[type=item]"));
 
         return new FileData(FileName.start_game, fileCommands);
     }
