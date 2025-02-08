@@ -69,6 +69,7 @@ public enum BlockType {
     tnt("tnt"),
     trident("trident"),
     void_air("void_air"),
+    wind_charge("wind_charge"),
     wolf_armor("wolf_armor"),
     wolf_spawn_egg("wolf_spawn_egg"),
     written_book("written_book");
@@ -81,5 +82,9 @@ public enum BlockType {
 
     public String setNamespace(Namespace namespace) {
         return namespace + ":" + symbol;
+    }
+
+    public String extendColor(String color) {
+        return color + "_" + symbol;
     }
 }

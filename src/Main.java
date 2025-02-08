@@ -464,92 +464,6 @@ public class Main {
         // Entry #40
         entries.add(new LootTableEntry(1, BlockType.netherite_upgrade_smithing_template));
 
-        // Entry #41
-
-        // Set title and author
-        String title = "Fifty Shades of Awkward";
-        String author = "Velvet Pennington";
-
-        // Compile pages
-        ArrayList<ArrayList<TextItem>> pages = new ArrayList<>();
-        ArrayList<TextItem> texts = new ArrayList<>();
-        texts.add(new Text(false, false, "Anastasia stood in Christian Grey's lavish penthouse. The skyline shimmered, but all she could focus on was him.\\n\\n" +
-                "\"I have something for you,\" Christian said. He reached into his pocket and pulled out... a contract."));
-
-        pages.add(texts);
-        texts = new ArrayList<>();
-
-        texts.add(new Text(false, false, "\"Another one?\" she asked.\\n\\n" +
-                "\"This one's different,\" he whispered. \"It's... a "));
-        texts.add(new Text(false, true, "cuddle contract"));
-        texts.add(new Text(false, false, ".\"\\n\\n" +
-                "Anastasia blinked. \"A cuddle contract?\""));
-
-        pages.add(texts);
-        texts = new ArrayList<>();
-
-        texts.add(new Text(false, false, "\"Yes. Unlimited. Any time. Any position.\" He leaned closer. \""));
-        texts.add(new Text(false, true, "Spooning is mandatory"));
-        texts.add(new Text(false, false, ".\""));
-        texts.add(new Text(false, false, "Her heart pounded. \"I... I don't know what to say.\"\\n\\n" +
-                "\"Say yes,\" he whispered, \"or "));
-        texts.add(new Text(true, false, "no dessert for a week"));
-        texts.add(new Text(false, false, ".\""));
-
-        pages.add(texts);
-        texts = new ArrayList<>();
-
-        texts.add(new Text(false, false, "She gasped. No chocolate lava cake? \"Fine! I'll sign it!\"\\n\\n"));
-        texts.add(new Text(false, false, "She grabbed the pen, only to find it read "));
-        texts.add(new Text(false, true, "Mr. Snugglemonster"));
-        texts.add(new Text(false, false, ".\\n\\n" +
-                "Christian coughed. \"Don't ask.\"\\n\\n" +
-                "Suddenly, Taylor, his bodyguard, burst in. \"Sir, your meeting!\""));
-
-        pages.add(texts);
-        texts = new ArrayList<>();
-
-        texts.add(new Text(false, false, "Christian groaned. \"Anastasia, stay here. Don't touch anything... especially the "));
-        texts.add(new Text(false, true, "espresso machine"));
-        texts.add(new Text(false, false, ".\"\\n\\n" +
-                "As he left, Ana wandered around, finding a locked drawer. "));
-        texts.add(new Text(false, true, "What secrets does he hide?"));
-
-        pages.add(texts);
-        texts = new ArrayList<>();
-
-        texts.add(new Text(false, false, "Inside were DVDs. "));
-        texts.add(new Text(false, true, "The Notebook. Twilight."));
-        texts.add(new Text(false, false, "\\n\\n" +
-                "\"Oh my God... he's a romantic,\" she whispered.\\n\\n" +
-                "From the doorway, Christian sighed. \"I told you not to touch anything.\""));
-
-        pages.add(texts);
-        texts = new ArrayList<>();
-
-        texts.add(new Text(false, false, "\"You like rom-coms?\" Ana asked, grinning.\\n\\n" +
-                "Christian crossed his arms. \"It's for... research.\"\\n\\n" +
-                "She held up "));
-        texts.add(new Text(false, true, "How to Lose a Guy in 10 Days."));
-
-        pages.add(texts);
-        texts = new ArrayList<>();
-
-        texts.add(new Text(false, false, "His jaw clenched. \"Fine. I love rom-coms. And cuddles. And... maybe you.\"\\n\\n" +
-                "She smiled. \"That's all I needed to hear.\"\\n\\n" +
-                "As they cuddled, Christian whispered, \"No one must ever know.\""));
-
-        pages.add(texts);
-        texts = new ArrayList<>();
-
-        texts.add(new Text(false, false, "She grinned. \"Your secret's safe with me... if you share the popcorn.\""));
-
-        pages.add(texts);
-        texts = new ArrayList<>();
-
-        components.add(new WrittenBookContent(title, author, pages));
-        entries.add(new LootTableEntry(1, BlockType.written_book, new SetComponents(components)));
-
         // Entry #42
         RandomChance condition = new RandomChance(0.001);
         entries.add(new LootTableEntry(1, BlockType.netherite_scrap, new SetCount(4, condition)));
@@ -603,6 +517,133 @@ public class Main {
         functions.add(name);
 
         entries.add(new LootTableEntry(2, BlockType.horse_spawn_egg, functions));
+
+        // Entry #47
+        // Set title and author
+        String title = "Terraria [Ep1]";
+        String author = "Mr9Madness";
+
+        // Compile pages
+        ArrayList<ArrayList<TextItem>>pages = new ArrayList<>();
+        ArrayList<TextItem>texts = new ArrayList<>();
+        texts.add(new Text(false, false, "Alright, guys, welcome to a new Let's Play!\\n\\n"));
+        texts.add(new Text(false, false, "We're starting a new Terraria playthrough with a fresh character—of course, blue hair and blue eyes, because why not? Naming him "));
+        texts.add(new Text(false, true, "Mr9Madness."));
+
+        pages.add(texts);
+        texts = new ArrayList<>();
+
+        texts.add(new Text(false, false, "Creating a new large world... let’s call it "));
+        texts.add(new Text(false, true, "YouTube"));
+        texts.add(new Text(false, false, ". The game is generating everything—placing dirt, caves, dungeons, and, yes, a big jungle."));
+
+        pages.add(texts);
+        texts = new ArrayList<>();
+
+        texts.add(new Text(false, false, "And we’re in!\\n" +
+                "\\n" +
+                "Terraria is all about surviving, like Minecraft, but 2D. First things first: gathering resources. I see a bunny... well, first blood goes to the bunny, as always."));
+
+        pages.add(texts);
+        texts = new ArrayList<>();
+
+        texts.add(new Text(false, false, "Snodog627, I'm not saying your name!\\n" +
+                "\\n" +
+                "Yeah, someone I know doesn’t want me to play this game because he hates it. Too bad, I love it."));
+
+        pages.add(texts);
+        texts = new ArrayList<>();
+
+        texts.add(new Text(false, false, "Exploring underground...\\n" +
+                "\\n" +
+                "Found silver, platinum—wait, normally platinum replaces silver? Whatever, I’ll take it. Died over here earlier, but let’s just jump down again, probably a smart move, right?\\n"));
+
+        pages.add(texts);
+        texts = new ArrayList<>();
+
+        texts.add(new Text(false, false, "Oh, a hook!\\n" +
+                "\\n" +
+                "That’s rare! And a cloud in a bottle? First episode luck! Now I can double-jump. Also got a Suspicious Looking Eye—first boss summon ready.\\n"));
+
+        pages.add(texts);
+        texts = new ArrayList<>();
+
+        texts.add(new Text(false, false, "Building my first house.\\n" +
+                "\\n" +
+                "It's going underground, don't ask why. Also, fireflies are in the game now—no idea what they do, but cool. Need more wood for a hammer, so time to chop trees.\\n"));
+
+        pages.add(texts);
+        texts = new ArrayList<>();
+
+        texts.add(new Text(false, false, "Exploring further…\\n" +
+                "\\n" +
+                "Found a boomerang! Oh, and... "));
+        texts.add(new Text(false, true, "corruption"));
+        texts.add(new Text(false, false, ". Yeah, nope. "));
+        texts.add(new Text(false, true, "Get banned!"));
+        texts.add(new Text(false, false, " Not dealing with that right now.\\n" +
+                "\\n" +
+                "That’s it for the first episode! See you next time!"));
+
+        pages.add(texts);
+        texts = new ArrayList<>();
+
+        components.add(new WrittenBookContent(title, author, pages));
+        entries.add(new LootTableEntry(1, BlockType.written_book, new SetComponents(components)));
+
+        // Entry #48
+        title = "The Diorite Experts UHC S01";
+        author = "Snodog627";
+
+        pages = new ArrayList<>();
+
+        texts.add(new Text(false, false, "Alright, welcome everyone to The Diorite Experts UltraHardCore (UHC) Season 1!\\n" +
+                "\\n" +
+                "We’ve got random teams of three competing in this season."));
+
+        pages.add(texts);
+        texts = new ArrayList<>();
+
+
+        texts.add(new Text(false, false,"Here are the teams:\\n" +
+                "Team Red: Snodog627 and PR0BA.\\n" +
+                "Team Lime: Tiba101 and WarriorJeroen (a.k.a. SGT_Prostidude).\\n" +
+                "Team Blue: BananaKid99 (a.k.a. Mr9Madness) and S3R91."));
+
+        pages.add(texts);
+        texts = new ArrayList<>();
+
+        texts.add(new Text(false, false, "Now, let’s go over the rules as usual:\\n" +
+                "Regeneration potions are banned.\\n" +
+                "No strip mining allowed.\\n" +
+                "If you’re near (0,0), you have to stay there—escape is only allowed through the Nether."));
+
+        pages.add(texts);
+        texts = new ArrayList<>();
+
+        texts.add(new Text(false, false, "Everyone clear on that? Good.\\n" +
+                "\\n" +
+                "Alright, let's talk predictions for this UHC! Who do you think is going to win?\\n" +
+                "\\n" +
+                "Oh, we’re making predictions already? Okay!"));
+
+        pages.add(texts);
+        texts = new ArrayList<>();
+
+        texts.add(new Text(false, false, "Wait, does everyone have their starting positions? Is everyone set?\\n" +
+                "\\n" +
+                "Yeah, I think we're good to go!\\n" +
+                "\\n" +
+                "Alright then—let’s get started! Good luck, everyone!"));
+
+        pages.add(texts);
+        texts = new ArrayList<>();
+
+        components.add(new WrittenBookContent(title, author, pages));
+        entries.add(new LootTableEntry(1, BlockType.written_book, new SetComponents(components)));
+
+        // Entry #49
+        entries.add(new LootTableEntry(2, BlockType.wind_charge, new SetCount(5)));
 
         // Make loot table
         LootTable lTable = new LootTable(type, rolls, bonusRolls, entries);
