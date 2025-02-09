@@ -912,6 +912,8 @@ public class Main {
 
     private String giveItem(String entity, BlockType item, String nbt) { return "give " + entity + " " + item + nbt; }
 
+    private String giveItem(String entity, String item, String nbt) { return "give " + entity + " " + item + nbt; }
+
     private String replaceItem(String targets, InventorySlot slot, BlockType item) { return "item replace entity " + targets + " " + slot + " with " + item; }
 
     private String replaceItem(String targets, String slot, BlockType item) { return "item replace entity " + targets + " " + slot + " with " + item; }
@@ -1589,7 +1591,9 @@ public class Main {
         // Give players teammate tools
         if (teamMode == 1) {
             // Teammate tracker
-            fileCommands.add(giveItem("@a", BlockType.bundle, "[custom_data={locateTeammate:1b}]"));
+            for (int i = 0; i < teams.size(); i++) {
+                fileCommands.add(giveItem("@a[team=" + teams.get(i).getName() + "]", BlockType.bundle.extendColor(teams.get(i).getGlassColor()), "[enchantments={levels:{\"minecraft:vanishing_curse\":1}},custom_data={locateTeammate:1b}]"));
+            }
         }
         else if (teamMode == 2) {
             // Team caller
@@ -2504,18 +2508,16 @@ public class Main {
                 killEntity("@s")); // Remove item
 
         // Give players teammate tools
-        if (teamMode == 1) {
-            // Teammate tracker
-            fileCommands.add(giveItem(respawnPlayer, BlockType.bundle, "[custom_data={locateTeammate:1b}]"));
-        }
-        else if (teamMode == 2) {
+        if (teamMode == 2) {
             // Team caller
             fileCommands.add(execute.If("@p[tag=" + Tag.Respawn + ",team=]") +
                     giveItem(respawnPlayer, BlockType.goat_horn, "[instrument=\"minecraft:ponder_goat_horn\",use_cooldown={seconds:30}]"));
+        }
 
-            // Teammate tracker
-            fileCommands.add(execute.If("@p[tag=" + Tag.Respawn + ",team=!]") +
-                    giveItem(respawnPlayer, BlockType.bundle, "[custom_data={locateTeammate:1b}]"));
+        // Teammate tracker
+        for (Team team : teams) {
+            fileCommands.add(execute.If("@p[tag=" + Tag.Respawn + ",team=" + team.getName() + "]") +
+                    giveItem(respawnPlayer, BlockType.bundle.extendColor(team.getGlassColor()), "[enchantments={levels:{\"minecraft:vanishing_curse\":1}},custom_data={locateTeammate:1b}]"));
         }
 
         // Set respawn health
@@ -2637,10 +2639,11 @@ public class Main {
 
     private FileData LocateTeammate() {
         ArrayList<String> fileCommands = new ArrayList<>();
+        boolean debug = false;
 
         for (Team t : teams) {
             for (int i = 0; i < 3; i++) {
-                fileCommands.add(execute.As(new Entity("@a[team=" + t.getName() + ",nbt={SelectedItem:{id:\"minecraft:bundle\",components:{\"minecraft:custom_data\":{locateTeammate:1b}}}}]"), false) +
+                fileCommands.add(execute.As(new Entity("@a[team=" + t.getName() + ",nbt={SelectedItem:{id:\"minecraft:" + BlockType.bundle.extendColor(t.getGlassColor()) + "\",components:{\"minecraft:custom_data\":{locateTeammate:1b}}}}]"), false) +
                         execute.AtNext(new Entity("@s")) +
                         execute.IfNext(new Entity("@a[team=" + t.getName() + ",distance=0.1..,gamemode=!spectator]")) +
                         execute.FacingNext(new Entity("@a[team=" + t.getName() + ",distance=0.1..,gamemode=!spectator,limit=1,sort=nearest]"), EntityAnchor.eyes) +
@@ -2648,7 +2651,20 @@ public class Main {
                         execute.PositionedNext(new Coordinate(0, 0, i + 1, ReferenceFrame.relative_facing), true) +
                         createParticle(Particle.dust + "{color:[" + t.getDustColor() + "],scale:1}", new Coordinate(0, 0, 0, ReferenceFrame.relative), new Coordinate(0, 0, 0), 0, 1, "@s"));
             }
+
+            if (debug) {
+                ArrayList<TextItem> texts = new ArrayList<>();
+
+                texts.add(new Text(false, false, t.getName() + " has players "));
+                texts.add(new Select(false, false, "@a[team=" + t.getName() + ",nbt={SelectedItem:{id:\\\"minecraft:" + BlockType.bundle.extendColor(t.getGlassColor()) + "\\\",components:{\\\"minecraft:custom_data\\\":{locateTeammate:1b}}}}]"));
+                texts.add(new Text(false, false, "Who are holding their bundle"));
+
+                fileCommands.add(new TellRaw("@a[tag=Debug]", texts).sendRaw());
+                texts.clear();
+            }
         }
+
+
 
         return new FileData(FileName.locate_teammate, fileCommands);
     }
@@ -2741,8 +2757,11 @@ public class Main {
                 clearInventory("@p[limit=2]", BlockType.goat_horn));
 
 
-        fileCommands.add(execute.At(lookingPlayer) +
-                giveItem("@p[limit=2]", BlockType.bundle, "[custom_data={locateTeammate:1b}]"));
+        for (Team team : teams) {
+            fileCommands.add(execute.At(lookingPlayer, false) +
+                    execute.IfNext("@p[tag=LookingForTeamMate,team=" + team.getName() + "]", true) +
+                    giveItem("@p[limit=2]", BlockType.bundle.extendColor(team.getGlassColor()), "[enchantments={levels:{\"minecraft:vanishing_curse\":1}},custom_data={locateTeammate:1b}]"));
+        }
 
         return new FileData(FileName.join_team, fileCommands);
     }
@@ -2750,7 +2769,7 @@ public class Main {
     private FileData UpdatePlayerDistance() {
         ArrayList<String> fileCommands = new ArrayList<>();
         ArrayList<TextItem> texts = new ArrayList<>();
-        Boolean debug = false;
+        boolean debug = false;
 
         String checkingPlayer = "@p[team=,scores={TimesCalled=1..}]";
         ComparatorType comparator;
