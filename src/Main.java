@@ -426,6 +426,7 @@ public class Main {
         functions.add(name);
 
         entries.add(new LootTableEntry(10, BlockType.horse_spawn_egg, functions));
+        functions = new ArrayList<>();
 
         // Entry #29
         entries.add(new LootTableEntry(3, BlockType.glowstone_dust, new SetCount(6)));
@@ -471,21 +472,22 @@ public class Main {
         // Entry #43
         PotionContents contents = new PotionContents(Effect.luck, 0, 600, "59C106", true, false, true);
         name = new SetName(new Text(false, false, "Potion of Care Package luck"));
-        functions = new ArrayList<>();
+
         functions.add(new SetComponents(contents));
         functions.add(name);
 
         entries.add(new LootTableEntry(2, BlockType.splash_potion, functions));
+        functions = new ArrayList<>();
 
         // Entry #44
         contents = new PotionContents(Effect.poison, 0, 5, "4E9331", false, true, true);
         name = new SetName(new Text(false, false, "Potion of Poison"));
 
-        functions = new ArrayList<>();
         functions.add(new SetComponents(contents));
         functions.add(name);
 
         entries.add(new LootTableEntry(2, BlockType.splash_potion, functions));
+        functions = new ArrayList<>();
 
         // Entry #45
         contents = new PotionContents(Effect.blindness, 0, 10, "1F1F23", false, true, true);
@@ -493,16 +495,16 @@ public class Main {
         name = new SetName(new Text(false, false, "Potion of Blindness"));
         SetCount count = new SetCount(5, new RandomChance(0.3));
 
-        components = new ArrayList<>();
         components.add(contents);
         components.add(stack);
 
-        functions = new ArrayList<>();
         functions.add(new SetComponents(components));
         functions.add(name);
         functions.add(count);
 
         entries.add(new LootTableEntry(2, BlockType.splash_potion, functions));
+        functions = new ArrayList<>();
+        components = new ArrayList<>();
 
         // Entry #46
         attributes = new ArrayList<>();
@@ -517,6 +519,7 @@ public class Main {
         functions.add(name);
 
         entries.add(new LootTableEntry(2, BlockType.horse_spawn_egg, functions));
+        functions = new ArrayList<>();
 
         // Entry #47
         // Set title and author
@@ -590,6 +593,7 @@ public class Main {
 
         components.add(new WrittenBookContent(title, author, pages));
         entries.add(new LootTableEntry(1, BlockType.written_book, new SetComponents(components)));
+        components = new ArrayList<>();
 
         // Entry #48
         title = "The Diorite Experts UHC S01";
@@ -641,6 +645,7 @@ public class Main {
 
         components.add(new WrittenBookContent(title, author, pages));
         entries.add(new LootTableEntry(1, BlockType.written_book, new SetComponents(components)));
+        components = new ArrayList<>();
 
         // Entry #49
         entries.add(new LootTableEntry(2, BlockType.wind_charge, new SetCount(5)));
