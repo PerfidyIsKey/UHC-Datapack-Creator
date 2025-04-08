@@ -2740,7 +2740,7 @@ public class Main {
             }
 
             // Announce that players formed a team
-            texts.add(new Select(false, false, "@p[limit=2,team=]"));
+            texts.add(new Select(false, false, "@p[limit=2,team=,gamemode=!spectator]"));
             texts.add(new Text(Color.white, false, false, " have decided to join forces as team "));
             texts.add(new Text(teams.get(i).getColor(), false, false, teams.get(i).getJSONColor()));
             texts.add(new Text(Color.white, false, false, "!"));
@@ -2753,19 +2753,19 @@ public class Main {
 
             // Try to let players join team
             fileCommands.add(filledTeam +
-                    execute.IfNext("@p[tag=LookingForTeamMate,team=]") +
+                    execute.IfNext("@p[tag=LookingForTeamMate]") +
                     execute.AtNext(lookingPlayer, true) +
-                    teams.get(i).joinTeam("@p[limit=2,team=]"));
+                    teams.get(i).joinTeam("@p[limit=2,team=,gamemode=!spectator]"));
         }
 
         fileCommands.add(execute.At(lookingPlayer) +
-                clearInventory("@p[limit=2]", BlockType.goat_horn));
+                clearInventory("@p[limit=2,gamemode=!spectator]", BlockType.goat_horn));
 
 
         for (Team team : teams) {
             fileCommands.add(execute.At(lookingPlayer, false) +
                     execute.IfNext("@p[tag=LookingForTeamMate,team=" + team.getName() + "]", true) +
-                    giveItem("@p[limit=2]", BlockType.bundle.extendColor(team.getGlassColor()), "[enchantments={levels:{\"minecraft:vanishing_curse\":1}},custom_data={locateTeammate:1b}]"));
+                    giveItem("@p[limit=2,gamemode=!spectator]", BlockType.bundle.extendColor(team.getGlassColor()), "[enchantments={levels:{\"minecraft:vanishing_curse\":1}},custom_data={locateTeammate:1b}]"));
         }
 
         return new FileData(FileName.join_team, fileCommands);
@@ -2809,7 +2809,7 @@ public class Main {
             // Subtract distance of nearest player in Cartesian coordinate
             fileCommands.add(execute.As(checkingPlayer, false) +
                     execute.AtNext(checkingPlayer, true) +
-                    scoreboard.Operation("@s", getObjectiveByName(Objective.Pos + cartesian[i]), ComparatorType.subtract, "@p[tag=!LookingForTeamMate,team=]", getObjectiveByName(Objective.Pos + cartesian[i])));
+                    scoreboard.Operation("@s", getObjectiveByName(Objective.Pos + cartesian[i]), ComparatorType.subtract, "@p[tag=!LookingForTeamMate,team=,gamemode=!spectator]", getObjectiveByName(Objective.Pos + cartesian[i])));
 
             if (debug) {
                 texts.add(new Text(Color.white, false, false, "The closest person to "));
@@ -2875,13 +2875,13 @@ public class Main {
         String playerInRange = "@p[tag=LookingForTeamMate,scores={Distance=.." + (minJoinDistance * minJoinDistance) + ",IsKiller=0},team=]";
         fileCommands.add(execute.If(playerInRange, false) +
                 execute.AtNext(playerInRange) +
-                execute.UnlessNext("@p[tag=!LookingForTeamMate]", Objective.IsKiller, 1, true) +
+                execute.UnlessNext("@p[tag=!LookingForTeamMate,gamemode=!spectator]", Objective.IsKiller, 1, true) +
                 callFunction(FileName.join_team));
 
         // Refuse call if player is too far away
         texts.add(new Text(Color.red, true, false, "You need to be within " + minJoinDistance + " blocks of a player without a team to form a team!"));
 
-        String playerTooFar = "@p[tag=LookingForTeamMate,scores={Distance=" + (minJoinDistance * minJoinDistance) + "..},team=]";
+        String playerTooFar = "@p[tag=LookingForTeamMate,scores={Distance=" + (minJoinDistance * minJoinDistance) + "..},team=,gamemode=!spectator]";
         fileCommands.add(execute.If(playerTooFar, false) +
                 execute.UnlessNext(playerTooFar, Objective.IsKiller, 1, true) +
                 new TellRaw(playerTooFar, texts).sendRaw());
@@ -2906,7 +2906,7 @@ public class Main {
         texts.add(new Text(Color.red, true, false, "Watch out! They are a killer!"));
 
         fileCommands.add(execute.At(playerInRange, false) +
-                execute.IfNext("@p[tag=!LookingForTeamMate]", Objective.IsKiller, 1, true) +
+                execute.IfNext("@p[tag=!LookingForTeamMate,gamemode=!spectator]", Objective.IsKiller, 1, true) +
                 new TellRaw(playerInRange, texts).sendRaw());
         texts.clear();
 
