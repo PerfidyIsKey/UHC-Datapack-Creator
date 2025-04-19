@@ -2737,6 +2737,11 @@ public class Main {
                 fileCommands.add(new TellRaw("@a[tag=Debug]", texts).sendRaw());
                 texts.clear();
 
+                texts.add(new Select(false, false, "@p[tag=LookingForTeamMate,team=]"));
+                texts.add(new Text(Color.white, false, false, " is looking for a team mate and is not in a team"));
+                fileCommands.add(new TellRaw("@a[tag=Debug]", texts).sendRaw());
+                texts.clear();
+
                 texts.add(new Select(false, false, "@p[team=" + teams.get(i).getName() + "]"));
                 texts.add(new Text(Color.white, false, false, " is already in team "));
                 texts.add(new Text(teams.get(i).getColor(), false, false, teams.get(i).getJSONColor()));
@@ -2747,7 +2752,7 @@ public class Main {
                 texts.add(new Text(Color.white, false, false, " will join "));
                 texts.add(new Text(teams.get(i).getColor(), false, false, teams.get(i).getJSONColor()));
                 fileCommands.add(execute.At(lookingPlayer) +
-                        new TellRaw("@a", texts).sendRaw());
+                        new TellRaw("@a[tag=Debug]", texts).sendRaw());
             }
 
             // Announce that players formed a team
