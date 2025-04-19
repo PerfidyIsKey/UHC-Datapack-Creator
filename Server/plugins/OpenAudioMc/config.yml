@@ -225,13 +225,13 @@ options:
   voicechat-radius: 45
 
   # Chat announcements for players to notify them of others entering/leaving their voice chat proximity
-  voicechat-announcements: true
+  voicechat-announcements: false
 
   # Changes whether to toggle your microphone while sneaking and pressing swap.
-  voicechat-toggle-mic-on-swap-and-sneak: true
+  voicechat-toggle-mic-on-swap-and-sneak: false
 
   # Decides if voicechat messages should go in the hotbar or chat. Setting this to false will default to chat
-  voicechat-send-messages-in-hotbar: true
+  voicechat-send-messages-in-hotbar: false
 
   # Automatically request a free voicechat license when the server starts
   voicechat-autoclaim-on-start: true

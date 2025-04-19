@@ -1,6 +1,6 @@
-uhcNumber:proximityTest
+uhcNumber:58
 teamMode:2
-startCoordinate:0,68,0
-minTraitorRank:0
-traitorWaitTime:0
+startCoordinate:0,63,0
+minTraitorRank:30
+traitorWaitTime:2
 communityName:THE DIORITE EXPERTS

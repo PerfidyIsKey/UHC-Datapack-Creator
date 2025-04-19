@@ -2722,7 +2722,7 @@ public class Main {
 
     private FileData JoinTeam() {
         ArrayList<String> fileCommands = new ArrayList<>();
-        Boolean debug = false;
+        Boolean debug = true;
 
         String lookingPlayer = "@p[tag=LookingForTeamMate]";
 
@@ -2732,11 +2732,22 @@ public class Main {
             filledTeam = execute.Unless("@p[team=" + teams.get(i).getName() + "]", false);
 
             if (debug) {
+                texts.add(new Select(false, false, lookingPlayer));
+                texts.add(new Text(Color.white, false, false, " is looking for a team mate"));
+                fileCommands.add(new TellRaw("@a[tag=Debug]", texts).sendRaw());
+                texts.clear();
+
                 texts.add(new Select(false, false, "@p[team=" + teams.get(i).getName() + "]"));
                 texts.add(new Text(Color.white, false, false, " is already in team "));
                 texts.add(new Text(teams.get(i).getColor(), false, false, teams.get(i).getJSONColor()));
                 fileCommands.add(new TellRaw("@a[tag=Debug]", texts).sendRaw());
                 texts.clear();
+
+                texts.add(new Select(false, false, "@p[limit=2,team=,gamemode=!spectator]"));
+                texts.add(new Text(Color.white, false, false, " will join "));
+                texts.add(new Text(teams.get(i).getColor(), false, false, teams.get(i).getJSONColor()));
+                fileCommands.add(execute.At(lookingPlayer) +
+                        new TellRaw("@a", texts).sendRaw());
             }
 
             // Announce that players formed a team
@@ -2753,7 +2764,7 @@ public class Main {
 
             // Try to let players join team
             fileCommands.add(filledTeam +
-                    execute.IfNext("@p[tag=LookingForTeamMate]") +
+                    execute.IfNext("@p[tag=LookingForTeamMate,team=]") +
                     execute.AtNext(lookingPlayer, true) +
                     teams.get(i).joinTeam("@p[limit=2,team=,gamemode=!spectator]"));
         }
