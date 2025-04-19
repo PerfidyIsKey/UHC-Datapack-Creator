@@ -56,4 +56,10 @@
 79,sanswithagun,26,57,true
 80,Lazyness98,20,0,true
 81,Athype,20,0,true
-82,_mellaan_,60,58,true
+82,Mellaan_,20,0,true
+83,sugarsweetgen,20,0,true
+84,lotte2655,20,0,true
+85,Em0tic0n1212,20,0,true
+86,SunshineWasTaken,20,0,true
+87,Vex,20,0,true
+88,YeetFrog,20,0,true

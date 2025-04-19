@@ -3,6 +3,7 @@ package Enums;
 public enum Tag {
     AmIWinning("AmIWinning"),
     AttackingCP("AttackingCP"),
+    CarePackagesSpread("CarePackagesSpread"),
     CollarCheck("CollarCheck"),
     Debug("Debug"),
     DontMakeTraitor("DontMakeTraitor"),

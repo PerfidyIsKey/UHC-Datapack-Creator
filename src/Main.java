@@ -1375,7 +1375,7 @@ public class Main {
         fileCommands.add(setGameRule(GameRule.fireDamage, false));
         fileCommands.add(setGameRule(GameRule.sendCommandFeedback, true));
         fileCommands.add(setGameRule(GameRule.doImmediateRespawn, true));
-        fileCommands.add(scoreboard.Reset("@a"));
+        fileCommands.add(scoreboard.Reset("@e"));
         fileCommands.add(execute.In(Dimension.overworld) +
                 fill(0, worldBottom + 2, 15, 0, worldBottom + 2, 2, BlockType.bedrock, SetBlockType.replace));
         fileCommands.add(execute.In(Dimension.overworld) +
@@ -1414,6 +1414,7 @@ public class Main {
         fileCommands.add(removeTag("@a", Tag.RespawnDisabled));
         fileCommands.add(removeTag("@a", Tag.IronManCandidate));
         fileCommands.add(removeTag("@a", Tag.IronMan));
+        fileCommands.add(removeTag(admin, Tag.CarePackagesSpread));
         fileCommands.add(setWorldBorder(2 * worldSize));
         fileCommands.add(callFunction(FileName.display_rank));
         fileCommands.add(scoreboard.Set("NightTime", getObjectiveByName(Objective.Time), 600));
@@ -2001,10 +2002,19 @@ public class Main {
     private FileData CarepackageDistributor() {
         ArrayList<String> fileCommands = new ArrayList<>();
 
+        // Indicate that Care Packages are spread
+        fileCommands.add(execute.If("@e[type=" + EntityType.falling_block + ",distance=..2]") +
+                addTag(admin, Tag.CarePackagesSpread));
+
         // Spread Care Packages
         fileCommands.add(execute.In(Dimension.overworld, false) +
                 execute.IfNext(new Entity("@e[type=" + EntityType.falling_block + ",distance=..2]"), true) +
                 spreadPlayers(0, 0, 10, carePackageSpread, false, "@e[type=" + EntityType.falling_block + ",distance=..2]"));
+
+        // Reset command blocks
+        fileCommands.add(execute.In(Dimension.overworld, false) +
+                execute.IfNext("@e[type=marker,limit=1,tag=" + Tag.CarePackagesSpread + "]", true) +
+                fill(0, (worldBottom + 2), 10, 0, (worldBottom + 2), 9, BlockType.bedrock));
 
         return new FileData(FileName.carepackage_distributor, fileCommands);
     }
@@ -2290,6 +2300,9 @@ public class Main {
         // Announce dead players
         fileCommands.add(execute.If(new Entity("@p[scores={Deaths=1}]")) +
                 callFunction(FileName.handle_player_death));
+
+        // Update sidebar
+        fileCommands.add(callFunction(FileName.update_sidebar));
 
         // Add time
         fileCommands.add(scoreboard.Add(admin, getObjectiveByName(Objective.Time.extendName(2)), 1));
