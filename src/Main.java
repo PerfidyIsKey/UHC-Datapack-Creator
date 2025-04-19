@@ -1603,7 +1603,7 @@ public class Main {
         }
         else if (teamMode == 2) {
             // Team caller
-            fileCommands.add(giveItem("@a", BlockType.goat_horn, "[instrument=\"minecraft:ponder_goat_horn\",use_cooldown={seconds:30}]"));
+            fileCommands.add(giveItem("@a", BlockType.goat_horn, "[instrument=\"minecraft:ponder_goat_horn\",use_cooldown={seconds:30},enchantments={\"minecraft:vanishing_curse\":1}]"));
         }
 
         // Show world border size in actionbar
@@ -2515,10 +2515,6 @@ public class Main {
                 execute.IfNext(new Entity("@s[team=]"), true) +
                 spreadPlayers(0, 0, (int) (0.3*worldSize), (int) (0.7*worldSize), false, "@s"));
 
-        // Set player's gamemode to survival
-        fileCommands.add(execute.As(new Entity(respawnPlayer)) +
-                setGameMode(GameMode.survival, "@s"));
-
         // Remove player heads
         fileCommands.add(execute.As(new Entity("@a[nbt={Inventory:[{id:\"minecraft:player_head\"}]}]")) +
                 clearInventory("@s", BlockType.player_head));  // Remove from inventory
@@ -2529,7 +2525,7 @@ public class Main {
         if (teamMode == 2) {
             // Team caller
             fileCommands.add(execute.If("@p[tag=" + Tag.Respawn + ",team=]") +
-                    giveItem(respawnPlayer, BlockType.goat_horn, "[instrument=\"minecraft:ponder_goat_horn\",use_cooldown={seconds:30}]"));
+                    giveItem(respawnPlayer, BlockType.goat_horn, "[instrument=\"minecraft:ponder_goat_horn\",use_cooldown={seconds:30},enchantments={\"minecraft:vanishing_curse\":1}]"));
         }
 
         // Teammate tracker
@@ -2549,6 +2545,10 @@ public class Main {
         fileCommands.add(giveEffect(respawnPlayer, Effect.health_boost, 1, 0));
         fileCommands.add(clearEffect(respawnPlayer, Effect.health_boost));
         fileCommands.add(setAttributeBase(respawnPlayer, AttributeType.max_health, 20));
+
+        // Set player's gamemode to survival
+        fileCommands.add(execute.As(new Entity(respawnPlayer)) +
+                setGameMode(GameMode.survival, "@s"));
 
         // Remove respawn tag
         fileCommands.add(removeTag(respawnPlayer, Tag.Respawn));
