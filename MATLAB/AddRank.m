@@ -23,12 +23,13 @@ load('DataS57.mat')                    % Load data
 %%% Season data
 NoS                     = size(Seasons,2) + 1;  % New season index
 Seasons(NoS).Season     = 'S58';    % Season name
-Seasons(NoS).Players    = 13;                    % Total number of players
+Seasons(NoS).Players    = 23;                    % Total number of players
 Seasons(NoS).Date       = datetime(2025,4,19); % Date of the season
 Seasons(NoS).TeamAmount = 2;	% Needs to be equal to the amount of members in the winning team
 
 %%% New Players
-PlayersNew = [];     % Define the username of new players
+PlayersNew = ["YeetFrog","Athype","Lazyness98","AVexedFrog","sugarsweetgen","Em0tic0n1212",...
+    "Mellaan_","PotatoLot","SunshineWasTaken"];     % Define the username of new players
 
 NoN     = length(PlayersNew);	% Number of new players
 NoP     = length(Players);      % Old total number of players
@@ -40,28 +41,23 @@ for i = 1:NoN
 end
 
 %%% Player data
-ParticipantIndex	= [01,02,17,25,48,54,63,70,73,74,77,78,79,NewIndex'];    % Define index of the participants
-Kills               = [00;00;01;02;00;00;01;00;02;00;08;00;01];              % Indicate amount of kills per player
-Position            = [03;08;11;04;12;06;09;02;13;07;01;10;05];              % Indicate final position
-Winner              = [00;00;00;00;00;00;00;00;00;00;01;01;00];              % Indicate whether the player won the season
+ParticipantIndex	= [01,02,17,25,33,48,54,63,70,73,74,77,78,79,NewIndex'];    % Define index of the participants
+Kills               = [00;00;01;00;00;00;01;01;08;00;00;03;01;00;00;00;00;00;00;00;00;00;03];              % Indicate amount of kills per player
+Position            = [14;18;04;03;13;20;01;21;01;19;08;11;05;09;23;22;17;16;15;12;10;07;06];              % Indicate final position
+Winner              = [00;00;00;00;00;00;01;00;01;00;00;00;00;00;00;00;00;00;00;00;00;00;00];              % Indicate whether the player won the season
 NoPar               = size(ParticipantIndex,2);             % Indicate number of participants
 
 PC = [      % Indicate which players were in a team together
-    1 48
-    1 73
-    1 74
-    2 25
-    2 79
-    17 54
-    17 63
-    25 79
-    48 73
-    48 74
-    54 63
-    70 77
-    70 78
-    73 74
-    77 78
+    1 33
+    2 73
+    17 78
+    48 63
+    54 70
+    74 79
+    77 82
+    83 84
+    85 88
+    86 87
     ];
 
 %% Update data
