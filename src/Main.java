@@ -1375,7 +1375,7 @@ public class Main {
         fileCommands.add(setGameRule(GameRule.fireDamage, false));
         fileCommands.add(setGameRule(GameRule.sendCommandFeedback, true));
         fileCommands.add(setGameRule(GameRule.doImmediateRespawn, true));
-        fileCommands.add(scoreboard.Reset("@a"));
+        fileCommands.add(scoreboard.Reset("@e"));
         fileCommands.add(execute.In(Dimension.overworld) +
                 fill(0, worldBottom + 2, 15, 0, worldBottom + 2, 2, BlockType.bedrock, SetBlockType.replace));
         fileCommands.add(execute.In(Dimension.overworld) +
@@ -1414,6 +1414,7 @@ public class Main {
         fileCommands.add(removeTag("@a", Tag.RespawnDisabled));
         fileCommands.add(removeTag("@a", Tag.IronManCandidate));
         fileCommands.add(removeTag("@a", Tag.IronMan));
+        fileCommands.add(removeTag(admin, Tag.CarePackagesSpread));
         fileCommands.add(setWorldBorder(2 * worldSize));
         fileCommands.add(callFunction(FileName.display_rank));
         fileCommands.add(scoreboard.Set("NightTime", getObjectiveByName(Objective.Time), 600));
@@ -1602,7 +1603,7 @@ public class Main {
         }
         else if (teamMode == 2) {
             // Team caller
-            fileCommands.add(giveItem("@a", BlockType.goat_horn, "[instrument=\"minecraft:ponder_goat_horn\",use_cooldown={seconds:30}]"));
+            fileCommands.add(giveItem("@a", BlockType.goat_horn, "[instrument=\"minecraft:ponder_goat_horn\",use_cooldown={seconds:30},enchantments={\"minecraft:vanishing_curse\":1}]"));
         }
 
         // Show world border size in actionbar
@@ -2001,10 +2002,19 @@ public class Main {
     private FileData CarepackageDistributor() {
         ArrayList<String> fileCommands = new ArrayList<>();
 
+        // Indicate that Care Packages are spread
+        fileCommands.add(execute.If("@e[type=" + EntityType.falling_block + ",distance=..2]") +
+                addTag(admin, Tag.CarePackagesSpread));
+
         // Spread Care Packages
         fileCommands.add(execute.In(Dimension.overworld, false) +
                 execute.IfNext(new Entity("@e[type=" + EntityType.falling_block + ",distance=..2]"), true) +
                 spreadPlayers(0, 0, 10, carePackageSpread, false, "@e[type=" + EntityType.falling_block + ",distance=..2]"));
+
+        // Reset command blocks
+        fileCommands.add(execute.In(Dimension.overworld, false) +
+                execute.IfNext("@e[type=marker,limit=1,tag=" + Tag.CarePackagesSpread + "]", true) +
+                fill(0, (worldBottom + 2), 10, 0, (worldBottom + 2), 9, BlockType.bedrock));
 
         return new FileData(FileName.carepackage_distributor, fileCommands);
     }
@@ -2291,6 +2301,9 @@ public class Main {
         fileCommands.add(execute.If(new Entity("@p[scores={Deaths=1}]")) +
                 callFunction(FileName.handle_player_death));
 
+        // Update sidebar
+        fileCommands.add(callFunction(FileName.update_sidebar));
+
         // Add time
         fileCommands.add(scoreboard.Add(admin, getObjectiveByName(Objective.Time.extendName(2)), 1));
         fileCommands.add(scoreboard.Add(admin, getObjectiveByName(Objective.TimDum), 1));
@@ -2502,10 +2515,6 @@ public class Main {
                 execute.IfNext(new Entity("@s[team=]"), true) +
                 spreadPlayers(0, 0, (int) (0.3*worldSize), (int) (0.7*worldSize), false, "@s"));
 
-        // Set player's gamemode to survival
-        fileCommands.add(execute.As(new Entity(respawnPlayer)) +
-                setGameMode(GameMode.survival, "@s"));
-
         // Remove player heads
         fileCommands.add(execute.As(new Entity("@a[nbt={Inventory:[{id:\"minecraft:player_head\"}]}]")) +
                 clearInventory("@s", BlockType.player_head));  // Remove from inventory
@@ -2516,7 +2525,7 @@ public class Main {
         if (teamMode == 2) {
             // Team caller
             fileCommands.add(execute.If("@p[tag=" + Tag.Respawn + ",team=]") +
-                    giveItem(respawnPlayer, BlockType.goat_horn, "[instrument=\"minecraft:ponder_goat_horn\",use_cooldown={seconds:30}]"));
+                    giveItem(respawnPlayer, BlockType.goat_horn, "[instrument=\"minecraft:ponder_goat_horn\",use_cooldown={seconds:30},enchantments={\"minecraft:vanishing_curse\":1}]"));
         }
 
         // Teammate tracker
@@ -2536,6 +2545,10 @@ public class Main {
         fileCommands.add(giveEffect(respawnPlayer, Effect.health_boost, 1, 0));
         fileCommands.add(clearEffect(respawnPlayer, Effect.health_boost));
         fileCommands.add(setAttributeBase(respawnPlayer, AttributeType.max_health, 20));
+
+        // Set player's gamemode to survival
+        fileCommands.add(execute.As(new Entity(respawnPlayer)) +
+                setGameMode(GameMode.survival, "@s"));
 
         // Remove respawn tag
         fileCommands.add(removeTag(respawnPlayer, Tag.Respawn));
@@ -2722,7 +2735,7 @@ public class Main {
 
     private FileData JoinTeam() {
         ArrayList<String> fileCommands = new ArrayList<>();
-        Boolean debug = false;
+        Boolean debug = true;
 
         String lookingPlayer = "@p[tag=LookingForTeamMate]";
 
@@ -2732,11 +2745,27 @@ public class Main {
             filledTeam = execute.Unless("@p[team=" + teams.get(i).getName() + "]", false);
 
             if (debug) {
+                texts.add(new Select(false, false, lookingPlayer));
+                texts.add(new Text(Color.white, false, false, " is looking for a team mate"));
+                fileCommands.add(new TellRaw("@a[tag=Debug]", texts).sendRaw());
+                texts.clear();
+
+                texts.add(new Select(false, false, "@p[tag=LookingForTeamMate,team=]"));
+                texts.add(new Text(Color.white, false, false, " is looking for a team mate and is not in a team"));
+                fileCommands.add(new TellRaw("@a[tag=Debug]", texts).sendRaw());
+                texts.clear();
+
                 texts.add(new Select(false, false, "@p[team=" + teams.get(i).getName() + "]"));
                 texts.add(new Text(Color.white, false, false, " is already in team "));
                 texts.add(new Text(teams.get(i).getColor(), false, false, teams.get(i).getJSONColor()));
                 fileCommands.add(new TellRaw("@a[tag=Debug]", texts).sendRaw());
                 texts.clear();
+
+                texts.add(new Select(false, false, "@p[limit=2,team=,gamemode=!spectator]"));
+                texts.add(new Text(Color.white, false, false, " will join "));
+                texts.add(new Text(teams.get(i).getColor(), false, false, teams.get(i).getJSONColor()));
+                fileCommands.add(execute.At(lookingPlayer) +
+                        new TellRaw("@a[tag=Debug]", texts).sendRaw());
             }
 
             // Announce that players formed a team
@@ -2753,7 +2782,7 @@ public class Main {
 
             // Try to let players join team
             fileCommands.add(filledTeam +
-                    execute.IfNext("@p[tag=LookingForTeamMate]") +
+                    execute.IfNext("@p[tag=LookingForTeamMate,team=]") +
                     execute.AtNext(lookingPlayer, true) +
                     teams.get(i).joinTeam("@p[limit=2,team=,gamemode=!spectator]"));
         }

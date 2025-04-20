@@ -1,6 +1,6 @@
-315,72,406,forest
--373,71,413,old_growth_spruce_taiga
-132,62,-402,cold_ocean
--222,70,47,taiga
--403,69,323,old_growth_spruce_taiga
--223,64,-454,birch_forest
+33,84,89,forest
+317,62,-66,river
+182,80,-347,forest
+-107,65,-187,cave
+1,64,-438,plains
+-409,112,201,cherry_grove
