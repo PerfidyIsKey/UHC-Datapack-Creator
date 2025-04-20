@@ -2735,7 +2735,7 @@ public class Main {
 
     private FileData JoinTeam() {
         ArrayList<String> fileCommands = new ArrayList<>();
-        Boolean debug = true;
+        Boolean debug = false;
 
         String lookingPlayer = "@p[tag=LookingForTeamMate]";
 
@@ -2766,6 +2766,7 @@ public class Main {
                 texts.add(new Text(teams.get(i).getColor(), false, false, teams.get(i).getJSONColor()));
                 fileCommands.add(execute.At(lookingPlayer) +
                         new TellRaw("@a[tag=Debug]", texts).sendRaw());
+                texts.clear();
             }
 
             // Announce that players formed a team
