@@ -230,34 +230,21 @@ public class Main {
             }
         }
 
-        // Number of players
-        int relativePlayerAmount = players.size() - 15;
+        // World size based on amount of players
         if (players.size() <= 6) {
             worldSize = 500;
             carePackageSpread = 450;
             carePackageAmount = 200;
         }
+        else if (players.size() <= 20) {
+            worldSize = 750;
+            carePackageSpread = 500;
+            carePackageAmount = 200;
+        }
         else {
-            if (relativePlayerAmount < 0) relativePlayerAmount = 0;
-            if (relativePlayerAmount > 10) relativePlayerAmount = 10;
-
-            // Desired chest density
-            double desiredChestDensity = 0.0002;
-
-            int baseWorldSize = 750;
-            int baseCarePackageSpread = 500;
-
-            int maxPlayerAmount = 10;
-            int maxWorldSize = 1500;
-            int maxCarePackageSpread = 800;
-
-            int worldSizeStep = (maxWorldSize - baseWorldSize) / maxPlayerAmount;
-            int carePackageSpreadStep = (maxCarePackageSpread - baseCarePackageSpread) / maxPlayerAmount;
-
-            worldSize = baseWorldSize + worldSizeStep * relativePlayerAmount;
-            carePackageSpread = baseCarePackageSpread + carePackageSpreadStep * relativePlayerAmount;
-
-            carePackageAmount = (int) (desiredChestDensity * (carePackageSpread * 2) * (carePackageSpread * 2));
+            worldSize = 1000;
+            carePackageSpread = 750;
+            carePackageAmount = 450;
         }
 
         // Seasons
