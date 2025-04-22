@@ -84,4 +84,12 @@ public class Team {
     public String add(){
         return "team add " + this.name;
     }
+
+    public String setTeamColor() { return "team modify " + this.name + " color " + this.color; }
+
+    public String leaveTeam(String entity) { return "team leave " + entity; }
+
+    public String joinTeam(String entity) { return "team join " + this.name + " " + entity; }
+
+    public String emptyTeam() { return "team empty " + this.name; }
 }

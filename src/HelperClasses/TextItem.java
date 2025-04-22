@@ -10,11 +10,16 @@ public class TextItem {
     public String getText() {
         return "";
     }
+    public String getText(Boolean technical) {return ""; }
 
     public TextItem(Color color, boolean isBold, boolean isItalic) {
         this.color = color;
         this.isBold = isBold;
         this.isItalic = isItalic;
+    }
+
+    public TextItem(Color color) {
+        this.color = color;
     }
 
     public TextItem(boolean isBold, boolean isItalic) {

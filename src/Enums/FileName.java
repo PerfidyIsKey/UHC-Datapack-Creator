@@ -12,6 +12,7 @@ public enum FileName {
     spread_players,
     survival_mode,
     start_game,
+    start_potions,
 
     // Timer
     horse_frost_walker,
@@ -55,8 +56,10 @@ public enum FileName {
     teams_highscore_alive_check,
     victory,
     victory_message_,
+    victory_message_solo,
     victory_message_traitor,
     minute_,
+    initiate_deathmatch,
     death_match,
 
     // World loading
@@ -69,9 +72,21 @@ public enum FileName {
     clear_schedule,
     locate_teammate,
     teams,
+    join_team,
+    announce_iron_man,
+    check_iron_man,
+    update_player_distance,
+    title_default_timing,
 
     // Misc (for fun)
     equip_gear,
     god_mode,
     battle_royale,
+
+    // Developer
+    debug_give,
+    debug_remove,
+
+    // Testing
+    current_test_function
 }

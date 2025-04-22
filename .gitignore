@@ -1,4 +1,3 @@
-
 misc.xml
 workspace.xml
 vcs.xml
@@ -6,9 +5,6 @@ uiDesigner.xml
 modules.xml
 .name
 .env
-
-
-
 
 # Not useful folders
 Misc/
@@ -29,6 +25,8 @@ Server/config
 Server/libraries
 Server/logs
 Server/plugins
+!Server/plugins/*.jar
+!Server/plugins/OpenAudioMc/config.yml
 Server/versions
 Server/world
 Server/world_nether
