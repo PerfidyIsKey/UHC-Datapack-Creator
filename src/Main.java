@@ -1362,71 +1362,12 @@ public class Main {
         fileCommands.add(setGameRule(GameRule.fireDamage, false));
         fileCommands.add(setGameRule(GameRule.sendCommandFeedback, true));
         fileCommands.add(setGameRule(GameRule.doImmediateRespawn, true));
+        fileCommands.add(setGameRule(GameRule.disableRaids, true));
+        fileCommands.add(setGameRule(GameRule.doInsomnia, false));
+        fileCommands.add(setGameRule(GameRule.doPatrolSpawning, false));
+
+        // Reset scores of all entities
         fileCommands.add(scoreboard.Reset("@e"));
-        fileCommands.add(execute.In(Dimension.overworld) +
-                fill(0, worldBottom + 2, 15, 0, worldBottom + 2, 2, BlockType.bedrock, SetBlockType.replace));
-        fileCommands.add(execute.In(Dimension.overworld) +
-                fill(2, worldBottom + 2, 0, 8, worldBottom + 2, 0, BlockType.bedrock, SetBlockType.replace));
-        fileCommands.add(execute.In(Dimension.overworld) +
-                fill(15, worldBottom + 2, 3, 15, worldBottom + 2, 11, BlockType.bedrock, SetBlockType.replace));
-        fileCommands.add(execute.In(Dimension.overworld) +
-                fill(15, worldBottom + 2, 15, 9, worldBottom + 2, 15, BlockType.redstone_block, SetBlockType.replace));
-        fileCommands.add(execute.In(Dimension.overworld) +
-                setBlock(11, worldBottom + 2, 0, BlockType.bedrock, SetBlockType.destroy));
-        fileCommands.add(execute.In(Dimension.overworld) +
-                setBlock(10, worldBottom + 2, 0, BlockType.bedrock, SetBlockType.destroy));
-        fileCommands.add(execute.In(controlPoints.get(0).getCoordinate().getDimension()) +
-                addForceLoad(controlPoints.get(0).getCoordinate().getX(), controlPoints.get(0).getCoordinate().getZ(), controlPoints.get(0).getCoordinate().getX(), controlPoints.get(0).getCoordinate().getZ()));
-        fileCommands.add(execute.In(controlPoints.get(1).getCoordinate().getDimension()) +
-                addForceLoad(controlPoints.get(1).getCoordinate().getX(), controlPoints.get(1).getCoordinate().getZ(), controlPoints.get(1).getCoordinate().getX(), controlPoints.get(1).getCoordinate().getZ()));
-        fileCommands.add(callFunction(FileName.spawn_controlpoints));
-        fileCommands.add(execute.In(controlPoints.get(0).getCoordinate().getDimension()) +
-                removeForceLoad(controlPoints.get(0).getCoordinate().getX(), controlPoints.get(0).getCoordinate().getZ(), controlPoints.get(0).getCoordinate().getX(), controlPoints.get(0).getCoordinate().getZ()));
-        fileCommands.add(execute.In(controlPoints.get(1).getCoordinate().getDimension()) +
-                removeForceLoad(controlPoints.get(1).getCoordinate().getX(), controlPoints.get(1).getCoordinate().getZ(), controlPoints.get(1).getCoordinate().getX(), controlPoints.get(1).getCoordinate().getZ()));
-        BossBar bossBarCp1 = getBossbarByName("cp1");
-        BossBar bossBarCp2 = getBossbarByName("cp2");
-        fileCommands.add(bossBarCp1.setColor(BossBarColor.white));
-        fileCommands.add(bossBarCp1.setVisible(false));
-        fileCommands.add(bossBarCp1.setPlayers("@a"));
-        fileCommands.add(bossBarCp1.setTitle(controlPoints.get(0).getName() + ": " + controlPoints.get(0).getCoordinate().getX() + ", " + controlPoints.get(0).getCoordinate().getY() + ", " + controlPoints.get(0).getCoordinate().getZ() + " (" + controlPoints.get(0).getCoordinate().getDimensionName() + ")"));
-        fileCommands.add(bossBarCp2.setColor(BossBarColor.white));
-        fileCommands.add(bossBarCp2.setVisible(false));
-        fileCommands.add(bossBarCp2.setPlayers("@a"));
-        fileCommands.add(bossBarCp2.setTitle(controlPoints.get(1).getName() + " soon: " + controlPoints.get(1).getCoordinate().getX() + ", " + controlPoints.get(1).getCoordinate().getY() + ", " + controlPoints.get(1).getCoordinate().getZ() + " (" + controlPoints.get(1).getCoordinate().getDimensionName() + ")"));
-        fileCommands.add(execute.In(Dimension.overworld) +
-                setBlock(startCoordinate,  BlockType.jukebox + "[has_record=true]{RecordItem:{Count:1b,id:\"minecraft:music_disc_stal\"}}", SetBlockType.replace));
-        fileCommands.add(removeTag("@a", Tag.Traitor));
-        fileCommands.add(removeTag("@a", Tag.DontMakeTraitor));
-        fileCommands.add(removeTag("@a", Tag.RespawnDisabled));
-        fileCommands.add(removeTag("@a", Tag.IronManCandidate));
-        fileCommands.add(removeTag("@a", Tag.IronMan));
-        fileCommands.add(removeTag(admin, Tag.CarePackagesSpread));
-        fileCommands.add(setWorldBorder(2 * worldSize));
-        fileCommands.add(callFunction(FileName.display_rank));
-        fileCommands.add(scoreboard.Set("NightTime", getObjectiveByName(Objective.Time), 600));
-        fileCommands.add(scoreboard.Set("CarePackages", getObjectiveByName(Objective.Time), 1200));
-        fileCommands.add(scoreboard.Set("ControlPoints", getObjectiveByName(Objective.Time), 1800));
-        fileCommands.add(scoreboard.Set("TraitorFaction", getObjectiveByName(Objective.Time), 2400));
-        for (int i = 0; i < 4; i++) {
-            fileCommands.add(removeTag("@a", Tag.ReceivedPerk.extendName(i + 1)));
-        }
-
-        for (Team t : teams) {
-            fileCommands.add(t.emptyTeam());
-            fileCommands.add(scoreboard.Reset(t.getPlayerColor(), getObjectiveByName(Objective.CPScore)));
-            fileCommands.add(t.joinTeam(t.getPlayerColor()));
-        }
-        fileCommands.add(scoreboard.Reset("Solo", getObjectiveByName(Objective.CPScore)));
-
-        int minToCPScore = secPerMinute * tickPerSecond * controlPoints.get(0).getAddRate();
-        fileCommands.add(scoreboard.Set("Perk1", getObjectiveByName(Objective.CPScore), 3 * minToCPScore));
-        fileCommands.add(scoreboard.Set("Perk2", getObjectiveByName(Objective.CPScore), 6 * minToCPScore));
-        fileCommands.add(scoreboard.Set("Perk3", getObjectiveByName(Objective.CPScore), 12 * minToCPScore));
-        fileCommands.add(scoreboard.Set("Perk4", getObjectiveByName(Objective.CPScore), 15 * minToCPScore));
-        fileCommands.add(scoreboard.Set("TimeVictory", getObjectiveByName(Objective.CPScore), 20 * minToCPScore));
-
-        // Reset comparative objectives
         for (int i = 1; i < controlPoints.size() + 1; i++) {
             fileCommands.add(scoreboard.Set(admin, getObjectiveByName(Objective.Highscore.extendName(i)), 1));
             for (int ii = 1; ii < 3; ii++) {
@@ -1437,10 +1378,93 @@ public class Main {
         fileCommands.add(scoreboard.Set(admin, Objective.Victory, 1));
         fileCommands.add(scoreboard.Set("@a", Objective.IsKiller, 0));
 
+        // Deactivate game-critical command blocks
+        fileCommands.add(execute.In(Dimension.overworld) +
+                fill(0, worldBottom + 2, 15, 0, worldBottom + 2, 2, BlockType.bedrock, SetBlockType.replace));
+        fileCommands.add(execute.In(Dimension.overworld) +
+                fill(2, worldBottom + 2, 0, 8, worldBottom + 2, 0, BlockType.bedrock, SetBlockType.replace));
+        fileCommands.add(execute.In(Dimension.overworld) +
+                fill(15, worldBottom + 2, 3, 15, worldBottom + 2, 11, BlockType.bedrock, SetBlockType.replace));
+        fileCommands.add(execute.In(Dimension.overworld) +
+                setBlock(11, worldBottom + 2, 0, BlockType.bedrock, SetBlockType.destroy));
+        fileCommands.add(execute.In(Dimension.overworld) +
+                setBlock(10, worldBottom + 2, 0, BlockType.bedrock, SetBlockType.destroy));
+
+        // Activate potion command blocks
+        fileCommands.add(execute.In(Dimension.overworld) +
+                fill(15, worldBottom + 2, 15, 9, worldBottom + 2, 15, BlockType.redstone_block, SetBlockType.replace));
+
+        // Spawn new Control Points
+        fileCommands.add(execute.In(controlPoints.get(0).getCoordinate().getDimension()) +
+                addForceLoad(controlPoints.get(0).getCoordinate().getX(), controlPoints.get(0).getCoordinate().getZ(), controlPoints.get(0).getCoordinate().getX(), controlPoints.get(0).getCoordinate().getZ()));
+        fileCommands.add(execute.In(controlPoints.get(1).getCoordinate().getDimension()) +
+                addForceLoad(controlPoints.get(1).getCoordinate().getX(), controlPoints.get(1).getCoordinate().getZ(), controlPoints.get(1).getCoordinate().getX(), controlPoints.get(1).getCoordinate().getZ()));
+        fileCommands.add(callFunction(FileName.spawn_controlpoints));
+        fileCommands.add(execute.In(controlPoints.get(0).getCoordinate().getDimension()) +
+                removeForceLoad(controlPoints.get(0).getCoordinate().getX(), controlPoints.get(0).getCoordinate().getZ(), controlPoints.get(0).getCoordinate().getX(), controlPoints.get(0).getCoordinate().getZ()));
+        fileCommands.add(execute.In(controlPoints.get(1).getCoordinate().getDimension()) +
+                removeForceLoad(controlPoints.get(1).getCoordinate().getX(), controlPoints.get(1).getCoordinate().getZ(), controlPoints.get(1).getCoordinate().getX(), controlPoints.get(1).getCoordinate().getZ()));
+
+        // Reset bossbars
+        BossBar bossBarCp1 = getBossbarByName("cp1");
+        BossBar bossBarCp2 = getBossbarByName("cp2");
+        fileCommands.add(bossBarCp1.setColor(BossBarColor.white));
+        fileCommands.add(bossBarCp1.setVisible(false));
+        fileCommands.add(bossBarCp1.setPlayers("@a"));
+        fileCommands.add(bossBarCp1.setTitle(controlPoints.get(0).getName() + ": " + controlPoints.get(0).getCoordinate().getX() + ", " + controlPoints.get(0).getCoordinate().getY() + ", " + controlPoints.get(0).getCoordinate().getZ() + " (" + controlPoints.get(0).getCoordinate().getDimensionName() + ")"));
+        fileCommands.add(bossBarCp2.setColor(BossBarColor.white));
+        fileCommands.add(bossBarCp2.setVisible(false));
+        fileCommands.add(bossBarCp2.setPlayers("@a"));
+        fileCommands.add(bossBarCp2.setTitle(controlPoints.get(1).getName() + " soon: " + controlPoints.get(1).getCoordinate().getX() + ", " + controlPoints.get(1).getCoordinate().getY() + ", " + controlPoints.get(1).getCoordinate().getZ() + " (" + controlPoints.get(1).getCoordinate().getDimensionName() + ")"));
+
+        // Create jukebox at 0,0
+        fileCommands.add(execute.In(Dimension.overworld) +
+                setBlock(startCoordinate,  BlockType.jukebox + "[has_record=true]{RecordItem:{Count:1b,id:\"minecraft:music_disc_stal\"}}", SetBlockType.replace));
+
+        // Remove tags
+        fileCommands.add(removeTag("@a", Tag.Traitor));
+        fileCommands.add(removeTag("@a", Tag.DontMakeTraitor));
+        fileCommands.add(removeTag("@a", Tag.RespawnDisabled));
+        fileCommands.add(removeTag("@a", Tag.IronManCandidate));
+        fileCommands.add(removeTag("@a", Tag.IronMan));
+        fileCommands.add(removeTag(admin, Tag.CarePackagesSpread));
+        for (int i = 0; i < 4; i++) {
+            fileCommands.add(removeTag("@a", Tag.ReceivedPerk.extendName(i + 1)));
+        }
+
+        // Set world border
+        fileCommands.add(setWorldBorder(2 * worldSize));
+
+        // Display ranks
+        fileCommands.add(callFunction(FileName.display_rank));
+
+        // Set time dummy scoreboard entries
+        fileCommands.add(scoreboard.Set("NightTime", getObjectiveByName(Objective.Time), 600));
+        fileCommands.add(scoreboard.Set("CarePackages", getObjectiveByName(Objective.Time), 1200));
+        fileCommands.add(scoreboard.Set("ControlPoints", getObjectiveByName(Objective.Time), 1800));
+        fileCommands.add(scoreboard.Set("TraitorFaction", getObjectiveByName(Objective.Time), 2400));
+
+        // Reset teams & solos
+        for (Team t : teams) {
+            fileCommands.add(t.emptyTeam());
+            fileCommands.add(scoreboard.Reset(t.getPlayerColor(), getObjectiveByName(Objective.CPScore)));
+            fileCommands.add(t.joinTeam(t.getPlayerColor()));
+        }
+        fileCommands.add(scoreboard.Reset("Solo", getObjectiveByName(Objective.CPScore)));
+
+        // Set CP score dummy scoreboard entries
+        int minToCPScore = secPerMinute * tickPerSecond * controlPoints.get(0).getAddRate();
+        fileCommands.add(scoreboard.Set("Perk1", getObjectiveByName(Objective.CPScore), 3 * minToCPScore));
+        fileCommands.add(scoreboard.Set("Perk2", getObjectiveByName(Objective.CPScore), 6 * minToCPScore));
+        fileCommands.add(scoreboard.Set("Perk3", getObjectiveByName(Objective.CPScore), 12 * minToCPScore));
+        fileCommands.add(scoreboard.Set("Perk4", getObjectiveByName(Objective.CPScore), 15 * minToCPScore));
+        fileCommands.add(scoreboard.Set("TimeVictory", getObjectiveByName(Objective.CPScore), 20 * minToCPScore));
+
         // Reset player scales
         fileCommands.add(execute.As(new Entity("@a")) +
                         setAttributeBase("@s", AttributeType.scale, 1));
 
+        // Set gamemode of player executing the command to creative
         fileCommands.add(setGameMode(GameMode.creative, "@s"));
 
         // Clear scheduled commands
@@ -2147,6 +2171,9 @@ public class Main {
             fileCommands.add(execute.In(c.getDimension()) +
                     removeForceLoad(c.getX(), c.getZ(), c.getX(), c.getZ()));
         }
+
+        // Remove leftover music discs from legacy Control Point
+        fileCommands.add(killEntity("@e[type=item,nbt={Item:{id:\"minecraft:music_disc_stal\",count:1}}]"));
 
         return new FileData(FileName.spawn_controlpoints, fileCommands);
     }
