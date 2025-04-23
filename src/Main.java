@@ -478,7 +478,7 @@ public class Main {
 
         // Entry #45
         contents = new PotionContents(Effect.blindness, 0, 10, "1F1F23", false, true, true);
-        MaxStackSize stack = new MaxStackSize(5);
+        MaxStackSize stack = new MaxStackSize(64);
         name = new SetName(new Text(false, false, "Potion of Blindness"));
         SetCount count = new SetCount(5, new RandomChance(0.3));
 
