@@ -59,6 +59,7 @@ public enum BlockType {
     player_head("player_head"),
     redstone("redstone"),
     redstone_block("redstone_block"),
+    reinforced_deepslate("reinforced_deepslate"),
     saddle("saddle"),
     shield("shield"),
     spectral_arrow("spectral_arrow"),
