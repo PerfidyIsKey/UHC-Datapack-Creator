@@ -1362,6 +1362,9 @@ public class Main {
         fileCommands.add(setGameRule(GameRule.fireDamage, false));
         fileCommands.add(setGameRule(GameRule.sendCommandFeedback, true));
         fileCommands.add(setGameRule(GameRule.doImmediateRespawn, true));
+        fileCommands.add(setGameRule(GameRule.disableRaids, true));
+        fileCommands.add(setGameRule(GameRule.doInsomnia, false));
+        fileCommands.add(setGameRule(GameRule.doPatrolSpawning, false));
 
         // Reset scores of all entities
         fileCommands.add(scoreboard.Reset("@e"));
@@ -2168,6 +2171,9 @@ public class Main {
             fileCommands.add(execute.In(c.getDimension()) +
                     removeForceLoad(c.getX(), c.getZ(), c.getX(), c.getZ()));
         }
+
+        // Remove leftover music discs from legacy Control Point
+        fileCommands.add(killEntity("@e[type=item,nbt={Item:{id:\"minecraft:music_disc_stal\",count:1}}]"));
 
         return new FileData(FileName.spawn_controlpoints, fileCommands);
     }
