@@ -2223,7 +2223,7 @@ public class Main {
                 setBlock(6, worldBottom + 2, 15, BlockType.bedrock));
         fileCommands.add(execute.If(new Entity("@e[scores={Time=12000..}]"), false) +
                 execute.InNext(Dimension.overworld, true) +
-                teleportEntity("@a[gamemode=creative]", new Coordinate(0, 221, 0)));
+                teleportEntity("@a", new Coordinate(0, 221, 0)));
         fileCommands.add(execute.If(new Entity("@e[scores={Time=12000..}]")) +
                 callFunction(FileName.developer_mode));
 
