@@ -1078,32 +1078,42 @@ public class Main {
 
     private FileData Initialize() {
         ArrayList<String> fileCommands = new ArrayList<>();
-        fileCommands.add(setGameRule(GameRule.naturalRegeneration, false));
+
+        // Set gamerules
+        for (Dimension dimension : Dimension.values()) {
+            fileCommands.add(execute.In(dimension) +
+                    setGameRule(GameRule.naturalRegeneration, false));
+        }
         fileCommands.add(setGameRule(GameRule.doImmediateRespawn, true));
         fileCommands.add(setGameRule(GameRule.doPatrolSpawning, false));
         fileCommands.add(setGameRule(GameRule.doMobSpawning, false));
         fileCommands.add(setGameRule(GameRule.doWeatherCycle, false));
+
+        // Set difficulty
         fileCommands.add(setDifficulty(Difficulty.hard));
+
+        // Set default gamemode
         fileCommands.add(setDefaultGameMode(GameMode.adventure));
+
+        // Set world spawn
         fileCommands.add(setWorldSpawn(new Coordinate(0, 221, 0)));
 
-        //scoreboard
+        // Create scoreboard objectives
         for (ScoreboardObjective objective : scoreboardObjectives) {
             fileCommands.add(objective.add());
         }
         fileCommands.add(new ScoreboardObjective().setDisplay(ScoreboardLocation.below_name, Objective.Hearts));
         fileCommands.add(new ScoreboardObjective().setDisplay(ScoreboardLocation.list, Objective.Hearts));
-        //end scoreboard
-        //bossbar
 
+        // Create bossbars
         fileCommands.add(getBossbarByName("cp1").remove());
         fileCommands.add(getBossbarByName("cp2").remove());
         fileCommands.add(getBossbarByName("cp1").add(controlPoints.get(0).getName() + ": " + controlPoints.get(0).getCoordinate().getX() + ", " + controlPoints.get(0).getCoordinate().getY() + ", " + controlPoints.get(0).getCoordinate().getZ() + " (" + controlPoints.get(0).getCoordinate().getDimensionName() + ")"));
         fileCommands.add(getBossbarByName("cp1").setMax(controlPoints.get(0).getMaxVal()));
         fileCommands.add(getBossbarByName("cp2").add(controlPoints.get(1).getName() + " soon: " + controlPoints.get(1).getCoordinate().getX() + ", " + controlPoints.get(1).getCoordinate().getY() + ", " + controlPoints.get(1).getCoordinate().getZ() + " (" + controlPoints.get(1).getCoordinate().getDimensionName() + ")"));
         fileCommands.add(getBossbarByName("cp2").setMax(controlPoints.get(1).getMaxVal()));
-        //end bossbar
-        //teams
+
+        // Create teams
         for (Team t : teams) {
             fileCommands.add(t.add());
             fileCommands.add(t.setTeamColor());
@@ -1112,9 +1122,8 @@ public class Main {
                 fileCommands.add(scoreboardObjectives.get(scoreboardObjectives.size() - 1).add());
             }
         }
-        //end teams
-        //structure
-        // Staging area
+
+        // Create staging area
         fileCommands.add(execute.In(Dimension.overworld) +
                 fill(-6, 220, -6, 6, 226, 6, BlockType.barrier));
         fileCommands.add(execute.In(Dimension.overworld) +
@@ -1122,7 +1131,7 @@ public class Main {
         fileCommands.add(execute.In(Dimension.overworld) +
                 setBlock(0, 222, -5, BlockType.cherry_wall_sign + "[facing=south,waterlogged=false]{back_text:{messages:['{\"text\":\"You have\"}','{\"text\":\"angered\"}','{\"text\":\"the Gods!\"}','{\"text\":\"\"}']},front_text:{messages:['{\"text\":\"Teleport\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"" + teleportEntity("@s", new Coordinate(5, worldBottom + 5, 5)) + "\"}}','{\"text\":\"to the\"}','{\"text\":\"Command center\"}','{\"text\":\"\"}']},is_waxed:0b}"));
 
-        // Command center
+        // Create command center
         fileCommands.add(execute.In(Dimension.overworld) +
                 setBlock(-2, worldBottom, -2, BlockType.structure_block + "[mode=load]{metadata:\"\",mirror:\"NONE\",ignoreEnti" +
                         "ties:0b,powered:0b,seed:0L,author:\"?\",rotation:\"NONE\",posX:1,mode:\"LOAD\",posY:1,sizeX:18,posZ:1," +
@@ -1135,9 +1144,6 @@ public class Main {
                 fill(15, worldBottom + 2, 15, 9, worldBottom + 2, 15, BlockType.bedrock));
         fileCommands.add(execute.In(Dimension.overworld) +
                 fill(15, worldBottom + 2, 15, 9, worldBottom + 2, 15, BlockType.redstone_block));
-        //end structure
-        //end structure
-        //
 
         return new FileData(FileName.initialize, fileCommands);
     }
@@ -1364,7 +1370,6 @@ public class Main {
         fileCommands.add(setGameRule(GameRule.doImmediateRespawn, true));
         fileCommands.add(setGameRule(GameRule.disableRaids, true));
         fileCommands.add(setGameRule(GameRule.doInsomnia, false));
-        fileCommands.add(setGameRule(GameRule.doPatrolSpawning, false));
 
         // Reset scores of all entities
         fileCommands.add(scoreboard.Reset("@e"));
@@ -1827,35 +1832,42 @@ public class Main {
     private FileData Controlpoint(int i) {
         ArrayList<String> fileCommands = new ArrayList<>();
 
+        // Current Control Point
+        ControlPoint currentCP = controlPoints.get(i - 1);
+
         // Players in teams
         for (Team team : teams) {
             // Give players on the Control Point score
-            fileCommands.add(execute.As("@a[gamemode=!spectator,team=" + team.getName() + "]", false) +
-                    execute.IfNext("@s[gamemode=!spectator,x=" + (controlPoints.get(i - 1).getCoordinate().getX() - 6) + ",y=" + (controlPoints.get(i - 1).getCoordinate().getY() - 1) + ",z=" + (controlPoints.get(i - 1).getCoordinate().getZ() - 6) + ",dx=12,dy=12,dz=12]") +
-                    execute.UnlessNext("@a[gamemode=!spectator,x=" + (controlPoints.get(i - 1).getCoordinate().getX() - 6) + ",y=" + (controlPoints.get(i - 1).getCoordinate().getY() - 1) + ",z=" + (controlPoints.get(i - 1).getCoordinate().getZ() - 6) + ",dx=12,dy=12,dz=12,team=!" + team.getName() + "]", true) +
-                    scoreboard.Add("@s", getObjectiveByName(Objective.ControlPoint.extendName(i)), controlPoints.get(i - 1).getAddRate()));
+            fileCommands.add(execute.In(currentCP.getCoordinate().getDimension(), false) +
+                    execute.AsNext("@a[gamemode=!spectator,team=" + team.getName() + "]") +
+                    execute.IfNext("@p[gamemode=!spectator,team=" + team.getName() + ",x=" + (currentCP.getCoordinate().getX() - 6) + ",y=" + (currentCP.getCoordinate().getY() - 1) + ",z=" + (currentCP.getCoordinate().getZ() - 6) + ",dx=12,dy=12,dz=12]") +
+                    execute.UnlessNext("@p[gamemode=!spectator,x=" + (currentCP.getCoordinate().getX() - 6) + ",y=" + (currentCP.getCoordinate().getY() - 1) + ",z=" + (currentCP.getCoordinate().getZ() - 6) + ",dx=12,dy=12,dz=12,team=!" + team.getName() + "]", true) +
+                    scoreboard.Add("@s", getObjectiveByName(Objective.ControlPoint.extendName(i)), currentCP.getAddRate()));
 
             // Update CP glass color
-            fileCommands.add(execute.In(controlPoints.get(i - 1).getCoordinate().getDimension(), false) +
-                    execute.IfNext("@r[limit=1,gamemode=!spectator,team=" + team.getName() + "]", getObjectiveByName(Objective.ControlPoint.extendName(i)), ComparatorType.greater, adminSingle, getObjectiveByName(Objective.Highscore.extendName(i)), true) +
-                    setBlock(controlPoints.get(i - 1).getCoordinate().getX(), controlPoints.get(i - 1).getCoordinate().getY() + 1, controlPoints.get(i - 1).getCoordinate().getZ(), "minecraft:" + team.getGlassColor() + "_stained_glass", SetBlockType.replace));
+            fileCommands.add(execute.In(currentCP.getCoordinate().getDimension(), false) +
+                    execute.IfNext("@p[gamemode=!spectator,team=" + team.getName() + "]", getObjectiveByName(Objective.ControlPoint.extendName(i)), ComparatorType.greater, adminSingle, getObjectiveByName(Objective.Highscore.extendName(i)), true) +
+                    setBlock(currentCP.getCoordinate().getX(), currentCP.getCoordinate().getY() + 1, currentCP.getCoordinate().getZ(), "minecraft:" + team.getGlassColor() + "_stained_glass", SetBlockType.replace));
         }
 
         // Players without a team
         // Give players on the Control Point score
-        fileCommands.add(execute.As("@a[gamemode=!spectator,team=]", false) +
-                execute.IfNext("@s[gamemode=!spectator,x=" + (controlPoints.get(i - 1).getCoordinate().getX() - 6) + ",y=" + (controlPoints.get(i - 1).getCoordinate().getY() - 1) + ",z=" + (controlPoints.get(i - 1).getCoordinate().getZ() - 6) + ",dx=12,dy=12,dz=12]") +
-                execute.UnlessNext("@a[gamemode=!spectator,x=" + (controlPoints.get(i - 1).getCoordinate().getX() - 6) + ",y=" + (controlPoints.get(i - 1).getCoordinate().getY() - 1) + ",z=" + (controlPoints.get(i - 1).getCoordinate().getZ() - 6) + ",dx=12,dy=12,dz=12,team=!]", true) +
-                scoreboard.Add("@s", getObjectiveByName(Objective.ControlPoint.extendName(i)), controlPoints.get(i - 1).getAddRate()));
+        fileCommands.add(execute.In(currentCP.getCoordinate().getDimension(), false) +
+                execute.AsNext("@a[gamemode=!spectator,team=]") +
+                execute.IfNext("@s[x=" + (currentCP.getCoordinate().getX() - 6) + ",y=" + (currentCP.getCoordinate().getY() - 1) + ",z=" + (currentCP.getCoordinate().getZ() - 6) + ",dx=12,dy=12,dz=12]") +
+                execute.UnlessNext("@p[gamemode=!spectator,x=" + (currentCP.getCoordinate().getX() - 6) + ",y=" + (currentCP.getCoordinate().getY() - 1) + ",z=" + (currentCP.getCoordinate().getZ() - 6) + ",dx=12,dy=12,dz=12,team=!]", true) +
+                scoreboard.Add("@s", getObjectiveByName(Objective.ControlPoint.extendName(i)), currentCP.getAddRate()));
 
         // Update CP glass color
-        fileCommands.add(execute.In(controlPoints.get(i - 1).getCoordinate().getDimension(), false) +
+        fileCommands.add(execute.In(currentCP.getCoordinate().getDimension(), false) +
                 execute.IfNext("@r[limit=1,gamemode=!spectator,team=]", getObjectiveByName(Objective.ControlPoint.extendName(i)), ComparatorType.greater, adminSingle, getObjectiveByName(Objective.Highscore.extendName(i)), true) +
-                setBlock(controlPoints.get(i - 1).getCoordinate().getX(), controlPoints.get(i - 1).getCoordinate().getY() + 1, controlPoints.get(i - 1).getCoordinate().getZ(), "minecraft:white_stained_glass", SetBlockType.replace));
+                setBlock(currentCP.getCoordinate().getX(), currentCP.getCoordinate().getY() + 1, currentCP.getCoordinate().getZ(), "minecraft:white_stained_glass", SetBlockType.replace));
 
         // Keep beacon active
-        fileCommands.add(fill(controlPoints.get(i - 1).getCoordinate().getX() - 1, controlPoints.get(i - 1).getCoordinate().getY() - 1, controlPoints.get(i - 1).getCoordinate().getZ() - 1, controlPoints.get(i - 1).getCoordinate().getX() + 1, controlPoints.get(i - 1).getCoordinate().getY() - 1, controlPoints.get(i - 1).getCoordinate().getZ() + 1, BlockType.emerald_block));
-        fileCommands.add(fill(controlPoints.get(i - 1).getCoordinate().getX(), controlPoints.get(i - 1).getCoordinate().getY(), controlPoints.get(i - 1).getCoordinate().getZ(), controlPoints.get(i - 1).getCoordinate().getX(), controlPoints.get(i - 1).getCoordinate().getY(), controlPoints.get(i - 1).getCoordinate().getZ(), BlockType.beacon));
+        fileCommands.add(execute.In(currentCP.getCoordinate().getDimension()) +
+                fill(currentCP.getCoordinate().getX() - 1, currentCP.getCoordinate().getY() - 1, currentCP.getCoordinate().getZ() - 1, currentCP.getCoordinate().getX() + 1, currentCP.getCoordinate().getY() - 1, currentCP.getCoordinate().getZ() + 1, BlockType.emerald_block));
+        fileCommands.add(execute.In(currentCP.getCoordinate().getDimension()) +
+                fill(currentCP.getCoordinate().getX(), currentCP.getCoordinate().getY(), currentCP.getCoordinate().getZ(), currentCP.getCoordinate().getX(), currentCP.getCoordinate().getY(), currentCP.getCoordinate().getZ(), BlockType.beacon));
 
         // Update CP messaging
         fileCommands.add(callFunction("" + FileName.controlpoint_messages_ + i));
@@ -1866,17 +1878,20 @@ public class Main {
     private FileData ControlPointMessages(int i) {
         ArrayList<String> fileCommands = new ArrayList<>();
 
+        // Current Control Point
+        ControlPoint currentCP = controlPoints.get(i - 1);
+
         // Players in a team
         for (Team team : teams) {
             /* Under attack message */
             // Increment attacking counter if team is on CP and message is not sent
-            fileCommands.add(execute.As(new Entity("@a[gamemode=!spectator,team=" + team.getName() + "]"), false) +
-                    execute.IfNext(new Entity("@s[x=" + (controlPoints.get(i - 1).getCoordinate().getX() - 6) + ",y=" + (controlPoints.get(i - 1).getCoordinate().getY() - 1) + ",z=" + (controlPoints.get(i - 1).getCoordinate().getZ() - 6) + ",dx=12,dy=12,dz=12,scores={MSGDum1CP" + i + "=.." + cpMessageThreshold + "}]"), true) +
+            fileCommands.add(execute.In(currentCP.getCoordinate().getDimension(), false) +
+                    execute.IfNext(new Entity("@p[gamemode=!spectator,team=" + team.getName() + ",x=" + (currentCP.getCoordinate().getX() - 6) + ",y=" + (currentCP.getCoordinate().getY() - 1) + ",z=" + (currentCP.getCoordinate().getZ() - 6) + ",dx=12,dy=12,dz=12,scores={MSGDum1CP" + i + "=.." + cpMessageThreshold + "}]"), true) +
                     scoreboard.Add("@a[team=" + team.getName() + "]", getObjectiveByName(Objective.MSGDum.extendName("1CP" + i)), 1));
 
             // Reset abandonment counter
-            fileCommands.add(execute.As(new Entity("@a[gamemode=!spectator,team=" + team.getName() + "]"), false) +
-                    execute.IfNext(new Entity("@s[x=" + (controlPoints.get(i - 1).getCoordinate().getX() - 6) + ",y=" + (controlPoints.get(i - 1).getCoordinate().getY() - 1) + ",z=" + (controlPoints.get(i - 1).getCoordinate().getZ() - 6) + ",dx=12,dy=12,dz=12]"), true) +
+            fileCommands.add(execute.In(currentCP.getCoordinate().getDimension(), false) +
+                    execute.IfNext(new Entity("@p[gamemode=!spectator,team=" + team.getName() + ",x=" + (currentCP.getCoordinate().getX() - 6) + ",y=" + (currentCP.getCoordinate().getY() - 1) + ",z=" + (currentCP.getCoordinate().getZ() - 6) + ",dx=12,dy=12,dz=12]"), true) +
                     scoreboard.Set("@a[gamemode=!spectator,team=" + team.getName() + "]", getObjectiveByName(Objective.MSGDum.extendName("2CP" + i)), 1));
 
             // Define CP attacking message
@@ -1886,19 +1901,18 @@ public class Main {
             texts.add(new Text(Color.light_purple, false, false, " IS ATTACKING CONTROL POINT " + i + "!"));
 
             // Display message in chat if time threshold has been exceeded
-            fileCommands.add(execute.As(new Entity("@a[team=" + team.getName() + ",limit=1]"), false) +
-                    execute.IfNext(new Entity("@s[scores={MSGDum1CP" + i + "=" + cpMessageThreshold + "}]"), true) +
+            fileCommands.add(execute.If(new Entity("@p[team=" + team.getName() + ",scores={MSGDum1CP" + i + "=" + cpMessageThreshold + "}]")) +
                     new TellRaw("@a", texts).sendRaw());
 
             // Grant attacking players Attacking tag
-            fileCommands.add(execute.As(new Entity("@a[team=" + team.getName() + ",limit=1]"), false) +
-                    execute.IfNext(new Entity("@s[scores={MSGDum1CP" + i + "=" + cpMessageThreshold + "}]"), true) +
+            fileCommands.add(execute.If(new Entity("@p[team=" + team.getName() + ",scores={MSGDum1CP" + i + "=" + cpMessageThreshold + "}]")) +
                     addTag("@a[team=" + team.getName() + "]", Tag.AttackingCP.extendName(i)));
 
             /* Abandoned message */
             // Increment abandonment counter unless team is on the CP
-            fileCommands.add(execute.If("@p[gamemode=!spectator,team=" + team.getName() + ",tag=" + Tag.AttackingCP.extendName(i) + "]", false) +
-                    execute.UnlessNext("@p[gamemode=!spectator,team=" + team.getName() + ",x=" + (controlPoints.get(i - 1).getCoordinate().getX() - 6) + ",y=" + (controlPoints.get(i - 1).getCoordinate().getY() - 1) + ",z=" + (controlPoints.get(i - 1).getCoordinate().getZ() - 6) + ",dx=12,dy=12,dz=12]", true) +
+            fileCommands.add(execute.In(currentCP.getCoordinate().getDimension(), false) +
+                    execute.IfNext("@p[gamemode=!spectator,team=" + team.getName() + ",tag=" + Tag.AttackingCP.extendName(i) + "]") +
+                    execute.UnlessNext("@p[gamemode=!spectator,team=" + team.getName() + ",x=" + (currentCP.getCoordinate().getX() - 6) + ",y=" + (currentCP.getCoordinate().getY() - 1) + ",z=" + (currentCP.getCoordinate().getZ() - 6) + ",dx=12,dy=12,dz=12]", true) +
                     scoreboard.Add("@a[team=" + team.getName() + "]", getObjectiveByName(Objective.MSGDum.extendName("2CP" + i)), 1));
 
             // Define CP abandonment message
@@ -1908,31 +1922,28 @@ public class Main {
             texts.add(new Text(Color.light_purple, false, false, " HAS ABANDONED CONTROL POINT " + i + "!"));
 
             // Display message in chat if time threshold has been exceeded
-            fileCommands.add(execute.As(new Entity("@a[team=" + team.getName() + ",limit=1]"), false) +
-                    execute.IfNext(new Entity("@s[scores={MSGDum2CP" + i + "=" + (cpMessageThreshold - 1) + "}]"), true) +
+            fileCommands.add(execute.If(new Entity("@p[team=" + team.getName() + ",scores={MSGDum2CP" + i + "=" + (cpMessageThreshold - 1) + "}]")) +
                     new TellRaw("@a", texts).sendRaw());
 
             // Reset attacking counter
-            fileCommands.add(execute.As(new Entity("@a[team=" + team.getName() + ",limit=1]"), false) +
-                    execute.IfNext(new Entity("@s[scores={MSGDum2CP" + i + "=" + cpMessageThreshold + "}]"), true) +
+            fileCommands.add(execute.If(new Entity("@p[team=" + team.getName() + ",scores={MSGDum2CP" + i + "=" + cpMessageThreshold + "}]")) +
                     scoreboard.Set("@a[gamemode=!spectator,team=" + team.getName() + "]", getObjectiveByName(Objective.MSGDum.extendName("1CP" + i)), 1));
 
             // Remove Attacking tag
-            fileCommands.add(execute.As(new Entity("@a[team=" + team.getName() + ",limit=1]"), false) +
-                    execute.IfNext(new Entity("@s[scores={MSGDum2CP" + i + "=" + cpMessageThreshold + "}]"), true) +
+            fileCommands.add(execute.If(new Entity("@p[team=" + team.getName() + ",scores={MSGDum2CP" + i + "=" + cpMessageThreshold + "}]")) +
                     removeTag("@a[team=" + team.getName() + "]", Tag.AttackingCP.extendName(i)));
         }
 
         // Players without a team
         /* Under attack message */
         // Increment attacking counter if team is on CP and message is not sent
-        fileCommands.add(execute.As(new Entity("@a[gamemode=!spectator,team=]"), false) +
-                execute.IfNext(new Entity("@s[x=" + (controlPoints.get(i - 1).getCoordinate().getX() - 6) + ",y=" + (controlPoints.get(i - 1).getCoordinate().getY() - 1) + ",z=" + (controlPoints.get(i - 1).getCoordinate().getZ() - 6) + ",dx=12,dy=12,dz=12,scores={MSGDum1CP" + i + "=.." + cpMessageThreshold + "}]"), true) +
+        fileCommands.add(execute.In(currentCP.getCoordinate().getDimension(), false) +
+                execute.IfNext(new Entity("@p[gamemode=!spectator,team=,x=" + (currentCP.getCoordinate().getX() - 6) + ",y=" + (currentCP.getCoordinate().getY() - 1) + ",z=" + (currentCP.getCoordinate().getZ() - 6) + ",dx=12,dy=12,dz=12,scores={MSGDum1CP" + i + "=.." + cpMessageThreshold + "}]"), true) +
                 scoreboard.Add("@a[team=]", getObjectiveByName(Objective.MSGDum.extendName("1CP" + i)), 1));
 
         // Reset abandonment counter
-        fileCommands.add(execute.As(new Entity("@a[gamemode=!spectator,team=]"), false) +
-                execute.IfNext(new Entity("@s[x=" + (controlPoints.get(i - 1).getCoordinate().getX() - 6) + ",y=" + (controlPoints.get(i - 1).getCoordinate().getY() - 1) + ",z=" + (controlPoints.get(i - 1).getCoordinate().getZ() - 6) + ",dx=12,dy=12,dz=12]"), true) +
+        fileCommands.add(execute.In(currentCP.getCoordinate().getDimension(), false) +
+                execute.IfNext(new Entity("@p[gamemode=!spectator,team=,x=" + (currentCP.getCoordinate().getX() - 6) + ",y=" + (currentCP.getCoordinate().getY() - 1) + ",z=" + (currentCP.getCoordinate().getZ() - 6) + ",dx=12,dy=12,dz=12]"), true) +
                 scoreboard.Set("@a[gamemode=!spectator,team=]", getObjectiveByName(Objective.MSGDum.extendName("2CP" + i)), 1));
 
         // Define CP attacking message
@@ -1942,19 +1953,18 @@ public class Main {
         texts.add(new Text(Color.light_purple, false, false, " IS ATTACKING CONTROL POINT " + i + "!"));
 
         // Display message in chat if time threshold has been exceeded
-        fileCommands.add(execute.As(new Entity("@a[team=,limit=1]"), false) +
-                execute.IfNext(new Entity("@s[scores={MSGDum1CP" + i + "=" + cpMessageThreshold + "}]"), true) +
+        fileCommands.add(execute.If(new Entity("@p[team=,scores={MSGDum1CP" + i + "=" + cpMessageThreshold + "}]")) +
                 new TellRaw("@a", texts).sendRaw());
 
         // Grant attacking players Attacking tag
-        fileCommands.add(execute.As(new Entity("@a[team=,limit=1]"), false) +
-                execute.IfNext(new Entity("@s[scores={MSGDum1CP" + i + "=" + cpMessageThreshold + "}]"), true) +
+        fileCommands.add(execute.If(new Entity("@p[team=,scores={MSGDum1CP" + i + "=" + cpMessageThreshold + "}]")) +
                 addTag("@a[team=]", Tag.AttackingCP.extendName(i)));
 
         /* Abandoned message */
         // Increment abandonment counter unless team is on the CP
-        fileCommands.add(execute.If("@p[gamemode=!spectator,team=,tag=" + Tag.AttackingCP.extendName(i) + "]", false) +
-                execute.UnlessNext("@p[gamemode=!spectator,team=,x=" + (controlPoints.get(i - 1).getCoordinate().getX() - 6) + ",y=" + (controlPoints.get(i - 1).getCoordinate().getY() - 1) + ",z=" + (controlPoints.get(i - 1).getCoordinate().getZ() - 6) + ",dx=12,dy=12,dz=12]", true) +
+        fileCommands.add(execute.In(currentCP.getCoordinate().getDimension(), false) +
+                execute.IfNext("@p[gamemode=!spectator,team=,tag=" + Tag.AttackingCP.extendName(i) + "]") +
+                execute.UnlessNext("@p[gamemode=!spectator,team=,x=" + (currentCP.getCoordinate().getX() - 6) + ",y=" + (currentCP.getCoordinate().getY() - 1) + ",z=" + (currentCP.getCoordinate().getZ() - 6) + ",dx=12,dy=12,dz=12]", true) +
                 scoreboard.Add("@a[team=]", getObjectiveByName(Objective.MSGDum.extendName("2CP" + i)), 1));
 
         // Define CP abandonment message
@@ -1964,18 +1974,15 @@ public class Main {
         texts.add(new Text(Color.light_purple, false, false, " HAS ABANDONED CONTROL POINT " + i + "!"));
 
         // Display message in chat if time threshold has been exceeded
-        fileCommands.add(execute.As(new Entity("@a[team=,limit=1]"), false) +
-                execute.IfNext(new Entity("@s[scores={MSGDum2CP" + i + "=" + (cpMessageThreshold - 1) + "}]"), true) +
+        fileCommands.add(execute.If(new Entity("@p[team=,scores={MSGDum2CP" + i + "=" + (cpMessageThreshold - 1) + "}]")) +
                 new TellRaw("@a", texts).sendRaw());
 
         // Reset attacking counter
-        fileCommands.add(execute.As(new Entity("@a[team=,limit=1]"), false) +
-                execute.IfNext(new Entity("@s[scores={MSGDum2CP" + i + "=" + cpMessageThreshold + "}]"), true) +
+        fileCommands.add(execute.If(new Entity("@p[team=,scores={MSGDum2CP" + i + "=" + cpMessageThreshold + "}]")) +
                 scoreboard.Set("@a[gamemode=!spectator,team=]", getObjectiveByName(Objective.MSGDum.extendName("1CP" + i)), 1));
 
         // Remove Attacking tag
-        fileCommands.add(execute.As(new Entity("@a[team=,limit=1]"), false) +
-                execute.IfNext(new Entity("@s[scores={MSGDum2CP" + i + "=" + cpMessageThreshold + "}]"), true) +
+        fileCommands.add(execute.If(new Entity("@p[team=,scores={MSGDum2CP" + i + "=" + cpMessageThreshold + "}]")) +
                 removeTag("@a[team=]", Tag.AttackingCP.extendName(i)));
 
         return new FileData("" + FileName.controlpoint_messages_ + i, fileCommands);
@@ -2192,10 +2199,25 @@ public class Main {
     private FileData WorldPreload() {
         ArrayList<String> fileCommands = new ArrayList<>();
 
+        // Add score to keep track of time
         fileCommands.add(scoreboard.Add(admin, getObjectiveByName(Objective.WorldLoad), 1));
         fileCommands.add(scoreboard.Add(admin, getObjectiveByName(Objective.Time), 1));
-        fileCommands.add(execute.If(new Entity("@e[scores={WorldLoad=400..}]")) +
+
+        /* Spread players to load world */
+        // Load overworld
+        fileCommands.add(execute.If(new Entity("@e[scores={WorldLoad=400..,Time=..9600}]"), false) +
+                execute.InNext(Dimension.overworld, true) +
                 spreadPlayers(0, 0, 5, worldSize, false, "@a"));
+        // Load nether
+        fileCommands.add(execute.If(new Entity("@e[scores={WorldLoad=400..,Time=9600..}]"), false) +
+                execute.InNext(Dimension.the_nether, true) +
+                spreadPlayers(0, 0, 5, (worldSize / 4), false, "@a"));
+
+        // Reset counter
+        fileCommands.add(execute.If(new Entity("@e[scores={WorldLoad=400..}]")) +
+                scoreboard.Reset("@e", getObjectiveByName(Objective.WorldLoad)));
+
+        // Stop world preload
         fileCommands.add(execute.If(new Entity("@e[scores={Time=12000..}]"), false) +
                 execute.InNext(Dimension.overworld, true) +
                 setBlock(6, worldBottom + 2, 15, BlockType.bedrock));
@@ -2204,8 +2226,6 @@ public class Main {
                 teleportEntity("@a[gamemode=creative]", new Coordinate(0, 221, 0)));
         fileCommands.add(execute.If(new Entity("@e[scores={Time=12000..}]")) +
                 callFunction(FileName.developer_mode));
-        fileCommands.add(execute.If(new Entity("@e[scores={WorldLoad=400..}]")) +
-                scoreboard.Reset("@e", getObjectiveByName(Objective.WorldLoad)));
 
         return new FileData(FileName.world_pre_load, fileCommands);
     }
