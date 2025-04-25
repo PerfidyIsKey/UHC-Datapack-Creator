@@ -2199,10 +2199,25 @@ public class Main {
     private FileData WorldPreload() {
         ArrayList<String> fileCommands = new ArrayList<>();
 
+        // Add score to keep track of time
         fileCommands.add(scoreboard.Add(admin, getObjectiveByName(Objective.WorldLoad), 1));
         fileCommands.add(scoreboard.Add(admin, getObjectiveByName(Objective.Time), 1));
-        fileCommands.add(execute.If(new Entity("@e[scores={WorldLoad=400..}]")) +
+
+        /* Spread players to load world */
+        // Load overworld
+        fileCommands.add(execute.If(new Entity("@e[scores={WorldLoad=400..,Time=..9600}]"), false) +
+                execute.InNext(Dimension.overworld, true) +
                 spreadPlayers(0, 0, 5, worldSize, false, "@a"));
+        // Load nether
+        fileCommands.add(execute.If(new Entity("@e[scores={WorldLoad=400..,Time=9600..}]"), false) +
+                execute.InNext(Dimension.the_nether, true) +
+                spreadPlayers(0, 0, 5, (worldSize / 4), false, "@a"));
+
+        // Reset counter
+        fileCommands.add(execute.If(new Entity("@e[scores={WorldLoad=400..}]")) +
+                scoreboard.Reset("@e", getObjectiveByName(Objective.WorldLoad)));
+
+        // Stop world preload
         fileCommands.add(execute.If(new Entity("@e[scores={Time=12000..}]"), false) +
                 execute.InNext(Dimension.overworld, true) +
                 setBlock(6, worldBottom + 2, 15, BlockType.bedrock));
@@ -2211,8 +2226,6 @@ public class Main {
                 teleportEntity("@a[gamemode=creative]", new Coordinate(0, 221, 0)));
         fileCommands.add(execute.If(new Entity("@e[scores={Time=12000..}]")) +
                 callFunction(FileName.developer_mode));
-        fileCommands.add(execute.If(new Entity("@e[scores={WorldLoad=400..}]")) +
-                scoreboard.Reset("@e", getObjectiveByName(Objective.WorldLoad)));
 
         return new FileData(FileName.world_pre_load, fileCommands);
     }
