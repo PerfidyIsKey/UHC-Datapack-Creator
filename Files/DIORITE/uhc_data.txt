@@ -1,4 +1,4 @@
-uhcNumber:58
+uhcNumber:59
 teamMode:2
 startCoordinate:0,63,0
 minTraitorRank:20

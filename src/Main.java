@@ -1080,7 +1080,10 @@ public class Main {
         ArrayList<String> fileCommands = new ArrayList<>();
 
         // Set gamerules
-        fileCommands.add(setGameRule(GameRule.naturalRegeneration, false));
+        for (Dimension dimension : Dimension.values()) {
+            fileCommands.add(execute.In(dimension) +
+                    setGameRule(GameRule.naturalRegeneration, false));
+        }
         fileCommands.add(setGameRule(GameRule.doImmediateRespawn, true));
         fileCommands.add(setGameRule(GameRule.doPatrolSpawning, false));
         fileCommands.add(setGameRule(GameRule.doMobSpawning, false));
