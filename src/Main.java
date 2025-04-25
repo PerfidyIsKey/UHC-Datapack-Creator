@@ -1078,32 +1078,39 @@ public class Main {
 
     private FileData Initialize() {
         ArrayList<String> fileCommands = new ArrayList<>();
+
+        // Set gamerules
         fileCommands.add(setGameRule(GameRule.naturalRegeneration, false));
         fileCommands.add(setGameRule(GameRule.doImmediateRespawn, true));
         fileCommands.add(setGameRule(GameRule.doPatrolSpawning, false));
         fileCommands.add(setGameRule(GameRule.doMobSpawning, false));
         fileCommands.add(setGameRule(GameRule.doWeatherCycle, false));
+
+        // Set difficulty
         fileCommands.add(setDifficulty(Difficulty.hard));
+
+        // Set default gamemode
         fileCommands.add(setDefaultGameMode(GameMode.adventure));
+
+        // Set world spawn
         fileCommands.add(setWorldSpawn(new Coordinate(0, 221, 0)));
 
-        //scoreboard
+        // Create scoreboard objectives
         for (ScoreboardObjective objective : scoreboardObjectives) {
             fileCommands.add(objective.add());
         }
         fileCommands.add(new ScoreboardObjective().setDisplay(ScoreboardLocation.below_name, Objective.Hearts));
         fileCommands.add(new ScoreboardObjective().setDisplay(ScoreboardLocation.list, Objective.Hearts));
-        //end scoreboard
-        //bossbar
 
+        // Create bossbars
         fileCommands.add(getBossbarByName("cp1").remove());
         fileCommands.add(getBossbarByName("cp2").remove());
         fileCommands.add(getBossbarByName("cp1").add(controlPoints.get(0).getName() + ": " + controlPoints.get(0).getCoordinate().getX() + ", " + controlPoints.get(0).getCoordinate().getY() + ", " + controlPoints.get(0).getCoordinate().getZ() + " (" + controlPoints.get(0).getCoordinate().getDimensionName() + ")"));
         fileCommands.add(getBossbarByName("cp1").setMax(controlPoints.get(0).getMaxVal()));
         fileCommands.add(getBossbarByName("cp2").add(controlPoints.get(1).getName() + " soon: " + controlPoints.get(1).getCoordinate().getX() + ", " + controlPoints.get(1).getCoordinate().getY() + ", " + controlPoints.get(1).getCoordinate().getZ() + " (" + controlPoints.get(1).getCoordinate().getDimensionName() + ")"));
         fileCommands.add(getBossbarByName("cp2").setMax(controlPoints.get(1).getMaxVal()));
-        //end bossbar
-        //teams
+
+        // Create teams
         for (Team t : teams) {
             fileCommands.add(t.add());
             fileCommands.add(t.setTeamColor());
@@ -1112,9 +1119,8 @@ public class Main {
                 fileCommands.add(scoreboardObjectives.get(scoreboardObjectives.size() - 1).add());
             }
         }
-        //end teams
-        //structure
-        // Staging area
+
+        // Create staging area
         fileCommands.add(execute.In(Dimension.overworld) +
                 fill(-6, 220, -6, 6, 226, 6, BlockType.barrier));
         fileCommands.add(execute.In(Dimension.overworld) +
@@ -1122,7 +1128,7 @@ public class Main {
         fileCommands.add(execute.In(Dimension.overworld) +
                 setBlock(0, 222, -5, BlockType.cherry_wall_sign + "[facing=south,waterlogged=false]{back_text:{messages:['{\"text\":\"You have\"}','{\"text\":\"angered\"}','{\"text\":\"the Gods!\"}','{\"text\":\"\"}']},front_text:{messages:['{\"text\":\"Teleport\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"" + teleportEntity("@s", new Coordinate(5, worldBottom + 5, 5)) + "\"}}','{\"text\":\"to the\"}','{\"text\":\"Command center\"}','{\"text\":\"\"}']},is_waxed:0b}"));
 
-        // Command center
+        // Create command center
         fileCommands.add(execute.In(Dimension.overworld) +
                 setBlock(-2, worldBottom, -2, BlockType.structure_block + "[mode=load]{metadata:\"\",mirror:\"NONE\",ignoreEnti" +
                         "ties:0b,powered:0b,seed:0L,author:\"?\",rotation:\"NONE\",posX:1,mode:\"LOAD\",posY:1,sizeX:18,posZ:1," +
@@ -1135,9 +1141,6 @@ public class Main {
                 fill(15, worldBottom + 2, 15, 9, worldBottom + 2, 15, BlockType.bedrock));
         fileCommands.add(execute.In(Dimension.overworld) +
                 fill(15, worldBottom + 2, 15, 9, worldBottom + 2, 15, BlockType.redstone_block));
-        //end structure
-        //end structure
-        //
 
         return new FileData(FileName.initialize, fileCommands);
     }
@@ -1364,7 +1367,6 @@ public class Main {
         fileCommands.add(setGameRule(GameRule.doImmediateRespawn, true));
         fileCommands.add(setGameRule(GameRule.disableRaids, true));
         fileCommands.add(setGameRule(GameRule.doInsomnia, false));
-        fileCommands.add(setGameRule(GameRule.doPatrolSpawning, false));
 
         // Reset scores of all entities
         fileCommands.add(scoreboard.Reset("@e"));
