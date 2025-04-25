@@ -8,10 +8,8 @@ import ItemClasses.*;
 import ItemModifiers.*;
 import Predicates.*;
 import TeamGeneration.*;
-
-import java.io.IOException;
+import java.io.*;
 import java.util.*;
-
 import static java.lang.Integer.parseInt;
 
 public class Main {
@@ -86,6 +84,7 @@ public class Main {
 
         communityModeChange();
         createDatapack();
+        serverPropertiesEditor();
         System.out.println("Datapack created");
         if (args.length == 0) {
             boolean menuRunning = true;
@@ -109,10 +108,12 @@ public class Main {
                     int num = parseInt(command);
                     changeCommunitymode(num);
                     createDatapack();
+                    serverPropertiesEditor();
                     System.out.println("Datapack created");
                 } else if (input.equals("r")) {
                     communityModeChange();
                     createDatapack();
+                    serverPropertiesEditor();
                     System.out.println("Datapack created");
                 } else if (input.equals("t")) {
                     teamGenerator = new TeamGenerator(Double.parseDouble(uhcNumber), fileLocation, teams, communityMode);
@@ -174,6 +175,40 @@ public class Main {
         dataPackName = "uhc-datapack-" + uhcNumber + "v" + version;
         fileLocation = dataPackLocation + dataPackName + "\\data\\uhc\\";
 
+    }
+
+    private void serverPropertiesEditor() {
+        String filePath = "Server/server.properties";  // adjust path as needed
+        Properties properties = new Properties();
+
+        try (FileInputStream in = new FileInputStream(filePath)) {
+            // Load existing properties
+            properties.load(in);
+        } catch (IOException e) {
+            System.err.println("Failed to load server.properties: " + e.getMessage());
+            return;
+        }
+
+        // Modify properties
+        properties.setProperty("difficulty", "hard");
+        properties.setProperty("enable-command-block", "true");
+        properties.setProperty("gamemode", "adventure");
+        properties.setProperty("level-seed", "2751584510");
+        properties.setProperty("max-players", "50");
+        properties.setProperty("motd", communityName + " UHC S" + uhcNumber);
+        properties.setProperty("online-mode", "false");
+        properties.setProperty("simulation-distance", "5");
+        properties.setProperty("spawn-protection", "0");
+        properties.setProperty("view-distance", "7");
+
+        try (FileOutputStream out = new FileOutputStream(filePath)) {
+            // Save updated properties back to the file
+            properties.store(out, "Updated by Java program");
+        } catch (IOException e) {
+            System.err.println("Failed to save server.properties: " + e.getMessage());
+        }
+
+        System.out.println("server.properties updated successfully.");
     }
 
     private void initGameData() {

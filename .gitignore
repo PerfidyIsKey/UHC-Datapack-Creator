@@ -20,19 +20,10 @@ out/production/UHC-Datapack-Creator
 out/production/UHC-Datapack-Creator/
 
 # Server folders
-Server/cache
-Server/config
-Server/libraries
-Server/logs
-Server/plugins
+Server/
 !Server/plugins/*.jar
 !Server/plugins/OpenAudioMc/config.yml
-Server/versions
-Server/world
-Server/world_nether
-Server/world_the_end
-Server/.console_history
-Server/*.yml
+!Server/paper*.jar
 
 # Copy files
 playerConnections_copy.txt
