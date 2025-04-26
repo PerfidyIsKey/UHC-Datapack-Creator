@@ -13,6 +13,7 @@ public enum BlockType {
     bone("bone"),
     book("book"),
     bow("bow"),
+    bowl("bowl"),
     bread("bread"),
     bundle("bundle"),
     cave_air("cave_air"),
