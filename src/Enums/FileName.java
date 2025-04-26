@@ -23,6 +23,7 @@ public enum FileName {
     update_mine_count,
     update_min_health,
     eliminate_baby_wolf,
+    remove_banned_items,
 
     // Death
     handle_player_death,
