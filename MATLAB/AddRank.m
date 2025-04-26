@@ -42,9 +42,9 @@ end
 
 %%% Player data
 ParticipantIndex	= [01,02,17,25,33,48,54,63,70,73,74,77,78,79,NewIndex'];    % Define index of the participants
-Kills               = [00;00;01;00;00;00;01;01;08;00;00;03;01;00;00;00;00;00;00;00;00;00;03];              % Indicate amount of kills per player
-Position            = [14;18;04;03;13;20;01;21;01;19;08;11;05;09;23;22;17;16;15;12;10;07;06];              % Indicate final position
-Winner              = [00;00;00;00;00;00;01;00;01;00;00;00;00;00;00;00;00;00;00;00;00;00;00];              % Indicate whether the player won the season
+Kills               = [00;00;01;00;00;00;01;01;00;00;00;03;01;00;00;00;00;00;00;00;00;00;03];              % Indicate amount of kills per player
+Position            = [13;17;03;02;12;19;01;20;23;18;07;10;04;08;22;21;16;15;14;11;09;06;05];              % Indicate final position
+Winner              = [00;00;00;00;00;00;00;00;00;00;00;00;00;00;00;00;00;00;00;00;00;00;00];              % Indicate whether the player won the season
 NoPar               = size(ParticipantIndex,2);             % Indicate number of participants
 
 PC = [      % Indicate which players were in a team together
