@@ -20,19 +20,21 @@ out/production/UHC-Datapack-Creator
 out/production/UHC-Datapack-Creator/
 
 # Server folders
-Server/cache
-Server/config
-Server/libraries
-Server/logs
-Server/plugins
+# Ignore everything in Server
+Server/**
+
+# But don't ignore these files
+!Server/eula.txt
+!Server/paper-*.jar
+!Server/server.properties
+
+# Don't ignore .jar files in Server/plugins/
+!Server/plugins/
 !Server/plugins/*.jar
+
+# Don't ignore config.yml in OpenAudioMc subfolder
+!Server/plugins/OpenAudioMc/
 !Server/plugins/OpenAudioMc/config.yml
-Server/versions
-Server/world
-Server/world_nether
-Server/world_the_end
-Server/.console_history
-Server/*.yml
 
 # Copy files
 playerConnections_copy.txt
