@@ -1,5 +1,5 @@
 uhcNumber:59
-teamMode:2
+teamMode:1
 startCoordinate:0,63,0
 minTraitorRank:20
 traitorWaitTime:2
