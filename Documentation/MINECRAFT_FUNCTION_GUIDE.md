@@ -63,14 +63,12 @@ A list of all functions in the Java project with descriptions and their executio
   - Prepares world for deathmatch and spreads living players. 
   - Execution Method: Single-use
 
-- [ ] TODO
-
 - **debug_give**
-  - Debug tool to give items or effects.
+  - Give player access to debug messages. 
   - Execution Method: Single-use
 
 - **debug_remove**
-  - Debug tool to remove items or effects.
+  - Revoke player access to debug messages. 
   - Execution Method: Single-use
 
 - **developer_mode**
@@ -78,40 +76,46 @@ A list of all functions in the Java project with descriptions and their executio
   - Execution Method: Single-use
 
 - **disable_respawn**
-  - Prevents players from respawning.
-  - Execution Method: Continuous (High priority)
-
-- **display_quotes**
-  - Displays motivational or flavor quotes during gameplay.
+  - Disable automatic respawn mechanic. 
   - Execution Method: Single-use
 
+- **display_quotes**
+  - Displays quotes during gameplay.
+  - Execution Method: Continuous
+  - Priority: Low
+
 - **display_rank**
-  - Displays team or player ranking.
-  - Execution Method: Continuous (Medium priority)
+  - Displays player rankings in sidebar.
+  - Execution Method: Single-use 
 
 - **drop_carepackages**
-  - Triggers care package drops.
+  - Summon Care Packages as falling blocks.
   - Execution Method: Single-use
 
 - **drop_player_heads**
   - Drops player heads upon death.
-  - Execution Method: Continuous (Medium priority)
+  - Execution Method: Continuous
+  - Priority: Medium
 
 - **eliminate_baby_wolf**
-  - Removes baby wolves from the game.
-  - Execution Method: Single-use
+  - Kill baby wolves and summon a dolphin
+  - Execution Method: Continuous
+  - Priority: Low
 
 - **equip_gear**
-  - Equips players with default or specific gear.
+  - Equips players with basic iron armor and weapons. 
   - Execution Method: Single-use
 
 - **god_mode**
-  - Enables invincibility for debugging or dev play.
-  - Execution Method: Continuous (Low priority)
+  - Enables invincibility for caller.
+  - Execution Method: Single-use
 
 - **handle_player_death**
   - Handles events and clean-up when a player dies.
-  - Execution Method: Continuous (High priority)
+  - Execution Method: Continuous
+  - Priority: Medium
+
+- [ ] TODO
 
 - **horse_frost_walker**
   - Applies Frost Walker effect to horses.
