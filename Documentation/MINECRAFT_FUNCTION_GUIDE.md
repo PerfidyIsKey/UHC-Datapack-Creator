@@ -30,44 +30,40 @@ A list of all functions in the Java project with descriptions and their executio
   - Clears all players' Ender Chests.
   - Execution Method: Single-use
 
-
-- [] TODO
-
 - **clear_schedule**
-  - Clears scheduled tasks, e.g., timers or events.
+  - Clears scheduled functions.
   - Execution Method: Single-use
 
 - **control_point_captured**
-  - Handles logic for when a control point is captured.
-  - Execution Method: Continuous (High priority)
-
-- **controlpoint_1**
-  - Manages location or behavior of the first control point.
+  - Announces that the Control Point has been captured.
   - Execution Method: Single-use
 
-- **controlpoint_2**
-  - Manages location or behavior of the second control point.
-  - Execution Method: Single-use
+- **controlpoint_1** and **controlpoint_2**
+  - Award players CP score. Keep glass, beacon active. Call Control Point messages
+  - Execution Method: Continuous
+  - Priority: Medium
+  - Note: Computationally heavy
 
-- **controlpoint_messages_1**
-  - Displays messages related to controlpoint_1.
-  - Execution Method: Continuous (Low priority)
-
-- **controlpoint_messages_2**
-  - Displays messages related to controlpoint_2.
-  - Execution Method: Continuous (Low priority)
+- **controlpoint_messages_1** and **controlpoint_messages_2**
+  - Message logic and announcements for Control Point attacks and abandonment
+  - Execution Method: Continuous
+  - Priority: Low
+  - Note: Computationally heavy
 
 - **controlpoint_perks**
-  - Grants perks when players capture or hold control points.
-  - Execution Method: Continuous (Medium priority)
+  - Grants perks for Control Point progress.
+  - Execution Method: Continuous
+  - Priority: Low
 
 - **current_test_function**
   - Currently used for development testing.
   - Execution Method: Single-use
 
 - **death_match**
-  - Handles mechanics for initiating and running the deathmatch phase.
-  - Execution Method: Continuous (High priority)
+  - Prepares world for deathmatch and spreads living players. 
+  - Execution Method: Single-use
+
+- [ ] TODO
 
 - **debug_give**
   - Debug tool to give items or effects.
