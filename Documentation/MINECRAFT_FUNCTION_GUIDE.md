@@ -3,13 +3,13 @@
 A list of all functions in the Java project with descriptions and their execution methods.
 
 - **announce_iron_man**
-  - Sends a message in chat when Iron Man is crowned—either when the last full-health player takes damage or at game end.
-  - Execution Method: Continuous
-  - Priority: Low
+  - Sends a message in chat that Iron Man is crowned
+  - Execution Method: Single-use 
 
 - **battle_royale**
   - Spreads players for battle royale mode.
   - Execution Method: Single-use
+  - Note: Not used in regular game
 
 - **bbvalue**
   - Update value of bossbar, and color of bossbar and glass block.
@@ -18,17 +18,20 @@ A list of all functions in the Java project with descriptions and their executio
 
 - **carepackage_distributor**
   - Spreads Care Packages that have been spawned as falling blocks.
-  - Execution Method: Single-use
+  - Execution Method: Continuous
+  - Priority: Low
 
-
-- [ ] TODO
 - **check_iron_man**
   - Regularly checks which players are still at full health.
-  - Execution Method: Continuous (Medium priority)
+  - Execution Method: Continuous
+  - Priority: Low
 
 - **clear_enderchest**
   - Clears all players' Ender Chests.
   - Execution Method: Single-use
+
+
+- [] TODO
 
 - **clear_schedule**
   - Clears scheduled tasks, e.g., timers or events.
