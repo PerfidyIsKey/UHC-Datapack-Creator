@@ -115,78 +115,76 @@ A list of all functions in the Java project with descriptions and their executio
   - Execution Method: Continuous
   - Priority: Medium
 
-- [ ] TODO
-
 - **horse_frost_walker**
   - Applies Frost Walker effect to horses.
-  - Execution Method: Continuous (Low priority)
+  - Execution Method: Continuous
+  - Priority: Medium
 
 - **init**
-  - Initializes the plugin or game environment.
+  - Example.
   - Execution Method: Single-use
 
 - **initialize**
-  - Sets up main configuration or game state.
+  - Creates necessary scoreboard objectives, teams and start structures. 
   - Execution Method: Single-use
 
 - **initialize_controlpoint**
-  - Sets up control point locations and properties.
+  - Activates command blocks for Control Point functions. Sends activation message.
   - Execution Method: Single-use
 
 - **initiate_deathmatch**
-  - Prepares players and arena for the deathmatch.
+  - Schedules deathmatch related functions.
   - Execution Method: Single-use
 
 - **into_calls**
-  - Possibly routes command calls to the correct subfunction.
-  - Execution Method: Continuous (Medium priority)
+  - Teleport all players for the start of the game.
+  - Execution Method: Single-use
 
 - **join_team**
-  - Adds players to a team.
+  - Make custom team during the game.
   - Execution Method: Single-use
 
 - **locate_teammate**
-  - Lets players find teammates via coordinates or tracking.
-  - Execution Method: Continuous (Medium priority)
+  - Create particle effect to find closest team mate while holding the team mate tracker.
+  - Execution Method: Continuous
+  - Priority: Medium
 
 - **main**
-  - Main game loop or entry point for plugin.
-  - Execution Method: Continuous (Very High priority)
+  - Example.
+  - Execution Method: Continuous
+  - Priority: High
 
-- **minute_1**
-  - Triggers first-minute timed events.
-  - Execution Method: Single-use
-
-- **minute_2**
-  - Triggers second-minute timed events.
+- **minute_1** and **minute_2**
+  - Announces that there are 1, 2 minutes remaining, respectively. 
   - Execution Method: Single-use
 
 - **predictions**
-  - Manages voting or prediction mechanics.
+  - Teleport all players into the void for season predictions. 
   - Execution Method: Single-use
 
 - **random_teams1** to **random_teams8**
-  - Variants of random team assignment logic.
+  - Random team assignment logic for teams of 1-8.
   - Execution Method: Single-use
 
 - **remove_banned_items**
   - Strips items that are not allowed in gameplay.
-  - Execution Method: Continuous (High priority)
+  - Execution Method: Continuous
+  - Priority: Medium
 
 - **respawn_player**
-  - Respawns player under certain conditions (if allowed).
+  - Respawns player, remove death items, give team mate tools, reset health.
   - Execution Method: Single-use
 
 - **second_controlpoint**
-  - Initializes or manages the second phase of control points.
+  - Enables command block execution for CP2. Announces activation.
   - Execution Method: Single-use
 
 - **spawn_controlpoints**
-  - Spawns all control points into the game world.
+  - Spawns all control points into the game world and modifies the terrain to enable the beacon beam.
   - Execution Method: Single-use
 
 - **spread_players**
-  - Spreads players randomly across the map at game start.
+  - Spreads players/teams randomly across the map.
   - Execution Method: Single-use
 
 - **start_game**
@@ -194,28 +192,34 @@ A list of all functions in the Java project with descriptions and their executio
   - Execution Method: Single-use
 
 - **start_potions**
-  - Activates potion effects if enabled.
+  - Give player potions to activate the start of game functions.
   - Execution Method: Single-use
 
 - **survival_mode**
-  - Switches all players to survival mode.
+  - Set all gamerules to play mode.
   - Execution Method: Single-use
 
 - **team_score**
-  - Updates and tracks team score based on events.
-  - Execution Method: Continuous (Medium priority)
+  - Updates and tracks team CP score. Calls CP perks function. 
+  - Execution Method: Continuous
+  - Priority: Medium
 
 - **teams_alive_check**
-  - Checks how many teams are still alive.
-  - Execution Method: Continuous (High priority)
+  - Checks if only a single team/player is alive.
+  - Execution Method: Continuous
+  - Priority: Low
 
 - **teams_highscore_alive_check**
-  - Tracks top-performing teams still alive.
-  - Execution Method: Continuous (Medium priority)
+  - Check if a team/player/traitor has captured the Control Point.
+  - Execution Method: Continuous
+  - Priority: Low
 
 - **timer**
   - Main game timer logic.
-  - Execution Method: Continuous (Very High priority)
+  - Execution Method: Continuous
+  - Priority: High
+
+- [ ] TODO
 
 - **title_default_timing**
   - Sets how long title messages display.
