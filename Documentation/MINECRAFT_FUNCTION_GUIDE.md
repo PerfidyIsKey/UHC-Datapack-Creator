@@ -219,43 +219,48 @@ A list of all functions in the Java project with descriptions and their executio
   - Execution Method: Continuous
   - Priority: High
 
-- [ ] TODO
-
 - **title_default_timing**
-  - Sets how long title messages display.
+  - Sets how long title messages display to default values.
   - Execution Method: Single-use
 
 - **traitor_actionbar**
-  - Displays role info to traitors in the actionbar.
-  - Execution Method: Continuous (Medium priority)
+  - Displays Traitor Faction to its members. Calls Traitor victory check. 
+  - Execution Method: Continuous
+  - Priority: Low
 
 - **traitor_check**
-  - Checks which players are traitors.
-  - Execution Method: Continuous (High priority)
+  - Checks whether traitors and non-traitors are alive. 
+  - Execution Method: Continuous
+  - Priority: Medium
 
 - **traitor_handout**
-  - Assigns roles and abilities to traitors.
+  - Assigns random eligible players to the Traitor Faction. 
   - Execution Method: Single-use
 
 - **update_min_health**
-  - Adjusts the minimum health cap for players.
-  - Execution Method: Continuous (Medium priority)
+  - Updates the current minimum health of all players.
+  - Execution Method: Continuous
+  - Priority: Medium
 
 - **update_mine_count**
-  - Tracks how many ores have been mined.
-  - Execution Method: Continuous (Low priority)
+  - Tracks how many stone-like blocks have been mined.
+  - Execution Method: Continuous
+  - Priority: Low
 
 - **update_player_distance**
-  - Updates how far players are from each other.
-  - Execution Method: Continuous (Medium priority)
+  - Updates how far players are from a player trying to form a team. Calls function if all conditions are met, else send fitting refusal message. 
+  - Execution Method: Continuous
+  - Priority: Low
 
 - **update_public_cp_score**
-  - Displays control point scores publicly.
-  - Execution Method: Continuous (Medium priority)
+  - Displays CP scores publicly.
+  - Execution Method: Continuous
+  - Priority: Low
 
 - **update_sidebar**
-  - Updates sidebar HUD elements.
-  - Execution Method: Continuous (Medium priority)
+  - Updates sidebar scoreboard elements.
+  - Execution Method: Continuous
+  - Priority: Low
 
 - **victory**
   - Triggers end-game victory logic.
@@ -270,17 +275,19 @@ A list of all functions in the Java project with descriptions and their executio
   - Execution Method: Single-use
 
 - **victory_message_traitor**
-  - Displays win message if traitor wins.
+  - Displays win message if Traitor Faction wins.
   - Execution Method: Single-use
 
 - **wolf_collar_execute**
-  - Changes or reacts to wolf collar settings.
-  - Execution Method: Continuous (Low priority)
+  - Change wolf collar color to match team color of its owner. 
+  - Execution Method: Continuous
+  - Priority: Low
 
 - **world_pre_load**
-  - Pre-loads world elements before players join.
-  - Execution Method: Single-use
+  - Pre-loads overworld and nether terrain.
+  - Execution Method: Continuous
+  - Priority: Low
 
 - **world_pre_load_activation**
-  - Activates specific systems after pre-load.
+  - Activate command block for world pre-loading
   - Execution Method: Single-use
