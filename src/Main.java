@@ -676,11 +676,19 @@ public class Main {
     }
 
     private String callFunction(String functionName, double delayInSeconds) {
-        return "schedule " + callFunction(functionName) + " " + (int) (delayInSeconds * tickPerSecond) + "t";
+        return callFunction(functionName, delayInSeconds, Duration.seconds);
     }
 
     private String callFunction(FileName functionName, double delayInSeconds) {
-        return callFunction("" + functionName, delayInSeconds);
+        return callFunction("" + functionName, delayInSeconds, Duration.seconds);
+    }
+
+    private String callFunction(String functionName, double delay, Duration unit) {
+        return "schedule " + callFunction(functionName) + " " + delay + unit;
+    }
+
+    private String callFunction(FileName functionName, double delay, Duration unit) {
+        return callFunction("" + functionName, delay, unit);
     }
 
    // Clear schedule
@@ -2117,6 +2125,9 @@ public class Main {
         fileCommands.add(execute.If(new Entity("@e[scores={Victory=1}]")) +
                 callFunction(FileName.traitor_check));
 
+        // Reschedule function
+        fileCommands.add(callFunction(FileName.traitor_actionbar, 1));
+
         return new FileData(FileName.traitor_actionbar, fileCommands);
     }
 
@@ -2407,6 +2418,16 @@ public class Main {
 
         // Remove banned items
         fileCommands.add(callFunction(FileName.remove_banned_items));
+
+        // TODO: Schedule in-game events. These need to be one-time executions
+        fileCommands.add(execute.If("@e[scores={Time2=" + (20 * secPerMinute * tickPerSecond) + "}]") +
+                callFunction(FileName.drop_carepackages));
+        fileCommands.add(execute.If("@e[scores={Time2=" + (30 * secPerMinute * tickPerSecond) + "}]") +
+                callFunction(FileName.initialize_controlpoint));
+        fileCommands.add(execute.If("@e[scores={Time2=" + (40 * secPerMinute * tickPerSecond) + "}]") +
+                callFunction(FileName.traitor_handout));
+        fileCommands.add(execute.If("@e[scores={Time2=" + (40 * secPerMinute * tickPerSecond) + "}]") +
+                callFunction(FileName.traitor_actionbar));
 
         return new FileData(FileName.timer, fileCommands);
     }
@@ -2700,6 +2721,7 @@ public class Main {
         fileCommands.add(clearFunction(FileName.minute_ + "2"));
         fileCommands.add(clearFunction(FileName.minute_ + "1"));
         fileCommands.add(clearFunction(FileName.death_match));
+        fileCommands.add(clearFunction(FileName.traitor_actionbar));
 
         return new FileData(FileName.clear_schedule, fileCommands);
     }
