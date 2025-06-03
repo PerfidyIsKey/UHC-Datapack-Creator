@@ -996,6 +996,24 @@ public class Main {
         return "title " + targets + " times " + fadeIn + " " + duration + " " + fadeOut;
     }
 
+    // Store random number
+    private String storeRandomNumber(String targets, String objective, int min, int max) {
+        return execute.Store(ExecuteStore.result, targets, objective) +
+                "random value " + min + ".." + max;
+    }
+    private String storeRandomNumber(String targets, Objective objective, int min, int max) {
+        return execute.Store(ExecuteStore.result, targets, objective) +
+                "random value " + min + ".." + max;
+    }
+
+    private String storeRandomNumber(String objective, int min, int max) {
+        return storeRandomNumber(admin, objective, min, max);
+    }
+
+    private String storeRandomNumber(Objective objective, int min, int max) {
+        return storeRandomNumber(admin, objective, min, max);
+    }
+
     // Create function files
     private void makeFunctionFiles() {
         files.add(Initialize());
