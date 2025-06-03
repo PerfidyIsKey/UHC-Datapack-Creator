@@ -15,6 +15,7 @@ public enum BlockType {
     bow("bow"),
     bowl("bowl"),
     bread("bread"),
+    bricks("bricks"),
     bundle("bundle"),
     cave_air("cave_air"),
     cherry_wall_sign("cherry_wall_sign"),
