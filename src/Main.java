@@ -299,6 +299,7 @@ public class Main {
         scoreboardObjectives.add(new ScoreboardObjective(Objective.WolfAge, ObjectiveType.dummy));
         scoreboardObjectives.add(new ScoreboardObjective(Objective.FoundTeam, ObjectiveType.dummy));
         scoreboardObjectives.add(new ScoreboardObjective(Objective.Distance, ObjectiveType.dummy));
+        scoreboardObjectives.add(new ScoreboardObjective(Objective.RandomQuotes, ObjectiveType.dummy));
         scoreboardObjectives.add(new ScoreboardObjective(Objective.TimesCalled, "minecraft.used:minecraft.goat_horn"));
         scoreboardObjectives.add(new ScoreboardObjective(Objective.DamageTaken, "minecraft.custom:minecraft.damage_taken"));
         for (String s : cartesian) {
@@ -2392,9 +2393,6 @@ public class Main {
                 new TellRaw("@a", texts).sendRaw());
         texts.clear();
 
-        // Display quotes
-        fileCommands.add(callFunction(FileName.display_quotes));
-
         // Locate teammates with bundle
         fileCommands.add(callFunction(FileName.locate_teammate));
 
@@ -2522,11 +2520,13 @@ public class Main {
     private FileData DisplayQuotes() {
         ArrayList<String> fileCommands = new ArrayList<>();
 
-        for (int i = 0; i < 36; i++) {
-            int index = (int) (Math.random() * quotes.size());
-            fileCommands.add(execute.If(new Entity("@e[scores={Time2=" + (7 * secPerMinute * tickPerSecond * (i + 1)) + "}]")) +
-                    new TellRaw("@a", new Text(Color.white, false, false, quotes.get(index))).sendRaw());
-            quotes.remove(index);
+        // Roll a random number to pick a quote
+        fileCommands.add(storeRandomNumber(Objective.RandomQuotes, 0, quotes.size() - 1));
+
+        // Pick a quote from the list
+        for (int i = 0; i < quotes.size(); i++) {
+            fileCommands.add(execute.If(new Entity("@e[scores={RandomQuotes=" + i + "}]")) +
+                    new TellRaw("@a", new Text(Color.white, false, false, quotes.get(i))).sendRaw());
         }
 
         return new FileData(FileName.display_quotes, fileCommands);
