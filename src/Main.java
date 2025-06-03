@@ -1049,7 +1049,6 @@ public class Main {
         }
 
         files.add(DropCarepackages());
-        files.add(CarepackageDistributor());
         files.add(TraitorHandout());
         files.add(TraitorActionBar());
         files.add(TeamScore());
@@ -1441,7 +1440,6 @@ public class Main {
         fileCommands.add(removeTag("@a", Tag.RespawnDisabled));
         fileCommands.add(removeTag("@a", Tag.IronManCandidate));
         fileCommands.add(removeTag("@a", Tag.IronMan));
-        fileCommands.add(removeTag(admin, Tag.CarePackagesSpread));
         for (int i = 0; i < 4; i++) {
             fileCommands.add(removeTag("@a", Tag.ReceivedPerk.extendName(i + 1)));
         }
@@ -2020,30 +2018,14 @@ public class Main {
         // Summon Care Package entities
         for (int i = 0; i < carePackageAmount; i++) {
             fileCommands.add(execute.In(Dimension.overworld) +
-                    summonEntity(EntityType.area_effect_cloud, new Coordinate(0, 5, 0, ReferenceFrame.relative), "{Passengers:[{id:falling_block,Time:1,DropItem:0b,BlockState:{Name:\"minecraft:chest\"},TileEntityData:{CustomName:\"\\\"Loot chest\\\"\",LootTable:\"uhc:supply_drop\"}}]}"));
+                    summonEntity(EntityType.area_effect_cloud, new Coordinate(0, 300, 0), "{Tags:[\"CarePackage\"],Passengers:[{id:falling_block,Time:1,DropItem:0b,BlockState:{Name:\"minecraft:chest\"},TileEntityData:{CustomName:\"\\\"Loot chest\\\"\",LootTable:\"uhc:supply_drop\"}}]}"));
         }
 
-        return new FileData(FileName.drop_carepackages, fileCommands);
-    }
-
-    private FileData CarepackageDistributor() {
-        ArrayList<String> fileCommands = new ArrayList<>();
-
-        // Indicate that Care Packages are spread
-        fileCommands.add(execute.If("@e[type=" + EntityType.falling_block + ",distance=..2]") +
-                addTag(admin, Tag.CarePackagesSpread));
-
         // Spread Care Packages
-        fileCommands.add(execute.In(Dimension.overworld, false) +
-                execute.IfNext(new Entity("@e[type=" + EntityType.falling_block + ",distance=..2]"), true) +
-                spreadPlayers(0, 0, 10, carePackageSpread, false, "@e[type=" + EntityType.falling_block + ",distance=..2]"));
+        fileCommands.add(execute.In(Dimension.overworld, true) +
+                spreadPlayers(0, 0, 10, carePackageSpread, false, "@e[type=falling_block,nbt={Time:1,Tags:[\"CarePackage\"]}]"));
 
-        // Reset command blocks
-        fileCommands.add(execute.In(Dimension.overworld, false) +
-                execute.IfNext("@e[type=marker,limit=1,tag=" + Tag.CarePackagesSpread + "]", true) +
-                fill(0, (worldBottom + 2), 10, 0, (worldBottom + 2), 9, BlockType.bedrock));
-
-        return new FileData(FileName.carepackage_distributor, fileCommands);
+        return new FileData(FileName.drop_carepackages, fileCommands);
     }
 
     private FileData TraitorHandout() {
