@@ -80,9 +80,10 @@ A list of all functions in the Java project with descriptions and their executio
   - Execution Method: Single-use
 
 - **display_quotes**
-  - Displays quotes during gameplay.
-  - Execution Method: Continuous
+  - Rolls a random number and picks a quote to display.
+  - Execution Method: Self-scheduling, every 7 minutes
   - Priority: Low
+  - Initiation: start_game
 
 - **display_rank**
   - Displays player rankings in sidebar.

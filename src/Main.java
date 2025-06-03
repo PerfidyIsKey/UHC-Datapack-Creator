@@ -299,6 +299,7 @@ public class Main {
         scoreboardObjectives.add(new ScoreboardObjective(Objective.WolfAge, ObjectiveType.dummy));
         scoreboardObjectives.add(new ScoreboardObjective(Objective.FoundTeam, ObjectiveType.dummy));
         scoreboardObjectives.add(new ScoreboardObjective(Objective.Distance, ObjectiveType.dummy));
+        scoreboardObjectives.add(new ScoreboardObjective(Objective.RandomQuotes, ObjectiveType.dummy));
         scoreboardObjectives.add(new ScoreboardObjective(Objective.TimesCalled, "minecraft.used:minecraft.goat_horn"));
         scoreboardObjectives.add(new ScoreboardObjective(Objective.DamageTaken, "minecraft.custom:minecraft.damage_taken"));
         for (String s : cartesian) {
@@ -996,6 +997,24 @@ public class Main {
         return "title " + targets + " times " + fadeIn + " " + duration + " " + fadeOut;
     }
 
+    // Store random number
+    private String storeRandomNumber(String targets, String objective, int min, int max) {
+        return execute.Store(ExecuteStore.result, targets, objective) +
+                "random value " + min + ".." + max;
+    }
+    private String storeRandomNumber(String targets, Objective objective, int min, int max) {
+        return execute.Store(ExecuteStore.result, targets, objective) +
+                "random value " + min + ".." + max;
+    }
+
+    private String storeRandomNumber(String objective, int min, int max) {
+        return storeRandomNumber(admin, objective, min, max);
+    }
+
+    private String storeRandomNumber(Objective objective, int min, int max) {
+        return storeRandomNumber(admin, objective, min, max);
+    }
+
     // Create function files
     private void makeFunctionFiles() {
         files.add(Initialize());
@@ -1641,6 +1660,9 @@ public class Main {
 
         // Destroy all ground items
         fileCommands.add(killEntity("@e[type=item]"));
+
+        // Schedule functions
+        fileCommands.add(callFunction(FileName.display_quotes, 7 * secPerMinute));
 
         return new FileData(FileName.start_game, fileCommands);
     }
@@ -2374,9 +2396,6 @@ public class Main {
                 new TellRaw("@a", texts).sendRaw());
         texts.clear();
 
-        // Display quotes
-        fileCommands.add(callFunction(FileName.display_quotes));
-
         // Locate teammates with bundle
         fileCommands.add(callFunction(FileName.locate_teammate));
 
@@ -2504,12 +2523,17 @@ public class Main {
     private FileData DisplayQuotes() {
         ArrayList<String> fileCommands = new ArrayList<>();
 
-        for (int i = 0; i < 36; i++) {
-            int index = (int) (Math.random() * quotes.size());
-            fileCommands.add(execute.If(new Entity("@e[scores={Time2=" + (7 * secPerMinute * tickPerSecond * (i + 1)) + "}]")) +
-                    new TellRaw("@a", new Text(Color.white, false, false, quotes.get(index))).sendRaw());
-            quotes.remove(index);
+        // Roll a random number to pick a quote
+        fileCommands.add(storeRandomNumber(Objective.RandomQuotes, 0, quotes.size() - 1));
+
+        // Pick a quote from the list
+        for (int i = 0; i < quotes.size(); i++) {
+            fileCommands.add(execute.If(new Entity("@e[scores={RandomQuotes=" + i + "}]")) +
+                    new TellRaw("@a", new Text(Color.white, false, false, quotes.get(i))).sendRaw());
         }
+
+        // Reschedule displaying a new quote
+        fileCommands.add(callFunction(FileName.display_quotes, 7 * secPerMinute));
 
         return new FileData(FileName.display_quotes, fileCommands);
     }

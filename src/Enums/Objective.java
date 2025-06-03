@@ -35,7 +35,8 @@ public enum Objective {
         Square("Square"),
         DamageTaken("DamageTaken"),
         IsKiller("IsKiller"),
-        TempKills("TempKills");
+        TempKills("TempKills"),
+        RandomQuotes("RandomQuotes");
 
         private final String symbol;
 
