@@ -16,11 +16,6 @@ A list of all functions in the Java project with descriptions and their executio
   - Execution Method: Continuous
   - Priority: Medium
 
-- **carepackage_distributor**
-  - Spreads Care Packages that have been spawned as falling blocks.
-  - Execution Method: Continuous
-  - Priority: Low
-
 - **check_iron_man**
   - Regularly checks which players are still at full health.
   - Execution Method: Continuous
