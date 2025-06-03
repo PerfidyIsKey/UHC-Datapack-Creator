@@ -1661,6 +1661,9 @@ public class Main {
         // Destroy all ground items
         fileCommands.add(killEntity("@e[type=item]"));
 
+        // Schedule functions
+        fileCommands.add(callFunction(FileName.display_quotes, 7 * secPerMinute));
+
         return new FileData(FileName.start_game, fileCommands);
     }
 
@@ -2528,6 +2531,9 @@ public class Main {
             fileCommands.add(execute.If(new Entity("@e[scores={RandomQuotes=" + i + "}]")) +
                     new TellRaw("@a", new Text(Color.white, false, false, quotes.get(i))).sendRaw());
         }
+
+        // Reschedule displaying a new quote
+        fileCommands.add(callFunction(FileName.display_quotes, 7 * secPerMinute));
 
         return new FileData(FileName.display_quotes, fileCommands);
     }
