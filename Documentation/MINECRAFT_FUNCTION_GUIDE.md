@@ -315,7 +315,7 @@ A list of all functions in the Java project with descriptions and their executio
   - Execution Method: Continuous (self-scheduling)
   - Interval: 20 ticks
   - Parents: start_game
-  - Children: locate_teammate, eliminate_baby_wolf, check_iron_man, update_mine_count
+  - Children: locate_teammate, eliminate_baby_wolf, check_iron_man, update_mine_count, update_sidebar
 
 - **timer_traitor_5**
   - Timer for Traitor Faction functions with interval of 5 ticks
@@ -384,7 +384,9 @@ A list of all functions in the Java project with descriptions and their executio
 - **update_sidebar**
   - Updates sidebar scoreboard elements.
   - Execution Method: Continuous
-  - Priority: Low
+  - Interval: 20 ticks
+  - Parents: timer_main_20
+  - Children: -
 
 - **victory**
   - Triggers end-game victory logic.

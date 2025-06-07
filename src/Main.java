@@ -2419,9 +2419,6 @@ public class Main {
         ArrayList<String> fileCommands = new ArrayList<>();
         ArrayList<TextItem> texts = new ArrayList<>();
 
-        // Update sidebar
-        fileCommands.add(Schedule.callFunction(FileName.update_sidebar));
-
         // PVP message
         fileCommands.add(execute.If(new Entity("@e[scores={Time2=" + (300 * tickPerSecond) + "}]")) +
                 new TellRaw("@a", new Text(Color.gray, false, false, "PVP IS NOT ALLOWED UNTIL DAY 2!")).sendRaw());
