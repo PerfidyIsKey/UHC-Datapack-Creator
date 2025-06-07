@@ -3119,7 +3119,8 @@ public class Main {
         // Timer for functions that should be executed every 5 ticks
         ArrayList<String> fileCommands = new ArrayList<>();
 
-
+        // Self-schedule timer
+        fileCommands.add(callFunction(FileName.timer_main_5, 5, Duration.ticks));
 
         return new FileData(FileName.timer_main_5, fileCommands);
     }
@@ -3133,9 +3134,8 @@ public class Main {
         fileCommands.add(execute.Store(ExecuteStore.result, "CurrentTime", getObjectiveByName(Objective.Time)) +
                 scoreboard.Get(adminSingle, getObjectiveByName(Objective.TimeDum)));
 
-        // Schedule functions
-
-
+        // Self-schedule timer
+        fileCommands.add(callFunction(FileName.timer_main_20, 20, Duration.ticks));
 
         return new FileData(FileName.timer_main_20, fileCommands);
     }
