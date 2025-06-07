@@ -2390,11 +2390,9 @@ public class Main {
 
 
 
-        
 
-        // Let united players make a team
-        fileCommands.add(execute.If("@p[scores={TimesCalled=1..}]") +
-                Schedule.callFunction(FileName.update_player_distance));
+
+        
 
 
         return new FileData(FileName.timer, fileCommands);

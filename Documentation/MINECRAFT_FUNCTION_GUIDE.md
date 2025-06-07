@@ -171,6 +171,8 @@ A list of all functions in the Java project with descriptions and their executio
 - **join_team**
   - Make custom team during the game.
   - Execution Method: Single-use
+  - Parents: update_player_distance
+  - Children: -
 
 - **locate_teammate**
   - Create particle effect to find closest team mate while holding the team mate tracker.
@@ -378,9 +380,11 @@ A list of all functions in the Java project with descriptions and their executio
   - Children: -
 
 - **update_player_distance**
-  - Updates how far players are from a player trying to form a team. Calls function if all conditions are met, else send fitting refusal message. 
+  - Updates how far players are from a player trying to form a team. 
   - Execution Method: Continuous
-  - Priority: Low
+  - Interval: 5 ticks
+  - Parents: timer_main_5
+  - Children: join_team
 
 - **update_public_cp_score**
   - Displays CP scores publicly.

@@ -40,6 +40,8 @@ public class Update {
         fileCommands.add(Schedule.callFunction(FileName.horse_frost_walker));
         fileCommands.add(Schedule.callFunction(FileName.remove_banned_items));
         fileCommands.add(Schedule.callFunction(FileName.update_min_health));
+        fileCommands.add(Main.execute.If("@p[scores={TimesCalled=1..}]") +
+                Schedule.callFunction(FileName.update_player_distance));    // Check if custom team can be made
 
         // Self-schedule timer
         fileCommands.add(Schedule.callFunction(FileName.timer_main_5, 5, Duration.ticks));
@@ -59,9 +61,6 @@ public class Update {
                 Schedule.callFunction(FileName.update_mine_count)); // Update strip mine count
         fileCommands.add(Schedule.callFunction(FileName.update_sidebar));
         fileCommands.add(Schedule.callFunction(FileName.wolf_updates));
-
-
-
 
         // Timer scoreboard
         fileCommands.add(Main.scoreboard.Add(Main.admin, Objective.TimeDum, 1));
