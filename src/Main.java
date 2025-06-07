@@ -41,8 +41,8 @@ public class Main {
     //GameData<
     private static final int chestSize = 27;
     private static final String commandCenter = "s58";
-    private static final String admin = "@e[type=marker]";
-    private static final String adminSingle = "@e[type=marker,limit=1]";
+    public static final String admin = "@e[type=marker]";
+    public static final String adminSingle = "@e[type=marker,limit=1]";
     private Coordinate startCoordinate;
     private ArrayList<Team> teams = new ArrayList<>();
     private ArrayList<ControlPoint> cpList = new ArrayList<>();
@@ -55,8 +55,8 @@ public class Main {
     private static int worldSize;  // Maximum possible coordinate
     private static final int worldHeight = 257;
     private static final int worldBottom = -64;
-    private static final int tickPerSecond = 20;
-    private static final int secPerMinute = 60;
+    public static final int tickPerSecond = 20;
+    public static final int secPerMinute = 60;
     private static final int maxCPScore = 2400;
     private static final int maxCPScoreBossbar = 20 * secPerMinute * tickPerSecond * 2;
     private static final int cpMessageThreshold = 5 * tickPerSecond;
@@ -69,8 +69,8 @@ public class Main {
     private int traitorWaitTime;
     private static final int traitorMode = 1;
     private String communityName;
-    private static final Execute execute = new Execute();
-    private static final Scoreboard scoreboard = new Scoreboard();
+    public static final Execute execute = new Execute();
+    public static final Scoreboard scoreboard = new Scoreboard();
 
     private final Text bannerText = new Text(Color.dark_gray, true, false, " | ");
 
@@ -657,11 +657,11 @@ public class Main {
         return bossBars.stream().filter(bossBar -> name.equals(bossBar.getName())).findAny().orElse(null);
     }
 
-    private ScoreboardObjective getObjectiveByName(String name) {
+    public ScoreboardObjective getObjectiveByName(String name) {
         return scoreboardObjectives.stream().filter(objective -> name.equals(objective.getName())).findAny().orElse(null);
     }
 
-    private ScoreboardObjective getObjectiveByName(Objective name) {
+    public ScoreboardObjective getObjectiveByName(Objective name) {
         return scoreboardObjectives.stream().filter(objective -> name.toString().equals(objective.getName())).findAny().orElse(null);
     }
 
@@ -854,11 +854,11 @@ public class Main {
         return "effect give " + entity + " minecraft:" + effect + " " + duration + " " + amplifier + " " + hideParticles;
     }
 
-    private String clearEffect(String entity, Effect effect) {
+    public String clearEffect(String entity, Effect effect) {
         return "effect clear " + entity + " minecraft:" + effect;
     }
 
-    private String clearEffect(String entity) {
+    public String clearEffect(String entity) {
         return "effect clear " + entity;
     }
 
@@ -3093,133 +3093,6 @@ public class Main {
 
         return new FileData(FileName.current_test_function, fileCommands);
     }
-
-    private FileData TimerMain1() {
-        // Timer for functions that should be executed each tick
-        ArrayList<String> fileCommands = new ArrayList<>();
-
-        // Timer scoreboard
-        fileCommands.add(scoreboard.Add(admin, getObjectiveByName(Objective.Time.extendName(2)), 1));
-
-        // Scheduled events
-        fileCommands.add(execute.If("@e[scores={Time2=" + (20 * secPerMinute * tickPerSecond) + "}]") +
-                callFunction(FileName.drop_carepackages));
-        fileCommands.add(execute.If("@e[scores={Time2=" + (30 * secPerMinute * tickPerSecond) + "}]") +
-                callFunction(FileName.initialize_control_point));
-        fileCommands.add(execute.If("@e[scores={Time2=" + (40 * secPerMinute * tickPerSecond) + "}]") +
-                callFunction(FileName.traitor_handout));
-
-        // Self-schedule timer
-        fileCommands.add(callFunction(FileName.timer_main_1, 1, Duration.ticks));
-
-        return new FileData(FileName.timer_main_1, fileCommands);
-    }
-
-    private FileData TimerMain5() {
-        // Timer for functions that should be executed every 5 ticks
-        ArrayList<String> fileCommands = new ArrayList<>();
-
-        // Self-schedule timer
-        fileCommands.add(callFunction(FileName.timer_main_5, 5, Duration.ticks));
-
-        return new FileData(FileName.timer_main_5, fileCommands);
-    }
-
-    private FileData TimerMain20() {
-        // Timer for functions that should be executed every 20 ticks
-        ArrayList<String> fileCommands = new ArrayList<>();
-
-        // Timer scoreboard
-        fileCommands.add(scoreboard.Add(admin, getObjectiveByName(Objective.TimeDum), 1));
-        fileCommands.add(execute.Store(ExecuteStore.result, "CurrentTime", getObjectiveByName(Objective.Time)) +
-                scoreboard.Get(adminSingle, getObjectiveByName(Objective.TimeDum)));
-
-        // Self-schedule timer
-        fileCommands.add(callFunction(FileName.timer_main_20, 20, Duration.ticks));
-
-        return new FileData(FileName.timer_main_20, fileCommands);
-    }
-
-    private FileData TimerControlPoint5() {
-        // Timer for Control Point continuous functions with interval of 5 ticks
-        ArrayList<String> fileCommands = new ArrayList<>();
-
-        // Schedule continuous functions
-        fileCommands.add(callFunction(FileName.bbvalue));
-        for (int i = 1; i < 3; i++) {
-            fileCommands.add(callFunction("" + FileName.control_point_ + i));
-            fileCommands.add(execute.If("@p[scores={ControlPoint" + i + "=" + 48000 + "..}]") +
-                    callFunction(FileName.control_point_captured));
-        }
-        fileCommands.add(callFunction(FileName.team_score));
-
-
-        // Self-schedule timer
-        fileCommands.add(callFunction(FileName.timer_control_point_5, 5, Duration.ticks));
-
-        return new FileData(FileName.timer_control_point_5, fileCommands);
-    }
-
-    private FileData TimerControlPoint20() {
-        // Timer for Control Point continuous functions with interval of 20 ticks
-        ArrayList<String> fileCommands = new ArrayList<>();
-
-        // Schedule continuous functions
-        for (int i = 1; i < 3; i++) {
-            fileCommands.add(callFunction("" + FileName.control_point_messages_ + i));
-        }
-        fileCommands.add(callFunction(FileName.control_point_perks));
-        fileCommands.add(callFunction(FileName.update_public_cp_score));
-        fileCommands.add(execute.If("@p[scores=ControlPoint1={" + 14400 + "..}]") +
-                callFunction(FileName.second_control_point));
-
-
-        // Self-schedule timer
-        fileCommands.add(callFunction(FileName.timer_control_point_20, 20, Duration.ticks));
-
-        return new FileData(FileName.timer_control_point_20, fileCommands);
-    }
-
-    private FileData TimerTraitor5() {
-        // Timer for Traitor Faction continuous functions with interval of 5 ticks
-        ArrayList<String> fileCommands = new ArrayList<>();
-
-        // Schedule continuous functions
-        fileCommands.add(execute.If(new Entity("@e[scores={Victory=1}]")) +
-                callFunction(FileName.traitor_check));  // Check if traitors have won
-
-        // Self-schedule timer
-        fileCommands.add(callFunction(FileName.timer_traitor_5, 5, Duration.ticks));
-
-        return new FileData(FileName.timer_traitor_5, fileCommands);
-    }
-
-    private FileData TimerTraitor20() {
-        // Timer for Traitor Faction continuous functions with interval of 20 ticks
-        ArrayList<String> fileCommands = new ArrayList<>();
-
-        // Schedule continuous functions
-        fileCommands.add(callFunction(FileName.traitor_actionbar)); // Display traitor actionbar
-
-        // Self-schedule timer
-        fileCommands.add(callFunction(FileName.timer_traitor_20, 20, Duration.ticks));
-
-        return new FileData(FileName.timer_traitor_20, fileCommands);
-    }
-
-    private FileData TimerDeveloper20() {
-        // Timer for Developer mode continuous functions with interval of 20 ticks
-        ArrayList<String> fileCommands = new ArrayList<>();
-
-        // Schedule continuous functions
-        fileCommands.add(callFunction(FileName.developer_potion_control));
-
-        // Self-schedule timer
-        fileCommands.add(callFunction(FileName.timer_developer_20, 20, Duration.ticks));
-
-        return new FileData(FileName.timer_developer_20, fileCommands);
-    }
-
     private FileData DeveloperPotionControl() {
         // Turn potion effect into function execution
         ArrayList<String> fileCommands = new ArrayList<>();
@@ -3229,7 +3102,7 @@ public class Main {
 
         for (int i = 0; i < effects.length; i++) {
             fileCommands.add(execute.If("@a[gamemode=creative,nbt={active_effects:[{id:\"minecraft:" + effects[i] + "\"}]}]") +
-                    callFunction(functions[i]));
+                    Schedule.callFunction(functions[i]));
 
             fileCommands.add(execute.If("@a[gamemode=creative,nbt={active_effects:[{id:\"minecraft:" + effects[i] + "\"}]}]") +
                     clearEffect("@e", effects[i]));
@@ -3237,5 +3110,4 @@ public class Main {
 
         return new FileData(FileName.developer_potion_control, fileCommands);
     }
-
 }

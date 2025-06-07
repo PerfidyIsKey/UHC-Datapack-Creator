@@ -13,10 +13,16 @@ public class Scoreboard {
     public String Add(String targets, ScoreboardObjective objective, int score) {
         return "scoreboard players add " + targets + " " + objective.getName() + " " + score;
     }
+    public String Add(String targets, Objective objective, int score) {
+        return "scoreboard players add " + targets + " " + objective + " " + score;
+    }
 
     // players get
     public String Get(String target, ScoreboardObjective objective) {
         return "scoreboard players get " + target + " " + objective.getName();
+    }
+    public String Get(String target, Objective objective) {
+        return "scoreboard players get " + target + " " + objective;
     }
 
     // players operation

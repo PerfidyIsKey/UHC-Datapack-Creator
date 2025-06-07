@@ -1,64 +1,152 @@
-import Enums.Duration;
-import Enums.FileName;
+import Enums.*;
 import FileGeneration.FileData;
+import HelperClasses.Entity;
+import HelperClasses.Execute;
+import  HelperClasses.Scoreboard;
+
 
 import java.util.ArrayList;
 
 public class Update {
-    public FileData TimerTick1() {
+
+    private FileData TimerMain1() {
         // Timer for functions that should be executed each tick
         ArrayList<String> fileCommands = new ArrayList<>();
-        fileCommands.add(Schedule.callFunction(FileName.timer_tick_1, 1, Duration.ticks));
-        return new FileData(FileName.timer_tick_1, fileCommands);
+
+        // Timer scoreboard
+        fileCommands.add(Main.scoreboard.Add(Main.admin, Objective.Time2, 1));
+
+        // Scheduled events
+        fileCommands.add(Main.execute.If("@e[scores={Time2=" + (20 * Main.secPerMinute * Main.tickPerSecond) + "}]") +
+                Schedule.callFunction(FileName.drop_carepackages));
+        fileCommands.add(Main.execute.If("@e[scores={Time2=" + (30 * Main.secPerMinute * Main.tickPerSecond) + "}]") +
+                Schedule.callFunction(FileName.initialize_control_point));
+        fileCommands.add(Main.execute.If("@e[scores={Time2=" + (40 * Main.secPerMinute * Main.tickPerSecond) + "}]") +
+                Schedule.callFunction(FileName.traitor_handout));
+
+        // Self-schedule timer
+        fileCommands.add(Schedule.callFunction(FileName.timer_main_1, 1, Duration.ticks));
+
+        return new FileData(FileName.timer_main_1, fileCommands);
     }
 
-    public FileData TimerTick5() {
+    private FileData TimerMain5() {
         // Timer for functions that should be executed every 5 ticks
         ArrayList<String> fileCommands = new ArrayList<>();
 
         // Schedule functions
-        for (int i = 1; i < 3; i++)
-            fileCommands.add(Schedule.callFunction("" + FileName.controlpoint_ + i, 5, Duration.ticks));
-
-        fileCommands.add(Schedule.callFunction(FileName.team_score));
-        fileCommands.add(Schedule.callFunction(FileName.traitor_check));
         fileCommands.add(Schedule.callFunction(FileName.handle_player_death));
         fileCommands.add(Schedule.callFunction(FileName.horse_frost_walker));
         fileCommands.add(Schedule.callFunction(FileName.locate_teammate));
         fileCommands.add(Schedule.callFunction(FileName.remove_banned_items));
         fileCommands.add(Schedule.callFunction(FileName.update_min_health));
 
-        fileCommands.add(Schedule.callFunction(FileName.timer_tick_5));
-        return new FileData(FileName.timer_tick_5, fileCommands);
+        // Self-schedule timer
+        fileCommands.add(Schedule.callFunction(FileName.timer_main_5, 5, Duration.ticks));
+
+        return new FileData(FileName.timer_main_5, fileCommands);
     }
 
-    public FileData TimerTick20() {
+    private FileData TimerMain20() {
         // Timer for functions that should be executed every 20 ticks
         ArrayList<String> fileCommands = new ArrayList<>();
 
         // Schedule functions
-        fileCommands.add(Schedule.callFunction(FileName.carepackage_distributor));
-
-        for (int i = 1; i < 3; i++) {
-            fileCommands.add(Schedule.callFunction("" + FileName.controlpoint_messages_ + i));
-        }
-        fileCommands.add(Schedule.callFunction(FileName.controlpoint_perks));
-        fileCommands.add(Schedule.callFunction(FileName.teams_alive_check));
-        fileCommands.add(Schedule.callFunction(FileName.teams_highscore_alive_check));
-        fileCommands.add(Schedule.callFunction(FileName.traitor_actionbar));
-        fileCommands.add(Schedule.callFunction(FileName.update_public_cp_score));
         fileCommands.add(Schedule.callFunction(FileName.eliminate_baby_wolf));
         fileCommands.add(Schedule.callFunction(FileName.check_iron_man));
         fileCommands.add(Schedule.callFunction(FileName.update_mine_count));
         fileCommands.add(Schedule.callFunction(FileName.update_sidebar));
         fileCommands.add(Schedule.callFunction(FileName.wolf_collar_execute));
-        fileCommands.add(Schedule.callFunction(FileName.check_iron_man));
+
+        // Timer scoreboard
+        fileCommands.add(Main.scoreboard.Add(Main.admin, Objective.TimeDum, 1));
+        fileCommands.add(Main.execute.Store(ExecuteStore.result, "CurrentTime", Objective.Time) +
+                Main.scoreboard.Get(Main.adminSingle,Objective.TimeDum));
+
+        // Self-schedule timer
+        fileCommands.add(Schedule.callFunction(FileName.timer_main_20, 20, Duration.ticks));
+
+        return new FileData(FileName.timer_main_20, fileCommands);
+    }
+
+    private FileData TimerControlPoint5() {
+        // Timer for Control Point continuous functions with interval of 5 ticks
+        ArrayList<String> fileCommands = new ArrayList<>();
+
+        // Schedule continuous functions
+        fileCommands.add(Schedule.callFunction(FileName.bbvalue));
+        for (int i = 1; i < 3; i++) {
+            fileCommands.add(Schedule.callFunction("" + FileName.control_point_ + i));
+            fileCommands.add(Main.execute.If("@p[scores={ControlPoint" + i + "=" + 48000 + "..}]") +
+                    Schedule.callFunction(FileName.control_point_captured));
+        }
+        fileCommands.add(Schedule.callFunction(FileName.team_score));
 
 
-        fileCommands.add(Schedule.callFunction(FileName.timer_tick_20, 20, Duration.ticks));
-        return new FileData(FileName.timer_tick_20, fileCommands);
+        // Self-schedule timer
+        fileCommands.add(Schedule.callFunction(FileName.timer_control_point_5, 5, Duration.ticks));
+
+        return new FileData(FileName.timer_control_point_5, fileCommands);
+    }
+
+    private FileData TimerControlPoint20() {
+        // Timer for Control Point continuous functions with interval of 20 ticks
+        ArrayList<String> fileCommands = new ArrayList<>();
+
+        // Schedule continuous functions
+        for (int i = 1; i < 3; i++) {
+            fileCommands.add(Schedule.callFunction("" + FileName.control_point_messages_ + i));
+        }
+        fileCommands.add(Schedule.callFunction(FileName.control_point_perks));
+        fileCommands.add(Schedule.callFunction(FileName.update_public_cp_score));
+        fileCommands.add(Main.execute.If("@p[scores=ControlPoint1={" + 14400 + "..}]") +
+                Schedule.callFunction(FileName.second_control_point));
 
 
+        // Self-schedule timer
+        fileCommands.add(Schedule.callFunction(FileName.timer_control_point_20, 20, Duration.ticks));
+
+        return new FileData(FileName.timer_control_point_20, fileCommands);
+    }
+
+    private FileData TimerTraitor5() {
+        // Timer for Traitor Faction continuous functions with interval of 5 ticks
+        ArrayList<String> fileCommands = new ArrayList<>();
+
+        // Schedule continuous functions
+        fileCommands.add(Main.execute.If(new Entity("@e[scores={Victory=1}]")) +
+                Schedule.callFunction(FileName.traitor_check));  // Check if traitors have won
+
+        // Self-schedule timer
+        fileCommands.add(Schedule.callFunction(FileName.timer_traitor_5, 5, Duration.ticks));
+
+        return new FileData(FileName.timer_traitor_5, fileCommands);
+    }
+
+    private FileData TimerTraitor20() {
+        // Timer for Traitor Faction continuous functions with interval of 20 ticks
+        ArrayList<String> fileCommands = new ArrayList<>();
+
+        // Schedule continuous functions
+        fileCommands.add(Schedule.callFunction(FileName.traitor_actionbar)); // Display traitor actionbar
+
+        // Self-schedule timer
+        fileCommands.add(Schedule.callFunction(FileName.timer_traitor_20, 20, Duration.ticks));
+
+        return new FileData(FileName.timer_traitor_20, fileCommands);
+    }
+
+    private FileData TimerDeveloper20() {
+        // Timer for Developer mode continuous functions with interval of 20 ticks
+        ArrayList<String> fileCommands = new ArrayList<>();
+
+        // Schedule continuous functions
+        fileCommands.add(Schedule.callFunction(FileName.developer_potion_control));
+
+        // Self-schedule timer
+        fileCommands.add(Schedule.callFunction(FileName.timer_developer_20, 20, Duration.ticks));
+
+        return new FileData(FileName.timer_developer_20, fileCommands);
     }
 }
 
