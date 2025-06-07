@@ -31,11 +31,7 @@ A list of all functions in the Java project with descriptions and their executio
   - Clears scheduled functions.
   - Execution Method: Single-use
 
-- **control_point_captured**
-  - Announces that the Control Point has been captured.
-  - Execution Method: Single-use
-
-- **controlpoint_1** and **controlpoint_2**
+- **control_point_1** and **control_point_2**
   - Award players CP score. Keep glass, beacon active. Call Control Point messages
   - Execution Method: Continuous
   - Interval: 5 ticks
@@ -43,7 +39,14 @@ A list of all functions in the Java project with descriptions and their executio
   - Children: - 
   - Note: Computationally heavy
 
-- **controlpoint_messages_1** and **controlpoint_messages_2**
+- **control_point_captured**
+  - Announces that the Control Point has been captured.
+  - Execution Method: Continuous
+  - Interval: 5 ticks
+  - Parents: timer_control_point_5
+  - Children: teams_highscore_alive_check
+
+- **control_point_messages_1** and **control_point_messages_2**
   - Message logic and announcements for Control Point attacks and abandonment
   - Execution Method: Continuous
   - Interval: 20 ticks
@@ -51,7 +54,7 @@ A list of all functions in the Java project with descriptions and their executio
   - Children: -
   - Note: Computationally heavy
 
-- **controlpoint_perks**
+- **control_point_perks**
   - Grants perks for Control Point progress.
   - Execution Method: Continuous
   - Interval: 20 ticks
@@ -131,7 +134,7 @@ A list of all functions in the Java project with descriptions and their executio
   - Creates necessary scoreboard objectives, teams and start structures. 
   - Execution Method: Single-use
 
-- **initialize_controlpoint**
+- **initialize_control_point**
   - Activates command blocks for Control Point functions. Sends activation message.
   - Execution Method: Single-use
 
@@ -178,11 +181,11 @@ A list of all functions in the Java project with descriptions and their executio
   - Respawns player, remove death items, give team mate tools, reset health.
   - Execution Method: Single-use
 
-- **second_controlpoint**
+- **second_control_point**
   - Enables command block execution for CP2. Announces activation.
   - Execution Method: Single-use
 
-- **spawn_controlpoints**
+- **spawn_control_points**
   - Spawns all control points into the game world and modifies the terrain to enable the beacon beam.
   - Execution Method: Single-use
 
@@ -214,12 +217,16 @@ A list of all functions in the Java project with descriptions and their executio
 - **teams_alive_check**
   - Checks if only a single team/player is alive.
   - Execution Method: Continuous
-  - Priority: Low
+  - Interval: 5 ticks
+  - Parents: traitor_check
+  - Children: victory_message_0 to victory_message_12, victory_message_solo
 
 - **teams_highscore_alive_check**
   - Check if a team/player/traitor has captured the Control Point.
   - Execution Method: Continuous
   - Priority: Low
+  - Parents: control_point_captured
+  - Children: victory_message_0 to victory_message_12, victory_message_solo, victory_message_traitor
 
 - **timer**
   - Main game timer logic.
@@ -230,15 +237,15 @@ A list of all functions in the Java project with descriptions and their executio
   - Timer for Control Point related functions with interval of 5 ticks
   - Execution Method: Continuous (self-scheduling)
   - Interval: 5 ticks
-  - Parents: initialize_controlpoint
-  - Children: bbvalue, controlpoint_1, controlpoint_2
+  - Parents: initialize_control_point
+  - Children: bbvalue, control_point_1, control_point_2, team_score, control_point_captured
 
 - **timer_control_point_20**
   - Timer for Control Point related functions with interval of 20 ticks
   - Execution Method: Continuous (self-scheduling)
   - Interval: 20 ticks
-  - Parents: initialize_controlpoint
-  - Children: controlpoint_messages_1, controlpoint_messages_2
+  - Parents: initialize_control_point
+  - Children: control_point_messages_1, control_point_messages_2
 
 - **timer_main_1**
   - Timer for main functions with interval of 1 tick
