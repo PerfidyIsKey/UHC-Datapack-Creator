@@ -316,7 +316,7 @@ A list of all functions in the Java project with descriptions and their executio
   - Execution Method: Continuous (self-scheduling)
   - Interval: 20 ticks
   - Parents: start_game
-  - Children: locate_teammate, eliminate_baby_wolf, check_iron_man, update_mine_count, update_sidebar
+  - Children: locate_teammate, eliminate_baby_wolf, check_iron_man, update_mine_count, update_sidebar, wolf_collar_execute
 
 - **timer_traitor_5**
   - Timer for Traitor Faction functions with interval of 5 ticks
@@ -408,7 +408,9 @@ A list of all functions in the Java project with descriptions and their executio
 - **wolf_collar_execute**
   - Change wolf collar color to match team color of its owner. 
   - Execution Method: Continuous
-  - Priority: Low
+  - Interval: 20 ticks
+  - Parents: timer_main_20
+  - Children: -
 
 - **world_pre_load**
   - Pre-loads overworld and nether terrain.

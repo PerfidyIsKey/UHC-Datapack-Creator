@@ -2436,9 +2436,6 @@ public class Main {
         // Display quotes
         fileCommands.add(Schedule.callFunction(FileName.display_quotes));
 
-        // Update wolf collars
-        fileCommands.add(Schedule.callFunction(FileName.wolf_collar_execute));
-
         // Set tamed wolf base health
         fileCommands.add(execute.As(new Entity("@e[type=wolf]"), false) +
                 execute.IfNext(DataClasses.entity, "@s Owner", true) +

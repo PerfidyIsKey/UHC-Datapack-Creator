@@ -59,10 +59,10 @@ public class Update {
         fileCommands.add(Main.execute.As("@a") +
                 Schedule.callFunction(FileName.update_mine_count)); // Update strip mine count
         fileCommands.add(Schedule.callFunction(FileName.update_sidebar));
-
-
-
         fileCommands.add(Schedule.callFunction(FileName.wolf_collar_execute));
+
+
+
 
         // Timer scoreboard
         fileCommands.add(Main.scoreboard.Add(Main.admin, Objective.TimeDum, 1));
