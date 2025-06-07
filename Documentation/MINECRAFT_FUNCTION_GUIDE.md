@@ -5,6 +5,8 @@ A list of all functions in the Java project with descriptions and their executio
 - **announce_iron_man**
   - Sends a message in chat that Iron Man is crowned
   - Execution Method: Single-use 
+  - Parents: check_iron_man, victory
+  - Children: -
 
 - **battle_royale**
   - Spreads players for battle royale mode.
@@ -21,7 +23,9 @@ A list of all functions in the Java project with descriptions and their executio
 - **check_iron_man**
   - Regularly checks which players are still at full health.
   - Execution Method: Continuous
-  - Priority: Low
+  - Interval: 20 ticks
+  - Parents: timer_main_20
+  - Children: announce_iron_man
 
 - **clear_enderchest**
   - Clears all players' Ender Chests.
@@ -312,7 +316,7 @@ A list of all functions in the Java project with descriptions and their executio
   - Execution Method: Continuous (self-scheduling)
   - Interval: 20 ticks
   - Parents: start_game
-  - Children: locate_teammate, eliminate_baby_wolf
+  - Children: locate_teammate, eliminate_baby_wolf, check_iron_man
 
 - **timer_traitor_5**
   - Timer for Traitor Faction functions with interval of 5 ticks
