@@ -248,7 +248,7 @@ A list of all functions in the Java project with descriptions and their executio
   - Execution Method: Continuous (self-scheduling)
   - Interval: 20 ticks
   - Parents: initialize_control_point
-  - Children: control_point_messages_1, control_point_messages_2
+  - Children: control_point_messages_1, control_point_messages_2, control_point_perks, update_public_cp_score
 
 - **timer_main_1**
   - Timer for main functions with interval of 1 tick
@@ -327,7 +327,9 @@ A list of all functions in the Java project with descriptions and their executio
 - **update_public_cp_score**
   - Displays CP scores publicly.
   - Execution Method: Continuous
-  - Priority: Low
+  - Interval: 20 ticks
+  - Parents: timer_control_point_20
+  - Children: -
 
 - **update_sidebar**
   - Updates sidebar scoreboard elements.

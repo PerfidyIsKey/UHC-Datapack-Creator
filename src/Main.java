@@ -2325,9 +2325,6 @@ public class Main {
         fileCommands.add(execute.As(new Entity("@a")) +
                 callFunction(FileName.update_mine_count));
 
-        // Update public team CP scores
-        fileCommands.add(callFunction(FileName.update_public_cp_score));
-
         return new FileData(FileName.update_sidebar, fileCommands);
     }
 
@@ -3122,7 +3119,6 @@ public class Main {
         ArrayList<String> fileCommands = new ArrayList<>();
 
         // Schedule functions
-        fileCommands.add(callFunction(FileName.update_public_cp_score, 20, Duration.ticks));
 
 
 
@@ -3158,6 +3154,8 @@ public class Main {
             fileCommands.add(callFunction("" + FileName.control_point_messages_ + i));
         }
         fileCommands.add(callFunction(FileName.control_point_perks));
+        fileCommands.add(callFunction(FileName.update_public_cp_score));
+
 
         // Self-schedule timer
         fileCommands.add(callFunction(FileName.timer_control_point_20, 20, Duration.ticks));
