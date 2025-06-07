@@ -14,10 +14,11 @@ public enum FileName {
     start_game,
     start_potions,
 
-    // Timer main
+    // Timer functions
     timer_tick_1,
     timer_tick_5,
     timer_tick_20,
+    timer_control_point,
 
     // Timer
     horse_frost_walker,
@@ -49,7 +50,6 @@ public enum FileName {
 
     // Care Packages
     drop_carepackages,
-    carepackage_distributor,
 
     // Traitor Faction
     traitor_handout,

@@ -1298,9 +1298,6 @@ public class Main {
         fileCommands.add(execute.Store(ExecuteStore.result, getBossbarByName("cp2"), BossBarStore.value) +
                 scoreboard.Get("@e[limit=1,scores={Highscore1=14400..}]", getObjectiveByName(Objective.Highscore.extendName(2))));
 
-        // Self-schedule
-        fileCommands.add(callFunction(FileName.bbvalue, 5, Duration.ticks));
-
         return new FileData(FileName.bbvalue, fileCommands);
     }
 
@@ -1704,7 +1701,7 @@ public class Main {
         fileCommands.add(setGameRule(GameRule.doDaylightCycle, false));
 
         // Schedule continuous functions
-        fileCommands.add(callFunction(FileName.bbvalue));
+        fileCommands.add(callFunction(FileName.timer_control_point));
 
         return new FileData(FileName.initialize_controlpoint, fileCommands);
     }
@@ -3101,9 +3098,6 @@ public class Main {
         ArrayList<String> fileCommands = new ArrayList<>();
 
         // Schedule functions
-        for (int i = 1; i < 3; i++) {
-            fileCommands.add(callFunction("" + FileName.controlpoint_ + i, 5, Duration.ticks));
-        }
         fileCommands.add(callFunction(FileName.drop_player_heads, 5, Duration.ticks));
         fileCommands.add(callFunction(FileName.team_score, 5, Duration.ticks));
         fileCommands.add(callFunction(FileName.traitor_check, 5, Duration.ticks));
@@ -3117,8 +3111,6 @@ public class Main {
         ArrayList<String> fileCommands = new ArrayList<>();
 
         // Schedule functions
-        fileCommands.add(callFunction(FileName.carepackage_distributor, 20, Duration.ticks));
-
         for (int i = 1; i < 3; i++) {
             fileCommands.add(callFunction("" + FileName.controlpoint_messages_ + i, 20, Duration.ticks));
         }
@@ -3132,5 +3124,20 @@ public class Main {
 
         return new FileData(FileName.timer_tick_20, fileCommands);
     }
-}
 
+    private FileData TimerControlPoint() {
+        // Timer for Control Point continuous functions
+        ArrayList<String> fileCommands = new ArrayList<>();
+
+        // Schedule continuous functions
+        fileCommands.add(callFunction(FileName.bbvalue));
+        for (int i = 1; i < 3; i++) {
+            fileCommands.add(callFunction("" + FileName.controlpoint_ + i, 5, Duration.ticks));
+        }
+
+        // Self-schedule timer
+        fileCommands.add(callFunction(FileName.timer_control_point, 5, Duration.ticks));
+
+        return new FileData(FileName.timer_control_point, fileCommands);
+    }
+}
