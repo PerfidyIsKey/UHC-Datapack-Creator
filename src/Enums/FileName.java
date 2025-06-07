@@ -14,6 +14,11 @@ public enum FileName {
     start_game,
     start_potions,
 
+    // Timer main
+    timer_tick_1,
+    timer_tick_5,
+    timer_tick_20,
+
     // Timer
     horse_frost_walker,
     wolf_collar_execute,
