@@ -53,8 +53,9 @@ public class Update {
 
         // Schedule functions
         fileCommands.add(Schedule.callFunction(FileName.locate_teammate));
-
         fileCommands.add(Schedule.callFunction(FileName.eliminate_baby_wolf));
+
+
         fileCommands.add(Schedule.callFunction(FileName.check_iron_man));
         fileCommands.add(Schedule.callFunction(FileName.update_mine_count));
         fileCommands.add(Schedule.callFunction(FileName.update_sidebar));
