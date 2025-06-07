@@ -1653,6 +1653,19 @@ public class Main {
         // Destroy all ground items
         fileCommands.add(killEntity("@e[type=item]"));
 
+        // Schedule continuous functions
+        fileCommands.add(callFunction(FileName.handle_player_death, 5, Duration.ticks));
+        fileCommands.add(callFunction(FileName.horse_frost_walker, 5, Duration.ticks));
+        fileCommands.add(callFunction(FileName.locate_teammate, 5, Duration.ticks));
+        fileCommands.add(callFunction(FileName.remove_banned_items, 5, Duration.ticks));
+        fileCommands.add(callFunction(FileName.update_min_health, 5, Duration.ticks));
+        fileCommands.add(callFunction(FileName.eliminate_baby_wolf, 20, Duration.ticks));
+        fileCommands.add(callFunction(FileName.check_iron_man, 20, Duration.ticks));
+        fileCommands.add(callFunction(FileName.update_mine_count, 20, Duration.ticks));
+        fileCommands.add(callFunction(FileName.update_sidebar, 20, Duration.ticks));
+        fileCommands.add(callFunction(FileName.wolf_collar_execute, 20, Duration.ticks));
+        fileCommands.add(callFunction(FileName.check_iron_man, 20, Duration.ticks));
+
         return new FileData(FileName.start_game, fileCommands);
     }
 
@@ -3087,13 +3100,8 @@ public class Main {
             fileCommands.add(callFunction("" + FileName.controlpoint_ + i, 5, Duration.ticks));
         }
         fileCommands.add(callFunction(FileName.drop_player_heads, 5, Duration.ticks));
-        fileCommands.add(callFunction(FileName.handle_player_death, 5, Duration.ticks));
-        fileCommands.add(callFunction(FileName.horse_frost_walker, 5, Duration.ticks));
-        fileCommands.add(callFunction(FileName.locate_teammate, 5, Duration.ticks));
-        fileCommands.add(callFunction(FileName.remove_banned_items, 5, Duration.ticks));
         fileCommands.add(callFunction(FileName.team_score, 5, Duration.ticks));
         fileCommands.add(callFunction(FileName.traitor_check, 5, Duration.ticks));
-        fileCommands.add(callFunction(FileName.update_min_health, 5, Duration.ticks));
 
 
         return new FileData(FileName.timer_tick_5, fileCommands);
@@ -3105,19 +3113,17 @@ public class Main {
 
         // Schedule functions
         fileCommands.add(callFunction(FileName.carepackage_distributor, 20, Duration.ticks));
-        fileCommands.add(callFunction(FileName.check_iron_man, 20, Duration.ticks));
+
         for (int i = 1; i < 3; i++) {
             fileCommands.add(callFunction("" + FileName.controlpoint_messages_ + i, 20, Duration.ticks));
         }
         fileCommands.add(callFunction(FileName.controlpoint_perks, 20, Duration.ticks));
-        fileCommands.add(callFunction(FileName.eliminate_baby_wolf, 20, Duration.ticks));
         fileCommands.add(callFunction(FileName.teams_alive_check, 20, Duration.ticks));
         fileCommands.add(callFunction(FileName.teams_highscore_alive_check, 20, Duration.ticks));
         fileCommands.add(callFunction(FileName.traitor_actionbar, 20, Duration.ticks));
-        fileCommands.add(callFunction(FileName.update_mine_count, 20, Duration.ticks));
         fileCommands.add(callFunction(FileName.update_public_cp_score, 20, Duration.ticks));
-        fileCommands.add(callFunction(FileName.update_sidebar, 20, Duration.ticks));
-        fileCommands.add(callFunction(FileName.wolf_collar_execute, 20, Duration.ticks));
+
+
 
         return new FileData(FileName.timer_tick_20, fileCommands);
     }
