@@ -175,7 +175,9 @@ A list of all functions in the Java project with descriptions and their executio
 - **locate_teammate**
   - Create particle effect to find closest team mate while holding the team mate tracker.
   - Execution Method: Continuous
-  - Priority: Medium
+  - Interval: 20 ticks
+  - Parents: timer_main_20
+  - Children: -
 
 - **main**
   - Example.
@@ -299,14 +301,14 @@ A list of all functions in the Java project with descriptions and their executio
   - Execution Method: Continuous (self-scheduling)
   - Interval: 5 ticks
   - Parents: start_game
-  - Children: handle_player_death
+  - Children: handle_player_death, horse_frost_walker
 
 - **timer_main_20**
   - Timer for main functions with interval of 20 ticks
   - Execution Method: Continuous (self-scheduling)
   - Interval: 20 ticks
   - Parents: start_game
-  - Children: -
+  - Children: locate_teammate
 
 - **timer_traitor_5**
   - Timer for Traitor Faction functions with interval of 5 ticks

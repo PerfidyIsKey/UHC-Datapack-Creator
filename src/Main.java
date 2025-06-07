@@ -2443,9 +2443,6 @@ public class Main {
         // Display quotes
         fileCommands.add(Schedule.callFunction(FileName.display_quotes));
 
-        // Locate teammates with bundle
-        fileCommands.add(Schedule.callFunction(FileName.locate_teammate));
-
         // Update minimum health
         fileCommands.add(Schedule.callFunction(FileName.update_min_health));
 
@@ -2803,7 +2800,6 @@ public class Main {
                 texts.clear();
             }
         }
-
 
         return new FileData(FileName.locate_teammate, fileCommands);
     }
