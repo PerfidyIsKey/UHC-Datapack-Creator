@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 public class Update {
 
-    private FileData TimerMain1() {
+    public FileData TimerMain1() {
         // Timer for functions that should be executed each tick
         ArrayList<String> fileCommands = new ArrayList<>();
 
@@ -30,12 +30,15 @@ public class Update {
         return new FileData(FileName.timer_main_1, fileCommands);
     }
 
-    private FileData TimerMain5() {
+    public FileData TimerMain5() {
         // Timer for functions that should be executed every 5 ticks
         ArrayList<String> fileCommands = new ArrayList<>();
 
         // Schedule functions
-        fileCommands.add(Schedule.callFunction(FileName.handle_player_death));
+        fileCommands.add(Main.execute.If("@p[scores={Deaths=1}]") +
+                Schedule.callFunction(FileName.handle_player_death));
+
+
         fileCommands.add(Schedule.callFunction(FileName.horse_frost_walker));
         fileCommands.add(Schedule.callFunction(FileName.locate_teammate));
         fileCommands.add(Schedule.callFunction(FileName.remove_banned_items));
@@ -47,7 +50,7 @@ public class Update {
         return new FileData(FileName.timer_main_5, fileCommands);
     }
 
-    private FileData TimerMain20() {
+    public FileData TimerMain20() {
         // Timer for functions that should be executed every 20 ticks
         ArrayList<String> fileCommands = new ArrayList<>();
 
@@ -69,7 +72,7 @@ public class Update {
         return new FileData(FileName.timer_main_20, fileCommands);
     }
 
-    private FileData TimerControlPoint5() {
+    public FileData TimerControlPoint5() {
         // Timer for Control Point continuous functions with interval of 5 ticks
         ArrayList<String> fileCommands = new ArrayList<>();
 
@@ -89,7 +92,7 @@ public class Update {
         return new FileData(FileName.timer_control_point_5, fileCommands);
     }
 
-    private FileData TimerControlPoint20() {
+    public FileData TimerControlPoint20() {
         // Timer for Control Point continuous functions with interval of 20 ticks
         ArrayList<String> fileCommands = new ArrayList<>();
 
@@ -109,7 +112,7 @@ public class Update {
         return new FileData(FileName.timer_control_point_20, fileCommands);
     }
 
-    private FileData TimerTraitor5() {
+    public FileData TimerTraitor5() {
         // Timer for Traitor Faction continuous functions with interval of 5 ticks
         ArrayList<String> fileCommands = new ArrayList<>();
 
@@ -123,7 +126,7 @@ public class Update {
         return new FileData(FileName.timer_traitor_5, fileCommands);
     }
 
-    private FileData TimerTraitor20() {
+    public FileData TimerTraitor20() {
         // Timer for Traitor Faction continuous functions with interval of 20 ticks
         ArrayList<String> fileCommands = new ArrayList<>();
 
@@ -136,7 +139,7 @@ public class Update {
         return new FileData(FileName.timer_traitor_20, fileCommands);
     }
 
-    private FileData TimerDeveloper20() {
+    public FileData TimerDeveloper20() {
         // Timer for Developer mode continuous functions with interval of 20 ticks
         ArrayList<String> fileCommands = new ArrayList<>();
 

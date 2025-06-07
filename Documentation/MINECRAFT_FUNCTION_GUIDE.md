@@ -132,7 +132,9 @@ A list of all functions in the Java project with descriptions and their executio
 - **handle_player_death**
   - Handles events and clean-up when a player dies.
   - Execution Method: Continuous
-  - Priority: Medium
+  - Interval: 5 ticks
+  - Parents: timer_main_5
+  - Children: drop_player_heads, respawn_player
 
 - **horse_frost_walker**
   - Applies Frost Walker effect to horses.
@@ -294,7 +296,7 @@ A list of all functions in the Java project with descriptions and their executio
   - Execution Method: Continuous (self-scheduling)
   - Interval: 5 ticks
   - Parents: start_game
-  - Children: -
+  - Children: handle_player_death
 
 - **timer_main_20**
   - Timer for main functions with interval of 20 ticks

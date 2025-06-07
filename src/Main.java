@@ -1153,16 +1153,16 @@ public class Main {
 
         // Timer main functions
         Update Updating = new Update();
-        files.add(Updating.TimerTick1());
-        files.add(Updating.TimerTick5());
-        files.add(Updating.TimerTick20());
+        files.add(Updating.TimerMain1());
+        files.add(Updating.TimerMain5());
+        files.add(Updating.TimerMain20());
 
         // Timer functions
-        files.add(TimerControlPoint5());
+        /*files.add(TimerControlPoint5());
         files.add(TimerControlPoint20());
         files.add(TimerTraitor5());
         files.add(TimerTraitor20());
-        files.add(TimerDeveloper20());
+        files.add(TimerDeveloper20());*/
 
         // Gamestart functions
         files.add(GameStart.GameStarter());
@@ -1733,13 +1733,13 @@ public class Main {
         fileCommands.add(killEntity("@e[type=item]"));
 
         // Schedule continuous functions
-        fileCommands.add(callFunction(FileName.timer_main_1));
-        fileCommands.add(callFunction(FileName.timer_main_5));
-        fileCommands.add(callFunction(FileName.timer_main_20));
+        fileCommands.add(Schedule.callFunction(FileName.timer_main_1));
+        fileCommands.add(Schedule.callFunction(FileName.timer_main_5));
+        fileCommands.add(Schedule.callFunction(FileName.timer_main_20));
 
 
         // Disable developer timers
-        fileCommands.add(clearFunction(FileName.timer_developer_20));
+        fileCommands.add(Schedule.clearFunction(FileName.timer_developer_20));
 
         return new FileData(FileName.start_game, fileCommands);
     }
@@ -2422,10 +2422,6 @@ public class Main {
     private FileData Timer() {
         ArrayList<String> fileCommands = new ArrayList<>();
         ArrayList<TextItem> texts = new ArrayList<>();
-
-        // Announce dead players
-        fileCommands.add(execute.If(new Entity("@p[scores={Deaths=1}]")) +
-                Schedule.callFunction(FileName.handle_player_death));
 
         // Update sidebar
         fileCommands.add(Schedule.callFunction(FileName.update_sidebar));
