@@ -101,10 +101,11 @@ A list of all functions in the Java project with descriptions and their executio
   - Execution Method: Single-use
 
 - **display_quotes**
-  - Rolls a random number and picks a quote to display.
-  - Execution Method: Self-scheduling, every 7 minutes
-  - Priority: Low
-  - Initiation: start_game
+  - Displays quotes during gameplay.
+  - Execution Method: Continuous
+  - Interval: 7 minutes
+  - Parents: start_game
+  - Children: -
 
 - **display_rank**
   - Displays player rankings in sidebar.
@@ -185,10 +186,23 @@ A list of all functions in the Java project with descriptions and their executio
   - Parents: timer_main_20
   - Children: -
 
-- **main**
-  - Example.
-  - Execution Method: Continuous
-  - Priority: High
+- **messages_pvp**
+  - PVP disabled message
+  - Execution Method: Single-use
+  - Parents: messages_schedule_single
+  - Children: -
+
+- **messages_eternal_day**
+  - Eternal day enabled message
+  - Execution Method: Single-use
+  - Parents: messages_schedule_single
+  - Children: -
+
+- **messages_schedule_single**
+  - Combination function for all single send messages
+  - Execution Method: Single-use
+  - Parents: start_game
+  - Children: messages_pvp, messages_eternal_day
 
 - **minute_1** and **minute_2**
   - Announces that there are 1, 2 minutes remaining, respectively. 
@@ -238,7 +252,7 @@ A list of all functions in the Java project with descriptions and their executio
   - Begins the match and all core timers.
   - Execution Method: Single-use
   - Parents: developer_potion_control
-  - Children: timer_main_1, timer_main_5, timer_main_20
+  - Children: timer_main_1, timer_main_5, timer_main_20, display_quotes, messages_schedule_single
 
 - **start_potions**
   - Give player potions to activate the start of game functions.

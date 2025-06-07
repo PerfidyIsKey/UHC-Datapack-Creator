@@ -1151,6 +1151,11 @@ public class Main {
 
         files.add(TitleDefaultTiming());
 
+        // Messages
+        files.add(ScheduleSingleMessages());
+        files.add(MessagePVP());
+        files.add(MessageEternalDay());
+
         // Timer main functions
         Update Updating = new Update();
         files.add(Updating.TimerMain1());
@@ -2417,24 +2422,8 @@ public class Main {
 
     private FileData Timer() {
         ArrayList<String> fileCommands = new ArrayList<>();
-        ArrayList<TextItem> texts = new ArrayList<>();
 
-        // PVP message
-        fileCommands.add(execute.If(new Entity("@e[scores={Time2=" + (300 * tickPerSecond) + "}]")) +
-                new TellRaw("@a", new Text(Color.gray, false, false, "PVP IS NOT ALLOWED UNTIL DAY 2!")).sendRaw());
 
-        // Eternal day message
-        texts.add(bannerText);
-        texts.add(new Text(Color.gold, true, false, communityName + " UHC"));
-        texts.add(bannerText);
-        texts.add(new Text(Color.light_purple, true, false, "DAY TIME HAS ARRIVED & ETERNAL DAY ENABLED!"));
-        texts.add(bannerText);
-        fileCommands.add(execute.If(new Entity("@e[scores={Time2=" + (1200 * tickPerSecond) + "}]")) +
-                new TellRaw("@a", texts).sendRaw());
-        texts.clear();
-
-        // Display quotes
-        fileCommands.add(Schedule.callFunction(FileName.display_quotes));
 
         // Set tamed wolf base health
         fileCommands.add(execute.As(new Entity("@e[type=wolf]"), false) +
@@ -3128,4 +3117,42 @@ public class Main {
 
         return new FileData(FileName.developer_potion_control, fileCommands);
     }
+
+    private FileData ScheduleSingleMessages() {
+        // Schedule messages that are only shown once
+        ArrayList<String> fileCommands = new ArrayList<>();
+
+        fileCommands.add(Schedule.callFunction(FileName.messages_pvp, 5 * secPerMinute));
+        fileCommands.add(Schedule.callFunction(FileName.messages_eternal_day, 20 * secPerMinute));
+
+        return new FileData(FileName.messages_schedule_single, fileCommands);
+    }
+
+    private FileData MessagePVP() {
+        // Schedule messages that are only shown once
+        ArrayList<String> fileCommands = new ArrayList<>();
+
+        // Message
+        fileCommands.add(new TellRaw("@a", new Text(Color.gray, false, false, "PVP IS NOT ALLOWED UNTIL DAY 2!")).sendRaw());
+
+        return new FileData(FileName.messages_pvp, fileCommands);
+    }
+
+    private FileData MessageEternalDay() {
+        // Schedule messages that are only shown once
+        ArrayList<String> fileCommands = new ArrayList<>();
+
+        // Message
+        ArrayList<TextItem> texts = new ArrayList<>();
+        texts.add(bannerText);
+        texts.add(new Text(Color.gold, true, false, communityName + " UHC"));
+        texts.add(bannerText);
+        texts.add(new Text(Color.light_purple, true, false, "DAY TIME HAS ARRIVED & ETERNAL DAY ENABLED!"));
+        texts.add(bannerText);
+        fileCommands.add(new TellRaw("@a", texts).sendRaw());
+        texts.clear();
+
+        return new FileData(FileName.messages_eternal_day, fileCommands);
+    }
+
 }
