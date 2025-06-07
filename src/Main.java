@@ -1131,7 +1131,6 @@ public class Main {
         files.add(HorseFrostWalker());
 
         files.add(UpdateSidebar());
-        files.add(Timer());
         files.add(RemoveBannedItems());
         files.add(ControlPointPerks());
         files.add(DisplayQuotes());
@@ -2383,19 +2382,6 @@ public class Main {
         fileCommands.add(replaceItem("@p[nbt={SelectedItem:{id:\"minecraft:suspicious_stew\",count:1}}]", InventorySlot.mainhand, BlockType.bowl));
 
         return new FileData(FileName.remove_banned_items, fileCommands);
-    }
-
-    private FileData Timer() {
-        ArrayList<String> fileCommands = new ArrayList<>();
-
-
-
-
-
-        
-
-
-        return new FileData(FileName.timer, fileCommands);
     }
 
     // Perks for being on the Control Point

@@ -30,7 +30,6 @@ public enum FileName {
     horse_frost_walker,
     wolf_updates,
     update_sidebar,
-    timer,
     display_quotes,
     update_mine_count,
     update_min_health,
