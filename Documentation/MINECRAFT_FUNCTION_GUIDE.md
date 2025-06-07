@@ -122,13 +122,6 @@ A list of all functions in the Java project with descriptions and their executio
   - Execution Method: Continuous
   - Priority: Medium
 
-- **eliminate_baby_wolf**
-  - Kill baby wolves and summon a dolphin
-  - Execution Method: Continuous
-  - Interval: 20 ticks
-  - Parents: timer_main_20
-  - Children: -
-
 - **equip_gear**
   - Equips players with basic iron armor and weapons. 
   - Execution Method: Single-use
@@ -330,7 +323,7 @@ A list of all functions in the Java project with descriptions and their executio
   - Execution Method: Continuous (self-scheduling)
   - Interval: 20 ticks
   - Parents: start_game
-  - Children: locate_teammate, eliminate_baby_wolf, check_iron_man, update_mine_count, update_sidebar, wolf_collar_execute
+  - Children: locate_teammate, check_iron_man, update_mine_count, update_sidebar, wolf_updates
 
 - **timer_traitor_5**
   - Timer for Traitor Faction functions with interval of 5 ticks
@@ -419,8 +412,8 @@ A list of all functions in the Java project with descriptions and their executio
   - Displays win message if Traitor Faction wins.
   - Execution Method: Single-use
 
-- **wolf_collar_execute**
-  - Change wolf collar color to match team color of its owner. 
+- **wolf_updates**
+  - Update wolf parameters, such as collar color, base health, and baby elimination 
   - Execution Method: Continuous
   - Interval: 20 ticks
   - Parents: timer_main_20
