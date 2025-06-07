@@ -2455,10 +2455,6 @@ public class Main {
         fileCommands.add(execute.If("@p[scores={TimesCalled=1..}]") +
                 Schedule.callFunction(FileName.update_player_distance));
 
-        // Update iron man candidates
-        fileCommands.add(execute.Unless("@p[tag=IronMan]") +
-                Schedule.callFunction(FileName.check_iron_man));
-
 
         return new FileData(FileName.timer, fileCommands);
     }
