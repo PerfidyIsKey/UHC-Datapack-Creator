@@ -1087,8 +1087,8 @@ public class Main {
         files.add(TimerTick1());
         files.add(TimerTick5());
         files.add(TimerTick20());
-        files.add(TimerControlPoint());
-        files.add(TimerCPMessages());
+        files.add(TimerControlPoint5());
+        files.add(TimerControlPoint20());
     }
 
     private FileData Initialize() {
@@ -1706,8 +1706,8 @@ public class Main {
         fileCommands.add(setGameRule(GameRule.doDaylightCycle, false));
 
         // Schedule continuous functions
-        fileCommands.add(callFunction(FileName.timer_control_point));
-        fileCommands.add(callFunction(FileName.controlpoint_messages));
+        fileCommands.add(callFunction(FileName.timer_control_point_5));
+        fileCommands.add(callFunction(FileName.timer_control_point_20));
 
         return new FileData(FileName.initialize_controlpoint, fileCommands);
     }
@@ -2016,22 +2016,7 @@ public class Main {
         fileCommands.add(execute.If(new Entity("@p[team=,scores={MSGDum2CP" + i + "=" + cpMessageThreshold + "}]")) +
                 removeTag("@a[team=]", Tag.AttackingCP.extendName(i)));
 
-        return new FileData(FileName.controlpoint_messages + "_" + i, fileCommands);
-    }
-
-    private FileData TimerCPMessages() {
-        // Timer for Control Point messages
-        ArrayList<String> fileCommands = new ArrayList<>();
-
-        // Call separate message functions
-        for (int i = 1; i < 3; i++) {
-            fileCommands.add(callFunction(FileName.controlpoint_messages + "_" + i));
-        }
-
-        // Self reschedule
-        fileCommands.add(callFunction(FileName.controlpoint_messages, 20, Duration.ticks));
-
-        return new FileData(FileName.controlpoint_messages, fileCommands);
+        return new FileData("" + FileName.controlpoint_messages_ + i, fileCommands);
     }
 
     private FileData DropCarepackages() {
@@ -2176,7 +2161,6 @@ public class Main {
                     execute.AsNext(new Entity("@r[limit=1,gamemode=!spectator,x=" + (controlPoints.get(1).getCoordinate().getX() - 6) + ",y=" + (controlPoints.get(1).getCoordinate().getY() - 1) + ",z=" + (controlPoints.get(1).getCoordinate().getZ() - 6) + ",dx=12,dy=12,dz=12,team=" + t.getName() + "]"), true) +
                     scoreboard.Operation(admin, getObjectiveByName("" + Objective.CP + 2 + t.getName()), ComparatorType.greater, admin, getObjectiveByName("" + Objective.CP + 1 + t.getName())));
         }
-        fileCommands.add(callFunction(FileName.controlpoint_perks));
 
         return new FileData(FileName.team_score, fileCommands);
     }
@@ -3128,7 +3112,6 @@ public class Main {
         ArrayList<String> fileCommands = new ArrayList<>();
 
         // Schedule functions
-        fileCommands.add(callFunction(FileName.controlpoint_perks, 20, Duration.ticks));
         fileCommands.add(callFunction(FileName.teams_alive_check, 20, Duration.ticks));
         fileCommands.add(callFunction(FileName.teams_highscore_alive_check, 20, Duration.ticks));
         fileCommands.add(callFunction(FileName.traitor_actionbar, 20, Duration.ticks));
@@ -3139,8 +3122,8 @@ public class Main {
         return new FileData(FileName.timer_tick_20, fileCommands);
     }
 
-    private FileData TimerControlPoint() {
-        // Timer for Control Point continuous functions
+    private FileData TimerControlPoint5() {
+        // Timer for Control Point continuous functions with interval of 5 ticks
         ArrayList<String> fileCommands = new ArrayList<>();
 
         // Schedule continuous functions
@@ -3151,8 +3134,25 @@ public class Main {
         fileCommands.add(callFunction(FileName.team_score));
 
         // Self-schedule timer
-        fileCommands.add(callFunction(FileName.timer_control_point, 5, Duration.ticks));
+        fileCommands.add(callFunction(FileName.timer_control_point_5, 5, Duration.ticks));
 
-        return new FileData(FileName.timer_control_point, fileCommands);
+        return new FileData(FileName.timer_control_point_5, fileCommands);
     }
+
+    private FileData TimerControlPoint20() {
+        // Timer for Control Point continuous functions with interval of 20 ticks
+        ArrayList<String> fileCommands = new ArrayList<>();
+
+        // Schedule continuous functions
+        for (int i = 1; i < 3; i++) {
+            fileCommands.add(callFunction("" + FileName.controlpoint_messages_ + i));
+        }
+        fileCommands.add(callFunction(FileName.controlpoint_perks));
+
+        // Self-schedule timer
+        fileCommands.add(callFunction(FileName.timer_control_point_20, 5, Duration.ticks));
+
+        return new FileData(FileName.timer_control_point_20, fileCommands);
+    }
+
 }

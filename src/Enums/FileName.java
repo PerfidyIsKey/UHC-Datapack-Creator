@@ -19,7 +19,8 @@ public enum FileName {
     timer_tick_1,
     timer_tick_5,
     timer_tick_20,
-    timer_control_point,
+    timer_control_point_5,
+    timer_control_point_20,
 
     // Timer
     horse_frost_walker,
@@ -46,7 +47,7 @@ public enum FileName {
     second_controlpoint,
     bbvalue,
     controlpoint_perks,
-    controlpoint_messages,
+    controlpoint_messages_,
     update_public_cp_score,
 
     // Care Packages

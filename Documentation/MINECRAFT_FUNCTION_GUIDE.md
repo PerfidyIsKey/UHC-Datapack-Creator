@@ -14,7 +14,9 @@ A list of all functions in the Java project with descriptions and their executio
 - **bbvalue**
   - Update value of bossbar, and color of bossbar and glass block.
   - Execution Method: Continuous
-  - Priority: Medium
+  - Interval: 5 ticks
+  - Parents: timer_control_point_5
+  - Children: -
 
 - **check_iron_man**
   - Regularly checks which players are still at full health.
@@ -36,28 +38,25 @@ A list of all functions in the Java project with descriptions and their executio
 - **controlpoint_1** and **controlpoint_2**
   - Award players CP score. Keep glass, beacon active. Call Control Point messages
   - Execution Method: Continuous
-  - Priority: Medium
+  - Interval: 5 ticks
+  - Parents: timer_control_point_5
+  - Children: - 
   - Note: Computationally heavy
-
-- **controlpoint_messages**
-  - Timer for Control Point messages
-  - Execution Method: Continuous (self-scheduling)
-  - Interval: 20 ticks
-  - Parents: initialize_controlpoint
-  - Children: controlpoint_messages_1, controlpoint_messages_2
 
 - **controlpoint_messages_1** and **controlpoint_messages_2**
   - Message logic and announcements for Control Point attacks and abandonment
   - Execution Method: Continuous
   - Interval: 20 ticks
-  - Parents: controlpoint_messages
+  - Parents: timer_control_point_20
   - Children: -
   - Note: Computationally heavy
 
 - **controlpoint_perks**
   - Grants perks for Control Point progress.
   - Execution Method: Continuous
-  - Priority: Low
+  - Interval: 20 ticks
+  - Parents: timer_control_point_20
+  - Children: -
 
 - **current_test_function**
   - Currently used for development testing.
@@ -208,7 +207,7 @@ A list of all functions in the Java project with descriptions and their executio
   - Updates and tracks team Control Point score.
   - Execution Method: Continuous
   - Interval: 5 ticks
-  - Parents: timer_control_point
+  - Parents: timer_control_point_5
   - Children: -
 
 - **teams_alive_check**
@@ -226,12 +225,19 @@ A list of all functions in the Java project with descriptions and their executio
   - Execution Method: Continuous
   - Priority: High
 
-- **timer_control_point**
-  - Timer for Control Point related functions
+- **timer_control_point_5**
+  - Timer for Control Point related functions with interval of 5 ticks
   - Execution Method: Continuous (self-scheduling)
   - Interval: 5 ticks
   - Parents: initialize_controlpoint
   - Children: bbvalue, controlpoint_1, controlpoint_2
+
+- **timer_control_point_20**
+  - Timer for Control Point related functions with interval of 20 ticks
+  - Execution Method: Continuous (self-scheduling)
+  - Interval: 20 ticks
+  - Parents: initialize_controlpoint
+  - Children: controlpoint_messages_1, controlpoint_messages_2
 
 - **title_default_timing**
   - Sets how long title messages display to default values.
