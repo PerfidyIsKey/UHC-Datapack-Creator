@@ -1672,9 +1672,6 @@ public class Main {
         // Destroy all ground items
         fileCommands.add(killEntity("@e[type=item]"));
 
-        // Schedule functions
-        fileCommands.add(callFunction(FileName.display_quotes, 7 * secPerMinute));
-
         return new FileData(FileName.start_game, fileCommands);
     }
 
