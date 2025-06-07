@@ -13,6 +13,7 @@ public enum FileName {
     survival_mode,
     start_game,
     start_potions,
+    game_starter,
 
     // Timer main
     timer_tick_1,
