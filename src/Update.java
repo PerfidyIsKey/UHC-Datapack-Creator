@@ -58,10 +58,10 @@ public class Update {
                 Schedule.callFunction(FileName.check_iron_man));    // Update Iron Man candidates
         fileCommands.add(Main.execute.As("@a") +
                 Schedule.callFunction(FileName.update_mine_count)); // Update strip mine count
-
-
-
         fileCommands.add(Schedule.callFunction(FileName.update_sidebar));
+
+
+
         fileCommands.add(Schedule.callFunction(FileName.wolf_collar_execute));
 
         // Timer scoreboard
