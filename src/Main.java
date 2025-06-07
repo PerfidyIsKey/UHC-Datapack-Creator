@@ -2465,8 +2465,6 @@ public class Main {
         fileCommands.add(execute.Unless("@p[tag=IronMan]") +
                 Schedule.callFunction(FileName.check_iron_man));
 
-        // Remove banned items
-        fileCommands.add(Schedule.callFunction(FileName.remove_banned_items));
 
         return new FileData(FileName.timer, fileCommands);
     }
