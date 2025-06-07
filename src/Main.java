@@ -2446,9 +2446,6 @@ public class Main {
         // Locate teammates with bundle
         fileCommands.add(Schedule.callFunction(FileName.locate_teammate));
 
-        // Horse frost walker
-        fileCommands.add(Schedule.callFunction(FileName.horse_frost_walker));
-
         // Update minimum health
         fileCommands.add(Schedule.callFunction(FileName.update_min_health));
 

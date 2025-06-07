@@ -140,7 +140,9 @@ A list of all functions in the Java project with descriptions and their executio
 - **horse_frost_walker**
   - Applies Frost Walker effect to horses.
   - Execution Method: Continuous
-  - Priority: Medium
+  - Interval: 5 ticks
+  - Parents: timer_main_5
+  - Children: -
 
 - **init**
   - Example.
