@@ -37,6 +37,11 @@ public enum FileName {
     eliminate_baby_wolf,
     remove_banned_items,
 
+    // Messages
+    messages_schedule_single,
+    messages_pvp,
+    messages_eternal_day,
+
     // Death
     handle_player_death,
     drop_player_heads,
