@@ -2443,9 +2443,6 @@ public class Main {
         // Display quotes
         fileCommands.add(Schedule.callFunction(FileName.display_quotes));
 
-        // Update minimum health
-        fileCommands.add(Schedule.callFunction(FileName.update_min_health));
-
         // Kill baby wolves
         fileCommands.add(Schedule.callFunction(FileName.eliminate_baby_wolf));
 
