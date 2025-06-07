@@ -14,11 +14,17 @@ public enum FileName {
     start_game,
     start_potions,
     game_starter,
+    developer_potion_control,
 
-    // Timer main
-    timer_tick_1,
-    timer_tick_5,
-    timer_tick_20,
+    // Timer functions
+    timer_main_1,
+    timer_main_5,
+    timer_main_20,
+    timer_control_point_5,
+    timer_control_point_20,
+    timer_traitor_5,
+    timer_traitor_20,
+    timer_developer_20,
 
     // Timer
     horse_frost_walker,
@@ -38,19 +44,18 @@ public enum FileName {
     disable_respawn,
 
     // Control Point
-    spawn_controlpoints,
-    initialize_controlpoint,
-    controlpoint_,
+    spawn_control_points,
+    initialize_control_point,
+    control_point_,
     team_score,
-    second_controlpoint,
+    second_control_point,
     bbvalue,
-    controlpoint_perks,
-    controlpoint_messages_,
+    control_point_perks,
+    control_point_messages_,
     update_public_cp_score,
 
     // Care Packages
     drop_carepackages,
-    carepackage_distributor,
 
     // Traitor Faction
     traitor_handout,

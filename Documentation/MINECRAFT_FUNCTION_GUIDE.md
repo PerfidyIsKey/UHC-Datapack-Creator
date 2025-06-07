@@ -14,7 +14,9 @@ A list of all functions in the Java project with descriptions and their executio
 - **bbvalue**
   - Update value of bossbar, and color of bossbar and glass block.
   - Execution Method: Continuous
-  - Priority: Medium
+  - Interval: 5 ticks
+  - Parents: timer_control_point_5
+  - Children: -
 
 - **check_iron_man**
   - Regularly checks which players are still at full health.
@@ -28,27 +30,38 @@ A list of all functions in the Java project with descriptions and their executio
 - **clear_schedule**
   - Clears scheduled functions.
   - Execution Method: Single-use
+  - Parents: developer_mode
+  - Children: timer_main, timer_control_point, timer_traitor
+
+- **control_point_1** and **control_point_2**
+  - Award players CP score. Keep glass, beacon active. Call Control Point messages
+  - Execution Method: Continuous
+  - Interval: 5 ticks
+  - Parents: timer_control_point_5
+  - Children: - 
+  - Note: Computationally heavy
 
 - **control_point_captured**
   - Announces that the Control Point has been captured.
-  - Execution Method: Single-use
-
-- **controlpoint_1** and **controlpoint_2**
-  - Award players CP score. Keep glass, beacon active. Call Control Point messages
   - Execution Method: Continuous
-  - Priority: Medium
-  - Note: Computationally heavy
+  - Interval: 5 ticks
+  - Parents: timer_control_point_5
+  - Children: teams_highscore_alive_check
 
-- **controlpoint_messages_1** and **controlpoint_messages_2**
+- **control_point_messages_1** and **control_point_messages_2**
   - Message logic and announcements for Control Point attacks and abandonment
   - Execution Method: Continuous
-  - Priority: Low
+  - Interval: 20 ticks
+  - Parents: timer_control_point_20
+  - Children: -
   - Note: Computationally heavy
 
-- **controlpoint_perks**
+- **control_point_perks**
   - Grants perks for Control Point progress.
   - Execution Method: Continuous
-  - Priority: Low
+  - Interval: 20 ticks
+  - Parents: timer_control_point_20
+  - Children: -
 
 - **current_test_function**
   - Currently used for development testing.
@@ -69,6 +82,15 @@ A list of all functions in the Java project with descriptions and their executio
 - **developer_mode**
   - Toggles developer-specific settings or debug features.
   - Execution Method: Single-use
+  - Parents: developer_potion_control
+  - Children: timer_developer_5
+
+- **developer_potion_control**
+  - Turn potion effect into function execution.
+  - Execution Method: Continuous
+  - Interval: 5 ticks
+  - Parents: timer_developer_5
+  - Children: developer_mode, random_teams, predictions, into_calls, spread_players, survival_mode, start_game
 
 - **disable_respawn**
   - Disable automatic respawn mechanic. 
@@ -86,6 +108,8 @@ A list of all functions in the Java project with descriptions and their executio
 - **drop_carepackages**
   - Summon Care Packages as falling blocks.
   - Execution Method: Single-use
+  - Parents: timer_main_1
+  - Children: -
 
 - **drop_player_heads**
   - Drops player heads upon death.
@@ -123,9 +147,11 @@ A list of all functions in the Java project with descriptions and their executio
   - Creates necessary scoreboard objectives, teams and start structures. 
   - Execution Method: Single-use
 
-- **initialize_controlpoint**
+- **initialize_control_point**
   - Activates command blocks for Control Point functions. Sends activation message.
   - Execution Method: Single-use
+  - Parents: timer_main_1
+  - Children: timer_control_point
 
 - **initiate_deathmatch**
   - Schedules deathmatch related functions.
@@ -134,6 +160,8 @@ A list of all functions in the Java project with descriptions and their executio
 - **into_calls**
   - Teleport all players for the start of the game.
   - Execution Method: Single-use
+  - Parents: developer_potion_control
+  - Children: -
 
 - **join_team**
   - Make custom team during the game.
@@ -156,10 +184,14 @@ A list of all functions in the Java project with descriptions and their executio
 - **predictions**
   - Teleport all players into the void for season predictions. 
   - Execution Method: Single-use
+  - Parents: developer_potion_control
+  - Children: -
 
 - **random_teams1** to **random_teams8**
   - Random team assignment logic for teams of 1-8.
   - Execution Method: Single-use
+  - Parents: developer_potion_control
+  - Children: -
 
 - **remove_banned_items**
   - Strips items that are not allowed in gameplay.
@@ -170,21 +202,28 @@ A list of all functions in the Java project with descriptions and their executio
   - Respawns player, remove death items, give team mate tools, reset health.
   - Execution Method: Single-use
 
-- **second_controlpoint**
+- **second_control_point**
   - Enables command block execution for CP2. Announces activation.
-  - Execution Method: Single-use
+  - Execution Method: Continuous
+  - Interval: 20 ticks
+  - Parents: timer_control_point_20
+  - Children: -
 
-- **spawn_controlpoints**
+- **spawn_control_points**
   - Spawns all control points into the game world and modifies the terrain to enable the beacon beam.
   - Execution Method: Single-use
 
 - **spread_players**
   - Spreads players/teams randomly across the map.
   - Execution Method: Single-use
+  - Parents: developer_potion_control
+  - Children: -
 
 - **start_game**
   - Begins the match and all core timers.
   - Execution Method: Single-use
+  - Parents: developer_potion_control
+  - Children: timer_main_1, timer_main_5, timer_main_20
 
 - **start_potions**
   - Give player potions to activate the start of game functions.
@@ -193,26 +232,90 @@ A list of all functions in the Java project with descriptions and their executio
 - **survival_mode**
   - Set all gamerules to play mode.
   - Execution Method: Single-use
+  - Parents: developer_potion_control
+  - Children: -
 
 - **team_score**
-  - Updates and tracks team CP score. Calls CP perks function. 
+  - Updates and tracks team Control Point score.
   - Execution Method: Continuous
-  - Priority: Medium
+  - Interval: 5 ticks
+  - Parents: timer_control_point_5
+  - Children: -
 
 - **teams_alive_check**
   - Checks if only a single team/player is alive.
   - Execution Method: Continuous
-  - Priority: Low
+  - Interval: 5 ticks
+  - Parents: traitor_check
+  - Children: victory_message_0 to victory_message_12, victory_message_solo
 
 - **teams_highscore_alive_check**
   - Check if a team/player/traitor has captured the Control Point.
   - Execution Method: Continuous
   - Priority: Low
+  - Parents: control_point_captured
+  - Children: victory_message_0 to victory_message_12, victory_message_solo, victory_message_traitor
 
 - **timer**
   - Main game timer logic.
   - Execution Method: Continuous
   - Priority: High
+
+- **timer_control_point_5**
+  - Timer for Control Point related functions with interval of 5 ticks
+  - Execution Method: Continuous (self-scheduling)
+  - Interval: 5 ticks
+  - Parents: initialize_control_point
+  - Children: bbvalue, control_point_1, control_point_2, team_score, control_point_captured
+
+- **timer_control_point_20**
+  - Timer for Control Point related functions with interval of 20 ticks
+  - Execution Method: Continuous (self-scheduling)
+  - Interval: 20 ticks
+  - Parents: initialize_control_point
+  - Children: control_point_messages_1, control_point_messages_2, control_point_perks, update_public_cp_score, second_control_point
+
+- **timer_developer_20**
+  - Timer for developer related functions with interval of 20 ticks
+  - Execution Method: Continuous (self-scheduling)
+  - Interval: 20 ticks
+  - Parents: developer_mode
+  - Children: developer_potion_control
+
+- **timer_main_1**
+  - Timer for main functions with interval of 1 tick
+  - Execution Method: Continuous (self-scheduling)
+  - Interval: 1 tick
+  - Parents: start_game
+  - Children: drop_carepackages, initialize_control_point, traitor_handout
+
+- **timer_main_5**
+  - Timer for main functions with interval of 5 ticks
+  - Execution Method: Continuous (self-scheduling)
+  - Interval: 5 ticks
+  - Parents: start_game
+  - Children: -
+
+- **timer_main_20**
+  - Timer for main functions with interval of 20 ticks
+  - Execution Method: Continuous (self-scheduling)
+  - Interval: 20 ticks
+  - Parents: start_game
+  - Children: -
+
+- **timer_traitor_5**
+  - Timer for Traitor Faction functions with interval of 5 ticks
+  - Execution Method: Continuous (self-scheduling)
+  - Interval: 5 ticks
+  - Parents: traitor_handout
+  - Children: traitor_check
+
+- **timer_traitor_20**
+  - Timer for Traitor Faction functions with interval of 20 ticks
+  - Execution Method: Continuous (self-scheduling)
+  - Interval: 20 ticks
+  - Parents: traitor_handout
+  - Children: traitor_actionbar
 
 - **title_default_timing**
   - Sets how long title messages display to default values.
@@ -221,16 +324,22 @@ A list of all functions in the Java project with descriptions and their executio
 - **traitor_actionbar**
   - Displays Traitor Faction to its members. Calls Traitor victory check. 
   - Execution Method: Continuous
-  - Priority: Low
+  - Interval: 20 ticks
+  - Parents: timer_traitor_20
+  - Children: -
 
 - **traitor_check**
   - Checks whether traitors and non-traitors are alive. 
   - Execution Method: Continuous
-  - Priority: Medium
+  - Interval: 5 ticks
+  - Parents: timer_traitor_5
+  - Children: teams_alive_check, victory_message_traitor
 
 - **traitor_handout**
   - Assigns random eligible players to the Traitor Faction. 
   - Execution Method: Single-use
+  - Parents: timer_main_1
+  - Children: timer_traitor
 
 - **update_min_health**
   - Updates the current minimum health of all players.
@@ -250,7 +359,9 @@ A list of all functions in the Java project with descriptions and their executio
 - **update_public_cp_score**
   - Displays CP scores publicly.
   - Execution Method: Continuous
-  - Priority: Low
+  - Interval: 20 ticks
+  - Parents: timer_control_point_20
+  - Children: -
 
 - **update_sidebar**
   - Updates sidebar scoreboard elements.

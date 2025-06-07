@@ -264,7 +264,6 @@ public class Main {
         }
 
         // Scoreboard objectives
-        scoreboardObjectives.add(new ScoreboardObjective(Objective.TimDum, ObjectiveType.dummy));
         scoreboardObjectives.add(new ScoreboardObjective(Objective.TimeDum, ObjectiveType.dummy, "\"Elapsed Time\""));
         scoreboardObjectives.add(new ScoreboardObjective(Objective.Time, ObjectiveType.dummy, "\"Elapsed Time\"", true));
         scoreboardObjectives.add(new ScoreboardObjective(Objective.Time.extendName(2), ObjectiveType.dummy, "\"Elapsed Time\""));
@@ -1065,14 +1064,27 @@ public class Main {
 
     // Create function files
     private void makeFunctionFiles() {
+        // Developer mode
         files.add(Initialize());
-        files.add(DropPlayerHeads());
-        files.add(BossBarValue());
-        files.add(ClearEnderChest());
-        files.add(EquipGear());
-        files.add(GodMode());
         files.add(DeveloperMode());
         files.add(GetStartPotions());
+        files.add(DeveloperPotionControl());
+        files.add(ClearEnderChest());
+        files.add(SpawnControlPoints());
+        files.add(DisplayRank());
+        files.add(ClearSchedule());
+        files.add(DebugGive());
+        files.add(DebugRemove());
+        files.add(CurrentTestFunction());
+
+
+        files.add(DropPlayerHeads());
+        files.add(BossBarValue());
+
+        files.add(EquipGear());
+        files.add(GodMode());
+
+
 
         for (int i = 1; i < 9; i++) {
             files.add(RandomTeams(i));
@@ -1112,8 +1124,7 @@ public class Main {
         files.add(TraitorActionBar());
         files.add(TeamScore());
 
-        files.add(SpawnControlPoints());
-        files.add(DisplayRank());
+
 
         files.add(WorldPreload());
         files.add(WorldPreLoadActivation());
@@ -1127,7 +1138,7 @@ public class Main {
         files.add(UpdateMineCount());
         files.add(RespawnPlayer());
         files.add(UpdateMinHealth());
-        files.add(ClearSchedule());
+
         files.add(LocateTeammate());
         files.add(EliminateBabyWolf());
         files.add(UpdatePublicCPScore());
@@ -1137,17 +1148,25 @@ public class Main {
         files.add(AnnounceIronMan());
         files.add(CheckIronMan());
         files.add(UpdatePlayerDistance());
-        files.add(DebugGive());
-        files.add(DebugRemove());
+
         files.add(TitleDefaultTiming());
-        files.add(CurrentTestFunction());
 
         // Timer main functions
         Update Updating = new Update();
         files.add(Updating.TimerTick1());
         files.add(Updating.TimerTick5());
         files.add(Updating.TimerTick20());
+
+        // Timer functions
+        files.add(TimerControlPoint5());
+        files.add(TimerControlPoint20());
+        files.add(TimerTraitor5());
+        files.add(TimerTraitor20());
+        files.add(TimerDeveloper20());
+
+        // Gamestart functions
         files.add(GameStart.GameStarter());
+
     }
 
     private FileData Initialize() {
@@ -1358,9 +1377,6 @@ public class Main {
         fileCommands.add(execute.Store(ExecuteStore.result, getBossbarByName("cp2"), BossBarStore.value) +
                 scoreboard.Get("@e[limit=1,scores={Highscore1=14400..}]", getObjectiveByName(Objective.Highscore.extendName(2))));
 
-        // Self-schedule
-        fileCommands.add(Schedule.callFunction(FileName.bbvalue, 5, Duration.ticks));
-
         return new FileData(FileName.bbvalue, fileCommands);
     }
 
@@ -1479,7 +1495,7 @@ public class Main {
                 addForceLoad(controlPoints.get(0).getCoordinate().getX(), controlPoints.get(0).getCoordinate().getZ(), controlPoints.get(0).getCoordinate().getX(), controlPoints.get(0).getCoordinate().getZ()));
         fileCommands.add(execute.In(controlPoints.get(1).getCoordinate().getDimension()) +
                 addForceLoad(controlPoints.get(1).getCoordinate().getX(), controlPoints.get(1).getCoordinate().getZ(), controlPoints.get(1).getCoordinate().getX(), controlPoints.get(1).getCoordinate().getZ()));
-        fileCommands.add(Schedule.callFunction(FileName.spawn_controlpoints));
+        fileCommands.add(Schedule.callFunction(FileName.spawn_control_points));
         fileCommands.add(execute.In(controlPoints.get(0).getCoordinate().getDimension()) +
                 removeForceLoad(controlPoints.get(0).getCoordinate().getX(), controlPoints.get(0).getCoordinate().getZ(), controlPoints.get(0).getCoordinate().getX(), controlPoints.get(0).getCoordinate().getZ()));
         fileCommands.add(execute.In(controlPoints.get(1).getCoordinate().getDimension()) +
@@ -1554,6 +1570,9 @@ public class Main {
 
         // Give admin start potions
         fileCommands.add(Schedule.callFunction(FileName.start_potions));
+
+        // Start timers
+        fileCommands.add(Schedule.callFunction(FileName.timer_developer_20));
 
         return new FileData(FileName.developer_mode, fileCommands);
     }
@@ -1713,6 +1732,15 @@ public class Main {
         // Destroy all ground items
         fileCommands.add(killEntity("@e[type=item]"));
 
+        // Schedule continuous functions
+        fileCommands.add(callFunction(FileName.timer_main_1));
+        fileCommands.add(callFunction(FileName.timer_main_5));
+        fileCommands.add(callFunction(FileName.timer_main_20));
+
+
+        // Disable developer timers
+        fileCommands.add(clearFunction(FileName.timer_developer_20));
+
         return new FileData(FileName.start_game, fileCommands);
     }
 
@@ -1748,9 +1776,10 @@ public class Main {
         fileCommands.add(setGameRule(GameRule.doDaylightCycle, false));
 
         // Schedule continuous functions
-        fileCommands.add(Schedule.callFunction(FileName.bbvalue));
+        fileCommands.add(Schedule.callFunction(FileName.timer_control_point_5));
+        fileCommands.add(Schedule.callFunction(FileName.timer_control_point_20));
 
-        return new FileData(FileName.initialize_controlpoint, fileCommands);
+        return new FileData(FileName.initialize_control_point, fileCommands);
     }
 
     private FileData SecondControlpoint() {
@@ -1773,7 +1802,7 @@ public class Main {
         fileCommands.addAll(forceLoadAndSet(controlPoints.get(1).getCoordinate().getX(), controlPoints.get(1).getCoordinate().getY() + 3, controlPoints.get(1).getCoordinate().getZ(), controlPoints.get(1).getCoordinate().getDimension(), BlockType.air, SetBlockType.replace));
         fileCommands.add(getBossbarByName("cp2").setTitle("CP2: " + controlPoints.get(1).getCoordinate().getX() + ", " + controlPoints.get(1).getCoordinate().getY() + ", " + controlPoints.get(1).getCoordinate().getZ() + " (" + controlPoints.get(1).getCoordinate().getDimensionName() + ") - FASTER!!"));
 
-        return new FileData(FileName.second_controlpoint, fileCommands);
+        return new FileData(FileName.second_control_point, fileCommands);
     }
 
     private FileData Minute(int i) {
@@ -1944,10 +1973,7 @@ public class Main {
         fileCommands.add(execute.In(currentCP.getCoordinate().getDimension()) +
                 fill(currentCP.getCoordinate().getX(), currentCP.getCoordinate().getY(), currentCP.getCoordinate().getZ(), currentCP.getCoordinate().getX(), currentCP.getCoordinate().getY(), currentCP.getCoordinate().getZ(), BlockType.beacon));
 
-        // Update CP messaging
-        fileCommands.add(Schedule.callFunction("" + FileName.controlpoint_messages_ + i));
-
-        return new FileData("" + FileName.controlpoint_ + i, fileCommands);
+        return new FileData("" + FileName.control_point_ + i, fileCommands);
     }
 
     private FileData ControlPointMessages(int i) {
@@ -2060,7 +2086,7 @@ public class Main {
         fileCommands.add(execute.If(new Entity("@p[team=,scores={MSGDum2CP" + i + "=" + cpMessageThreshold + "}]")) +
                 removeTag("@a[team=]", Tag.AttackingCP.extendName(i)));
 
-        return new FileData("" + FileName.controlpoint_messages_ + i, fileCommands);
+        return new FileData("" + FileName.control_point_messages_ + i, fileCommands);
     }
 
     private FileData DropCarepackages() {
@@ -2156,6 +2182,10 @@ public class Main {
         fileCommands.add(execute.In(Dimension.overworld) +
                 setBlock(11, worldBottom + 2, 0, BlockType.redstone_block, SetBlockType.destroy));
 
+        // Enable timers
+        fileCommands.add(Schedule.callFunction(FileName.timer_traitor_5));
+        fileCommands.add(Schedule.callFunction(FileName.timer_traitor_20));
+
         return new FileData(FileName.traitor_handout, fileCommands);
     }
 
@@ -2170,13 +2200,6 @@ public class Main {
         texts.add(new Text(Color.gold, false, false, " <<<"));
         fileCommands.add(execute.As(new Entity("@a[tag=" + Tag.Traitor + "]")) +
                 new Title("@s", TitleType.actionbar, texts).displayTitle());
-
-        // Check if traitors have won
-        fileCommands.add(execute.If(new Entity("@e[scores={Victory=1}]")) +
-                Schedule.callFunction(FileName.traitor_check));
-
-        // Reschedule function
-        fileCommands.add(Schedule.callFunction(FileName.traitor_actionbar, 1));
 
         return new FileData(FileName.traitor_actionbar, fileCommands);
     }
@@ -2205,7 +2228,6 @@ public class Main {
                     execute.AsNext(new Entity("@r[limit=1,gamemode=!spectator,x=" + (controlPoints.get(1).getCoordinate().getX() - 6) + ",y=" + (controlPoints.get(1).getCoordinate().getY() - 1) + ",z=" + (controlPoints.get(1).getCoordinate().getZ() - 6) + ",dx=12,dy=12,dz=12,team=" + t.getName() + "]"), true) +
                     scoreboard.Operation(admin, getObjectiveByName("" + Objective.CP + 2 + t.getName()), ComparatorType.greater, admin, getObjectiveByName("" + Objective.CP + 1 + t.getName())));
         }
-        fileCommands.add(Schedule.callFunction(FileName.controlpoint_perks));
 
         return new FileData(FileName.team_score, fileCommands);
     }
@@ -2244,7 +2266,7 @@ public class Main {
         // Remove leftover music discs from legacy Control Point
         fileCommands.add(killEntity("@e[type=item,nbt={Item:{id:\"minecraft:music_disc_stal\",count:1}}]"));
 
-        return new FileData(FileName.spawn_controlpoints, fileCommands);
+        return new FileData(FileName.spawn_control_points, fileCommands);
     }
 
     private FileData DisplayRank() {
@@ -2367,9 +2389,6 @@ public class Main {
         fileCommands.add(execute.As(new Entity("@a")) +
                 Schedule.callFunction(FileName.update_mine_count));
 
-        // Update public team CP scores
-        fileCommands.add(Schedule.callFunction(FileName.update_public_cp_score));
-
         return new FileData(FileName.update_sidebar, fileCommands);
     }
 
@@ -2410,16 +2429,6 @@ public class Main {
 
         // Update sidebar
         fileCommands.add(Schedule.callFunction(FileName.update_sidebar));
-
-        // Add time
-        fileCommands.add(scoreboard.Add(admin, getObjectiveByName(Objective.Time.extendName(2)), 1));
-        fileCommands.add(scoreboard.Add(admin, getObjectiveByName(Objective.TimDum), 1));
-        fileCommands.add(execute.If(new Entity("@e[scores={TimDum=" + tickPerSecond + "}]")) +
-                scoreboard.Add(admin, getObjectiveByName(Objective.TimeDum), 1));
-        fileCommands.add(execute.Store(ExecuteStore.result, "CurrentTime", getObjectiveByName(Objective.Time)) +
-                scoreboard.Get(adminSingle, getObjectiveByName(Objective.TimeDum)));
-        fileCommands.add(execute.If(new Entity("@e[scores={TimDum=" + tickPerSecond + "..}]")) +
-                scoreboard.Reset(admin, getObjectiveByName(Objective.TimDum)));
 
         // PVP message
         fileCommands.add(execute.If(new Entity("@e[scores={Time2=" + (300 * tickPerSecond) + "}]")) +
@@ -2468,16 +2477,6 @@ public class Main {
 
         // Remove banned items
         fileCommands.add(Schedule.callFunction(FileName.remove_banned_items));
-
-        // TODO: Schedule in-game events. These need to be one-time executions
-        fileCommands.add(execute.If("@e[scores={Time2=" + (20 * secPerMinute * tickPerSecond) + "}]") +
-                Schedule.callFunction(FileName.drop_carepackages));
-        fileCommands.add(execute.If("@e[scores={Time2=" + (30 * secPerMinute * tickPerSecond) + "}]") +
-                Schedule.callFunction(FileName.initialize_controlpoint));
-        fileCommands.add(execute.If("@e[scores={Time2=" + (40 * secPerMinute * tickPerSecond) + "}]") +
-                Schedule.callFunction(FileName.traitor_handout));
-        fileCommands.add(execute.If("@e[scores={Time2=" + (40 * secPerMinute * tickPerSecond) + "}]") +
-                Schedule.callFunction(FileName.traitor_actionbar));
 
         return new FileData(FileName.timer, fileCommands);
     }
@@ -2567,7 +2566,7 @@ public class Main {
             }
         }
 
-        return new FileData(FileName.controlpoint_perks, fileCommands);
+        return new FileData(FileName.control_point_perks, fileCommands);
 
     }
 
@@ -2706,10 +2705,11 @@ public class Main {
     private FileData TraitorCheck() {
         ArrayList<String> fileCommands = new ArrayList<>();
 
-        //When no traitors remain start teams_alive_check
+        // When no traitors remain start teams_alive_check
         fileCommands.add(execute.Unless("@a[limit=1,tag=" + Tag.Traitor + ",gamemode=!spectator]") +
                 Schedule.callFunction(FileName.teams_alive_check));
 
+        // When no non-traitors remain, traitors have won
         fileCommands.add(execute.Unless("@a[limit=1,tag=!" + Tag.Traitor + ",gamemode=!spectator]") +
                 Schedule.callFunction(FileName.victory_message_traitor));
 
@@ -2771,7 +2771,15 @@ public class Main {
         fileCommands.add(Schedule.clearFunction(FileName.minute_ + "2"));
         fileCommands.add(Schedule.clearFunction(FileName.minute_ + "1"));
         fileCommands.add(Schedule.clearFunction(FileName.death_match));
-        fileCommands.add(Schedule.clearFunction(FileName.traitor_actionbar));
+
+        // Clear timer schedules
+        fileCommands.add(Schedule.clearFunction(FileName.timer_main_1));
+        fileCommands.add(Schedule.clearFunction(FileName.timer_main_5));
+        fileCommands.add(Schedule.clearFunction(FileName.timer_main_20));
+        fileCommands.add(Schedule.clearFunction(FileName.timer_control_point_5));
+        fileCommands.add(Schedule.clearFunction(FileName.timer_control_point_20));
+        fileCommands.add(Schedule.clearFunction(FileName.timer_traitor_5));
+        fileCommands.add(Schedule.clearFunction(FileName.timer_traitor_20));
 
         return new FileData(FileName.clear_schedule, fileCommands);
     }
@@ -3134,4 +3142,149 @@ public class Main {
 
         return new FileData(FileName.current_test_function, fileCommands);
     }
+
+    private FileData TimerMain1() {
+        // Timer for functions that should be executed each tick
+        ArrayList<String> fileCommands = new ArrayList<>();
+
+        // Timer scoreboard
+        fileCommands.add(scoreboard.Add(admin, getObjectiveByName(Objective.Time.extendName(2)), 1));
+
+        // Scheduled events
+        fileCommands.add(execute.If("@e[scores={Time2=" + (20 * secPerMinute * tickPerSecond) + "}]") +
+                callFunction(FileName.drop_carepackages));
+        fileCommands.add(execute.If("@e[scores={Time2=" + (30 * secPerMinute * tickPerSecond) + "}]") +
+                callFunction(FileName.initialize_control_point));
+        fileCommands.add(execute.If("@e[scores={Time2=" + (40 * secPerMinute * tickPerSecond) + "}]") +
+                callFunction(FileName.traitor_handout));
+
+        // Self-schedule timer
+        fileCommands.add(callFunction(FileName.timer_main_1, 1, Duration.ticks));
+
+        return new FileData(FileName.timer_main_1, fileCommands);
+    }
+
+    private FileData TimerMain5() {
+        // Timer for functions that should be executed every 5 ticks
+        ArrayList<String> fileCommands = new ArrayList<>();
+
+        // Self-schedule timer
+        fileCommands.add(callFunction(FileName.timer_main_5, 5, Duration.ticks));
+
+        return new FileData(FileName.timer_main_5, fileCommands);
+    }
+
+    private FileData TimerMain20() {
+        // Timer for functions that should be executed every 20 ticks
+        ArrayList<String> fileCommands = new ArrayList<>();
+
+        // Timer scoreboard
+        fileCommands.add(scoreboard.Add(admin, getObjectiveByName(Objective.TimeDum), 1));
+        fileCommands.add(execute.Store(ExecuteStore.result, "CurrentTime", getObjectiveByName(Objective.Time)) +
+                scoreboard.Get(adminSingle, getObjectiveByName(Objective.TimeDum)));
+
+        // Self-schedule timer
+        fileCommands.add(callFunction(FileName.timer_main_20, 20, Duration.ticks));
+
+        return new FileData(FileName.timer_main_20, fileCommands);
+    }
+
+    private FileData TimerControlPoint5() {
+        // Timer for Control Point continuous functions with interval of 5 ticks
+        ArrayList<String> fileCommands = new ArrayList<>();
+
+        // Schedule continuous functions
+        fileCommands.add(callFunction(FileName.bbvalue));
+        for (int i = 1; i < 3; i++) {
+            fileCommands.add(callFunction("" + FileName.control_point_ + i));
+            fileCommands.add(execute.If("@p[scores={ControlPoint" + i + "=" + 48000 + "..}]") +
+                    callFunction(FileName.control_point_captured));
+        }
+        fileCommands.add(callFunction(FileName.team_score));
+
+
+        // Self-schedule timer
+        fileCommands.add(callFunction(FileName.timer_control_point_5, 5, Duration.ticks));
+
+        return new FileData(FileName.timer_control_point_5, fileCommands);
+    }
+
+    private FileData TimerControlPoint20() {
+        // Timer for Control Point continuous functions with interval of 20 ticks
+        ArrayList<String> fileCommands = new ArrayList<>();
+
+        // Schedule continuous functions
+        for (int i = 1; i < 3; i++) {
+            fileCommands.add(callFunction("" + FileName.control_point_messages_ + i));
+        }
+        fileCommands.add(callFunction(FileName.control_point_perks));
+        fileCommands.add(callFunction(FileName.update_public_cp_score));
+        fileCommands.add(execute.If("@p[scores=ControlPoint1={" + 14400 + "..}]") +
+                callFunction(FileName.second_control_point));
+
+
+        // Self-schedule timer
+        fileCommands.add(callFunction(FileName.timer_control_point_20, 20, Duration.ticks));
+
+        return new FileData(FileName.timer_control_point_20, fileCommands);
+    }
+
+    private FileData TimerTraitor5() {
+        // Timer for Traitor Faction continuous functions with interval of 5 ticks
+        ArrayList<String> fileCommands = new ArrayList<>();
+
+        // Schedule continuous functions
+        fileCommands.add(execute.If(new Entity("@e[scores={Victory=1}]")) +
+                callFunction(FileName.traitor_check));  // Check if traitors have won
+
+        // Self-schedule timer
+        fileCommands.add(callFunction(FileName.timer_traitor_5, 5, Duration.ticks));
+
+        return new FileData(FileName.timer_traitor_5, fileCommands);
+    }
+
+    private FileData TimerTraitor20() {
+        // Timer for Traitor Faction continuous functions with interval of 20 ticks
+        ArrayList<String> fileCommands = new ArrayList<>();
+
+        // Schedule continuous functions
+        fileCommands.add(callFunction(FileName.traitor_actionbar)); // Display traitor actionbar
+
+        // Self-schedule timer
+        fileCommands.add(callFunction(FileName.timer_traitor_20, 20, Duration.ticks));
+
+        return new FileData(FileName.timer_traitor_20, fileCommands);
+    }
+
+    private FileData TimerDeveloper20() {
+        // Timer for Developer mode continuous functions with interval of 20 ticks
+        ArrayList<String> fileCommands = new ArrayList<>();
+
+        // Schedule continuous functions
+        fileCommands.add(callFunction(FileName.developer_potion_control));
+
+        // Self-schedule timer
+        fileCommands.add(callFunction(FileName.timer_developer_20, 20, Duration.ticks));
+
+        return new FileData(FileName.timer_developer_20, fileCommands);
+    }
+
+    private FileData DeveloperPotionControl() {
+        // Turn potion effect into function execution
+        ArrayList<String> fileCommands = new ArrayList<>();
+
+        Effect[] effects = {Effect.speed, Effect.weakness, Effect.slow_falling, Effect.invisibility, Effect.poison, Effect.strength, Effect.slowness};
+        FileName[] functions = {FileName.developer_mode, FileName.random_teams, FileName.predictions, FileName.into_calls, FileName.spread_players, FileName.survival_mode, FileName.start_game};
+
+        for (int i = 0; i < effects.length; i++) {
+            fileCommands.add(execute.If("@a[gamemode=creative,nbt={active_effects:[{id:\"minecraft:" + effects[i] + "\"}]}]") +
+                    callFunction(functions[i]));
+
+            fileCommands.add(execute.If("@a[gamemode=creative,nbt={active_effects:[{id:\"minecraft:" + effects[i] + "\"}]}]") +
+                    clearEffect("@e", effects[i]));
+        }
+
+        return new FileData(FileName.developer_potion_control, fileCommands);
+    }
+
 }
