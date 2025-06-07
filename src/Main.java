@@ -1129,7 +1129,7 @@ public class Main {
         files.add(WorldPreload());
         files.add(WorldPreLoadActivation());
         files.add(HorseFrostWalker());
-        files.add(WolfCollarExecute());
+
         files.add(UpdateSidebar());
         files.add(Timer());
         files.add(RemoveBannedItems());
@@ -1140,7 +1140,7 @@ public class Main {
         files.add(UpdateMinHealth());
 
         files.add(LocateTeammate());
-        files.add(EliminateBabyWolf());
+        files.add(WolfUpdates());
         files.add(UpdatePublicCPScore());
         files.add(DisableRespawn());
         files.add(PlayerDeathHandler());
@@ -2339,41 +2339,6 @@ public class Main {
         return new FileData(FileName.horse_frost_walker, fileCommands);
     }
 
-    private FileData WolfCollarExecute() {
-        ArrayList<String> fileCommands = new ArrayList<>();
-
-        // Get data
-        for (int i = 0; i < 2; i++) {
-            fileCommands.add(execute.As(new Entity("@e[type=minecraft:wolf]"), false) +
-                    execute.StoreNext(ExecuteStore.result, "@s", getObjectiveByName(Objective.CollarCheck.extendName(i)), true) +
-                    getData("@s", "Owner[" + i + "]"));
-
-            fileCommands.add(execute.As(new Entity("@a"), false) +
-                    execute.StoreNext(ExecuteStore.result, "@s", getObjectiveByName(Objective.CollarCheck.extendName(i)), true) +
-                    getData("@s", "UUID[" + i + "]"));
-
-        }
-        // Players in a team
-        for (Team t : teams) {
-            fileCommands.add(addTag("@a[team=" + t.getName() + "]", Tag.CollarCheck));
-            fileCommands.add(execute.As(new Entity("@e[type=wolf]"), false) +
-                    execute.IfNext("@s", getObjectiveByName(Objective.CollarCheck.extendName(0)), ComparatorType.equal, "@p[tag=" + Tag.CollarCheck + "]", getObjectiveByName(Objective.CollarCheck.extendName(0))) +
-                    execute.IfNext("@s", getObjectiveByName(Objective.CollarCheck.extendName(1)), ComparatorType.equal, "@p[tag=" + Tag.CollarCheck + "]", getObjectiveByName(Objective.CollarCheck.extendName(1)), true) +
-                    modifyData("@s", "CollarColor", t.getCollarColor()));
-            fileCommands.add(removeTag("@a[team=" + t.getName() + "]", Tag.CollarCheck));
-        }
-
-        // Individual players
-        fileCommands.add(addTag("@a[team=]", Tag.CollarCheck));
-        fileCommands.add(execute.As(new Entity("@e[type=wolf]"), false) +
-                execute.IfNext("@s", getObjectiveByName(Objective.CollarCheck.extendName(0)), ComparatorType.equal, "@p[tag=" + Tag.CollarCheck + "]", getObjectiveByName(Objective.CollarCheck.extendName(0))) +
-                execute.IfNext("@s", getObjectiveByName(Objective.CollarCheck.extendName(1)), ComparatorType.equal, "@p[tag=" + Tag.CollarCheck + "]", getObjectiveByName(Objective.CollarCheck.extendName(1)), true) +
-                modifyData("@s", "CollarColor", "0"));
-        fileCommands.add(removeTag("@a[team=]", Tag.CollarCheck));
-
-        return new FileData(FileName.wolf_collar_execute, fileCommands);
-    }
-
     private FileData UpdateSidebar() {
         ArrayList<String> fileCommands = new ArrayList<>();
 
@@ -2425,10 +2390,7 @@ public class Main {
 
 
 
-        // Set tamed wolf base health
-        fileCommands.add(execute.As(new Entity("@e[type=wolf]"), false) +
-                execute.IfNext(DataClasses.entity, "@s Owner", true) +
-                setAttributeBase("@s", AttributeType.max_health, 20));
+        
 
         // Let united players make a team
         fileCommands.add(execute.If("@p[scores={TimesCalled=1..}]") +
@@ -2773,9 +2735,40 @@ public class Main {
         return new FileData(FileName.locate_teammate, fileCommands);
     }
 
-    private FileData EliminateBabyWolf() {
+    private FileData WolfUpdates() {
         ArrayList<String> fileCommands = new ArrayList<>();
 
+        // Set wolf collar color
+        // Get data
+        for (int i = 0; i < 2; i++) {
+            fileCommands.add(execute.As(new Entity("@e[type=minecraft:wolf]"), false) +
+                    execute.StoreNext(ExecuteStore.result, "@s", getObjectiveByName(Objective.CollarCheck.extendName(i)), true) +
+                    getData("@s", "Owner[" + i + "]"));
+
+            fileCommands.add(execute.As(new Entity("@a"), false) +
+                    execute.StoreNext(ExecuteStore.result, "@s", getObjectiveByName(Objective.CollarCheck.extendName(i)), true) +
+                    getData("@s", "UUID[" + i + "]"));
+
+        }
+        // Players in a team
+        for (Team t : teams) {
+            fileCommands.add(addTag("@a[team=" + t.getName() + "]", Tag.CollarCheck));
+            fileCommands.add(execute.As(new Entity("@e[type=wolf]"), false) +
+                    execute.IfNext("@s", getObjectiveByName(Objective.CollarCheck.extendName(0)), ComparatorType.equal, "@p[tag=" + Tag.CollarCheck + "]", getObjectiveByName(Objective.CollarCheck.extendName(0))) +
+                    execute.IfNext("@s", getObjectiveByName(Objective.CollarCheck.extendName(1)), ComparatorType.equal, "@p[tag=" + Tag.CollarCheck + "]", getObjectiveByName(Objective.CollarCheck.extendName(1)), true) +
+                    modifyData("@s", "CollarColor", t.getCollarColor()));
+            fileCommands.add(removeTag("@a[team=" + t.getName() + "]", Tag.CollarCheck));
+        }
+
+        // Individual players
+        fileCommands.add(addTag("@a[team=]", Tag.CollarCheck));
+        fileCommands.add(execute.As(new Entity("@e[type=wolf]"), false) +
+                execute.IfNext("@s", getObjectiveByName(Objective.CollarCheck.extendName(0)), ComparatorType.equal, "@p[tag=" + Tag.CollarCheck + "]", getObjectiveByName(Objective.CollarCheck.extendName(0))) +
+                execute.IfNext("@s", getObjectiveByName(Objective.CollarCheck.extendName(1)), ComparatorType.equal, "@p[tag=" + Tag.CollarCheck + "]", getObjectiveByName(Objective.CollarCheck.extendName(1)), true) +
+                modifyData("@s", "CollarColor", "0"));
+        fileCommands.add(removeTag("@a[team=]", Tag.CollarCheck));
+
+        // Eliminate baby wolves
         Entity babyWolf = new Entity("@e[type=wolf,scores={WolfAge=..-1}]");
 
         fileCommands.add(execute.As(new Entity("@e[limit=1, type=wolf, sort=random]"), false) +
@@ -2786,7 +2779,12 @@ public class Main {
         fileCommands.add(execute.As(babyWolf) +
                 killEntity("@s"));
 
-        return new FileData(FileName.eliminate_baby_wolf, fileCommands);
+        // Set tamed wolf base health
+        fileCommands.add(execute.As(new Entity("@e[type=wolf]"), false) +
+                execute.IfNext(DataClasses.entity, "@s Owner", true) +
+                setAttributeBase("@s", AttributeType.max_health, 20));
+
+        return new FileData(FileName.wolf_updates, fileCommands);
     }
 
     private FileData UpdatePublicCPScore() {

@@ -28,13 +28,12 @@ public enum FileName {
 
     // Timer
     horse_frost_walker,
-    wolf_collar_execute,
+    wolf_updates,
     update_sidebar,
     timer,
     display_quotes,
     update_mine_count,
     update_min_health,
-    eliminate_baby_wolf,
     remove_banned_items,
 
     // Messages

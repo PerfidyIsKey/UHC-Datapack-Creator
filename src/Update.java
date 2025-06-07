@@ -53,13 +53,12 @@ public class Update {
 
         // Schedule functions
         fileCommands.add(Schedule.callFunction(FileName.locate_teammate));
-        fileCommands.add(Schedule.callFunction(FileName.eliminate_baby_wolf));
         fileCommands.add(Main.execute.Unless("@p[tag=IronMan]") +
                 Schedule.callFunction(FileName.check_iron_man));    // Update Iron Man candidates
         fileCommands.add(Main.execute.As("@a") +
                 Schedule.callFunction(FileName.update_mine_count)); // Update strip mine count
         fileCommands.add(Schedule.callFunction(FileName.update_sidebar));
-        fileCommands.add(Schedule.callFunction(FileName.wolf_collar_execute));
+        fileCommands.add(Schedule.callFunction(FileName.wolf_updates));
 
 
 
