@@ -1154,18 +1154,21 @@ public class Main {
         files.add(MessagePVP());
         files.add(MessageEternalDay());
 
-        // Timer main functions
+        // Timer functions
         Update Updating = new Update();
+
+        // Main timers
         files.add(Updating.TimerMain1());
         files.add(Updating.TimerMain5());
         files.add(Updating.TimerMain20());
-
-        // Timer functions
-        /*files.add(TimerControlPoint5());
-        files.add(TimerControlPoint20());
-        files.add(TimerTraitor5());
-        files.add(TimerTraitor20());
-        files.add(TimerDeveloper20());*/
+        // Control Point timers
+        files.add(Updating.TimerControlPoint5());
+        files.add(Updating.TimerControlPoint20());
+        // Traitor Faction timers
+        files.add(Updating.TimerTraitor5());
+        files.add(Updating.TimerTraitor20());
+        // Developer mode timers
+        files.add(Updating.TimerDeveloper20());
 
         // Gamestart functions
         files.add(GameStart.GameStarter());
@@ -1694,13 +1697,7 @@ public class Main {
         fileCommands.add(killEntity("@e[type=item]"));
 
         // Schedule continuous functions
-        fileCommands.add(Schedule.callFunction(FileName.timer_main_1));
-        fileCommands.add(Schedule.callFunction(FileName.timer_main_5));
-        fileCommands.add(Schedule.callFunction(FileName.timer_main_20));
-
-
-        // Disable developer timers
-        fileCommands.add(Schedule.clearFunction(FileName.timer_developer_20));
+        fileCommands.add(Schedule.callFunction(FileName.game_starter));
 
         return new FileData(FileName.start_game, fileCommands);
     }
