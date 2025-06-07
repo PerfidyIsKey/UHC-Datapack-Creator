@@ -39,10 +39,19 @@ A list of all functions in the Java project with descriptions and their executio
   - Priority: Medium
   - Note: Computationally heavy
 
+- **controlpoint_messages**
+  - Timer for Control Point messages
+  - Execution Method: Continuous (self-scheduling)
+  - Interval: 20 ticks
+  - Parents: initialize_controlpoint
+  - Children: controlpoint_messages_1, controlpoint_messages_2
+
 - **controlpoint_messages_1** and **controlpoint_messages_2**
   - Message logic and announcements for Control Point attacks and abandonment
   - Execution Method: Continuous
-  - Priority: Low
+  - Interval: 20 ticks
+  - Parents: controlpoint_messages
+  - Children: -
   - Note: Computationally heavy
 
 - **controlpoint_perks**
@@ -217,9 +226,9 @@ A list of all functions in the Java project with descriptions and their executio
 
 - **timer_control_point**
   - Timer for Control Point related functions
-  - Execution Method: Continuous
-  - Interval: 5 ticks (self-scheduling)
-  - Parent: initialize_controlpoint
+  - Execution Method: Continuous (self-scheduling)
+  - Interval: 5 ticks
+  - Parents: initialize_controlpoint
   - Children: bbvalue, controlpoint_1, controlpoint_2
 
 - **title_default_timing**

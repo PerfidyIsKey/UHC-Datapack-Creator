@@ -1764,7 +1764,6 @@ public class Main {
         fileCommands.add(setGameRule(GameRule.doDaylightCycle, false));
 
         // Schedule continuous functions
-        fileCommands.add(callFunction(FileName.bbvalue));
 
         return new FileData(FileName.initialize_controlpoint, fileCommands);
     }
@@ -1961,7 +1960,7 @@ public class Main {
                 fill(currentCP.getCoordinate().getX(), currentCP.getCoordinate().getY(), currentCP.getCoordinate().getZ(), currentCP.getCoordinate().getX(), currentCP.getCoordinate().getY(), currentCP.getCoordinate().getZ(), BlockType.beacon));
 
         // Update CP messaging
-        fileCommands.add(Schedule.callFunction("" + FileName.controlpoint_messages_ + i));
+        fileCommands.add(callFunction("" + FileName.controlpoint_messages_ + i));
 
         return new FileData("" + FileName.controlpoint_ + i, fileCommands);
     }
@@ -2076,7 +2075,22 @@ public class Main {
         fileCommands.add(execute.If(new Entity("@p[team=,scores={MSGDum2CP" + i + "=" + cpMessageThreshold + "}]")) +
                 removeTag("@a[team=]", Tag.AttackingCP.extendName(i)));
 
-        return new FileData("" + FileName.controlpoint_messages_ + i, fileCommands);
+        return new FileData(FileName.controlpoint_messages + "_" + i, fileCommands);
+    }
+
+    private FileData TimerCPMessages() {
+        // Timer for Control Point messages
+        ArrayList<String> fileCommands = new ArrayList<>();
+
+        // Call separate message functions
+        for (int i = 1; i < 3; i++) {
+            fileCommands.add(callFunction(FileName.controlpoint_messages + "_" + i));
+        }
+
+        // Self reschedule
+        fileCommands.add(callFunction(FileName.controlpoint_messages, 20, Duration.ticks));
+
+        return new FileData(FileName.controlpoint_messages, fileCommands);
     }
 
     private FileData DropCarepackages() {
@@ -2599,9 +2613,6 @@ public class Main {
             fileCommands.add(execute.If(new Entity("@e[scores={RandomQuotes=" + i + "}]")) +
                     new TellRaw("@a", new Text(Color.white, false, false, quotes.get(i))).sendRaw());
         }
-
-        // Reschedule displaying a new quote
-        fileCommands.add(callFunction(FileName.display_quotes, 7 * secPerMinute));
 
         return new FileData(FileName.display_quotes, fileCommands);
     }
@@ -3168,17 +3179,9 @@ public class Main {
         ArrayList<String> fileCommands = new ArrayList<>();
 
         // Schedule functions
-        for (int i = 1; i < 3; i++) {
-            fileCommands.add(callFunction("" + FileName.controlpoint_ + i, 5, Duration.ticks));
-        }
         fileCommands.add(callFunction(FileName.drop_player_heads, 5, Duration.ticks));
-        fileCommands.add(callFunction(FileName.handle_player_death, 5, Duration.ticks));
-        fileCommands.add(callFunction(FileName.horse_frost_walker, 5, Duration.ticks));
-        fileCommands.add(callFunction(FileName.locate_teammate, 5, Duration.ticks));
-        fileCommands.add(callFunction(FileName.remove_banned_items, 5, Duration.ticks));
         fileCommands.add(callFunction(FileName.team_score, 5, Duration.ticks));
         fileCommands.add(callFunction(FileName.traitor_check, 5, Duration.ticks));
-        fileCommands.add(callFunction(FileName.update_min_health, 5, Duration.ticks));
 
 
         return new FileData(FileName.timer_tick_5, fileCommands);
@@ -3193,14 +3196,12 @@ public class Main {
             fileCommands.add(callFunction("" + FileName.controlpoint_messages_ + i, 20, Duration.ticks));
         }
         fileCommands.add(callFunction(FileName.controlpoint_perks, 20, Duration.ticks));
-        fileCommands.add(callFunction(FileName.eliminate_baby_wolf, 20, Duration.ticks));
         fileCommands.add(callFunction(FileName.teams_alive_check, 20, Duration.ticks));
         fileCommands.add(callFunction(FileName.teams_highscore_alive_check, 20, Duration.ticks));
         fileCommands.add(callFunction(FileName.traitor_actionbar, 20, Duration.ticks));
-        fileCommands.add(callFunction(FileName.update_mine_count, 20, Duration.ticks));
         fileCommands.add(callFunction(FileName.update_public_cp_score, 20, Duration.ticks));
-        fileCommands.add(callFunction(FileName.update_sidebar, 20, Duration.ticks));
-        fileCommands.add(callFunction(FileName.wolf_collar_execute, 20, Duration.ticks));
+
+
 
         return new FileData(FileName.timer_tick_20, fileCommands);
     }
