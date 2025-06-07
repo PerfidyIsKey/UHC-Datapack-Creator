@@ -202,7 +202,9 @@ A list of all functions in the Java project with descriptions and their executio
 - **remove_banned_items**
   - Strips items that are not allowed in gameplay.
   - Execution Method: Continuous
-  - Priority: Medium
+  - Interval: 5 ticks
+  - Parents: timer_main_5
+  - Children: -
 
 - **respawn_player**
   - Respawns player, remove death items, give team mate tools, reset health.
@@ -300,7 +302,7 @@ A list of all functions in the Java project with descriptions and their executio
   - Execution Method: Continuous (self-scheduling)
   - Interval: 5 ticks
   - Parents: start_game
-  - Children: handle_player_death, horse_frost_walker
+  - Children: handle_player_death, horse_frost_walker, remove_banned_items
 
 - **timer_main_20**
   - Timer for main functions with interval of 20 ticks

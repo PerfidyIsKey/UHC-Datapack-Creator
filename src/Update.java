@@ -38,10 +38,10 @@ public class Update {
         fileCommands.add(Main.execute.If("@p[scores={Deaths=1}]") +
                 Schedule.callFunction(FileName.handle_player_death));
         fileCommands.add(Schedule.callFunction(FileName.horse_frost_walker));
-
-
-
         fileCommands.add(Schedule.callFunction(FileName.remove_banned_items));
+
+
+
         fileCommands.add(Schedule.callFunction(FileName.update_min_health));
 
         // Self-schedule timer
