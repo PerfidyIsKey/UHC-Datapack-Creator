@@ -204,9 +204,11 @@ A list of all functions in the Java project with descriptions and their executio
   - Execution Method: Single-use
 
 - **team_score**
-  - Updates and tracks team CP score. Calls CP perks function. 
+  - Updates and tracks team Control Point score.
   - Execution Method: Continuous
-  - Priority: Medium
+  - Interval: 5 ticks
+  - Parents: timer_control_point
+  - Children: -
 
 - **teams_alive_check**
   - Checks if only a single team/player is alive.

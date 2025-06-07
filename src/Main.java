@@ -3117,7 +3117,6 @@ public class Main {
 
         // Schedule functions
         fileCommands.add(callFunction(FileName.drop_player_heads, 5, Duration.ticks));
-        fileCommands.add(callFunction(FileName.team_score, 5, Duration.ticks));
         fileCommands.add(callFunction(FileName.traitor_check, 5, Duration.ticks));
 
 
@@ -3147,8 +3146,9 @@ public class Main {
         // Schedule continuous functions
         fileCommands.add(callFunction(FileName.bbvalue));
         for (int i = 1; i < 3; i++) {
-            fileCommands.add(callFunction("" + FileName.controlpoint_ + i, 5, Duration.ticks));
+            fileCommands.add(callFunction("" + FileName.controlpoint_ + i));
         }
+        fileCommands.add(callFunction(FileName.team_score));
 
         // Self-schedule timer
         fileCommands.add(callFunction(FileName.timer_control_point, 5, Duration.ticks));
