@@ -1127,7 +1127,6 @@ public class Main {
 
 
         files.add(WorldPreload());
-        files.add(WorldPreLoadActivation());
         files.add(HorseFrostWalker());
 
         files.add(UpdateSidebar());
@@ -1226,21 +1225,7 @@ public class Main {
         fileCommands.add(execute.In(Dimension.overworld) +
                 fill(-5, 221, -5, 5, 226, 5, BlockType.air));
         fileCommands.add(execute.In(Dimension.overworld) +
-                setBlock(0, 222, -5, BlockType.cherry_wall_sign + "[facing=south,waterlogged=false]{back_text:{messages:['{\"text\":\"You have\"}','{\"text\":\"angered\"}','{\"text\":\"the Gods!\"}','{\"text\":\"\"}']},front_text:{messages:['{\"text\":\"Teleport\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"" + teleportEntity("@s", new Coordinate(5, worldBottom + 5, 5)) + "\"}}','{\"text\":\"to the\"}','{\"text\":\"Command center\"}','{\"text\":\"\"}']},is_waxed:0b}"));
-
-        // Create command center
-        fileCommands.add(execute.In(Dimension.overworld) +
-                setBlock(-2, worldBottom, -2, BlockType.structure_block + "[mode=load]{metadata:\"\",mirror:\"NONE\",ignoreEnti" +
-                        "ties:0b,powered:0b,seed:0L,author:\"?\",rotation:\"NONE\",posX:1,mode:\"LOAD\",posY:1,sizeX:18,posZ:1," +
-                        "integrity:1.0f,showair:0b,name:\"minecraft:commandcenter_" + commandCenter + "\",sizeY:31,sizeZ:18,showboundingbox:1b}"));
-        fileCommands.add(execute.In(Dimension.overworld) +
-                setBlock(-2, worldBottom + 1, -2, BlockType.redstone_block));
-        fileCommands.add(execute.In(Dimension.overworld) +
-                fill(0, worldBottom + 5, 1, 0, worldBottom + 6, 1, BlockType.air));
-        fileCommands.add(execute.In(Dimension.overworld) +
-                fill(15, worldBottom + 2, 15, 9, worldBottom + 2, 15, BlockType.bedrock));
-        fileCommands.add(execute.In(Dimension.overworld) +
-                fill(15, worldBottom + 2, 15, 9, worldBottom + 2, 15, BlockType.redstone_block));
+                setBlock(0, 222, -5, BlockType.cherry_wall_sign + "[facing=south,waterlogged=false]{back_text:{messages:[\"You have\",\"angered\",\"the Gods!\",\"\"]},front_text:{messages:[\"In solidarity of\",\"our removed\",\"Command Center\",\"2014 - 2025\"]},is_waxed:0b}"));
 
         return new FileData(FileName.initialize, fileCommands);
     }
@@ -1478,22 +1463,6 @@ public class Main {
         fileCommands.add(scoreboard.Set(admin, Objective.Victory, 1));
         fileCommands.add(scoreboard.Set("@a", Objective.IsKiller, 0));
 
-        // Deactivate game-critical command blocks
-        fileCommands.add(execute.In(Dimension.overworld) +
-                fill(0, worldBottom + 2, 15, 0, worldBottom + 2, 2, BlockType.bedrock, SetBlockType.replace));
-        fileCommands.add(execute.In(Dimension.overworld) +
-                fill(2, worldBottom + 2, 0, 8, worldBottom + 2, 0, BlockType.bedrock, SetBlockType.replace));
-        fileCommands.add(execute.In(Dimension.overworld) +
-                fill(15, worldBottom + 2, 3, 15, worldBottom + 2, 11, BlockType.bedrock, SetBlockType.replace));
-        fileCommands.add(execute.In(Dimension.overworld) +
-                setBlock(11, worldBottom + 2, 0, BlockType.bedrock, SetBlockType.destroy));
-        fileCommands.add(execute.In(Dimension.overworld) +
-                setBlock(10, worldBottom + 2, 0, BlockType.bedrock, SetBlockType.destroy));
-
-        // Activate potion command blocks
-        fileCommands.add(execute.In(Dimension.overworld) +
-                fill(15, worldBottom + 2, 15, 9, worldBottom + 2, 15, BlockType.redstone_block, SetBlockType.replace));
-
         // Spawn new Control Points
         fileCommands.add(execute.In(controlPoints.get(0).getCoordinate().getDimension()) +
                 addForceLoad(controlPoints.get(0).getCoordinate().getX(), controlPoints.get(0).getCoordinate().getZ(), controlPoints.get(0).getCoordinate().getX(), controlPoints.get(0).getCoordinate().getZ()));
@@ -1687,18 +1656,6 @@ public class Main {
         // Set all players to survival mode
         fileCommands.add(setGameMode(GameMode.survival, "@a"));
 
-        // Activate command blocks
-        fileCommands.add(execute.In(Dimension.overworld) +
-                fill(0, worldBottom + 2, 15, 0, worldBottom + 2, 2, BlockType.redstone_block, SetBlockType.replace));
-        fileCommands.add(execute.In(Dimension.overworld) +
-                fill(2, worldBottom + 2, 0, 6, worldBottom + 2, 0, BlockType.redstone_block, SetBlockType.replace));
-        fileCommands.add(execute.In(Dimension.overworld) +
-                setBlock(10, worldBottom + 2, 0, BlockType.redstone_block, SetBlockType.destroy));
-
-        // Deactivate startup command blocks
-        fileCommands.add(execute.In(Dimension.overworld) +
-                fill(15, worldBottom + 2, 15, 9, worldBottom + 2, 15, BlockType.bedrock));
-
         // Revoke all advancements
         fileCommands.add(revokeAdvancement("@a"));
 
@@ -1763,20 +1720,10 @@ public class Main {
     private FileData InitializeControlpoint() {
         ArrayList<String> fileCommands = new ArrayList<>();
         fileCommands.add(new Title("@a", TitleType.subtitle, new Text(Color.light_purple, true, true, "is now enabled!")).displayTitle());
-        fileCommands.add(execute.In(Dimension.overworld) +
-                setBlock(7, worldBottom + 2, 0, BlockType.redstone_block, SetBlockType.replace));
         fileCommands.add(new Title("@a", TitleType.title, new Text(Color.gold, true, true, "Control Point 1")).displayTitle());
         fileCommands.add(getBossbarByName("cp1").setVisible(true));
         fileCommands.add(getBossbarByName("cp2").setVisible(true));
-        fileCommands.add(execute.In(Dimension.overworld) +
-                setBlock(6, worldBottom + 2, 0, BlockType.bedrock, SetBlockType.replace));
         fileCommands.addAll(forceLoadAndSet(controlPoints.get(0).getCoordinate().getX(), controlPoints.get(0).getCoordinate().getY() + 3, controlPoints.get(0).getCoordinate().getZ(), BlockType.air, SetBlockType.replace));
-        fileCommands.add(execute.In(Dimension.overworld) +
-                setBlock(15, worldBottom + 2, 7, BlockType.redstone_block, SetBlockType.replace));
-        fileCommands.add(execute.In(Dimension.overworld) +
-                setBlock(15, worldBottom + 2, 6, BlockType.redstone_block, SetBlockType.replace));
-        fileCommands.add(execute.In(Dimension.overworld) +
-                setBlock(15, worldBottom + 2, 10, BlockType.redstone_block, SetBlockType.replace));
         fileCommands.add(setGameRule(GameRule.doDaylightCycle, false));
 
         // Schedule continuous functions
@@ -1788,10 +1735,6 @@ public class Main {
 
     private FileData SecondControlpoint() {
         ArrayList<String> fileCommands = new ArrayList<>();
-        fileCommands.add(execute.In(Dimension.overworld) +
-                setBlock(7, worldBottom + 2, 0, BlockType.bedrock, SetBlockType.replace));
-        fileCommands.add(execute.In(Dimension.overworld) +
-                setBlock(8, worldBottom + 2, 0, BlockType.redstone_block, SetBlockType.replace));
 
         ArrayList<TextItem> texts = new ArrayList<>();
         texts.add(bannerText);
@@ -1801,8 +1744,6 @@ public class Main {
         texts.add(bannerText);
 
         fileCommands.add(new TellRaw("@a", texts).sendRaw());
-        fileCommands.add(execute.In(Dimension.overworld) +
-                setBlock(15, worldBottom + 2, 11, BlockType.redstone_block, SetBlockType.replace));
         fileCommands.addAll(forceLoadAndSet(controlPoints.get(1).getCoordinate().getX(), controlPoints.get(1).getCoordinate().getY() + 3, controlPoints.get(1).getCoordinate().getZ(), controlPoints.get(1).getCoordinate().getDimension(), BlockType.air, SetBlockType.replace));
         fileCommands.add(getBossbarByName("cp2").setTitle("CP2: " + controlPoints.get(1).getCoordinate().getX() + ", " + controlPoints.get(1).getCoordinate().getY() + ", " + controlPoints.get(1).getCoordinate().getZ() + " (" + controlPoints.get(1).getCoordinate().getDimensionName() + ") - FASTER!!"));
 
@@ -2182,10 +2123,6 @@ public class Main {
         fileCommands.add(new Title("@a", TitleType.title, new Text(Color.red, true, false, "A Traitor Faction")).displayTitle());
         fileCommands.add(new Title("@a", TitleType.subtitle, new Text(Color.dark_red, true, false, "has been founded!")).displayTitle());
 
-        // Disable traitor handout
-        fileCommands.add(execute.In(Dimension.overworld) +
-                setBlock(11, worldBottom + 2, 0, BlockType.redstone_block, SetBlockType.destroy));
-
         // Enable timers
         fileCommands.add(Schedule.callFunction(FileName.timer_traitor_5));
         fileCommands.add(Schedule.callFunction(FileName.timer_traitor_20));
@@ -2308,25 +2245,11 @@ public class Main {
         // Stop world preload
         fileCommands.add(execute.If(new Entity("@e[scores={Time=12000..}]"), false) +
                 execute.InNext(Dimension.overworld, true) +
-                setBlock(6, worldBottom + 2, 15, BlockType.bedrock));
-        fileCommands.add(execute.If(new Entity("@e[scores={Time=12000..}]"), false) +
-                execute.InNext(Dimension.overworld, true) +
                 teleportEntity("@a", new Coordinate(0, 221, 0)));
         fileCommands.add(execute.If(new Entity("@e[scores={Time=12000..}]")) +
                 Schedule.callFunction(FileName.developer_mode));
 
         return new FileData(FileName.world_pre_load, fileCommands);
-    }
-
-    private FileData WorldPreLoadActivation() {
-        ArrayList<String> fileCommands = new ArrayList<>();
-
-        fileCommands.add(setGameRule(GameRule.commandBlockOutput, false));
-        fileCommands.add(execute.In(Dimension.overworld) +
-                setBlock(6, worldBottom + 2, 15, BlockType.redstone_block));
-        fileCommands.add(getObjectiveByName(Objective.WorldLoad).setDisplay(ScoreboardLocation.sidebar));
-
-        return new FileData(FileName.world_pre_load_activation, fileCommands);
     }
 
     private FileData HorseFrostWalker() {
@@ -2583,12 +2506,6 @@ public class Main {
     private FileData ControlPointCaptured() {
         ArrayList<String> fileCommands = new ArrayList<>();
         ArrayList<TextItem> texts = new ArrayList<>();
-
-        // Disable command blocks
-        fileCommands.add(execute.In(Dimension.overworld) +
-                setBlock(8, worldBottom + 2, 0, BlockType.bedrock, SetBlockType.replace));
-        fileCommands.add(execute.In(Dimension.overworld) +
-                fill(15, worldBottom + 2, 3, 15, worldBottom + 2, 4, BlockType.bedrock));
 
         // Announce that Control Point has been captured
         texts.add(bannerText);

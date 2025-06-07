@@ -79,7 +79,6 @@ public enum FileName {
 
     // World loading
     world_pre_load,
-    world_pre_load_activation,
 
     // Misc (gameplay critical)
     clear_enderchest,
