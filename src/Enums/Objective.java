@@ -3,7 +3,6 @@ package Enums;
 import HelperClasses.ScoreboardObjective;
 
 public enum Objective {
-        TimDum("TimDum"),
         TimeDum("TimeDum"),
         Time("Time"),
         SideDum("SideDum"),
