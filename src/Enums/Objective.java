@@ -5,6 +5,7 @@ import HelperClasses.ScoreboardObjective;
 public enum Objective {
         TimeDum("TimeDum"),
         Time("Time"),
+        Time2("Time2"),
         SideDum("SideDum"),
         ControlPoint("ControlPoint"),
         CPScore("CPScore"),
