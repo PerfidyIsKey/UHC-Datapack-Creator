@@ -3106,9 +3106,6 @@ public class Main {
         // Timer for functions that should be executed every 5 ticks
         ArrayList<String> fileCommands = new ArrayList<>();
 
-        // Schedule functions
-        fileCommands.add(callFunction(FileName.drop_player_heads, 5, Duration.ticks));
-
 
 
         return new FileData(FileName.timer_main_5, fileCommands);
@@ -3155,6 +3152,8 @@ public class Main {
         }
         fileCommands.add(callFunction(FileName.control_point_perks));
         fileCommands.add(callFunction(FileName.update_public_cp_score));
+        fileCommands.add(execute.If("@p[scores=ControlPoint1={" + 14400 + "..}]") +
+                callFunction(FileName.second_control_point));
 
 
         // Self-schedule timer

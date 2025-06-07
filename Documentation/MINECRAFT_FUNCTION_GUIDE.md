@@ -185,7 +185,10 @@ A list of all functions in the Java project with descriptions and their executio
 
 - **second_control_point**
   - Enables command block execution for CP2. Announces activation.
-  - Execution Method: Single-use
+  - Execution Method: Continuous
+  - Interval: 20 ticks
+  - Parents: timer_control_point_20
+  - Children: -
 
 - **spawn_control_points**
   - Spawns all control points into the game world and modifies the terrain to enable the beacon beam.
@@ -247,7 +250,7 @@ A list of all functions in the Java project with descriptions and their executio
   - Execution Method: Continuous (self-scheduling)
   - Interval: 20 ticks
   - Parents: initialize_control_point
-  - Children: control_point_messages_1, control_point_messages_2, control_point_perks, update_public_cp_score
+  - Children: control_point_messages_1, control_point_messages_2, control_point_perks, update_public_cp_score, second_control_point
 
 - **timer_main_1**
   - Timer for main functions with interval of 1 tick
