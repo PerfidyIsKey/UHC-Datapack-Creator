@@ -2384,10 +2384,6 @@ public class Main {
         fileCommands.add(execute.If(new Entity("@e[scores={SideDum=" + (10 * tickPerSecond * i + 1) + "}]")) +
                 scoreboard.Reset(admin, getObjectiveByName(Objective.SideDum)));
 
-        // Update stripmine count
-        fileCommands.add(scoreboard.Set("@a[scores={Mining=1..}]", getObjectiveByName(Objective.Mining), 0));
-        fileCommands.add(execute.As(new Entity("@a")) +
-                Schedule.callFunction(FileName.update_mine_count));
 
         return new FileData(FileName.update_sidebar, fileCommands);
     }
@@ -2565,6 +2561,8 @@ public class Main {
     // Update amount stripmined
     private FileData UpdateMineCount() {
         ArrayList<String> fileCommands = new ArrayList<>();
+
+        fileCommands.add(scoreboard.Set("@a[scores={Mining=1..}]", Objective.Mining, 0));
 
         ArrayList<String> blocks = new ArrayList<>();
         blocks.add("Stone");
