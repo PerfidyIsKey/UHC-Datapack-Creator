@@ -266,7 +266,6 @@ public class Main {
         }
 
         // Scoreboard objectives
-        scoreboardObjectives.add(new ScoreboardObjective(Objective.TimDum, ObjectiveType.dummy));
         scoreboardObjectives.add(new ScoreboardObjective(Objective.TimeDum, ObjectiveType.dummy, "\"Elapsed Time\""));
         scoreboardObjectives.add(new ScoreboardObjective(Objective.Time, ObjectiveType.dummy, "\"Elapsed Time\"", true));
         scoreboardObjectives.add(new ScoreboardObjective(Objective.Time.extendName(2), ObjectiveType.dummy, "\"Elapsed Time\""));
@@ -2384,16 +2383,6 @@ public class Main {
         // Update sidebar
         fileCommands.add(callFunction(FileName.update_sidebar));
 
-        // Add time
-        fileCommands.add(scoreboard.Add(admin, getObjectiveByName(Objective.Time.extendName(2)), 1));
-        fileCommands.add(scoreboard.Add(admin, getObjectiveByName(Objective.TimDum), 1));
-        fileCommands.add(execute.If(new Entity("@e[scores={TimDum=" + tickPerSecond + "}]")) +
-                scoreboard.Add(admin, getObjectiveByName(Objective.TimeDum), 1));
-        fileCommands.add(execute.Store(ExecuteStore.result, "CurrentTime", getObjectiveByName(Objective.Time)) +
-                scoreboard.Get(adminSingle, getObjectiveByName(Objective.TimeDum)));
-        fileCommands.add(execute.If(new Entity("@e[scores={TimDum=" + tickPerSecond + "..}]")) +
-                scoreboard.Reset(admin, getObjectiveByName(Objective.TimDum)));
-
         // PVP message
         fileCommands.add(execute.If(new Entity("@e[scores={Time2=" + (300 * tickPerSecond) + "}]")) +
                 new TellRaw("@a", new Text(Color.gray, false, false, "PVP IS NOT ALLOWED UNTIL DAY 2!")).sendRaw());
@@ -3109,6 +3098,9 @@ public class Main {
         // Timer for functions that should be executed each tick
         ArrayList<String> fileCommands = new ArrayList<>();
 
+        // Timer scoreboard
+        fileCommands.add(scoreboard.Add(admin, getObjectiveByName(Objective.Time.extendName(2)), 1));
+
         // Scheduled events
         fileCommands.add(execute.If("@e[scores={Time2=" + (20 * secPerMinute * tickPerSecond) + "}]") +
                 callFunction(FileName.drop_carepackages));
@@ -3135,6 +3127,11 @@ public class Main {
     private FileData TimerMain20() {
         // Timer for functions that should be executed every 20 ticks
         ArrayList<String> fileCommands = new ArrayList<>();
+
+        // Timer scoreboard
+        fileCommands.add(scoreboard.Add(admin, getObjectiveByName(Objective.TimeDum), 1));
+        fileCommands.add(execute.Store(ExecuteStore.result, "CurrentTime", getObjectiveByName(Objective.Time)) +
+                scoreboard.Get(adminSingle, getObjectiveByName(Objective.TimeDum)));
 
         // Schedule functions
 
