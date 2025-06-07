@@ -104,7 +104,7 @@ A list of all functions in the Java project with descriptions and their executio
   - Displays quotes during gameplay.
   - Execution Method: Continuous (self-scheduling)
   - Interval: 7 minutes
-  - Parents: start_game
+  - Parents: game_starter
   - Children: -
 
 - **display_rank**
@@ -125,6 +125,12 @@ A list of all functions in the Java project with descriptions and their executio
 - **equip_gear**
   - Equips players with basic iron armor and weapons. 
   - Execution Method: Single-use
+
+- **game_starter**
+  - Calls timer functions at the start of the game.
+  - Execution Method: Single-use
+  - Parents: start_game
+  - Children: timer_main, display_quotes, messages_schedule_single
 
 - **god_mode**
   - Enables invincibility for caller.
@@ -196,7 +202,7 @@ A list of all functions in the Java project with descriptions and their executio
 - **messages_schedule_single**
   - Combination function for all single send messages
   - Execution Method: Single-use
-  - Parents: start_game
+  - Parents: game_starter
   - Children: messages_pvp, messages_eternal_day
 
 - **minute_1** and **minute_2**
@@ -247,7 +253,7 @@ A list of all functions in the Java project with descriptions and their executio
   - Begins the match and all core timers.
   - Execution Method: Single-use
   - Parents: developer_potion_control
-  - Children: timer_main_1, timer_main_5, timer_main_20, display_quotes, messages_schedule_single
+  - Children: game_starter
 
 - **start_potions**
   - Give player potions to activate the start of game functions.
@@ -305,21 +311,21 @@ A list of all functions in the Java project with descriptions and their executio
   - Timer for main functions with interval of 1 tick
   - Execution Method: Continuous (self-scheduling)
   - Interval: 1 tick
-  - Parents: start_game
+  - Parents: game_starter
   - Children: drop_carepackages, initialize_control_point, traitor_handout
 
 - **timer_main_5**
   - Timer for main functions with interval of 5 ticks
   - Execution Method: Continuous (self-scheduling)
   - Interval: 5 ticks
-  - Parents: start_game
+  - Parents: game_starter
   - Children: handle_player_death, horse_frost_walker, remove_banned_items, update_min_health
 
 - **timer_main_20**
   - Timer for main functions with interval of 20 ticks
   - Execution Method: Continuous (self-scheduling)
   - Interval: 20 ticks
-  - Parents: start_game
+  - Parents: game_starter
   - Children: locate_teammate, check_iron_man, update_mine_count, update_sidebar, wolf_updates
 
 - **timer_traitor_5**
