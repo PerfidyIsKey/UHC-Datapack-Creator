@@ -215,6 +215,13 @@ A list of all functions in the Java project with descriptions and their executio
   - Execution Method: Continuous
   - Priority: High
 
+- **timer_control_point**
+  - Timer for Control Point related functions
+  - Execution Method: Continuous
+  - Interval: 5 ticks (self-scheduling)
+  - Parent: initialize_controlpoint
+  - Children: bbvalue, controlpoint_1, controlpoint_2
+
 - **title_default_timing**
   - Sets how long title messages display to default values.
   - Execution Method: Single-use
