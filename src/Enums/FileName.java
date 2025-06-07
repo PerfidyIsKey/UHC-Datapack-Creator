@@ -22,6 +22,7 @@ public enum FileName {
     timer_control_point_5,
     timer_control_point_20,
     timer_traitor_5,
+    timer_traitor_20,
 
     // Timer
     horse_frost_walker,

@@ -30,6 +30,8 @@ A list of all functions in the Java project with descriptions and their executio
 - **clear_schedule**
   - Clears scheduled functions.
   - Execution Method: Single-use
+  - Parents: developer_mode
+  - Children: timer_main, timer_control_point, timer_traitor
 
 - **control_point_1** and **control_point_2**
   - Award players CP score. Keep glass, beacon active. Call Control Point messages
@@ -276,6 +278,13 @@ A list of all functions in the Java project with descriptions and their executio
   - Parents: traitor_handout
   - Children: traitor_check
 
+- **timer_traitor_20**
+  - Timer for Traitor Faction functions with interval of 20 ticks
+  - Execution Method: Continuous (self-scheduling)
+  - Interval: 20 ticks
+  - Parents: traitor_handout
+  - Children: traitor_actionbar
+
 - **title_default_timing**
   - Sets how long title messages display to default values.
   - Execution Method: Single-use
@@ -283,7 +292,9 @@ A list of all functions in the Java project with descriptions and their executio
 - **traitor_actionbar**
   - Displays Traitor Faction to its members. Calls Traitor victory check. 
   - Execution Method: Continuous
-  - Priority: Low
+  - Interval: 20 ticks
+  - Parents: timer_traitor_20
+  - Children: -
 
 - **traitor_check**
   - Checks whether traitors and non-traitors are alive. 

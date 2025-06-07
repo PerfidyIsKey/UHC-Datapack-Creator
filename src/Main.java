@@ -1090,6 +1090,7 @@ public class Main {
         files.add(TimerControlPoint5());
         files.add(TimerControlPoint20());
         files.add(TimerTraitor5());
+        files.add(TimerTraitor20());
     }
 
     private FileData Initialize() {
@@ -2119,6 +2120,7 @@ public class Main {
 
         // Enable timers
         fileCommands.add(callFunction(FileName.timer_traitor_5));
+        fileCommands.add(callFunction(FileName.timer_traitor_20));
 
         return new FileData(FileName.traitor_handout, fileCommands);
     }
@@ -2134,9 +2136,6 @@ public class Main {
         texts.add(new Text(Color.gold, false, false, " <<<"));
         fileCommands.add(execute.As(new Entity("@a[tag=" + Tag.Traitor + "]")) +
                 new Title("@s", TitleType.actionbar, texts).displayTitle());
-
-        // Reschedule function
-        fileCommands.add(callFunction(FileName.traitor_actionbar, 1));
 
         return new FileData(FileName.traitor_actionbar, fileCommands);
     }
@@ -2435,8 +2434,6 @@ public class Main {
                 callFunction(FileName.initialize_control_point));
         fileCommands.add(execute.If("@e[scores={Time2=" + (40 * secPerMinute * tickPerSecond) + "}]") +
                 callFunction(FileName.traitor_handout));
-        fileCommands.add(execute.If("@e[scores={Time2=" + (40 * secPerMinute * tickPerSecond) + "}]") +
-                callFunction(FileName.traitor_actionbar));
 
         return new FileData(FileName.timer, fileCommands);
     }
@@ -2731,7 +2728,15 @@ public class Main {
         fileCommands.add(clearFunction(FileName.minute_ + "2"));
         fileCommands.add(clearFunction(FileName.minute_ + "1"));
         fileCommands.add(clearFunction(FileName.death_match));
-        fileCommands.add(clearFunction(FileName.traitor_actionbar));
+
+        // Clear timer schedules
+        fileCommands.add(clearFunction(FileName.timer_main_1));
+        fileCommands.add(clearFunction(FileName.timer_main_5));
+        fileCommands.add(clearFunction(FileName.timer_main_20));
+        fileCommands.add(clearFunction(FileName.timer_control_point_5));
+        fileCommands.add(clearFunction(FileName.timer_control_point_20));
+        fileCommands.add(clearFunction(FileName.timer_traitor_5));
+        fileCommands.add(clearFunction(FileName.timer_traitor_20));
 
         return new FileData(FileName.clear_schedule, fileCommands);
     }
@@ -3117,7 +3122,6 @@ public class Main {
         ArrayList<String> fileCommands = new ArrayList<>();
 
         // Schedule functions
-        fileCommands.add(callFunction(FileName.traitor_actionbar, 20, Duration.ticks));
         fileCommands.add(callFunction(FileName.update_public_cp_score, 20, Duration.ticks));
 
 
@@ -3173,6 +3177,19 @@ public class Main {
         fileCommands.add(callFunction(FileName.timer_traitor_5, 5, Duration.ticks));
 
         return new FileData(FileName.timer_traitor_5, fileCommands);
+    }
+
+    private FileData TimerTraitor20() {
+        // Timer for Traitor Faction continuous functions with interval of 5 ticks
+        ArrayList<String> fileCommands = new ArrayList<>();
+
+        // Schedule continuous functions
+        fileCommands.add(callFunction(FileName.traitor_actionbar)); // Display traitor actionbar
+
+        // Self-schedule timer
+        fileCommands.add(callFunction(FileName.timer_traitor_20, 20, Duration.ticks));
+
+        return new FileData(FileName.timer_traitor_20, fileCommands);
     }
 
 }
