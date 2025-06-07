@@ -82,6 +82,15 @@ A list of all functions in the Java project with descriptions and their executio
 - **developer_mode**
   - Toggles developer-specific settings or debug features.
   - Execution Method: Single-use
+  - Parents: developer_potion_control
+  - Children: timer_developer_5
+
+- **developer_potion_control**
+  - Turn potion effect into function execution.
+  - Execution Method: Continuous
+  - Interval: 5 ticks
+  - Parents: timer_developer_5
+  - Children: developer_mode, random_teams, predictions, into_calls, spread_players, survival_mode, start_game
 
 - **disable_respawn**
   - Disable automatic respawn mechanic. 
@@ -148,6 +157,8 @@ A list of all functions in the Java project with descriptions and their executio
 - **into_calls**
   - Teleport all players for the start of the game.
   - Execution Method: Single-use
+  - Parents: developer_potion_control
+  - Children: -
 
 - **join_team**
   - Make custom team during the game.
@@ -170,10 +181,14 @@ A list of all functions in the Java project with descriptions and their executio
 - **predictions**
   - Teleport all players into the void for season predictions. 
   - Execution Method: Single-use
+  - Parents: developer_potion_control
+  - Children: -
 
 - **random_teams1** to **random_teams8**
   - Random team assignment logic for teams of 1-8.
   - Execution Method: Single-use
+  - Parents: developer_potion_control
+  - Children: -
 
 - **remove_banned_items**
   - Strips items that are not allowed in gameplay.
@@ -198,11 +213,13 @@ A list of all functions in the Java project with descriptions and their executio
 - **spread_players**
   - Spreads players/teams randomly across the map.
   - Execution Method: Single-use
+  - Parents: developer_potion_control
+  - Children: -
 
 - **start_game**
   - Begins the match and all core timers.
   - Execution Method: Single-use
-  - Parents: -
+  - Parents: developer_potion_control
   - Children: timer_main_1, timer_main_5, timer_main_20
 
 - **start_potions**
@@ -212,6 +229,8 @@ A list of all functions in the Java project with descriptions and their executio
 - **survival_mode**
   - Set all gamerules to play mode.
   - Execution Method: Single-use
+  - Parents: developer_potion_control
+  - Children: -
 
 - **team_score**
   - Updates and tracks team Control Point score.
@@ -252,6 +271,13 @@ A list of all functions in the Java project with descriptions and their executio
   - Interval: 20 ticks
   - Parents: initialize_control_point
   - Children: control_point_messages_1, control_point_messages_2, control_point_perks, update_public_cp_score, second_control_point
+
+- **timer_developer_5**
+  - Timer for developer related functions with interval of 5 ticks
+  - Execution Method: Continuous (self-scheduling)
+  - Interval: 5 ticks
+  - Parents: developer_mode
+  - Children: developer_potion_control
 
 - **timer_main_1**
   - Timer for main functions with interval of 1 tick
