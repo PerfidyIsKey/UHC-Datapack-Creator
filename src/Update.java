@@ -103,7 +103,7 @@ public class Update {
         }
         fileCommands.add(Schedule.callFunction(FileName.control_point_perks));
         fileCommands.add(Schedule.callFunction(FileName.update_public_cp_score));
-        fileCommands.add(Main.execute.If("@p[scores=ControlPoint1={" + 14400 + "..}]") +
+        fileCommands.add(Main.execute.If("@p[scores={ControlPoint1=" + 14400 + "..}]") +
                 Schedule.callFunction(FileName.second_control_point));
 
 

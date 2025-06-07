@@ -102,7 +102,7 @@ A list of all functions in the Java project with descriptions and their executio
 
 - **display_quotes**
   - Displays quotes during gameplay.
-  - Execution Method: Continuous
+  - Execution Method: Continuous (self-scheduling)
   - Interval: 7 minutes
   - Parents: start_game
   - Children: -
@@ -279,11 +279,6 @@ A list of all functions in the Java project with descriptions and their executio
   - Priority: Low
   - Parents: control_point_captured
   - Children: victory_message_0 to victory_message_12, victory_message_solo, victory_message_traitor
-
-- **timer**
-  - Main game timer logic.
-  - Execution Method: Continuous
-  - Priority: High
 
 - **timer_control_point_5**
   - Timer for Control Point related functions with interval of 5 ticks
