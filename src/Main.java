@@ -675,19 +675,19 @@ public class Main {
         return callFunction("" + functionName);
     }
 
-    private String callFunction(String functionName, double delayInSeconds) {
+    private String callFunction(String functionName, int delayInSeconds) {
         return callFunction(functionName, delayInSeconds, Duration.seconds);
     }
 
-    private String callFunction(FileName functionName, double delayInSeconds) {
+    private String callFunction(FileName functionName, int delayInSeconds) {
         return callFunction("" + functionName, delayInSeconds, Duration.seconds);
     }
 
-    private String callFunction(String functionName, double delay, Duration unit) {
+    private String callFunction(String functionName, int delay, Duration unit) {
         return "schedule " + callFunction(functionName) + " " + delay + unit;
     }
 
-    private String callFunction(FileName functionName, double delay, Duration unit) {
+    private String callFunction(FileName functionName, int delay, Duration unit) {
         return callFunction("" + functionName, delay, unit);
     }
 
