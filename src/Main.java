@@ -1089,6 +1089,7 @@ public class Main {
         files.add(TimerMain20());
         files.add(TimerControlPoint5());
         files.add(TimerControlPoint20());
+        files.add(TimerTraitor5());
     }
 
     private FileData Initialize() {
@@ -2116,6 +2117,9 @@ public class Main {
         fileCommands.add(execute.In(Dimension.overworld) +
                 setBlock(11, worldBottom + 2, 0, BlockType.redstone_block, SetBlockType.destroy));
 
+        // Enable timers
+        fileCommands.add(callFunction(FileName.timer_traitor_5));
+
         return new FileData(FileName.traitor_handout, fileCommands);
     }
 
@@ -2130,10 +2134,6 @@ public class Main {
         texts.add(new Text(Color.gold, false, false, " <<<"));
         fileCommands.add(execute.As(new Entity("@a[tag=" + Tag.Traitor + "]")) +
                 new Title("@s", TitleType.actionbar, texts).displayTitle());
-
-        // Check if traitors have won
-        fileCommands.add(execute.If(new Entity("@e[scores={Victory=1}]")) +
-                callFunction(FileName.traitor_check));
 
         // Reschedule function
         fileCommands.add(callFunction(FileName.traitor_actionbar, 1));
@@ -2665,10 +2665,11 @@ public class Main {
     private FileData TraitorCheck() {
         ArrayList<String> fileCommands = new ArrayList<>();
 
-        //When no traitors remain start teams_alive_check
+        // When no traitors remain start teams_alive_check
         fileCommands.add(execute.Unless("@a[limit=1,tag=" + Tag.Traitor + ",gamemode=!spectator]") +
                 callFunction(FileName.teams_alive_check));
 
+        // When no non-traitors remain, traitors have won
         fileCommands.add(execute.Unless("@a[limit=1,tag=!" + Tag.Traitor + ",gamemode=!spectator]") +
                 callFunction(FileName.victory_message_traitor));
 
@@ -3105,7 +3106,7 @@ public class Main {
 
         // Schedule functions
         fileCommands.add(callFunction(FileName.drop_player_heads, 5, Duration.ticks));
-        fileCommands.add(callFunction(FileName.traitor_check, 5, Duration.ticks));
+
 
 
         return new FileData(FileName.timer_main_5, fileCommands);
@@ -3154,9 +3155,23 @@ public class Main {
         fileCommands.add(callFunction(FileName.controlpoint_perks));
 
         // Self-schedule timer
-        fileCommands.add(callFunction(FileName.timer_control_point_20, 5, Duration.ticks));
+        fileCommands.add(callFunction(FileName.timer_control_point_20, 20, Duration.ticks));
 
         return new FileData(FileName.timer_control_point_20, fileCommands);
+    }
+
+    private FileData TimerTraitor5() {
+        // Timer for Traitor Faction continuous functions with interval of 5 ticks
+        ArrayList<String> fileCommands = new ArrayList<>();
+
+        // Schedule continuous functions
+        fileCommands.add(execute.If(new Entity("@e[scores={Victory=1}]")) +
+                callFunction(FileName.traitor_check));  // Check if traitors have won
+
+        // Self-schedule timer
+        fileCommands.add(callFunction(FileName.timer_traitor_5, 5, Duration.ticks));
+
+        return new FileData(FileName.timer_traitor_5, fileCommands);
     }
 
 }
