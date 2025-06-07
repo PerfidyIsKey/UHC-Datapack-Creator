@@ -1254,6 +1254,9 @@ public class Main {
         fileCommands.add(execute.Unless("@e[tag=" + Tag.RespawnDisabled + "]") +
                 callFunction(FileName.respawn_player, 1));
 
+        // Repeat this check every 5 ticks
+        fileCommands.add(callFunction(FileName.handle_player_death, 5, Duration.ticks));
+
         return new FileData(FileName.handle_player_death, fileCommands);
     }
 
