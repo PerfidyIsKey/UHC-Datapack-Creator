@@ -1102,7 +1102,7 @@ public class Main {
         files.add(TimerControlPoint20());
         files.add(TimerTraitor5());
         files.add(TimerTraitor20());
-        files.add(TimerDeveloper5());
+        files.add(TimerDeveloper20());
     }
 
     private FileData Initialize() {
@@ -1513,7 +1513,7 @@ public class Main {
         fileCommands.add(callFunction(FileName.start_potions));
 
         // Start timers
-        fileCommands.add(callFunction(FileName.timer_developer_5));
+        fileCommands.add(callFunction(FileName.timer_developer_20));
 
         return new FileData(FileName.developer_mode, fileCommands);
     }
@@ -1693,7 +1693,7 @@ public class Main {
         fileCommands.add(callFunction(FileName.check_iron_man, 20, Duration.ticks));
 
         // Disable developer timers
-        fileCommands.add(clearFunction(FileName.timer_developer_5));
+        fileCommands.add(clearFunction(FileName.timer_developer_20));
 
         return new FileData(FileName.start_game, fileCommands);
     }
@@ -2442,14 +2442,6 @@ public class Main {
         // Remove banned items
         fileCommands.add(callFunction(FileName.remove_banned_items));
 
-        // TODO: Schedule in-game events. These need to be one-time executions
-        fileCommands.add(execute.If("@e[scores={Time2=" + (20 * secPerMinute * tickPerSecond) + "}]") +
-                callFunction(FileName.drop_carepackages));
-        fileCommands.add(execute.If("@e[scores={Time2=" + (30 * secPerMinute * tickPerSecond) + "}]") +
-                callFunction(FileName.initialize_control_point));
-        fileCommands.add(execute.If("@e[scores={Time2=" + (40 * secPerMinute * tickPerSecond) + "}]") +
-                callFunction(FileName.traitor_handout));
-
         return new FileData(FileName.timer, fileCommands);
     }
 
@@ -3117,6 +3109,17 @@ public class Main {
         // Timer for functions that should be executed each tick
         ArrayList<String> fileCommands = new ArrayList<>();
 
+        // Scheduled events
+        fileCommands.add(execute.If("@e[scores={Time2=" + (20 * secPerMinute * tickPerSecond) + "}]") +
+                callFunction(FileName.drop_carepackages));
+        fileCommands.add(execute.If("@e[scores={Time2=" + (30 * secPerMinute * tickPerSecond) + "}]") +
+                callFunction(FileName.initialize_control_point));
+        fileCommands.add(execute.If("@e[scores={Time2=" + (40 * secPerMinute * tickPerSecond) + "}]") +
+                callFunction(FileName.traitor_handout));
+
+        // Self-schedule timer
+        fileCommands.add(callFunction(FileName.timer_main_1, 1, Duration.ticks));
+
         return new FileData(FileName.timer_main_1, fileCommands);
     }
 
@@ -3207,17 +3210,17 @@ public class Main {
         return new FileData(FileName.timer_traitor_20, fileCommands);
     }
 
-    private FileData TimerDeveloper5() {
-        // Timer for Developer mode continuous functions with interval of 5 ticks
+    private FileData TimerDeveloper20() {
+        // Timer for Developer mode continuous functions with interval of 20 ticks
         ArrayList<String> fileCommands = new ArrayList<>();
 
         // Schedule continuous functions
         fileCommands.add(callFunction(FileName.developer_potion_control));
 
         // Self-schedule timer
-        fileCommands.add(callFunction(FileName.timer_developer_5, 5, Duration.ticks));
+        fileCommands.add(callFunction(FileName.timer_developer_20, 20, Duration.ticks));
 
-        return new FileData(FileName.timer_developer_5, fileCommands);
+        return new FileData(FileName.timer_developer_20, fileCommands);
     }
 
     private FileData DeveloperPotionControl() {

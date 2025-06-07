@@ -108,6 +108,8 @@ A list of all functions in the Java project with descriptions and their executio
 - **drop_carepackages**
   - Summon Care Packages as falling blocks.
   - Execution Method: Single-use
+  - Parents: timer_main_1
+  - Children: -
 
 - **drop_player_heads**
   - Drops player heads upon death.
@@ -148,6 +150,8 @@ A list of all functions in the Java project with descriptions and their executio
 - **initialize_control_point**
   - Activates command blocks for Control Point functions. Sends activation message.
   - Execution Method: Single-use
+  - Parents: timer_main_1
+  - Children: timer_control_point
 
 - **initiate_deathmatch**
   - Schedules deathmatch related functions.
@@ -271,10 +275,10 @@ A list of all functions in the Java project with descriptions and their executio
   - Parents: initialize_control_point
   - Children: control_point_messages_1, control_point_messages_2, control_point_perks, update_public_cp_score, second_control_point
 
-- **timer_developer_5**
-  - Timer for developer related functions with interval of 5 ticks
+- **timer_developer_20**
+  - Timer for developer related functions with interval of 20 ticks
   - Execution Method: Continuous (self-scheduling)
-  - Interval: 5 ticks
+  - Interval: 20 ticks
   - Parents: developer_mode
   - Children: developer_potion_control
 
@@ -283,7 +287,7 @@ A list of all functions in the Java project with descriptions and their executio
   - Execution Method: Continuous (self-scheduling)
   - Interval: 1 tick
   - Parents: start_game
-  - Children: -
+  - Children: drop_carepackages, initialize_control_point, traitor_handout
 
 - **timer_main_5**
   - Timer for main functions with interval of 5 ticks
@@ -334,8 +338,8 @@ A list of all functions in the Java project with descriptions and their executio
 - **traitor_handout**
   - Assigns random eligible players to the Traitor Faction. 
   - Execution Method: Single-use
-  - Parents: -
-  - Children: timer_traitor_5
+  - Parents: timer_main_1
+  - Children: timer_traitor
 
 - **update_min_health**
   - Updates the current minimum health of all players.
