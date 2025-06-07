@@ -1006,14 +1006,27 @@ public class Main {
 
     // Create function files
     private void makeFunctionFiles() {
+        // Developer mode
         files.add(Initialize());
-        files.add(DropPlayerHeads());
-        files.add(BossBarValue());
-        files.add(ClearEnderChest());
-        files.add(EquipGear());
-        files.add(GodMode());
         files.add(DeveloperMode());
         files.add(GetStartPotions());
+        files.add(DeveloperPotionControl());
+        files.add(ClearEnderChest());
+        files.add(SpawnControlPoints());
+        files.add(DisplayRank());
+        files.add(ClearSchedule());
+        files.add(DebugGive());
+        files.add(DebugRemove());
+        files.add(CurrentTestFunction());
+
+
+        files.add(DropPlayerHeads());
+        files.add(BossBarValue());
+
+        files.add(EquipGear());
+        files.add(GodMode());
+
+
 
         for (int i = 1; i < 9; i++) {
             files.add(RandomTeams(i));
@@ -1053,8 +1066,7 @@ public class Main {
         files.add(TraitorActionBar());
         files.add(TeamScore());
 
-        files.add(SpawnControlPoints());
-        files.add(DisplayRank());
+
 
         files.add(WorldPreload());
         files.add(WorldPreLoadActivation());
@@ -1068,7 +1080,7 @@ public class Main {
         files.add(UpdateMineCount());
         files.add(RespawnPlayer());
         files.add(UpdateMinHealth());
-        files.add(ClearSchedule());
+
         files.add(LocateTeammate());
         files.add(EliminateBabyWolf());
         files.add(UpdatePublicCPScore());
@@ -1078,10 +1090,9 @@ public class Main {
         files.add(AnnounceIronMan());
         files.add(CheckIronMan());
         files.add(UpdatePlayerDistance());
-        files.add(DebugGive());
-        files.add(DebugRemove());
+
         files.add(TitleDefaultTiming());
-        files.add(CurrentTestFunction());
+
 
         // Timer functions
         files.add(TimerMain1());
@@ -1091,6 +1102,7 @@ public class Main {
         files.add(TimerControlPoint20());
         files.add(TimerTraitor5());
         files.add(TimerTraitor20());
+        files.add(TimerDeveloper5());
     }
 
     private FileData Initialize() {
@@ -1500,6 +1512,9 @@ public class Main {
         // Give admin start potions
         fileCommands.add(callFunction(FileName.start_potions));
 
+        // Start timers
+        fileCommands.add(callFunction(FileName.timer_developer_5));
+
         return new FileData(FileName.developer_mode, fileCommands);
     }
 
@@ -1676,6 +1691,9 @@ public class Main {
         fileCommands.add(callFunction(FileName.update_sidebar, 20, Duration.ticks));
         fileCommands.add(callFunction(FileName.wolf_collar_execute, 20, Duration.ticks));
         fileCommands.add(callFunction(FileName.check_iron_man, 20, Duration.ticks));
+
+        // Disable developer timers
+        fileCommands.add(clearFunction(FileName.timer_developer_5));
 
         return new FileData(FileName.start_game, fileCommands);
     }
@@ -3177,7 +3195,7 @@ public class Main {
     }
 
     private FileData TimerTraitor20() {
-        // Timer for Traitor Faction continuous functions with interval of 5 ticks
+        // Timer for Traitor Faction continuous functions with interval of 20 ticks
         ArrayList<String> fileCommands = new ArrayList<>();
 
         // Schedule continuous functions
@@ -3187,6 +3205,37 @@ public class Main {
         fileCommands.add(callFunction(FileName.timer_traitor_20, 20, Duration.ticks));
 
         return new FileData(FileName.timer_traitor_20, fileCommands);
+    }
+
+    private FileData TimerDeveloper5() {
+        // Timer for Developer mode continuous functions with interval of 5 ticks
+        ArrayList<String> fileCommands = new ArrayList<>();
+
+        // Schedule continuous functions
+        fileCommands.add(callFunction(FileName.developer_potion_control));
+
+        // Self-schedule timer
+        fileCommands.add(callFunction(FileName.timer_developer_5, 5, Duration.ticks));
+
+        return new FileData(FileName.timer_developer_5, fileCommands);
+    }
+
+    private FileData DeveloperPotionControl() {
+        // Turn potion effect into function execution
+        ArrayList<String> fileCommands = new ArrayList<>();
+
+        Effect[] effects = {Effect.speed, Effect.weakness, Effect.slow_falling, Effect.invisibility, Effect.poison, Effect.strength, Effect.slowness};
+        FileName[] functions = {FileName.developer_mode, FileName.random_teams, FileName.predictions, FileName.into_calls, FileName.spread_players, FileName.survival_mode, FileName.start_game};
+
+        for (int i = 0; i < effects.length; i++) {
+            fileCommands.add(execute.If("@a[gamemode=creative,nbt={active_effects:[{id:\"minecraft:" + effects[i] + "\"}]}]") +
+                    callFunction(functions[i]));
+
+            fileCommands.add(execute.If("@a[gamemode=creative,nbt={active_effects:[{id:\"minecraft:" + effects[i] + "\"}]}]") +
+                    clearEffect("@e", effects[i]));
+        }
+
+        return new FileData(FileName.developer_potion_control, fileCommands);
     }
 
 }

@@ -13,6 +13,7 @@ public enum FileName {
     survival_mode,
     start_game,
     start_potions,
+    developer_potion_control,
 
     // Timer functions
     timer_main_1,
@@ -22,6 +23,7 @@ public enum FileName {
     timer_control_point_20,
     timer_traitor_5,
     timer_traitor_20,
+    timer_developer_5,
 
     // Timer
     horse_frost_walker,
