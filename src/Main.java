@@ -1423,7 +1423,7 @@ public class Main {
                 addForceLoad(controlPoints.get(0).getCoordinate().getX(), controlPoints.get(0).getCoordinate().getZ(), controlPoints.get(0).getCoordinate().getX(), controlPoints.get(0).getCoordinate().getZ()));
         fileCommands.add(execute.In(controlPoints.get(1).getCoordinate().getDimension()) +
                 addForceLoad(controlPoints.get(1).getCoordinate().getX(), controlPoints.get(1).getCoordinate().getZ(), controlPoints.get(1).getCoordinate().getX(), controlPoints.get(1).getCoordinate().getZ()));
-        fileCommands.add(callFunction(FileName.spawn_controlpoints));
+        fileCommands.add(callFunction(FileName.spawn_control_points));
         fileCommands.add(execute.In(controlPoints.get(0).getCoordinate().getDimension()) +
                 removeForceLoad(controlPoints.get(0).getCoordinate().getX(), controlPoints.get(0).getCoordinate().getZ(), controlPoints.get(0).getCoordinate().getX(), controlPoints.get(0).getCoordinate().getZ()));
         fileCommands.add(execute.In(controlPoints.get(1).getCoordinate().getDimension()) +
@@ -1714,7 +1714,7 @@ public class Main {
         fileCommands.add(callFunction(FileName.timer_control_point_5));
         fileCommands.add(callFunction(FileName.timer_control_point_20));
 
-        return new FileData(FileName.initialize_controlpoint, fileCommands);
+        return new FileData(FileName.initialize_control_point, fileCommands);
     }
 
     private FileData SecondControlpoint() {
@@ -1737,7 +1737,7 @@ public class Main {
         fileCommands.addAll(forceLoadAndSet(controlPoints.get(1).getCoordinate().getX(), controlPoints.get(1).getCoordinate().getY() + 3, controlPoints.get(1).getCoordinate().getZ(), controlPoints.get(1).getCoordinate().getDimension(), BlockType.air, SetBlockType.replace));
         fileCommands.add(getBossbarByName("cp2").setTitle("CP2: " + controlPoints.get(1).getCoordinate().getX() + ", " + controlPoints.get(1).getCoordinate().getY() + ", " + controlPoints.get(1).getCoordinate().getZ() + " (" + controlPoints.get(1).getCoordinate().getDimensionName() + ") - FASTER!!"));
 
-        return new FileData(FileName.second_controlpoint, fileCommands);
+        return new FileData(FileName.second_control_point, fileCommands);
     }
 
     private FileData Minute(int i) {
@@ -1908,7 +1908,7 @@ public class Main {
         fileCommands.add(execute.In(currentCP.getCoordinate().getDimension()) +
                 fill(currentCP.getCoordinate().getX(), currentCP.getCoordinate().getY(), currentCP.getCoordinate().getZ(), currentCP.getCoordinate().getX(), currentCP.getCoordinate().getY(), currentCP.getCoordinate().getZ(), BlockType.beacon));
 
-        return new FileData("" + FileName.controlpoint_ + i, fileCommands);
+        return new FileData("" + FileName.control_point_ + i, fileCommands);
     }
 
     private FileData ControlPointMessages(int i) {
@@ -2021,7 +2021,7 @@ public class Main {
         fileCommands.add(execute.If(new Entity("@p[team=,scores={MSGDum2CP" + i + "=" + cpMessageThreshold + "}]")) +
                 removeTag("@a[team=]", Tag.AttackingCP.extendName(i)));
 
-        return new FileData("" + FileName.controlpoint_messages_ + i, fileCommands);
+        return new FileData("" + FileName.control_point_messages_ + i, fileCommands);
     }
 
     private FileData DropCarepackages() {
@@ -2203,7 +2203,7 @@ public class Main {
         // Remove leftover music discs from legacy Control Point
         fileCommands.add(killEntity("@e[type=item,nbt={Item:{id:\"minecraft:music_disc_stal\",count:1}}]"));
 
-        return new FileData(FileName.spawn_controlpoints, fileCommands);
+        return new FileData(FileName.spawn_control_points, fileCommands);
     }
 
     private FileData DisplayRank() {
@@ -2432,7 +2432,7 @@ public class Main {
         fileCommands.add(execute.If("@e[scores={Time2=" + (20 * secPerMinute * tickPerSecond) + "}]") +
                 callFunction(FileName.drop_carepackages));
         fileCommands.add(execute.If("@e[scores={Time2=" + (30 * secPerMinute * tickPerSecond) + "}]") +
-                callFunction(FileName.initialize_controlpoint));
+                callFunction(FileName.initialize_control_point));
         fileCommands.add(execute.If("@e[scores={Time2=" + (40 * secPerMinute * tickPerSecond) + "}]") +
                 callFunction(FileName.traitor_handout));
         fileCommands.add(execute.If("@e[scores={Time2=" + (40 * secPerMinute * tickPerSecond) + "}]") +
@@ -2526,7 +2526,7 @@ public class Main {
             }
         }
 
-        return new FileData(FileName.controlpoint_perks, fileCommands);
+        return new FileData(FileName.control_point_perks, fileCommands);
 
     }
 
@@ -3117,8 +3117,6 @@ public class Main {
         ArrayList<String> fileCommands = new ArrayList<>();
 
         // Schedule functions
-        fileCommands.add(callFunction(FileName.teams_alive_check, 20, Duration.ticks));
-        fileCommands.add(callFunction(FileName.teams_highscore_alive_check, 20, Duration.ticks));
         fileCommands.add(callFunction(FileName.traitor_actionbar, 20, Duration.ticks));
         fileCommands.add(callFunction(FileName.update_public_cp_score, 20, Duration.ticks));
 
@@ -3134,9 +3132,12 @@ public class Main {
         // Schedule continuous functions
         fileCommands.add(callFunction(FileName.bbvalue));
         for (int i = 1; i < 3; i++) {
-            fileCommands.add(callFunction("" + FileName.controlpoint_ + i));
+            fileCommands.add(callFunction("" + FileName.control_point_ + i));
+            fileCommands.add(execute.If("@p[scores={ControlPoint" + i + "=" + 48000 + "..}]") +
+                    callFunction(FileName.control_point_captured));
         }
         fileCommands.add(callFunction(FileName.team_score));
+
 
         // Self-schedule timer
         fileCommands.add(callFunction(FileName.timer_control_point_5, 5, Duration.ticks));
@@ -3150,9 +3151,9 @@ public class Main {
 
         // Schedule continuous functions
         for (int i = 1; i < 3; i++) {
-            fileCommands.add(callFunction("" + FileName.controlpoint_messages_ + i));
+            fileCommands.add(callFunction("" + FileName.control_point_messages_ + i));
         }
-        fileCommands.add(callFunction(FileName.controlpoint_perks));
+        fileCommands.add(callFunction(FileName.control_point_perks));
 
         // Self-schedule timer
         fileCommands.add(callFunction(FileName.timer_control_point_20, 20, Duration.ticks));

@@ -41,14 +41,14 @@ public enum FileName {
     disable_respawn,
 
     // Control Point
-    spawn_controlpoints,
-    initialize_controlpoint,
-    controlpoint_,
+    spawn_control_points,
+    initialize_control_point,
+    control_point_,
     team_score,
-    second_controlpoint,
+    second_control_point,
     bbvalue,
-    controlpoint_perks,
-    controlpoint_messages_,
+    control_point_perks,
+    control_point_messages_,
     update_public_cp_score,
 
     // Care Packages
