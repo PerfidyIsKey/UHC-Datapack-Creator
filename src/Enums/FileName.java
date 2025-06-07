@@ -45,7 +45,7 @@ public enum FileName {
     second_controlpoint,
     bbvalue,
     controlpoint_perks,
-    controlpoint_messages_,
+    controlpoint_messages,
     update_public_cp_score,
 
     // Care Packages

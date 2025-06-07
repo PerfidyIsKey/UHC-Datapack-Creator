@@ -1087,6 +1087,8 @@ public class Main {
         files.add(TimerTick1());
         files.add(TimerTick5());
         files.add(TimerTick20());
+        files.add(TimerControlPoint());
+        files.add(TimerCPMessages());
     }
 
     private FileData Initialize() {
@@ -1705,6 +1707,7 @@ public class Main {
 
         // Schedule continuous functions
         fileCommands.add(callFunction(FileName.timer_control_point));
+        fileCommands.add(callFunction(FileName.controlpoint_messages));
 
         return new FileData(FileName.initialize_controlpoint, fileCommands);
     }
@@ -1900,9 +1903,6 @@ public class Main {
         fileCommands.add(execute.In(currentCP.getCoordinate().getDimension()) +
                 fill(currentCP.getCoordinate().getX(), currentCP.getCoordinate().getY(), currentCP.getCoordinate().getZ(), currentCP.getCoordinate().getX(), currentCP.getCoordinate().getY(), currentCP.getCoordinate().getZ(), BlockType.beacon));
 
-        // Update CP messaging
-        fileCommands.add(callFunction("" + FileName.controlpoint_messages_ + i));
-
         return new FileData("" + FileName.controlpoint_ + i, fileCommands);
     }
 
@@ -2016,7 +2016,22 @@ public class Main {
         fileCommands.add(execute.If(new Entity("@p[team=,scores={MSGDum2CP" + i + "=" + cpMessageThreshold + "}]")) +
                 removeTag("@a[team=]", Tag.AttackingCP.extendName(i)));
 
-        return new FileData("" + FileName.controlpoint_messages_ + i, fileCommands);
+        return new FileData(FileName.controlpoint_messages + "_" + i, fileCommands);
+    }
+
+    private FileData TimerCPMessages() {
+        // Timer for Control Point messages
+        ArrayList<String> fileCommands = new ArrayList<>();
+
+        // Call separate message functions
+        for (int i = 1; i < 3; i++) {
+            fileCommands.add(callFunction(FileName.controlpoint_messages + "_" + i));
+        }
+
+        // Self reschedule
+        fileCommands.add(callFunction(FileName.controlpoint_messages, 20, Duration.ticks));
+
+        return new FileData(FileName.controlpoint_messages, fileCommands);
     }
 
     private FileData DropCarepackages() {
@@ -3114,9 +3129,6 @@ public class Main {
         ArrayList<String> fileCommands = new ArrayList<>();
 
         // Schedule functions
-        for (int i = 1; i < 3; i++) {
-            fileCommands.add(callFunction("" + FileName.controlpoint_messages_ + i, 20, Duration.ticks));
-        }
         fileCommands.add(callFunction(FileName.controlpoint_perks, 20, Duration.ticks));
         fileCommands.add(callFunction(FileName.teams_alive_check, 20, Duration.ticks));
         fileCommands.add(callFunction(FileName.teams_highscore_alive_check, 20, Duration.ticks));
