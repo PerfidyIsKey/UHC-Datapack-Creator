@@ -1298,6 +1298,9 @@ public class Main {
         fileCommands.add(execute.Store(ExecuteStore.result, getBossbarByName("cp2"), BossBarStore.value) +
                 scoreboard.Get("@e[limit=1,scores={Highscore1=14400..}]", getObjectiveByName(Objective.Highscore.extendName(2))));
 
+        // Self-schedule
+        fileCommands.add(callFunction(FileName.bbvalue, 5, Duration.ticks));
+
         return new FileData(FileName.bbvalue, fileCommands);
     }
 
@@ -1686,6 +1689,9 @@ public class Main {
         fileCommands.add(execute.In(Dimension.overworld) +
                 setBlock(15, worldBottom + 2, 10, BlockType.redstone_block, SetBlockType.replace));
         fileCommands.add(setGameRule(GameRule.doDaylightCycle, false));
+
+        // Schedule continuous functions
+        fileCommands.add(callFunction(FileName.bbvalue));
 
         return new FileData(FileName.initialize_controlpoint, fileCommands);
     }
@@ -3082,7 +3088,6 @@ public class Main {
         ArrayList<String> fileCommands = new ArrayList<>();
 
         // Schedule functions
-        fileCommands.add(callFunction(FileName.bbvalue, 5, Duration.ticks));
         for (int i = 1; i < 3; i++) {
             fileCommands.add(callFunction("" + FileName.controlpoint_ + i, 5, Duration.ticks));
         }
