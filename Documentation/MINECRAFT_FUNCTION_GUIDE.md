@@ -262,6 +262,13 @@ A list of all functions in the Java project with descriptions and their executio
   - Parents: start_game
   - Children: -
 
+- **timer_traitor_5**
+  - Timer for Traitor Faction functions with interval of 5 ticks
+  - Execution Method: Continuous (self-scheduling)
+  - Interval: 5 ticks
+  - Parents: traitor_handout
+  - Children: traitor_check
+
 - **title_default_timing**
   - Sets how long title messages display to default values.
   - Execution Method: Single-use
@@ -274,11 +281,15 @@ A list of all functions in the Java project with descriptions and their executio
 - **traitor_check**
   - Checks whether traitors and non-traitors are alive. 
   - Execution Method: Continuous
-  - Priority: Medium
+  - Interval: 5 ticks
+  - Parents: timer_traitor_5
+  - Children: teams_alive_check, victory_message_traitor
 
 - **traitor_handout**
   - Assigns random eligible players to the Traitor Faction. 
   - Execution Method: Single-use
+  - Parents: -
+  - Children: timer_traitor_5
 
 - **update_min_health**
   - Updates the current minimum health of all players.
