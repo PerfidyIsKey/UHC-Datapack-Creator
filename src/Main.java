@@ -235,13 +235,11 @@ public class Main {
             worldSize = 500;
             carePackageSpread = 450;
             carePackageAmount = 200;
-        }
-        else if (players.size() <= 20) {
+        } else if (players.size() <= 20) {
             worldSize = 750;
             carePackageSpread = 500;
             carePackageAmount = 200;
-        }
-        else {
+        } else {
             worldSize = 1000;
             carePackageSpread = 750;
             carePackageAmount = 450;
@@ -513,8 +511,8 @@ public class Main {
         String author = "Mr9Madness";
 
         // Compile pages
-        ArrayList<ArrayList<TextItem>>pages = new ArrayList<>();
-        ArrayList<TextItem>texts = new ArrayList<>();
+        ArrayList<ArrayList<TextItem>> pages = new ArrayList<>();
+        ArrayList<TextItem> texts = new ArrayList<>();
         texts.add(new Text(false, false, "Alright, guys, welcome to a new Let's Play!\\n\\n"));
         texts.add(new Text(false, false, "We're starting a new Terraria playthrough with a fresh character—of course, blue hair and blue eyes, because why not? Naming him "));
         texts.add(new Text(false, true, "Mr9Madness."));
@@ -595,7 +593,7 @@ public class Main {
         texts = new ArrayList<>();
 
 
-        texts.add(new Text(false, false,"Here are the teams:\\n" +
+        texts.add(new Text(false, false, "Here are the teams:\\n" +
                 "Team Red: Snodog627 and PR0BA.\\n" +
                 "Team Lime: Tiba101 and WarriorJeroen (a.k.a. SGT_Prostidude).\\n" +
                 "Team Blue: BananaKid99 (a.k.a. Mr9Madness) and S3R91."));
@@ -665,41 +663,8 @@ public class Main {
         return scoreboardObjectives.stream().filter(objective -> name.toString().equals(objective.getName())).findAny().orElse(null);
     }
 
-    // Call function through other function
-    private String callFunction(String functionName) {
-        return "function uhc:" + functionName;
-    }
 
-    private String callFunction(FileName functionName) {
-        return callFunction("" + functionName);
-    }
-
-    private String callFunction(String functionName, int delayInSeconds) {
-        return callFunction(functionName, delayInSeconds, Duration.seconds);
-    }
-
-    private String callFunction(FileName functionName, int delayInSeconds) {
-        return callFunction("" + functionName, delayInSeconds, Duration.seconds);
-    }
-
-    private String callFunction(String functionName, int delay, Duration unit) {
-        return "schedule " + callFunction(functionName) + " " + delay + unit;
-    }
-
-    private String callFunction(FileName functionName, int delay, Duration unit) {
-        return callFunction("" + functionName, delay, unit);
-    }
-
-   // Clear schedule
-    private String clearFunction(String functionName) {
-        return "schedule clear uhc:" + functionName;
-    }
-
-    private String clearFunction(FileName functionName) {
-        return clearFunction("" + functionName);
-    }
-
-   // Setblock
+    // Setblock
     private ArrayList<String> forceLoadAndSet(int x, int y, int z, String blockType) {
         return forceLoadAndSet(x, y, z, Dimension.overworld, blockType);
     }
@@ -746,9 +711,13 @@ public class Main {
         return forceLoadAndSet(x, y, z, dimension, blockType + "", type);
     }
 
-    private String addForceLoad(int x1, int z1, int x2, int z2) { return "forceload add " + x1 + " " + z1 + " " + x2 + " " + z2; }
+    private String addForceLoad(int x1, int z1, int x2, int z2) {
+        return "forceload add " + x1 + " " + z1 + " " + x2 + " " + z2;
+    }
 
-    private String removeForceLoad(int x1, int z1, int x2, int z2) { return "forceload remove " + x1 + " " + z1 + " " + x2 + " " + z2; }
+    private String removeForceLoad(int x1, int z1, int x2, int z2) {
+        return "forceload remove " + x1 + " " + z1 + " " + x2 + " " + z2;
+    }
 
     private String setBlock(String x, String y, String z, String blockType) {
         return "setblock " + x + " " + y + " " + z + " " + blockType;
@@ -863,110 +832,200 @@ public class Main {
     }
 
     // Difficulty
-    private String setDifficulty(Difficulty difficulty) { return "difficulty " + difficulty; }
+    private String setDifficulty(Difficulty difficulty) {
+        return "difficulty " + difficulty;
+    }
 
     // Gamemode
-    private String setDefaultGameMode(GameMode gameMode) { return "defaultgamemode " + gameMode; }
+    private String setDefaultGameMode(GameMode gameMode) {
+        return "defaultgamemode " + gameMode;
+    }
 
-    private String setGameMode(GameMode gameMode, String entity) { return "gamemode " + gameMode + " " + entity; }
+    private String setGameMode(GameMode gameMode, String entity) {
+        return "gamemode " + gameMode + " " + entity;
+    }
 
     // Set world spawn
-    private String setWorldSpawn(Coordinate coordinate) { return "setworldspawn " + coordinate.getCoordinateString(); }
+    private String setWorldSpawn(Coordinate coordinate) {
+        return "setworldspawn " + coordinate.getCoordinateString();
+    }
 
     // Entities
-    private String summonEntity(String entity) { return summonEntity(entity, new Coordinate(0, 0, 0, ReferenceFrame.relative)); }
+    private String summonEntity(String entity) {
+        return summonEntity(entity, new Coordinate(0, 0, 0, ReferenceFrame.relative));
+    }
 
-    private String summonEntity(String entity, Coordinate coordinate) { return "summon minecraft:" + entity + " " + coordinate.getCoordinateString(); }
+    private String summonEntity(String entity, Coordinate coordinate) {
+        return "summon minecraft:" + entity + " " + coordinate.getCoordinateString();
+    }
 
-    private String summonEntity(String entity, String nbt) { return summonEntity(entity, new Coordinate(0, 0, 0, ReferenceFrame.relative), nbt); }
+    private String summonEntity(String entity, String nbt) {
+        return summonEntity(entity, new Coordinate(0, 0, 0, ReferenceFrame.relative), nbt);
+    }
 
-    private String summonEntity(String entity, Coordinate coordinate, String nbt) { return "summon minecraft:" + entity + " " + coordinate.getCoordinateString() + " " + nbt; }
+    private String summonEntity(String entity, Coordinate coordinate, String nbt) {
+        return "summon minecraft:" + entity + " " + coordinate.getCoordinateString() + " " + nbt;
+    }
 
-    private String summonEntity(EntityType entity) { return summonEntity(entity, new Coordinate(0, 0, 0, ReferenceFrame.relative)); }
+    private String summonEntity(EntityType entity) {
+        return summonEntity(entity, new Coordinate(0, 0, 0, ReferenceFrame.relative));
+    }
 
-    private String summonEntity(EntityType entity, Coordinate coordinate) { return "summon minecraft:" + entity + " " + coordinate.getCoordinateString(); }
+    private String summonEntity(EntityType entity, Coordinate coordinate) {
+        return "summon minecraft:" + entity + " " + coordinate.getCoordinateString();
+    }
 
-    private String summonEntity(EntityType entity, String nbt) { return summonEntity(entity, new Coordinate(0, 0, 0, ReferenceFrame.relative), nbt); }
+    private String summonEntity(EntityType entity, String nbt) {
+        return summonEntity(entity, new Coordinate(0, 0, 0, ReferenceFrame.relative), nbt);
+    }
 
-    private String summonEntity(EntityType entity, Coordinate coordinate, String nbt) { return "summon minecraft:" + entity + " " + coordinate.getCoordinateString() + " " + nbt; }
+    private String summonEntity(EntityType entity, Coordinate coordinate, String nbt) {
+        return "summon minecraft:" + entity + " " + coordinate.getCoordinateString() + " " + nbt;
+    }
 
-    private String killEntity(String entity) { return "kill " + entity; }
+    private String killEntity(String entity) {
+        return "kill " + entity;
+    }
 
     // Teleportation
-    private String teleportEntity(String entity, Coordinate coordinate) { return "tp " + entity + " " + coordinate.getCoordinateString(); }
+    private String teleportEntity(String entity, Coordinate coordinate) {
+        return "tp " + entity + " " + coordinate.getCoordinateString();
+    }
 
-    private String teleportEntity(String entity1, String entity2) { return "tp " + entity1 + " " + entity2; }
+    private String teleportEntity(String entity1, String entity2) {
+        return "tp " + entity1 + " " + entity2;
+    }
 
     // Tags
-    private String addTag(String entity, Tag tag) { return "tag " + entity + " add " + tag; }
+    private String addTag(String entity, Tag tag) {
+        return "tag " + entity + " add " + tag;
+    }
 
-    private String addTag(String entity, String tag) { return "tag " + entity + " add " + tag; }
+    private String addTag(String entity, String tag) {
+        return "tag " + entity + " add " + tag;
+    }
 
-    private String removeTag(String entity, Tag tag) { return "tag " + entity + " remove " + tag; }
+    private String removeTag(String entity, Tag tag) {
+        return "tag " + entity + " remove " + tag;
+    }
 
-    private String removeTag(String entity, String tag) { return "tag " + entity + " remove " + tag; }
+    private String removeTag(String entity, String tag) {
+        return "tag " + entity + " remove " + tag;
+    }
 
     // Give item
-    private String giveItem(String entity, BlockType item) { return giveItem(entity, item, ""); }
+    private String giveItem(String entity, BlockType item) {
+        return giveItem(entity, item, "");
+    }
 
-    private String giveItem(String entity, BlockType item, String nbt) { return "give " + entity + " " + item + nbt; }
+    private String giveItem(String entity, BlockType item, String nbt) {
+        return "give " + entity + " " + item + nbt;
+    }
 
-    private String giveItem(String entity, String item, String nbt) { return "give " + entity + " " + item + nbt; }
+    private String giveItem(String entity, String item, String nbt) {
+        return "give " + entity + " " + item + nbt;
+    }
 
-    private String replaceItem(String targets, InventorySlot slot, BlockType item) { return "item replace entity " + targets + " " + slot + " with " + item; }
+    private String replaceItem(String targets, InventorySlot slot, BlockType item) {
+        return "item replace entity " + targets + " " + slot + " with " + item;
+    }
 
-    private String replaceItem(String targets, String slot, BlockType item) { return "item replace entity " + targets + " " + slot + " with " + item; }
+    private String replaceItem(String targets, String slot, BlockType item) {
+        return "item replace entity " + targets + " " + slot + " with " + item;
+    }
 
-    private String replaceItem(String targets, InventorySlot slot, BlockType item, int count) { return "item replace entity " + targets + " " + slot + " with " + item + " " + count; }
+    private String replaceItem(String targets, InventorySlot slot, BlockType item, int count) {
+        return "item replace entity " + targets + " " + slot + " with " + item + " " + count;
+    }
 
-    private String replaceItem(String targets, String slot, BlockType item, int count) { return "item replace entity " + targets + " " + slot + " with " + item + " " + count; }
+    private String replaceItem(String targets, String slot, BlockType item, int count) {
+        return "item replace entity " + targets + " " + slot + " with " + item + " " + count;
+    }
 
-    private String replaceItem(String targets, InventorySlot slot, String item) { return "item replace entity " + targets + " " + slot + " with " + item; }
+    private String replaceItem(String targets, InventorySlot slot, String item) {
+        return "item replace entity " + targets + " " + slot + " with " + item;
+    }
 
-    private String replaceItem(String targets, String slot, String item) { return "item replace entity " + targets + " " + slot + " with " + item; }
+    private String replaceItem(String targets, String slot, String item) {
+        return "item replace entity " + targets + " " + slot + " with " + item;
+    }
 
-    private String replaceItem(String targets, InventorySlot slot, String item, int count) { return "item replace entity " + targets + " " + slot + " with " + item + " " + count; }
+    private String replaceItem(String targets, InventorySlot slot, String item, int count) {
+        return "item replace entity " + targets + " " + slot + " with " + item + " " + count;
+    }
 
-    private String replaceItem(String targets, String slot, String item, int count) { return "item replace entity " + targets + " " + slot + " with " + item + " " + count; }
+    private String replaceItem(String targets, String slot, String item, int count) {
+        return "item replace entity " + targets + " " + slot + " with " + item + " " + count;
+    }
 
 
     // Worldborder
-    private String setWorldBorder(int size, int duration) { return "worldborder set " + size + " " + duration; }
+    private String setWorldBorder(int size, int duration) {
+        return "worldborder set " + size + " " + duration;
+    }
 
-    private String setWorldBorder(int size) { return "worldborder set " + size; }
+    private String setWorldBorder(int size) {
+        return "worldborder set " + size;
+    }
 
     // Spreadplayers
-    private String spreadPlayers(int xCenter, int yCenter, int minRange, int maxRange, Boolean respectTeam, String entities) { return "spreadplayers " + xCenter + " " + yCenter + " " + minRange + " " + maxRange + " " + respectTeam + " " + entities; }
+    private String spreadPlayers(int xCenter, int yCenter, int minRange, int maxRange, Boolean respectTeam, String entities) {
+        return "spreadplayers " + xCenter + " " + yCenter + " " + minRange + " " + maxRange + " " + respectTeam + " " + entities;
+    }
 
     // Experience
-    private String setExperience(String target, int amount, ExperienceType type) { return "xp set " + target + " " + amount + " " + type; }
+    private String setExperience(String target, int amount, ExperienceType type) {
+        return "xp set " + target + " " + amount + " " + type;
+    }
 
     // Advancements
-    private String revokeAdvancement(String target) { return "advancement revoke " + target + " everything"; }
+    private String revokeAdvancement(String target) {
+        return "advancement revoke " + target + " everything";
+    }
 
     // Data
-    private String getData(String target, String path) { return "data get entity " + target + " " + path; }
+    private String getData(String target, String path) {
+        return "data get entity " + target + " " + path;
+    }
 
-    private String getData(String target, String path, int scale) { return "data get entity " + target + " " + path + " " + scale; }
+    private String getData(String target, String path, int scale) {
+        return "data get entity " + target + " " + path + " " + scale;
+    }
 
-    private String modifyData(String target, String targetPath, String value) { return "data modify entity " + target + " " + targetPath + " set value " + value + "b"; }
+    private String modifyData(String target, String targetPath, String value) {
+        return "data modify entity " + target + " " + targetPath + " set value " + value + "b";
+    }
 
     // Clear inventory
-    private String clearInventory(String targets, BlockType item) { return "clear " + targets + " " + item; }
+    private String clearInventory(String targets, BlockType item) {
+        return "clear " + targets + " " + item;
+    }
 
-    private String clearInventory(String targets) { return "clear " + targets; }
+    private String clearInventory(String targets) {
+        return "clear " + targets;
+    }
 
     // Game time
-    private String setTime(int time) { return "time set " + time; }
+    private String setTime(int time) {
+        return "time set " + time;
+    }
 
     // Recipes
-    private String giveRecipe(String targets, BlockType recipe) { return "recipe give " + targets + " " + recipe; }
+    private String giveRecipe(String targets, BlockType recipe) {
+        return "recipe give " + targets + " " + recipe;
+    }
 
-    private String giveRecipe(String targets, String recipe) { return "recipe give " + targets + " " + recipe; }
+    private String giveRecipe(String targets, String recipe) {
+        return "recipe give " + targets + " " + recipe;
+    }
 
-    private String takeRecipe(String targets, BlockType recipe) { return "recipe take " + targets + " " + recipe; }
+    private String takeRecipe(String targets, BlockType recipe) {
+        return "recipe take " + targets + " " + recipe;
+    }
 
-    private String takeRecipe(String targets, String recipe) { return "recipe take " + targets + " " + recipe; }
+    private String takeRecipe(String targets, String recipe) {
+        return "recipe take " + targets + " " + recipe;
+    }
 
     // Particle
     private String createParticle(Particle name, Coordinate pos, Coordinate delta, int speed, int count, String viewers) {
@@ -996,7 +1055,7 @@ public class Main {
     }
 
     private String changeTitleDisplayTime(String targets, int fadeIn, int duration, int fadeOut, Duration durationType) {
-        return "title " + targets + " times " + fadeIn + durationType +  " " + duration + durationType + " " + fadeOut + durationType;
+        return "title " + targets + " times " + fadeIn + durationType + " " + duration + durationType + " " + fadeOut + durationType;
     }
 
     private String changeTitleDisplayTime(String targets, String fadeIn, String duration, String fadeOut) {
@@ -1092,16 +1151,22 @@ public class Main {
 
         files.add(TitleDefaultTiming());
 
+        // Timer main functions
+        Update Updating = new Update();
+        files.add(Updating.TimerMain1());
+        files.add(Updating.TimerMain5());
+        files.add(Updating.TimerMain20());
 
         // Timer functions
-        files.add(TimerMain1());
-        files.add(TimerMain5());
-        files.add(TimerMain20());
-        files.add(TimerControlPoint5());
+        /*files.add(TimerControlPoint5());
         files.add(TimerControlPoint20());
         files.add(TimerTraitor5());
         files.add(TimerTraitor20());
-        files.add(TimerDeveloper20());
+        files.add(TimerDeveloper20());*/
+
+        // Gamestart functions
+        files.add(GameStart.GameStarter());
+
     }
 
     private FileData Initialize() {
@@ -1183,7 +1248,7 @@ public class Main {
         // Indicate when the first 20 minutes of the game have elapsed
         fileCommands.add(execute.If("@e[scores={Time2=24000..}]", false) +
                 execute.UnlessNext("@e[tag=" + Tag.RespawnDisabled + "]", true) +
-                callFunction(FileName.disable_respawn));
+                Schedule.callFunction(FileName.disable_respawn));
 
         // Play thunder sound
         fileCommands.add(playSound(Sound.THUNDER, SoundSource.master, "@a", "~", "~50", "~", "100", "1", "0"));
@@ -1216,7 +1281,7 @@ public class Main {
                 addTag("@p[scores={Deaths=1}]", Tag.Respawn));
 
         // Drop player head
-        fileCommands.add(callFunction(FileName.drop_player_heads));
+        fileCommands.add(Schedule.callFunction(FileName.drop_player_heads));
 
         // Do not allow killers to form a team
         if (teamMode == 2) {
@@ -1267,11 +1332,7 @@ public class Main {
 
         // Do automatic respawn in the first 20 minutes
         fileCommands.add(execute.Unless("@e[tag=" + Tag.RespawnDisabled + "]") +
-                callFunction(FileName.respawn_player, 1));
-
-        // Repeat this check every 5 ticks
-        fileCommands.add(callFunction(FileName.handle_player_death, 5, Duration.ticks));
-
+                Schedule.callFunction(FileName.respawn_player, 1));
         return new FileData(FileName.handle_player_death, fileCommands);
     }
 
@@ -1292,7 +1353,7 @@ public class Main {
 
         // Players in a team
         for (Team t : teams) {
-            fileCommands.add(execute.If(adminSingle, getObjectiveByName(Objective.CP.toString() + 1 + t.getName()), ComparatorType.greater,adminSingle, getObjectiveByName(Objective.Highscore.extendName(1))) +
+            fileCommands.add(execute.If(adminSingle, getObjectiveByName(Objective.CP.toString() + 1 + t.getName()), ComparatorType.greater, adminSingle, getObjectiveByName(Objective.Highscore.extendName(1))) +
                     getBossbarByName("cp1").setColor(t.getBossbarColor()));
             fileCommands.add(execute.If(adminSingle, getObjectiveByName(Objective.CP.toString() + 2 + t.getName()), ComparatorType.greater, "@e[limit=1,scores={Highscore1=14400..}]", getObjectiveByName(Objective.Highscore.extendName(2))) +
                     getBossbarByName("cp2").setColor(t.getBossbarColor()));
@@ -1323,7 +1384,7 @@ public class Main {
         ArrayList<String> fileCommands = new ArrayList<>();
         for (int i = 0; i < chestSize; i++) {
             fileCommands.add(replaceItem("@a", InventorySlot.enderchest.setSlotNumber(i), BlockType.air, 1));
-            }
+        }
 
         return new FileData(FileName.clear_enderchest, fileCommands);
     }
@@ -1365,8 +1426,7 @@ public class Main {
             fileCommands.add(giveSplashPotion("@s", 4, Effect.poison, "00CC66", "Spread players", "Spread players across the map."));
             fileCommands.add(giveSplashPotion("@s", 5, Effect.strength, "CC3333", "Survival Mode", "Set operational mode to Ready to Play."));
             fileCommands.add(giveSplashPotion("@s", 6, Effect.slowness, "00FF7F", "Start Game", "Start the game. Good luck!"));
-        }
-        else if (teamMode == 2) {
+        } else if (teamMode == 2) {
             fileCommands.add(giveSplashPotion("@s", 0, Effect.speed, "808080", "Developer Mode", "Set operational mode to Developer Mode."));
             fileCommands.add(giveSplashPotion("@s", 1, Effect.slow_falling, "6633CC", "Predictions", "Who will win this season?."));
             fileCommands.add(giveSplashPotion("@s", 2, Effect.invisibility, "3399FF", "Into Calls", "Allow players to gather in their Discord channel."));
@@ -1435,7 +1495,7 @@ public class Main {
                 addForceLoad(controlPoints.get(0).getCoordinate().getX(), controlPoints.get(0).getCoordinate().getZ(), controlPoints.get(0).getCoordinate().getX(), controlPoints.get(0).getCoordinate().getZ()));
         fileCommands.add(execute.In(controlPoints.get(1).getCoordinate().getDimension()) +
                 addForceLoad(controlPoints.get(1).getCoordinate().getX(), controlPoints.get(1).getCoordinate().getZ(), controlPoints.get(1).getCoordinate().getX(), controlPoints.get(1).getCoordinate().getZ()));
-        fileCommands.add(callFunction(FileName.spawn_control_points));
+        fileCommands.add(Schedule.callFunction(FileName.spawn_control_points));
         fileCommands.add(execute.In(controlPoints.get(0).getCoordinate().getDimension()) +
                 removeForceLoad(controlPoints.get(0).getCoordinate().getX(), controlPoints.get(0).getCoordinate().getZ(), controlPoints.get(0).getCoordinate().getX(), controlPoints.get(0).getCoordinate().getZ()));
         fileCommands.add(execute.In(controlPoints.get(1).getCoordinate().getDimension()) +
@@ -1455,7 +1515,7 @@ public class Main {
 
         // Create jukebox at 0,0
         fileCommands.add(execute.In(Dimension.overworld) +
-                setBlock(startCoordinate,  BlockType.jukebox + "[has_record=true]{RecordItem:{Count:1b,id:\"minecraft:music_disc_stal\"}}", SetBlockType.replace));
+                setBlock(startCoordinate, BlockType.jukebox + "[has_record=true]{RecordItem:{Count:1b,id:\"minecraft:music_disc_stal\"}}", SetBlockType.replace));
 
         // Remove tags
         fileCommands.add(removeTag("@a", Tag.Traitor));
@@ -1471,7 +1531,7 @@ public class Main {
         fileCommands.add(setWorldBorder(2 * worldSize));
 
         // Display ranks
-        fileCommands.add(callFunction(FileName.display_rank));
+        fileCommands.add(Schedule.callFunction(FileName.display_rank));
 
         // Set time dummy scoreboard entries
         fileCommands.add(scoreboard.Set("NightTime", getObjectiveByName(Objective.Time), 600));
@@ -1497,22 +1557,22 @@ public class Main {
 
         // Reset player scales
         fileCommands.add(execute.As(new Entity("@a")) +
-                        setAttributeBase("@s", AttributeType.scale, 1));
+                setAttributeBase("@s", AttributeType.scale, 1));
 
         // Set gamemode of player executing the command to creative
         fileCommands.add(setGameMode(GameMode.creative, "@s"));
 
         // Clear scheduled commands
-        fileCommands.add(callFunction(FileName.clear_schedule));
+        fileCommands.add(Schedule.callFunction(FileName.clear_schedule));
 
         // Clear all player effects
         fileCommands.add(clearEffect("@a"));
 
         // Give admin start potions
-        fileCommands.add(callFunction(FileName.start_potions));
+        fileCommands.add(Schedule.callFunction(FileName.start_potions));
 
         // Start timers
-        fileCommands.add(callFunction(FileName.timer_developer_20));
+        fileCommands.add(Schedule.callFunction(FileName.timer_developer_20));
 
         return new FileData(FileName.developer_mode, fileCommands);
     }
@@ -1568,8 +1628,7 @@ public class Main {
         Boolean respectTeams = true;
         if (teamMode == 1) {
             respectTeams = true;
-        }
-        else if (teamMode == 2) {
+        } else if (teamMode == 2) {
             respectTeams = false;
         }
 
@@ -1590,7 +1649,7 @@ public class Main {
         fileCommands.add(setGameRule(GameRule.fallDamage, true));
         fileCommands.add(setGameRule(GameRule.fireDamage, true));
         fileCommands.add(setGameRule(GameRule.doImmediateRespawn, true));
-        fileCommands.add(callFunction(FileName.clear_enderchest));
+        fileCommands.add(Schedule.callFunction(FileName.clear_enderchest));
 
         // Recipes
         // fileCommands.add(giveRecipe("@a", BlockType.golden_apple.setNamespace(Namespace.uhc)));
@@ -1616,7 +1675,7 @@ public class Main {
         // Give potion effect
         fileCommands.add(giveEffect("@a", Effect.regeneration, 1, 255));
         fileCommands.add(giveEffect("@a", Effect.saturation, 1, 255));
-        fileCommands.add(giveEffect("@a", Effect.resistance, 20*60, 2, true));
+        fileCommands.add(giveEffect("@a", Effect.resistance, 20 * 60, 2, true));
 
         // Clear player inventories
         fileCommands.add(clearInventory("@a"));
@@ -1649,8 +1708,7 @@ public class Main {
             for (int i = 0; i < teams.size(); i++) {
                 fileCommands.add(giveItem("@a[team=" + teams.get(i).getName() + "]", BlockType.bundle.extendColor(teams.get(i).getGlassColor()), "[enchantments={levels:{\"minecraft:vanishing_curse\":1}},custom_data={locateTeammate:1b}]"));
             }
-        }
-        else if (teamMode == 2) {
+        } else if (teamMode == 2) {
             // Team caller
             fileCommands.add(giveItem("@a", BlockType.goat_horn, "[instrument=\"minecraft:ponder_goat_horn\",use_cooldown={seconds:30},enchantments={\"minecraft:vanishing_curse\":1}]"));
         }
@@ -1669,30 +1727,19 @@ public class Main {
         fileCommands.add(new Title("@a", TitleType.title, new Text(Color.gold, true, true, "Game Starting Now!")).displayTitle());
 
         // Change title display time
-        fileCommands.add(callFunction(FileName.title_default_timing, 5));
+        fileCommands.add(Schedule.callFunction(FileName.title_default_timing, 5));
 
         // Destroy all ground items
         fileCommands.add(killEntity("@e[type=item]"));
 
         // Schedule continuous functions
-        fileCommands.add(callFunction(FileName.timer_main_1));
-        fileCommands.add(callFunction(FileName.timer_main_5));
-        fileCommands.add(callFunction(FileName.timer_main_20));
+        fileCommands.add(Schedule.callFunction(FileName.timer_main_1));
+        fileCommands.add(Schedule.callFunction(FileName.timer_main_5));
+        fileCommands.add(Schedule.callFunction(FileName.timer_main_20));
 
-        fileCommands.add(callFunction(FileName.handle_player_death, 5, Duration.ticks));
-        fileCommands.add(callFunction(FileName.horse_frost_walker, 5, Duration.ticks));
-        fileCommands.add(callFunction(FileName.locate_teammate, 5, Duration.ticks));
-        fileCommands.add(callFunction(FileName.remove_banned_items, 5, Duration.ticks));
-        fileCommands.add(callFunction(FileName.update_min_health, 5, Duration.ticks));
-        fileCommands.add(callFunction(FileName.eliminate_baby_wolf, 20, Duration.ticks));
-        fileCommands.add(callFunction(FileName.check_iron_man, 20, Duration.ticks));
-        fileCommands.add(callFunction(FileName.update_mine_count, 20, Duration.ticks));
-        fileCommands.add(callFunction(FileName.update_sidebar, 20, Duration.ticks));
-        fileCommands.add(callFunction(FileName.wolf_collar_execute, 20, Duration.ticks));
-        fileCommands.add(callFunction(FileName.check_iron_man, 20, Duration.ticks));
 
         // Disable developer timers
-        fileCommands.add(clearFunction(FileName.timer_developer_20));
+        fileCommands.add(Schedule.clearFunction(FileName.timer_developer_20));
 
         return new FileData(FileName.start_game, fileCommands);
     }
@@ -1729,8 +1776,8 @@ public class Main {
         fileCommands.add(setGameRule(GameRule.doDaylightCycle, false));
 
         // Schedule continuous functions
-        fileCommands.add(callFunction(FileName.timer_control_point_5));
-        fileCommands.add(callFunction(FileName.timer_control_point_20));
+        fileCommands.add(Schedule.callFunction(FileName.timer_control_point_5));
+        fileCommands.add(Schedule.callFunction(FileName.timer_control_point_20));
 
         return new FileData(FileName.initialize_control_point, fileCommands);
     }
@@ -1780,11 +1827,11 @@ public class Main {
 
         // Call deathmatch functions
         fileCommands.add(execute.If("@a[limit=2,gamemode=!spectator]") +
-                callFunction(FileName.initiate_deathmatch));
+                Schedule.callFunction(FileName.initiate_deathmatch));
 
         // Announce iron man
         fileCommands.add(execute.As("@a[scores={DamageTaken=.." + minDamage + "}]") +
-                callFunction(FileName.announce_iron_man));
+                Schedule.callFunction(FileName.announce_iron_man));
 
         return new FileData(FileName.victory, fileCommands);
     }
@@ -1793,9 +1840,9 @@ public class Main {
         ArrayList<String> fileCommands = new ArrayList<>();
 
         // Call deathmatch functions
-        fileCommands.add(callFunction(FileName.minute_ + "2", 60));
-        fileCommands.add(callFunction(FileName.minute_ + "1", 60 * 2));
-        fileCommands.add(callFunction(FileName.death_match, 60 * 3));
+        fileCommands.add(Schedule.callFunction(FileName.minute_ + "2", 60));
+        fileCommands.add(Schedule.callFunction(FileName.minute_ + "1", 60 * 2));
+        fileCommands.add(Schedule.callFunction(FileName.death_match, 60 * 3));
 
         return new FileData(FileName.initiate_deathmatch, fileCommands);
     }
@@ -1818,7 +1865,7 @@ public class Main {
         fileCommands.add(new Title("@a", TitleType.title, new Text(Color.gold, true, true, team.getJSONColor() + " team victory")).displayTitle());
 
         // Proceed to victory mode
-        fileCommands.add(callFunction(FileName.victory));
+        fileCommands.add(Schedule.callFunction(FileName.victory));
 
         return new FileData("" + FileName.victory_message_ + i, fileCommands);
     }
@@ -1844,7 +1891,7 @@ public class Main {
         fileCommands.add(new Title("@a", TitleType.title, texts).displayTitle());
 
         // Proceed to victory mode
-        fileCommands.add(callFunction(FileName.victory));
+        fileCommands.add(Schedule.callFunction(FileName.victory));
 
         return new FileData(FileName.victory_message_solo, fileCommands);
     }
@@ -1866,7 +1913,7 @@ public class Main {
         fileCommands.add(new Title("@a", TitleType.title, new Text(Color.gold, true, true, "Traitors Win")).displayTitle());
 
         // Proceed to victory mode
-        fileCommands.add(callFunction(FileName.victory));
+        fileCommands.add(Schedule.callFunction(FileName.victory));
 
         return new FileData(FileName.victory_message_traitor, fileCommands);
     }
@@ -2060,7 +2107,7 @@ public class Main {
         fileCommands.add(new Title("@a", TitleType.title, new Text(Color.gold, true, true, carePackageAmount + " Care Packages!")).displayTitle());
 
         // Change title display time
-        fileCommands.add(callFunction(FileName.title_default_timing, 5));
+        fileCommands.add(Schedule.callFunction(FileName.title_default_timing, 5));
 
         // Summon Care Package entities
         for (int i = 0; i < carePackageAmount; i++) {
@@ -2136,8 +2183,8 @@ public class Main {
                 setBlock(11, worldBottom + 2, 0, BlockType.redstone_block, SetBlockType.destroy));
 
         // Enable timers
-        fileCommands.add(callFunction(FileName.timer_traitor_5));
-        fileCommands.add(callFunction(FileName.timer_traitor_20));
+        fileCommands.add(Schedule.callFunction(FileName.timer_traitor_5));
+        fileCommands.add(Schedule.callFunction(FileName.timer_traitor_20));
 
         return new FileData(FileName.traitor_handout, fileCommands);
     }
@@ -2262,7 +2309,7 @@ public class Main {
                 execute.InNext(Dimension.overworld, true) +
                 teleportEntity("@a", new Coordinate(0, 221, 0)));
         fileCommands.add(execute.If(new Entity("@e[scores={Time=12000..}]")) +
-                callFunction(FileName.developer_mode));
+                Schedule.callFunction(FileName.developer_mode));
 
         return new FileData(FileName.world_pre_load, fileCommands);
     }
@@ -2340,7 +2387,7 @@ public class Main {
         // Update stripmine count
         fileCommands.add(scoreboard.Set("@a[scores={Mining=1..}]", getObjectiveByName(Objective.Mining), 0));
         fileCommands.add(execute.As(new Entity("@a")) +
-                callFunction(FileName.update_mine_count));
+                Schedule.callFunction(FileName.update_mine_count));
 
         return new FileData(FileName.update_sidebar, fileCommands);
     }
@@ -2362,12 +2409,12 @@ public class Main {
         // Wolf armor
         fileCommands.add(execute.If(new Entity("@p[nbt={SelectedItem:{id:\"minecraft:wolf_armor\",count:1}}]")) +
                 new TellRaw("@p[nbt={SelectedItem:{id:\"minecraft:wolf_armor\",count:1}}]", new Text(Color.red, true, false, "WOLF ARMOR IS NOT ALLOWED, YOU NAUGHTY BUM!")).sendRaw());
-        fileCommands.add(replaceItem("@p[nbt={SelectedItem:{id:\"minecraft:wolf_armor\",count:1}}]", InventorySlot.mainhand,  BlockType.leather_horse_armor));
+        fileCommands.add(replaceItem("@p[nbt={SelectedItem:{id:\"minecraft:wolf_armor\",count:1}}]", InventorySlot.mainhand, BlockType.leather_horse_armor));
 
         // Suspicious stew
         fileCommands.add(execute.If(new Entity("@p[nbt={SelectedItem:{id:\"minecraft:suspicious_stew\",count:1}}]")) +
                 new TellRaw("@p[nbt={SelectedItem:{id:\"minecraft:suspicious_stew\",count:1}}]", new Text(Color.red, true, false, "SUSPICIOUS STEW IS NOT ALLOWED, YOU NAUGHTY BUM!")).sendRaw());
-        fileCommands.add(replaceItem("@p[nbt={SelectedItem:{id:\"minecraft:suspicious_stew\",count:1}}]", InventorySlot.mainhand,  BlockType.bowl));
+        fileCommands.add(replaceItem("@p[nbt={SelectedItem:{id:\"minecraft:suspicious_stew\",count:1}}]", InventorySlot.mainhand, BlockType.bowl));
 
         return new FileData(FileName.remove_banned_items, fileCommands);
     }
@@ -2376,12 +2423,8 @@ public class Main {
         ArrayList<String> fileCommands = new ArrayList<>();
         ArrayList<TextItem> texts = new ArrayList<>();
 
-        // Announce dead players
-        fileCommands.add(execute.If(new Entity("@p[scores={Deaths=1}]")) +
-                callFunction(FileName.handle_player_death));
-
         // Update sidebar
-        fileCommands.add(callFunction(FileName.update_sidebar));
+        fileCommands.add(Schedule.callFunction(FileName.update_sidebar));
 
         // PVP message
         fileCommands.add(execute.If(new Entity("@e[scores={Time2=" + (300 * tickPerSecond) + "}]")) +
@@ -2398,22 +2441,22 @@ public class Main {
         texts.clear();
 
         // Display quotes
-        fileCommands.add(callFunction(FileName.display_quotes));
+        fileCommands.add(Schedule.callFunction(FileName.display_quotes));
 
         // Locate teammates with bundle
-        fileCommands.add(callFunction(FileName.locate_teammate));
+        fileCommands.add(Schedule.callFunction(FileName.locate_teammate));
 
         // Horse frost walker
-        fileCommands.add(callFunction(FileName.horse_frost_walker));
+        fileCommands.add(Schedule.callFunction(FileName.horse_frost_walker));
 
         // Update minimum health
-        fileCommands.add(callFunction(FileName.update_min_health));
+        fileCommands.add(Schedule.callFunction(FileName.update_min_health));
 
         // Kill baby wolves
-        fileCommands.add(callFunction(FileName.eliminate_baby_wolf));
+        fileCommands.add(Schedule.callFunction(FileName.eliminate_baby_wolf));
 
         // Update wolf collars
-        fileCommands.add(callFunction(FileName.wolf_collar_execute));
+        fileCommands.add(Schedule.callFunction(FileName.wolf_collar_execute));
 
         // Set tamed wolf base health
         fileCommands.add(execute.As(new Entity("@e[type=wolf]"), false) +
@@ -2422,14 +2465,14 @@ public class Main {
 
         // Let united players make a team
         fileCommands.add(execute.If("@p[scores={TimesCalled=1..}]") +
-                callFunction(FileName.update_player_distance));
+                Schedule.callFunction(FileName.update_player_distance));
 
         // Update iron man candidates
         fileCommands.add(execute.Unless("@p[tag=IronMan]") +
-                callFunction(FileName.check_iron_man));
+                Schedule.callFunction(FileName.check_iron_man));
 
         // Remove banned items
-        fileCommands.add(callFunction(FileName.remove_banned_items));
+        fileCommands.add(Schedule.callFunction(FileName.remove_banned_items));
 
         return new FileData(FileName.timer, fileCommands);
     }
@@ -2585,7 +2628,7 @@ public class Main {
         // Teleport player if they are not in a team
         fileCommands.add(execute.As(new Entity(respawnPlayer), false) +
                 execute.IfNext(new Entity("@s[team=]"), true) +
-                spreadPlayers(0, 0, (int) (0.3*worldSize), (int) (0.7*worldSize), false, "@s"));
+                spreadPlayers(0, 0, (int) (0.3 * worldSize), (int) (0.7 * worldSize), false, "@s"));
 
         // Remove player heads
         fileCommands.add(execute.As(new Entity("@a[nbt={Inventory:[{id:\"minecraft:player_head\"}]}]")) +
@@ -2650,7 +2693,7 @@ public class Main {
         fileCommands.add(new Title("@a", TitleType.title, new Text(Color.gold, true, true, "The Control Point")).displayTitle());
 
         // Check which team has captured the Control Point
-        fileCommands.add(callFunction(FileName.teams_highscore_alive_check));
+        fileCommands.add(Schedule.callFunction(FileName.teams_highscore_alive_check));
 
         return new FileData(FileName.control_point_captured, fileCommands);
     }
@@ -2660,11 +2703,11 @@ public class Main {
 
         // When no traitors remain start teams_alive_check
         fileCommands.add(execute.Unless("@a[limit=1,tag=" + Tag.Traitor + ",gamemode=!spectator]") +
-                callFunction(FileName.teams_alive_check));
+                Schedule.callFunction(FileName.teams_alive_check));
 
         // When no non-traitors remain, traitors have won
         fileCommands.add(execute.Unless("@a[limit=1,tag=!" + Tag.Traitor + ",gamemode=!spectator]") +
-                callFunction(FileName.victory_message_traitor));
+                Schedule.callFunction(FileName.victory_message_traitor));
 
         return new FileData(FileName.traitor_check, fileCommands);
     }
@@ -2675,14 +2718,14 @@ public class Main {
         // Players in teams
         for (int i = 0; i < teams.size(); i++) {
             fileCommands.add(execute.Unless("@a[limit=1,team=!" + teams.get(i).getName() + ",gamemode=!spectator]") +
-                    callFunction("" + FileName.victory_message_ + i));
+                    Schedule.callFunction("" + FileName.victory_message_ + i));
         }
 
         // Players without a team
         fileCommands.add(addTag("@p[team=,gamemode=!spectator]", Tag.AmIWinning));
         fileCommands.add(execute.Unless("@p[tag=!AmIWinning,gamemode=!spectator]", false) +
                 execute.AsNext("@p[tag=AmIWinning]", true) +
-                callFunction(FileName.victory_message_solo));
+                Schedule.callFunction(FileName.victory_message_solo));
         fileCommands.add(removeTag("@p[tag=AmIWinning]", Tag.AmIWinning));
 
         return new FileData(FileName.teams_alive_check, fileCommands);
@@ -2696,11 +2739,11 @@ public class Main {
             for (int j = 1; j < 3; j++) {
                 fileCommands.add(execute.If(new Entity("@e[scores={Victory=1}]"), false) +
                         execute.IfNext(new Entity("@p[team=" + teams.get(i).getName() + ",gamemode=!spectator,scores={ControlPoint" + j + "=" + (maxCPScore * tickPerSecond) + "..},tag=!" + Tag.Traitor + "]"), true) +
-                        callFunction("" + FileName.victory_message_ + i));
+                        Schedule.callFunction("" + FileName.victory_message_ + i));
                 fileCommands.add(execute.If(new Entity("@e[scores={Victory=1}]"), false) +
                         execute.IfNext("@p[team=" + teams.get(i).getName() + ",gamemode=!spectator,scores={ControlPoint" + j + "=" + (maxCPScore * tickPerSecond) + "..},tag=" + Tag.Traitor + "]") +
                         execute.UnlessNext("@p[team=" + teams.get(i).getName() + ",gamemode=!spectator,scores={ControlPoint" + j + "=" + (maxCPScore * tickPerSecond) + "..},tag=!" + Tag.Traitor + "]", true) +
-                        callFunction(FileName.victory_message_traitor));
+                        Schedule.callFunction(FileName.victory_message_traitor));
             }
         }
 
@@ -2709,10 +2752,10 @@ public class Main {
             fileCommands.add(execute.If(new Entity("@e[scores={Victory=1}]"), false) +
                     execute.IfNext(new Entity("@p[team=,gamemode=!spectator,scores={ControlPoint" + j + "=" + (maxCPScore * tickPerSecond) + "..},tag=!" + Tag.Traitor + "]")) +
                     execute.AsNext("@p[team=,gamemode=!spectator,scores={ControlPoint" + j + "=" + (maxCPScore * tickPerSecond) + "..},tag=!" + Tag.Traitor + "]", true) +
-                    callFunction(FileName.victory_message_solo));
+                    Schedule.callFunction(FileName.victory_message_solo));
             fileCommands.add(execute.If(new Entity("@e[scores={Victory=1}]"), false) +
                     execute.IfNext("@p[team=,gamemode=!spectator,scores={ControlPoint" + j + "=" + (maxCPScore * tickPerSecond) + "..},tag=" + Tag.Traitor + "]", true) +
-                    callFunction(FileName.victory_message_traitor));
+                    Schedule.callFunction(FileName.victory_message_traitor));
         }
 
         return new FileData(FileName.teams_highscore_alive_check, fileCommands);
@@ -2721,18 +2764,18 @@ public class Main {
     private FileData ClearSchedule() {
         ArrayList<String> fileCommands = new ArrayList<>();
 
-        fileCommands.add(clearFunction(FileName.minute_ + "2"));
-        fileCommands.add(clearFunction(FileName.minute_ + "1"));
-        fileCommands.add(clearFunction(FileName.death_match));
+        fileCommands.add(Schedule.clearFunction(FileName.minute_ + "2"));
+        fileCommands.add(Schedule.clearFunction(FileName.minute_ + "1"));
+        fileCommands.add(Schedule.clearFunction(FileName.death_match));
 
         // Clear timer schedules
-        fileCommands.add(clearFunction(FileName.timer_main_1));
-        fileCommands.add(clearFunction(FileName.timer_main_5));
-        fileCommands.add(clearFunction(FileName.timer_main_20));
-        fileCommands.add(clearFunction(FileName.timer_control_point_5));
-        fileCommands.add(clearFunction(FileName.timer_control_point_20));
-        fileCommands.add(clearFunction(FileName.timer_traitor_5));
-        fileCommands.add(clearFunction(FileName.timer_traitor_20));
+        fileCommands.add(Schedule.clearFunction(FileName.timer_main_1));
+        fileCommands.add(Schedule.clearFunction(FileName.timer_main_5));
+        fileCommands.add(Schedule.clearFunction(FileName.timer_main_20));
+        fileCommands.add(Schedule.clearFunction(FileName.timer_control_point_5));
+        fileCommands.add(Schedule.clearFunction(FileName.timer_control_point_20));
+        fileCommands.add(Schedule.clearFunction(FileName.timer_traitor_5));
+        fileCommands.add(Schedule.clearFunction(FileName.timer_traitor_20));
 
         return new FileData(FileName.clear_schedule, fileCommands);
     }
@@ -2763,7 +2806,6 @@ public class Main {
                 texts.clear();
             }
         }
-
 
 
         return new FileData(FileName.locate_teammate, fileCommands);
@@ -2942,8 +2984,11 @@ public class Main {
             fileCommands.add(execute.As(checkingPlayer) +
                     scoreboard.Operation("@s", getObjectiveByName(Objective.Square + cartesian[i]), ComparatorType.multiply, "@s", getObjectiveByName(Objective.Pos + cartesian[i])));
 
-            if (i == 0) { comparator = ComparatorType.equal; }
-            else { comparator = ComparatorType.add; }
+            if (i == 0) {
+                comparator = ComparatorType.equal;
+            } else {
+                comparator = ComparatorType.add;
+            }
 
             // Calculate distance to nearest player
             fileCommands.add(execute.As(checkingPlayer) +
@@ -2988,7 +3033,7 @@ public class Main {
         fileCommands.add(execute.If(playerInRange, false) +
                 execute.AtNext(playerInRange) +
                 execute.UnlessNext("@p[tag=!LookingForTeamMate,gamemode=!spectator]", Objective.IsKiller, 1, true) +
-                callFunction(FileName.join_team));
+                Schedule.callFunction(FileName.join_team));
 
         // Refuse call if player is too far away
         texts.add(new Text(Color.red, true, false, "You need to be within " + minJoinDistance + " blocks of a player without a team to form a team!"));
@@ -3038,7 +3083,7 @@ public class Main {
         // Check if there are other potential iron man candidates
         fileCommands.add(execute.Unless("@a[tag=!IronManCandidate,scores={DamageTaken=.." + minDamage + "}]", false) +
                 execute.AsNext("@p[tag=IronManCandidate]", true) +
-                callFunction(FileName.announce_iron_man));
+                Schedule.callFunction(FileName.announce_iron_man));
 
         // Remove iron man candidate tag
         fileCommands.add(removeTag("@p[tag=IronManCandidate]", Tag.IronManCandidate));
