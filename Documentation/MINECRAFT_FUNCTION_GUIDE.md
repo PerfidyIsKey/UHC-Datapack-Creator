@@ -193,6 +193,8 @@ A list of all functions in the Java project with descriptions and their executio
 - **start_game**
   - Begins the match and all core timers.
   - Execution Method: Single-use
+  - Parents: -
+  - Children: timer_main_1, timer_main_5, timer_main_20
 
 - **start_potions**
   - Give player potions to activate the start of game functions.
@@ -237,6 +239,27 @@ A list of all functions in the Java project with descriptions and their executio
   - Interval: 20 ticks
   - Parents: initialize_controlpoint
   - Children: controlpoint_messages_1, controlpoint_messages_2
+
+- **timer_main_1**
+  - Timer for main functions with interval of 1 tick
+  - Execution Method: Continuous (self-scheduling)
+  - Interval: 1 tick
+  - Parents: start_game
+  - Children: -
+
+- **timer_main_5**
+  - Timer for main functions with interval of 5 ticks
+  - Execution Method: Continuous (self-scheduling)
+  - Interval: 5 ticks
+  - Parents: start_game
+  - Children: -
+
+- **timer_main_20**
+  - Timer for main functions with interval of 20 ticks
+  - Execution Method: Continuous (self-scheduling)
+  - Interval: 20 ticks
+  - Parents: start_game
+  - Children: -
 
 - **title_default_timing**
   - Sets how long title messages display to default values.

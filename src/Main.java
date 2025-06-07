@@ -1083,10 +1083,10 @@ public class Main {
         files.add(TitleDefaultTiming());
         files.add(CurrentTestFunction());
 
-        // Timer main functions
-        files.add(TimerTick1());
-        files.add(TimerTick5());
-        files.add(TimerTick20());
+        // Timer functions
+        files.add(TimerMain1());
+        files.add(TimerMain5());
+        files.add(TimerMain20());
         files.add(TimerControlPoint5());
         files.add(TimerControlPoint20());
     }
@@ -1659,6 +1659,10 @@ public class Main {
         fileCommands.add(killEntity("@e[type=item]"));
 
         // Schedule continuous functions
+        fileCommands.add(callFunction(FileName.timer_main_1));
+        fileCommands.add(callFunction(FileName.timer_main_5));
+        fileCommands.add(callFunction(FileName.timer_main_20));
+
         fileCommands.add(callFunction(FileName.handle_player_death, 5, Duration.ticks));
         fileCommands.add(callFunction(FileName.horse_frost_walker, 5, Duration.ticks));
         fileCommands.add(callFunction(FileName.locate_teammate, 5, Duration.ticks));
@@ -3088,14 +3092,14 @@ public class Main {
         return new FileData(FileName.current_test_function, fileCommands);
     }
 
-    private FileData TimerTick1() {
+    private FileData TimerMain1() {
         // Timer for functions that should be executed each tick
         ArrayList<String> fileCommands = new ArrayList<>();
 
-        return new FileData(FileName.timer_tick_1, fileCommands);
+        return new FileData(FileName.timer_main_1, fileCommands);
     }
 
-    private FileData TimerTick5() {
+    private FileData TimerMain5() {
         // Timer for functions that should be executed every 5 ticks
         ArrayList<String> fileCommands = new ArrayList<>();
 
@@ -3104,10 +3108,10 @@ public class Main {
         fileCommands.add(callFunction(FileName.traitor_check, 5, Duration.ticks));
 
 
-        return new FileData(FileName.timer_tick_5, fileCommands);
+        return new FileData(FileName.timer_main_5, fileCommands);
     }
 
-    private FileData TimerTick20() {
+    private FileData TimerMain20() {
         // Timer for functions that should be executed every 20 ticks
         ArrayList<String> fileCommands = new ArrayList<>();
 
@@ -3119,7 +3123,7 @@ public class Main {
 
 
 
-        return new FileData(FileName.timer_tick_20, fileCommands);
+        return new FileData(FileName.timer_main_20, fileCommands);
     }
 
     private FileData TimerControlPoint5() {

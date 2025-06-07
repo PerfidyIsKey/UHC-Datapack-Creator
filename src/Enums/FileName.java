@@ -15,9 +15,9 @@ public enum FileName {
     start_potions,
 
     // Timer functions
-    timer_tick_1,
-    timer_tick_5,
-    timer_tick_20,
+    timer_main_1,
+    timer_main_5,
+    timer_main_20,
     timer_control_point_5,
     timer_control_point_20,
 
