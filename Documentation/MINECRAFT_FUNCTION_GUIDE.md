@@ -302,7 +302,7 @@ A list of all functions in the Java project with descriptions and their executio
   - Execution Method: Continuous (self-scheduling)
   - Interval: 5 ticks
   - Parents: start_game
-  - Children: handle_player_death, horse_frost_walker, remove_banned_items
+  - Children: handle_player_death, horse_frost_walker, remove_banned_items, update_min_health
 
 - **timer_main_20**
   - Timer for main functions with interval of 20 ticks
@@ -352,7 +352,9 @@ A list of all functions in the Java project with descriptions and their executio
 - **update_min_health**
   - Updates the current minimum health of all players.
   - Execution Method: Continuous
-  - Priority: Medium
+  - Interval: 5 ticks
+  - Parents: timer_main_5
+  - Children: -
 
 - **update_mine_count**
   - Tracks how many stone-like blocks have been mined.
