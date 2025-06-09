@@ -35,7 +35,7 @@ A list of all functions in the Java project with descriptions and their executio
   - Clears scheduled functions.
   - Execution Method: Single-use
   - Parents: developer_mode
-  - Children: timer_main, timer_control_point, timer_traitor
+  - Children: -
 
 - **control_point_1** and **control_point_2**
   - Award players CP score. Keep glass, beacon active. Call Control Point messages

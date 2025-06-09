@@ -2587,6 +2587,7 @@ public class Main {
     private FileData ClearSchedule() {
         ArrayList<String> fileCommands = new ArrayList<>();
 
+        // Post-game functions
         fileCommands.add(Schedule.clearFunction(FileName.minute_ + "2"));
         fileCommands.add(Schedule.clearFunction(FileName.minute_ + "1"));
         fileCommands.add(Schedule.clearFunction(FileName.death_match));
@@ -2599,6 +2600,11 @@ public class Main {
         fileCommands.add(Schedule.clearFunction(FileName.timer_control_point_20));
         fileCommands.add(Schedule.clearFunction(FileName.timer_traitor_5));
         fileCommands.add(Schedule.clearFunction(FileName.timer_traitor_20));
+
+        // Extra scheduled functions
+        fileCommands.add(Schedule.clearFunction(FileName.display_quotes));
+        fileCommands.add(Schedule.clearFunction(FileName.messages_eternal_day));
+        fileCommands.add(Schedule.clearFunction(FileName.messages_pvp));
 
         return new FileData(FileName.clear_schedule, fileCommands);
     }
