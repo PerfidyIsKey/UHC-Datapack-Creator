@@ -224,9 +224,6 @@ public class Main {
             String[] controlPointSplit = fileTools.splitLineOnComma(controlPoint);
             cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, new Coordinate(Integer.parseInt(controlPointSplit[0]), Integer.parseInt(controlPointSplit[1]), Integer.parseInt(controlPointSplit[2])), Biome.valueOf(controlPointSplit[3])));
         }
-        minToCPScore = secPerMinute * cpTickPerSecond * controlPoints.get(0).getAddRate();
-        cp2ActivationScore = cp2ActivationInMin * minToCPScore;
-        maxCPScore = cpCaptureInMin * minToCPScore;
 
         // Players
         ArrayList<String> playersString = fileTools.GetLinesFromFile("Files\\" + communityMode + "\\players.txt");
@@ -270,6 +267,11 @@ public class Main {
             controlPoints.get(i).setAddRate(addRates[i]);
             controlPoints.get(i).setName("CP" + (i + 1));
         }
+
+        // Control Point parameters
+        minToCPScore = secPerMinute * cpTickPerSecond * controlPoints.get(0).getAddRate();
+        cp2ActivationScore = cp2ActivationInMin * minToCPScore;
+        maxCPScore = cpCaptureInMin * minToCPScore;
 
         // Scoreboard objectives
         scoreboardObjectives.add(new ScoreboardObjective(Objective.TimeDum, ObjectiveType.dummy, "\"Elapsed Time\""));
