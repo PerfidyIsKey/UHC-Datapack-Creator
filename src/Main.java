@@ -57,7 +57,12 @@ public class Main {
     private static final int worldBottom = -64;
     public static final int tickPerSecond = 20;
     public static final int secPerMinute = 60;
-    private static final int maxCPScore = 2400;
+    private static final int cpTickPerSecond = 4;
+    private int minToCPScore;
+    private static final int cp2ActivationInMin = 6;
+    private int cp2ActivationScore;
+    private int maxCPScore;
+    private static final int cpCaptureInMin = 20;
     private static final int maxCPScoreBossbar = 20 * secPerMinute * tickPerSecond * 2;
     private static final int cpMessageThreshold = 5 * tickPerSecond;
     private static final int minJoinDistance = 10;
@@ -219,6 +224,9 @@ public class Main {
             String[] controlPointSplit = fileTools.splitLineOnComma(controlPoint);
             cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, new Coordinate(Integer.parseInt(controlPointSplit[0]), Integer.parseInt(controlPointSplit[1]), Integer.parseInt(controlPointSplit[2])), Biome.valueOf(controlPointSplit[3])));
         }
+        minToCPScore = secPerMinute * cpTickPerSecond * controlPoints.get(0).getAddRate();
+        cp2ActivationScore = cp2ActivationInMin * minToCPScore;
+        maxCPScore = cpCaptureInMin * minToCPScore;
 
         // Players
         ArrayList<String> playersString = fileTools.GetLinesFromFile("Files\\" + communityMode + "\\players.txt");
@@ -1347,7 +1355,7 @@ public class Main {
         for (Team t : teams) {
             fileCommands.add(execute.If(adminSingle, getObjectiveByName(Objective.CP.toString() + 1 + t.getName()), ComparatorType.greater, adminSingle, getObjectiveByName(Objective.Highscore.extendName(1))) +
                     getBossbarByName("cp1").setColor(t.getBossbarColor()));
-            fileCommands.add(execute.If(adminSingle, getObjectiveByName(Objective.CP.toString() + 2 + t.getName()), ComparatorType.greater, "@e[limit=1,scores={Highscore1=14400..}]", getObjectiveByName(Objective.Highscore.extendName(2))) +
+            fileCommands.add(execute.If(adminSingle, getObjectiveByName(Objective.CP.toString() + 2 + t.getName()), ComparatorType.greater, "@e[limit=1,scores={Highscore1=" + cp2ActivationScore + "..}]", getObjectiveByName(Objective.Highscore.extendName(2))) +
                     getBossbarByName("cp2").setColor(t.getBossbarColor()));
             for (int i = 0; i < controlPoints.size(); i++) {
                 fileCommands.add(scoreboard.Operation(admin, getObjectiveByName(Objective.Highscore.extendName(i + 1)), ComparatorType.greater, admin, getObjectiveByName("" + Objective.CP + (i + 1) + t.getName())));
@@ -1357,7 +1365,7 @@ public class Main {
         // Individual players
         fileCommands.add(execute.If("@r[limit=1,team=]", getObjectiveByName(Objective.ControlPoint.extendName(1)), ComparatorType.greater, "@e[type=marker,limit=1]", getObjectiveByName(Objective.Highscore.extendName(1))) +
                 getBossbarByName("cp1").setColor(BossBarColor.white));
-        fileCommands.add(execute.If("@r[limit=1,team=]", getObjectiveByName(Objective.ControlPoint.extendName(2)), ComparatorType.greater, "@e[scores={Highscore1=14400..},limit=1]", getObjectiveByName(Objective.Highscore.extendName(2))) +
+        fileCommands.add(execute.If("@r[limit=1,team=]", getObjectiveByName(Objective.ControlPoint.extendName(2)), ComparatorType.greater, "@e[scores={Highscore1=" + cp2ActivationScore + "..},limit=1]", getObjectiveByName(Objective.Highscore.extendName(2))) +
                 getBossbarByName("cp2").setColor(BossBarColor.white));
         for (int i = 0; i < controlPoints.size(); i++) {
             fileCommands.add(scoreboard.Operation(admin, getObjectiveByName(Objective.Highscore.extendName(i + 1)), ComparatorType.greater, "@r[limit=1,team=]", getObjectiveByName(Objective.ControlPoint.extendName(i + 1))));
@@ -1367,7 +1375,7 @@ public class Main {
         fileCommands.add(execute.Store(ExecuteStore.result, getBossbarByName("cp1"), BossBarStore.value) +
                 scoreboard.Get(adminSingle, getObjectiveByName(Objective.Highscore.extendName(1))));
         fileCommands.add(execute.Store(ExecuteStore.result, getBossbarByName("cp2"), BossBarStore.value) +
-                scoreboard.Get("@e[limit=1,scores={Highscore1=14400..}]", getObjectiveByName(Objective.Highscore.extendName(2))));
+                scoreboard.Get("@e[limit=1,scores={Highscore1=" + cp2ActivationScore + "..}]", getObjectiveByName(Objective.Highscore.extendName(2))));
 
         return new FileData(FileName.bbvalue, fileCommands);
     }
@@ -2328,7 +2336,6 @@ public class Main {
         ArrayList<String> fileCommands = new ArrayList<>();
 
         // Define perk activation times
-        int minToCPScore = secPerMinute * tickPerSecond * controlPoints.get(0).getAddRate();
         ArrayList<Perk> perks = new ArrayList<>();
         perks.add(new Perk(1, new StatusEffect(Effect.speed, 999999, 0, false), Sound.BASALT, 3 * minToCPScore));
         perks.add(new Perk(2, new Attribute(AttributeType.scale, 0.8), Sound.CRIMSON, 6 * minToCPScore));
@@ -2580,11 +2587,11 @@ public class Main {
         for (int i = 0; i < teams.size(); i++) {
             for (int j = 1; j < 3; j++) {
                 fileCommands.add(execute.If(new Entity("@e[scores={Victory=1}]"), false) +
-                        execute.IfNext(new Entity("@p[team=" + teams.get(i).getName() + ",gamemode=!spectator,scores={ControlPoint" + j + "=" + (maxCPScore * tickPerSecond) + "..},tag=!" + Tag.Traitor + "]"), true) +
+                        execute.IfNext(new Entity("@p[team=" + teams.get(i).getName() + ",gamemode=!spectator,scores={ControlPoint" + j + "=" + maxCPScore + "..},tag=!" + Tag.Traitor + "]"), true) +
                         Schedule.callFunction("" + FileName.victory_message_ + i));
                 fileCommands.add(execute.If(new Entity("@e[scores={Victory=1}]"), false) +
-                        execute.IfNext("@p[team=" + teams.get(i).getName() + ",gamemode=!spectator,scores={ControlPoint" + j + "=" + (maxCPScore * tickPerSecond) + "..},tag=" + Tag.Traitor + "]") +
-                        execute.UnlessNext("@p[team=" + teams.get(i).getName() + ",gamemode=!spectator,scores={ControlPoint" + j + "=" + (maxCPScore * tickPerSecond) + "..},tag=!" + Tag.Traitor + "]", true) +
+                        execute.IfNext("@p[team=" + teams.get(i).getName() + ",gamemode=!spectator,scores={ControlPoint" + j + "=" + maxCPScore + "..},tag=" + Tag.Traitor + "]") +
+                        execute.UnlessNext("@p[team=" + teams.get(i).getName() + ",gamemode=!spectator,scores={ControlPoint" + j + "=" + maxCPScore + "..},tag=!" + Tag.Traitor + "]", true) +
                         Schedule.callFunction(FileName.victory_message_traitor));
             }
         }
@@ -2592,11 +2599,11 @@ public class Main {
         // Individual players
         for (int j = 1; j < 3; j++) {
             fileCommands.add(execute.If(new Entity("@e[scores={Victory=1}]"), false) +
-                    execute.IfNext(new Entity("@p[team=,gamemode=!spectator,scores={ControlPoint" + j + "=" + (maxCPScore * tickPerSecond) + "..},tag=!" + Tag.Traitor + "]")) +
-                    execute.AsNext("@p[team=,gamemode=!spectator,scores={ControlPoint" + j + "=" + (maxCPScore * tickPerSecond) + "..},tag=!" + Tag.Traitor + "]", true) +
+                    execute.IfNext(new Entity("@p[team=,gamemode=!spectator,scores={ControlPoint" + j + "=" + maxCPScore + "..},tag=!" + Tag.Traitor + "]")) +
+                    execute.AsNext("@p[team=,gamemode=!spectator,scores={ControlPoint" + j + "=" + maxCPScore + "..},tag=!" + Tag.Traitor + "]", true) +
                     Schedule.callFunction(FileName.victory_message_solo));
             fileCommands.add(execute.If(new Entity("@e[scores={Victory=1}]"), false) +
-                    execute.IfNext("@p[team=,gamemode=!spectator,scores={ControlPoint" + j + "=" + (maxCPScore * tickPerSecond) + "..},tag=" + Tag.Traitor + "]", true) +
+                    execute.IfNext("@p[team=,gamemode=!spectator,scores={ControlPoint" + j + "=" + maxCPScore + "..},tag=" + Tag.Traitor + "]", true) +
                     Schedule.callFunction(FileName.victory_message_traitor));
         }
 
