@@ -2034,10 +2034,12 @@ public class Main {
     private FileData DropCarepackages() {
         ArrayList<String> fileCommands = new ArrayList<>();
         ArrayList<TextItem> texts = new ArrayList<>();
+        Boolean debug = false;
 
         // Show world border size in actionbar
         texts.add(new Text(Color.light_purple, false, false, "To be found at ±" + carePackageSpread + " blocks"));
         Title showWorldSize = new Title("@a", TitleType.subtitle, texts);
+        texts.clear();
 
         // Change title display time
         fileCommands.add(changeTitleDisplayTime("@a", 1, 5, 2));
@@ -2054,12 +2056,29 @@ public class Main {
         // Summon Care Package entities
         for (int i = 0; i < carePackageAmount; i++) {
             fileCommands.add(execute.In(Dimension.overworld) +
-                    summonEntity(EntityType.area_effect_cloud, new Coordinate(0, 300, 0), "{Tags:[\"CarePackage\"],Passengers:[{id:falling_block,Time:1,DropItem:0b,BlockState:{Name:\"minecraft:chest\"},TileEntityData:{CustomName:\"\\\"Loot chest\\\"\",LootTable:\"uhc:supply_drop\"}}]}"));
+                    summonEntity(EntityType.area_effect_cloud, new Coordinate(0, 300, 0), "{Passengers:[{id:\"minecraft:falling_block\",BlockState:{Name:\"minecraft:chest\"},TileEntityData:{LootTable:\"uhc:supply_drop\",CustomName:\"Care Package\"},Time:1,DropItem:0b,Tags:[\"CarePackage\"]}]}"));
+        }
+
+        if (debug) {
+
+            texts.add(new Select(false, false, "@e[type=area_effect_cloud]"));
+            texts.add(new Text(false, false, " summoned!"));
+
+            fileCommands.add(new TellRaw("@a[tag=Debug]", texts).sendRaw());
+            texts.clear();
+        }
+
+        if (debug) {
+            texts.add(new Select(false, false, "@e[type=falling_block]"));
+            texts.add(new Text(false, false, " ready to be spread!"));
+
+            fileCommands.add(new TellRaw("@a[tag=Debug]", texts).sendRaw());
+            texts.clear();
         }
 
         // Spread Care Packages
         fileCommands.add(execute.In(Dimension.overworld, true) +
-                spreadPlayers(0, 0, 10, carePackageSpread, false, "@e[type=falling_block,nbt={Time:1,Tags:[\"CarePackage\"]}]"));
+                spreadPlayers(0, 0, 10, carePackageSpread, false, "@e[type=falling_block,nbt={Tags:[\"CarePackage\"]}]"));
 
         return new FileData(FileName.drop_carepackages, fileCommands);
     }
