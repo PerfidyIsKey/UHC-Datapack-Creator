@@ -1115,8 +1115,11 @@ public class Main {
         fileCommands.add(CommandBuilder.removeTag("@a", Tag.IronManCandidate));
         fileCommands.add(CommandBuilder.removeTag("@a", Tag.IronMan));
         fileCommands.add(CommandBuilder.removeTag(Constant.admin, Tag.GameStarted));
-        fileCommands.add(CommandBuilder.removeTag(Constant.admin, Tag.ControlPointCaptured));
+        fileCommands.add(CommandBuilder.removeTag(Constant.admin, Tag.CarePackagesDropped));
+        fileCommands.add(CommandBuilder.removeTag(Constant.admin, Tag.ControlPoint1Enabled));
         fileCommands.add(CommandBuilder.removeTag(Constant.admin, Tag.ControlPoint2Enabled));
+        fileCommands.add(CommandBuilder.removeTag(Constant.admin, Tag.ControlPointCaptured));
+        fileCommands.add(CommandBuilder.removeTag(Constant.admin, Tag.TraitorsAssigned));
         for (int i = 0; i < 4; i++) {
             fileCommands.add(CommandBuilder.removeTag("@a", Tag.ReceivedPerk.extendName(i + 1)));
         }
@@ -1334,16 +1337,24 @@ public class Main {
 
     private FileData InitializeControlpoint() {
         ArrayList<String> fileCommands = new ArrayList<>();
+
+        // Display Control Point 1 enabled
         fileCommands.add(new Title("@a", TitleType.subtitle, new Text(Color.light_purple, true, true, "is now enabled!")).displayTitle());
         fileCommands.add(new Title("@a", TitleType.title, new Text(Color.gold, true, true, "Control Point 1")).displayTitle());
+
+        // Make bossbars visible
         fileCommands.add(getBossbarByName("cp1").setVisible(true));
         fileCommands.add(getBossbarByName("cp2").setVisible(true));
+
+        // Remove CP1 reinforced deepslate block
         fileCommands.addAll(CommandBuilder.forceLoadAndSet(controlPoints.get(0).getCoordinate().getX(), controlPoints.get(0).getCoordinate().getY() + 3, controlPoints.get(0).getCoordinate().getZ(), BlockType.air, SetBlockType.replace));
-        fileCommands.add(CommandBuilder.setGameRule(GameRule.doDaylightCycle, false));
 
         // Schedule continuous functions
         fileCommands.add(Schedule.callFunction(FileName.timer_control_point_5));
         fileCommands.add(Schedule.callFunction(FileName.timer_control_point_20));
+
+        // Give admin tag for disabling self-rescheduling
+        fileCommands.add(CommandBuilder.addTag(Constant.admin, Tag.ControlPoint1Enabled));
 
         return new FileData(FileName.initialize_control_point, fileCommands);
     }
@@ -1705,6 +1716,9 @@ public class Main {
         fileCommands.add(Execute.In(Dimension.overworld, true) +
                 CommandBuilder.spreadPlayers(0, 0, 10, carePackageSpread, false, "@e[type=falling_block,nbt={Tags:[\"CarePackage\"]}]"));
 
+        // Give admin tag for disabling self-rescheduling
+        fileCommands.add(CommandBuilder.addTag(Constant.admin, Tag.CarePackagesDropped));
+
         return new FileData(FileName.drop_carepackages, fileCommands);
     }
 
@@ -1767,6 +1781,9 @@ public class Main {
         // Enable timers
         fileCommands.add(Schedule.callFunction(FileName.timer_traitor_5));
         fileCommands.add(Schedule.callFunction(FileName.timer_traitor_20));
+
+        // Give admin tag for disabling self-rescheduling
+        fileCommands.add(CommandBuilder.addTag(Constant.admin, Tag.TraitorsAssigned));
 
         return new FileData(FileName.traitor_handout, fileCommands);
     }

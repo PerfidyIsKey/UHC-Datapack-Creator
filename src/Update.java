@@ -22,11 +22,14 @@ public class Update {
         fileCommands.add(Main.scoreboard.Add(Constant.admin, Objective.Time2, 1));
 
         // Scheduled events
-        fileCommands.add(Execute.If("@e[scores={Time2=" + (20 * Main.secPerMinute * Main.tickPerSecond) + "}]") +
+        fileCommands.add(Execute.If("@e[scores={Time2=" + (20 * Main.secPerMinute * Main.tickPerSecond) + "..}]", false) +
+                Execute.UnlessNext("@e[tag=" + Tag.CarePackagesDropped + "]", true) +
                 Schedule.callFunction(FileName.drop_carepackages));
-        fileCommands.add(Execute.If("@e[scores={Time2=" + (30 * Main.secPerMinute * Main.tickPerSecond) + "}]") +
+        fileCommands.add(Execute.If("@e[scores={Time2=" + (30 * Main.secPerMinute * Main.tickPerSecond) + "..}]", false) +
+                Execute.UnlessNext("@e[tag=" + Tag.ControlPoint1Enabled + "]", true) +
                 Schedule.callFunction(FileName.initialize_control_point));
-        fileCommands.add(Execute.If("@e[scores={Time2=" + (40 * Main.secPerMinute * Main.tickPerSecond) + "}]") +
+        fileCommands.add(Execute.If("@e[scores={Time2=" + (40 * Main.secPerMinute * Main.tickPerSecond) + "..}]", false) +
+                Execute.UnlessNext("@e[tag=" + Tag.TraitorsAssigned + "]", true) +
                 Schedule.callFunction(FileName.traitor_handout));
 
         // Self-schedule timer

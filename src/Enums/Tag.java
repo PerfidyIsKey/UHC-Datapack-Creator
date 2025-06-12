@@ -3,7 +3,9 @@ package Enums;
 public enum Tag {
     AmIWinning("AmIWinning"),
     AttackingCP("AttackingCP"),
+    CarePackagesDropped("CarePackagesDropped"),
     CollarCheck("CollarCheck"),
+    ControlPoint1Enabled("ControlPoint1Enabled"),
     ControlPoint2Enabled("ControlPoint2Enabled"),
     ControlPointCaptured("ControlPointCaptured"),
     Debug("Debug"),
@@ -15,7 +17,8 @@ public enum Tag {
     ReceivedPerk("ReceivedPerk"),
     Respawn("Respawn"),
     RespawnDisabled("RespawnDisabled"),
-    Traitor("Traitor");
+    Traitor("Traitor"),
+    TraitorsAssigned("TraitorsAssigned");
 
     private final String symbol;
 
