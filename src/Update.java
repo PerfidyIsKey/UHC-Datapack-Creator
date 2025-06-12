@@ -9,6 +9,11 @@ import java.util.ArrayList;
 
 public class Update {
 
+    private Singleton singleton;
+    public Update() {
+        singleton = Singleton.getInstance();
+    }
+
     public FileData TimerMain1() {
         // Timer for functions that should be executed each tick
         ArrayList<String> fileCommands = new ArrayList<>();
@@ -81,7 +86,7 @@ public class Update {
         fileCommands.add(Schedule.callFunction(FileName.bbvalue));
         for (int i = 1; i < 3; i++) {
             fileCommands.add(Schedule.callFunction("" + FileName.control_point_ + i));
-            fileCommands.add(Main.execute.If("@p[scores={ControlPoint" + i + "=" + 48000 + "..}]") +
+            fileCommands.add(Main.execute.If("@p[scores={ControlPoint" + i + "=" + 20 * singleton.getMinToCPScore() + "..}]") +
                     Schedule.callFunction(FileName.control_point_captured));
         }
         fileCommands.add(Schedule.callFunction(FileName.team_score));
@@ -103,7 +108,7 @@ public class Update {
         }
         fileCommands.add(Schedule.callFunction(FileName.control_point_perks));
         fileCommands.add(Schedule.callFunction(FileName.update_public_cp_score));
-        fileCommands.add(Main.execute.If("@p[scores={ControlPoint1=" + 14400 + "..}]") +
+        fileCommands.add(Main.execute.If("@p[scores={ControlPoint1=" + 6 * singleton.getMinToCPScore() + "..}]") +
                 Schedule.callFunction(FileName.second_control_point));
 
 

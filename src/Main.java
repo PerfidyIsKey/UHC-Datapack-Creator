@@ -58,12 +58,12 @@ public class Main {
     public static final int tickPerSecond = 20;
     public static final int secPerMinute = 60;
     private static final int cpTickPerSecond = 4;
-    private int minToCPScore;
+
     private static final int cp2ActivationInMin = 6;
     private int cp2ActivationScore;
     private int maxCPScore;
     private static final int cpCaptureInMin = 20;
-    private static final int maxCPScoreBossbar = 20 * secPerMinute * tickPerSecond * 2;
+    private static final int maxCPScoreBossbar = 20 * secPerMinute * cpTickPerSecond * 2;
     private static final int cpMessageThreshold = 5 * tickPerSecond;
     private static final int minJoinDistance = 10;
     private static final int minDamage = 9;
@@ -81,6 +81,8 @@ public class Main {
 
     private TeamGenerator teamGenerator;
 
+    private Singleton singleton;
+
     //GameData>
 
 
@@ -88,7 +90,7 @@ public class Main {
 
 
     private void run(String[] args) {
-
+        singleton = Singleton.getInstance();
         communityModeChange();
         createDatapack();
         System.out.println("Datapack created");
@@ -269,9 +271,9 @@ public class Main {
         }
 
         // Control Point parameters
-        minToCPScore = secPerMinute * cpTickPerSecond * controlPoints.get(0).getAddRate();
-        cp2ActivationScore = cp2ActivationInMin * minToCPScore;
-        maxCPScore = cpCaptureInMin * minToCPScore;
+        singleton.setMinToCPScore( secPerMinute * cpTickPerSecond * controlPoints.get(0).getAddRate());
+        cp2ActivationScore = cp2ActivationInMin * singleton.getMinToCPScore();
+        maxCPScore = cpCaptureInMin * singleton.getMinToCPScore();
 
         // Scoreboard objectives
         scoreboardObjectives.add(new ScoreboardObjective(Objective.TimeDum, ObjectiveType.dummy, "\"Elapsed Time\""));
@@ -1820,7 +1822,6 @@ public class Main {
             // Initialize object
             for (int i = c.getY() + 12; i < worldHeight; i++) {
                 // Specify block to be changed
-                c.setCoordinate(c.getX(), i, c.getZ());
 
                 fileCommands.add(Execute.In(c.getDimension(), false) +
                         Execute.UnlessNext(c, BlockType.air) +
@@ -1943,10 +1944,10 @@ public class Main {
 
         // Define perk activation times
         ArrayList<Perk> perks = new ArrayList<>();
-        perks.add(new Perk(1, new StatusEffect(Effect.speed, 999999, 0, false), Sound.BASALT, 3 * minToCPScore));
-        perks.add(new Perk(2, new Attribute(AttributeType.scale, 0.8), Sound.CRIMSON, 6 * minToCPScore));
-        perks.add(new Perk(3, new StatusEffect(Effect.haste, 999999, 2, false), Sound.WARPED, 12 * minToCPScore));
-        perks.add(new Perk(4, new StatusEffect(Effect.absorption, 999999, 1, false), Sound.WITHER, 15 * minToCPScore));
+        perks.add(new Perk(1, new StatusEffect(Effect.speed, 999999, 0, false), Sound.BASALT, 3 * singleton.getMinToCPScore()));
+        perks.add(new Perk(2, new Attribute(AttributeType.scale, 0.8), Sound.CRIMSON, 6 * singleton.getMinToCPScore()));
+        perks.add(new Perk(3, new StatusEffect(Effect.haste, 999999, 2, false), Sound.WARPED, 12 * singleton.getMinToCPScore()));
+        perks.add(new Perk(4, new StatusEffect(Effect.absorption, 999999, 1, false), Sound.WITHER, 15 * singleton.getMinToCPScore()));
 
 
         Entity currentPlayer = new Entity("");
