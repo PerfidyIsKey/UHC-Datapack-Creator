@@ -1330,12 +1330,18 @@ public class Main {
 
     private FileData InitializeControlpoint() {
         ArrayList<String> fileCommands = new ArrayList<>();
+
+        // Announce Control Point
         fileCommands.add(new Title("@a", TitleType.subtitle, new Text(Color.light_purple, true, true, "is now enabled!")).displayTitle());
         fileCommands.add(new Title("@a", TitleType.title, new Text(Color.gold, true, true, "Control Point 1")).displayTitle());
+
+        // Make bossbars available
         fileCommands.add(getBossbarByName("cp1").setVisible(true));
         fileCommands.add(getBossbarByName("cp2").setVisible(true));
+
+
+        // Clear reinforced deepslate from active Control Point
         fileCommands.addAll(CommandBuilder.forceLoadAndSet(controlPoints.get(0).getCoordinate().getX(), controlPoints.get(0).getCoordinate().getY() + 3, controlPoints.get(0).getCoordinate().getZ(), BlockType.air, SetBlockType.replace));
-        fileCommands.add(CommandBuilder.setGameRule(GameRule.doDaylightCycle, false));
 
         // Schedule continuous functions
         fileCommands.add(Schedule.callFunction(FileName.timer_control_point_5));
@@ -2685,6 +2691,9 @@ public class Main {
         texts.add(bannerText);
         fileCommands.add(new TellRaw("@a", texts).sendRaw());
         texts.clear();
+
+        // Set gamerule
+        fileCommands.add(CommandBuilder.setGameRule(GameRule.doDaylightCycle, false));
 
         return new FileData(FileName.messages_eternal_day, fileCommands);
     }
