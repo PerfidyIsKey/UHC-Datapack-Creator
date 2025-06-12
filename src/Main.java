@@ -1850,10 +1850,10 @@ public class Main {
                 // Specify block to be changed
 
                 fileCommands.add(Execute.In(c.getDimension(), false) +
-                        Execute.UnlessNext(c, BlockType.air) +
-                        Execute.UnlessNext(c, BlockType.cave_air) +
-                        Execute.UnlessNext(c, BlockType.void_air) +
-                        Execute.UnlessNext(c, BlockType.bedrock, true) +
+                        Execute.UnlessNext(c.getX(), i, c.getZ(), BlockType.air) +
+                        Execute.UnlessNext(c.getX(), i, c.getZ(), BlockType.cave_air) +
+                        Execute.UnlessNext(c.getX(), i, c.getZ(), BlockType.void_air) +
+                        Execute.UnlessNext(c.getX(), i, c.getZ(), BlockType.bedrock, true) +
                         CommandBuilder.setBlock(c.getX(), i, c.getZ(), BlockType.glass));
             }
 

@@ -341,6 +341,22 @@ public class Execute {
         return Next("unless block " + coordinate.getCoordinateString() + " minecraft:" + blockType + " ", run);
     }
 
+    public static String Unless(int x, int y, int z, BlockType blockType) {
+        return Unless(x, y, z, blockType, true);
+    }
+
+    public static String Unless(int x, int y, int z, BlockType blockType, Boolean run) {
+        return Standard(UnlessNext(x, y, z, blockType), run);
+    }
+
+    public static String UnlessNext(int x, int y, int z, BlockType blockType) {
+        return UnlessNext(x, y, z, blockType, false);
+    }
+
+    public static String UnlessNext(int x, int y, int z, BlockType blockType, Boolean run) {
+        return Next("unless block " + x + " " + y + " " + z + " minecraft:" + blockType + " ", run);
+    }
+
     // unless entity
     public static String Unless(String entity) {
         return Unless(entity, true);
