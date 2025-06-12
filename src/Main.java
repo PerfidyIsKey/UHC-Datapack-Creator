@@ -40,8 +40,6 @@ public class Main {
 
     //GameData<
     private static final int chestSize = 27;
-    private static final String commandCenter = "s58";
-    public static final String adminSingle = "@e[type=marker,limit=1]";
     private Coordinate startCoordinate;
     private ArrayList<Team> teams = new ArrayList<>();
     private ArrayList<ControlPoint> cpList = new ArrayList<>();
@@ -832,9 +830,13 @@ public class Main {
             fileCommands.add(t.add());
             fileCommands.add(t.setTeamColor());
             for (int i = 1; i < controlPoints.size() + 1; i++) {
-                scoreboardObjectives.add(new ScoreboardObjective(Objective.CP.toString() + i + t.getName(), ObjectiveType.dummy));
+                scoreboardObjectives.add(new ScoreboardObjective(Objective.CP.extendName(i + t.getName()), ObjectiveType.dummy));
                 fileCommands.add(scoreboardObjectives.get(scoreboardObjectives.size() - 1).add());
             }
+        }
+        for (int i = 1; i < controlPoints.size() + 1; i++) {
+            scoreboardObjectives.add(new ScoreboardObjective(Objective.CP.extendName(i + "Solo"), ObjectiveType.dummy));
+            fileCommands.add(scoreboardObjectives.get(scoreboardObjectives.size() - 1).add());
         }
 
         // Create staging area
@@ -960,9 +962,9 @@ public class Main {
 
         // Players in a team
         for (Team t : teams) {
-            fileCommands.add(Execute.If(adminSingle, getObjectiveByName(Objective.CP.toString() + 1 + t.getName()), ComparatorType.greater, adminSingle, getObjectiveByName(Objective.Highscore.extendName(1))) +
+            fileCommands.add(Execute.If(Constant.adminSingle, getObjectiveByName(Objective.CP.toString() + 1 + t.getName()), ComparatorType.greater, Constant.adminSingle, getObjectiveByName(Objective.Highscore.extendName(1))) +
                     getBossbarByName("cp1").setColor(t.getBossbarColor()));
-            fileCommands.add(Execute.If(adminSingle, getObjectiveByName(Objective.CP.toString() + 2 + t.getName()), ComparatorType.greater, "@e[limit=1,scores={Highscore1=" + cp2ActivationScore + "..}]", getObjectiveByName(Objective.Highscore.extendName(2))) +
+            fileCommands.add(Execute.If(Constant.adminSingle, getObjectiveByName(Objective.CP.toString() + 2 + t.getName()), ComparatorType.greater, "@e[limit=1,scores={Highscore1=" + cp2ActivationScore + "..}]", getObjectiveByName(Objective.Highscore.extendName(2))) +
                     getBossbarByName("cp2").setColor(t.getBossbarColor()));
             for (int i = 0; i < controlPoints.size(); i++) {
                 fileCommands.add(scoreboard.Operation(Constant.admin, getObjectiveByName(Objective.Highscore.extendName(i + 1)), ComparatorType.greater, Constant.admin, getObjectiveByName("" + Objective.CP + (i + 1) + t.getName())));
@@ -970,17 +972,17 @@ public class Main {
         }
 
         // Individual players
-        fileCommands.add(Execute.If("@r[limit=1,team=]", getObjectiveByName(Objective.ControlPoint.extendName(1)), ComparatorType.greater, "@e[type=marker,limit=1]", getObjectiveByName(Objective.Highscore.extendName(1))) +
+        fileCommands.add(Execute.If(Constant.adminSingle, getObjectiveByName(Objective.CP.extendName("1Solo")), ComparatorType.greater, "@e[type=marker,limit=1]", getObjectiveByName(Objective.Highscore.extendName(1))) +
                 getBossbarByName("cp1").setColor(BossBarColor.white));
-        fileCommands.add(Execute.If("@r[limit=1,team=]", getObjectiveByName(Objective.ControlPoint.extendName(2)), ComparatorType.greater, "@e[scores={Highscore1=" + cp2ActivationScore + "..},limit=1]", getObjectiveByName(Objective.Highscore.extendName(2))) +
+        fileCommands.add(Execute.If(Constant.adminSingle, getObjectiveByName(Objective.CP.extendName("2Solo")), ComparatorType.greater, "@e[scores={Highscore1=" + cp2ActivationScore + "..},limit=1]", getObjectiveByName(Objective.Highscore.extendName(2))) +
                 getBossbarByName("cp2").setColor(BossBarColor.white));
         for (int i = 0; i < controlPoints.size(); i++) {
-            fileCommands.add(scoreboard.Operation(Constant.admin, getObjectiveByName(Objective.Highscore.extendName(i + 1)), ComparatorType.greater, "@r[limit=1,team=]", getObjectiveByName(Objective.ControlPoint.extendName(i + 1))));
+            fileCommands.add(scoreboard.Operation(Constant.admin, getObjectiveByName(Objective.Highscore.extendName(i + 1)), ComparatorType.greater, Constant.admin, getObjectiveByName(Objective.CP.extendName((i + 1) + "Solo"))));
         }
 
         // Update value of bossbars
         fileCommands.add(Execute.Store(ExecuteStore.result, getBossbarByName("cp1"), BossBarStore.value) +
-                scoreboard.Get(adminSingle, getObjectiveByName(Objective.Highscore.extendName(1))));
+                scoreboard.Get(Constant.adminSingle, getObjectiveByName(Objective.Highscore.extendName(1))));
         fileCommands.add(Execute.Store(ExecuteStore.result, getBossbarByName("cp2"), BossBarStore.value) +
                 scoreboard.Get("@e[limit=1,scores={Highscore1=" + cp2ActivationScore + "..}]", getObjectiveByName(Objective.Highscore.extendName(2))));
 
@@ -1528,7 +1530,7 @@ public class Main {
 
             // Update CP glass color
             fileCommands.add(Execute.In(currentCP.getCoordinate().getDimension(), false) +
-                    Execute.IfNext("@p[gamemode=!spectator,team=" + team.getName() + "]", getObjectiveByName(Objective.ControlPoint.extendName(i)), ComparatorType.greater, adminSingle, getObjectiveByName(Objective.Highscore.extendName(i)), true) +
+                    Execute.IfNext("@p[gamemode=!spectator,team=" + team.getName() + "]", getObjectiveByName(Objective.ControlPoint.extendName(i)), ComparatorType.greater, Constant.adminSingle, getObjectiveByName(Objective.Highscore.extendName(i)), true) +
                     CommandBuilder.setBlock(currentCP.getCoordinate().getX(), currentCP.getCoordinate().getY() + 1, currentCP.getCoordinate().getZ(), "minecraft:" + team.getGlassColor() + "_stained_glass", SetBlockType.replace));
         }
 
@@ -1542,7 +1544,7 @@ public class Main {
 
         // Update CP glass color
         fileCommands.add(Execute.In(currentCP.getCoordinate().getDimension(), false) +
-                Execute.IfNext("@r[limit=1,gamemode=!spectator,team=]", getObjectiveByName(Objective.ControlPoint.extendName(i)), ComparatorType.greater, adminSingle, getObjectiveByName(Objective.Highscore.extendName(i)), true) +
+                Execute.IfNext("@r[limit=1,gamemode=!spectator,team=]", getObjectiveByName(Objective.ControlPoint.extendName(i)), ComparatorType.greater, Constant.adminSingle, getObjectiveByName(Objective.Highscore.extendName(i)), true) +
                 CommandBuilder.setBlock(currentCP.getCoordinate().getX(), currentCP.getCoordinate().getY() + 1, currentCP.getCoordinate().getZ(), "minecraft:white_stained_glass", SetBlockType.replace));
 
         // Keep beacon active
@@ -1808,6 +1810,7 @@ public class Main {
 
         // TODO This can definitely be improved
 
+        // Teams
         for (int i = 1; i < controlPoints.size() + 1; i++) {
             for (Team t : teams) {
                 fileCommands.add(Execute.As(new Entity("@r[limit=1,gamemode=!spectator]")) +
@@ -1827,6 +1830,23 @@ public class Main {
                     Execute.AsNext(new Entity("@r[limit=1,gamemode=!spectator,x=" + (controlPoints.get(1).getCoordinate().getX() - 6) + ",y=" + (controlPoints.get(1).getCoordinate().getY() - 1) + ",z=" + (controlPoints.get(1).getCoordinate().getZ() - 6) + ",dx=12,dy=12,dz=12,team=" + t.getName() + "]"), true) +
                     scoreboard.Operation(Constant.admin, getObjectiveByName("" + Objective.CP + 2 + t.getName()), ComparatorType.greater, Constant.admin, getObjectiveByName("" + Objective.CP + 1 + t.getName())));
         }
+
+        // Individual players
+        for (int i = 1; i < controlPoints.size() + 1; i++) {
+                fileCommands.add(Execute.As(new Entity("@r[limit=1,gamemode=!spectator]")) +
+                        scoreboard.Operation(Constant.admin, getObjectiveByName(Objective.CP.extendName(i + "Solo")), ComparatorType.greater, "@s[team=]", getObjectiveByName(Objective.ControlPoint.extendName(i))));
+
+                fileCommands.add(Execute.As(new Entity("@r[limit=1,gamemode=!spectator]")) +
+                        scoreboard.Operation("@s[team=]", getObjectiveByName(Objective.ControlPoint.extendName(i)), ComparatorType.greater, Constant.admin, getObjectiveByName(Objective.CP.extendName(i + "Solo"))));
+        }
+
+        fileCommands.add(Execute.In(controlPoints.get(0).getCoordinate().getDimension(), false) +
+                Execute.AsNext(new Entity("@r[limit=1,gamemode=!spectator,x=" + (controlPoints.get(0).getCoordinate().getX() - 6) + ",y=" + (controlPoints.get(0).getCoordinate().getY() - 1) + ",z=" + (controlPoints.get(0).getCoordinate().getZ() - 6) + ",dx=12,dy=12,dz=12,team=]"), true) +
+                scoreboard.Operation(Constant.admin, getObjectiveByName(Objective.CP.extendName("1Solo")), ComparatorType.greater, Constant.admin, getObjectiveByName(Objective.CP.extendName("2Solo"))));
+
+        fileCommands.add(Execute.In(controlPoints.get(1).getCoordinate().getDimension(), false) +
+                Execute.AsNext(new Entity("@r[limit=1,gamemode=!spectator,x=" + (controlPoints.get(0).getCoordinate().getX() - 6) + ",y=" + (controlPoints.get(0).getCoordinate().getY() - 1) + ",z=" + (controlPoints.get(0).getCoordinate().getZ() - 6) + ",dx=12,dy=12,dz=12,team=]"), true) +
+                scoreboard.Operation(Constant.admin, getObjectiveByName(Objective.CP.extendName("2Solo")), ComparatorType.greater, Constant.admin, getObjectiveByName(Objective.CP.extendName("1Solo"))));
 
         return new FileData(FileName.team_score, fileCommands);
     }
@@ -2092,7 +2112,7 @@ public class Main {
 
         // Find player with lowest health
         fileCommands.add(Execute.As(new Entity("@r[gamemode=!spectator]"), false) +
-                Execute.IfNext("@s", getObjectiveByName(Objective.Hearts), ComparatorType.less, adminSingle, getObjectiveByName(Objective.MinHealth)) +
+                Execute.IfNext("@s", getObjectiveByName(Objective.Hearts), ComparatorType.less, Constant.adminSingle, getObjectiveByName(Objective.MinHealth)) +
                 Execute.StoreNext(ExecuteStore.result, Constant.admin, getObjectiveByName(Objective.MinHealth), true) +
                 scoreboard.Get("@s", getObjectiveByName(Objective.Hearts)));
 
