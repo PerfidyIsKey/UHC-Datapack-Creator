@@ -41,7 +41,6 @@ public class Main {
     //GameData<
     private static final int chestSize = 27;
     private static final String commandCenter = "s58";
-    public static final String admin = "@e[type=marker]";
     public static final String adminSingle = "@e[type=marker,limit=1]";
     private Coordinate startCoordinate;
     private ArrayList<Team> teams = new ArrayList<>();
@@ -867,11 +866,11 @@ public class Main {
         // Reset scores
         for (int i = 0; i < 2; i++) {
             fileCommands.add(scoreboard.Set("@a[scores={Deaths=1}]", getObjectiveByName(Objective.ControlPoint.extendName(i + 1)), 0));
-            fileCommands.add(scoreboard.Set(admin, getObjectiveByName(Objective.Highscore.extendName(i + 1)), 1));
+            fileCommands.add(scoreboard.Set(Constant.admin, getObjectiveByName(Objective.Highscore.extendName(i + 1)), 1));
         }
 
         // Reset player with lowest health
-        fileCommands.add(scoreboard.Set(admin, getObjectiveByName(Objective.MinHealth), 20));
+        fileCommands.add(scoreboard.Set(Constant.admin, getObjectiveByName(Objective.MinHealth), 20));
 
         // Announce traitor deaths
         ArrayList<TextItem> texts = new ArrayList<>();
@@ -966,7 +965,7 @@ public class Main {
             fileCommands.add(Execute.If(adminSingle, getObjectiveByName(Objective.CP.toString() + 2 + t.getName()), ComparatorType.greater, "@e[limit=1,scores={Highscore1=" + cp2ActivationScore + "..}]", getObjectiveByName(Objective.Highscore.extendName(2))) +
                     getBossbarByName("cp2").setColor(t.getBossbarColor()));
             for (int i = 0; i < controlPoints.size(); i++) {
-                fileCommands.add(scoreboard.Operation(admin, getObjectiveByName(Objective.Highscore.extendName(i + 1)), ComparatorType.greater, admin, getObjectiveByName("" + Objective.CP + (i + 1) + t.getName())));
+                fileCommands.add(scoreboard.Operation(Constant.admin, getObjectiveByName(Objective.Highscore.extendName(i + 1)), ComparatorType.greater, Constant.admin, getObjectiveByName("" + Objective.CP + (i + 1) + t.getName())));
             }
         }
 
@@ -976,7 +975,7 @@ public class Main {
         fileCommands.add(Execute.If("@r[limit=1,team=]", getObjectiveByName(Objective.ControlPoint.extendName(2)), ComparatorType.greater, "@e[scores={Highscore1=" + cp2ActivationScore + "..},limit=1]", getObjectiveByName(Objective.Highscore.extendName(2))) +
                 getBossbarByName("cp2").setColor(BossBarColor.white));
         for (int i = 0; i < controlPoints.size(); i++) {
-            fileCommands.add(scoreboard.Operation(admin, getObjectiveByName(Objective.Highscore.extendName(i + 1)), ComparatorType.greater, "@r[limit=1,team=]", getObjectiveByName(Objective.ControlPoint.extendName(i + 1))));
+            fileCommands.add(scoreboard.Operation(Constant.admin, getObjectiveByName(Objective.Highscore.extendName(i + 1)), ComparatorType.greater, "@r[limit=1,team=]", getObjectiveByName(Objective.ControlPoint.extendName(i + 1))));
         }
 
         // Update value of bossbars
@@ -1073,13 +1072,13 @@ public class Main {
         // Reset scores of all entities
         fileCommands.add(scoreboard.Reset("@e"));
         for (int i = 1; i < controlPoints.size() + 1; i++) {
-            fileCommands.add(scoreboard.Set(admin, getObjectiveByName(Objective.Highscore.extendName(i)), 1));
+            fileCommands.add(scoreboard.Set(Constant.admin, getObjectiveByName(Objective.Highscore.extendName(i)), 1));
             for (int ii = 1; ii < 3; ii++) {
                 fileCommands.add(scoreboard.Set("@a", getObjectiveByName(Objective.MSGDum.extendName(ii + "CP" + i)), 1));
             }
         }
-        fileCommands.add(scoreboard.Set(admin, Objective.MinHealth, 20));
-        fileCommands.add(scoreboard.Set(admin, Objective.Victory, 1));
+        fileCommands.add(scoreboard.Set(Constant.admin, Objective.MinHealth, 20));
+        fileCommands.add(scoreboard.Set(Constant.admin, Objective.Victory, 1));
         fileCommands.add(scoreboard.Set("@a", Objective.IsKiller, 0));
 
         // Spawn new Control Points
@@ -1115,6 +1114,9 @@ public class Main {
         fileCommands.add(CommandBuilder.removeTag("@a", Tag.RespawnDisabled));
         fileCommands.add(CommandBuilder.removeTag("@a", Tag.IronManCandidate));
         fileCommands.add(CommandBuilder.removeTag("@a", Tag.IronMan));
+        fileCommands.add(CommandBuilder.removeTag(Constant.admin, Tag.GameStarted));
+        fileCommands.add(CommandBuilder.removeTag(Constant.admin, Tag.ControlPointCaptured));
+        fileCommands.add(CommandBuilder.removeTag(Constant.admin, Tag.ControlPoint2Enabled));
         for (int i = 0; i < 4; i++) {
             fileCommands.add(CommandBuilder.removeTag("@a", Tag.ReceivedPerk.extendName(i + 1)));
         }
@@ -1349,16 +1351,23 @@ public class Main {
     private FileData SecondControlpoint() {
         ArrayList<String> fileCommands = new ArrayList<>();
 
+        // Announce that Control Point 2 is enabled
         ArrayList<TextItem> texts = new ArrayList<>();
         texts.add(bannerText);
         texts.add(new Text(Color.gold, true, false, communityName + " UHC"));
         texts.add(bannerText);
         texts.add(new Text(Color.light_purple, true, false, "CONTROL POINT 2 IS NOW AVAILABLE!"));
         texts.add(bannerText);
-
         fileCommands.add(new TellRaw("@a", texts).sendRaw());
+
+        // Remove reinforced deepslate from CP2
         fileCommands.addAll(CommandBuilder.forceLoadAndSet(controlPoints.get(1).getCoordinate().getX(), controlPoints.get(1).getCoordinate().getY() + 3, controlPoints.get(1).getCoordinate().getZ(), controlPoints.get(1).getCoordinate().getDimension(), BlockType.air, SetBlockType.replace));
+
+        // Change bossbar text
         fileCommands.add(getBossbarByName("cp2").setTitle("CP2: " + controlPoints.get(1).getCoordinate().getX() + ", " + controlPoints.get(1).getCoordinate().getY() + ", " + controlPoints.get(1).getCoordinate().getZ() + " (" + controlPoints.get(1).getCoordinate().getDimensionName() + ") - FASTER!!"));
+
+        // Give admin tag for disabling self-rescheduling
+        fileCommands.add(CommandBuilder.addTag(Constant.admin, Tag.ControlPoint2Enabled));
 
         return new FileData(FileName.second_control_point, fileCommands);
     }
@@ -1381,7 +1390,7 @@ public class Main {
         ArrayList<String> fileCommands = new ArrayList<>();
 
         // Set objective to victory achieved
-        fileCommands.add(scoreboard.Set(admin, getObjectiveByName(Objective.Victory), 2));
+        fileCommands.add(scoreboard.Set(Constant.admin, getObjectiveByName(Objective.Victory), 2));
 
         // Call deathmatch functions
         fileCommands.add(Execute.If("@a[limit=2,gamemode=!spectator]") +
@@ -1785,21 +1794,21 @@ public class Main {
         for (int i = 1; i < controlPoints.size() + 1; i++) {
             for (Team t : teams) {
                 fileCommands.add(Execute.As(new Entity("@r[limit=1,gamemode=!spectator]")) +
-                        scoreboard.Operation(admin, getObjectiveByName("" + Objective.CP + i + t.getName()), ComparatorType.greater, "@s[team=" + t.getName() + "]", getObjectiveByName(Objective.ControlPoint.extendName(i))));
+                        scoreboard.Operation(Constant.admin, getObjectiveByName("" + Objective.CP + i + t.getName()), ComparatorType.greater, "@s[team=" + t.getName() + "]", getObjectiveByName(Objective.ControlPoint.extendName(i))));
 
                 fileCommands.add(Execute.As(new Entity("@r[limit=1,gamemode=!spectator]")) +
-                        scoreboard.Operation("@s[team=" + t.getName() + "]", getObjectiveByName(Objective.ControlPoint.extendName(i)), ComparatorType.greater, admin, getObjectiveByName("" + Objective.CP + i + t.getName())));
+                        scoreboard.Operation("@s[team=" + t.getName() + "]", getObjectiveByName(Objective.ControlPoint.extendName(i)), ComparatorType.greater, Constant.admin, getObjectiveByName("" + Objective.CP + i + t.getName())));
             }
         }
 
         for (Team t : teams) {
             fileCommands.add(Execute.In(controlPoints.get(0).getCoordinate().getDimension(), false) +
                     Execute.AsNext(new Entity("@r[limit=1,gamemode=!spectator,x=" + (controlPoints.get(0).getCoordinate().getX() - 6) + ",y=" + (controlPoints.get(0).getCoordinate().getY() - 1) + ",z=" + (controlPoints.get(0).getCoordinate().getZ() - 6) + ",dx=12,dy=12,dz=12,team=" + t.getName() + "]"), true) +
-                    scoreboard.Operation(admin, getObjectiveByName("" + Objective.CP + 1 + t.getName()), ComparatorType.greater, admin, getObjectiveByName("" + Objective.CP + 2 + t.getName())));
+                    scoreboard.Operation(Constant.admin, getObjectiveByName("" + Objective.CP + 1 + t.getName()), ComparatorType.greater, Constant.admin, getObjectiveByName("" + Objective.CP + 2 + t.getName())));
 
             fileCommands.add(Execute.In(controlPoints.get(1).getCoordinate().getDimension(), false) +
                     Execute.AsNext(new Entity("@r[limit=1,gamemode=!spectator,x=" + (controlPoints.get(1).getCoordinate().getX() - 6) + ",y=" + (controlPoints.get(1).getCoordinate().getY() - 1) + ",z=" + (controlPoints.get(1).getCoordinate().getZ() - 6) + ",dx=12,dy=12,dz=12,team=" + t.getName() + "]"), true) +
-                    scoreboard.Operation(admin, getObjectiveByName("" + Objective.CP + 2 + t.getName()), ComparatorType.greater, admin, getObjectiveByName("" + Objective.CP + 1 + t.getName())));
+                    scoreboard.Operation(Constant.admin, getObjectiveByName("" + Objective.CP + 2 + t.getName()), ComparatorType.greater, Constant.admin, getObjectiveByName("" + Objective.CP + 1 + t.getName())));
         }
 
         return new FileData(FileName.team_score, fileCommands);
@@ -1856,8 +1865,8 @@ public class Main {
         ArrayList<String> fileCommands = new ArrayList<>();
 
         // Add score to keep track of time
-        fileCommands.add(scoreboard.Add(admin, getObjectiveByName(Objective.WorldLoad), 1));
-        fileCommands.add(scoreboard.Add(admin, getObjectiveByName(Objective.Time), 1));
+        fileCommands.add(scoreboard.Add(Constant.admin, getObjectiveByName(Objective.WorldLoad), 1));
+        fileCommands.add(scoreboard.Add(Constant.admin, getObjectiveByName(Objective.Time), 1));
 
         /* Spread players to load world */
         // Load overworld
@@ -1895,7 +1904,7 @@ public class Main {
     private FileData UpdateSidebar() {
         ArrayList<String> fileCommands = new ArrayList<>();
 
-        fileCommands.add(scoreboard.Add(admin, getObjectiveByName(Objective.SideDum), 1));
+        fileCommands.add(scoreboard.Add(Constant.admin, getObjectiveByName(Objective.SideDum), 1));
         int i = 0;
         for (ScoreboardObjective s : scoreboardObjectives) {
             if (s.getDisplaySideBar()) {
@@ -1905,7 +1914,7 @@ public class Main {
             }
         }
         fileCommands.add(Execute.If(new Entity("@e[scores={SideDum=" + (10 * tickPerSecond * i + 1) + "}]")) +
-                scoreboard.Reset(admin, getObjectiveByName(Objective.SideDum)));
+                scoreboard.Reset(Constant.admin, getObjectiveByName(Objective.SideDum)));
 
 
         return new FileData(FileName.update_sidebar, fileCommands);
@@ -2067,7 +2076,7 @@ public class Main {
         // Find player with lowest health
         fileCommands.add(Execute.As(new Entity("@r[gamemode=!spectator]"), false) +
                 Execute.IfNext("@s", getObjectiveByName(Objective.Hearts), ComparatorType.less, adminSingle, getObjectiveByName(Objective.MinHealth)) +
-                Execute.StoreNext(ExecuteStore.result, admin, getObjectiveByName(Objective.MinHealth), true) +
+                Execute.StoreNext(ExecuteStore.result, Constant.admin, getObjectiveByName(Objective.MinHealth), true) +
                 scoreboard.Get("@s", getObjectiveByName(Objective.Hearts)));
 
         return new FileData(FileName.update_min_health, fileCommands);
@@ -2150,6 +2159,9 @@ public class Main {
 
         // Check which team has captured the Control Point
         fileCommands.add(Schedule.callFunction(FileName.teams_highscore_alive_check));
+
+        // Give admin tag for disabling self-rescheduling
+        fileCommands.add(CommandBuilder.addTag(Constant.admin, Tag.ControlPointCaptured));
 
         return new FileData(FileName.control_point_captured, fileCommands);
     }
@@ -2330,7 +2342,7 @@ public class Main {
         // Players in teams
         for (Team t : teams) {
             for (int i = 1; i < controlPoints.size() + 1; i++) {
-                fileCommands.add(scoreboard.Operation(t.getPlayerColor(), getObjectiveByName(Objective.CPScore), ComparatorType.greater, admin, getObjectiveByName("" + Objective.CP + i + t.getName())));
+                fileCommands.add(scoreboard.Operation(t.getPlayerColor(), getObjectiveByName(Objective.CPScore), ComparatorType.greater, Constant.admin, getObjectiveByName("" + Objective.CP + i + t.getName())));
             }
         }
 
@@ -2346,7 +2358,7 @@ public class Main {
         ArrayList<String> fileCommands = new ArrayList<>();
 
         // Add first blood tag
-        fileCommands.add(CommandBuilder.addTag(admin, Tag.RespawnDisabled));
+        fileCommands.add(CommandBuilder.addTag(Constant.admin, Tag.RespawnDisabled));
 
         // Update immediate respawn
         fileCommands.add(CommandBuilder.setGameRule(GameRule.doImmediateRespawn, false));

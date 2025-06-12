@@ -1,5 +1,6 @@
 import Enums.Duration;
 import Enums.FileName;
+import Enums.Tag;
 import FileGeneration.FileData;
 
 import java.util.ArrayList;
@@ -23,7 +24,7 @@ public class GameStart {
         fileCommands.add(Schedule.callFunction(FileName.messages_schedule_single));
 
         // Disable developer timers
-        fileCommands.add(Schedule.clearFunction(FileName.timer_developer_20));
+        fileCommands.add(CommandBuilder.addTag(Constant.admin, Tag.GameStarted));
 
         return new FileData(FileName.game_starter, fileCommands);
     }
