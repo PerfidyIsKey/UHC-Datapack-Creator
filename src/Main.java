@@ -2716,6 +2716,9 @@ public class Main {
         fileCommands.add(new TellRaw("@a", texts).sendRaw());
         texts.clear();
 
+        // Set gamerule
+        fileCommands.add(CommandBuilder.setGameRule(GameRule.doDaylightCycle, false));
+
         return new FileData(FileName.messages_eternal_day, fileCommands);
     }
 
