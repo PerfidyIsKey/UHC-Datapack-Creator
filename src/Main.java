@@ -2675,7 +2675,7 @@ public class Main {
             fileCommands.add(Execute.If("@a[gamemode=creative,nbt={active_effects:[{id:\"minecraft:" + effects[i] + "\"}]}]") +
                     Schedule.callFunction(functions[i]));
 
-            fileCommands.add(Execute.If("@a[gamemode=creative,nbt={active_effects:[{id:\"minecraft:" + effects[i] + "\"}]}]") +
+            fileCommands.add(Execute.If("@a[nbt={active_effects:[{id:\"minecraft:" + effects[i] + "\"}]}]") +
                     CommandBuilder.clearEffect("@e", effects[i]));
         }
 
