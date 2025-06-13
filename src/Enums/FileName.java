@@ -77,9 +77,6 @@ public enum FileName {
     initiate_deathmatch,
     death_match,
 
-    // World loading
-    world_pre_load,
-
     // Misc (gameplay critical)
     clear_enderchest,
     display_rank,
