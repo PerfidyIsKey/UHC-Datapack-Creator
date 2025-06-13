@@ -52,7 +52,6 @@ public class Main {
     private static int worldSize;  // Maximum possible coordinate
     private static final int worldHeight = 257;
     private static final int worldBottom = -64;
-    public static final int tickPerSecond = 20;
     public static final int secPerMinute = 60;
     private static final int cpTickPerSecond = 4;
 
@@ -61,7 +60,7 @@ public class Main {
     private int maxCPScore;
     private static final int cpCaptureInMin = 20;
     private static final int maxCPScoreBossbar = 20 * secPerMinute * cpTickPerSecond * 2;
-    private static final int cpMessageThreshold = 5 * tickPerSecond;
+    private static final int cpMessageThreshold = 5 * Constant.tickFrequencyLong;
     private static final int minJoinDistance = 10;
     private static final int minDamage = 9;
     private static final String[] cartesian = {"X", "Y", "Z"};
@@ -1920,11 +1919,11 @@ public class Main {
         for (ScoreboardObjective s : scoreboardObjectives) {
             if (s.getDisplaySideBar()) {
                 i++;
-                fileCommands.add(Execute.If(new Entity("@e[scores={SideDum=" + (10 * tickPerSecond * i) + "}]")) +
+                fileCommands.add(Execute.If(new Entity("@e[scores={SideDum=" + (10 * Constant.tickFrequencyLong * i) + "}]")) +
                         s.setDisplay(ScoreboardLocation.sidebar));
             }
         }
-        fileCommands.add(Execute.If(new Entity("@e[scores={SideDum=" + (10 * tickPerSecond * i + 1) + "}]")) +
+        fileCommands.add(Execute.If(new Entity("@e[scores={SideDum=" + (10 * Constant.tickFrequencyLong * i + 1) + "}]")) +
                 scoreboard.Reset(Constant.admin, getObjectiveByName(Objective.SideDum)));
 
 
