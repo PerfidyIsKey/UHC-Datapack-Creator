@@ -855,7 +855,7 @@ public class Main {
         fileCommands.add(Execute.In(Dimension.overworld) +
                 CommandBuilder.fill(-5, 221, -5, 5, 226, 5, BlockType.air));
         fileCommands.add(Execute.In(Dimension.overworld) +
-                CommandBuilder.setBlock(0, 222, -5, BlockType.cherry_wall_sign + "[facing=south,waterlogged=false]{back_text:{messages:[\"You have\",\"angered\",\"the Gods!\",\"\"]},front_text:{messages:[\"In solidarity of\",\"our removed\",\"Command Center\",\"2014 - 2025\"]},is_waxed:0b}"));
+                CommandBuilder.setBlock(0, 222, -5, BlockType.cherry_wall_sign + "[facing=south,waterlogged=false]{back_text:{messages:['{\"text\":\"You have\"}','{\"text\":\"angered\"}','{\"text\":\"the Gods!\"}','{\"text\":\"\"}']},front_text:{messages:['{\"text\":\"In rememberance\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"" + CommandBuilder.summonEntity(EntityType.firework_rocket, new Coordinate(0, 0, 0, ReferenceFrame.relative)) + "\"}}','{\"text\":\"of our\"}','{\"text\":\"Command Center\"}','{\"text\":\"2014-2025\"}']},is_waxed:0b}"));
 
         return new FileData(FileName.initialize, fileCommands);
     }
