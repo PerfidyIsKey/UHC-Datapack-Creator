@@ -829,10 +829,6 @@ public class Main {
                 fileCommands.add(scoreboardObjectives.get(scoreboardObjectives.size() - 1).add());
             }
         }
-        for (int i = 1; i < controlPoints.size() + 1; i++) {
-            scoreboardObjectives.add(new ScoreboardObjective(Objective.CP.extendName(i + "Solo"), ObjectiveType.dummy));
-            fileCommands.add(scoreboardObjectives.get(scoreboardObjectives.size() - 1).add());
-        }
 
         // Create staging area
         fileCommands.add(Execute.In(Dimension.overworld) +
@@ -967,12 +963,12 @@ public class Main {
         }
 
         // Individual players
-        fileCommands.add(Execute.If(Constant.adminSingle, getObjectiveByName(Objective.CP.extendName("1Solo")), ComparatorType.greater, "@e[type=marker,limit=1]", getObjectiveByName(Objective.Highscore.extendName(1))) +
+        fileCommands.add(Execute.If("@r[limit=1,team=]", getObjectiveByName(Objective.ControlPoint.extendName(1)), ComparatorType.greater, "@e[type=marker,limit=1]", getObjectiveByName(Objective.Highscore.extendName(1))) +
                 getBossbarByName("cp1").setColor(BossBarColor.white));
-        fileCommands.add(Execute.If(Constant.adminSingle, getObjectiveByName(Objective.CP.extendName("2Solo")), ComparatorType.greater, "@e[scores={Highscore1=" + cp2ActivationScore + "..},limit=1]", getObjectiveByName(Objective.Highscore.extendName(2))) +
+        fileCommands.add(Execute.If("@r[limit=1,team=]", getObjectiveByName(Objective.ControlPoint.extendName(2)), ComparatorType.greater, "@e[scores={Highscore1=" + cp2ActivationScore + "..},limit=1]", getObjectiveByName(Objective.Highscore.extendName(2))) +
                 getBossbarByName("cp2").setColor(BossBarColor.white));
         for (int i = 0; i < controlPoints.size(); i++) {
-            fileCommands.add(scoreboard.Operation(Constant.admin, getObjectiveByName(Objective.Highscore.extendName(i + 1)), ComparatorType.greater, Constant.admin, getObjectiveByName(Objective.CP.extendName((i + 1) + "Solo"))));
+            fileCommands.add(scoreboard.Operation(Constant.admin, getObjectiveByName(Objective.Highscore.extendName(i + 1)), ComparatorType.greater, "@r[limit=1,team=]", getObjectiveByName(Objective.ControlPoint.extendName(i + 1))));
         }
 
         // Update value of bossbars
@@ -1824,23 +1820,6 @@ public class Main {
                     Execute.AsNext(new Entity("@r[limit=1,gamemode=!spectator,x=" + (controlPoints.get(1).getCoordinate().getX() - 6) + ",y=" + (controlPoints.get(1).getCoordinate().getY() - 1) + ",z=" + (controlPoints.get(1).getCoordinate().getZ() - 6) + ",dx=12,dy=12,dz=12,team=" + t.getName() + "]"), true) +
                     scoreboard.Operation(Constant.admin, getObjectiveByName("" + Objective.CP + 2 + t.getName()), ComparatorType.greater, Constant.admin, getObjectiveByName("" + Objective.CP + 1 + t.getName())));
         }
-
-        // Individual players
-        for (int i = 1; i < controlPoints.size() + 1; i++) {
-                fileCommands.add(Execute.As(new Entity("@r[limit=1,gamemode=!spectator]")) +
-                        scoreboard.Operation(Constant.admin, getObjectiveByName(Objective.CP.extendName(i + "Solo")), ComparatorType.greater, "@s[team=]", getObjectiveByName(Objective.ControlPoint.extendName(i))));
-
-                fileCommands.add(Execute.As(new Entity("@r[limit=1,gamemode=!spectator]")) +
-                        scoreboard.Operation("@s[team=]", getObjectiveByName(Objective.ControlPoint.extendName(i)), ComparatorType.greater, Constant.admin, getObjectiveByName(Objective.CP.extendName(i + "Solo"))));
-        }
-
-        fileCommands.add(Execute.In(controlPoints.get(0).getCoordinate().getDimension(), false) +
-                Execute.AsNext(new Entity("@r[limit=1,gamemode=!spectator,x=" + (controlPoints.get(0).getCoordinate().getX() - 6) + ",y=" + (controlPoints.get(0).getCoordinate().getY() - 1) + ",z=" + (controlPoints.get(0).getCoordinate().getZ() - 6) + ",dx=12,dy=12,dz=12,team=]"), true) +
-                scoreboard.Operation(Constant.admin, getObjectiveByName(Objective.CP.extendName("1Solo")), ComparatorType.greater, Constant.admin, getObjectiveByName(Objective.CP.extendName("2Solo"))));
-
-        fileCommands.add(Execute.In(controlPoints.get(1).getCoordinate().getDimension(), false) +
-                Execute.AsNext(new Entity("@r[limit=1,gamemode=!spectator,x=" + (controlPoints.get(1).getCoordinate().getX() - 6) + ",y=" + (controlPoints.get(1).getCoordinate().getY() - 1) + ",z=" + (controlPoints.get(1).getCoordinate().getZ() - 6) + ",dx=12,dy=12,dz=12,team=]"), true) +
-                scoreboard.Operation(Constant.admin, getObjectiveByName(Objective.CP.extendName("2Solo")), ComparatorType.greater, Constant.admin, getObjectiveByName(Objective.CP.extendName("1Solo"))));
 
         return new FileData(FileName.team_score, fileCommands);
     }
