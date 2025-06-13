@@ -1821,6 +1821,15 @@ public class Main {
                     scoreboard.Operation(Constant.admin, getObjectiveByName("" + Objective.CP + 2 + t.getName()), ComparatorType.greater, Constant.admin, getObjectiveByName("" + Objective.CP + 1 + t.getName())));
         }
 
+        // Individual players
+        fileCommands.add(Execute.In(controlPoints.get(0).getCoordinate().getDimension(), false) +
+                Execute.AsNext(new Entity("@r[limit=1,gamemode=!spectator,x=" + (controlPoints.get(0).getCoordinate().getX() - 6) + ",y=" + (controlPoints.get(0).getCoordinate().getY() - 1) + ",z=" + (controlPoints.get(0).getCoordinate().getZ() - 6) + ",dx=12,dy=12,dz=12,team=]"), true) +
+                scoreboard.Operation("@s", getObjectiveByName(Objective.ControlPoint.extendName(1)), ComparatorType.greater, "@s", getObjectiveByName(Objective.ControlPoint.extendName(2))));
+
+        fileCommands.add(Execute.In(controlPoints.get(1).getCoordinate().getDimension(), false) +
+                Execute.AsNext(new Entity("@r[limit=1,gamemode=!spectator,x=" + (controlPoints.get(1).getCoordinate().getX() - 6) + ",y=" + (controlPoints.get(1).getCoordinate().getY() - 1) + ",z=" + (controlPoints.get(1).getCoordinate().getZ() - 6) + ",dx=12,dy=12,dz=12,team=]"), true) +
+                scoreboard.Operation("@s", getObjectiveByName(Objective.ControlPoint.extendName(2)), ComparatorType.greater, "@s", getObjectiveByName(Objective.ControlPoint.extendName(1))));
+
         return new FileData(FileName.team_score, fileCommands);
     }
 
