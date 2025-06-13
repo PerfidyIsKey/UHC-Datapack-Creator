@@ -857,10 +857,6 @@ public class Main {
         fileCommands.add(Execute.In(Dimension.overworld) +
                 CommandBuilder.setBlock(0, 222, -5, BlockType.cherry_wall_sign + "[facing=south,waterlogged=false]{back_text:{messages:[\"You have\",\"angered\",\"the Gods!\",\"\"]},front_text:{messages:[\"In solidarity of\",\"our removed\",\"Command Center\",\"2014 - 2025\"]},is_waxed:0b}"));
 
-        // Pre-generate terrain
-        ArrayList<String> worldGen = world.worldGen();
-        fileCommands.addAll(worldGen);
-
         return new FileData(FileName.initialize, fileCommands);
     }
 
