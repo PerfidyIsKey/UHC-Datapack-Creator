@@ -2373,7 +2373,8 @@ public class Main {
 
         // Players without a team
         for (int i = 1; i < controlPoints.size() + 1; i++) {
-            fileCommands.add(scoreboard.Operation("Solo", getObjectiveByName(Objective.CPScore), ComparatorType.greater, "@r[team=]", getObjectiveByName(Objective.ControlPoint.extendName(i))));
+            fileCommands.add(Execute.As("@a[team=]") +
+                    scoreboard.Operation("Solo", getObjectiveByName(Objective.CPScore), ComparatorType.greater, "@s", getObjectiveByName(Objective.ControlPoint.extendName(i))));
         }
 
         return new FileData(FileName.update_public_cp_score, fileCommands);
