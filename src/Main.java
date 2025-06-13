@@ -18,7 +18,7 @@ public class Main {
 
 
     //TODO: Automate process using args.
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         new Main().run(args);
     }
 
@@ -81,7 +81,7 @@ public class Main {
     private ArrayList<FileData> files = new ArrayList<>();
 
 
-    private void run(String[] args) {
+    private void run(String[] args) throws IOException {
         singleton = Singleton.getInstance();
         communityModeChange();
         createDatapack();
@@ -126,7 +126,7 @@ public class Main {
         }
     }
 
-    private void changeCommunitymode(int num) {
+    private void changeCommunitymode(int num) throws IOException {
         if (num == 0) {
             communityMode = CommunityMode.DIORITE;
         }
@@ -149,7 +149,7 @@ public class Main {
         }
     }
 
-    private void communityModeChange() {
+    private void communityModeChange() throws IOException {
         files = new ArrayList<>();
         initSaveDir();
         fileTools = new FileTools(version, dataPackLocation, dataPackName, worldLocation);
@@ -158,6 +158,7 @@ public class Main {
         makeFunctionFiles();
         files.addAll(fileTools.makeRecipeFiles());
         makeLootTableFiles();
+        makeServerProperties();
     }
 
     private void initSaveDir() {
@@ -652,6 +653,29 @@ public class Main {
         fileCommands.add(lTable.GenerateRates());
         fileData = new FileData("supply_drop_rates", fileCommands, "loot_table");
         files.add(fileData);
+    }
+
+    private void makeServerProperties() throws IOException {
+        String filePath = "Server\\server.properties";
+
+        ServerProperties properties = new ServerProperties();
+
+        // Override fields
+        properties.set("difficulty", Difficulty.hard);
+        properties.set("enable-command-block", true);
+        properties.set("gamemode", GameMode.adventure);
+        properties.set("level-seed", 27515851);
+        properties.set("max-players", 50);
+        properties.set("motd", communityName + " UHC S" + uhcNumber);
+        properties.set("online-mode", false);
+        properties.set("simulation-distance", 5);
+        properties.set("spawn-protection", 0);
+        properties.set("view-distance", 7);
+
+        // Save back to the same file
+        properties.saveToFile(filePath);
+
+        System.out.println("Server properties updated successfully.");
     }
 
     // Get by name functions
