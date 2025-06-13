@@ -30,6 +30,7 @@ public class FileData {
         return name;
     }
 
+    //Very sad to see this
     public String getNameWithoutExtension(){
         return name;
     }

@@ -13,17 +13,32 @@ public enum FileName {
     survival_mode,
     start_game,
     start_potions,
+    developer_potion_control,
+    game_starter,
+
+    // Timer functions
+    timer_main_1,
+    timer_main_5,
+    timer_main_20,
+    timer_control_point_5,
+    timer_control_point_20,
+    timer_traitor_5,
+    timer_traitor_20,
+    timer_developer_20,
 
     // Timer
     horse_frost_walker,
-    wolf_collar_execute,
+    wolf_updates,
     update_sidebar,
-    timer,
     display_quotes,
     update_mine_count,
     update_min_health,
-    eliminate_baby_wolf,
     remove_banned_items,
+
+    // Messages
+    messages_schedule_single,
+    messages_pvp,
+    messages_eternal_day,
 
     // Death
     handle_player_death,
@@ -32,19 +47,18 @@ public enum FileName {
     disable_respawn,
 
     // Control Point
-    spawn_controlpoints,
-    initialize_controlpoint,
-    controlpoint_,
+    spawn_control_points,
+    initialize_control_point,
+    control_point_,
     team_score,
-    second_controlpoint,
+    second_control_point,
     bbvalue,
-    controlpoint_perks,
-    controlpoint_messages_,
+    control_point_perks,
+    control_point_messages_,
     update_public_cp_score,
 
     // Care Packages
     drop_carepackages,
-    carepackage_distributor,
 
     // Traitor Faction
     traitor_handout,
@@ -65,7 +79,6 @@ public enum FileName {
 
     // World loading
     world_pre_load,
-    world_pre_load_activation,
 
     // Misc (gameplay critical)
     clear_enderchest,
