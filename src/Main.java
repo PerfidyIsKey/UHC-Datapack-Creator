@@ -304,6 +304,7 @@ public class Main {
         scoreboardObjectives.add(new ScoreboardObjective(Objective.WolfAge, ObjectiveType.dummy));
         scoreboardObjectives.add(new ScoreboardObjective(Objective.FoundTeam, ObjectiveType.dummy));
         scoreboardObjectives.add(new ScoreboardObjective(Objective.Distance, ObjectiveType.dummy));
+        scoreboardObjectives.add(new ScoreboardObjective(Objective.RandomQuotes, ObjectiveType.dummy));
         scoreboardObjectives.add(new ScoreboardObjective(Objective.TimesCalled, "minecraft.used:minecraft.goat_horn"));
         scoreboardObjectives.add(new ScoreboardObjective(Objective.DamageTaken, "minecraft.custom:minecraft.damage_taken"));
         for (String s : cartesian) {
@@ -2049,12 +2050,18 @@ public class Main {
     private FileData DisplayQuotes() {
         ArrayList<String> fileCommands = new ArrayList<>();
 
-        for (int i = 0; i < 36; i++) {
-            int index = (int) (Math.random() * quotes.size());
-            fileCommands.add(Execute.If(new Entity("@e[scores={Time2=" + (7 * secPerMinute * tickPerSecond * (i + 1)) + "}]")) +
-                    new TellRaw("@a", new Text(Color.white, false, false, quotes.get(index))).sendRaw());
-            quotes.remove(index);
+        // Roll a random number to pick a quote
+        fileCommands.add(CommandBuilder.storeRandomNumber(Objective.RandomQuotes, 0, quotes.size() - 1));
+
+        // Pick a quote from the listAdd commentMore actions
+        for (int i = 0; i < quotes.size(); i++) {
+            fileCommands.add(Execute.If(new Entity("@e[scores={RandomQuotes=" + i + "}]")) +
+                    new TellRaw("@a", new Text(Color.white, false, false, quotes.get(i))).sendRaw());
+
         }
+
+        // Reschedule displaying a new quote
+        fileCommands.add(Schedule.callFunction(FileName.display_quotes, 7 * secPerMinute));
 
         return new FileData(FileName.display_quotes, fileCommands);
     }

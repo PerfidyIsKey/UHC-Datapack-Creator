@@ -404,4 +404,23 @@ public class CommandBuilder {
     public static String changeTitleDisplayTime(String targets, String fadeIn, String duration, String fadeOut) {
         return "title " + targets + " times " + fadeIn + " " + duration + " " + fadeOut;
     }
+
+    // Store random number
+    public static String storeRandomNumber(String targets, String objective, int min, int max) {
+        return Execute.Store(ExecuteStore.result, targets, objective) +
+                "random value " + min + ".." + max;
+    }
+
+    public static String storeRandomNumber(String targets, Objective objective, int min, int max) {
+        return Execute.Store(ExecuteStore.result, targets, objective) +
+                "random value " + min + ".." + max;
+    }
+
+    public static String storeRandomNumber(String objective, int min, int max) {
+        return storeRandomNumber(Constant.admin, objective, min, max);
+    }
+
+    public static String storeRandomNumber(Objective objective, int min, int max) {
+        return storeRandomNumber(Constant.admin, objective, min, max);
+    }
 }
