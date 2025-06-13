@@ -24,7 +24,7 @@ for /f "tokens=1,2,3,4,5 delims=," %%A in (..\Files\DIORITE\players.txt) do (
 )
 
 REM Build the final command
-set FINAL_CMD=%BASE_CMD% --nicks "%NICKNAMES_FILE%" -c %BOT_COUNT% -g
+set FINAL_CMD=%BASE_CMD% --nicks "%NICKNAMES_FILE%" -c %BOT_COUNT%
 
 REM Start the bot process in a new console window (no cleanup)
 start "" cmd /k "%FINAL_CMD%"
