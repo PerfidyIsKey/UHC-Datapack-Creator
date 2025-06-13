@@ -1845,7 +1845,7 @@ public class Main {
                 scoreboard.Operation(Constant.admin, getObjectiveByName(Objective.CP.extendName("1Solo")), ComparatorType.greater, Constant.admin, getObjectiveByName(Objective.CP.extendName("2Solo"))));
 
         fileCommands.add(Execute.In(controlPoints.get(1).getCoordinate().getDimension(), false) +
-                Execute.AsNext(new Entity("@r[limit=1,gamemode=!spectator,x=" + (controlPoints.get(0).getCoordinate().getX() - 6) + ",y=" + (controlPoints.get(0).getCoordinate().getY() - 1) + ",z=" + (controlPoints.get(0).getCoordinate().getZ() - 6) + ",dx=12,dy=12,dz=12,team=]"), true) +
+                Execute.AsNext(new Entity("@r[limit=1,gamemode=!spectator,x=" + (controlPoints.get(1).getCoordinate().getX() - 6) + ",y=" + (controlPoints.get(1).getCoordinate().getY() - 1) + ",z=" + (controlPoints.get(1).getCoordinate().getZ() - 6) + ",dx=12,dy=12,dz=12,team=]"), true) +
                 scoreboard.Operation(Constant.admin, getObjectiveByName(Objective.CP.extendName("2Solo")), ComparatorType.greater, Constant.admin, getObjectiveByName(Objective.CP.extendName("1Solo"))));
 
         return new FileData(FileName.team_score, fileCommands);
