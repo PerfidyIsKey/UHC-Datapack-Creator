@@ -49,12 +49,9 @@ public class Main {
     private ArrayList<Season> seasons = new ArrayList<>();
     private ArrayList<String> quotes = new ArrayList<>();
     private ArrayList<BossBar> bossBars = new ArrayList<>();
-    private static int worldSize;  // Maximum possible coordinate
-    private static final int worldHeight = 257;
-    private static final int worldBottom = -64;
+    private World world = new World(0, Constant.worldHeight, Constant.worldBottom, Constant.worldShape);
     public static final int secPerMinute = 60;
     private static final int cpTickPerSecond = 4;
-
     private static final int cp2ActivationInMin = 6;
     private int cp2ActivationScore;
     private int maxCPScore;
@@ -234,18 +231,17 @@ public class Main {
 
         // World size based on amount of players
         if (players.size() <= 6) {
-            worldSize = 500;
             carePackageSpread = 450;
             carePackageAmount = 200;
         } else if (players.size() <= 20) {
-            worldSize = 750;
             carePackageSpread = 500;
             carePackageAmount = 200;
         } else {
-            worldSize = 1000;
             carePackageSpread = 750;
             carePackageAmount = 450;
         }
+
+        world.setWorldSizeByPlayers(players.size());
 
         // Seasons
         ArrayList<String> seasonsString = fileTools.GetLinesFromFile("Files\\" + communityMode + "\\seasonData.txt");
@@ -734,7 +730,6 @@ public class Main {
         files.add(TeamScore());
 
 
-        files.add(WorldPreload());
         files.add(HorseFrostWalker());
 
         files.add(UpdateSidebar());
@@ -837,6 +832,10 @@ public class Main {
                 CommandBuilder.fill(-5, 221, -5, 5, 226, 5, BlockType.air));
         fileCommands.add(Execute.In(Dimension.overworld) +
                 CommandBuilder.setBlock(0, 222, -5, BlockType.cherry_wall_sign + "[facing=south,waterlogged=false]{back_text:{messages:[\"You have\",\"angered\",\"the Gods!\",\"\"]},front_text:{messages:[\"In solidarity of\",\"our removed\",\"Command Center\",\"2014 - 2025\"]},is_waxed:0b}"));
+
+        // Pre-generate terrain
+        ArrayList<String> worldGen = world.worldGen();
+        fileCommands.addAll(worldGen);
 
         return new FileData(FileName.initialize, fileCommands);
     }
@@ -1043,7 +1042,7 @@ public class Main {
 
         // Create marker entity
         fileCommands.add(CommandBuilder.killEntity("@e[type=marker]"));
-        fileCommands.add(CommandBuilder.summonEntity(EntityType.marker, new Coordinate(0, worldBottom, 0), "{CustomName:\"\\\"Admin\\\"\"}"));
+        fileCommands.add(CommandBuilder.summonEntity(EntityType.marker, new Coordinate(0, Constant.worldBottom, 0), "{CustomName:\"\\\"Admin\\\"\"}"));
 
         // Set time
         fileCommands.add(CommandBuilder.setTime(0));
@@ -1118,7 +1117,7 @@ public class Main {
         }
 
         // Set world border
-        fileCommands.add(CommandBuilder.setWorldBorder(2 * worldSize));
+        fileCommands.add(CommandBuilder.setWorldBorder(2 * world.getSize()));
 
         // Display ranks
         fileCommands.add(Schedule.callFunction(FileName.display_rank));
@@ -1222,7 +1221,7 @@ public class Main {
         }
 
         fileCommands.add(Execute.In(Dimension.overworld) +
-                CommandBuilder.spreadPlayers(0, 0, (int) (0.3 * worldSize), (int) (0.9 * worldSize), respectTeams, "@a"));
+                CommandBuilder.spreadPlayers(0, 0, (int) (0.3 * world.getSize()), (int) (0.9 * world.getSize()), respectTeams, "@a"));
 
         return new FileData(FileName.spread_players, fileCommands);
     }
@@ -1291,7 +1290,7 @@ public class Main {
         }
 
         // Show world border size in actionbar
-        texts.add(new Text(Color.light_purple, false, false, "World size: ±" + worldSize + " blocks"));
+        texts.add(new Text(Color.light_purple, false, false, "World size: ±" + world.getSize() + " blocks"));
         Title showWorldSize = new Title("@a", TitleType.subtitle, texts);
 
         // Change title display time
@@ -1322,7 +1321,7 @@ public class Main {
                 CommandBuilder.setGameMode(GameMode.survival, "@a[distance=..20,gamemode=!creative]"));
         fileCommands.add(Execute.In(Dimension.overworld, false) +
                 Execute.PositionedNext(new Coordinate(0, 151, 0), true) +
-                CommandBuilder.spreadPlayers(0, 0, (int) (0.3 * worldSize), (int) (0.9 * worldSize), true, "@a[distance=..20,gamemode=survival]"));
+                CommandBuilder.spreadPlayers(0, 0, (int) (0.3 * world.getSize()), (int) (0.9 * world.getSize()), true, "@a[distance=..20,gamemode=survival]"));
 
         return new FileData(FileName.battle_royale, fileCommands);
     }
@@ -1839,7 +1838,7 @@ public class Main {
                     CommandBuilder.setBlock(c.getX(), c.getY() + 10, c.getZ(), BlockType.redstone_block, SetBlockType.destroy));
 
             // Initialize object
-            for (int i = c.getY() + 12; i < worldHeight; i++) {
+            for (int i = c.getY() + 12; i < Constant.worldHeight; i++) {
                 // Specify block to be changed
 
                 fileCommands.add(Execute.In(c.getDimension(), false) +
@@ -1869,37 +1868,6 @@ public class Main {
         fileCommands.add(new ScoreboardObjective().setDisplay(ScoreboardLocation.sidebar, Objective.Rank));
 
         return new FileData(FileName.display_rank, fileCommands);
-    }
-
-    private FileData WorldPreload() {
-        ArrayList<String> fileCommands = new ArrayList<>();
-
-        // Add score to keep track of time
-        fileCommands.add(scoreboard.Add(Constant.admin, getObjectiveByName(Objective.WorldLoad), 1));
-        fileCommands.add(scoreboard.Add(Constant.admin, getObjectiveByName(Objective.Time), 1));
-
-        /* Spread players to load world */
-        // Load overworld
-        fileCommands.add(Execute.If(new Entity("@e[scores={WorldLoad=400..,Time=..9600}]"), false) +
-                Execute.InNext(Dimension.overworld, true) +
-                CommandBuilder.spreadPlayers(0, 0, 5, worldSize, false, "@a"));
-        // Load nether
-        fileCommands.add(Execute.If(new Entity("@e[scores={WorldLoad=400..,Time=9600..}]"), false) +
-                Execute.InNext(Dimension.the_nether, true) +
-                CommandBuilder.spreadPlayers(0, 0, 5, (worldSize / 4), false, "@a"));
-
-        // Reset counter
-        fileCommands.add(Execute.If(new Entity("@e[scores={WorldLoad=400..}]")) +
-                scoreboard.Reset("@e", getObjectiveByName(Objective.WorldLoad)));
-
-        // Stop world preload
-        fileCommands.add(Execute.If(new Entity("@e[scores={Time=12000..}]"), false) +
-                Execute.InNext(Dimension.overworld, true) +
-                CommandBuilder.teleportEntity("@a", new Coordinate(0, 221, 0)));
-        fileCommands.add(Execute.If(new Entity("@e[scores={Time=12000..}]")) +
-                Schedule.callFunction(FileName.developer_mode));
-
-        return new FileData(FileName.world_pre_load, fileCommands);
     }
 
     private FileData HorseFrostWalker() {
@@ -2115,7 +2083,7 @@ public class Main {
         // Teleport player if they are not in a team
         fileCommands.add(Execute.As(new Entity(respawnPlayer), false) +
                 Execute.IfNext(new Entity("@s[team=]"), true) +
-                CommandBuilder.spreadPlayers(0, 0, (int) (0.3 * worldSize), (int) (0.7 * worldSize), false, "@s"));
+                CommandBuilder.spreadPlayers(0, 0, (int) (0.3 * world.getSize()), (int) (0.7 * world.getSize()), false, "@s"));
 
         // Remove player heads
         fileCommands.add(Execute.As(new Entity("@a[nbt={Inventory:[{id:\"minecraft:player_head\"}]}]")) +
