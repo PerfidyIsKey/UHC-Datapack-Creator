@@ -71,7 +71,6 @@ public class Main {
     private int traitorWaitTime;
     private static final int traitorMode = 1;
     private String communityName;
-    public static final Execute execute = new Execute();
     public static final Scoreboard scoreboard = new Scoreboard();
 
     private final Text bannerText = new Text(Color.dark_gray, true, false, " | ");
@@ -268,7 +267,7 @@ public class Main {
         }
 
         // Control Point parameters
-        singleton.setMinToCPScore( secPerMinute * cpTickPerSecond * controlPoints.get(0).getAddRate());
+        singleton.setMinToCPScore(secPerMinute * cpTickPerSecond * controlPoints.get(0).getAddRate());
         cp2ActivationScore = cp2ActivationInMin * singleton.getMinToCPScore();
         maxCPScore = cpCaptureInMin * singleton.getMinToCPScore();
 
@@ -673,8 +672,6 @@ public class Main {
     }
 
 
-
-
     // Create function files
     private void makeFunctionFiles() {
         // Developer mode
@@ -696,7 +693,6 @@ public class Main {
 
         files.add(EquipGear());
         files.add(GodMode());
-
 
 
         for (int i = 1; i < 9; i++) {
@@ -736,7 +732,6 @@ public class Main {
         files.add(TraitorHandout());
         files.add(TraitorActionBar());
         files.add(TeamScore());
-
 
 
         files.add(WorldPreload());
@@ -1147,12 +1142,11 @@ public class Main {
         fileCommands.add(scoreboard.Reset("Solo", getObjectiveByName(Objective.CPScore)));
 
         // Set CP score dummy scoreboard entries
-        int minToCPScore = secPerMinute * tickPerSecond * controlPoints.get(0).getAddRate();
-        fileCommands.add(scoreboard.Set("Perk1", getObjectiveByName(Objective.CPScore), 3 * minToCPScore));
-        fileCommands.add(scoreboard.Set("Perk2", getObjectiveByName(Objective.CPScore), 6 * minToCPScore));
-        fileCommands.add(scoreboard.Set("Perk3", getObjectiveByName(Objective.CPScore), 12 * minToCPScore));
-        fileCommands.add(scoreboard.Set("Perk4", getObjectiveByName(Objective.CPScore), 15 * minToCPScore));
-        fileCommands.add(scoreboard.Set("TimeVictory", getObjectiveByName(Objective.CPScore), 20 * minToCPScore));
+        fileCommands.add(scoreboard.Set("Perk1", getObjectiveByName(Objective.CPScore), 3 * singleton.getMinToCPScore()));
+        fileCommands.add(scoreboard.Set("Perk2", getObjectiveByName(Objective.CPScore), 6 * singleton.getMinToCPScore()));
+        fileCommands.add(scoreboard.Set("Perk3", getObjectiveByName(Objective.CPScore), 12 * singleton.getMinToCPScore()));
+        fileCommands.add(scoreboard.Set("Perk4", getObjectiveByName(Objective.CPScore), 15 * singleton.getMinToCPScore()));
+        fileCommands.add(scoreboard.Set("TimeVictory", getObjectiveByName(Objective.CPScore), 20 * singleton.getMinToCPScore()));
 
         // Reset player scales
         fileCommands.add(Execute.As(new Entity("@a")) +
@@ -1813,11 +1807,11 @@ public class Main {
         // Teams
         for (int i = 1; i < controlPoints.size() + 1; i++) {
             for (Team t : teams) {
-                fileCommands.add(Execute.As(new Entity("@r[limit=1,gamemode=!spectator]")) +
-                        scoreboard.Operation(Constant.admin, getObjectiveByName("" + Objective.CP + i + t.getName()), ComparatorType.greater, "@s[team=" + t.getName() + "]", getObjectiveByName(Objective.ControlPoint.extendName(i))));
+                fileCommands.add(Execute.As(new Entity("@r[limit=1,gamemode=!spectator,team=" + t.getName() + "]")) +
+                        scoreboard.Operation(Constant.admin, getObjectiveByName("" + Objective.CP + i + t.getName()), ComparatorType.greater, "@s", getObjectiveByName(Objective.ControlPoint.extendName(i))));
 
-                fileCommands.add(Execute.As(new Entity("@r[limit=1,gamemode=!spectator]")) +
-                        scoreboard.Operation("@s[team=" + t.getName() + "]", getObjectiveByName(Objective.ControlPoint.extendName(i)), ComparatorType.greater, Constant.admin, getObjectiveByName("" + Objective.CP + i + t.getName())));
+                fileCommands.add(Execute.As(new Entity("@r[limit=1,gamemode=!spectator,team=" + t.getName() + "]")) +
+                        scoreboard.Operation("@s", getObjectiveByName(Objective.ControlPoint.extendName(i)), ComparatorType.greater, Constant.admin, getObjectiveByName("" + Objective.CP + i + t.getName())));
             }
         }
 
@@ -2684,6 +2678,7 @@ public class Main {
 
         return new FileData(FileName.current_test_function, fileCommands);
     }
+
     private FileData DeveloperPotionControl() {
         // Turn potion effect into function execution
         ArrayList<String> fileCommands = new ArrayList<>();
