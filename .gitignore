@@ -26,7 +26,6 @@ Server/**
 # But don't ignore these files
 !Server/eula.txt
 !Server/paper-*.jar
-!Server/server.properties
 
 # Don't ignore .jar files in Server/plugins/
 !Server/plugins/

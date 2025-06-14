@@ -18,7 +18,7 @@ public class Main {
 
 
     //TODO: Automate process using args.
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         new Main().run(args);
     }
 
@@ -81,7 +81,7 @@ public class Main {
     private ArrayList<FileData> files = new ArrayList<>();
 
 
-    private void run(String[] args) {
+    private void run(String[] args) throws IOException {
         singleton = Singleton.getInstance();
         communityModeChange();
         createDatapack();
@@ -126,7 +126,7 @@ public class Main {
         }
     }
 
-    private void changeCommunitymode(int num) {
+    private void changeCommunitymode(int num) throws IOException {
         if (num == 0) {
             communityMode = CommunityMode.DIORITE;
         }
@@ -149,7 +149,7 @@ public class Main {
         }
     }
 
-    private void communityModeChange() {
+    private void communityModeChange() throws IOException {
         files = new ArrayList<>();
         initSaveDir();
         fileTools = new FileTools(version, dataPackLocation, dataPackName, worldLocation);
@@ -158,6 +158,7 @@ public class Main {
         makeFunctionFiles();
         files.addAll(fileTools.makeRecipeFiles());
         makeLootTableFiles();
+        makeServerProperties();
     }
 
     private void initSaveDir() {
@@ -654,6 +655,29 @@ public class Main {
         files.add(fileData);
     }
 
+    private void makeServerProperties() throws IOException {
+        String filePath = "Server\\server.properties";
+
+        ServerProperties properties = new ServerProperties();
+
+        // Override fields
+        properties.set("difficulty", Difficulty.hard);
+        properties.set("enable-command-block", true);
+        properties.set("gamemode", GameMode.adventure);
+        properties.set("level-seed", 27515851);
+        properties.set("max-players", 50);
+        properties.set("motd", communityName + " UHC S" + uhcNumber);
+        properties.set("online-mode", false);
+        properties.set("simulation-distance", 5);
+        properties.set("spawn-protection", 0);
+        properties.set("view-distance", 7);
+
+        // Save back to the same file
+        properties.saveToFile(filePath);
+
+        System.out.println("Server properties updated successfully.");
+    }
+
     // Get by name functions
     private BossBar getBossbarByName(String name) {
         return bossBars.stream().filter(bossBar -> name.equals(bossBar.getName())).findAny().orElse(null);
@@ -831,11 +855,7 @@ public class Main {
         fileCommands.add(Execute.In(Dimension.overworld) +
                 CommandBuilder.fill(-5, 221, -5, 5, 226, 5, BlockType.air));
         fileCommands.add(Execute.In(Dimension.overworld) +
-                CommandBuilder.setBlock(0, 222, -5, BlockType.cherry_wall_sign + "[facing=south,waterlogged=false]{back_text:{messages:[\"You have\",\"angered\",\"the Gods!\",\"\"]},front_text:{messages:[\"In solidarity of\",\"our removed\",\"Command Center\",\"2014 - 2025\"]},is_waxed:0b}"));
-
-        // Pre-generate terrain
-        ArrayList<String> worldGen = world.worldGen();
-        fileCommands.addAll(worldGen);
+                CommandBuilder.setBlock(0, 222, -5, BlockType.cherry_wall_sign + "[facing=south,waterlogged=false]{back_text:{messages:['{\"text\":\"You have\"}','{\"text\":\"angered\"}','{\"text\":\"the Gods!\"}','{\"text\":\"\"}']},front_text:{messages:['{\"text\":\"In rememberance\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"" + CommandBuilder.summonEntity(EntityType.firework_rocket, new Coordinate(0, 0, 0, ReferenceFrame.relative)) + "\"}}','{\"text\":\"of our\"}','{\"text\":\"Command Center\"}','{\"text\":\"2014-2025\"}']},is_waxed:0b}"));
 
         return new FileData(FileName.initialize, fileCommands);
     }
