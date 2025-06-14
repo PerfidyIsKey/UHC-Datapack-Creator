@@ -32,6 +32,9 @@ public class Update {
                 Execute.UnlessNext("@e[tag=" + Tag.TraitorsAssigned + "]", true) +
                 Schedule.callFunction(FileName.traitor_handout));
 
+        // Schedule functions
+        fileCommands.add(Schedule.callFunction(FileName.update_min_health));
+
         // Self-schedule timer
         fileCommands.add(Schedule.callFunction(FileName.timer_main_1, 1, Duration.ticks));
 
@@ -43,11 +46,8 @@ public class Update {
         ArrayList<String> fileCommands = new ArrayList<>();
 
         // Schedule functions
-        fileCommands.add(Execute.If("@p[scores={Deaths=1}]") +
-                Schedule.callFunction(FileName.handle_player_death));
         fileCommands.add(Schedule.callFunction(FileName.horse_frost_walker));
         fileCommands.add(Schedule.callFunction(FileName.remove_banned_items));
-        fileCommands.add(Schedule.callFunction(FileName.update_min_health));
         fileCommands.add(Execute.If("@p[scores={TimesCalled=1..}]") +
                 Schedule.callFunction(FileName.update_player_distance));    // Check if custom team can be made
 
@@ -62,6 +62,8 @@ public class Update {
         ArrayList<String> fileCommands = new ArrayList<>();
 
         // Schedule functions
+        fileCommands.add(Execute.If("@p[scores={Deaths=1}]") +
+                Schedule.callFunction(FileName.handle_player_death));
         fileCommands.add(Schedule.callFunction(FileName.locate_teammate));
         fileCommands.add(Execute.Unless("@p[tag=IronMan]") +
                 Schedule.callFunction(FileName.check_iron_man));    // Update Iron Man candidates

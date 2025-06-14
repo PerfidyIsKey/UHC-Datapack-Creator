@@ -30,6 +30,10 @@ public class Scoreboard {
         return "scoreboard players operation " + targets + " " + targetObjective.getName() + " " + operation + " " + source + " " + sourceObjective.getName();
     }
 
+    public String Operation(String targets, Objective targetObjective, ComparatorType operation, String source, Objective sourceObjective) {
+        return "scoreboard players operation " + targets + " " + targetObjective + " " + operation + " " + source + " " + sourceObjective;
+    }
+
     // players reset
     public String Reset(String targets) {
         return "scoreboard players reset " + targets;
