@@ -862,10 +862,20 @@ public class Main {
 
     private FileData PlayerDeathHandler() {
         ArrayList<String> fileCommands = new ArrayList<>();
-        Boolean debug = false;
+        ArrayList<TextItem> texts = new ArrayList<>();
+        Boolean debug = true;
+
+        if (debug) {
+
+            texts.add(new Select(false, false, "@e[tag=" + Tag.RespawnDisabled + "]"));
+            texts.add(new Text(false, false, " update"));
+
+            fileCommands.add(new TellRaw("@a[tag=Debug]", texts).sendRaw());
+            texts.clear();
+        }
 
         // Indicate when the first 20 minutes of the game have elapsed
-        fileCommands.add(Execute.If("@e[scores={Time2=24000..}]", false) +
+        fileCommands.add(Execute.If("@e[scores={Time2=" + (20 * Main.secPerMinute * Constant.tickFrequencyMed) + "..}]", false) +
                 Execute.UnlessNext("@e[tag=" + Tag.RespawnDisabled + "]", true) +
                 Schedule.callFunction(FileName.disable_respawn));
 
@@ -885,7 +895,6 @@ public class Main {
         fileCommands.add(scoreboard.Set(Constant.admin, getObjectiveByName(Objective.MinHealth), 20));
 
         // Announce traitor deaths
-        ArrayList<TextItem> texts = new ArrayList<>();
         texts.add(bannerText);
         texts.add(new Text(Color.red, true, false, "A TRAITOR HAS BEEN ELIMINATED"));
         texts.add(bannerText);
@@ -951,7 +960,7 @@ public class Main {
 
         // Do automatic respawn in the first 20 minutes
         fileCommands.add(Execute.Unless("@e[tag=" + Tag.RespawnDisabled + "]") +
-                Schedule.callFunction(FileName.respawn_player, 1));
+                Schedule.callFunction(FileName.respawn_player, 5, Duration.ticks));
         return new FileData(FileName.handle_player_death, fileCommands);
     }
 
@@ -1126,6 +1135,8 @@ public class Main {
         fileCommands.add(CommandBuilder.removeTag("@a", Tag.RespawnDisabled));
         fileCommands.add(CommandBuilder.removeTag("@a", Tag.IronManCandidate));
         fileCommands.add(CommandBuilder.removeTag("@a", Tag.IronMan));
+        fileCommands.add(CommandBuilder.removeTag("@a", Tag.Respawn));
+        fileCommands.add(CommandBuilder.removeTag("@a", Tag.OnCP));
         fileCommands.add(CommandBuilder.removeTag(Constant.admin, Tag.GameStarted));
         fileCommands.add(CommandBuilder.removeTag(Constant.admin, Tag.CarePackagesDropped));
         fileCommands.add(CommandBuilder.removeTag(Constant.admin, Tag.ControlPoint1Enabled));
@@ -1544,12 +1555,20 @@ public class Main {
         }
 
         // Players without a team
+
+        // Give player dummy tag
+        fileCommands.add(Execute.In(currentCP.getCoordinate().getDimension(), false) +
+                Execute.AsNext("@p[gamemode=!spectator,team=,x=" + (currentCP.getCoordinate().getX() - 6) + ",y=" + (currentCP.getCoordinate().getY() - 1) + ",z=" + (currentCP.getCoordinate().getZ() - 6) + ",dx=12,dy=12,dz=12]", true) +
+                CommandBuilder.addTag("@s", Tag.OnCP));
+
         // Give players on the Control Point score
         fileCommands.add(Execute.In(currentCP.getCoordinate().getDimension(), false) +
-                Execute.AsNext("@a[gamemode=!spectator,team=]") +
-                Execute.IfNext("@s[x=" + (currentCP.getCoordinate().getX() - 6) + ",y=" + (currentCP.getCoordinate().getY() - 1) + ",z=" + (currentCP.getCoordinate().getZ() - 6) + ",dx=12,dy=12,dz=12]") +
-                Execute.UnlessNext("@p[gamemode=!spectator,x=" + (currentCP.getCoordinate().getX() - 6) + ",y=" + (currentCP.getCoordinate().getY() - 1) + ",z=" + (currentCP.getCoordinate().getZ() - 6) + ",dx=12,dy=12,dz=12,team=!]", true) +
+                Execute.AsNext("@p[tag=" + Tag.OnCP + "]") +
+                Execute.UnlessNext("@p[gamemode=!spectator,x=" + (currentCP.getCoordinate().getX() - 6) + ",y=" + (currentCP.getCoordinate().getY() - 1) + ",z=" + (currentCP.getCoordinate().getZ() - 6) + ",dx=12,dy=12,dz=12,tag=!" + Tag.OnCP + "]", true) +
                 scoreboard.Add("@s", getObjectiveByName(Objective.ControlPoint.extendName(i)), currentCP.getAddRate()));
+
+        // Remove player dummy tag
+        fileCommands.add(CommandBuilder.removeTag("@p[tag=" + Tag.OnCP + "]", Tag.OnCP));
 
         // Update CP glass color
         fileCommands.add(Execute.In(currentCP.getCoordinate().getDimension(), false) +
@@ -1840,6 +1859,15 @@ public class Main {
                     scoreboard.Operation(Constant.admin, getObjectiveByName("" + Objective.CP + 2 + t.getName()), ComparatorType.greater, Constant.admin, getObjectiveByName("" + Objective.CP + 1 + t.getName())));
         }
 
+        // Individual players
+        fileCommands.add(Execute.In(controlPoints.get(0).getCoordinate().getDimension(), false) +
+                Execute.AsNext(new Entity("@r[limit=1,gamemode=!spectator,x=" + (controlPoints.get(0).getCoordinate().getX() - 6) + ",y=" + (controlPoints.get(0).getCoordinate().getY() - 1) + ",z=" + (controlPoints.get(0).getCoordinate().getZ() - 6) + ",dx=12,dy=12,dz=12,team=]"), true) +
+                scoreboard.Operation("@s", getObjectiveByName(Objective.ControlPoint.extendName(1)), ComparatorType.greater, "@s", getObjectiveByName(Objective.ControlPoint.extendName(2))));
+
+        fileCommands.add(Execute.In(controlPoints.get(1).getCoordinate().getDimension(), false) +
+                Execute.AsNext(new Entity("@r[limit=1,gamemode=!spectator,x=" + (controlPoints.get(1).getCoordinate().getX() - 6) + ",y=" + (controlPoints.get(1).getCoordinate().getY() - 1) + ",z=" + (controlPoints.get(1).getCoordinate().getZ() - 6) + ",dx=12,dy=12,dz=12,team=]"), true) +
+                scoreboard.Operation("@s", getObjectiveByName(Objective.ControlPoint.extendName(2)), ComparatorType.greater, "@s", getObjectiveByName(Objective.ControlPoint.extendName(1))));
+
         return new FileData(FileName.team_score, fileCommands);
     }
 
@@ -2078,10 +2106,7 @@ public class Main {
         ArrayList<String> fileCommands = new ArrayList<>();
 
         // Find player with lowest health
-        fileCommands.add(Execute.As(new Entity("@r[gamemode=!spectator]"), false) +
-                Execute.IfNext("@s", getObjectiveByName(Objective.Hearts), ComparatorType.less, Constant.adminSingle, getObjectiveByName(Objective.MinHealth)) +
-                Execute.StoreNext(ExecuteStore.result, Constant.admin, getObjectiveByName(Objective.MinHealth), true) +
-                scoreboard.Get("@s", getObjectiveByName(Objective.Hearts)));
+        fileCommands.add(scoreboard.Operation(Constant.admin, Objective.MinHealth, ComparatorType.less, "@a[gamemode=!spectator]", Objective.Hearts));
 
         return new FileData(FileName.update_min_health, fileCommands);
     }
@@ -2091,19 +2116,23 @@ public class Main {
         ArrayList<String> fileCommands = new ArrayList<>();
 
         // Define player that needs to be respawned
-        String respawnPlayer = "@p[tag=" + Tag.Respawn + "]";
+        String respawnPlayer = "@a[tag=" + Tag.Respawn + "]";
 
         // Teleport player to their team
         for (Team t : teams) {
-            fileCommands.add(Execute.As(new Entity(respawnPlayer), false) +
-                    Execute.IfNext(new Entity("@s[team=" + t.getName() + "]"), true) +
-                    CommandBuilder.teleportEntity("@s", "@r[gamemode=!spectator, team=" + t.getName() + "]"));
+            fileCommands.add(Execute.As(new Entity(respawnPlayer)) +
+                    CommandBuilder.teleportEntity("@s[team=" + t.getName() + "]", "@r[gamemode=!spectator, team=" + t.getName() + "]"));
+
+            fileCommands.add(Execute.At(respawnPlayer, false) +
+                    Execute.AsNext(respawnPlayer) +
+                    Execute.UnlessNext("@p[team=" + t.getName() + ",tag=!Respawn]", true) +
+                    CommandBuilder.spreadPlayers(0, 0, (int) (0.3 * world.getSize()), (int) (0.7 * world.getSize()), false, "@s[team=" + t.getName() + "]"));
         }
 
         // Teleport player if they are not in a team
-        fileCommands.add(Execute.As(new Entity(respawnPlayer), false) +
-                Execute.IfNext(new Entity("@s[team=]"), true) +
-                CommandBuilder.spreadPlayers(0, 0, (int) (0.3 * world.getSize()), (int) (0.7 * world.getSize()), false, "@s"));
+        fileCommands.add(Execute.As(new Entity(respawnPlayer)) +
+                CommandBuilder.spreadPlayers(0, 0, (int) (0.3 * world.getSize()), (int) (0.7 * world.getSize()), false, "@s[team=]"));
+
 
         // Remove player heads
         fileCommands.add(Execute.As(new Entity("@a[nbt={Inventory:[{id:\"minecraft:player_head\"}]}]")) +
@@ -2114,14 +2143,14 @@ public class Main {
         // Give players teammate tools
         if (teamMode == 2) {
             // Team caller
-            fileCommands.add(Execute.If("@p[tag=" + Tag.Respawn + ",team=]") +
-                    CommandBuilder.giveItem(respawnPlayer, BlockType.goat_horn, "[instrument=\"minecraft:ponder_goat_horn\",use_cooldown={seconds:30},enchantments={\"minecraft:vanishing_curse\":1}]"));
+            fileCommands.add(Execute.As(new Entity(respawnPlayer)) +
+                    CommandBuilder.giveItem("@s[team=]", BlockType.goat_horn, "[instrument=\"minecraft:ponder_goat_horn\",use_cooldown={seconds:30},enchantments={\"minecraft:vanishing_curse\":1}]"));
         }
 
         // Teammate tracker
         for (Team team : teams) {
-            fileCommands.add(Execute.If("@p[tag=" + Tag.Respawn + ",team=" + team.getName() + "]") +
-                    CommandBuilder.giveItem(respawnPlayer, BlockType.bundle.extendColor(team.getGlassColor()), "[enchantments={levels:{\"minecraft:vanishing_curse\":1}},custom_data={locateTeammate:1b}]"));
+            fileCommands.add(Execute.As(respawnPlayer) +
+                    CommandBuilder.giveItem("@s[team=" + team.getName() + "]", BlockType.bundle.extendColor(team.getGlassColor()), "[enchantments={levels:{\"minecraft:vanishing_curse\":1}},custom_data={locateTeammate:1b}]"));
         }
 
         // Set respawn health
@@ -2129,12 +2158,14 @@ public class Main {
             int indexFront = 2 * i + 1;
             int indexRear = 2 * (i + 1);
 
-            fileCommands.add(Execute.If(new Entity("@e[scores={MinHealth=" + indexFront + ".." + indexRear + "}]")) +
-                    CommandBuilder.setAttributeBase(respawnPlayer, AttributeType.max_health, i + 1));
+            fileCommands.add(Execute.As(respawnPlayer, false) +
+                    Execute.IfNext(new Entity("@e[scores={MinHealth=" + indexFront + ".." + indexRear + "}]"), true) +
+                    CommandBuilder.setAttributeBase("@s", AttributeType.max_health, i + 1));
         }
         fileCommands.add(CommandBuilder.giveEffect(respawnPlayer, Effect.health_boost, 1, 0));
         fileCommands.add(CommandBuilder.clearEffect(respawnPlayer, Effect.health_boost));
-        fileCommands.add(CommandBuilder.setAttributeBase(respawnPlayer, AttributeType.max_health, 20));
+        fileCommands.add(Execute.As(respawnPlayer) +
+                CommandBuilder.setAttributeBase("@s", AttributeType.max_health, 20));
 
         // Set player's gamemode to survival
         fileCommands.add(Execute.As(new Entity(respawnPlayer)) +
@@ -2352,7 +2383,8 @@ public class Main {
 
         // Players without a team
         for (int i = 1; i < controlPoints.size() + 1; i++) {
-            fileCommands.add(scoreboard.Operation("Solo", getObjectiveByName(Objective.CPScore), ComparatorType.greater, "@r[team=]", getObjectiveByName(Objective.ControlPoint.extendName(i))));
+            fileCommands.add(Execute.As("@a[team=]") +
+                    scoreboard.Operation("Solo", getObjectiveByName(Objective.CPScore), ComparatorType.greater, "@s", getObjectiveByName(Objective.ControlPoint.extendName(i))));
         }
 
         return new FileData(FileName.update_public_cp_score, fileCommands);
