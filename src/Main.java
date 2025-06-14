@@ -1116,6 +1116,7 @@ public class Main {
         fileCommands.add(CommandBuilder.removeTag("@a", Tag.IronManCandidate));
         fileCommands.add(CommandBuilder.removeTag("@a", Tag.IronMan));
         fileCommands.add(CommandBuilder.removeTag("@a", Tag.Respawn));
+        fileCommands.add(CommandBuilder.removeTag("@a", Tag.OnCP));
         fileCommands.add(CommandBuilder.removeTag(Constant.admin, Tag.GameStarted));
         fileCommands.add(CommandBuilder.removeTag(Constant.admin, Tag.CarePackagesDropped));
         fileCommands.add(CommandBuilder.removeTag(Constant.admin, Tag.ControlPoint1Enabled));
@@ -1534,12 +1535,20 @@ public class Main {
         }
 
         // Players without a team
+
+        // Give player dummy tag
+        fileCommands.add(Execute.In(currentCP.getCoordinate().getDimension(), false) +
+                Execute.AsNext("@p[gamemode=!spectator,team=,x=" + (currentCP.getCoordinate().getX() - 6) + ",y=" + (currentCP.getCoordinate().getY() - 1) + ",z=" + (currentCP.getCoordinate().getZ() - 6) + ",dx=12,dy=12,dz=12]", true) +
+                CommandBuilder.addTag("@s", Tag.OnCP));
+
         // Give players on the Control Point score
         fileCommands.add(Execute.In(currentCP.getCoordinate().getDimension(), false) +
-                Execute.AsNext("@a[gamemode=!spectator,team=]") +
-                Execute.IfNext("@s[x=" + (currentCP.getCoordinate().getX() - 6) + ",y=" + (currentCP.getCoordinate().getY() - 1) + ",z=" + (currentCP.getCoordinate().getZ() - 6) + ",dx=12,dy=12,dz=12]") +
-                Execute.UnlessNext("@p[gamemode=!spectator,x=" + (currentCP.getCoordinate().getX() - 6) + ",y=" + (currentCP.getCoordinate().getY() - 1) + ",z=" + (currentCP.getCoordinate().getZ() - 6) + ",dx=12,dy=12,dz=12,team=!]", true) +
+                Execute.AsNext("@p[tag=" + Tag.OnCP + "]") +
+                Execute.UnlessNext("@p[gamemode=!spectator,x=" + (currentCP.getCoordinate().getX() - 6) + ",y=" + (currentCP.getCoordinate().getY() - 1) + ",z=" + (currentCP.getCoordinate().getZ() - 6) + ",dx=12,dy=12,dz=12,tag=!" + Tag.OnCP + "]", true) +
                 scoreboard.Add("@s", getObjectiveByName(Objective.ControlPoint.extendName(i)), currentCP.getAddRate()));
+
+        // Remove player dummy tag
+        fileCommands.add(CommandBuilder.removeTag("@p[tag=" + Tag.OnCP + "]", Tag.OnCP));
 
         // Update CP glass color
         fileCommands.add(Execute.In(currentCP.getCoordinate().getDimension(), false) +
@@ -1829,6 +1838,15 @@ public class Main {
                     Execute.AsNext(new Entity("@r[limit=1,gamemode=!spectator,x=" + (controlPoints.get(1).getCoordinate().getX() - 6) + ",y=" + (controlPoints.get(1).getCoordinate().getY() - 1) + ",z=" + (controlPoints.get(1).getCoordinate().getZ() - 6) + ",dx=12,dy=12,dz=12,team=" + t.getName() + "]"), true) +
                     scoreboard.Operation(Constant.admin, getObjectiveByName("" + Objective.CP + 2 + t.getName()), ComparatorType.greater, Constant.admin, getObjectiveByName("" + Objective.CP + 1 + t.getName())));
         }
+
+        // Individual players
+        fileCommands.add(Execute.In(controlPoints.get(0).getCoordinate().getDimension(), false) +
+                Execute.AsNext(new Entity("@r[limit=1,gamemode=!spectator,x=" + (controlPoints.get(0).getCoordinate().getX() - 6) + ",y=" + (controlPoints.get(0).getCoordinate().getY() - 1) + ",z=" + (controlPoints.get(0).getCoordinate().getZ() - 6) + ",dx=12,dy=12,dz=12,team=]"), true) +
+                scoreboard.Operation("@s", getObjectiveByName(Objective.ControlPoint.extendName(1)), ComparatorType.greater, "@s", getObjectiveByName(Objective.ControlPoint.extendName(2))));
+
+        fileCommands.add(Execute.In(controlPoints.get(1).getCoordinate().getDimension(), false) +
+                Execute.AsNext(new Entity("@r[limit=1,gamemode=!spectator,x=" + (controlPoints.get(1).getCoordinate().getX() - 6) + ",y=" + (controlPoints.get(1).getCoordinate().getY() - 1) + ",z=" + (controlPoints.get(1).getCoordinate().getZ() - 6) + ",dx=12,dy=12,dz=12,team=]"), true) +
+                scoreboard.Operation("@s", getObjectiveByName(Objective.ControlPoint.extendName(2)), ComparatorType.greater, "@s", getObjectiveByName(Objective.ControlPoint.extendName(1))));
 
         return new FileData(FileName.team_score, fileCommands);
     }
@@ -2345,7 +2363,8 @@ public class Main {
 
         // Players without a team
         for (int i = 1; i < controlPoints.size() + 1; i++) {
-            fileCommands.add(scoreboard.Operation("Solo", getObjectiveByName(Objective.CPScore), ComparatorType.greater, "@r[team=]", getObjectiveByName(Objective.ControlPoint.extendName(i))));
+            fileCommands.add(Execute.As("@a[team=]") +
+                    scoreboard.Operation("Solo", getObjectiveByName(Objective.CPScore), ComparatorType.greater, "@s", getObjectiveByName(Objective.ControlPoint.extendName(i))));
         }
 
         return new FileData(FileName.update_public_cp_score, fileCommands);

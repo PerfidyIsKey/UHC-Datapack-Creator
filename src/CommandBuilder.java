@@ -256,6 +256,14 @@ public class CommandBuilder {
         return "tag " + entity + " remove " + tag;
     }
 
+    public static String removeTag(Tag tag) {
+        return removeTag("@a", tag);
+    }
+
+    public static String removeTag(String tag) {
+        return removeTag("@a", tag);
+    }
+
     // Give item
     public static String giveItem(String entity, BlockType item) {
         return giveItem(entity, item, "");
