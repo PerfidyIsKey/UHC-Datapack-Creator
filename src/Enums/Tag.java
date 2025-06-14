@@ -14,6 +14,7 @@ public enum Tag {
     IronMan("IronMan"),
     IronManCandidate("IronManCandidate"),
     LookingForTeamMate("LookingForTeamMate"),
+    OnCP("OnCP"),
     ReceivedPerk("ReceivedPerk"),
     Respawn("Respawn"),
     RespawnDisabled("RespawnDisabled"),
