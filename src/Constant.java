@@ -1,6 +1,9 @@
 import Enums.WorldShape;
 
 public class Constant {
+    // Unit conversion
+    public static final int secPerMinute = 60;
+
     // Admin entity
     public static final String admin = "@e[type=marker]";
     public static final String adminSingle = "@e[type=marker,limit=1]";

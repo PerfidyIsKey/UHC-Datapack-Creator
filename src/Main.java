@@ -50,13 +50,12 @@ public class Main {
     private ArrayList<String> quotes = new ArrayList<>();
     private ArrayList<BossBar> bossBars = new ArrayList<>();
     private World world = new World(0, Constant.worldHeight, Constant.worldBottom, Constant.worldShape);
-    public static final int secPerMinute = 60;
-    private static final int cpTickPerSecond = 1;
+    private static final int cpTickPerSecond = 4;
     private static final int cp2ActivationInMin = 6;
     private int cp2ActivationScore;
     private int maxCPScore;
     private static final int cpCaptureInMin = 20;
-    private static final int maxCPScoreBossbar = 20 * secPerMinute * cpTickPerSecond * 2;
+    private static final int maxCPScoreBossbar = 20 * Constant.secPerMinute * cpTickPerSecond * 2;
     private static final int cpMessageThreshold = 5 * Constant.tickFrequencyLong;
     private static final int minJoinDistance = 10;
     private static final int minDamage = 9;
@@ -263,7 +262,7 @@ public class Main {
         }
 
         // Control Point parameters
-        singleton.setMinToCPScore(secPerMinute * cpTickPerSecond * controlPoints.get(0).getAddRate());
+        singleton.setMinToCPScore(Constant.secPerMinute * cpTickPerSecond * controlPoints.get(0).getAddRate());
         cp2ActivationScore = cp2ActivationInMin * singleton.getMinToCPScore();
         maxCPScore = cpCaptureInMin * singleton.getMinToCPScore();
 
@@ -791,7 +790,6 @@ public class Main {
         files.add(Updating.TimerMain5());
         files.add(Updating.TimerMain20());
         // Control Point timers
-//        files.add(Updating.TimerControlPoint5());
         files.add(Updating.TimerControlPoint20());
         // Traitor Faction timers
         files.add(Updating.TimerTraitor5());
@@ -875,11 +873,6 @@ public class Main {
             fileCommands.add(new TellRaw("@a[tag=Debug]", texts).sendRaw());
             texts.clear();
         }
-
-        // Indicate when the first 20 minutes of the game have elapsed
-        fileCommands.add(Execute.If("@e[scores={Time2=" + (20 * Main.secPerMinute * Constant.tickFrequencyMed) + "..}]", false) +
-                Execute.UnlessNext("@e[tag=" + Tag.RespawnDisabled + "]", true) +
-                Schedule.callFunction(FileName.disable_respawn));
 
         // Play thunder sound
         fileCommands.add(CommandBuilder.playSound(Sound.THUNDER, SoundSource.master, "@a", "~", "~50", "~", "100", "1", "0"));
@@ -1377,7 +1370,6 @@ public class Main {
         fileCommands.addAll(CommandBuilder.forceLoadAndSet(controlPoints.get(0).getCoordinate().getX(), controlPoints.get(0).getCoordinate().getY() + 3, controlPoints.get(0).getCoordinate().getZ(), BlockType.air, SetBlockType.replace));
 
         // Schedule continuous functions
-//        fileCommands.add(Schedule.callFunction(FileName.timer_control_point_5));
         fileCommands.add(Schedule.callFunction(FileName.timer_control_point_20));
 
         // Give admin tag for disabling self-rescheduling
@@ -2116,7 +2108,7 @@ public class Main {
         }
 
         // Reschedule displaying a new quote
-        fileCommands.add(Schedule.callFunction(FileName.display_quotes, 7 * secPerMinute));
+        fileCommands.add(Schedule.callFunction(FileName.display_quotes, 7 * Constant.secPerMinute));
 
         return new FileData(FileName.display_quotes, fileCommands);
     }
@@ -2316,7 +2308,6 @@ public class Main {
         fileCommands.add(Schedule.clearFunction(FileName.timer_main_1));
         fileCommands.add(Schedule.clearFunction(FileName.timer_main_5));
         fileCommands.add(Schedule.clearFunction(FileName.timer_main_20));
-//        fileCommands.add(Schedule.clearFunction(FileName.timer_control_point_5));
         fileCommands.add(Schedule.clearFunction(FileName.timer_control_point_20));
         fileCommands.add(Schedule.clearFunction(FileName.timer_traitor_5));
         fileCommands.add(Schedule.clearFunction(FileName.timer_traitor_20));
@@ -2746,8 +2737,8 @@ public class Main {
         // Schedule messages that are only shown once
         ArrayList<String> fileCommands = new ArrayList<>();
 
-        fileCommands.add(Schedule.callFunction(FileName.messages_pvp, 5 * secPerMinute));
-        fileCommands.add(Schedule.callFunction(FileName.messages_eternal_day, 20 * secPerMinute));
+        fileCommands.add(Schedule.callFunction(FileName.messages_pvp, 5 * Constant.secPerMinute));
+        fileCommands.add(Schedule.callFunction(FileName.messages_eternal_day, 20 * Constant.secPerMinute));
 
         return new FileData(FileName.messages_schedule_single, fileCommands);
     }
