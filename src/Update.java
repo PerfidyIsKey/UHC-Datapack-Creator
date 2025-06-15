@@ -77,11 +77,6 @@ public class Update {
         fileCommands.add(Execute.Store(ExecuteStore.result, "CurrentTime", Objective.Time) +
                 Main.scoreboard.Get(Constant.adminSingle,Objective.TimeDum));
 
-        // Disable respawn if 20 minutes have elapsed
-        fileCommands.add(Execute.If("@e[scores={Time2=" + (20 * Constant.secPerMinute * Constant.tickFrequencyShort) + "..}]", false) +
-                Execute.UnlessNext("@e[tag=" + Tag.RespawnDisabled + "]", true) +
-                Schedule.callFunction(FileName.disable_respawn));
-
         // Self-schedule timer
         fileCommands.add(Schedule.callFunction(FileName.timer_main_20, 20, Duration.ticks));
 
