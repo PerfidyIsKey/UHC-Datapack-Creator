@@ -20,14 +20,16 @@ public class GameStart {
         fileCommands.add(Schedule.callFunction(FileName.timer_main_20));
 
         // Other cycles
-        fileCommands.add(Schedule.callFunction(FileName.display_quotes, 7 * Main.secPerMinute));
+        fileCommands.add(Schedule.callFunction(FileName.display_quotes, 7 * Constant.secPerMinute));
 
         // Single execute
         fileCommands.add(Schedule.callFunction(FileName.messages_schedule_single));
 
         // Disable developer timers
-
         fileCommands.add(Schedule.clearFunction(FileName.timer_developer_20));
+
+        // Disable automatic player respawn after 20 minutes
+        fileCommands.add(Schedule.callFunction(FileName.disable_respawn, 20 * Constant.secPerMinute));
 
         fileCommands.add(CommandBuilder.addTag(Constant.admin, Tag.GameStarted));
 

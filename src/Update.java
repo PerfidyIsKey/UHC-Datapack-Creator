@@ -22,13 +22,13 @@ public class Update {
         fileCommands.add(Main.scoreboard.Add(Constant.admin, Objective.Time2, 1));
 
         // Scheduled events
-        fileCommands.add(Execute.If("@e[scores={Time2=" + (20 * Main.secPerMinute * Constant.tickFrequencyShort) + "..}]", false) +
+        fileCommands.add(Execute.If("@e[scores={Time2=" + (20 * Constant.secPerMinute * Constant.tickFrequencyShort) + "..}]", false) +
                 Execute.UnlessNext("@e[tag=" + Tag.CarePackagesDropped + "]", true) +
                 Schedule.callFunction(FileName.drop_carepackages));
-        fileCommands.add(Execute.If("@e[scores={Time2=" + (30 * Main.secPerMinute * Constant.tickFrequencyShort) + "..}]", false) +
+        fileCommands.add(Execute.If("@e[scores={Time2=" + (30 * Constant.secPerMinute * Constant.tickFrequencyShort) + "..}]", false) +
                 Execute.UnlessNext("@e[tag=" + Tag.ControlPoint1Enabled + "]", true) +
                 Schedule.callFunction(FileName.initialize_control_point));
-        fileCommands.add(Execute.If("@e[scores={Time2=" + (40 * Main.secPerMinute * Constant.tickFrequencyShort) + "..}]", false) +
+        fileCommands.add(Execute.If("@e[scores={Time2=" + (40 * Constant.secPerMinute * Constant.tickFrequencyShort) + "..}]", false) +
                 Execute.UnlessNext("@e[tag=" + Tag.TraitorsAssigned + "]", true) +
                 Schedule.callFunction(FileName.traitor_handout));
 
@@ -50,6 +50,7 @@ public class Update {
         fileCommands.add(Schedule.callFunction(FileName.remove_banned_items));
         fileCommands.add(Execute.If("@p[scores={TimesCalled=1..}]") +
                 Schedule.callFunction(FileName.update_player_distance));    // Check if custom team can be made
+        fileCommands.add(Schedule.callFunction(FileName.locate_teammate));
 
         // Self-schedule timer
         fileCommands.add(Schedule.callFunction(FileName.timer_main_5, 5, Duration.ticks));
@@ -64,7 +65,6 @@ public class Update {
         // Schedule functions
         fileCommands.add(Execute.If("@p[scores={Deaths=1}]") +
                 Schedule.callFunction(FileName.handle_player_death));
-        fileCommands.add(Schedule.callFunction(FileName.locate_teammate));
         fileCommands.add(Execute.Unless("@p[tag=IronMan]") +
                 Schedule.callFunction(FileName.check_iron_man));    // Update Iron Man candidates
         fileCommands.add(Execute.As("@a") +
