@@ -51,7 +51,7 @@ public class Main {
     private ArrayList<BossBar> bossBars = new ArrayList<>();
     private World world = new World(0, Constant.worldHeight, Constant.worldBottom, Constant.worldShape);
     public static final int secPerMinute = 60;
-    private static final int cpTickPerSecond = 4;
+    private static final int cpTickPerSecond = 1;
     private static final int cp2ActivationInMin = 6;
     private int cp2ActivationScore;
     private int maxCPScore;
@@ -1539,7 +1539,7 @@ public class Main {
     }
 
 
-    //todo only run singleplayer one when having singleplayers
+
     private FileData Controlpoint(int i) {
         ArrayList<String> fileCommands = new ArrayList<>();
 
@@ -1602,7 +1602,7 @@ public class Main {
 
         // Remove player OnCP tag
         fileCommands.add(Execute.In(currentCP.getCoordinate().getDimension(), false) +
-                Execute.AsNext("@p[gamemode=!spectator,tag=" + Tag.OnCP + i + "]") +
+                Execute.AsNext("@a[gamemode=!spectator,tag=" + Tag.OnCP + i + "]") +
                 Execute.UnlessNext("@s[x=" + (currentCP.getCoordinate().getX() - 6) + ",y=" + (currentCP.getCoordinate().getY() - 1) + ",z=" + (currentCP.getCoordinate().getZ() - 6) + ",dx=12,dy=12,dz=12]", true) +
                 CommandBuilder.removeTag("@s", Tag.OnCP + "" + i));
 
@@ -1616,6 +1616,11 @@ public class Main {
         fileCommands.add(Execute.In(currentCP.getCoordinate().getDimension(), false) +
                 Execute.AsNext("@a[gamemode=!spectator,tag="+Tag.OnCP + i +"]") +
                 Execute.IfNext("@s[gamemode=!spectator,tag=!" + Tag.Capping + i + "]", true) +
+                CommandBuilder.removeTag("@a", Tag.Capping + "" + i));
+
+        fileCommands.add(Execute.In(currentCP.getCoordinate().getDimension(), false) +
+                Execute.AsNext("@a[gamemode=!spectator,tag="+Tag.Capping + i +"]") +
+                Execute.UnlessNext("@s[gamemode=!spectator,tag=" + Tag.OnCP + i + "]", true) +
                 CommandBuilder.removeTag("@a", Tag.Capping + "" + i));
 
         return new FileData("" + FileName.control_point_tag_ + i, fileCommands);
@@ -1872,8 +1877,6 @@ public class Main {
 
     private FileData TeamScore() {
         ArrayList<String> fileCommands = new ArrayList<>();
-
-        // TODO This can definitely be improved
 
         // Teams
         for (int i = 1; i < controlPoints.size() + 1; i++) {

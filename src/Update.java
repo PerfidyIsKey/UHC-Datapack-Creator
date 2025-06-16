@@ -102,9 +102,9 @@ public class Update {
         fileCommands.add(Schedule.callFunction("" + FileName.control_point_messages_ + 1));
 
         //Schedule Controlpoint functionality for CP2, when enabled
-        fileCommands.add(Execute.UnlessNext("@e[tag=" + Tag.ControlPoint2Enabled + "]", true) +
+        fileCommands.add(Execute.If("@e[tag=" + Tag.ControlPoint2Enabled + "]", true) +
                 Schedule.callFunction("" + FileName.control_point_ + 2));
-        fileCommands.add(Execute.UnlessNext("@e[tag=" + Tag.ControlPoint2Enabled + "]", true) +
+        fileCommands.add(Execute.If("@e[tag=" + Tag.ControlPoint2Enabled + "]", true) +
                 Schedule.callFunction("" + FileName.control_point_messages_ + 2));
 
         //Functionality based on CP score.
