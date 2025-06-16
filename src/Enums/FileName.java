@@ -50,6 +50,8 @@ public enum FileName {
     spawn_control_points,
     initialize_control_point,
     control_point_,
+    control_point_tag_,
+    control_point_score_,
     team_score,
     second_control_point,
     bbvalue,

@@ -51,7 +51,7 @@ public class Main {
     private ArrayList<BossBar> bossBars = new ArrayList<>();
     private World world = new World(0, Constant.worldHeight, Constant.worldBottom, Constant.worldShape);
     public static final int secPerMinute = 60;
-    private static final int cpTickPerSecond = 4;
+    private static final int cpTickPerSecond = 1;
     private static final int cp2ActivationInMin = 6;
     private int cp2ActivationScore;
     private int maxCPScore;
@@ -745,6 +745,8 @@ public class Main {
 
         for (int i = 1; i < controlPoints.size() + 1; i++) {
             files.add(Controlpoint(i));
+            files.add(ControlPointTag(i));
+            files.add(ControlPointScore(i));
             files.add(ControlPointMessages(i));
         }
 
@@ -789,7 +791,7 @@ public class Main {
         files.add(Updating.TimerMain5());
         files.add(Updating.TimerMain20());
         // Control Point timers
-        files.add(Updating.TimerControlPoint5());
+//        files.add(Updating.TimerControlPoint5());
         files.add(Updating.TimerControlPoint20());
         // Traitor Faction timers
         files.add(Updating.TimerTraitor5());
@@ -1136,7 +1138,10 @@ public class Main {
         fileCommands.add(CommandBuilder.removeTag("@a", Tag.IronManCandidate));
         fileCommands.add(CommandBuilder.removeTag("@a", Tag.IronMan));
         fileCommands.add(CommandBuilder.removeTag("@a", Tag.Respawn));
-        fileCommands.add(CommandBuilder.removeTag("@a", Tag.OnCP));
+        fileCommands.add(CommandBuilder.removeTag("@a", Tag.OnCP + "" + 1));
+        fileCommands.add(CommandBuilder.removeTag("@a", Tag.OnCP + "" + 2));
+        fileCommands.add(CommandBuilder.removeTag("@a", Tag.Capping + "" + 1));
+        fileCommands.add(CommandBuilder.removeTag("@a", Tag.Capping + "" + 2));
         fileCommands.add(CommandBuilder.removeTag(Constant.admin, Tag.GameStarted));
         fileCommands.add(CommandBuilder.removeTag(Constant.admin, Tag.CarePackagesDropped));
         fileCommands.add(CommandBuilder.removeTag(Constant.admin, Tag.ControlPoint1Enabled));
@@ -1372,7 +1377,7 @@ public class Main {
         fileCommands.addAll(CommandBuilder.forceLoadAndSet(controlPoints.get(0).getCoordinate().getX(), controlPoints.get(0).getCoordinate().getY() + 3, controlPoints.get(0).getCoordinate().getZ(), BlockType.air, SetBlockType.replace));
 
         // Schedule continuous functions
-        fileCommands.add(Schedule.callFunction(FileName.timer_control_point_5));
+//        fileCommands.add(Schedule.callFunction(FileName.timer_control_point_5));
         fileCommands.add(Schedule.callFunction(FileName.timer_control_point_20));
 
         // Give admin tag for disabling self-rescheduling
@@ -1533,44 +1538,23 @@ public class Main {
         return new FileData(FileName.death_match, fileCommands);
     }
 
+
+
     private FileData Controlpoint(int i) {
         ArrayList<String> fileCommands = new ArrayList<>();
 
         // Current Control Point
         ControlPoint currentCP = controlPoints.get(i - 1);
 
-        // Players in teams
+        // Update CP glass color teams
         for (Team team : teams) {
-            // Give players on the Control Point score
-            fileCommands.add(Execute.In(currentCP.getCoordinate().getDimension(), false) +
-                    Execute.AsNext("@a[gamemode=!spectator,team=" + team.getName() + "]") +
-                    Execute.IfNext("@p[gamemode=!spectator,team=" + team.getName() + ",x=" + (currentCP.getCoordinate().getX() - 6) + ",y=" + (currentCP.getCoordinate().getY() - 1) + ",z=" + (currentCP.getCoordinate().getZ() - 6) + ",dx=12,dy=12,dz=12]") +
-                    Execute.UnlessNext("@p[gamemode=!spectator,x=" + (currentCP.getCoordinate().getX() - 6) + ",y=" + (currentCP.getCoordinate().getY() - 1) + ",z=" + (currentCP.getCoordinate().getZ() - 6) + ",dx=12,dy=12,dz=12,team=!" + team.getName() + "]", true) +
-                    scoreboard.Add("@s", getObjectiveByName(Objective.ControlPoint.extendName(i)), currentCP.getAddRate()));
-
             // Update CP glass color
             fileCommands.add(Execute.In(currentCP.getCoordinate().getDimension(), false) +
                     Execute.IfNext("@p[gamemode=!spectator,team=" + team.getName() + "]", getObjectiveByName(Objective.ControlPoint.extendName(i)), ComparatorType.greater, Constant.adminSingle, getObjectiveByName(Objective.Highscore.extendName(i)), true) +
                     CommandBuilder.setBlock(currentCP.getCoordinate().getX(), currentCP.getCoordinate().getY() + 1, currentCP.getCoordinate().getZ(), "minecraft:" + team.getGlassColor() + "_stained_glass", SetBlockType.replace));
         }
 
-        // Players without a team
-
-        // Give player dummy tag
-        fileCommands.add(Execute.In(currentCP.getCoordinate().getDimension(), false) +
-                Execute.AsNext("@p[gamemode=!spectator,team=,x=" + (currentCP.getCoordinate().getX() - 6) + ",y=" + (currentCP.getCoordinate().getY() - 1) + ",z=" + (currentCP.getCoordinate().getZ() - 6) + ",dx=12,dy=12,dz=12]", true) +
-                CommandBuilder.addTag("@s", Tag.OnCP));
-
-        // Give players on the Control Point score
-        fileCommands.add(Execute.In(currentCP.getCoordinate().getDimension(), false) +
-                Execute.AsNext("@p[tag=" + Tag.OnCP + "]") +
-                Execute.UnlessNext("@p[gamemode=!spectator,x=" + (currentCP.getCoordinate().getX() - 6) + ",y=" + (currentCP.getCoordinate().getY() - 1) + ",z=" + (currentCP.getCoordinate().getZ() - 6) + ",dx=12,dy=12,dz=12,tag=!" + Tag.OnCP + "]", true) +
-                scoreboard.Add("@s", getObjectiveByName(Objective.ControlPoint.extendName(i)), currentCP.getAddRate()));
-
-        // Remove player dummy tag
-        fileCommands.add(CommandBuilder.removeTag("@p[tag=" + Tag.OnCP + "]", Tag.OnCP));
-
-        // Update CP glass color
+        // Update CP glass color solo
         fileCommands.add(Execute.In(currentCP.getCoordinate().getDimension(), false) +
                 Execute.IfNext("@r[limit=1,gamemode=!spectator,team=]", getObjectiveByName(Objective.ControlPoint.extendName(i)), ComparatorType.greater, Constant.adminSingle, getObjectiveByName(Objective.Highscore.extendName(i)), true) +
                 CommandBuilder.setBlock(currentCP.getCoordinate().getX(), currentCP.getCoordinate().getY() + 1, currentCP.getCoordinate().getZ(), "minecraft:white_stained_glass", SetBlockType.replace));
@@ -1581,7 +1565,65 @@ public class Main {
         fileCommands.add(Execute.In(currentCP.getCoordinate().getDimension()) +
                 CommandBuilder.fill(currentCP.getCoordinate().getX(), currentCP.getCoordinate().getY(), currentCP.getCoordinate().getZ(), currentCP.getCoordinate().getX(), currentCP.getCoordinate().getY(), currentCP.getCoordinate().getZ(), BlockType.beacon));
 
+        fileCommands.add(Schedule.callFunction("" + FileName.control_point_tag_ + i));
+        fileCommands.add(Schedule.callFunction("" + FileName.control_point_score_ + i));
+
         return new FileData("" + FileName.control_point_ + i, fileCommands);
+    }
+
+    private FileData ControlPointScore(int i) {
+        ArrayList<String> fileCommands = new ArrayList<>();
+        ControlPoint currentCP = controlPoints.get(i - 1);
+
+        // Give team players on the Control Point score
+        for (Team team : teams) {
+            fileCommands.add(Execute.In(currentCP.getCoordinate().getDimension(), false) +
+                    Execute.AsNext("@p[gamemode=!spectator,tag=" + Tag.OnCP + i + ",team=" + team.getName() + "]") +
+                    Execute.UnlessNext("@p[gamemode=!spectator,tag=" + Tag.OnCP + i + ",team=!" + team.getName() + "]", true) +
+                    scoreboard.Add("@s", getObjectiveByName(Objective.ControlPoint.extendName(i)), currentCP.getAddRate()));
+        }
+
+        // Give single players on the Control Point score
+        fileCommands.add(Execute.In(currentCP.getCoordinate().getDimension(), false) +
+                Execute.AsNext("@a[tag=" + Tag.Capping + i + "]", true) +
+                scoreboard.Add("@s", getObjectiveByName(Objective.ControlPoint.extendName(i)), currentCP.getAddRate()));
+
+        return new FileData("" + FileName.control_point_score_ + i, fileCommands);
+    }
+
+    private FileData ControlPointTag(int i) {
+        ArrayList<String> fileCommands = new ArrayList<>();
+        ControlPoint currentCP = controlPoints.get(i - 1);
+
+        // Give player OnCP tag
+        fileCommands.add(Execute.In(currentCP.getCoordinate().getDimension(), false) +
+                Execute.AsNext("@p[gamemode=!spectator,tag=!" + Tag.OnCP + i + ",x=" + (currentCP.getCoordinate().getX() - 6) + ",y=" + (currentCP.getCoordinate().getY() - 1) + ",z=" + (currentCP.getCoordinate().getZ() - 6) + ",dx=12,dy=12,dz=12]", true) +
+                CommandBuilder.addTag("@s", Tag.OnCP + "" + i));
+
+        // Remove player OnCP tag
+        fileCommands.add(Execute.In(currentCP.getCoordinate().getDimension(), false) +
+                Execute.AsNext("@a[gamemode=!spectator,tag=" + Tag.OnCP + i + "]") +
+                Execute.UnlessNext("@s[x=" + (currentCP.getCoordinate().getX() - 6) + ",y=" + (currentCP.getCoordinate().getY() - 1) + ",z=" + (currentCP.getCoordinate().getZ() - 6) + ",dx=12,dy=12,dz=12]", true) +
+                CommandBuilder.removeTag("@s", Tag.OnCP + "" + i));
+
+        //Give player Capping tag
+        fileCommands.add(Execute.In(currentCP.getCoordinate().getDimension(), false) +
+                Execute.AsNext("@p[gamemode=!spectator,team=,tag=" + Tag.OnCP + i + "]") +
+                Execute.UnlessNext("@a[tag=" + Tag.Capping + i + "]", true) +
+                CommandBuilder.addTag("@s", Tag.Capping + "" + i));
+
+        //remove player Capping tag
+        fileCommands.add(Execute.In(currentCP.getCoordinate().getDimension(), false) +
+                Execute.AsNext("@a[gamemode=!spectator,tag="+Tag.OnCP + i +"]") +
+                Execute.IfNext("@s[gamemode=!spectator,tag=!" + Tag.Capping + i + "]", true) +
+                CommandBuilder.removeTag("@a", Tag.Capping + "" + i));
+
+        fileCommands.add(Execute.In(currentCP.getCoordinate().getDimension(), false) +
+                Execute.AsNext("@a[gamemode=!spectator,tag="+Tag.Capping + i +"]") +
+                Execute.UnlessNext("@s[gamemode=!spectator,tag=" + Tag.OnCP + i + "]", true) +
+                CommandBuilder.removeTag("@a", Tag.Capping + "" + i));
+
+        return new FileData("" + FileName.control_point_tag_ + i, fileCommands);
     }
 
     private FileData ControlPointMessages(int i) {
@@ -1835,8 +1877,6 @@ public class Main {
 
     private FileData TeamScore() {
         ArrayList<String> fileCommands = new ArrayList<>();
-
-        // TODO This can definitely be improved
 
         // Teams
         for (int i = 1; i < controlPoints.size() + 1; i++) {
@@ -2276,7 +2316,7 @@ public class Main {
         fileCommands.add(Schedule.clearFunction(FileName.timer_main_1));
         fileCommands.add(Schedule.clearFunction(FileName.timer_main_5));
         fileCommands.add(Schedule.clearFunction(FileName.timer_main_20));
-        fileCommands.add(Schedule.clearFunction(FileName.timer_control_point_5));
+//        fileCommands.add(Schedule.clearFunction(FileName.timer_control_point_5));
         fileCommands.add(Schedule.clearFunction(FileName.timer_control_point_20));
         fileCommands.add(Schedule.clearFunction(FileName.timer_traitor_5));
         fileCommands.add(Schedule.clearFunction(FileName.timer_traitor_20));

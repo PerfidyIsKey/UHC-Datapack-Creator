@@ -87,17 +87,6 @@ public class Update {
         // Timer for Control Point continuous functions with interval of 5 ticks
         ArrayList<String> fileCommands = new ArrayList<>();
 
-        // Schedule continuous functions
-        fileCommands.add(Schedule.callFunction(FileName.bbvalue));
-        for (int i = 1; i < 3; i++) {
-            fileCommands.add(Schedule.callFunction("" + FileName.control_point_ + i));
-            fileCommands.add(Execute.If("@p[scores={ControlPoint" + i + "=" + 20 * singleton.getMinToCPScore() + "..}]", false) +
-                    Execute.UnlessNext("@e[tag=" + Tag.ControlPointCaptured + "]", true) +
-                    Schedule.callFunction(FileName.control_point_captured));
-        }
-        fileCommands.add(Schedule.callFunction(FileName.team_score));
-
-
         // Self-schedule timer
         fileCommands.add(Schedule.callFunction(FileName.timer_control_point_5, 5, Duration.ticks));
 
@@ -108,15 +97,35 @@ public class Update {
         // Timer for Control Point continuous functions with interval of 20 ticks
         ArrayList<String> fileCommands = new ArrayList<>();
 
-        // Schedule continuous functions
+        //Schedule Controlpoint functionality for CP1
+        fileCommands.add(Schedule.callFunction("" + FileName.control_point_ + 1));
+        fileCommands.add(Schedule.callFunction("" + FileName.control_point_messages_ + 1));
+
+        //Schedule Controlpoint functionality for CP2, when enabled
+        fileCommands.add(Execute.If("@e[tag=" + Tag.ControlPoint2Enabled + "]", true) +
+                Schedule.callFunction("" + FileName.control_point_ + 2));
+        fileCommands.add(Execute.If("@e[tag=" + Tag.ControlPoint2Enabled + "]", true) +
+                Schedule.callFunction("" + FileName.control_point_messages_ + 2));
+
+        //Functionality based on CP score.
+        //Check if Controlpoint is captured.
         for (int i = 1; i < 3; i++) {
-            fileCommands.add(Schedule.callFunction("" + FileName.control_point_messages_ + i));
+            fileCommands.add(Execute.If("@p[scores={ControlPoint" + i + "=" + 20 * singleton.getMinToCPScore() + "..}]", false) +
+                    Execute.UnlessNext("@e[tag=" + Tag.ControlPointCaptured + "]", true) +
+                    Schedule.callFunction(FileName.control_point_captured));
         }
+
         fileCommands.add(Schedule.callFunction(FileName.control_point_perks));
         fileCommands.add(Schedule.callFunction(FileName.update_public_cp_score));
+
+        //enable second controlpoint when necessary.
         fileCommands.add(Execute.If("@p[scores={ControlPoint1=" + 6 * singleton.getMinToCPScore() + "..}]", false) +
                 Execute.UnlessNext("@e[tag=" + Tag.ControlPoint2Enabled + "]", true) +
                 Schedule.callFunction(FileName.second_control_point));
+
+        // manage boss bar
+        fileCommands.add(Schedule.callFunction(FileName.bbvalue));
+        fileCommands.add(Schedule.callFunction(FileName.team_score));
 
 
         // Self-schedule timer
