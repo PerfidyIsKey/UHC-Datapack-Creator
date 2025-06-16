@@ -50,7 +50,7 @@ public class Main {
     private ArrayList<String> quotes = new ArrayList<>();
     private ArrayList<BossBar> bossBars = new ArrayList<>();
     private World world = new World(0, Constant.worldHeight, Constant.worldBottom, Constant.worldShape);
-    private static final int cpTickPerSecond = 4;
+    private static final int cpTickPerSecond = 1;
     private static final int cp2ActivationInMin = 6;
     private int cp2ActivationScore;
     private int maxCPScore;
