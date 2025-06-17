@@ -2117,7 +2117,7 @@ public class Main {
     private FileData UpdateMineCount() {
         ArrayList<String> fileCommands = new ArrayList<>();
 
-        fileCommands.add(scoreboard.Set("@a[scores={Mining=1..}]", Objective.Mining, 0));
+        fileCommands.add(scoreboard.Set("@s", Objective.Mining, 0));
 
         ArrayList<String> blocks = new ArrayList<>();
         blocks.add("Stone");

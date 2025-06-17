@@ -33,7 +33,7 @@ public class ServerProperties {
             Map.entry("initial-enabled-packs", "vanilla"),
             Map.entry("level-name", "world"),
             Map.entry("level-seed", "2751584509"),
-            Map.entry("level-type", "default"),
+            Map.entry("level-type", "normal"),
             Map.entry("log-ips", "true"),
             Map.entry("max-chained-neighbor-updates", "1000000"),
             Map.entry("max-players", "50"),
