@@ -1135,6 +1135,8 @@ public class Main {
         fileCommands.add(CommandBuilder.removeTag("@a", Tag.OnCP + "" + 2));
         fileCommands.add(CommandBuilder.removeTag("@a", Tag.Capping + "" + 1));
         fileCommands.add(CommandBuilder.removeTag("@a", Tag.Capping + "" + 2));
+        fileCommands.add(CommandBuilder.removeTag("@a", Tag.AttackingCP + "" + 1));
+        fileCommands.add(CommandBuilder.removeTag("@a", Tag.AttackingCP + "" + 2));
         fileCommands.add(CommandBuilder.removeTag(Constant.admin, Tag.GameStarted));
         fileCommands.add(CommandBuilder.removeTag(Constant.admin, Tag.CarePackagesDropped));
         fileCommands.add(CommandBuilder.removeTag(Constant.admin, Tag.ControlPoint1Enabled));
