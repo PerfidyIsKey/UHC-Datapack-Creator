@@ -10,6 +10,7 @@ import Predicates.*;
 import TeamGeneration.*;
 
 import java.io.IOException;
+import java.nio.file.*;
 import java.util.*;
 
 import static java.lang.Integer.parseInt;
@@ -71,6 +72,7 @@ public class Main {
     private final Text bannerText = new Text(Color.dark_gray, true, false, " | ");
 
     private TeamGenerator teamGenerator;
+    private ServerProperties properties = new ServerProperties();
 
     private Singleton singleton;
 
@@ -150,6 +152,7 @@ public class Main {
 
     private void communityModeChange() throws IOException {
         files = new ArrayList<>();
+        makeServerProperties();
         initSaveDir();
         fileTools = new FileTools(version, dataPackLocation, dataPackName, worldLocation);
 
@@ -157,7 +160,6 @@ public class Main {
         makeFunctionFiles();
         files.addAll(fileTools.makeRecipeFiles());
         makeLootTableFiles();
-        makeServerProperties();
     }
 
     private void initSaveDir() {
@@ -166,9 +168,18 @@ public class Main {
         }
         uhcNumber = fileTools.getContentOutOfFile("Files\\" + communityMode + "\\uhc_data.txt", "uhcNumber");
 
-        worldLocation = "Server\\world\\";
+        worldLocation = "Server\\" + properties.get("level-name") + "\\";
 
         dataPackLocation = worldLocation + "datapacks\\";
+
+        Path path = Paths.get(dataPackLocation);
+        try {
+            if (Files.notExists(path)) {
+                Files.createDirectories(path);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         dataPackName = "uhc-datapack-" + uhcNumber + "v" + version;
         fileLocation = dataPackLocation + dataPackName + "\\data\\uhc\\";
@@ -656,8 +667,6 @@ public class Main {
 
     private void makeServerProperties() throws IOException {
         String filePath = "Server\\server.properties";
-
-        ServerProperties properties = new ServerProperties();
 
         // Override fields
         properties.set("difficulty", Difficulty.hard);
