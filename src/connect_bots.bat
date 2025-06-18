@@ -5,7 +5,7 @@ REM Set server and JAR info
 set SERVER_IP=192.168.0.115
 set SERVER_PORT=25565
 set JAR=mc-bots-1.2.14.jar
-set BASE_CMD=java -jar ..\Server\plugins\%JAR% -s %SERVER_IP%:%SERVER_PORT%
+set BASE_CMD=java -jar ..\plugins\%JAR% -s %SERVER_IP%:%SERVER_PORT%
 set NICKNAMES_FILE=..\Files\DIORITE\nicknames.txt
 
 REM Clean up old nicknames file

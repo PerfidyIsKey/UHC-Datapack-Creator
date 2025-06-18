@@ -29,6 +29,7 @@ public class Main {
     private String uhcNumber;
     private static final String version = "4.0";
     private String dataPackLocation;
+    private String pluginLocation;
     private String worldLocation;
     private String dataPackName;
     private static final String namespace = "uhc";
@@ -72,6 +73,7 @@ public class Main {
 
     private TeamGenerator teamGenerator;
     private ServerProperties properties = new ServerProperties();
+    private ArrayList<PaperPlugin> plugins = new ArrayList<>();
 
     private Singleton singleton;
 
@@ -153,12 +155,13 @@ public class Main {
         files = new ArrayList<>();
         makeServerProperties();
         initSaveDir();
-        fileTools = new FileTools(version, dataPackLocation, dataPackName, worldLocation, namespace);
+        fileTools = new FileTools(version, dataPackLocation, dataPackName, worldLocation, pluginLocation, namespace);
 
         initGameData();
         makeFunctionFiles();
         files.addAll(fileTools.makeRecipeFiles());
         makeLootTableFiles();
+        definePlugins();
     }
 
     private void initSaveDir() {
@@ -166,6 +169,8 @@ public class Main {
             fileTools = new FileTools();
         }
         uhcNumber = fileTools.getContentOutOfFile("Files\\" + communityMode + "\\uhc_data.txt", "uhcNumber");
+
+        pluginLocation = "Server\\plugins\\";
 
         worldLocation = "Server\\" + properties.get("level-name") + "\\";
 
@@ -674,15 +679,25 @@ public class Main {
         properties.set("level-seed", 27515851);
         properties.set("max-players", 50);
         properties.set("motd", communityName + " UHC S" + uhcNumber);
-        properties.set("online-mode", false);
         properties.set("simulation-distance", 5);
         properties.set("spawn-protection", 0);
         properties.set("view-distance", 7);
+        if (OperationMode.bots) {
+            properties.set("online-mode", false);
+        }
 
         // Save back to the same file
         properties.saveToFile(filePath);
 
         System.out.println("Server properties updated successfully.");
+    }
+
+    private void definePlugins() throws IOException {
+        plugins.add(new PaperPlugin("spark-1.10.119-bukkit.jar", OperationMode.debug));
+        plugins.add(new PaperPlugin("Chunky-Bukkit-1.4.28.jar", OperationMode.debug));
+        plugins.add(new PaperPlugin("openaudiomc-6.10.7.jar", OperationMode.proximity, "OpenAudioMc\\"));
+
+        fileTools.copyPlugins(plugins);
     }
 
     // Get by name functions

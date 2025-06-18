@@ -27,14 +27,6 @@ Server/**
 !Server/eula.txt
 !Server/paper-*.jar
 
-# Don't ignore .jar files in Server/plugins/
-!Server/plugins/
-!Server/plugins/*.jar
-
-# Don't ignore config.yml in OpenAudioMc subfolder
-!Server/plugins/OpenAudioMc/
-!Server/plugins/OpenAudioMc/config.yml
-
 # Copy files
 playerConnections_copy.txt
 nicknames.txt

@@ -41,7 +41,7 @@ public class ServerProperties {
             Map.entry("max-world-size", "29999984"),
             Map.entry("motd", "A Minecraft Server"),
             Map.entry("network-compression-threshold", "256"),
-            Map.entry("online-mode", "false"),
+            Map.entry("online-mode", "true"),
             Map.entry("op-permission-level", "4"),
             Map.entry("pause-when-empty-seconds", "-1"),
             Map.entry("player-idle-timeout", "0"),

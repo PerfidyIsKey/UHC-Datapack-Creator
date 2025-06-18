@@ -4,13 +4,11 @@ import FileGeneration.FileData;
 import FileGeneration.Recipe;
 import HelperClasses.PlayerConnection;
 import TeamGeneration.Season;
+import HelperClasses.PaperPlugin;
 
 import javax.swing.*;
 import java.io.*;
-import java.nio.file.FileAlreadyExistsException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.nio.file.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -21,16 +19,18 @@ public class FileTools {
     private String dataPackLocation;
     private String dataPackName;
     private String worldLocation;
+    private String pluginLocation;
     private String namespace;
 
     public FileTools() {
     }
 
-    public FileTools(String version, String dataPackLocation, String dataPackName, String worldLocation, String namespace) {
+    public FileTools(String version, String dataPackLocation, String dataPackName, String worldLocation, String pluginLocation, String namespace) {
         this.version = version;
         this.dataPackLocation = dataPackLocation;
         this.dataPackName = dataPackName;
         this.worldLocation = worldLocation;
+        this.pluginLocation = pluginLocation;
         this.namespace = namespace;
     }
 
@@ -181,6 +181,64 @@ public class FileTools {
         }
     }
 
+    public void copyPlugins(ArrayList<PaperPlugin> plugins) throws IOException {
+        // Clear plugins folder
+        clearDirectory(pluginLocation);
+
+        String from;
+        for (PaperPlugin plugin : plugins) {
+            if (plugin.getActive()) {
+                from = "plugins\\" + plugin.getMainFileName();
+                copyFile(from, pluginLocation);
+                if (plugin.getExtraFileNames() != null) {
+                    String[] extra = plugin.getExtraFileNames();
+                    for (String s : extra) {
+                        from = "plugins\\" + s;
+                        copyFile(from, pluginLocation);
+                    }
+                }
+            }
+        }
+    }
+
+    public static void copyFile(String sourcePath, String destinationDir) throws IOException {
+        Path source = Paths.get(sourcePath);
+        Path destination = Paths.get(destinationDir);
+
+        if (!Files.exists(source)) {
+            throw new FileNotFoundException("Source does not exist: " + source);
+        }
+
+        if (!Files.exists(destination)) {
+            Files.createDirectories(destination);
+        }
+
+        Path destinationPath = destination.resolve(source.getFileName());
+
+        if (Files.isDirectory(source)) {
+            copyDirectory(source, destinationPath);
+        } else {
+            Files.copy(source, destinationPath, StandardCopyOption.REPLACE_EXISTING);
+        }
+    }
+
+    private static void copyDirectory(Path sourceDir, Path destinationDir) throws IOException {
+        Files.walk(sourceDir).forEach(source -> {
+            try {
+                Path target = destinationDir.resolve(sourceDir.relativize(source));
+                if (Files.isDirectory(source)) {
+                    if (!Files.exists(target)) {
+                        Files.createDirectories(target);
+                    }
+                } else {
+                    Files.copy(source, target, StandardCopyOption.REPLACE_EXISTING);
+                }
+            } catch (IOException e) {
+                throw new UncheckedIOException(e);
+            }
+        });
+    }
+
     private static void copyDirectory(String sourceDirectoryLocation, String destinationDirectoryLocation)
             throws IOException {
         Files.walk(Paths.get(sourceDirectoryLocation))
@@ -237,6 +295,39 @@ public class FileTools {
         }
         writer.close();
         System.out.println("File \"" + fileData.getName() + "\" Updated.");
+    }
+
+    public static void clearDirectory(String directoryLocation) throws IOException {
+        File dir = new File(directoryLocation);
+
+        if (!dir.exists() || !dir.isDirectory()) {
+            throw new IllegalArgumentException("The provided location is not a valid directory: " + directoryLocation);
+        }
+
+        File[] files = dir.listFiles();
+        if (files == null) {
+            throw new IOException("Failed to list contents of directory: " + directoryLocation);
+        }
+
+        for (File file : files) {
+            deleteRecursively(file);
+        }
+    }
+
+    private static void deleteRecursively(File file) throws IOException {
+        if (file.isDirectory()) {
+            File[] children = file.listFiles();
+            if (children == null) {
+                throw new IOException("Failed to list contents of directory: " + file);
+            }
+            for (File child : children) {
+                deleteRecursively(child);
+            }
+        }
+
+        if (!file.delete()) {
+            throw new IOException("Failed to delete file or directory: " + file);
+        }
     }
 
     public void createPlayerConnection(String fileLocation, String fileName, PlayerConnection playerConnection) throws IOException {
