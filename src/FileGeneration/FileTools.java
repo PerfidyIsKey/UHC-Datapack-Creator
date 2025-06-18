@@ -21,15 +21,17 @@ public class FileTools {
     private String dataPackLocation;
     private String dataPackName;
     private String worldLocation;
+    private String namespace;
 
     public FileTools() {
     }
 
-    public FileTools(String version, String dataPackLocation, String dataPackName, String worldLocation) {
+    public FileTools(String version, String dataPackLocation, String dataPackName, String worldLocation, String namespace) {
         this.version = version;
         this.dataPackLocation = dataPackLocation;
         this.dataPackName = dataPackName;
         this.worldLocation = worldLocation;
+        this.namespace = namespace;
     }
 
     public ArrayList<FileData> makeRecipeFiles() {
@@ -142,26 +144,36 @@ public class FileTools {
 
             File data = new File(dataPackLocation + dataPackName + "\\data");
             if (data.mkdir()) {
-                File uhc = new File(dataPackLocation + dataPackName + "\\data\\uhc");
+                File uhc = new File(dataPackLocation + dataPackName + "\\data\\" + namespace);
                 if (uhc.mkdir()) {
-                    File functions = new File(dataPackLocation + dataPackName + "\\data\\uhc\\function");
+                    File functions = new File(dataPackLocation + dataPackName + "\\data\\" + namespace + "\\function");
                     if (!functions.mkdir()) {
                         System.out.println("No functions dir");
                     }
-                    File recipes = new File(dataPackLocation + dataPackName + "\\data\\uhc\\recipe");
+                    File recipes = new File(dataPackLocation + dataPackName + "\\data\\" + namespace + "\\recipe");
                     if (!recipes.mkdir()) {
                         System.out.println("No recipes dir");
                     }
-                    File lootTables = new File(dataPackLocation + dataPackName + "\\data\\uhc\\loot_table");
+                    File lootTables = new File(dataPackLocation + dataPackName + "\\data\\" + namespace + "\\loot_table");
                     if (lootTables.mkdir()) {
                         updateAllFiles(files, fileLocation);
                     } else {
                         System.out.println("No lootTables dir");
                     }
                 }
+                File minecraft = new File(dataPackLocation + dataPackName + "\\data\\minecraft");
+                if (minecraft.mkdir()) {
+                    // Will later be filled with custom code
+                }
             }
+            // generated folder
             String from = "generated";
             String to = worldLocation + "\\generated";
+            copyDirectory(from, to);
+
+            // worldgen folder
+            from = "worldgen";
+            to = dataPackLocation + dataPackName + "\\data\\minecraft\\worldgen";
             copyDirectory(from, to);
         } else {
             System.out.println("Datapack already exists: Updating files now...");
@@ -203,11 +215,11 @@ public class FileTools {
         ArrayList<String> fileText = fileData.getFileText();
         File file;
         if (fileData.getType().equals("recipe")) {
-            file = new File(fileLocation + "recipe\\" + fileData.getName() + ".json");
+            file = new File(fileLocation + "\\" + namespace + "\\recipe\\" + fileData.getName() + ".json");
         } else if (fileData.getType().equals("loot_table")) {
-            file = new File(fileLocation + "loot_table\\" + fileData.getName() + ".json");
+            file = new File(fileLocation + "\\" + namespace + "\\loot_table\\" + fileData.getName() + ".json");
         } else {
-            file = new File(fileLocation + "function\\" + fileData.getName() + ".mcfunction");
+            file = new File(fileLocation + "\\" + namespace + "\\function\\" + fileData.getName() + ".mcfunction");
         }
         BufferedWriter writer = new BufferedWriter(new FileWriter(file));
         for (String s : fileText) {

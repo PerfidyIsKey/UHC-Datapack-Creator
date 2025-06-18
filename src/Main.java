@@ -1,6 +1,4 @@
-import EntityClasses.Attributes;
-import EntityClasses.JumpStrength;
-import EntityClasses.MovementSpeed;
+import EntityClasses.*;
 import Enums.*;
 import FileGeneration.*;
 import HelperClasses.*;
@@ -33,6 +31,7 @@ public class Main {
     private String dataPackLocation;
     private String worldLocation;
     private String dataPackName;
+    private static final String namespace = "uhc";
 
     private String fileLocation;
     private CommunityMode communityMode = CommunityMode.DIORITE;
@@ -154,7 +153,7 @@ public class Main {
         files = new ArrayList<>();
         makeServerProperties();
         initSaveDir();
-        fileTools = new FileTools(version, dataPackLocation, dataPackName, worldLocation);
+        fileTools = new FileTools(version, dataPackLocation, dataPackName, worldLocation, namespace);
 
         initGameData();
         makeFunctionFiles();
@@ -182,7 +181,7 @@ public class Main {
         }
 
         dataPackName = "uhc-datapack-" + uhcNumber + "v" + version;
-        fileLocation = dataPackLocation + dataPackName + "\\data\\uhc\\";
+        fileLocation = dataPackLocation + dataPackName + "\\data\\";
 
     }
 
