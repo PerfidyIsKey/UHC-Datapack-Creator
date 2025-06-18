@@ -218,7 +218,16 @@ public class FileTools {
         if (Files.isDirectory(source)) {
             copyDirectory(source, destinationPath);
         } else {
-            Files.copy(source, destinationPath, StandardCopyOption.REPLACE_EXISTING);
+            try {
+                Files.copy(source, destinationPath, StandardCopyOption.REPLACE_EXISTING);
+            } catch (FileSystemException e) {
+                // Check if the exception is about the file being used by another process
+                if (e.getMessage() != null && e.getMessage().contains("being used by another process")) {
+                    // Silently ignore this error and do nothing
+                } else {
+                    throw e;  // rethrow if different reason
+                }
+            }
         }
     }
 
@@ -326,7 +335,7 @@ public class FileTools {
         }
 
         if (!file.delete()) {
-            throw new IOException("Failed to delete file or directory: " + file);
+            System.out.println("Failed to delete file or directory: " + file);
         }
     }
 
