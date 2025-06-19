@@ -722,21 +722,13 @@ public class Main {
         files.add(GetStartPotions());
         files.add(DeveloperPotionControl());
         files.add(ClearEnderChest());
-        files.add(SpawnControlPoints());
         files.add(DisplayRank());
         files.add(ClearSchedule());
         files.add(DebugGive());
         files.add(DebugRemove());
         files.add(CurrentTestFunction());
 
-
-        files.add(DropPlayerHeads());
-        files.add(BossBarValue());
-
-        files.add(EquipGear());
-        files.add(GodMode());
-
-
+        // Game start up
         for (int i = 1; i < 9; i++) {
             files.add(RandomTeams(i));
         }
@@ -745,17 +737,44 @@ public class Main {
         files.add(SpreadPlayers());
         files.add(SurvivalMode());
         files.add(StartGame());
-        files.add(BattleRoyale());
-        files.add(InitializeControlpoint());
-        files.add(SecondControlpoint());
+        files.add(GameStart.GameStarter());
 
+        // Timers
+        files.add(Update.TimerMain1());
+        files.add(Update.TimerMain5());
+        files.add(Update.TimerMain20());
+        files.add(Update.TimerDeveloper20());
+
+        // Messages
+        files.add(ScheduleSingleMessages());
+        files.add(MessagePVP());
+        files.add(MessageEternalDay());
+
+        // Updates
+        files.add(HorseFrostWalker());
+        files.add(UpdateSidebar());
+        files.add(RemoveBannedItems());
+        files.add(DisplayQuotes());
+        files.add(UpdateMineCount());
+        files.add(LocateTeammate());
+        files.add(WolfUpdates());
+        files.add(AnnounceIronMan());
+        files.add(CheckIronMan());
+
+        // Player death
+        files.add(DropPlayerHeads());
+        files.add(RespawnPlayer());
+        files.add(UpdateMinHealth());
+        files.add(DisableRespawn());
+        files.add(PlayerDeathHandler());
+
+        // Victory
         for (int i = 1; i < 3; i++) {
             files.add(Minute(i));
         }
         files.add(TraitorCheck());
         files.add(TeamsAliveCheck());
         files.add(TeamsHighscoreCheck());
-        files.add(ControlPointCaptured());
         files.add(Victory());
         for (int i = 0; i < teams.size(); i++) {
             files.add(VictoryMessage(teams.get(i), i));
@@ -765,64 +784,49 @@ public class Main {
         files.add(InitiateDeathMatch());
         files.add(DeathMatch());
 
-        for (int i = 1; i < controlPoints.size() + 1; i++) {
-            files.add(Controlpoint(i));
-            files.add(ControlPointTag(i));
-            files.add(ControlPointScore(i));
-            files.add(ControlPointMessages(i));
+        // Care Packages
+        if (OperationMode.carePackages) {
+            files.add(DropCarepackages());
         }
 
-        files.add(DropCarepackages());
-        files.add(TraitorHandout());
-        files.add(TraitorActionBar());
-        files.add(TeamScore());
+        // Control Points
+        if (OperationMode.controlPoints) {
+            files.add(Update.TimerControlPoint20());
+            files.add(SpawnControlPoints());
+            files.add(BossBarValue());
+            files.add(InitializeControlpoint());
+            files.add(SecondControlpoint());
+            files.add(ControlPointCaptured());
+            for (int i = 1; i < controlPoints.size() + 1; i++) {
+                files.add(Controlpoint(i));
+                files.add(ControlPointTag(i));
+                files.add(ControlPointScore(i));
+                files.add(ControlPointMessages(i));
+            }
+            files.add(ControlPointPerks());
+            files.add(UpdatePublicCPScore());
+            files.add(TeamScore());
+        }
 
+        // Traitor Faction
+        if (OperationMode.traitorFaction) {
+            files.add(Update.TimerTraitor5());
+            files.add(Update.TimerTraitor20());
+            files.add(TraitorHandout());
+            files.add(TraitorActionBar());
+        }
 
-        files.add(HorseFrostWalker());
+        // In game teams
+        if (OperationMode.teamCreationInGame) {
+            files.add(JoinTeam());
+            files.add(UpdatePlayerDistance());
+        }
 
-        files.add(UpdateSidebar());
-        files.add(RemoveBannedItems());
-        files.add(ControlPointPerks());
-        files.add(DisplayQuotes());
-        files.add(UpdateMineCount());
-        files.add(RespawnPlayer());
-        files.add(UpdateMinHealth());
-
-        files.add(LocateTeammate());
-        files.add(WolfUpdates());
-        files.add(UpdatePublicCPScore());
-        files.add(DisableRespawn());
-        files.add(PlayerDeathHandler());
-        files.add(JoinTeam());
-        files.add(AnnounceIronMan());
-        files.add(CheckIronMan());
-        files.add(UpdatePlayerDistance());
-
+        // Misc
+        files.add(EquipGear());
+        files.add(GodMode());
+        files.add(BattleRoyale());
         files.add(TitleDefaultTiming());
-
-        // Messages
-        files.add(ScheduleSingleMessages());
-        files.add(MessagePVP());
-        files.add(MessageEternalDay());
-
-        // Timer functions
-        Update Updating = new Update();
-
-        // Main timers
-        files.add(Updating.TimerMain1());
-        files.add(Updating.TimerMain5());
-        files.add(Updating.TimerMain20());
-        // Control Point timers
-        files.add(Updating.TimerControlPoint20());
-        // Traitor Faction timers
-        files.add(Updating.TimerTraitor5());
-        files.add(Updating.TimerTraitor20());
-        // Developer mode timers
-        files.add(Updating.TimerDeveloper20());
-
-        // Gamestart functions
-        files.add(GameStart.GameStarter());
-
     }
 
     private FileData Initialize() {
@@ -854,22 +858,10 @@ public class Main {
         fileCommands.add(new ScoreboardObjective().setDisplay(ScoreboardLocation.below_name, Objective.Hearts));
         fileCommands.add(new ScoreboardObjective().setDisplay(ScoreboardLocation.list, Objective.Hearts));
 
-        // Create bossbars
-        fileCommands.add(getBossbarByName("cp1").remove());
-        fileCommands.add(getBossbarByName("cp2").remove());
-        fileCommands.add(getBossbarByName("cp1").add(controlPoints.get(0).getName() + ": " + controlPoints.get(0).getCoordinate().getX() + ", " + controlPoints.get(0).getCoordinate().getY() + ", " + controlPoints.get(0).getCoordinate().getZ() + " (" + controlPoints.get(0).getCoordinate().getDimensionName() + ")"));
-        fileCommands.add(getBossbarByName("cp1").setMax(controlPoints.get(0).getMaxVal()));
-        fileCommands.add(getBossbarByName("cp2").add(controlPoints.get(1).getName() + " soon: " + controlPoints.get(1).getCoordinate().getX() + ", " + controlPoints.get(1).getCoordinate().getY() + ", " + controlPoints.get(1).getCoordinate().getZ() + " (" + controlPoints.get(1).getCoordinate().getDimensionName() + ")"));
-        fileCommands.add(getBossbarByName("cp2").setMax(controlPoints.get(1).getMaxVal()));
-
         // Create teams
         for (Team t : teams) {
             fileCommands.add(t.add());
             fileCommands.add(t.setTeamColor());
-            for (int i = 1; i < controlPoints.size() + 1; i++) {
-                scoreboardObjectives.add(new ScoreboardObjective(Objective.CP.extendName(i + t.getName()), ObjectiveType.dummy));
-                fileCommands.add(scoreboardObjectives.get(scoreboardObjectives.size() - 1).add());
-            }
         }
 
         // Create staging area
@@ -880,22 +872,32 @@ public class Main {
         fileCommands.add(Execute.In(Dimension.overworld) +
                 CommandBuilder.setBlock(0, 222, -5, BlockType.cherry_wall_sign + "[facing=south,waterlogged=false]{back_text:{messages:['{\"text\":\"You have\"}','{\"text\":\"angered\"}','{\"text\":\"the Gods!\"}','{\"text\":\"\"}']},front_text:{messages:['{\"text\":\"In rememberance\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"" + CommandBuilder.summonEntity(EntityType.firework_rocket, new Coordinate(0, 0, 0, ReferenceFrame.relative)) + "\"}}','{\"text\":\"of our\"}','{\"text\":\"Command Center\"}','{\"text\":\"2014-2025\"}']},is_waxed:0b}"));
 
+        // Control Point
+        if (OperationMode.controlPoints) {
+            // Create bossbars
+            fileCommands.add(getBossbarByName("cp1").remove());
+            fileCommands.add(getBossbarByName("cp2").remove());
+            fileCommands.add(getBossbarByName("cp1").add(controlPoints.get(0).getName() + ": " + controlPoints.get(0).getCoordinate().getX() + ", " + controlPoints.get(0).getCoordinate().getY() + ", " + controlPoints.get(0).getCoordinate().getZ() + " (" + controlPoints.get(0).getCoordinate().getDimensionName() + ")"));
+            fileCommands.add(getBossbarByName("cp1").setMax(controlPoints.get(0).getMaxVal()));
+            fileCommands.add(getBossbarByName("cp2").add(controlPoints.get(1).getName() + " soon: " + controlPoints.get(1).getCoordinate().getX() + ", " + controlPoints.get(1).getCoordinate().getY() + ", " + controlPoints.get(1).getCoordinate().getZ() + " (" + controlPoints.get(1).getCoordinate().getDimensionName() + ")"));
+            fileCommands.add(getBossbarByName("cp2").setMax(controlPoints.get(1).getMaxVal()));
+
+            // Scoreboard objectives
+            for (Team t: teams) {
+                for (int i = 1; i < controlPoints.size() + 1; i++) {
+                    scoreboardObjectives.add(new ScoreboardObjective(Objective.CP.extendName(i + t.getName()), ObjectiveType.dummy));
+                    fileCommands.add(scoreboardObjectives.get(scoreboardObjectives.size() - 1).add());
+                }
+            }
+        }
+
+
         return new FileData(FileName.initialize, fileCommands);
     }
 
     private FileData PlayerDeathHandler() {
         ArrayList<String> fileCommands = new ArrayList<>();
         ArrayList<TextItem> texts = new ArrayList<>();
-        Boolean debug = true;
-
-        if (debug) {
-
-            texts.add(new Select(false, false, "@e[tag=" + Tag.RespawnDisabled + "]"));
-            texts.add(new Text(false, false, " update"));
-
-            fileCommands.add(new TellRaw("@a[tag=Debug]", texts).sendRaw());
-            texts.clear();
-        }
 
         // Play thunder sound
         fileCommands.add(CommandBuilder.playSound(Sound.THUNDER, SoundSource.master, "@a", "~", "~50", "~", "100", "1", "0"));
@@ -903,24 +905,8 @@ public class Main {
         // Set all dead players to spectator mode
         fileCommands.add(CommandBuilder.setGameMode(GameMode.spectator, "@a[scores={Deaths=1},gamemode=!spectator]"));
 
-        // Reset scores
-        for (int i = 0; i < 2; i++) {
-            fileCommands.add(scoreboard.Set("@a[scores={Deaths=1}]", getObjectiveByName(Objective.ControlPoint.extendName(i + 1)), 0));
-            fileCommands.add(scoreboard.Set(Constant.admin, getObjectiveByName(Objective.Highscore.extendName(i + 1)), 1));
-        }
-
         // Reset player with lowest health
         fileCommands.add(scoreboard.Set(Constant.admin, getObjectiveByName(Objective.MinHealth), 20));
-
-        // Announce traitor deaths
-        texts.add(bannerText);
-        texts.add(new Text(Color.red, true, false, "A TRAITOR HAS BEEN ELIMINATED"));
-        texts.add(bannerText);
-        texts.add(new Text(Color.gold, true, false, "WELL DONE"));
-        texts.add(bannerText);
-        fileCommands.add(Execute.If(new Entity("@p[scores={Deaths=1},tag=" + Tag.Traitor + "]")) +
-                new TellRaw("@a", texts).sendRaw());
-        texts.clear();
 
         // Add respawn tag to players who die in the first 20 minutes
         fileCommands.add(Execute.Unless("@e[tag=" + Tag.RespawnDisabled + "]") +
@@ -929,27 +915,37 @@ public class Main {
         // Drop player head
         fileCommands.add(Schedule.callFunction(FileName.drop_player_heads));
 
-        // Do not allow killers to form a team
-        if (teamMode == 2) {
+        // Do automatic respawn in the first 20 minutes
+        fileCommands.add(Execute.Unless("@e[tag=" + Tag.RespawnDisabled + "]") +
+                Schedule.callFunction(FileName.respawn_player, 5, Duration.ticks));
+
+        // Control Point
+        if (OperationMode.controlPoints) {
+            // Reset scores
+            for (int i = 0; i < 2; i++) {
+                fileCommands.add(scoreboard.Set("@a[scores={Deaths=1}]", getObjectiveByName(Objective.ControlPoint.extendName(i + 1)), 0));
+                fileCommands.add(scoreboard.Set(Constant.admin, getObjectiveByName(Objective.Highscore.extendName(i + 1)), 1));
+            }
+        }
+
+        // Traitor Faction
+        if (OperationMode.traitorFaction) {
+            // Announce traitor deaths
+            texts.add(bannerText);
+            texts.add(new Text(Color.red, true, false, "A TRAITOR HAS BEEN ELIMINATED"));
+            texts.add(bannerText);
+            texts.add(new Text(Color.gold, true, false, "WELL DONE"));
+            texts.add(bannerText);
+            fileCommands.add(Execute.If(new Entity("@p[scores={Deaths=1},tag=" + Tag.Traitor + "]")) +
+                    new TellRaw("@a", texts).sendRaw());
+            texts.clear();
+        }
+
+        // In-game teams
+        if (OperationMode.teamCreationInGame) {
+            // Do not allow killers to form a team
             String killer = "@p[team=,scores={TempKills=1}]";
             String dead = "@p[team=,scores={Deaths=1}]";
-
-            if (debug) {
-                texts.add(new Select(false, false, killer));
-                texts.add(new Text(Color.white, false, false, " has killed and is not in a team."));
-                fileCommands.add(new TellRaw("@a[tag=Debug]", texts).sendRaw());
-                texts.clear();
-
-                texts.add(new Select(false, false, dead));
-                texts.add(new Text(Color.white, false, false, " has died and is not in a team."));
-                fileCommands.add(new TellRaw("@a[tag=Debug]", texts).sendRaw());
-                texts.clear();
-
-                texts.add(new Select(false, false, "@p[team=,scores={TempKills=1,IsKiller=1}]"));
-                texts.add(new Text(Color.white, false, false, " already has been assigned as a killer."));
-                fileCommands.add(new TellRaw("@a[tag=Debug]", texts).sendRaw());
-                texts.clear();
-            }
 
             texts.add(new Text(Color.red, true, false, "Looks like you do not want a teammate."));
             fileCommands.add(Execute.If(killer, false) +
@@ -962,23 +958,13 @@ public class Main {
                     Execute.IfNext(dead, true) +
                     scoreboard.Set(killer, Objective.IsKiller, 1));
 
-            if (debug) {
-                texts.add(new Select(false, false, "@p[scores={IsKiller=1}]"));
-                texts.add(new Text(Color.white, false, false, " has been assigned as a killer."));
-                fileCommands.add(new TellRaw("@a[tag=Debug]", texts).sendRaw());
-                texts.clear();
-            }
+            // Reset temporary kill count
+            fileCommands.add(scoreboard.Reset("@p[scores={TempKills=1}]", Objective.TempKills));
         }
 
         // Reset death count
         fileCommands.add(scoreboard.Reset("@p[scores={Deaths=1}]", Objective.Deaths));
 
-        // Reset temporary kill count
-        fileCommands.add(scoreboard.Reset("@p[scores={TempKills=1}]", Objective.TempKills));
-
-        // Do automatic respawn in the first 20 minutes
-        fileCommands.add(Execute.Unless("@e[tag=" + Tag.RespawnDisabled + "]") +
-                Schedule.callFunction(FileName.respawn_player, 5, Duration.ticks));
         return new FileData(FileName.handle_player_death, fileCommands);
     }
 
@@ -1064,7 +1050,7 @@ public class Main {
         fileCommands.add(CommandBuilder.clearInventory("@s"));
 
         // Give potions
-        if (teamMode == 1) {
+        if (!OperationMode.teamCreationInGame) {
             fileCommands.add(CommandBuilder.giveSplashPotion("@s", 0, Effect.speed, "808080", "Developer Mode", "Set operational mode to Developer Mode."));
             fileCommands.add(CommandBuilder.giveSplashPotion("@s", 1, Effect.weakness, "FF9933", "Assign Teams", "Assign players to teams."));
             fileCommands.add(CommandBuilder.giveSplashPotion("@s", 2, Effect.slow_falling, "6633CC", "Predictions", "Who will win this season?."));
@@ -1072,7 +1058,7 @@ public class Main {
             fileCommands.add(CommandBuilder.giveSplashPotion("@s", 4, Effect.poison, "00CC66", "Spread players", "Spread players across the map."));
             fileCommands.add(CommandBuilder.giveSplashPotion("@s", 5, Effect.strength, "CC3333", "Survival Mode", "Set operational mode to Ready to Play."));
             fileCommands.add(CommandBuilder.giveSplashPotion("@s", 6, Effect.slowness, "00FF7F", "Start Game", "Start the game. Good luck!"));
-        } else if (teamMode == 2) {
+        } else {
             fileCommands.add(CommandBuilder.giveSplashPotion("@s", 0, Effect.speed, "808080", "Developer Mode", "Set operational mode to Developer Mode."));
             fileCommands.add(CommandBuilder.giveSplashPotion("@s", 1, Effect.slow_falling, "6633CC", "Predictions", "Who will win this season?."));
             fileCommands.add(CommandBuilder.giveSplashPotion("@s", 2, Effect.invisibility, "3399FF", "Into Calls", "Allow players to gather in their Discord channel."));
@@ -1110,65 +1096,19 @@ public class Main {
 
         // Reset scores of all entities
         fileCommands.add(scoreboard.Reset("@e"));
-        for (int i = 1; i < controlPoints.size() + 1; i++) {
-            fileCommands.add(scoreboard.Set(Constant.admin, getObjectiveByName(Objective.Highscore.extendName(i)), 1));
-            for (int ii = 1; ii < 3; ii++) {
-                fileCommands.add(scoreboard.Set("@a", getObjectiveByName(Objective.MSGDum.extendName(ii + "CP" + i)), 1));
-            }
-        }
-        fileCommands.add(scoreboard.Set(Constant.admin, Objective.MinHealth, 20));
+                fileCommands.add(scoreboard.Set(Constant.admin, Objective.MinHealth, 20));
         fileCommands.add(scoreboard.Set(Constant.admin, Objective.Victory, 1));
-        fileCommands.add(scoreboard.Set("@a", Objective.IsKiller, 0));
-
-        // Spawn new Control Points
-        fileCommands.add(Execute.In(controlPoints.get(0).getCoordinate().getDimension()) +
-                CommandBuilder.addForceLoad(controlPoints.get(0).getCoordinate().getX(), controlPoints.get(0).getCoordinate().getZ(), controlPoints.get(0).getCoordinate().getX(), controlPoints.get(0).getCoordinate().getZ()));
-        fileCommands.add(Execute.In(controlPoints.get(1).getCoordinate().getDimension()) +
-                CommandBuilder.addForceLoad(controlPoints.get(1).getCoordinate().getX(), controlPoints.get(1).getCoordinate().getZ(), controlPoints.get(1).getCoordinate().getX(), controlPoints.get(1).getCoordinate().getZ()));
-        fileCommands.add(Schedule.callFunction(FileName.spawn_control_points));
-        fileCommands.add(Execute.In(controlPoints.get(0).getCoordinate().getDimension()) +
-                CommandBuilder.removeForceLoad(controlPoints.get(0).getCoordinate().getX(), controlPoints.get(0).getCoordinate().getZ(), controlPoints.get(0).getCoordinate().getX(), controlPoints.get(0).getCoordinate().getZ()));
-        fileCommands.add(Execute.In(controlPoints.get(1).getCoordinate().getDimension()) +
-                CommandBuilder.removeForceLoad(controlPoints.get(1).getCoordinate().getX(), controlPoints.get(1).getCoordinate().getZ(), controlPoints.get(1).getCoordinate().getX(), controlPoints.get(1).getCoordinate().getZ()));
-
-        // Reset bossbars
-        BossBar bossBarCp1 = getBossbarByName("cp1");
-        BossBar bossBarCp2 = getBossbarByName("cp2");
-        fileCommands.add(bossBarCp1.setColor(BossBarColor.white));
-        fileCommands.add(bossBarCp1.setVisible(false));
-        fileCommands.add(bossBarCp1.setPlayers("@a"));
-        fileCommands.add(bossBarCp1.setTitle(controlPoints.get(0).getName() + ": " + controlPoints.get(0).getCoordinate().getX() + ", " + controlPoints.get(0).getCoordinate().getY() + ", " + controlPoints.get(0).getCoordinate().getZ() + " (" + controlPoints.get(0).getCoordinate().getDimensionName() + ")"));
-        fileCommands.add(bossBarCp2.setColor(BossBarColor.white));
-        fileCommands.add(bossBarCp2.setVisible(false));
-        fileCommands.add(bossBarCp2.setPlayers("@a"));
-        fileCommands.add(bossBarCp2.setTitle(controlPoints.get(1).getName() + " soon: " + controlPoints.get(1).getCoordinate().getX() + ", " + controlPoints.get(1).getCoordinate().getY() + ", " + controlPoints.get(1).getCoordinate().getZ() + " (" + controlPoints.get(1).getCoordinate().getDimensionName() + ")"));
 
         // Create jukebox at 0,0
         fileCommands.add(Execute.In(Dimension.overworld) +
                 CommandBuilder.setBlock(startCoordinate, BlockType.jukebox + "[has_record=true]{RecordItem:{Count:1b,id:\"minecraft:music_disc_stal\"}}", SetBlockType.replace));
 
         // Remove tags
-        fileCommands.add(CommandBuilder.removeTag("@a", Tag.Traitor));
-        fileCommands.add(CommandBuilder.removeTag("@a", Tag.DontMakeTraitor));
         fileCommands.add(CommandBuilder.removeTag("@a", Tag.RespawnDisabled));
         fileCommands.add(CommandBuilder.removeTag("@a", Tag.IronManCandidate));
         fileCommands.add(CommandBuilder.removeTag("@a", Tag.IronMan));
         fileCommands.add(CommandBuilder.removeTag("@a", Tag.Respawn));
-        fileCommands.add(CommandBuilder.removeTag("@a", Tag.OnCP + "" + 1));
-        fileCommands.add(CommandBuilder.removeTag("@a", Tag.OnCP + "" + 2));
-        fileCommands.add(CommandBuilder.removeTag("@a", Tag.Capping + "" + 1));
-        fileCommands.add(CommandBuilder.removeTag("@a", Tag.Capping + "" + 2));
-        fileCommands.add(CommandBuilder.removeTag("@a", Tag.AttackingCP + "" + 1));
-        fileCommands.add(CommandBuilder.removeTag("@a", Tag.AttackingCP + "" + 2));
         fileCommands.add(CommandBuilder.removeTag(Constant.admin, Tag.GameStarted));
-        fileCommands.add(CommandBuilder.removeTag(Constant.admin, Tag.CarePackagesDropped));
-        fileCommands.add(CommandBuilder.removeTag(Constant.admin, Tag.ControlPoint1Enabled));
-        fileCommands.add(CommandBuilder.removeTag(Constant.admin, Tag.ControlPoint2Enabled));
-        fileCommands.add(CommandBuilder.removeTag(Constant.admin, Tag.ControlPointCaptured));
-        fileCommands.add(CommandBuilder.removeTag(Constant.admin, Tag.TraitorsAssigned));
-        for (int i = 0; i < 4; i++) {
-            fileCommands.add(CommandBuilder.removeTag("@a", Tag.ReceivedPerk.extendName(i + 1)));
-        }
 
         // Set world border
         fileCommands.add(CommandBuilder.setWorldBorder(2 * world.getSize()));
@@ -1178,24 +1118,11 @@ public class Main {
 
         // Set time dummy scoreboard entries
         fileCommands.add(scoreboard.Set("NightTime", getObjectiveByName(Objective.Time), 600));
-        fileCommands.add(scoreboard.Set("CarePackages", getObjectiveByName(Objective.Time), 1200));
-        fileCommands.add(scoreboard.Set("ControlPoints", getObjectiveByName(Objective.Time), 1800));
-        fileCommands.add(scoreboard.Set("TraitorFaction", getObjectiveByName(Objective.Time), 2400));
 
         // Reset teams & solos
         for (Team t : teams) {
             fileCommands.add(t.emptyTeam());
-            fileCommands.add(scoreboard.Reset(t.getPlayerColor(), getObjectiveByName(Objective.CPScore)));
-            fileCommands.add(t.joinTeam(t.getPlayerColor()));
         }
-        fileCommands.add(scoreboard.Reset("Solo", getObjectiveByName(Objective.CPScore)));
-
-        // Set CP score dummy scoreboard entries
-        fileCommands.add(scoreboard.Set("Perk1", getObjectiveByName(Objective.CPScore), 3 * singleton.getMinToCPScore()));
-        fileCommands.add(scoreboard.Set("Perk2", getObjectiveByName(Objective.CPScore), 6 * singleton.getMinToCPScore()));
-        fileCommands.add(scoreboard.Set("Perk3", getObjectiveByName(Objective.CPScore), 12 * singleton.getMinToCPScore()));
-        fileCommands.add(scoreboard.Set("Perk4", getObjectiveByName(Objective.CPScore), 15 * singleton.getMinToCPScore()));
-        fileCommands.add(scoreboard.Set("TimeVictory", getObjectiveByName(Objective.CPScore), 20 * singleton.getMinToCPScore()));
 
         // Reset player scales
         fileCommands.add(Execute.As(new Entity("@a")) +
@@ -1215,6 +1142,93 @@ public class Main {
 
         // Start timers
         fileCommands.add(Schedule.callFunction(FileName.timer_developer_20));
+
+        // Care Packages
+        if (OperationMode.carePackages) {
+            // Set scoreboard dummies
+            fileCommands.add(scoreboard.Set("CarePackages", getObjectiveByName(Objective.Time), 1200));
+
+            // Remove tags
+            fileCommands.add(CommandBuilder.removeTag(Constant.admin, Tag.CarePackagesDropped));
+        }
+
+        // Control Point
+        if (OperationMode.controlPoints) {
+            // Reset scoreboard objectives
+            for (int i = 1; i < controlPoints.size() + 1; i++) {
+                fileCommands.add(scoreboard.Set(Constant.admin, getObjectiveByName(Objective.Highscore.extendName(i)), 1));
+                for (int ii = 1; ii < 3; ii++) {
+                    fileCommands.add(scoreboard.Set("@a", getObjectiveByName(Objective.MSGDum.extendName(ii + "CP" + i)), 1));
+                }
+            }
+            fileCommands.add(scoreboard.Reset("Solo", getObjectiveByName(Objective.CPScore)));
+            for (Team t : teams) {
+                fileCommands.add(scoreboard.Reset(t.getPlayerColor(), getObjectiveByName(Objective.CPScore)));
+                fileCommands.add(t.joinTeam(t.getPlayerColor()));
+            }
+
+            // Set scoreboard dummies
+            fileCommands.add(scoreboard.Set("Perk1", getObjectiveByName(Objective.CPScore), 3 * singleton.getMinToCPScore()));
+            fileCommands.add(scoreboard.Set("Perk2", getObjectiveByName(Objective.CPScore), 6 * singleton.getMinToCPScore()));
+            fileCommands.add(scoreboard.Set("Perk3", getObjectiveByName(Objective.CPScore), 12 * singleton.getMinToCPScore()));
+            fileCommands.add(scoreboard.Set("Perk4", getObjectiveByName(Objective.CPScore), 15 * singleton.getMinToCPScore()));
+            fileCommands.add(scoreboard.Set("TimeVictory", getObjectiveByName(Objective.CPScore), 20 * singleton.getMinToCPScore()));
+            fileCommands.add(scoreboard.Set("ControlPoints", getObjectiveByName(Objective.Time), 1800));
+
+            // Remove tags
+            fileCommands.add(CommandBuilder.removeTag("@a", Tag.OnCP + "" + 1));
+            fileCommands.add(CommandBuilder.removeTag("@a", Tag.OnCP + "" + 2));
+            fileCommands.add(CommandBuilder.removeTag("@a", Tag.Capping + "" + 1));
+            fileCommands.add(CommandBuilder.removeTag("@a", Tag.Capping + "" + 2));
+            fileCommands.add(CommandBuilder.removeTag("@a", Tag.AttackingCP + "" + 1));
+            fileCommands.add(CommandBuilder.removeTag("@a", Tag.AttackingCP + "" + 2));
+            fileCommands.add(CommandBuilder.removeTag(Constant.admin, Tag.ControlPoint1Enabled));
+            fileCommands.add(CommandBuilder.removeTag(Constant.admin, Tag.ControlPoint2Enabled));
+            fileCommands.add(CommandBuilder.removeTag(Constant.admin, Tag.ControlPointCaptured));
+            for (int i = 0; i < 4; i++) {
+                fileCommands.add(CommandBuilder.removeTag("@a", Tag.ReceivedPerk.extendName(i + 1)));
+            }
+
+            // Spawn new Control Points
+            fileCommands.add(Execute.In(controlPoints.get(0).getCoordinate().getDimension()) +
+                    CommandBuilder.addForceLoad(controlPoints.get(0).getCoordinate().getX(), controlPoints.get(0).getCoordinate().getZ(), controlPoints.get(0).getCoordinate().getX(), controlPoints.get(0).getCoordinate().getZ()));
+            fileCommands.add(Execute.In(controlPoints.get(1).getCoordinate().getDimension()) +
+                    CommandBuilder.addForceLoad(controlPoints.get(1).getCoordinate().getX(), controlPoints.get(1).getCoordinate().getZ(), controlPoints.get(1).getCoordinate().getX(), controlPoints.get(1).getCoordinate().getZ()));
+            fileCommands.add(Schedule.callFunction(FileName.spawn_control_points));
+            fileCommands.add(Execute.In(controlPoints.get(0).getCoordinate().getDimension()) +
+                    CommandBuilder.removeForceLoad(controlPoints.get(0).getCoordinate().getX(), controlPoints.get(0).getCoordinate().getZ(), controlPoints.get(0).getCoordinate().getX(), controlPoints.get(0).getCoordinate().getZ()));
+            fileCommands.add(Execute.In(controlPoints.get(1).getCoordinate().getDimension()) +
+                    CommandBuilder.removeForceLoad(controlPoints.get(1).getCoordinate().getX(), controlPoints.get(1).getCoordinate().getZ(), controlPoints.get(1).getCoordinate().getX(), controlPoints.get(1).getCoordinate().getZ()));
+
+            // Reset bossbars
+            BossBar bossBarCp1 = getBossbarByName("cp1");
+            BossBar bossBarCp2 = getBossbarByName("cp2");
+            fileCommands.add(bossBarCp1.setColor(BossBarColor.white));
+            fileCommands.add(bossBarCp1.setVisible(false));
+            fileCommands.add(bossBarCp1.setPlayers("@a"));
+            fileCommands.add(bossBarCp1.setTitle(controlPoints.get(0).getName() + ": " + controlPoints.get(0).getCoordinate().getX() + ", " + controlPoints.get(0).getCoordinate().getY() + ", " + controlPoints.get(0).getCoordinate().getZ() + " (" + controlPoints.get(0).getCoordinate().getDimensionName() + ")"));
+            fileCommands.add(bossBarCp2.setColor(BossBarColor.white));
+            fileCommands.add(bossBarCp2.setVisible(false));
+            fileCommands.add(bossBarCp2.setPlayers("@a"));
+            fileCommands.add(bossBarCp2.setTitle(controlPoints.get(1).getName() + " soon: " + controlPoints.get(1).getCoordinate().getX() + ", " + controlPoints.get(1).getCoordinate().getY() + ", " + controlPoints.get(1).getCoordinate().getZ() + " (" + controlPoints.get(1).getCoordinate().getDimensionName() + ")"));
+        }
+
+        // Traitor Faction
+        if (OperationMode.traitorFaction) {
+            // Set scoreboard dummies
+            fileCommands.add(scoreboard.Set("TraitorFaction", getObjectiveByName(Objective.Time), 2400));
+
+            // Remove tags
+            fileCommands.add(CommandBuilder.removeTag("@a", Tag.Traitor));
+            fileCommands.add(CommandBuilder.removeTag("@a", Tag.DontMakeTraitor));
+            fileCommands.add(CommandBuilder.removeTag(Constant.admin, Tag.TraitorsAssigned));
+        }
+
+        // In-game team creation
+        if (OperationMode.teamCreationInGame) {
+            // Reset scoreboard objectives
+            fileCommands.add(scoreboard.Set("@a", Objective.IsKiller, 0));
+        }
 
         return new FileData(FileName.developer_mode, fileCommands);
     }
