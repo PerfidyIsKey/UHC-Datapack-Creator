@@ -22,7 +22,7 @@ public class Main {
     }
 
     //packages
-    FileTools fileTools;
+    FileTools fileTools = new FileTools();
 
     //DatapackData<
 
@@ -153,6 +153,7 @@ public class Main {
 
     private void communityModeChange() throws IOException {
         files = new ArrayList<>();
+        loadUHCData();
         makeServerProperties();
         initSaveDir();
         fileTools = new FileTools(version, dataPackLocation, dataPackName, worldLocation, pluginLocation, namespace);
@@ -164,18 +165,48 @@ public class Main {
         definePlugins();
     }
 
-    private void initSaveDir() {
-        if (fileTools == null) {
-            fileTools = new FileTools();
-        }
+    private void loadUHCData() {
+        // Get data from uhc_data.txt
         uhcNumber = fileTools.getContentOutOfFile("Files\\" + communityMode + "\\uhc_data.txt", "uhcNumber");
+        String[] splitStartCoordinates = fileTools.splitLineOnComma(fileTools.getContentOutOfFile("Files\\" + communityMode + "\\uhc_data.txt", "startCoordinate"));
+        startCoordinate = new Coordinate(Integer.parseInt(splitStartCoordinates[0]), Integer.parseInt(splitStartCoordinates[1]), Integer.parseInt(splitStartCoordinates[2]));
+        minTraitorRank = Integer.parseInt(fileTools.getContentOutOfFile("Files\\" + communityMode + "\\uhc_data.txt", "minTraitorRank"));
+        traitorWaitTime = Integer.parseInt(fileTools.getContentOutOfFile("Files\\" + communityMode + "\\uhc_data.txt", "traitorWaitTime"));
+        communityName = fileTools.getContentOutOfFile("Files\\" + communityMode + "\\uhc_data.txt", "communityName");
+    }
 
+    private void makeServerProperties() throws IOException {
+        String filePath = "Server\\server.properties";
+
+        // Override fields
+        properties.set("difficulty", Difficulty.hard);
+        properties.set("enable-command-block", true);
+        properties.set("gamemode", GameMode.adventure);
+        properties.set("level-seed", 27515851);
+        properties.set("max-players", 50);
+        properties.set("motd", communityName + " UHC S" + uhcNumber);
+        properties.set("simulation-distance", 5);
+        properties.set("spawn-protection", 0);
+        properties.set("view-distance", 7);
+        if (OperationMode.bots) {
+            properties.set("online-mode", false);
+        }
+
+        // Save back to the same file
+        properties.saveToFile(filePath);
+
+        System.out.println("Server properties updated successfully.");
+    }
+
+    private void initSaveDir() {
+        // Set directories
         pluginLocation = "Server\\plugins\\";
-
         worldLocation = "Server\\" + properties.get("level-name") + "\\";
-
         dataPackLocation = worldLocation + "datapacks\\";
+        dataPackName = "uhc-datapack-" + uhcNumber + "v" + version;
+        fileLocation = dataPackLocation + dataPackName + "\\data\\";
 
+        // Create new folders if non-existent
         Path path = Paths.get(dataPackLocation);
         try {
             if (Files.notExists(path)) {
@@ -184,10 +215,6 @@ public class Main {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        dataPackName = "uhc-datapack-" + uhcNumber + "v" + version;
-        fileLocation = dataPackLocation + dataPackName + "\\data\\";
-
     }
 
     private void initGameData() {
@@ -219,13 +246,6 @@ public class Main {
         // Bossbars
         bossBars.add(new BossBar("cp1"));
         bossBars.add(new BossBar("cp2"));
-
-        // Data
-        String[] splitStartCoordinates = fileTools.splitLineOnComma(fileTools.getContentOutOfFile("Files\\" + communityMode + "\\uhc_data.txt", "startCoordinate"));
-        startCoordinate = new Coordinate(Integer.parseInt(splitStartCoordinates[0]), Integer.parseInt(splitStartCoordinates[1]), Integer.parseInt(splitStartCoordinates[2]));
-        minTraitorRank = Integer.parseInt(fileTools.getContentOutOfFile("Files\\" + communityMode + "\\uhc_data.txt", "minTraitorRank"));
-        traitorWaitTime = Integer.parseInt(fileTools.getContentOutOfFile("Files\\" + communityMode + "\\uhc_data.txt", "traitorWaitTime"));
-        communityName = fileTools.getContentOutOfFile("Files\\" + communityMode + "\\uhc_data.txt", "communityName");
 
         // ControlPoints
         ArrayList<String> controlPointString = fileTools.GetLinesFromFile("Files\\" + communityMode + "\\controlPoints.txt");
@@ -667,29 +687,6 @@ public class Main {
         fileCommands.add(lTable.GenerateRates());
         fileData = new FileData("supply_drop_rates", fileCommands, "loot_table");
         files.add(fileData);
-    }
-
-    private void makeServerProperties() throws IOException {
-        String filePath = "Server\\server.properties";
-
-        // Override fields
-        properties.set("difficulty", Difficulty.hard);
-        properties.set("enable-command-block", true);
-        properties.set("gamemode", GameMode.adventure);
-        properties.set("level-seed", 27515851);
-        properties.set("max-players", 50);
-        properties.set("motd", communityName + " UHC S" + uhcNumber);
-        properties.set("simulation-distance", 5);
-        properties.set("spawn-protection", 0);
-        properties.set("view-distance", 7);
-        if (OperationMode.bots) {
-            properties.set("online-mode", false);
-        }
-
-        // Save back to the same file
-        properties.saveToFile(filePath);
-
-        System.out.println("Server properties updated successfully.");
     }
 
     private void definePlugins() throws IOException {
