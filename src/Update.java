@@ -34,6 +34,7 @@ public class Update {
 
         // Schedule functions
         fileCommands.add(Schedule.callFunction(FileName.update_min_health));
+        fileCommands.add(Schedule.callFunction(FileName.horse_frost_walker));
 
         // Self-schedule timer
         fileCommands.add(Schedule.callFunction(FileName.timer_main_1, 1, Duration.ticks));
@@ -46,7 +47,6 @@ public class Update {
         ArrayList<String> fileCommands = new ArrayList<>();
 
         // Schedule functions
-        fileCommands.add(Schedule.callFunction(FileName.horse_frost_walker));
         fileCommands.add(Schedule.callFunction(FileName.remove_banned_items));
         fileCommands.add(Execute.If("@p[scores={TimesCalled=1..}]") +
                 Schedule.callFunction(FileName.update_player_distance));    // Check if custom team can be made
