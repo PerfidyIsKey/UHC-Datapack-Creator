@@ -223,7 +223,14 @@ A list of all functions in the Java project with descriptions and their executio
   - Teleport all players into the void for season predictions. 
   - Execution Method: Single-use
   - Parents: developer_potion_control
-  - Children: -
+  - Children: predictions_loop
+
+### **predictions_loop**
+- Check which team comes out as winner in the predictions.
+- Execution Method: Continuous, self-scheduling
+- Interval: 1 tick
+- Parents: predictions
+- Children: -
 
 ### random_teamsi
   - Random team assignment logic for teams of 1-8.

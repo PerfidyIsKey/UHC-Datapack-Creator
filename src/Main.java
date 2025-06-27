@@ -738,6 +738,7 @@ public class Main {
             files.add(RandomTeams(i));
         }
         files.add(Predictions());
+        files.add(PredictionsLoop());
         files.add(IntoCalls());
         files.add(SpreadPlayers());
         files.add(SurvivalMode());
@@ -1157,6 +1158,7 @@ public class Main {
         fileCommands.add(CommandBuilder.removeTag("@a", Tag.Capping + "" + 2));
         fileCommands.add(CommandBuilder.removeTag("@a", Tag.AttackingCP + "" + 1));
         fileCommands.add(CommandBuilder.removeTag("@a", Tag.AttackingCP + "" + 2));
+        fileCommands.add(CommandBuilder.removeTag(Constant.admin, Tag.PredictionsCompleted));
         fileCommands.add(CommandBuilder.removeTag(Constant.admin, Tag.GameStarted));
         fileCommands.add(CommandBuilder.removeTag(Constant.admin, Tag.CarePackagesDropped));
         fileCommands.add(CommandBuilder.removeTag(Constant.admin, Tag.ControlPoint1Enabled));
@@ -1227,20 +1229,69 @@ public class Main {
 
     private FileData Predictions() {
         ArrayList<String> fileCommands = new ArrayList<>();
+
+        // Remove resistance and give regeneration
         fileCommands.add(CommandBuilder.clearEffect("@a"));
+        fileCommands.add(CommandBuilder.giveEffect("@a", Effect.regeneration, 1, 255));
+
+        // Make players fall
+        fileCommands.add(CommandBuilder.addTag("@a[gamemode=!adventure]", Tag.IsFlying));
+        fileCommands.add(CommandBuilder.setGameMode(GameMode.adventure, "@a[tag=" + Tag.IsFlying + "]"));
+        fileCommands.add(CommandBuilder.setGameMode(GameMode.creative, "@a[tag=" + Tag.IsFlying + "]"));
+        fileCommands.add(CommandBuilder.removeTag("@a[tag=" + Tag.IsFlying + "]", Tag.IsFlying));
+
+        // Set death count for comparison
+        fileCommands.add(scoreboard.Set("@a", Objective.Deaths, 0));
+
+        // Teleport everyone underneath the world
         fileCommands.add(Execute.In(Dimension.overworld) +
                 CommandBuilder.teleportEntity("@a", new Coordinate(0, -100, 0)));
 
+        // Announcement message
         ArrayList<TextItem> texts = new ArrayList<>();
         texts.add(bannerText);
         texts.add(new Text(Color.gold, true, false, communityName + " UHC"));
         texts.add(bannerText);
-        texts.add(new Text(Color.light_purple, true, false, "PREDICTIONS COMPLETED"));
+        texts.add(new Text(Color.light_purple, true, false, "PREDICTIONS STARTED! GOOD LUCK"));
         texts.add(bannerText);
-
         fileCommands.add(new TellRaw("@a", texts).sendRaw());
 
+        // Call predictions loop
+        fileCommands.add(Schedule.callFunction(FileName.predictions_loop));
+
         return new FileData(FileName.predictions, fileCommands);
+    }
+
+    private FileData PredictionsLoop() {
+        ArrayList<String> fileCommands = new ArrayList<>();
+        ArrayList<TextItem> texts = new ArrayList<>();
+
+        // Check if any team has won
+        for (Team t: teams) {
+            // Get tag that predictions have been completed
+            fileCommands.add(Execute.If("@p[team=" + t.getName() + ",scores={Deaths=0}]", false) +
+                            Execute.UnlessNext("@p[team=!" + t.getName() + ",scores={Deaths=0}]", true) +
+                            CommandBuilder.addTag(Constant.admin, Tag.PredictionsCompleted));
+
+            // Chat message
+            texts.add(bannerText);
+            texts.add(new Text(Color.gold, true, false, communityName + " UHC"));
+            texts.add(bannerText);
+            texts.add(new Text(t.getColor(), true, false, t.getJSONColor()));
+            texts.add(new Text(Color.light_purple, true, false, " WILL WIN THE SEASON!"));
+            texts.add(bannerText);
+
+            fileCommands.add(Execute.If("@p[team=" + t.getName() + ",scores={Deaths=0}]", false) +
+                    Execute.UnlessNext("@p[team=!" + t.getName() + ",scores={Deaths=0}]", true) +
+                    new TellRaw("@a", texts).sendRaw());
+            texts.clear();
+        }
+
+        // Self-schedule function
+        fileCommands.add(Execute.Unless("@e[tag=" + Tag.PredictionsCompleted + "]") +
+                Schedule.callFunction(FileName.predictions_loop, 1, Duration.ticks));
+
+        return new FileData(FileName.predictions_loop, fileCommands);
     }
 
     private FileData IntoCalls() {
@@ -1251,8 +1302,8 @@ public class Main {
                 CommandBuilder.teleportEntity("@a", startCoordinate));
 
         // Reset scores
-        fileCommands.add(scoreboard.Reset("@a", getObjectiveByName(Objective.Deaths)));
-        fileCommands.add(scoreboard.Reset("@a", getObjectiveByName(Objective.Kills)));
+        fileCommands.add(scoreboard.Set("@a", getObjectiveByName(Objective.Deaths), 0));
+        fileCommands.add(scoreboard.Set("@a", getObjectiveByName(Objective.Kills), 0));
 
         // Make players invulnerable
         fileCommands.add(CommandBuilder.giveEffect("@a", Effect.resistance, 99999, 4, true));
