@@ -8,6 +8,7 @@ public enum FileName {
     developer_mode,
     random_teams,
     predictions,
+    predictions_loop,
     into_calls,
     spread_players,
     survival_mode,

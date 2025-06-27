@@ -22,7 +22,7 @@ public class Main {
     }
 
     //packages
-    FileTools fileTools;
+    FileTools fileTools = new FileTools();;
 
     //DatapackData<
 
@@ -153,6 +153,7 @@ public class Main {
 
     private void communityModeChange() throws IOException {
         files = new ArrayList<>();
+        loadUHCData();
         makeServerProperties();
         initSaveDir();
         fileTools = new FileTools(version, dataPackLocation, dataPackName, worldLocation, pluginLocation, namespace);
@@ -164,18 +165,48 @@ public class Main {
         definePlugins();
     }
 
-    private void initSaveDir() {
-        if (fileTools == null) {
-            fileTools = new FileTools();
-        }
+    private void loadUHCData() {
+        // Get data from uhc_data.txt
         uhcNumber = fileTools.getContentOutOfFile("Files\\" + communityMode + "\\uhc_data.txt", "uhcNumber");
+        String[] splitStartCoordinates = fileTools.splitLineOnComma(fileTools.getContentOutOfFile("Files\\" + communityMode + "\\uhc_data.txt", "startCoordinate"));
+        startCoordinate = new Coordinate(Integer.parseInt(splitStartCoordinates[0]), Integer.parseInt(splitStartCoordinates[1]), Integer.parseInt(splitStartCoordinates[2]));
+        minTraitorRank = Integer.parseInt(fileTools.getContentOutOfFile("Files\\" + communityMode + "\\uhc_data.txt", "minTraitorRank"));
+        traitorWaitTime = Integer.parseInt(fileTools.getContentOutOfFile("Files\\" + communityMode + "\\uhc_data.txt", "traitorWaitTime"));
+        communityName = fileTools.getContentOutOfFile("Files\\" + communityMode + "\\uhc_data.txt", "communityName");
+    }
 
+    private void makeServerProperties() throws IOException {
+        String filePath = "Server\\server.properties";
+
+        // Override fields
+        properties.set("difficulty", Difficulty.hard);
+        properties.set("enable-command-block", true);
+        properties.set("gamemode", GameMode.adventure);
+        properties.set("level-seed", 27515851);
+        properties.set("max-players", 50);
+        properties.set("motd", communityName + " UHC S" + uhcNumber);
+        properties.set("simulation-distance", 5);
+        properties.set("spawn-protection", 0);
+        properties.set("view-distance", 7);
+        if (OperationMode.bots) {
+            properties.set("online-mode", false);
+        }
+
+        // Save back to the same file
+        properties.saveToFile(filePath);
+
+        System.out.println("Server properties updated successfully.");
+    }
+
+    private void initSaveDir() {
+        // Set directories
         pluginLocation = "Server\\plugins\\";
-
         worldLocation = "Server\\" + properties.get("level-name") + "\\";
-
         dataPackLocation = worldLocation + "datapacks\\";
+        dataPackName = "uhc-datapack-" + uhcNumber + "v" + version;
+        fileLocation = dataPackLocation + dataPackName + "\\data\\";
 
+        // Create new folders if non-existent
         Path path = Paths.get(dataPackLocation);
         try {
             if (Files.notExists(path)) {
@@ -184,10 +215,6 @@ public class Main {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        dataPackName = "uhc-datapack-" + uhcNumber + "v" + version;
-        fileLocation = dataPackLocation + dataPackName + "\\data\\";
-
     }
 
     private void initGameData() {
@@ -219,13 +246,6 @@ public class Main {
         // Bossbars
         bossBars.add(new BossBar("cp1"));
         bossBars.add(new BossBar("cp2"));
-
-        // Data
-        String[] splitStartCoordinates = fileTools.splitLineOnComma(fileTools.getContentOutOfFile("Files\\" + communityMode + "\\uhc_data.txt", "startCoordinate"));
-        startCoordinate = new Coordinate(Integer.parseInt(splitStartCoordinates[0]), Integer.parseInt(splitStartCoordinates[1]), Integer.parseInt(splitStartCoordinates[2]));
-        minTraitorRank = Integer.parseInt(fileTools.getContentOutOfFile("Files\\" + communityMode + "\\uhc_data.txt", "minTraitorRank"));
-        traitorWaitTime = Integer.parseInt(fileTools.getContentOutOfFile("Files\\" + communityMode + "\\uhc_data.txt", "traitorWaitTime"));
-        communityName = fileTools.getContentOutOfFile("Files\\" + communityMode + "\\uhc_data.txt", "communityName");
 
         // ControlPoints
         ArrayList<String> controlPointString = fileTools.GetLinesFromFile("Files\\" + communityMode + "\\controlPoints.txt");
@@ -669,29 +689,6 @@ public class Main {
         files.add(fileData);
     }
 
-    private void makeServerProperties() throws IOException {
-        String filePath = "Server\\server.properties";
-
-        // Override fields
-        properties.set("difficulty", Difficulty.hard);
-        properties.set("enable-command-block", true);
-        properties.set("gamemode", GameMode.adventure);
-        properties.set("level-seed", 27515851);
-        properties.set("max-players", 50);
-        properties.set("motd", communityName + " UHC S" + uhcNumber);
-        properties.set("simulation-distance", 5);
-        properties.set("spawn-protection", 0);
-        properties.set("view-distance", 7);
-        if (OperationMode.bots) {
-            properties.set("online-mode", false);
-        }
-
-        // Save back to the same file
-        properties.saveToFile(filePath);
-
-        System.out.println("Server properties updated successfully.");
-    }
-
     private void definePlugins() throws IOException {
         plugins.add(new PaperPlugin("spark-1.10.119-bukkit.jar", OperationMode.debug));
         plugins.add(new PaperPlugin("Chunky-Bukkit-1.4.28.jar", OperationMode.debug));
@@ -733,6 +730,7 @@ public class Main {
             files.add(RandomTeams(i));
         }
         files.add(Predictions());
+        files.add(PredictionsLoop());
         files.add(IntoCalls());
         files.add(SpreadPlayers());
         files.add(SurvivalMode());
@@ -1244,20 +1242,69 @@ public class Main {
 
     private FileData Predictions() {
         ArrayList<String> fileCommands = new ArrayList<>();
+
+        // Remove resistance and give regeneration
         fileCommands.add(CommandBuilder.clearEffect("@a"));
+        fileCommands.add(CommandBuilder.giveEffect("@a", Effect.regeneration, 1, 255));
+
+        // Make players fall
+        fileCommands.add(CommandBuilder.addTag("@a[gamemode=!adventure]", Tag.IsFlying));
+        fileCommands.add(CommandBuilder.setGameMode(GameMode.adventure, "@a[tag=" + Tag.IsFlying + "]"));
+        fileCommands.add(CommandBuilder.setGameMode(GameMode.creative, "@a[tag=" + Tag.IsFlying + "]"));
+        fileCommands.add(CommandBuilder.removeTag("@a[tag=" + Tag.IsFlying + "]", Tag.IsFlying));
+
+        // Set death count for comparison
+        fileCommands.add(scoreboard.Set("@a", Objective.Deaths, 0));
+
+        // Teleport everyone underneath the world
         fileCommands.add(Execute.In(Dimension.overworld) +
                 CommandBuilder.teleportEntity("@a", new Coordinate(0, -100, 0)));
 
+        // Announcement message
         ArrayList<TextItem> texts = new ArrayList<>();
         texts.add(bannerText);
         texts.add(new Text(Color.gold, true, false, communityName + " UHC"));
         texts.add(bannerText);
-        texts.add(new Text(Color.light_purple, true, false, "PREDICTIONS COMPLETED"));
+        texts.add(new Text(Color.light_purple, true, false, "PREDICTIONS STARTED! GOOD LUCK"));
         texts.add(bannerText);
-
         fileCommands.add(new TellRaw("@a", texts).sendRaw());
 
+        // Call predictions loop
+        fileCommands.add(Schedule.callFunction(FileName.predictions_loop));
+
         return new FileData(FileName.predictions, fileCommands);
+    }
+
+    private FileData PredictionsLoop() {
+        ArrayList<String> fileCommands = new ArrayList<>();
+        ArrayList<TextItem> texts = new ArrayList<>();
+
+        // Check if any team has won
+        for (Team t: teams) {
+            // Get tag that predictions have been completed
+            fileCommands.add(Execute.If("@p[team=" + t.getName() + ",scores={Deaths=0}]", false) +
+                            Execute.UnlessNext("@p[team=!" + t.getName() + ",scores={Deaths=0}]", true) +
+                            CommandBuilder.addTag(Constant.admin, Tag.PredictionsCompleted));
+
+            // Chat message
+            texts.add(bannerText);
+            texts.add(new Text(Color.gold, true, false, communityName + " UHC"));
+            texts.add(bannerText);
+            texts.add(new Text(t.getColor(), true, false, t.getJSONColor()));
+            texts.add(new Text(Color.light_purple, true, false, " WILL WIN THE SEASON!"));
+            texts.add(bannerText);
+
+            fileCommands.add(Execute.If("@p[team=" + t.getName() + ",scores={Deaths=0}]", false) +
+                    Execute.UnlessNext("@p[team=!" + t.getName() + ",scores={Deaths=0}]", true) +
+                    new TellRaw("@a", texts).sendRaw());
+            texts.clear();
+        }
+
+        // Self-schedule function
+        fileCommands.add(Execute.Unless("@e[tag=" + Tag.PredictionsCompleted + "]") +
+                Schedule.callFunction(FileName.predictions_loop, 1, Duration.ticks));
+
+        return new FileData(FileName.predictions_loop, fileCommands);
     }
 
     private FileData IntoCalls() {
@@ -1268,8 +1315,8 @@ public class Main {
                 CommandBuilder.teleportEntity("@a", startCoordinate));
 
         // Reset scores
-        fileCommands.add(scoreboard.Reset("@a", getObjectiveByName(Objective.Deaths)));
-        fileCommands.add(scoreboard.Reset("@a", getObjectiveByName(Objective.Kills)));
+        fileCommands.add(scoreboard.Set("@a", getObjectiveByName(Objective.Deaths), 0));
+        fileCommands.add(scoreboard.Set("@a", getObjectiveByName(Objective.Kills), 0));
 
         // Make players invulnerable
         fileCommands.add(CommandBuilder.giveEffect("@a", Effect.resistance, 99999, 4, true));
