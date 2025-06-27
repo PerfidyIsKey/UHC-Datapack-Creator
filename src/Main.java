@@ -1,6 +1,4 @@
-import EntityClasses.Attributes;
-import EntityClasses.JumpStrength;
-import EntityClasses.MovementSpeed;
+import EntityClasses.*;
 import Enums.*;
 import FileGeneration.*;
 import HelperClasses.*;
@@ -10,6 +8,7 @@ import Predicates.*;
 import TeamGeneration.*;
 
 import java.io.IOException;
+import java.nio.file.*;
 import java.util.*;
 
 import static java.lang.Integer.parseInt;
@@ -30,8 +29,10 @@ public class Main {
     private String uhcNumber;
     private static final String version = "4.0";
     private String dataPackLocation;
+    private String pluginLocation;
     private String worldLocation;
     private String dataPackName;
+    private static final String namespace = "uhc";
 
     private String fileLocation;
     private CommunityMode communityMode = CommunityMode.DIORITE;
@@ -71,6 +72,8 @@ public class Main {
     private final Text bannerText = new Text(Color.dark_gray, true, false, " | ");
 
     private TeamGenerator teamGenerator;
+    private ServerProperties properties = new ServerProperties();
+    private ArrayList<PaperPlugin> plugins = new ArrayList<>();
 
     private Singleton singleton;
 
@@ -150,14 +153,15 @@ public class Main {
 
     private void communityModeChange() throws IOException {
         files = new ArrayList<>();
+        makeServerProperties();
         initSaveDir();
-        fileTools = new FileTools(version, dataPackLocation, dataPackName, worldLocation);
+        fileTools = new FileTools(version, dataPackLocation, dataPackName, worldLocation, pluginLocation, namespace);
 
         initGameData();
         makeFunctionFiles();
         files.addAll(fileTools.makeRecipeFiles());
         makeLootTableFiles();
-        makeServerProperties();
+        definePlugins();
     }
 
     private void initSaveDir() {
@@ -166,12 +170,23 @@ public class Main {
         }
         uhcNumber = fileTools.getContentOutOfFile("Files\\" + communityMode + "\\uhc_data.txt", "uhcNumber");
 
-        worldLocation = "Server\\world\\";
+        pluginLocation = "Server\\plugins\\";
+
+        worldLocation = "Server\\" + properties.get("level-name") + "\\";
 
         dataPackLocation = worldLocation + "datapacks\\";
 
+        Path path = Paths.get(dataPackLocation);
+        try {
+            if (Files.notExists(path)) {
+                Files.createDirectories(path);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         dataPackName = "uhc-datapack-" + uhcNumber + "v" + version;
-        fileLocation = dataPackLocation + dataPackName + "\\data\\uhc\\";
+        fileLocation = dataPackLocation + dataPackName + "\\data\\";
 
     }
 
@@ -657,8 +672,6 @@ public class Main {
     private void makeServerProperties() throws IOException {
         String filePath = "Server\\server.properties";
 
-        ServerProperties properties = new ServerProperties();
-
         // Override fields
         properties.set("difficulty", Difficulty.hard);
         properties.set("enable-command-block", true);
@@ -666,15 +679,25 @@ public class Main {
         properties.set("level-seed", 27515851);
         properties.set("max-players", 50);
         properties.set("motd", communityName + " UHC S" + uhcNumber);
-        properties.set("online-mode", false);
         properties.set("simulation-distance", 5);
         properties.set("spawn-protection", 0);
         properties.set("view-distance", 7);
+        if (OperationMode.bots) {
+            properties.set("online-mode", false);
+        }
 
         // Save back to the same file
         properties.saveToFile(filePath);
 
         System.out.println("Server properties updated successfully.");
+    }
+
+    private void definePlugins() throws IOException {
+        plugins.add(new PaperPlugin("spark-1.10.119-bukkit.jar", OperationMode.debug));
+        plugins.add(new PaperPlugin("Chunky-Bukkit-1.4.28.jar", OperationMode.debug));
+        plugins.add(new PaperPlugin("openaudiomc-6.10.7.jar", OperationMode.proximity, "OpenAudioMc\\"));
+
+        fileTools.copyPlugins(plugins);
     }
 
     // Get by name functions
