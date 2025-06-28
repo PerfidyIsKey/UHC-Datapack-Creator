@@ -31,6 +31,7 @@ public enum GameRule {
     globalSoundEvents,
     keepInventory,
     lavaSourceConversion,
+    locatorBar,
     logAdminCommands,
     maxCommandChainLength,
     maxEntityCramming,

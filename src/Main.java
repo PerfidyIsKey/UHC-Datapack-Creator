@@ -1105,6 +1105,7 @@ public class Main {
         fileCommands.add(CommandBuilder.setGameRule(GameRule.doImmediateRespawn, true));
         fileCommands.add(CommandBuilder.setGameRule(GameRule.disableRaids, true));
         fileCommands.add(CommandBuilder.setGameRule(GameRule.doInsomnia, false));
+        fileCommands.add(CommandBuilder.setGameRule(GameRule.locatorBar, false));
 
         // Reset scores of all entities
         fileCommands.add(scoreboard.Reset("@e"));
