@@ -439,8 +439,8 @@ public class Main {
         // Entry #28
         ArrayList<Attributes> attributes = new ArrayList<>();
         attributes.add(new JumpStrength(1));
-        attributes.add(new MovementSpeed(0.1));
-        Text text = new Text(false, false, "Driftwood");
+        attributes.add(new MovementSpeed(0.2));
+        String text = "Driftwood";
         EntityData horse = new Horse(60, true, 5, text, attributes);
 
         SetName name = new SetName(new Text(false, false, "Driftwood's return"));
@@ -533,7 +533,7 @@ public class Main {
         attributes = new ArrayList<>();
         attributes.add(new JumpStrength(0.7));
         attributes.add(new MovementSpeed(0.34));
-        text = new Text(false, false, "Scuderia");
+        text = "Scuderia";
         horse = new Horse(5, true, 4, text, attributes);
 
         name = new SetName(new Text(false, false, "Grazie Ragazzi"));
@@ -876,7 +876,7 @@ public class Main {
         fileCommands.add(Execute.In(Dimension.overworld) +
                 CommandBuilder.fill(-5, 221, -5, 5, 226, 5, BlockType.air));
         fileCommands.add(Execute.In(Dimension.overworld) +
-                CommandBuilder.setBlock(0, 222, -5, BlockType.cherry_wall_sign + "[facing=south,waterlogged=false]{back_text:{messages:['{\"text\":\"You have\"}','{\"text\":\"angered\"}','{\"text\":\"the Gods!\"}','{\"text\":\"\"}']},front_text:{messages:['{\"text\":\"In rememberance\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"" + CommandBuilder.summonEntity(EntityType.firework_rocket, new Coordinate(0, 0, 0, ReferenceFrame.relative)) + "\"}}','{\"text\":\"of our\"}','{\"text\":\"Command Center\"}','{\"text\":\"2014-2025\"}']},is_waxed:0b}"));
+                CommandBuilder.setBlock(0, 222, -5, BlockType.cherry_wall_sign + "[facing=south,waterlogged=false]{back_text:{messages:[\"You have\",\"angered\",\"the Gods!\",\"\"]},front_text:{messages:[{\"text\":\"In rememberance\",\"click_event\":{\"action\":\"run_command\",\"command\":\"summon minecraft:firework_rocket ~ ~ ~\"}},\"of our\",\"Command Center\",\"2014-2025\"]},is_waxed:0b}"));
 
         return new FileData(FileName.initialize, fileCommands);
     }
@@ -1050,7 +1050,7 @@ public class Main {
     private FileData GodMode() {
         ArrayList<String> fileCommands = new ArrayList<>();
         fileCommands.add(CommandBuilder.giveEffect("@s", Effect.resistance, 99999, 4, true));
-        fileCommands.add(CommandBuilder.replaceItem("@s", InventorySlot.mainhand, BlockType.trident + "[custom_name='[{\"bold\":false,\"color\":\"white\",\"italic\":false,\"obfuscated\":true,\"text\":\"aA\"},{\"bold\":true,\"color\":\"#8C3CC1\",\"obfuscated\":false,\"text\":\" The\"},{\"bold\":true,\"color\":\"#E280FF\",\"obfuscated\":false,\"text\":\" Impaler \"},{\"color\":\"white\",\"obfuscated\":true,\"text\":\"Aa\"}]',lore=['{\"text\":\"This holy weapon impales anything it touches\"}'],unbreakable={show_in_tooltip:false},damage=0,enchantments={levels:{\"minecraft:fire_aspect\":255,\"minecraft:sharpness\":255,\"minecraft:efficiency\":255,'impaling':255},show_in_tooltip:false},attribute_modifiers={modifiers:[{id:\"" + AttributeType.armor + "\",type:\"" + AttributeType.attack_damage + "\",amount:1000,operation:\"add_value\",slot:\"mainhand\"}],show_in_tooltip:false}]"));
+        fileCommands.add(CommandBuilder.replaceItem("@s", InventorySlot.mainhand, BlockType.trident + "[custom_name=[{\"bold\":false,\"color\":\"white\",\"italic\":false,\"obfuscated\":true,\"text\":\"aA\"},{\"bold\":true,\"color\":\"#8C3CC1\",\"obfuscated\":false,\"text\":\"The\"},{\"bold\":true,\"color\":\"#E280FF\",\"obfuscated\":false,\"text\":\" Impaler \"},{\"color\":\"white\",\"obfuscated\":true,\"text\":\"Aa\"}],lore=[\"This holy weapon impales anything it touches\"],damage=0,enchantments={\"minecraft:fire_aspect\":255,\"minecraft:sharpness\":255,\"minecraft:impaling\":255,\"minecraft:loyalty\":255,\"minecraft:efficiency\":255},attribute_modifiers=[{id:\"armor\",type:\"armor\",amount:1000,operation:\"add_value\",slot:\"armor\",display:{type:\"hidden\"}},{id:\"attack_damage\",type:\"attack_damage\",amount:1000,operation:\"add_value\",slot:\"mainhand\",display:{type:\"hidden\"}}],unbreakable={}]"));
 
         return new FileData(FileName.god_mode, fileCommands);
     }
@@ -1087,7 +1087,7 @@ public class Main {
 
         // Create marker entity
         fileCommands.add(CommandBuilder.killEntity("@e[type=marker]"));
-        fileCommands.add(CommandBuilder.summonEntity(EntityType.marker, new Coordinate(0, Constant.worldBottom, 0), "{CustomName:\"\\\"Admin\\\"\"}"));
+        fileCommands.add(CommandBuilder.summonEntity(EntityType.marker, new Coordinate(0, Constant.worldBottom, 0), "{CustomName:\"Admin\"}"));
 
         // Set time
         fileCommands.add(CommandBuilder.setTime(0));
@@ -1384,7 +1384,7 @@ public class Main {
         if (teamMode == 1) {
             // Teammate tracker
             for (int i = 0; i < teams.size(); i++) {
-                fileCommands.add(CommandBuilder.giveItem("@a[team=" + teams.get(i).getName() + "]", BlockType.bundle.extendColor(teams.get(i).getGlassColor()), "[enchantments={levels:{\"minecraft:vanishing_curse\":1}},custom_data={locateTeammate:1b}]"));
+                fileCommands.add(CommandBuilder.giveItem("@a[team=" + teams.get(i).getName() + "]", BlockType.bundle.extendColor(teams.get(i).getGlassColor()), "[enchantments={\"minecraft:vanishing_curse\":1},custom_data={locateTeammate:1b}]"));
             }
         } else if (teamMode == 2) {
             // Team caller
@@ -2255,7 +2255,7 @@ public class Main {
         // Teammate tracker
         for (Team team : teams) {
             fileCommands.add(Execute.As(respawnPlayer) +
-                    CommandBuilder.giveItem("@s[team=" + team.getName() + "]", BlockType.bundle.extendColor(team.getGlassColor()), "[enchantments={levels:{\"minecraft:vanishing_curse\":1}},custom_data={locateTeammate:1b}]"));
+                    CommandBuilder.giveItem("@s[team=" + team.getName() + "]", BlockType.bundle.extendColor(team.getGlassColor()), "[enchantments={\"minecraft:vanishing_curse\":1},custom_data={locateTeammate:1b}]"));
         }
 
         // Set respawn health
@@ -2568,7 +2568,7 @@ public class Main {
         for (Team team : teams) {
             fileCommands.add(Execute.At(lookingPlayer, false) +
                     Execute.IfNext("@p[tag=LookingForTeamMate,team=" + team.getName() + "]", true) +
-                    CommandBuilder.giveItem("@p[limit=2,gamemode=!spectator]", BlockType.bundle.extendColor(team.getGlassColor()), "[enchantments={levels:{\"minecraft:vanishing_curse\":1}},custom_data={locateTeammate:1b}]"));
+                    CommandBuilder.giveItem("@p[limit=2,gamemode=!spectator]", BlockType.bundle.extendColor(team.getGlassColor()), "[enchantments={\"minecraft:vanishing_curse\":1},custom_data={locateTeammate:1b}]"));
         }
 
         return new FileData(FileName.join_team, fileCommands);

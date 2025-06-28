@@ -22,9 +22,7 @@ public class Enchantments implements Components{
     @Override
     public String GenerateComponent() {
         return "\"enchantments\":{\n" +
-                "\"levels\":{\n" +
                 "\"" + id + "\":" + level + "\n" +
-                "}\n" +
                 "}";
     }
 }
