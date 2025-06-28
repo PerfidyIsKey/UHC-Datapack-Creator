@@ -2058,14 +2058,14 @@ public class Main {
 
         for (int ii = 0; ii < 5; ii++) {
             // Piercing enchantment
-            fileCommands.add(Execute.If(new Entity("@p[nbt={SelectedItem:{id:\"minecraft:crossbow\",count:1,components:{\"minecraft:enchantments\":{levels:{\"minecraft:piercing\":" + (ii + 1) + "}}}}}]")) +
-                    new TellRaw("@p[nbt={SelectedItem:{id:\"minecraft:crossbow\",count:1,components:{\"minecraft:enchantments\":{levels:{\"minecraft:piercing\":" + (ii + 1) + "}}}}}]", new Text(Color.red, true, false, "PIERCING IS NOT ALLOWED, YOU NAUGHTY BUM!")).sendRaw());
-            fileCommands.add(CommandBuilder.replaceItem("@p[nbt={SelectedItem:{id:\"minecraft:crossbow\",count:1,components:{\"minecraft:enchantments\":{levels:{\"minecraft:piercing\":" + (ii + 1) + "}}}}}]", InventorySlot.mainhand, BlockType.crossbow));
+            fileCommands.add(Execute.If(new Entity("@p[nbt={SelectedItem:{id:\"minecraft:crossbow\",count:1,components:{\"minecraft:enchantments\":{\"minecraft:piercing\":" + (ii + 1) + "}}}}]")) +
+                    new TellRaw("@p[nbt={SelectedItem:{id:\"minecraft:crossbow\",count:1,components:{\"minecraft:enchantments\":{\"minecraft:piercing\":" + (ii + 1) + "}}}}]", new Text(Color.red, true, false, "PIERCING IS NOT ALLOWED, YOU NAUGHTY BUM!")).sendRaw());
+            fileCommands.add(CommandBuilder.replaceItem("@p[nbt={SelectedItem:{id:\"minecraft:crossbow\",count:1,components:{\"minecraft:enchantments\":{\"minecraft:piercing\":" + (ii + 1) + "}}}}]", InventorySlot.mainhand, BlockType.crossbow));
 
             // Power enchantment
-            fileCommands.add(Execute.If(new Entity("@p[nbt={SelectedItem:{id:\"minecraft:bow\",count:1,components:{\"minecraft:enchantments\":{levels:{\"minecraft:power\":" + (ii + 1) + "}}}}}]")) +
-                    new TellRaw("@p[nbt={SelectedItem:{id:\"minecraft:bow\",count:1,components:{\"minecraft:enchantments\":{levels:{\"minecraft:power\":" + (ii + 1) + "}}}}}]", new Text(Color.red, true, false, "POWER IS NOT ALLOWED, YOU NAUGHTY BUM!")).sendRaw());
-            fileCommands.add(CommandBuilder.replaceItem("@p[nbt={SelectedItem:{id:\"minecraft:bow\",count:1,components:{\"minecraft:enchantments\":{levels:{\"minecraft:power\":" + (ii + 1) + "}}}}}]", InventorySlot.mainhand, BlockType.bow));
+            fileCommands.add(Execute.If(new Entity("@p[nbt={SelectedItem:{id:\"minecraft:bow\",count:1,components:{\"minecraft:enchantments\":{\"minecraft:power\":" + (ii + 1) + "}}}}]")) +
+                    new TellRaw("@p[nbt={SelectedItem:{id:\"minecraft:bow\",count:1,components:{\"minecraft:enchantments\":{\"minecraft:power\":" + (ii + 1) + "}}}}]", new Text(Color.red, true, false, "POWER IS NOT ALLOWED, YOU NAUGHTY BUM!")).sendRaw());
+            fileCommands.add(CommandBuilder.replaceItem("@p[nbt={SelectedItem:{id:\"minecraft:bow\",count:1,components:{\"minecraft:enchantments\":{\"minecraft:power\":" + (ii + 1) + "}}}}]", InventorySlot.mainhand, BlockType.bow));
         }
         // Wolf armor
         fileCommands.add(Execute.If(new Entity("@p[nbt={SelectedItem:{id:\"minecraft:wolf_armor\",count:1}}]")) +
@@ -2391,6 +2391,7 @@ public class Main {
         fileCommands.add(Schedule.clearFunction(FileName.display_quotes));
         fileCommands.add(Schedule.clearFunction(FileName.messages_eternal_day));
         fileCommands.add(Schedule.clearFunction(FileName.messages_pvp));
+        fileCommands.add(Schedule.clearFunction(FileName.disable_respawn));
 
         return new FileData(FileName.clear_schedule, fileCommands);
     }
