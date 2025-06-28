@@ -690,6 +690,7 @@ public class Main {
     }
 
     private void definePlugins() throws IOException {
+        plugins.add(new PaperPlugin("ViaVersion-5.4.0.jar", OperationMode.otherVersions, "ViaBackwards-5.4.0.jar"));
         plugins.add(new PaperPlugin("spark-1.10.119-bukkit.jar", OperationMode.debug));
         plugins.add(new PaperPlugin("Chunky-Bukkit-1.4.28.jar", OperationMode.debug));
         plugins.add(new PaperPlugin("openaudiomc-6.10.7.jar", OperationMode.proximity, "OpenAudioMc\\"));
