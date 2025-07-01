@@ -1,7 +1,5 @@
 import Enums.*;
-import HelperClasses.Coordinate;
-import HelperClasses.Execute;
-import HelperClasses.ScoreboardObjective;
+import HelperClasses.*;
 
 import java.util.ArrayList;
 
@@ -86,9 +84,6 @@ public class CommandBuilder {
         return setBlock(coordinate, blockType) + " " + type;
     }
 
-    public static String setBlock(int x, int y, int z, BlockType blockType) {
-        return setBlock(x, y, z, "minecraft:" + blockType);
-    }
     public static String setBlock(int x, int y, int z, BlockType blockType, SetBlockType type) {
         return setBlock(x, y, z, blockType) + " " + type;
     }
@@ -387,7 +382,7 @@ public class CommandBuilder {
         // Convert hex to decimal
         int potionColor = Integer.parseInt(colorHex, 16);
 
-        return "item replace entity " + targets + " " + InventorySlot.hotbar.setSlotNumber(slotNumber) + " with " + BlockType.SPLASH_POTION + "[potion_contents={custom_color:" + potionColor + ",custom_effects:[{id:" + effect + ",amplifier:0,duration:200,show_particles:0b,show_icon:0b,ambient:0b}]},lore=[\"" + lore + "\"],custom_name=\"" + displayName + "\"]";
+        return "item replace entity " + targets + " " + InventorySlot.hotbar.setSlotNumber(slotNumber) + " with " + BlockType.SPLASH_POTION + "[potion_contents={custom_color:" + potionColor + ",custom_effects:[{id:\"" + effect + "\",amplifier:0,duration:200,show_particles:0b,show_icon:0b,ambient:0b}]},lore=[\"" + lore + "\"],custom_name=\"" + displayName + "\"]";
     }
 
     // Trigger
@@ -425,5 +420,19 @@ public class CommandBuilder {
 
     public static String storeRandomNumber(Objective objective, int min, int max) {
         return storeRandomNumber(Constant.admin, objective, min, max);
+    }
+
+    public static ArrayList<String> warnAndReplace(String targets, TextItem warning, String replacement) {
+        ArrayList<String> fileCommands = new ArrayList<>();
+
+        fileCommands.add(Execute.If(targets) +
+                new TellRaw(targets, warning).sendRaw());
+        fileCommands.add(replaceItem(targets, InventorySlot.mainhand, replacement));
+
+        return fileCommands;
+    }
+
+    public static ArrayList<String> warnAndReplace(String targets, TextItem warning, BlockType replacement) {
+        return warnAndReplace(targets, warning, replacement.toString());
     }
 }

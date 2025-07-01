@@ -2084,23 +2084,23 @@ public class Main {
         for (int ii = 0; ii < 5; ii++) {
             // Piercing enchantment
             warning.setText("PIERCING IS NOT ALLOWED, YOU NAUGHTY BUM!");
-            target = "@p[nbt={SelectedItem:{id:\"" + BlockType.crossbow + "\",count:1,components:{\"minecraft:enchantments\":{\"" + EnchantmentType.piercing + "\":" + (ii + 1) + "}}}}]";
-            fileCommands.addAll(CommandBuilder.warnAndReplace(target, warning, BlockType.crossbow));
+            target = "@p[nbt={SelectedItem:{id:\"" + BlockType.CROSSBOW + "\",count:1,components:{\"minecraft:enchantments\":{\"" + EnchantmentType.PIERCING + "\":" + (ii + 1) + "}}}}]";
+            fileCommands.addAll(CommandBuilder.warnAndReplace(target, warning, BlockType.CROSSBOW));
 
             // Power enchantment
             warning.setText("POWER IS NOT ALLOWED, YOU NAUGHTY BUM!");
-            target = "@p[nbt={SelectedItem:{id:\"" + BlockType.bow + "\",count:1,components:{\"minecraft:enchantments\":{\"" + EnchantmentType.power + "\":" + (ii + 1) + "}}}}]";
-            fileCommands.addAll(CommandBuilder.warnAndReplace(target, warning, BlockType.bow));
+            target = "@p[nbt={SelectedItem:{id:\"" + BlockType.BOW + "\",count:1,components:{\"minecraft:enchantments\":{\"" + EnchantmentType.POWER + "\":" + (ii + 1) + "}}}}]";
+            fileCommands.addAll(CommandBuilder.warnAndReplace(target, warning, BlockType.BOW));
         }
         // Wolf armor
         warning.setText("WOLF ARMOR IS NOT ALLOWED, YOU NAUGHTY BUM!");
-        target = "@p[nbt={SelectedItem:{id:\"" + BlockType.wolf_armor + "\",count:1}}]";
-        fileCommands.addAll(CommandBuilder.warnAndReplace(target, warning, BlockType.leather_horse_armor));
+        target = "@p[nbt={SelectedItem:{id:\"" + BlockType.WOLF_ARMOR + "\",count:1}}]";
+        fileCommands.addAll(CommandBuilder.warnAndReplace(target, warning, BlockType.LEATHER_HORSE_ARMOR));
 
         // Suspicious stew
         warning.setText("SUSPICIOUS STEW IS NOT ALLOWED, YOU NAUGHTY BUM!");
-        target = "@p[nbt={SelectedItem:{id:\"" + BlockType.suspicious_stew + "\",count:1}}]";
-        fileCommands.addAll(CommandBuilder.warnAndReplace(target, warning, BlockType.bowl));
+        target = "@p[nbt={SelectedItem:{id:\"" + BlockType.SUSPICIOUS_STEW + "\",count:1}}]";
+        fileCommands.addAll(CommandBuilder.warnAndReplace(target, warning, BlockType.BOWL));
 
         return new FileData(FileName.remove_banned_items, fileCommands);
     }
