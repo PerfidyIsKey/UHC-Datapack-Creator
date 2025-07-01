@@ -44,6 +44,10 @@ public class Text extends TextItem {
         return getText(false);
     }
 
+    public void setText(String text) {
+        this.text = text;
+    }
+
     private String convertSpecial(String content) {
         // List of special characters
         String[] special = {"\""};

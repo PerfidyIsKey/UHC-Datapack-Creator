@@ -90,7 +90,6 @@ public enum FileName {
     announce_iron_man,
     check_iron_man,
     update_player_distance,
-    title_default_timing,
 
     // Misc (for fun)
     equip_gear,

@@ -156,8 +156,8 @@ A list of all functions in the Java project with descriptions and their executio
 ### **horse_frost_walker**
   - Applies Frost Walker effect to horses.
   - Execution Method: Continuous
-  - Interval: 5 ticks
-  - Parents: timer_main_5
+  - Interval: 1 tick
+  - Parents: timer_main_1
   - Children: -
 
 ### **init**
@@ -193,8 +193,8 @@ A list of all functions in the Java project with descriptions and their executio
 ### **locate_teammate**
   - Create particle effect to find closest team mate while holding the team mate tracker.
   - Execution Method: Continuous
-  - Interval: 20 ticks
-  - Parents: timer_main_20
+  - Interval: 1 tick
+  - Parents: timer_main_1
   - Children: -
 
 ### **messages_pvp**
@@ -440,12 +440,3 @@ A list of all functions in the Java project with descriptions and their executio
   - Interval: 20 ticks
   - Parents: timer_main_20
   - Children: -
-
-### **world_pre_load**
-  - Pre-loads overworld and nether terrain.
-  - Execution Method: Continuous
-  - Priority: Low
-
-### **world_pre_load_activation**
-  - Activate command block for world pre-loading
-  - Execution Method: Single-use

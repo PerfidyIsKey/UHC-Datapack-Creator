@@ -22,7 +22,7 @@ public class Main {
     }
 
     //packages
-    FileTools fileTools = new FileTools();;
+    FileTools fileTools = new FileTools();
 
     //DatapackData<
 
@@ -182,7 +182,7 @@ public class Main {
         properties.set("difficulty", Difficulty.hard);
         properties.set("enable-command-block", true);
         properties.set("gamemode", GameMode.adventure);
-        properties.set("level-seed", 27515851);
+        properties.set("level-seed", -43193001);
         properties.set("max-players", 50);
         properties.set("motd", communityName + " UHC S" + uhcNumber);
         properties.set("simulation-distance", 5);
@@ -355,92 +355,92 @@ public class Main {
         ArrayList<ItemModifier> functions = new ArrayList<>();
 
         // Entry #1
-        entries.add(new LootTableEntry(17, BlockType.egg));
+        entries.add(new LootTableEntry(17, BlockType.EGG));
 
         // Entry #2
-        entries.add(new LootTableEntry(17, BlockType.ladder, new SetCount(10)));
+        entries.add(new LootTableEntry(17, BlockType.LADDER, new SetCount(10)));
 
         // Entry #3
-        entries.add(new LootTableEntry(15, BlockType.stick, new SetCount(8)));
+        entries.add(new LootTableEntry(15, BlockType.STICK, new SetCount(8)));
 
         // Entry #4
-        entries.add(new LootTableEntry(15, BlockType.diorite, new SetCount(16)));
+        entries.add(new LootTableEntry(15, BlockType.DIORITE, new SetCount(16)));
 
         // Entry #5
-        entries.add(new LootTableEntry(15, BlockType.amethyst_block, new SetCount(16)));
+        entries.add(new LootTableEntry(15, BlockType.AMETHYST_BLOCK, new SetCount(16)));
 
         // Entry #6
-        entries.add(new LootTableEntry(15, BlockType.iron_ingot, new SetCount(8)));
+        entries.add(new LootTableEntry(15, BlockType.IRON_INGOT, new SetCount(8)));
 
         // Entry #7
-        entries.add(new LootTableEntry(14, BlockType.arrow, new SetCount(10)));
+        entries.add(new LootTableEntry(14, BlockType.ARROW, new SetCount(10)));
 
         // Entry #8
-        entries.add(new LootTableEntry(11, BlockType.bone, new SetCount(3, new RandomChance(0.4))));
+        entries.add(new LootTableEntry(11, BlockType.BONE, new SetCount(3, new RandomChance(0.4))));
 
         // Entry #9
-        entries.add(new LootTableEntry(10, BlockType.copper_block, new SetCount(16)));
+        entries.add(new LootTableEntry(10, BlockType.COPPER_BLOCK, new SetCount(16)));
 
         // Entry #10
-        entries.add(new LootTableEntry(10, BlockType.bread, new SetCount(5)));
+        entries.add(new LootTableEntry(10, BlockType.BREAD, new SetCount(5)));
 
         // Entry #11
-        entries.add(new LootTableEntry(10, BlockType.cobweb, new SetCount(2, new RandomChance(0.4))));
+        entries.add(new LootTableEntry(10, BlockType.COBWEB, new SetCount(2, new RandomChance(0.4))));
 
         // Entry #12
-        Enchantments enchantment = new Enchantments(EnchantmentType.lure, 3);
-        entries.add(new LootTableEntry(8, BlockType.fishing_rod, new SetComponents(enchantment)));
+        Enchantments enchantment = new Enchantments(EnchantmentType.LURE, 3);
+        entries.add(new LootTableEntry(8, BlockType.FISHING_ROD, new SetComponents(enchantment)));
 
         // Entry #13
-        entries.add(new LootTableEntry(8, BlockType.obsidian, new SetCount(4)));
+        entries.add(new LootTableEntry(8, BlockType.OBSIDIAN, new SetCount(4)));
 
         // Entry #14
-        entries.add(new LootTableEntry(7, BlockType.glass, new SetCount(3)));
+        entries.add(new LootTableEntry(7, BlockType.GLASS, new SetCount(3)));
 
         // Entry #15
-        entries.add(new LootTableEntry(7, BlockType.melon_slice, new SetCount(3, new RandomChance(0.4))));
+        entries.add(new LootTableEntry(7, BlockType.MELON_SLICE, new SetCount(3, new RandomChance(0.4))));
 
         // Entry #16
-        entries.add(new LootTableEntry(5, BlockType.tnt, new SetCount(4)));
+        entries.add(new LootTableEntry(5, BlockType.TNT, new SetCount(4)));
 
         // Entry #17
-        entries.add(new LootTableEntry(5, BlockType.experience_bottle, new SetCount(3, new RandomChance(0.2))));
+        entries.add(new LootTableEntry(5, BlockType.EXPERIENCE_BOTTLE, new SetCount(3, new RandomChance(0.2))));
 
         // Entry #18
-        entries.add(new LootTableEntry(5, BlockType.book));
+        entries.add(new LootTableEntry(5, BlockType.BOOK));
 
         // Entry #19
-        entries.add(new LootTableEntry(5, BlockType.redstone, new SetCount(16)));
+        entries.add(new LootTableEntry(5, BlockType.REDSTONE, new SetCount(16)));
 
         // Entry #20
-        entries.add(new LootTableEntry(5, BlockType.gunpowder, new SetCount(16)));
+        entries.add(new LootTableEntry(5, BlockType.GUNPOWDER, new SetCount(16)));
 
         // Entry #21
-        entries.add(new LootTableEntry(5, BlockType.gold_ingot, new SetCount(4, new RandomChance(0.3))));
+        entries.add(new LootTableEntry(5, BlockType.GOLD_INGOT, new SetCount(4, new RandomChance(0.3))));
 
         // Entry #22
-        entries.add(new LootTableEntry(5, BlockType.lapis_lazuli, new SetCount(10)));
+        entries.add(new LootTableEntry(5, BlockType.LAPIS_LAZULI, new SetCount(10)));
 
         // Entry #23
-        entries.add(new LootTableEntry(4, BlockType.lava_bucket));
+        entries.add(new LootTableEntry(4, BlockType.LAVA_BUCKET));
 
         // Entry #24
-        entries.add(new LootTableEntry(4, BlockType.apple, new SetCount(2, new RandomChance(0.3))));
+        entries.add(new LootTableEntry(4, BlockType.APPLE, new SetCount(2, new RandomChance(0.3))));
 
         // Entry #25
-        entries.add(new LootTableEntry(2, BlockType.diamond, new SetCount(2, new RandomChance(0.3))));
+        entries.add(new LootTableEntry(2, BlockType.DIAMOND, new SetCount(2, new RandomChance(0.3))));
 
         // Entry #26
-        entries.add(new LootTableEntry(3, BlockType.saddle));
+        entries.add(new LootTableEntry(3, BlockType.SADDLE));
 
         // Entry #27
-        entries.add(new LootTableEntry(3, BlockType.spectral_arrow, new SetCount(10)));
+        entries.add(new LootTableEntry(3, BlockType.SPECTRAL_ARROW, new SetCount(10)));
 
         // Entry #28
         ArrayList<Attributes> attributes = new ArrayList<>();
         attributes.add(new JumpStrength(1));
-        attributes.add(new MovementSpeed(0.1));
-        Text text = new Text(false, false, "Driftwood");
+        attributes.add(new MovementSpeed(0.2));
+        String text = "Driftwood";
         EntityData horse = new Horse(60, true, 5, text, attributes);
 
         SetName name = new SetName(new Text(false, false, "Driftwood's return"));
@@ -448,72 +448,72 @@ public class Main {
         functions.add(new SetComponents(horse));
         functions.add(name);
 
-        entries.add(new LootTableEntry(10, BlockType.horse_spawn_egg, functions));
+        entries.add(new LootTableEntry(10, BlockType.HORSE_SPAWN_EGG, functions));
         functions = new ArrayList<>();
 
         // Entry #29
-        entries.add(new LootTableEntry(3, BlockType.glowstone_dust, new SetCount(6)));
+        entries.add(new LootTableEntry(3, BlockType.GLOWSTONE_DUST, new SetCount(6)));
 
         // Entry #30
-        entries.add(new LootTableEntry(3, BlockType.ender_pearl, new SetCount(2, new RandomChance(0.5))));
+        entries.add(new LootTableEntry(3, BlockType.ENDER_PEARL, new SetCount(2, new RandomChance(0.5))));
 
         // Entry #31
-        entries.add(new LootTableEntry(2, BlockType.nether_wart, new SetCount(5)));
+        entries.add(new LootTableEntry(2, BlockType.NETHER_WART, new SetCount(5)));
 
         // Entry #32
-        entries.add(new LootTableEntry(2, BlockType.blaze_rod, new SetCount(2, new RandomChance(0.1))));
+        entries.add(new LootTableEntry(2, BlockType.BLAZE_ROD, new SetCount(2, new RandomChance(0.1))));
 
         // Entry #33
-        entries.add(new LootTableEntry(2, BlockType.golden_apple));
+        entries.add(new LootTableEntry(2, BlockType.GOLDEN_APPLE));
 
         // Entry #34
-        entries.add(new LootTableEntry(2, BlockType.anvil));
+        entries.add(new LootTableEntry(2, BlockType.ANVIL));
 
         // Entry #35
-        entries.add(new LootTableEntry(4, BlockType.spyglass));
+        entries.add(new LootTableEntry(4, BlockType.SPYGLASS));
 
         // Entry #36
-        entries.add(new LootTableEntry(2, BlockType.wolf_spawn_egg, new SetCount(2, new RandomChance(0.01))));
+        entries.add(new LootTableEntry(2, BlockType.WOLF_SPAWN_EGG, new SetCount(2, new RandomChance(0.01))));
 
         // Entry #37
-        entries.add(new LootTableEntry(1, BlockType.diamond_horse_armor));
+        entries.add(new LootTableEntry(1, BlockType.DIAMOND_HORSE_ARMOR));
 
         // Entry #38
-        entries.add(new LootTableEntry(1, BlockType.netherite_hoe));
+        entries.add(new LootTableEntry(1, BlockType.NETHERITE_HOE));
 
         // Entry #39
-        enchantment = new Enchantments(EnchantmentType.loyalty, 3);
-        entries.add(new LootTableEntry(1, BlockType.trident, new SetComponents(enchantment)));
+        enchantment = new Enchantments(EnchantmentType.LOYALTY, 3);
+        entries.add(new LootTableEntry(1, BlockType.TRIDENT, new SetComponents(enchantment)));
 
         // Entry #40
-        entries.add(new LootTableEntry(1, BlockType.netherite_upgrade_smithing_template));
+        entries.add(new LootTableEntry(1, BlockType.NETHERITE_UPGRADE_SMITHING_TEMPLATE));
 
         // Entry #42
         RandomChance condition = new RandomChance(0.001);
-        entries.add(new LootTableEntry(1, BlockType.netherite_scrap, new SetCount(4, condition)));
+        entries.add(new LootTableEntry(1, BlockType.NETHERITE_SCRAP, new SetCount(4, condition)));
 
         // Entry #43
-        PotionContents contents = new PotionContents(Effect.luck, 0, 600, "59C106", true, false, true);
+        PotionContents contents = new PotionContents(Effect.LUCK, 0, 600, "59C106", true, false, true);
         name = new SetName(new Text(false, false, "Potion of Care Package luck"));
 
         functions.add(new SetComponents(contents));
         functions.add(name);
 
-        entries.add(new LootTableEntry(2, BlockType.splash_potion, functions));
+        entries.add(new LootTableEntry(2, BlockType.SPLASH_POTION, functions));
         functions = new ArrayList<>();
 
         // Entry #44
-        contents = new PotionContents(Effect.poison, 0, 5, "4E9331", false, true, true);
+        contents = new PotionContents(Effect.POISON, 0, 5, "4E9331", false, true, true);
         name = new SetName(new Text(false, false, "Potion of Poison"));
 
         functions.add(new SetComponents(contents));
         functions.add(name);
 
-        entries.add(new LootTableEntry(2, BlockType.splash_potion, functions));
+        entries.add(new LootTableEntry(2, BlockType.SPLASH_POTION, functions));
         functions = new ArrayList<>();
 
         // Entry #45
-        contents = new PotionContents(Effect.blindness, 0, 10, "1F1F23", false, true, true);
+        contents = new PotionContents(Effect.BLINDNESS, 0, 10, "1F1F23", false, true, true);
         MaxStackSize stack = new MaxStackSize(64);
         name = new SetName(new Text(false, false, "Potion of Blindness"));
         SetCount count = new SetCount(5, new RandomChance(0.3));
@@ -525,7 +525,7 @@ public class Main {
         functions.add(name);
         functions.add(count);
 
-        entries.add(new LootTableEntry(2, BlockType.splash_potion, functions));
+        entries.add(new LootTableEntry(2, BlockType.SPLASH_POTION, functions));
         functions = new ArrayList<>();
         components = new ArrayList<>();
 
@@ -533,7 +533,7 @@ public class Main {
         attributes = new ArrayList<>();
         attributes.add(new JumpStrength(0.7));
         attributes.add(new MovementSpeed(0.34));
-        text = new Text(false, false, "Scuderia");
+        text = "Scuderia";
         horse = new Horse(5, true, 4, text, attributes);
 
         name = new SetName(new Text(false, false, "Grazie Ragazzi"));
@@ -541,7 +541,7 @@ public class Main {
         functions.add(new SetComponents(horse));
         functions.add(name);
 
-        entries.add(new LootTableEntry(2, BlockType.horse_spawn_egg, functions));
+        entries.add(new LootTableEntry(2, BlockType.HORSE_SPAWN_EGG, functions));
         functions = new ArrayList<>();
 
         // Entry #47
@@ -615,7 +615,7 @@ public class Main {
         texts = new ArrayList<>();
 
         components.add(new WrittenBookContent(title, author, pages));
-        entries.add(new LootTableEntry(1, BlockType.written_book, new SetComponents(components)));
+        entries.add(new LootTableEntry(1, BlockType.WRITTEN_BOOK, new SetComponents(components)));
         components = new ArrayList<>();
 
         // Entry #48
@@ -667,11 +667,11 @@ public class Main {
         texts = new ArrayList<>();
 
         components.add(new WrittenBookContent(title, author, pages));
-        entries.add(new LootTableEntry(1, BlockType.written_book, new SetComponents(components)));
+        entries.add(new LootTableEntry(1, BlockType.WRITTEN_BOOK, new SetComponents(components)));
         components = new ArrayList<>();
 
         // Entry #49
-        entries.add(new LootTableEntry(2, BlockType.wind_charge, new SetCount(5)));
+        entries.add(new LootTableEntry(2, BlockType.WIND_CHARGE, new SetCount(5)));
 
         // Make loot table
         LootTable lTable = new LootTable(type, rolls, bonusRolls, entries);
@@ -690,6 +690,7 @@ public class Main {
     }
 
     private void definePlugins() throws IOException {
+        plugins.add(new PaperPlugin("ViaVersion-5.4.0.jar", OperationMode.otherVersions, "ViaBackwards-5.4.0.jar"));
         plugins.add(new PaperPlugin("spark-1.10.119-bukkit.jar", OperationMode.debug));
         plugins.add(new PaperPlugin("Chunky-Bukkit-1.4.28.jar", OperationMode.debug));
         plugins.add(new PaperPlugin("openaudiomc-6.10.7.jar", OperationMode.proximity, "OpenAudioMc\\"));
@@ -824,7 +825,6 @@ public class Main {
         files.add(EquipGear());
         files.add(GodMode());
         files.add(BattleRoyale());
-        files.add(TitleDefaultTiming());
     }
 
     private FileData Initialize() {
@@ -864,11 +864,11 @@ public class Main {
 
         // Create staging area
         fileCommands.add(Execute.In(Dimension.overworld) +
-                CommandBuilder.fill(-6, 220, -6, 6, 226, 6, BlockType.barrier));
+                CommandBuilder.fill(-6, 220, -6, 6, 226, 6, BlockType.BARRIER));
         fileCommands.add(Execute.In(Dimension.overworld) +
-                CommandBuilder.fill(-5, 221, -5, 5, 226, 5, BlockType.air));
+                CommandBuilder.fill(-5, 221, -5, 5, 226, 5, BlockType.AIR));
         fileCommands.add(Execute.In(Dimension.overworld) +
-                CommandBuilder.setBlock(0, 222, -5, BlockType.cherry_wall_sign + "[facing=south,waterlogged=false]{back_text:{messages:['{\"text\":\"You have\"}','{\"text\":\"angered\"}','{\"text\":\"the Gods!\"}','{\"text\":\"\"}']},front_text:{messages:['{\"text\":\"In rememberance\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"" + CommandBuilder.summonEntity(EntityType.firework_rocket, new Coordinate(0, 0, 0, ReferenceFrame.relative)) + "\"}}','{\"text\":\"of our\"}','{\"text\":\"Command Center\"}','{\"text\":\"2014-2025\"}']},is_waxed:0b}"));
+                CommandBuilder.setBlock(0, 222, -5, BlockType.CHERRY_WALL_SIGN + "[facing=south,waterlogged=false]{back_text:{messages:[\"You have\",\"angered\",\"the Gods!\",\"\"]},front_text:{messages:[{\"text\":\"In rememberance\",\"click_event\":{\"action\":\"run_command\",\"command\":\"summon minecraft:firework_rocket ~ ~ ~\"}},\"of our\",\"Command Center\",\"2014-2025\"]},is_waxed:0b}"));
 
         // Control Point
         if (OperationMode.controlPoints) {
@@ -972,7 +972,7 @@ public class Main {
         // Summon a player head upon dying
         for (Player p : players) {
             fileCommands.add(Execute.At(new Entity("@p[name=" + p.getPlayerName() + ",scores={Deaths=1}]")) +
-                    CommandBuilder.summonEntity(EntityType.item, "{Item:{id:\"minecraft:player_head\",count:1,components:{\"minecraft:profile\":{name:" + p.getPlayerName() + "}}}}"));
+                    CommandBuilder.summonEntity(EntityType.item, "{Item:{id:\"" + BlockType.PLAYER_HEAD + "\",count:1,components:{\"minecraft:profile\":{name:" + p.getPlayerName() + "}}}}"));
         }
 
         return new FileData(FileName.drop_player_heads, fileCommands);
@@ -1013,7 +1013,7 @@ public class Main {
     private FileData ClearEnderChest() {
         ArrayList<String> fileCommands = new ArrayList<>();
         for (int i = 0; i < chestSize; i++) {
-            fileCommands.add(CommandBuilder.replaceItem("@a", InventorySlot.enderchest.setSlotNumber(i), BlockType.air, 1));
+            fileCommands.add(CommandBuilder.replaceItem("@a", InventorySlot.enderchest.setSlotNumber(i), BlockType.AIR, 1));
         }
 
         return new FileData(FileName.clear_enderchest, fileCommands);
@@ -1021,22 +1021,22 @@ public class Main {
 
     private FileData EquipGear() {
         ArrayList<String> fileCommands = new ArrayList<>();
-        fileCommands.add(CommandBuilder.replaceItem("@a", InventorySlot.chest, BlockType.iron_chestplate));
-        fileCommands.add(CommandBuilder.replaceItem("@a", InventorySlot.feet, BlockType.iron_boots));
-        fileCommands.add(CommandBuilder.replaceItem("@a", InventorySlot.head, BlockType.iron_helmet));
-        fileCommands.add(CommandBuilder.replaceItem("@a", InventorySlot.legs, BlockType.iron_leggings));
-        fileCommands.add(CommandBuilder.replaceItem("@a", InventorySlot.offhand, BlockType.shield));
-        fileCommands.add(CommandBuilder.replaceItem("@a", InventorySlot.mainhand, BlockType.iron_axe));
-        fileCommands.add(CommandBuilder.replaceItem("@a", InventorySlot.inventory.setSlotNumber(0), BlockType.iron_sword));
-        fileCommands.add(CommandBuilder.giveEffect("@a", Effect.regeneration, 1, 255, true));
+        fileCommands.add(CommandBuilder.replaceItem("@a", InventorySlot.chest, BlockType.IRON_CHESTPLATE));
+        fileCommands.add(CommandBuilder.replaceItem("@a", InventorySlot.feet, BlockType.IRON_BOOTS));
+        fileCommands.add(CommandBuilder.replaceItem("@a", InventorySlot.head, BlockType.IRON_HELMET));
+        fileCommands.add(CommandBuilder.replaceItem("@a", InventorySlot.legs, BlockType.IRON_LEGGINGS));
+        fileCommands.add(CommandBuilder.replaceItem("@a", InventorySlot.offhand, BlockType.SHIELD));
+        fileCommands.add(CommandBuilder.replaceItem("@a", InventorySlot.mainhand, BlockType.IRON_AXE));
+        fileCommands.add(CommandBuilder.replaceItem("@a", InventorySlot.inventory.setSlotNumber(0), BlockType.IRON_SWORD));
+        fileCommands.add(CommandBuilder.giveEffect("@a", Effect.REGENERATION, 1, 255, true));
 
         return new FileData(FileName.equip_gear, fileCommands);
     }
 
     private FileData GodMode() {
         ArrayList<String> fileCommands = new ArrayList<>();
-        fileCommands.add(CommandBuilder.giveEffect("@s", Effect.resistance, 99999, 4, true));
-        fileCommands.add(CommandBuilder.replaceItem("@s", InventorySlot.mainhand, BlockType.trident + "[custom_name='[{\"bold\":false,\"color\":\"white\",\"italic\":false,\"obfuscated\":true,\"text\":\"aA\"},{\"bold\":true,\"color\":\"#8C3CC1\",\"obfuscated\":false,\"text\":\" The\"},{\"bold\":true,\"color\":\"#E280FF\",\"obfuscated\":false,\"text\":\" Impaler \"},{\"color\":\"white\",\"obfuscated\":true,\"text\":\"Aa\"}]',lore=['{\"text\":\"This holy weapon impales anything it touches\"}'],unbreakable={show_in_tooltip:false},damage=0,enchantments={levels:{\"minecraft:fire_aspect\":255,\"minecraft:sharpness\":255,\"minecraft:efficiency\":255,'impaling':255},show_in_tooltip:false},attribute_modifiers={modifiers:[{id:\"" + AttributeType.armor + "\",type:\"" + AttributeType.attack_damage + "\",amount:1000,operation:\"add_value\",slot:\"mainhand\"}],show_in_tooltip:false}]"));
+        fileCommands.add(CommandBuilder.giveEffect("@s", Effect.RESISTANCE, 99999, 4, true));
+        fileCommands.add(CommandBuilder.replaceItem("@s", InventorySlot.mainhand, BlockType.TRIDENT + "[custom_name=[{\"bold\":false,\"color\":\"white\",\"italic\":false,\"obfuscated\":true,\"text\":\"aA\"},{\"bold\":true,\"color\":\"#8C3CC1\",\"obfuscated\":false,\"text\":\"The\"},{\"bold\":true,\"color\":\"#E280FF\",\"obfuscated\":false,\"text\":\" Impaler \"},{\"color\":\"white\",\"obfuscated\":true,\"text\":\"Aa\"}],lore=[\"This holy weapon impales anything it touches\"],damage=0,enchantments={\"" + EnchantmentType.FIRE_ASPECT + "\":255,\"" + EnchantmentType.SHARPNESS + "\":255,\"" + EnchantmentType.IMPALING + "\":255,\"" + EnchantmentType.LOYALTY + "\":255,\"" + EnchantmentType.EFFICIENCY + "\":255},attribute_modifiers=[{id:\"armor\",type:\"armor\",amount:1000,operation:\"add_value\",slot:\"armor\",display:{type:\"hidden\"}},{id:\"attack_damage\",type:\"attack_damage\",amount:1000,operation:\"add_value\",slot:\"mainhand\",display:{type:\"hidden\"}}],unbreakable={}]"));
 
         return new FileData(FileName.god_mode, fileCommands);
     }
@@ -1049,20 +1049,20 @@ public class Main {
 
         // Give potions
         if (!OperationMode.teamCreationInGame) {
-            fileCommands.add(CommandBuilder.giveSplashPotion("@s", 0, Effect.speed, "808080", "Developer Mode", "Set operational mode to Developer Mode."));
-            fileCommands.add(CommandBuilder.giveSplashPotion("@s", 1, Effect.weakness, "FF9933", "Assign Teams", "Assign players to teams."));
-            fileCommands.add(CommandBuilder.giveSplashPotion("@s", 2, Effect.slow_falling, "6633CC", "Predictions", "Who will win this season?."));
-            fileCommands.add(CommandBuilder.giveSplashPotion("@s", 3, Effect.invisibility, "3399FF", "Into Calls", "Allow players to gather in their Discord channel."));
-            fileCommands.add(CommandBuilder.giveSplashPotion("@s", 4, Effect.poison, "00CC66", "Spread players", "Spread players across the map."));
-            fileCommands.add(CommandBuilder.giveSplashPotion("@s", 5, Effect.strength, "CC3333", "Survival Mode", "Set operational mode to Ready to Play."));
-            fileCommands.add(CommandBuilder.giveSplashPotion("@s", 6, Effect.slowness, "00FF7F", "Start Game", "Start the game. Good luck!"));
+            fileCommands.add(CommandBuilder.giveSplashPotion("@s", 0, Effect.SPEED, "808080", "Developer Mode", "Set operational mode to Developer Mode."));
+            fileCommands.add(CommandBuilder.giveSplashPotion("@s", 1, Effect.WEAKNESS, "FF9933", "Assign Teams", "Assign players to teams."));
+            fileCommands.add(CommandBuilder.giveSplashPotion("@s", 2, Effect.SLOW_FALLING, "6633CC", "Predictions", "Who will win this season?."));
+            fileCommands.add(CommandBuilder.giveSplashPotion("@s", 3, Effect.INVISIBILITY, "3399FF", "Into Calls", "Allow players to gather in their Discord channel."));
+            fileCommands.add(CommandBuilder.giveSplashPotion("@s", 4, Effect.POISON, "00CC66", "Spread players", "Spread players across the map."));
+            fileCommands.add(CommandBuilder.giveSplashPotion("@s", 5, Effect.STRENGTH, "CC3333", "Survival Mode", "Set operational mode to Ready to Play."));
+            fileCommands.add(CommandBuilder.giveSplashPotion("@s", 6, Effect.SLOWNESS, "00FF7F", "Start Game", "Start the game. Good luck!"));
         } else {
-            fileCommands.add(CommandBuilder.giveSplashPotion("@s", 0, Effect.speed, "808080", "Developer Mode", "Set operational mode to Developer Mode."));
-            fileCommands.add(CommandBuilder.giveSplashPotion("@s", 1, Effect.slow_falling, "6633CC", "Predictions", "Who will win this season?."));
-            fileCommands.add(CommandBuilder.giveSplashPotion("@s", 2, Effect.invisibility, "3399FF", "Into Calls", "Allow players to gather in their Discord channel."));
-            fileCommands.add(CommandBuilder.giveSplashPotion("@s", 3, Effect.poison, "00CC66", "Spread players", "Spread players across the map."));
-            fileCommands.add(CommandBuilder.giveSplashPotion("@s", 4, Effect.strength, "CC3333", "Survival Mode", "Set operational mode to Ready to Play."));
-            fileCommands.add(CommandBuilder.giveSplashPotion("@s", 5, Effect.slowness, "00FF7F", "Start Game", "Start the game. Good luck!"));
+            fileCommands.add(CommandBuilder.giveSplashPotion("@s", 0, Effect.SPEED, "808080", "Developer Mode", "Set operational mode to Developer Mode."));
+            fileCommands.add(CommandBuilder.giveSplashPotion("@s", 1, Effect.SLOW_FALLING, "6633CC", "Predictions", "Who will win this season?."));
+            fileCommands.add(CommandBuilder.giveSplashPotion("@s", 2, Effect.INVISIBILITY, "3399FF", "Into Calls", "Allow players to gather in their Discord channel."));
+            fileCommands.add(CommandBuilder.giveSplashPotion("@s", 3, Effect.POISON, "00CC66", "Spread players", "Spread players across the map."));
+            fileCommands.add(CommandBuilder.giveSplashPotion("@s", 4, Effect.STRENGTH, "CC3333", "Survival Mode", "Set operational mode to Ready to Play."));
+            fileCommands.add(CommandBuilder.giveSplashPotion("@s", 5, Effect.SLOWNESS, "00FF7F", "Start Game", "Start the game. Good luck!"));
         }
 
         return new FileData(FileName.start_potions, fileCommands);
@@ -1073,7 +1073,7 @@ public class Main {
 
         // Create marker entity
         fileCommands.add(CommandBuilder.killEntity("@e[type=marker]"));
-        fileCommands.add(CommandBuilder.summonEntity(EntityType.marker, new Coordinate(0, Constant.worldBottom, 0), "{CustomName:\"\\\"Admin\\\"\"}"));
+        fileCommands.add(CommandBuilder.summonEntity(EntityType.marker, new Coordinate(0, Constant.worldBottom, 0), "{CustomName:\"Admin\"}"));
 
         // Set time
         fileCommands.add(CommandBuilder.setTime(0));
@@ -1091,6 +1091,7 @@ public class Main {
         fileCommands.add(CommandBuilder.setGameRule(GameRule.doImmediateRespawn, true));
         fileCommands.add(CommandBuilder.setGameRule(GameRule.disableRaids, true));
         fileCommands.add(CommandBuilder.setGameRule(GameRule.doInsomnia, false));
+        fileCommands.add(CommandBuilder.setGameRule(GameRule.locatorBar, false));
 
         // Reset scores of all entities
         fileCommands.add(scoreboard.Reset("@e"));
@@ -1099,7 +1100,7 @@ public class Main {
 
         // Create jukebox at 0,0
         fileCommands.add(Execute.In(Dimension.overworld) +
-                CommandBuilder.setBlock(startCoordinate, BlockType.jukebox + "[has_record=true]{RecordItem:{Count:1b,id:\"minecraft:music_disc_stal\"}}", SetBlockType.replace));
+                CommandBuilder.setBlock(startCoordinate, BlockType.JUKEBOX + "[has_record=true]{RecordItem:{Count:1b,id:\"" + BlockType.MUSIC_DISC_STAL + "\"}}", SetBlockType.replace));
 
         // Remove tags
         fileCommands.add(CommandBuilder.removeTag("@a", Tag.RespawnDisabled));
@@ -1245,7 +1246,7 @@ public class Main {
 
         // Remove resistance and give regeneration
         fileCommands.add(CommandBuilder.clearEffect("@a"));
-        fileCommands.add(CommandBuilder.giveEffect("@a", Effect.regeneration, 1, 255));
+        fileCommands.add(CommandBuilder.giveEffect("@a", Effect.REGENERATION, 1, 255));
 
         // Make players fall
         fileCommands.add(CommandBuilder.addTag("@a[gamemode=!adventure]", Tag.IsFlying));
@@ -1319,7 +1320,7 @@ public class Main {
         fileCommands.add(scoreboard.Set("@a", getObjectiveByName(Objective.Kills), 0));
 
         // Make players invulnerable
-        fileCommands.add(CommandBuilder.giveEffect("@a", Effect.resistance, 99999, 4, true));
+        fileCommands.add(CommandBuilder.giveEffect("@a", Effect.RESISTANCE, 99999, 4, true));
 
         return new FileData(FileName.into_calls, fileCommands);
     }
@@ -1355,11 +1356,11 @@ public class Main {
         fileCommands.add(Schedule.callFunction(FileName.clear_enderchest));
 
         // Recipes
-        // fileCommands.add(giveRecipe("@a", BlockType.golden_apple.setNamespace(Namespace.uhc)));
-        fileCommands.add(CommandBuilder.takeRecipe("@a", BlockType.dragon_head.setNamespace(Namespace.uhc)));
+        // fileCommands.add(giveRecipe("@a", BlockType.GOLDEN_APPLE.setNamespace(Namespace.uhc)));
+        fileCommands.add(CommandBuilder.takeRecipe("@a", BlockType.DRAGON_HEAD.setNamespace(Namespace.uhc)));
 
         // Remove resistance
-        fileCommands.add(CommandBuilder.clearEffect("@a", Effect.resistance));
+        fileCommands.add(CommandBuilder.clearEffect("@a", Effect.RESISTANCE));
 
         // Set scoreboard values
         fileCommands.add(scoreboard.Set("@a", getObjectiveByName(Objective.Hearts), 20));
@@ -1376,9 +1377,9 @@ public class Main {
         fileCommands.add(CommandBuilder.setTime(0));
 
         // Give potion effect
-        fileCommands.add(CommandBuilder.giveEffect("@a", Effect.regeneration, 1, 255));
-        fileCommands.add(CommandBuilder.giveEffect("@a", Effect.saturation, 1, 255));
-        fileCommands.add(CommandBuilder.giveEffect("@a", Effect.resistance, 20 * 60, 2, true));
+        fileCommands.add(CommandBuilder.giveEffect("@a", Effect.REGENERATION, 1, 255));
+        fileCommands.add(CommandBuilder.giveEffect("@a", Effect.SATURATION, 1, 255));
+        fileCommands.add(CommandBuilder.giveEffect("@a", Effect.RESISTANCE, 20 * 60, 2, true));
 
         // Clear player inventories
         fileCommands.add(CommandBuilder.clearInventory("@a"));
@@ -1397,11 +1398,11 @@ public class Main {
         if (teamMode == 1) {
             // Teammate tracker
             for (int i = 0; i < teams.size(); i++) {
-                fileCommands.add(CommandBuilder.giveItem("@a[team=" + teams.get(i).getName() + "]", BlockType.bundle.extendColor(teams.get(i).getGlassColor()), "[enchantments={levels:{\"minecraft:vanishing_curse\":1}},custom_data={locateTeammate:1b}]"));
+                fileCommands.add(CommandBuilder.giveItem("@a[team=" + teams.get(i).getName() + "]", BlockType.BUNDLE.extendColor(teams.get(i).getGlassColor()), "[enchantments={\"" + EnchantmentType.VANISHING_CURSE + "\":1},custom_data={locateTeammate:1b}]"));
             }
         } else if (teamMode == 2) {
             // Team caller
-            fileCommands.add(CommandBuilder.giveItem("@a", BlockType.goat_horn, "[instrument=\"minecraft:ponder_goat_horn\",use_cooldown={seconds:30},enchantments={\"minecraft:vanishing_curse\":1}]"));
+            fileCommands.add(CommandBuilder.giveItem("@a", BlockType.GOAT_HORN, "[instrument=\"minecraft:ponder_goat_horn\",use_cooldown={seconds:30},enchantments={\"" + EnchantmentType.VANISHING_CURSE + "\":1}]"));
         }
 
         // Show world border size in actionbar
@@ -1418,7 +1419,7 @@ public class Main {
         fileCommands.add(new Title("@a", TitleType.title, new Text(Color.gold, true, true, "Game Starting Now!")).displayTitle());
 
         // Change title display time
-        fileCommands.add(Schedule.callFunction(FileName.title_default_timing, 5));
+        fileCommands.add(CommandBuilder.titleDefaultTiming("@a"));
 
         // Destroy all ground items
         fileCommands.add(CommandBuilder.killEntity("@e[type=item]"));
@@ -1453,7 +1454,7 @@ public class Main {
         fileCommands.add(getBossbarByName("cp2").setVisible(true));
 
         // Remove CP1 reinforced deepslate block
-        fileCommands.addAll(CommandBuilder.forceLoadAndSet(controlPoints.get(0).getCoordinate().getX(), controlPoints.get(0).getCoordinate().getY() + 3, controlPoints.get(0).getCoordinate().getZ(), BlockType.air, SetBlockType.replace));
+        fileCommands.addAll(CommandBuilder.forceLoadAndSet(controlPoints.get(0).getCoordinate().getX(), controlPoints.get(0).getCoordinate().getY() + 3, controlPoints.get(0).getCoordinate().getZ(), BlockType.AIR, SetBlockType.replace));
 
         // Schedule continuous functions
         fileCommands.add(Schedule.callFunction(FileName.timer_control_point_20));
@@ -1477,7 +1478,7 @@ public class Main {
         fileCommands.add(new TellRaw("@a", texts).sendRaw());
 
         // Remove reinforced deepslate from CP2
-        fileCommands.addAll(CommandBuilder.forceLoadAndSet(controlPoints.get(1).getCoordinate().getX(), controlPoints.get(1).getCoordinate().getY() + 3, controlPoints.get(1).getCoordinate().getZ(), controlPoints.get(1).getCoordinate().getDimension(), BlockType.air, SetBlockType.replace));
+        fileCommands.addAll(CommandBuilder.forceLoadAndSet(controlPoints.get(1).getCoordinate().getX(), controlPoints.get(1).getCoordinate().getY() + 3, controlPoints.get(1).getCoordinate().getZ(), controlPoints.get(1).getCoordinate().getDimension(), BlockType.AIR, SetBlockType.replace));
 
         // Change bossbar text
         fileCommands.add(getBossbarByName("cp2").setTitle("CP2: " + controlPoints.get(1).getCoordinate().getX() + ", " + controlPoints.get(1).getCoordinate().getY() + ", " + controlPoints.get(1).getCoordinate().getZ() + " (" + controlPoints.get(1).getCoordinate().getDimensionName() + ") - FASTER!!"));
@@ -1635,13 +1636,13 @@ public class Main {
         // Update CP glass color solo
         fileCommands.add(Execute.In(currentCP.getCoordinate().getDimension(), false) +
                 Execute.IfNext("@r[limit=1,gamemode=!spectator,team=]", getObjectiveByName(Objective.ControlPoint.extendName(i)), ComparatorType.greater, Constant.adminSingle, getObjectiveByName(Objective.Highscore.extendName(i)), true) +
-                CommandBuilder.setBlock(currentCP.getCoordinate().getX(), currentCP.getCoordinate().getY() + 1, currentCP.getCoordinate().getZ(), "minecraft:white_stained_glass", SetBlockType.replace));
+                CommandBuilder.setBlock(currentCP.getCoordinate().getX(), currentCP.getCoordinate().getY() + 1, currentCP.getCoordinate().getZ(), BlockType.STAINED_GLASS.extendColor("white"), SetBlockType.replace));
 
         // Keep beacon active
         fileCommands.add(Execute.In(currentCP.getCoordinate().getDimension()) +
-                CommandBuilder.fill(currentCP.getCoordinate().getX() - 1, currentCP.getCoordinate().getY() - 1, currentCP.getCoordinate().getZ() - 1, currentCP.getCoordinate().getX() + 1, currentCP.getCoordinate().getY() - 1, currentCP.getCoordinate().getZ() + 1, BlockType.emerald_block));
+                CommandBuilder.fill(currentCP.getCoordinate().getX() - 1, currentCP.getCoordinate().getY() - 1, currentCP.getCoordinate().getZ() - 1, currentCP.getCoordinate().getX() + 1, currentCP.getCoordinate().getY() - 1, currentCP.getCoordinate().getZ() + 1, BlockType.EMERALD_BLOCK));
         fileCommands.add(Execute.In(currentCP.getCoordinate().getDimension()) +
-                CommandBuilder.fill(currentCP.getCoordinate().getX(), currentCP.getCoordinate().getY(), currentCP.getCoordinate().getZ(), currentCP.getCoordinate().getX(), currentCP.getCoordinate().getY(), currentCP.getCoordinate().getZ(), BlockType.beacon));
+                CommandBuilder.fill(currentCP.getCoordinate().getX(), currentCP.getCoordinate().getY(), currentCP.getCoordinate().getZ(), currentCP.getCoordinate().getX(), currentCP.getCoordinate().getY(), currentCP.getCoordinate().getZ(), BlockType.BEACON));
 
         fileCommands.add(Schedule.callFunction("" + FileName.control_point_tag_ + i));
         fileCommands.add(Schedule.callFunction("" + FileName.control_point_score_ + i));
@@ -1837,12 +1838,12 @@ public class Main {
         fileCommands.add(new Title("@a", TitleType.title, new Text(Color.gold, true, true, carePackageAmount + " Care Packages!")).displayTitle());
 
         // Change title display time
-        fileCommands.add(Schedule.callFunction(FileName.title_default_timing, 5));
+        fileCommands.add(CommandBuilder.titleDefaultTiming("@a"));
 
         // Summon Care Package entities
         for (int i = 0; i < carePackageAmount; i++) {
             fileCommands.add(Execute.In(Dimension.overworld) +
-                    CommandBuilder.summonEntity(EntityType.area_effect_cloud, new Coordinate(0, 300, 0), "{Passengers:[{id:\"minecraft:falling_block\",BlockState:{Name:\"minecraft:chest\"},TileEntityData:{LootTable:\"uhc:supply_drop\",CustomName:\"Care Package\"},Time:1,DropItem:0b,Tags:[\"CarePackage\"]}]}"));
+                    CommandBuilder.summonEntity(EntityType.area_effect_cloud, new Coordinate(0, 300, 0), "{Passengers:[{id:\"minecraft:falling_block\",BlockState:{Name:\"" + BlockType.CHEST + "\"},TileEntityData:{LootTable:\"uhc:supply_drop\",CustomName:\"Care Package\"},Time:1,DropItem:0b,Tags:[\"CarePackage\"]}]}"));
         }
 
         if (debug) {
@@ -1997,22 +1998,22 @@ public class Main {
             fileCommands.add(Execute.In(c.getDimension()) +
                     CommandBuilder.addForceLoad(c.getX(), c.getZ(), c.getX(), c.getZ()));
             fileCommands.add(Execute.In(c.getDimension()) +
-                    CommandBuilder.setBlock(c.getX(), c.getY() + 11, c.getZ(), BlockType.structure_block + "[mode=load]{metadata:\"\",mirror:\"NONE\",ignoreEntities:1b,powered:0b,seed:0L,author:\"?\",rotation:\"NONE\",posX:-6,mode:\"LOAD\",posY:-13,sizeX:13,posZ:-6,integrity:1.0f,showair:0b,name:\"" + cp.getStructureName() + "\",sizeY:14,sizeZ:13,showboundingbox:1b}", SetBlockType.destroy));
+                    CommandBuilder.setBlock(c.getX(), c.getY() + 11, c.getZ(), BlockType.STRUCTURE_BLOCK + "[mode=load]{metadata:\"\",mirror:\"NONE\",ignoreEntities:1b,powered:0b,seed:0L,author:\"?\",rotation:\"NONE\",posX:-6,mode:\"LOAD\",posY:-13,sizeX:13,posZ:-6,integrity:1.0f,showair:0b,name:\"" + cp.getStructureName() + "\",sizeY:14,sizeZ:13,showboundingbox:1b}", SetBlockType.destroy));
 
             // Activate structure block
             fileCommands.add(Execute.In(c.getDimension()) +
-                    CommandBuilder.setBlock(c.getX(), c.getY() + 10, c.getZ(), BlockType.redstone_block, SetBlockType.destroy));
+                    CommandBuilder.setBlock(c.getX(), c.getY() + 10, c.getZ(), BlockType.REDSTONE_BLOCK, SetBlockType.destroy));
 
             // Initialize object
             for (int i = c.getY() + 12; i < Constant.worldHeight; i++) {
                 // Specify block to be changed
 
                 fileCommands.add(Execute.In(c.getDimension(), false) +
-                        Execute.UnlessNext(c.getX(), i, c.getZ(), BlockType.air) +
-                        Execute.UnlessNext(c.getX(), i, c.getZ(), BlockType.cave_air) +
-                        Execute.UnlessNext(c.getX(), i, c.getZ(), BlockType.void_air) +
-                        Execute.UnlessNext(c.getX(), i, c.getZ(), BlockType.bedrock, true) +
-                        CommandBuilder.setBlock(c.getX(), i, c.getZ(), BlockType.glass));
+                        Execute.UnlessNext(c.getX(), i, c.getZ(), BlockType.AIR) +
+                        Execute.UnlessNext(c.getX(), i, c.getZ(), BlockType.CAVE_AIR) +
+                        Execute.UnlessNext(c.getX(), i, c.getZ(), BlockType.VOID_AIR) +
+                        Execute.UnlessNext(c.getX(), i, c.getZ(), BlockType.BEDROCK, true) +
+                        CommandBuilder.setBlock(c.getX(), i, c.getZ(), BlockType.GLASS));
             }
 
             fileCommands.add(Execute.In(c.getDimension()) +
@@ -2020,7 +2021,7 @@ public class Main {
         }
 
         // Remove leftover music discs from legacy Control Point
-        fileCommands.add(CommandBuilder.killEntity("@e[type=item,nbt={Item:{id:\"minecraft:music_disc_stal\",count:1}}]"));
+        fileCommands.add(CommandBuilder.killEntity("@e[type=item,nbt={Item:{id:\"" + BlockType.MUSIC_DISC_STAL + "\",count:1}}]"));
 
         return new FileData(FileName.spawn_control_points, fileCommands);
     }
@@ -2067,26 +2068,51 @@ public class Main {
     private FileData RemoveBannedItems() {
         ArrayList<String> fileCommands = new ArrayList<>();
 
+        // Regeneration potions (normal + splash, strong, long)
+        Text warning = new Text(Color.red, true, false, "REGENERATION POTIONS ARE NOT ALLOWED, YOU NAUGHTY BUM!");
+        String target = "@p[nbt={SelectedItem:{id:\"" + BlockType.SPLASH_POTION + "\",count:1,components:{\"minecraft:potion_contents\":{potion:\"" + Effect.REGENERATION.getPotionTag() + "\"}}}}]";
+        String replacement = BlockType.GLASS_BOTTLE.toString();
+        fileCommands.addAll(CommandBuilder.warnAndReplace(target, warning, replacement));
+        target = "@p[nbt={SelectedItem:{id:\"" + BlockType.SPLASH_POTION + "\",count:1,components:{\"minecraft:potion_contents\":{potion:\"" + Effect.REGENERATION.getPotionTag(true, false) + "\"}}}}]";
+        fileCommands.addAll(CommandBuilder.warnAndReplace(target, warning, replacement));
+        target = "@p[nbt={SelectedItem:{id:\"" + BlockType.SPLASH_POTION + "\",count:1,components:{\"minecraft:potion_contents\":{potion:\"" + Effect.REGENERATION.getPotionTag(false, true) + "\"}}}}]";
+        fileCommands.addAll(CommandBuilder.warnAndReplace(target, warning, replacement));
+        target = "@p[nbt={SelectedItem:{id:\"" + BlockType.POTION + "\",count:1,components:{\"minecraft:potion_contents\":{potion:\"" + Effect.REGENERATION.getPotionTag() + "\"}}}}]";
+        fileCommands.addAll(CommandBuilder.warnAndReplace(target, warning, replacement));
+        target = "@p[nbt={SelectedItem:{id:\"" + BlockType.POTION + "\",count:1,components:{\"minecraft:potion_contents\":{potion:\"" + Effect.REGENERATION.getPotionTag(true, false) + "\"}}}}]";
+        fileCommands.addAll(CommandBuilder.warnAndReplace(target, warning, replacement));
+        target = "@p[nbt={SelectedItem:{id:\"" + BlockType.POTION + "\",count:1,components:{\"minecraft:potion_contents\":{potion:\"" + Effect.REGENERATION.getPotionTag(false, true) + "\"}}}}]";
+        fileCommands.addAll(CommandBuilder.warnAndReplace(target, warning, replacement));
+
+        // Strength II potions
+        warning.setText("STRENGTH II POTIONS ARE NOT ALLOWED, YOU NAUGHTY BUM!");
+        target = "@p[nbt={SelectedItem:{id:\"" + BlockType.SPLASH_POTION + "\",count:1,components:{\"minecraft:potion_contents\":{potion:\"" + Effect.STRENGTH.getPotionTag(true, false) + "\"}}}}]";
+        replacement = BlockType.SPLASH_POTION.addNBT("[potion_contents={potion:\"" + Effect.STRENGTH.getPotionTag() + "\"}]");
+        fileCommands.addAll(CommandBuilder.warnAndReplace(target, warning, replacement));
+        target = "@p[nbt={SelectedItem:{id:\"" + BlockType.POTION + "\",count:1,components:{\"minecraft:potion_contents\":{potion:\"" + Effect.STRENGTH.getPotionTag(true, false) + "\"}}}}]";
+        replacement = BlockType.POTION.addNBT("[potion_contents={potion:\"" + Effect.STRENGTH.getPotionTag() + "\"}]");
+        fileCommands.addAll(CommandBuilder.warnAndReplace(target, warning, replacement));
+
         for (int ii = 0; ii < 5; ii++) {
             // Piercing enchantment
-            fileCommands.add(Execute.If(new Entity("@p[nbt={SelectedItem:{id:\"minecraft:crossbow\",count:1,components:{\"minecraft:enchantments\":{levels:{\"minecraft:piercing\":" + (ii + 1) + "}}}}}]")) +
-                    new TellRaw("@p[nbt={SelectedItem:{id:\"minecraft:crossbow\",count:1,components:{\"minecraft:enchantments\":{levels:{\"minecraft:piercing\":" + (ii + 1) + "}}}}}]", new Text(Color.red, true, false, "PIERCING IS NOT ALLOWED, YOU NAUGHTY BUM!")).sendRaw());
-            fileCommands.add(CommandBuilder.replaceItem("@p[nbt={SelectedItem:{id:\"minecraft:crossbow\",count:1,components:{\"minecraft:enchantments\":{levels:{\"minecraft:piercing\":" + (ii + 1) + "}}}}}]", InventorySlot.mainhand, BlockType.crossbow));
+            warning.setText("PIERCING IS NOT ALLOWED, YOU NAUGHTY BUM!");
+            target = "@p[nbt={SelectedItem:{id:\"" + BlockType.CROSSBOW + "\",count:1,components:{\"minecraft:enchantments\":{\"" + EnchantmentType.PIERCING + "\":" + (ii + 1) + "}}}}]";
+            fileCommands.addAll(CommandBuilder.warnAndReplace(target, warning, BlockType.CROSSBOW));
 
             // Power enchantment
-            fileCommands.add(Execute.If(new Entity("@p[nbt={SelectedItem:{id:\"minecraft:bow\",count:1,components:{\"minecraft:enchantments\":{levels:{\"minecraft:power\":" + (ii + 1) + "}}}}}]")) +
-                    new TellRaw("@p[nbt={SelectedItem:{id:\"minecraft:bow\",count:1,components:{\"minecraft:enchantments\":{levels:{\"minecraft:power\":" + (ii + 1) + "}}}}}]", new Text(Color.red, true, false, "POWER IS NOT ALLOWED, YOU NAUGHTY BUM!")).sendRaw());
-            fileCommands.add(CommandBuilder.replaceItem("@p[nbt={SelectedItem:{id:\"minecraft:bow\",count:1,components:{\"minecraft:enchantments\":{levels:{\"minecraft:power\":" + (ii + 1) + "}}}}}]", InventorySlot.mainhand, BlockType.bow));
+            warning.setText("POWER IS NOT ALLOWED, YOU NAUGHTY BUM!");
+            target = "@p[nbt={SelectedItem:{id:\"" + BlockType.BOW + "\",count:1,components:{\"minecraft:enchantments\":{\"" + EnchantmentType.POWER + "\":" + (ii + 1) + "}}}}]";
+            fileCommands.addAll(CommandBuilder.warnAndReplace(target, warning, BlockType.BOW));
         }
         // Wolf armor
-        fileCommands.add(Execute.If(new Entity("@p[nbt={SelectedItem:{id:\"minecraft:wolf_armor\",count:1}}]")) +
-                new TellRaw("@p[nbt={SelectedItem:{id:\"minecraft:wolf_armor\",count:1}}]", new Text(Color.red, true, false, "WOLF ARMOR IS NOT ALLOWED, YOU NAUGHTY BUM!")).sendRaw());
-        fileCommands.add(CommandBuilder.replaceItem("@p[nbt={SelectedItem:{id:\"minecraft:wolf_armor\",count:1}}]", InventorySlot.mainhand, BlockType.leather_horse_armor));
+        warning.setText("WOLF ARMOR IS NOT ALLOWED, YOU NAUGHTY BUM!");
+        target = "@p[nbt={SelectedItem:{id:\"" + BlockType.WOLF_ARMOR + "\",count:1}}]";
+        fileCommands.addAll(CommandBuilder.warnAndReplace(target, warning, BlockType.LEATHER_HORSE_ARMOR));
 
         // Suspicious stew
-        fileCommands.add(Execute.If(new Entity("@p[nbt={SelectedItem:{id:\"minecraft:suspicious_stew\",count:1}}]")) +
-                new TellRaw("@p[nbt={SelectedItem:{id:\"minecraft:suspicious_stew\",count:1}}]", new Text(Color.red, true, false, "SUSPICIOUS STEW IS NOT ALLOWED, YOU NAUGHTY BUM!")).sendRaw());
-        fileCommands.add(CommandBuilder.replaceItem("@p[nbt={SelectedItem:{id:\"minecraft:suspicious_stew\",count:1}}]", InventorySlot.mainhand, BlockType.bowl));
+        warning.setText("SUSPICIOUS STEW IS NOT ALLOWED, YOU NAUGHTY BUM!");
+        target = "@p[nbt={SelectedItem:{id:\"" + BlockType.SUSPICIOUS_STEW + "\",count:1}}]";
+        fileCommands.addAll(CommandBuilder.warnAndReplace(target, warning, BlockType.BOWL));
 
         return new FileData(FileName.remove_banned_items, fileCommands);
     }
@@ -2097,10 +2123,10 @@ public class Main {
 
         // Define perk activation times
         ArrayList<Perk> perks = new ArrayList<>();
-        perks.add(new Perk(1, new StatusEffect(Effect.speed, 999999, 0, false), Sound.BASALT, 3 * singleton.getMinToCPScore()));
+        perks.add(new Perk(1, new StatusEffect(Effect.SPEED, 999999, 0, false), Sound.BASALT, 3 * singleton.getMinToCPScore()));
         perks.add(new Perk(2, new Attribute(AttributeType.scale, 0.8), Sound.CRIMSON, 6 * singleton.getMinToCPScore()));
-        perks.add(new Perk(3, new StatusEffect(Effect.haste, 999999, 2, false), Sound.WARPED, 12 * singleton.getMinToCPScore()));
-        perks.add(new Perk(4, new StatusEffect(Effect.absorption, 999999, 1, false), Sound.WITHER, 15 * singleton.getMinToCPScore()));
+        perks.add(new Perk(3, new StatusEffect(Effect.HASTE, 999999, 2, false), Sound.WARPED, 12 * singleton.getMinToCPScore()));
+        perks.add(new Perk(4, new StatusEffect(Effect.ABSORPTION, 999999, 1, false), Sound.WITHER, 15 * singleton.getMinToCPScore()));
 
 
         Entity currentPlayer = new Entity("");
@@ -2253,22 +2279,22 @@ public class Main {
 
 
         // Remove player heads
-        fileCommands.add(Execute.As(new Entity("@a[nbt={Inventory:[{id:\"minecraft:player_head\"}]}]")) +
-                CommandBuilder.clearInventory("@s", BlockType.player_head));  // Remove from inventory
-        fileCommands.add(Execute.As(new Entity("@e[type=item,nbt={Item:{id:\"minecraft:player_head\"}}]")) +
+        fileCommands.add(Execute.As(new Entity("@a[nbt={Inventory:[{id:\"" + BlockType.PLAYER_HEAD + "\"}]}]")) +
+                CommandBuilder.clearInventory("@s", BlockType.PLAYER_HEAD));  // Remove from inventory
+        fileCommands.add(Execute.As(new Entity("@e[type=item,nbt={Item:{id:\"" + BlockType.PLAYER_HEAD + "\"}}]")) +
                 CommandBuilder.killEntity("@s")); // Remove item
 
         // Give players teammate tools
         if (teamMode == 2) {
             // Team caller
             fileCommands.add(Execute.As(new Entity(respawnPlayer)) +
-                    CommandBuilder.giveItem("@s[team=]", BlockType.goat_horn, "[instrument=\"minecraft:ponder_goat_horn\",use_cooldown={seconds:30},enchantments={\"minecraft:vanishing_curse\":1}]"));
+                    CommandBuilder.giveItem("@s[team=]", BlockType.GOAT_HORN, "[instrument=\"minecraft:ponder_goat_horn\",use_cooldown={seconds:30},enchantments={\"" + EnchantmentType.VANISHING_CURSE + "\":1}]"));
         }
 
         // Teammate tracker
         for (Team team : teams) {
             fileCommands.add(Execute.As(respawnPlayer) +
-                    CommandBuilder.giveItem("@s[team=" + team.getName() + "]", BlockType.bundle.extendColor(team.getGlassColor()), "[enchantments={levels:{\"minecraft:vanishing_curse\":1}},custom_data={locateTeammate:1b}]"));
+                    CommandBuilder.giveItem("@s[team=" + team.getName() + "]", BlockType.BUNDLE.extendColor(team.getGlassColor()), "[enchantments={\"" + EnchantmentType.VANISHING_CURSE + "\":1},custom_data={locateTeammate:1b}]"));
         }
 
         // Set respawn health
@@ -2280,8 +2306,8 @@ public class Main {
                     Execute.IfNext(new Entity("@e[scores={MinHealth=" + indexFront + ".." + indexRear + "}]"), true) +
                     CommandBuilder.setAttributeBase("@s", AttributeType.max_health, i + 1));
         }
-        fileCommands.add(CommandBuilder.giveEffect(respawnPlayer, Effect.health_boost, 1, 0));
-        fileCommands.add(CommandBuilder.clearEffect(respawnPlayer, Effect.health_boost));
+        fileCommands.add(CommandBuilder.giveEffect(respawnPlayer, Effect.HEALTH_BOOST, 1, 0));
+        fileCommands.add(CommandBuilder.clearEffect(respawnPlayer, Effect.HEALTH_BOOST));
         fileCommands.add(Execute.As(respawnPlayer) +
                 CommandBuilder.setAttributeBase("@s", AttributeType.max_health, 20));
 
@@ -2402,6 +2428,7 @@ public class Main {
         fileCommands.add(Schedule.clearFunction(FileName.display_quotes));
         fileCommands.add(Schedule.clearFunction(FileName.messages_eternal_day));
         fileCommands.add(Schedule.clearFunction(FileName.messages_pvp));
+        fileCommands.add(Schedule.clearFunction(FileName.disable_respawn));
 
         return new FileData(FileName.clear_schedule, fileCommands);
     }
@@ -2412,7 +2439,7 @@ public class Main {
 
         for (Team t : teams) {
             for (int i = 0; i < 3; i++) {
-                fileCommands.add(Execute.As(new Entity("@a[team=" + t.getName() + ",nbt={SelectedItem:{id:\"minecraft:" + BlockType.bundle.extendColor(t.getGlassColor()) + "\",components:{\"minecraft:custom_data\":{locateTeammate:1b}}}}]"), false) +
+                fileCommands.add(Execute.As(new Entity("@a[team=" + t.getName() + ",nbt={SelectedItem:{id:\"" + BlockType.BUNDLE.extendColor(t.getGlassColor()) + "\",components:{\"minecraft:custom_data\":{locateTeammate:1b}}}}]"), false) +
                         Execute.AtNext(new Entity("@s")) +
                         Execute.IfNext(new Entity("@a[team=" + t.getName() + ",distance=0.1..,gamemode=!spectator]")) +
                         Execute.FacingNext(new Entity("@a[team=" + t.getName() + ",distance=0.1..,gamemode=!spectator,limit=1,sort=nearest]"), EntityAnchor.eyes) +
@@ -2425,7 +2452,7 @@ public class Main {
                 ArrayList<TextItem> texts = new ArrayList<>();
 
                 texts.add(new Text(false, false, t.getName() + " has players "));
-                texts.add(new Select(false, false, "@a[team=" + t.getName() + ",nbt={SelectedItem:{id:\\\"minecraft:" + BlockType.bundle.extendColor(t.getGlassColor()) + "\\\",components:{\\\"minecraft:custom_data\\\":{locateTeammate:1b}}}}]"));
+                texts.add(new Select(false, false, "@a[team=" + t.getName() + ",nbt={SelectedItem:{id:\\\"" + BlockType.BUNDLE.extendColor(t.getGlassColor()) + "\\\",components:{\\\"minecraft:custom_data\\\":{locateTeammate:1b}}}}]"));
                 texts.add(new Text(false, false, "Who are holding their bundle"));
 
                 fileCommands.add(new TellRaw("@a[tag=Debug]", texts).sendRaw());
@@ -2575,13 +2602,13 @@ public class Main {
         }
 
         fileCommands.add(Execute.At(lookingPlayer) +
-                CommandBuilder.clearInventory("@p[limit=2,gamemode=!spectator]", BlockType.goat_horn));
+                CommandBuilder.clearInventory("@p[limit=2,gamemode=!spectator]", BlockType.GOAT_HORN));
 
 
         for (Team team : teams) {
             fileCommands.add(Execute.At(lookingPlayer, false) +
                     Execute.IfNext("@p[tag=LookingForTeamMate,team=" + team.getName() + "]", true) +
-                    CommandBuilder.giveItem("@p[limit=2,gamemode=!spectator]", BlockType.bundle.extendColor(team.getGlassColor()), "[enchantments={levels:{\"minecraft:vanishing_curse\":1}},custom_data={locateTeammate:1b}]"));
+                    CommandBuilder.giveItem("@p[limit=2,gamemode=!spectator]", BlockType.BUNDLE.extendColor(team.getGlassColor()), "[enchantments={\"" + EnchantmentType.VANISHING_CURSE + "\":1},custom_data={locateTeammate:1b}]"));
         }
 
         return new FileData(FileName.join_team, fileCommands);
@@ -2786,15 +2813,6 @@ public class Main {
         return new FileData(FileName.debug_remove, fileCommands);
     }
 
-    private FileData TitleDefaultTiming() {
-        ArrayList<String> fileCommands = new ArrayList<>();
-
-        // Change title display time
-        fileCommands.add(CommandBuilder.changeTitleDisplayTime("@a", 10, 70, 20, Duration.ticks));
-
-        return new FileData(FileName.title_default_timing, fileCommands);
-    }
-
     private FileData CurrentTestFunction() {
         ArrayList<String> fileCommands = new ArrayList<>();
 
@@ -2805,14 +2823,14 @@ public class Main {
         // Turn potion effect into function execution
         ArrayList<String> fileCommands = new ArrayList<>();
 
-        Effect[] effects = {Effect.speed, Effect.weakness, Effect.slow_falling, Effect.invisibility, Effect.poison, Effect.strength, Effect.slowness};
+        Effect[] effects = {Effect.SPEED, Effect.WEAKNESS, Effect.SLOW_FALLING, Effect.INVISIBILITY, Effect.POISON, Effect.STRENGTH, Effect.SLOWNESS};
         FileName[] functions = {FileName.developer_mode, FileName.random_teams, FileName.predictions, FileName.into_calls, FileName.spread_players, FileName.survival_mode, FileName.start_game};
 
         for (int i = 0; i < effects.length; i++) {
-            fileCommands.add(Execute.If("@a[gamemode=creative,nbt={active_effects:[{id:\"minecraft:" + effects[i] + "\"}]}]") +
+            fileCommands.add(Execute.If("@a[gamemode=creative,nbt={active_effects:[{id:\"" + effects[i] + "\"}]}]") +
                     Schedule.callFunction(functions[i]));
 
-            fileCommands.add(Execute.If("@a[nbt={active_effects:[{id:\"minecraft:" + effects[i] + "\"}]}]") +
+            fileCommands.add(Execute.If("@a[nbt={active_effects:[{id:\"" + effects[i] + "\"}]}]") +
                     CommandBuilder.clearEffect("@e", effects[i]));
         }
 
