@@ -391,16 +391,20 @@ public class CommandBuilder {
     }
 
     // Change title display time
-    public static String changeTitleDisplayTime(String targets, int fadeIn, int duration, int fadeOut) {
-        return changeTitleDisplayTime(targets, fadeIn, duration, fadeOut, Duration.seconds);
+    public static String changeTitleDisplayTime(String targets, int fadeIn, int stay, int fadeOut) {
+        return changeTitleDisplayTime(targets, fadeIn, stay, fadeOut, Duration.seconds);
     }
 
-    public static String changeTitleDisplayTime(String targets, int fadeIn, int duration, int fadeOut, Duration durationType) {
-        return "title " + targets + " times " + fadeIn + durationType + " " + duration + durationType + " " + fadeOut + durationType;
+    public static String changeTitleDisplayTime(String targets, int fadeIn, int stay, int fadeOut, Duration durationType) {
+        return "title " + targets + " times " + fadeIn + durationType + " " + stay + durationType + " " + fadeOut + durationType;
     }
 
-    public static String changeTitleDisplayTime(String targets, String fadeIn, String duration, String fadeOut) {
-        return "title " + targets + " times " + fadeIn + " " + duration + " " + fadeOut;
+    public static String changeTitleDisplayTime(String targets, String fadeIn, String stay, String fadeOut) {
+        return "title " + targets + " times " + fadeIn + " " + stay + " " + fadeOut;
+    }
+
+    public static String titleDefaultTiming(String targets) {
+        return changeTitleDisplayTime(targets, 10, 70, 20, Duration.ticks);
     }
 
     // Store random number

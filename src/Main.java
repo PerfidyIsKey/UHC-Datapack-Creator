@@ -797,7 +797,6 @@ public class Main {
         files.add(CheckIronMan());
         files.add(UpdatePlayerDistance());
 
-        files.add(TitleDefaultTiming());
 
         // Messages
         files.add(ScheduleSingleMessages());
@@ -1407,7 +1406,7 @@ public class Main {
         fileCommands.add(new Title("@a", TitleType.title, new Text(Color.gold, true, true, "Game Starting Now!")).displayTitle());
 
         // Change title display time
-        fileCommands.add(Schedule.callFunction(FileName.title_default_timing, 5));
+        fileCommands.add(CommandBuilder.titleDefaultTiming("@a"));
 
         // Destroy all ground items
         fileCommands.add(CommandBuilder.killEntity("@e[type=item]"));
@@ -1826,7 +1825,7 @@ public class Main {
         fileCommands.add(new Title("@a", TitleType.title, new Text(Color.gold, true, true, carePackageAmount + " Care Packages!")).displayTitle());
 
         // Change title display time
-        fileCommands.add(Schedule.callFunction(FileName.title_default_timing, 5));
+        fileCommands.add(CommandBuilder.titleDefaultTiming("@a"));
 
         // Summon Care Package entities
         for (int i = 0; i < carePackageAmount; i++) {
@@ -2799,15 +2798,6 @@ public class Main {
         fileCommands.add(CommandBuilder.removeTag("@s", Tag.Debug));
 
         return new FileData(FileName.debug_remove, fileCommands);
-    }
-
-    private FileData TitleDefaultTiming() {
-        ArrayList<String> fileCommands = new ArrayList<>();
-
-        // Change title display time
-        fileCommands.add(CommandBuilder.changeTitleDisplayTime("@a", 10, 70, 20, Duration.ticks));
-
-        return new FileData(FileName.title_default_timing, fileCommands);
     }
 
     private FileData CurrentTestFunction() {
