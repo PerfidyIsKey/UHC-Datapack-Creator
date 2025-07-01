@@ -49,6 +49,6 @@ public class StatusEffect {
     }
 
     public String giveEffect(String entity) {
-        return "effect give " + entity + " minecraft:" + effect + " " + duration + " " + amplification + " " + hideParticles;
+        return "effect give " + entity + " " + effect + " " + duration + " " + amplification + " " + hideParticles;
     }
 }

@@ -493,7 +493,7 @@ public class Main {
         entries.add(new LootTableEntry(1, BlockType.netherite_scrap, new SetCount(4, condition)));
 
         // Entry #43
-        PotionContents contents = new PotionContents(Effect.luck, 0, 600, "59C106", true, false, true);
+        PotionContents contents = new PotionContents(Effect.LUCK, 0, 600, "59C106", true, false, true);
         name = new SetName(new Text(false, false, "Potion of Care Package luck"));
 
         functions.add(new SetComponents(contents));
@@ -503,7 +503,7 @@ public class Main {
         functions = new ArrayList<>();
 
         // Entry #44
-        contents = new PotionContents(Effect.poison, 0, 5, "4E9331", false, true, true);
+        contents = new PotionContents(Effect.POISON, 0, 5, "4E9331", false, true, true);
         name = new SetName(new Text(false, false, "Potion of Poison"));
 
         functions.add(new SetComponents(contents));
@@ -513,7 +513,7 @@ public class Main {
         functions = new ArrayList<>();
 
         // Entry #45
-        contents = new PotionContents(Effect.blindness, 0, 10, "1F1F23", false, true, true);
+        contents = new PotionContents(Effect.BLINDNESS, 0, 10, "1F1F23", false, true, true);
         MaxStackSize stack = new MaxStackSize(64);
         name = new SetName(new Text(false, false, "Potion of Blindness"));
         SetCount count = new SetCount(5, new RandomChance(0.3));
@@ -1043,14 +1043,14 @@ public class Main {
         fileCommands.add(CommandBuilder.replaceItem("@a", InventorySlot.offhand, BlockType.shield));
         fileCommands.add(CommandBuilder.replaceItem("@a", InventorySlot.mainhand, BlockType.iron_axe));
         fileCommands.add(CommandBuilder.replaceItem("@a", InventorySlot.inventory.setSlotNumber(0), BlockType.iron_sword));
-        fileCommands.add(CommandBuilder.giveEffect("@a", Effect.regeneration, 1, 255, true));
+        fileCommands.add(CommandBuilder.giveEffect("@a", Effect.REGENERATION, 1, 255, true));
 
         return new FileData(FileName.equip_gear, fileCommands);
     }
 
     private FileData GodMode() {
         ArrayList<String> fileCommands = new ArrayList<>();
-        fileCommands.add(CommandBuilder.giveEffect("@s", Effect.resistance, 99999, 4, true));
+        fileCommands.add(CommandBuilder.giveEffect("@s", Effect.RESISTANCE, 99999, 4, true));
         fileCommands.add(CommandBuilder.replaceItem("@s", InventorySlot.mainhand, BlockType.trident + "[custom_name=[{\"bold\":false,\"color\":\"white\",\"italic\":false,\"obfuscated\":true,\"text\":\"aA\"},{\"bold\":true,\"color\":\"#8C3CC1\",\"obfuscated\":false,\"text\":\"The\"},{\"bold\":true,\"color\":\"#E280FF\",\"obfuscated\":false,\"text\":\" Impaler \"},{\"color\":\"white\",\"obfuscated\":true,\"text\":\"Aa\"}],lore=[\"This holy weapon impales anything it touches\"],damage=0,enchantments={\"minecraft:fire_aspect\":255,\"minecraft:sharpness\":255,\"minecraft:impaling\":255,\"minecraft:loyalty\":255,\"minecraft:efficiency\":255},attribute_modifiers=[{id:\"armor\",type:\"armor\",amount:1000,operation:\"add_value\",slot:\"armor\",display:{type:\"hidden\"}},{id:\"attack_damage\",type:\"attack_damage\",amount:1000,operation:\"add_value\",slot:\"mainhand\",display:{type:\"hidden\"}}],unbreakable={}]"));
 
         return new FileData(FileName.god_mode, fileCommands);
@@ -1064,20 +1064,20 @@ public class Main {
 
         // Give potions
         if (teamMode == 1) {
-            fileCommands.add(CommandBuilder.giveSplashPotion("@s", 0, Effect.speed, "808080", "Developer Mode", "Set operational mode to Developer Mode."));
-            fileCommands.add(CommandBuilder.giveSplashPotion("@s", 1, Effect.weakness, "FF9933", "Assign Teams", "Assign players to teams."));
-            fileCommands.add(CommandBuilder.giveSplashPotion("@s", 2, Effect.slow_falling, "6633CC", "Predictions", "Who will win this season?."));
-            fileCommands.add(CommandBuilder.giveSplashPotion("@s", 3, Effect.invisibility, "3399FF", "Into Calls", "Allow players to gather in their Discord channel."));
-            fileCommands.add(CommandBuilder.giveSplashPotion("@s", 4, Effect.poison, "00CC66", "Spread players", "Spread players across the map."));
-            fileCommands.add(CommandBuilder.giveSplashPotion("@s", 5, Effect.strength, "CC3333", "Survival Mode", "Set operational mode to Ready to Play."));
-            fileCommands.add(CommandBuilder.giveSplashPotion("@s", 6, Effect.slowness, "00FF7F", "Start Game", "Start the game. Good luck!"));
+            fileCommands.add(CommandBuilder.giveSplashPotion("@s", 0, Effect.SPEED, "808080", "Developer Mode", "Set operational mode to Developer Mode."));
+            fileCommands.add(CommandBuilder.giveSplashPotion("@s", 1, Effect.WEAKNESS, "FF9933", "Assign Teams", "Assign players to teams."));
+            fileCommands.add(CommandBuilder.giveSplashPotion("@s", 2, Effect.SLOW_FALLING, "6633CC", "Predictions", "Who will win this season?."));
+            fileCommands.add(CommandBuilder.giveSplashPotion("@s", 3, Effect.INVISIBILITY, "3399FF", "Into Calls", "Allow players to gather in their Discord channel."));
+            fileCommands.add(CommandBuilder.giveSplashPotion("@s", 4, Effect.POISON, "00CC66", "Spread players", "Spread players across the map."));
+            fileCommands.add(CommandBuilder.giveSplashPotion("@s", 5, Effect.STRENGTH, "CC3333", "Survival Mode", "Set operational mode to Ready to Play."));
+            fileCommands.add(CommandBuilder.giveSplashPotion("@s", 6, Effect.SLOWNESS, "00FF7F", "Start Game", "Start the game. Good luck!"));
         } else if (teamMode == 2) {
-            fileCommands.add(CommandBuilder.giveSplashPotion("@s", 0, Effect.speed, "808080", "Developer Mode", "Set operational mode to Developer Mode."));
-            fileCommands.add(CommandBuilder.giveSplashPotion("@s", 1, Effect.slow_falling, "6633CC", "Predictions", "Who will win this season?."));
-            fileCommands.add(CommandBuilder.giveSplashPotion("@s", 2, Effect.invisibility, "3399FF", "Into Calls", "Allow players to gather in their Discord channel."));
-            fileCommands.add(CommandBuilder.giveSplashPotion("@s", 3, Effect.poison, "00CC66", "Spread players", "Spread players across the map."));
-            fileCommands.add(CommandBuilder.giveSplashPotion("@s", 4, Effect.strength, "CC3333", "Survival Mode", "Set operational mode to Ready to Play."));
-            fileCommands.add(CommandBuilder.giveSplashPotion("@s", 5, Effect.slowness, "00FF7F", "Start Game", "Start the game. Good luck!"));
+            fileCommands.add(CommandBuilder.giveSplashPotion("@s", 0, Effect.SPEED, "808080", "Developer Mode", "Set operational mode to Developer Mode."));
+            fileCommands.add(CommandBuilder.giveSplashPotion("@s", 1, Effect.SLOW_FALLING, "6633CC", "Predictions", "Who will win this season?."));
+            fileCommands.add(CommandBuilder.giveSplashPotion("@s", 2, Effect.INVISIBILITY, "3399FF", "Into Calls", "Allow players to gather in their Discord channel."));
+            fileCommands.add(CommandBuilder.giveSplashPotion("@s", 3, Effect.POISON, "00CC66", "Spread players", "Spread players across the map."));
+            fileCommands.add(CommandBuilder.giveSplashPotion("@s", 4, Effect.STRENGTH, "CC3333", "Survival Mode", "Set operational mode to Ready to Play."));
+            fileCommands.add(CommandBuilder.giveSplashPotion("@s", 5, Effect.SLOWNESS, "00FF7F", "Start Game", "Start the game. Good luck!"));
         }
 
         return new FileData(FileName.start_potions, fileCommands);
@@ -1234,7 +1234,7 @@ public class Main {
 
         // Remove resistance and give regeneration
         fileCommands.add(CommandBuilder.clearEffect("@a"));
-        fileCommands.add(CommandBuilder.giveEffect("@a", Effect.regeneration, 1, 255));
+        fileCommands.add(CommandBuilder.giveEffect("@a", Effect.REGENERATION, 1, 255));
 
         // Make players fall
         fileCommands.add(CommandBuilder.addTag("@a[gamemode=!adventure]", Tag.IsFlying));
@@ -1308,7 +1308,7 @@ public class Main {
         fileCommands.add(scoreboard.Set("@a", getObjectiveByName(Objective.Kills), 0));
 
         // Make players invulnerable
-        fileCommands.add(CommandBuilder.giveEffect("@a", Effect.resistance, 99999, 4, true));
+        fileCommands.add(CommandBuilder.giveEffect("@a", Effect.RESISTANCE, 99999, 4, true));
 
         return new FileData(FileName.into_calls, fileCommands);
     }
@@ -1348,7 +1348,7 @@ public class Main {
         fileCommands.add(CommandBuilder.takeRecipe("@a", BlockType.dragon_head.setNamespace(Namespace.uhc)));
 
         // Remove resistance
-        fileCommands.add(CommandBuilder.clearEffect("@a", Effect.resistance));
+        fileCommands.add(CommandBuilder.clearEffect("@a", Effect.RESISTANCE));
 
         // Set scoreboard values
         fileCommands.add(scoreboard.Set("@a", getObjectiveByName(Objective.Hearts), 20));
@@ -1365,9 +1365,9 @@ public class Main {
         fileCommands.add(CommandBuilder.setTime(0));
 
         // Give potion effect
-        fileCommands.add(CommandBuilder.giveEffect("@a", Effect.regeneration, 1, 255));
-        fileCommands.add(CommandBuilder.giveEffect("@a", Effect.saturation, 1, 255));
-        fileCommands.add(CommandBuilder.giveEffect("@a", Effect.resistance, 20 * 60, 2, true));
+        fileCommands.add(CommandBuilder.giveEffect("@a", Effect.REGENERATION, 1, 255));
+        fileCommands.add(CommandBuilder.giveEffect("@a", Effect.SATURATION, 1, 255));
+        fileCommands.add(CommandBuilder.giveEffect("@a", Effect.RESISTANCE, 20 * 60, 2, true));
 
         // Clear player inventories
         fileCommands.add(CommandBuilder.clearInventory("@a"));
@@ -2056,26 +2056,51 @@ public class Main {
     private FileData RemoveBannedItems() {
         ArrayList<String> fileCommands = new ArrayList<>();
 
+        // Regeneration potions (normal + splash, strong, long)
+        Text warning = new Text(Color.red, true, false, "REGENERATION POTIONS ARE NOT ALLOWED, YOU NAUGHTY BUM!");
+        String target = "@p[nbt={SelectedItem:{id:\"" + BlockType.splash_potion + "\",count:1,components:{\"minecraft:potion_contents\":{potion:\"" + Effect.REGENERATION.getPotionTag() + "\"}}}}]";
+        String replacement = BlockType.glass_bottle.toString();
+        fileCommands.addAll(CommandBuilder.warnAndReplace(target, warning, replacement));
+        target = "@p[nbt={SelectedItem:{id:\"" + BlockType.splash_potion + "\",count:1,components:{\"minecraft:potion_contents\":{potion:\"" + Effect.REGENERATION.getPotionTag(true, false) + "\"}}}}]";
+        fileCommands.addAll(CommandBuilder.warnAndReplace(target, warning, replacement));
+        target = "@p[nbt={SelectedItem:{id:\"" + BlockType.splash_potion + "\",count:1,components:{\"minecraft:potion_contents\":{potion:\"" + Effect.REGENERATION.getPotionTag(false, true) + "\"}}}}]";
+        fileCommands.addAll(CommandBuilder.warnAndReplace(target, warning, replacement));
+        target = "@p[nbt={SelectedItem:{id:\"" + BlockType.potion + "\",count:1,components:{\"minecraft:potion_contents\":{potion:\"" + Effect.REGENERATION.getPotionTag() + "\"}}}}]";
+        fileCommands.addAll(CommandBuilder.warnAndReplace(target, warning, replacement));
+        target = "@p[nbt={SelectedItem:{id:\"" + BlockType.potion + "\",count:1,components:{\"minecraft:potion_contents\":{potion:\"" + Effect.REGENERATION.getPotionTag(true, false) + "\"}}}}]";
+        fileCommands.addAll(CommandBuilder.warnAndReplace(target, warning, replacement));
+        target = "@p[nbt={SelectedItem:{id:\"" + BlockType.potion + "\",count:1,components:{\"minecraft:potion_contents\":{potion:\"" + Effect.REGENERATION.getPotionTag(false, true) + "\"}}}}]";
+        fileCommands.addAll(CommandBuilder.warnAndReplace(target, warning, replacement));
+
+        // Strength II potions
+        warning.setText("STRENGTH II POTIONS ARE NOT ALLOWED, YOU NAUGHTY BUM!");
+        target = "@p[nbt={SelectedItem:{id:\"" + BlockType.splash_potion + "\",count:1,components:{\"minecraft:potion_contents\":{potion:\"" + Effect.STRENGTH.getPotionTag(true, false) + "\"}}}}]";
+        replacement = BlockType.splash_potion.addNBT("[potion_contents={potion:\"" + Effect.STRENGTH.getPotionTag() + "\"}]");
+        fileCommands.addAll(CommandBuilder.warnAndReplace(target, warning, replacement));
+        target = "@p[nbt={SelectedItem:{id:\"" + BlockType.potion + "\",count:1,components:{\"minecraft:potion_contents\":{potion:\"" + Effect.STRENGTH.getPotionTag(true, false) + "\"}}}}]";
+        replacement = BlockType.potion.addNBT("[potion_contents={potion:\"" + Effect.STRENGTH.getPotionTag() + "\"}]");
+        fileCommands.addAll(CommandBuilder.warnAndReplace(target, warning, replacement));
+
         for (int ii = 0; ii < 5; ii++) {
             // Piercing enchantment
-            fileCommands.add(Execute.If(new Entity("@p[nbt={SelectedItem:{id:\"minecraft:crossbow\",count:1,components:{\"minecraft:enchantments\":{\"minecraft:piercing\":" + (ii + 1) + "}}}}]")) +
-                    new TellRaw("@p[nbt={SelectedItem:{id:\"minecraft:crossbow\",count:1,components:{\"minecraft:enchantments\":{\"minecraft:piercing\":" + (ii + 1) + "}}}}]", new Text(Color.red, true, false, "PIERCING IS NOT ALLOWED, YOU NAUGHTY BUM!")).sendRaw());
-            fileCommands.add(CommandBuilder.replaceItem("@p[nbt={SelectedItem:{id:\"minecraft:crossbow\",count:1,components:{\"minecraft:enchantments\":{\"minecraft:piercing\":" + (ii + 1) + "}}}}]", InventorySlot.mainhand, BlockType.crossbow));
+            warning.setText("PIERCING IS NOT ALLOWED, YOU NAUGHTY BUM!");
+            target = "@p[nbt={SelectedItem:{id:\"" + BlockType.crossbow + "\",count:1,components:{\"minecraft:enchantments\":{\"" + EnchantmentType.piercing + "\":" + (ii + 1) + "}}}}]";
+            fileCommands.addAll(CommandBuilder.warnAndReplace(target, warning, BlockType.crossbow));
 
             // Power enchantment
-            fileCommands.add(Execute.If(new Entity("@p[nbt={SelectedItem:{id:\"minecraft:bow\",count:1,components:{\"minecraft:enchantments\":{\"minecraft:power\":" + (ii + 1) + "}}}}]")) +
-                    new TellRaw("@p[nbt={SelectedItem:{id:\"minecraft:bow\",count:1,components:{\"minecraft:enchantments\":{\"minecraft:power\":" + (ii + 1) + "}}}}]", new Text(Color.red, true, false, "POWER IS NOT ALLOWED, YOU NAUGHTY BUM!")).sendRaw());
-            fileCommands.add(CommandBuilder.replaceItem("@p[nbt={SelectedItem:{id:\"minecraft:bow\",count:1,components:{\"minecraft:enchantments\":{\"minecraft:power\":" + (ii + 1) + "}}}}]", InventorySlot.mainhand, BlockType.bow));
+            warning.setText("POWER IS NOT ALLOWED, YOU NAUGHTY BUM!");
+            target = "@p[nbt={SelectedItem:{id:\"" + BlockType.bow + "\",count:1,components:{\"minecraft:enchantments\":{\"" + EnchantmentType.power + "\":" + (ii + 1) + "}}}}]";
+            fileCommands.addAll(CommandBuilder.warnAndReplace(target, warning, BlockType.bow));
         }
         // Wolf armor
-        fileCommands.add(Execute.If(new Entity("@p[nbt={SelectedItem:{id:\"minecraft:wolf_armor\",count:1}}]")) +
-                new TellRaw("@p[nbt={SelectedItem:{id:\"minecraft:wolf_armor\",count:1}}]", new Text(Color.red, true, false, "WOLF ARMOR IS NOT ALLOWED, YOU NAUGHTY BUM!")).sendRaw());
-        fileCommands.add(CommandBuilder.replaceItem("@p[nbt={SelectedItem:{id:\"minecraft:wolf_armor\",count:1}}]", InventorySlot.mainhand, BlockType.leather_horse_armor));
+        warning.setText("WOLF ARMOR IS NOT ALLOWED, YOU NAUGHTY BUM!");
+        target = "@p[nbt={SelectedItem:{id:\"" + BlockType.wolf_armor + "\",count:1}}]";
+        fileCommands.addAll(CommandBuilder.warnAndReplace(target, warning, BlockType.leather_horse_armor));
 
         // Suspicious stew
-        fileCommands.add(Execute.If(new Entity("@p[nbt={SelectedItem:{id:\"minecraft:suspicious_stew\",count:1}}]")) +
-                new TellRaw("@p[nbt={SelectedItem:{id:\"minecraft:suspicious_stew\",count:1}}]", new Text(Color.red, true, false, "SUSPICIOUS STEW IS NOT ALLOWED, YOU NAUGHTY BUM!")).sendRaw());
-        fileCommands.add(CommandBuilder.replaceItem("@p[nbt={SelectedItem:{id:\"minecraft:suspicious_stew\",count:1}}]", InventorySlot.mainhand, BlockType.bowl));
+        warning.setText("SUSPICIOUS STEW IS NOT ALLOWED, YOU NAUGHTY BUM!");
+        target = "@p[nbt={SelectedItem:{id:\"" + BlockType.suspicious_stew + "\",count:1}}]";
+        fileCommands.addAll(CommandBuilder.warnAndReplace(target, warning, BlockType.bowl));
 
         return new FileData(FileName.remove_banned_items, fileCommands);
     }
@@ -2086,10 +2111,10 @@ public class Main {
 
         // Define perk activation times
         ArrayList<Perk> perks = new ArrayList<>();
-        perks.add(new Perk(1, new StatusEffect(Effect.speed, 999999, 0, false), Sound.BASALT, 3 * singleton.getMinToCPScore()));
+        perks.add(new Perk(1, new StatusEffect(Effect.SPEED, 999999, 0, false), Sound.BASALT, 3 * singleton.getMinToCPScore()));
         perks.add(new Perk(2, new Attribute(AttributeType.scale, 0.8), Sound.CRIMSON, 6 * singleton.getMinToCPScore()));
-        perks.add(new Perk(3, new StatusEffect(Effect.haste, 999999, 2, false), Sound.WARPED, 12 * singleton.getMinToCPScore()));
-        perks.add(new Perk(4, new StatusEffect(Effect.absorption, 999999, 1, false), Sound.WITHER, 15 * singleton.getMinToCPScore()));
+        perks.add(new Perk(3, new StatusEffect(Effect.HASTE, 999999, 2, false), Sound.WARPED, 12 * singleton.getMinToCPScore()));
+        perks.add(new Perk(4, new StatusEffect(Effect.ABSORPTION, 999999, 1, false), Sound.WITHER, 15 * singleton.getMinToCPScore()));
 
 
         Entity currentPlayer = new Entity("");
@@ -2269,8 +2294,8 @@ public class Main {
                     Execute.IfNext(new Entity("@e[scores={MinHealth=" + indexFront + ".." + indexRear + "}]"), true) +
                     CommandBuilder.setAttributeBase("@s", AttributeType.max_health, i + 1));
         }
-        fileCommands.add(CommandBuilder.giveEffect(respawnPlayer, Effect.health_boost, 1, 0));
-        fileCommands.add(CommandBuilder.clearEffect(respawnPlayer, Effect.health_boost));
+        fileCommands.add(CommandBuilder.giveEffect(respawnPlayer, Effect.HEALTH_BOOST, 1, 0));
+        fileCommands.add(CommandBuilder.clearEffect(respawnPlayer, Effect.HEALTH_BOOST));
         fileCommands.add(Execute.As(respawnPlayer) +
                 CommandBuilder.setAttributeBase("@s", AttributeType.max_health, 20));
 
@@ -2795,14 +2820,14 @@ public class Main {
         // Turn potion effect into function execution
         ArrayList<String> fileCommands = new ArrayList<>();
 
-        Effect[] effects = {Effect.speed, Effect.weakness, Effect.slow_falling, Effect.invisibility, Effect.poison, Effect.strength, Effect.slowness};
+        Effect[] effects = {Effect.SPEED, Effect.WEAKNESS, Effect.SLOW_FALLING, Effect.INVISIBILITY, Effect.POISON, Effect.STRENGTH, Effect.SLOWNESS};
         FileName[] functions = {FileName.developer_mode, FileName.random_teams, FileName.predictions, FileName.into_calls, FileName.spread_players, FileName.survival_mode, FileName.start_game};
 
         for (int i = 0; i < effects.length; i++) {
-            fileCommands.add(Execute.If("@a[gamemode=creative,nbt={active_effects:[{id:\"minecraft:" + effects[i] + "\"}]}]") +
+            fileCommands.add(Execute.If("@a[gamemode=creative,nbt={active_effects:[{id:\"" + effects[i] + "\"}]}]") +
                     Schedule.callFunction(functions[i]));
 
-            fileCommands.add(Execute.If("@a[nbt={active_effects:[{id:\"minecraft:" + effects[i] + "\"}]}]") +
+            fileCommands.add(Execute.If("@a[nbt={active_effects:[{id:\"" + effects[i] + "\"}]}]") +
                     CommandBuilder.clearEffect("@e", effects[i]));
         }
 
