@@ -2058,27 +2058,27 @@ public class Main {
 
         // Regeneration potions (normal + splash, strong, long)
         Text warning = new Text(Color.red, true, false, "REGENERATION POTIONS ARE NOT ALLOWED, YOU NAUGHTY BUM!");
-        String target = "@p[nbt={SelectedItem:{id:\"" + BlockType.splash_potion + "\",count:1,components:{\"minecraft:potion_contents\":{potion:\"" + Effect.REGENERATION.getPotionTag() + "\"}}}}]";
-        String replacement = BlockType.glass_bottle.toString();
+        String target = "@p[nbt={SelectedItem:{id:\"" + BlockType.SPLASH_POTION + "\",count:1,components:{\"minecraft:potion_contents\":{potion:\"" + Effect.REGENERATION.getPotionTag() + "\"}}}}]";
+        String replacement = BlockType.GLASS_BOTTLE.toString();
         fileCommands.addAll(CommandBuilder.warnAndReplace(target, warning, replacement));
-        target = "@p[nbt={SelectedItem:{id:\"" + BlockType.splash_potion + "\",count:1,components:{\"minecraft:potion_contents\":{potion:\"" + Effect.REGENERATION.getPotionTag(true, false) + "\"}}}}]";
+        target = "@p[nbt={SelectedItem:{id:\"" + BlockType.SPLASH_POTION + "\",count:1,components:{\"minecraft:potion_contents\":{potion:\"" + Effect.REGENERATION.getPotionTag(true, false) + "\"}}}}]";
         fileCommands.addAll(CommandBuilder.warnAndReplace(target, warning, replacement));
-        target = "@p[nbt={SelectedItem:{id:\"" + BlockType.splash_potion + "\",count:1,components:{\"minecraft:potion_contents\":{potion:\"" + Effect.REGENERATION.getPotionTag(false, true) + "\"}}}}]";
+        target = "@p[nbt={SelectedItem:{id:\"" + BlockType.SPLASH_POTION + "\",count:1,components:{\"minecraft:potion_contents\":{potion:\"" + Effect.REGENERATION.getPotionTag(false, true) + "\"}}}}]";
         fileCommands.addAll(CommandBuilder.warnAndReplace(target, warning, replacement));
-        target = "@p[nbt={SelectedItem:{id:\"" + BlockType.potion + "\",count:1,components:{\"minecraft:potion_contents\":{potion:\"" + Effect.REGENERATION.getPotionTag() + "\"}}}}]";
+        target = "@p[nbt={SelectedItem:{id:\"" + BlockType.POTION + "\",count:1,components:{\"minecraft:potion_contents\":{potion:\"" + Effect.REGENERATION.getPotionTag() + "\"}}}}]";
         fileCommands.addAll(CommandBuilder.warnAndReplace(target, warning, replacement));
-        target = "@p[nbt={SelectedItem:{id:\"" + BlockType.potion + "\",count:1,components:{\"minecraft:potion_contents\":{potion:\"" + Effect.REGENERATION.getPotionTag(true, false) + "\"}}}}]";
+        target = "@p[nbt={SelectedItem:{id:\"" + BlockType.POTION + "\",count:1,components:{\"minecraft:potion_contents\":{potion:\"" + Effect.REGENERATION.getPotionTag(true, false) + "\"}}}}]";
         fileCommands.addAll(CommandBuilder.warnAndReplace(target, warning, replacement));
-        target = "@p[nbt={SelectedItem:{id:\"" + BlockType.potion + "\",count:1,components:{\"minecraft:potion_contents\":{potion:\"" + Effect.REGENERATION.getPotionTag(false, true) + "\"}}}}]";
+        target = "@p[nbt={SelectedItem:{id:\"" + BlockType.POTION + "\",count:1,components:{\"minecraft:potion_contents\":{potion:\"" + Effect.REGENERATION.getPotionTag(false, true) + "\"}}}}]";
         fileCommands.addAll(CommandBuilder.warnAndReplace(target, warning, replacement));
 
         // Strength II potions
         warning.setText("STRENGTH II POTIONS ARE NOT ALLOWED, YOU NAUGHTY BUM!");
-        target = "@p[nbt={SelectedItem:{id:\"" + BlockType.splash_potion + "\",count:1,components:{\"minecraft:potion_contents\":{potion:\"" + Effect.STRENGTH.getPotionTag(true, false) + "\"}}}}]";
-        replacement = BlockType.splash_potion.addNBT("[potion_contents={potion:\"" + Effect.STRENGTH.getPotionTag() + "\"}]");
+        target = "@p[nbt={SelectedItem:{id:\"" + BlockType.SPLASH_POTION + "\",count:1,components:{\"minecraft:potion_contents\":{potion:\"" + Effect.STRENGTH.getPotionTag(true, false) + "\"}}}}]";
+        replacement = BlockType.SPLASH_POTION.addNBT("[potion_contents={potion:\"" + Effect.STRENGTH.getPotionTag() + "\"}]");
         fileCommands.addAll(CommandBuilder.warnAndReplace(target, warning, replacement));
-        target = "@p[nbt={SelectedItem:{id:\"" + BlockType.potion + "\",count:1,components:{\"minecraft:potion_contents\":{potion:\"" + Effect.STRENGTH.getPotionTag(true, false) + "\"}}}}]";
-        replacement = BlockType.potion.addNBT("[potion_contents={potion:\"" + Effect.STRENGTH.getPotionTag() + "\"}]");
+        target = "@p[nbt={SelectedItem:{id:\"" + BlockType.POTION + "\",count:1,components:{\"minecraft:potion_contents\":{potion:\"" + Effect.STRENGTH.getPotionTag(true, false) + "\"}}}}]";
+        replacement = BlockType.POTION.addNBT("[potion_contents={potion:\"" + Effect.STRENGTH.getPotionTag() + "\"}]");
         fileCommands.addAll(CommandBuilder.warnAndReplace(target, warning, replacement));
 
         for (int ii = 0; ii < 5; ii++) {
