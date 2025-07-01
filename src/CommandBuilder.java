@@ -70,6 +70,10 @@ public class CommandBuilder {
         return setBlock("" + x, "" + y, "" + z, blockType);
     }
 
+    public static String setBlock(int x, int y, int z, BlockType blockType) {
+        return setBlock("" + x, "" + y, "" + z, blockType.toString());
+    }
+
     public static String setBlock(Coordinate coordinate, String blockType) {
         return setBlock("" + coordinate.getX(), "" + coordinate.getY(), "" + coordinate.getZ(), blockType);
     }
@@ -85,21 +89,12 @@ public class CommandBuilder {
     public static String setBlock(int x, int y, int z, BlockType blockType) {
         return setBlock(x, y, z, "minecraft:" + blockType);
     }
-
-    public static String setBlock(Coordinate coordinate, BlockType blockType) {
-        return setBlock(coordinate, "minecraft:" + blockType);
-    }
-
     public static String setBlock(int x, int y, int z, BlockType blockType, SetBlockType type) {
         return setBlock(x, y, z, blockType) + " " + type;
     }
 
     public static String setBlockRelative(int x, int y, int z, String blockType) {
         return setBlock("~" + x, "~" + y, "~" + z, blockType);
-    }
-
-    public static String setBlockRelative(int x, int y, int z, BlockType blockType) {
-        return setBlockRelative(x, y, z, "minecraft:" + blockType);
     }
 
     // Fill blocks
@@ -120,7 +115,7 @@ public class CommandBuilder {
     }
 
     public static String fill(int x1, int y1, int z1, int x2, int y2, int z2, BlockType blockType) {
-        return fill(x1, y1, z1, x2, y2, z2, "minecraft:" + blockType);
+        return fill(x1, y1, z1, x2, y2, z2, blockType.toString());
     }
 
     public static String fill(int x1, int y1, int z1, int x2, int y2, int z2, BlockType blockType, SetBlockType type) {
@@ -163,11 +158,11 @@ public class CommandBuilder {
     }
 
     public static String giveEffect(String entity, Effect effect, int duration, int amplifier, Boolean hideParticles) {
-        return "effect give " + entity + " minecraft:" + effect + " " + duration + " " + amplifier + " " + hideParticles;
+        return "effect give " + entity + " " + effect + " " + duration + " " + amplifier + " " + hideParticles;
     }
 
     public static String clearEffect(String entity, Effect effect) {
-        return "effect clear " + entity + " minecraft:" + effect;
+        return "effect clear " + entity + " " + effect;
     }
 
     public static String clearEffect(String entity) {
@@ -392,7 +387,7 @@ public class CommandBuilder {
         // Convert hex to decimal
         int potionColor = Integer.parseInt(colorHex, 16);
 
-        return "item replace entity " + targets + " " + InventorySlot.hotbar.setSlotNumber(slotNumber) + " with " + BlockType.splash_potion + "[potion_contents={custom_color:" + potionColor + ",custom_effects:[{id:" + effect + ",amplifier:0,duration:200,show_particles:0b,show_icon:0b,ambient:0b}]},lore=[\"" + lore + "\"],custom_name=\"" + displayName + "\"]";
+        return "item replace entity " + targets + " " + InventorySlot.hotbar.setSlotNumber(slotNumber) + " with " + BlockType.SPLASH_POTION + "[potion_contents={custom_color:" + potionColor + ",custom_effects:[{id:" + effect + ",amplifier:0,duration:200,show_particles:0b,show_icon:0b,ambient:0b}]},lore=[\"" + lore + "\"],custom_name=\"" + displayName + "\"]";
     }
 
     // Trigger
