@@ -1035,7 +1035,7 @@ public class Main {
     private FileData ClearEnderChest() {
         ArrayList<String> fileCommands = new ArrayList<>();
         for (int i = 0; i < chestSize; i++) {
-            fileCommands.add(CommandBuilder.replaceItem("@a", InventorySlot.enderchest.setSlotNumber(i), BlockType.AIR, 1));
+            fileCommands.add(CommandBuilder.replaceItem("@a", InventorySlot.ENDERCHEST.setSlotNumber(i), BlockType.AIR, 1));
         }
 
         return new FileData(FileName.clear_enderchest, fileCommands);
@@ -1043,13 +1043,13 @@ public class Main {
 
     private FileData EquipGear() {
         ArrayList<String> fileCommands = new ArrayList<>();
-        fileCommands.add(CommandBuilder.replaceItem("@a", InventorySlot.chest, BlockType.IRON_CHESTPLATE));
-        fileCommands.add(CommandBuilder.replaceItem("@a", InventorySlot.feet, BlockType.IRON_BOOTS));
-        fileCommands.add(CommandBuilder.replaceItem("@a", InventorySlot.head, BlockType.IRON_HELMET));
-        fileCommands.add(CommandBuilder.replaceItem("@a", InventorySlot.legs, BlockType.IRON_LEGGINGS));
-        fileCommands.add(CommandBuilder.replaceItem("@a", InventorySlot.offhand, BlockType.SHIELD));
-        fileCommands.add(CommandBuilder.replaceItem("@a", InventorySlot.mainhand, BlockType.IRON_AXE));
-        fileCommands.add(CommandBuilder.replaceItem("@a", InventorySlot.inventory.setSlotNumber(0), BlockType.IRON_SWORD));
+        fileCommands.add(CommandBuilder.replaceItem("@a", InventorySlot.CHEST, BlockType.IRON_CHESTPLATE));
+        fileCommands.add(CommandBuilder.replaceItem("@a", InventorySlot.FEET, BlockType.IRON_BOOTS));
+        fileCommands.add(CommandBuilder.replaceItem("@a", InventorySlot.HEAD, BlockType.IRON_HELMET));
+        fileCommands.add(CommandBuilder.replaceItem("@a", InventorySlot.LEGS, BlockType.IRON_LEGGINGS));
+        fileCommands.add(CommandBuilder.replaceItem("@a", InventorySlot.OFFHAND, BlockType.SHIELD));
+        fileCommands.add(CommandBuilder.replaceItem("@a", InventorySlot.MAINHAND, BlockType.IRON_AXE));
+        fileCommands.add(CommandBuilder.replaceItem("@a", InventorySlot.INVENTORY.setSlotNumber(0), BlockType.IRON_SWORD));
         fileCommands.add(CommandBuilder.giveEffect("@a", Effect.REGENERATION, 1, 255, true));
 
         return new FileData(FileName.equip_gear, fileCommands);
@@ -1058,7 +1058,7 @@ public class Main {
     private FileData GodMode() {
         ArrayList<String> fileCommands = new ArrayList<>();
         fileCommands.add(CommandBuilder.giveEffect("@s", Effect.RESISTANCE, 99999, 4, true));
-        fileCommands.add(CommandBuilder.replaceItem("@s", InventorySlot.mainhand, BlockType.TRIDENT + "[custom_name=[{\"bold\":false,\"color\":\"white\",\"italic\":false,\"obfuscated\":true,\"text\":\"aA\"},{\"bold\":true,\"color\":\"#8C3CC1\",\"obfuscated\":false,\"text\":\"The\"},{\"bold\":true,\"color\":\"#E280FF\",\"obfuscated\":false,\"text\":\" Impaler \"},{\"color\":\"white\",\"obfuscated\":true,\"text\":\"Aa\"}],lore=[\"This holy weapon impales anything it touches\"],damage=0,enchantments={\"" + EnchantmentType.FIRE_ASPECT + "\":255,\"" + EnchantmentType.SHARPNESS + "\":255,\"" + EnchantmentType.IMPALING + "\":255,\"" + EnchantmentType.LOYALTY + "\":255,\"" + EnchantmentType.EFFICIENCY + "\":255},attribute_modifiers=[{id:\"" + AttributeType.ARMOR + "\",type:\"armor\",amount:1000,operation:\"add_value\",slot:\"armor\",display:{type:\"hidden\"}},{id:\"" + AttributeType.ATTACK_DAMAGE + "\",type:\"attack_damage\",amount:1000,operation:\"add_value\",slot:\"mainhand\",display:{type:\"hidden\"}}],unbreakable={}]"));
+        fileCommands.add(CommandBuilder.replaceItem("@s", InventorySlot.MAINHAND, BlockType.TRIDENT + "[custom_name=[{\"bold\":false,\"color\":\"white\",\"italic\":false,\"obfuscated\":true,\"text\":\"aA\"},{\"bold\":true,\"color\":\"#8C3CC1\",\"obfuscated\":false,\"text\":\"The\"},{\"bold\":true,\"color\":\"#E280FF\",\"obfuscated\":false,\"text\":\" Impaler \"},{\"color\":\"white\",\"obfuscated\":true,\"text\":\"Aa\"}],lore=[\"This holy weapon impales anything it touches\"],damage=0,enchantments={\"" + EnchantmentType.FIRE_ASPECT + "\":255,\"" + EnchantmentType.SHARPNESS + "\":255,\"" + EnchantmentType.IMPALING + "\":255,\"" + EnchantmentType.LOYALTY + "\":255,\"" + EnchantmentType.EFFICIENCY + "\":255},attribute_modifiers=[{id:\"" + AttributeType.ARMOR + "\",type:\"armor\",amount:1000,operation:\"add_value\",slot:\"armor\",display:{type:\"hidden\"}},{id:\"" + AttributeType.ATTACK_DAMAGE + "\",type:\"attack_damage\",amount:1000,operation:\"add_value\",slot:\"mainhand\",display:{type:\"hidden\"}}],unbreakable={}]"));
 
         return new FileData(FileName.god_mode, fileCommands);
     }

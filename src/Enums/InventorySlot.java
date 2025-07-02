@@ -1,15 +1,15 @@
 package Enums;
 
 public enum InventorySlot {
-    chest("armor.chest"),
-    enderchest("enderchest"),
-    feet("armor.feet"),
-    head("armor.head"),
-    hotbar("hotbar"),
-    inventory("inventory"),
-    legs("armor.legs"),
-    mainhand("weapon.mainhand"),
-    offhand("weapon.offhand");
+    CHEST("armor.chest"),
+    ENDERCHEST("enderchest"),
+    FEET("armor.feet"),
+    HEAD("armor.head"),
+    HOTBAR("hotbar"),
+    INVENTORY("inventory"),
+    LEGS("armor.legs"),
+    MAINHAND("weapon.mainhand"),
+    OFFHAND("weapon.offhand");
 
     private final String symbol;
 
