@@ -1058,7 +1058,7 @@ public class Main {
     private FileData GodMode() {
         ArrayList<String> fileCommands = new ArrayList<>();
         fileCommands.add(CommandBuilder.giveEffect("@s", Effect.RESISTANCE, 99999, 4, true));
-        fileCommands.add(CommandBuilder.replaceItem("@s", InventorySlot.mainhand, BlockType.TRIDENT + "[custom_name=[{\"bold\":false,\"color\":\"white\",\"italic\":false,\"obfuscated\":true,\"text\":\"aA\"},{\"bold\":true,\"color\":\"#8C3CC1\",\"obfuscated\":false,\"text\":\"The\"},{\"bold\":true,\"color\":\"#E280FF\",\"obfuscated\":false,\"text\":\" Impaler \"},{\"color\":\"white\",\"obfuscated\":true,\"text\":\"Aa\"}],lore=[\"This holy weapon impales anything it touches\"],damage=0,enchantments={\"" + EnchantmentType.FIRE_ASPECT + "\":255,\"" + EnchantmentType.SHARPNESS + "\":255,\"" + EnchantmentType.IMPALING + "\":255,\"" + EnchantmentType.LOYALTY + "\":255,\"" + EnchantmentType.EFFICIENCY + "\":255},attribute_modifiers=[{id:\"armor\",type:\"armor\",amount:1000,operation:\"add_value\",slot:\"armor\",display:{type:\"hidden\"}},{id:\"attack_damage\",type:\"attack_damage\",amount:1000,operation:\"add_value\",slot:\"mainhand\",display:{type:\"hidden\"}}],unbreakable={}]"));
+        fileCommands.add(CommandBuilder.replaceItem("@s", InventorySlot.mainhand, BlockType.TRIDENT + "[custom_name=[{\"bold\":false,\"color\":\"white\",\"italic\":false,\"obfuscated\":true,\"text\":\"aA\"},{\"bold\":true,\"color\":\"#8C3CC1\",\"obfuscated\":false,\"text\":\"The\"},{\"bold\":true,\"color\":\"#E280FF\",\"obfuscated\":false,\"text\":\" Impaler \"},{\"color\":\"white\",\"obfuscated\":true,\"text\":\"Aa\"}],lore=[\"This holy weapon impales anything it touches\"],damage=0,enchantments={\"" + EnchantmentType.FIRE_ASPECT + "\":255,\"" + EnchantmentType.SHARPNESS + "\":255,\"" + EnchantmentType.IMPALING + "\":255,\"" + EnchantmentType.LOYALTY + "\":255,\"" + EnchantmentType.EFFICIENCY + "\":255},attribute_modifiers=[{id:\"" + AttributeType.ARMOR + "\",type:\"armor\",amount:1000,operation:\"add_value\",slot:\"armor\",display:{type:\"hidden\"}},{id:\"" + AttributeType.ATTACK_DAMAGE + "\",type:\"attack_damage\",amount:1000,operation:\"add_value\",slot:\"mainhand\",display:{type:\"hidden\"}}],unbreakable={}]"));
 
         return new FileData(FileName.god_mode, fileCommands);
     }
@@ -1147,7 +1147,7 @@ public class Main {
 
         // Reset player scales
         fileCommands.add(Execute.As(new Entity("@a")) +
-                CommandBuilder.setAttributeBase("@s", AttributeType.scale, 1));
+                CommandBuilder.setAttributeBase("@s", AttributeType.SCALE, 1));
 
         // Set gamemode of player executing the command to creative
         fileCommands.add(CommandBuilder.setGameMode(GameMode.creative, "@s"));
@@ -2171,7 +2171,7 @@ public class Main {
         // Define perk activation times
         ArrayList<Perk> perks = new ArrayList<>();
         perks.add(new Perk(1, new StatusEffect(Effect.SPEED, 999999, 0, false), Sound.BASALT, 3 * singleton.getMinToCPScore()));
-        perks.add(new Perk(2, new Attribute(AttributeType.scale, 0.8), Sound.CRIMSON, 6 * singleton.getMinToCPScore()));
+        perks.add(new Perk(2, new Attribute(AttributeType.SCALE, 0.8), Sound.CRIMSON, 6 * singleton.getMinToCPScore()));
         perks.add(new Perk(3, new StatusEffect(Effect.HASTE, 999999, 2, false), Sound.WARPED, 12 * singleton.getMinToCPScore()));
         perks.add(new Perk(4, new StatusEffect(Effect.ABSORPTION, 999999, 1, false), Sound.WITHER, 15 * singleton.getMinToCPScore()));
 
@@ -2351,12 +2351,12 @@ public class Main {
 
             fileCommands.add(Execute.As(respawnPlayer, false) +
                     Execute.IfNext(new Entity("@e[scores={MinHealth=" + indexFront + ".." + indexRear + "}]"), true) +
-                    CommandBuilder.setAttributeBase("@s", AttributeType.max_health, i + 1));
+                    CommandBuilder.setAttributeBase("@s", AttributeType.MAX_HEALTH, i + 1));
         }
         fileCommands.add(CommandBuilder.giveEffect(respawnPlayer, Effect.HEALTH_BOOST, 1, 0));
         fileCommands.add(CommandBuilder.clearEffect(respawnPlayer, Effect.HEALTH_BOOST));
         fileCommands.add(Execute.As(respawnPlayer) +
-                CommandBuilder.setAttributeBase("@s", AttributeType.max_health, 20));
+                CommandBuilder.setAttributeBase("@s", AttributeType.MAX_HEALTH, 20));
 
         // Set player's gamemode to survival
         fileCommands.add(Execute.As(new Entity(respawnPlayer)) +
@@ -2581,7 +2581,7 @@ public class Main {
         // Set tamed wolf base health
         fileCommands.add(Execute.As(new Entity("@e[type=" + EntityType.WOLF + "]"), false) +
                 Execute.IfNext(DataClasses.entity, "@s Owner", true) +
-                CommandBuilder.setAttributeBase("@s", AttributeType.max_health, 20));
+                CommandBuilder.setAttributeBase("@s", AttributeType.MAX_HEALTH, 20));
 
         return new FileData(FileName.wolf_updates, fileCommands);
     }

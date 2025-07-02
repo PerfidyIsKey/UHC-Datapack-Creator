@@ -2,8 +2,6 @@ package HelperClasses;
 
 import Enums.AttributeType;
 
-import javax.swing.text.DefaultStyledDocument;
-
 public class Attribute {
     private AttributeType attribute;
     private double baseValue;
@@ -14,7 +12,7 @@ public class Attribute {
     }
 
     public String setAttributeBase(String entity) {
-        return "attribute " + entity + " minecraft:" + attribute + " base set " + baseValue;
+        return "attribute " + entity + " " + attribute + " base set " + baseValue;
     }
 
 

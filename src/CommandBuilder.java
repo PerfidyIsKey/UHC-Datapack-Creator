@@ -144,7 +144,7 @@ public class CommandBuilder {
     }
 
     public static String setAttributeBase(String entity, AttributeType attribute, double value) {
-        return "attribute " + entity + " minecraft:" + attribute + " base set " + value;
+        return "attribute " + entity + " " + attribute + " base set " + value;
     }
 
     // Status effects
