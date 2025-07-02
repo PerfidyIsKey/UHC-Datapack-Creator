@@ -1355,12 +1355,7 @@ public class Main {
         ArrayList<String> fileCommands = new ArrayList<>();
 
         // Spread teams together in assigned mode, separate in unassigned mode
-        Boolean respectTeams = true;
-        if (teamMode == 1) {
-            respectTeams = true;
-        } else if (teamMode == 2) {
-            respectTeams = false;
-        }
+        Boolean respectTeams = !OperationMode.teamCreationInGame;
 
         fileCommands.add(Execute.In(Dimension.overworld) +
                 CommandBuilder.spreadPlayers(0, 0, (int) (0.3 * world.getSize()), (int) (0.9 * world.getSize()), respectTeams, "@a"));
