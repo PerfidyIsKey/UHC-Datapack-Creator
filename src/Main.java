@@ -161,7 +161,9 @@ public class Main {
         initGameData();
         makeFunctionFiles();
         files.addAll(fileTools.makeRecipeFiles());
-        makeLootTableFiles();
+        if (OperationMode.carePackages) {
+            makeLootTableFiles();
+        }
         definePlugins();
     }
 
@@ -170,9 +172,12 @@ public class Main {
         uhcNumber = fileTools.getContentOutOfFile("Files\\" + communityMode + "\\uhc_data.txt", "uhcNumber");
         String[] splitStartCoordinates = fileTools.splitLineOnComma(fileTools.getContentOutOfFile("Files\\" + communityMode + "\\uhc_data.txt", "startCoordinate"));
         startCoordinate = new Coordinate(Integer.parseInt(splitStartCoordinates[0]), Integer.parseInt(splitStartCoordinates[1]), Integer.parseInt(splitStartCoordinates[2]));
-        minTraitorRank = Integer.parseInt(fileTools.getContentOutOfFile("Files\\" + communityMode + "\\uhc_data.txt", "minTraitorRank"));
-        traitorWaitTime = Integer.parseInt(fileTools.getContentOutOfFile("Files\\" + communityMode + "\\uhc_data.txt", "traitorWaitTime"));
         communityName = fileTools.getContentOutOfFile("Files\\" + communityMode + "\\uhc_data.txt", "communityName");
+
+        if (OperationMode.traitorFaction) {
+            minTraitorRank = Integer.parseInt(fileTools.getContentOutOfFile("Files\\" + communityMode + "\\uhc_data.txt", "minTraitorRank"));
+            traitorWaitTime = Integer.parseInt(fileTools.getContentOutOfFile("Files\\" + communityMode + "\\uhc_data.txt", "traitorWaitTime"));
+        }
     }
 
     private void makeServerProperties() throws IOException {
@@ -219,13 +224,15 @@ public class Main {
 
     private void initGameData() {
         teams = new ArrayList<>();
-        bossBars = new ArrayList<>();
-        cpList = new ArrayList<>();
-        controlPoints = new ArrayList<>();
         scoreboardObjectives = new ArrayList<>();
         players = new ArrayList<>();
         seasons = new ArrayList<>();
         quotes = new ArrayList<>();
+        if (OperationMode.controlPoints) {
+            bossBars = new ArrayList<>();
+            cpList = new ArrayList<>();
+            controlPoints = new ArrayList<>();
+        }
 
         // Colors
         Color[] colors = {Color.yellow, Color.blue, Color.red, Color.dark_purple, Color.dark_green, Color.light_purple, Color.black, Color.gold, Color.gray, Color.aqua, Color.dark_red, Color.dark_blue, Color.dark_aqua};
@@ -243,15 +250,17 @@ public class Main {
             teams.add(team);
         }
 
-        // Bossbars
-        bossBars.add(new BossBar("cp1"));
-        bossBars.add(new BossBar("cp2"));
+        if (OperationMode.controlPoints) {
+            // Bossbars
+            bossBars.add(new BossBar("cp1"));
+            bossBars.add(new BossBar("cp2"));
 
-        // ControlPoints
-        ArrayList<String> controlPointString = fileTools.GetLinesFromFile("Files\\" + communityMode + "\\controlPoints.txt");
-        for (String controlPoint : controlPointString) {
-            String[] controlPointSplit = fileTools.splitLineOnComma(controlPoint);
-            cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, new Coordinate(Integer.parseInt(controlPointSplit[0]), Integer.parseInt(controlPointSplit[1]), Integer.parseInt(controlPointSplit[2])), Biome.valueOf(controlPointSplit[3])));
+            // ControlPoints
+            ArrayList<String> controlPointString = fileTools.GetLinesFromFile("Files\\" + communityMode + "\\controlPoints.txt");
+            for (String controlPoint : controlPointString) {
+                String[] controlPointSplit = fileTools.splitLineOnComma(controlPoint);
+                cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, new Coordinate(Integer.parseInt(controlPointSplit[0]), Integer.parseInt(controlPointSplit[1]), Integer.parseInt(controlPointSplit[2])), Biome.valueOf(controlPointSplit[3])));
+            }
         }
 
         // Players
@@ -264,16 +273,18 @@ public class Main {
             }
         }
 
-        // World size based on amount of players
-        if (players.size() <= 6) {
-            carePackageSpread = 450;
-            carePackageAmount = 200;
-        } else if (players.size() <= 20) {
-            carePackageSpread = 500;
-            carePackageAmount = 200;
-        } else {
-            carePackageSpread = 750;
-            carePackageAmount = 450;
+        if (OperationMode.carePackages) {
+            // World size based on amount of players
+            if (players.size() <= 6) {
+                carePackageSpread = 450;
+                carePackageAmount = 200;
+            } else if (players.size() <= 20) {
+                carePackageSpread = 500;
+                carePackageAmount = 200;
+            } else {
+                carePackageSpread = 750;
+                carePackageAmount = 450;
+            }
         }
 
         world.setWorldSizeByPlayers(players.size());
@@ -288,33 +299,26 @@ public class Main {
         // Quotes
         quotes = fileTools.GetLinesFromFile("Files\\" + communityMode + "\\quotes.txt");
 
-        int[] addRates = {2, 3};
-        Collections.shuffle(cpList);
-        for (int i = 0; i < addRates.length; i++) {
-            controlPoints.add(cpList.get(i));
-            controlPoints.get(i).setAddRate(addRates[i]);
-            controlPoints.get(i).setName("CP" + (i + 1));
-        }
+        if (OperationMode.controlPoints) {
+            int[] addRates = {2, 3};
+            Collections.shuffle(cpList);
+            for (int i = 0; i < addRates.length; i++) {
+                controlPoints.add(cpList.get(i));
+                controlPoints.get(i).setAddRate(addRates[i]);
+                controlPoints.get(i).setName("CP" + (i + 1));
+            }
 
-        // Control Point parameters
-        singleton.setMinToCPScore(Constant.secPerMinute * cpTickPerSecond * controlPoints.get(0).getAddRate());
-        cp2ActivationScore = cp2ActivationInMin * singleton.getMinToCPScore();
-        maxCPScore = cpCaptureInMin * singleton.getMinToCPScore();
+            // Control Point parameters
+            singleton.setMinToCPScore(Constant.secPerMinute * cpTickPerSecond * controlPoints.get(0).getAddRate());
+            cp2ActivationScore = cp2ActivationInMin * singleton.getMinToCPScore();
+            maxCPScore = cpCaptureInMin * singleton.getMinToCPScore();
+        }
 
         // Scoreboard objectives
         scoreboardObjectives.add(new ScoreboardObjective(Objective.TimeDum, ObjectiveType.dummy, "\"Elapsed Time\""));
         scoreboardObjectives.add(new ScoreboardObjective(Objective.Time, ObjectiveType.dummy, "\"Elapsed Time\"", true));
         scoreboardObjectives.add(new ScoreboardObjective(Objective.Time.extendName(2), ObjectiveType.dummy, "\"Elapsed Time\""));
         scoreboardObjectives.add(new ScoreboardObjective(Objective.SideDum, ObjectiveType.dummy));
-        scoreboardObjectives.add(new ScoreboardObjective(Objective.CPScore, ObjectiveType.dummy, "\"Control Point score\"", true));
-        for (int i = 0; i < 2; i++) {
-            scoreboardObjectives.add(new ScoreboardObjective(Objective.Highscore.extendName(i + 1), ObjectiveType.dummy));
-            scoreboardObjectives.add(new ScoreboardObjective(Objective.ControlPoint.extendName(i + 1), ObjectiveType.dummy));
-            scoreboardObjectives.add(new ScoreboardObjective(Objective.CollarCheck.extendName(i), ObjectiveType.dummy));
-            for (int j = 0; j < 2; j++) {
-                scoreboardObjectives.add(new ScoreboardObjective(Objective.MSGDum.extendName((i + 1) + "CP" + (j + 1)), ObjectiveType.dummy));
-            }
-        }
         scoreboardObjectives.add(new ScoreboardObjective(Objective.Hearts, ObjectiveType.health));
         scoreboardObjectives.add(new ScoreboardObjective(Objective.Apples, "minecraft.used:minecraft.golden_apple", "\"Golden Apple\"", true));
         scoreboardObjectives.add(new ScoreboardObjective(Objective.Stone, "minecraft.mined:minecraft.stone"));
@@ -325,21 +329,35 @@ public class Main {
         scoreboardObjectives.add(new ScoreboardObjective(Objective.Mining, ObjectiveType.dummy, "\"I like mining-leaderboard\"", true));
         scoreboardObjectives.add(new ScoreboardObjective(Objective.Deaths, ObjectiveType.deathCount));
         scoreboardObjectives.add(new ScoreboardObjective(Objective.Kills, ObjectiveType.playerKillCount, true));
-        scoreboardObjectives.add(new ScoreboardObjective(Objective.TempKills, ObjectiveType.playerKillCount));
         scoreboardObjectives.add(new ScoreboardObjective(Objective.Rank, ObjectiveType.dummy));
-        scoreboardObjectives.add(new ScoreboardObjective(Objective.WorldLoad, ObjectiveType.dummy));
         scoreboardObjectives.add(new ScoreboardObjective(Objective.MinHealth, ObjectiveType.dummy));
-        scoreboardObjectives.add(new ScoreboardObjective(Objective.IsKiller, ObjectiveType.dummy));
         scoreboardObjectives.add(new ScoreboardObjective(Objective.Victory, ObjectiveType.dummy));
         scoreboardObjectives.add(new ScoreboardObjective(Objective.WolfAge, ObjectiveType.dummy));
-        scoreboardObjectives.add(new ScoreboardObjective(Objective.FoundTeam, ObjectiveType.dummy));
-        scoreboardObjectives.add(new ScoreboardObjective(Objective.Distance, ObjectiveType.dummy));
         scoreboardObjectives.add(new ScoreboardObjective(Objective.RandomQuotes, ObjectiveType.dummy));
-        scoreboardObjectives.add(new ScoreboardObjective(Objective.TimesCalled, "minecraft.used:minecraft.goat_horn"));
         scoreboardObjectives.add(new ScoreboardObjective(Objective.DamageTaken, "minecraft.custom:minecraft.damage_taken"));
-        for (String s : cartesian) {
-            scoreboardObjectives.add(new ScoreboardObjective(Objective.Pos + s, ObjectiveType.dummy));
-            scoreboardObjectives.add(new ScoreboardObjective(Objective.Square + s, ObjectiveType.dummy));
+
+        if (OperationMode.controlPoints) {
+            scoreboardObjectives.add(new ScoreboardObjective(Objective.CPScore, ObjectiveType.dummy, "\"Control Point score\"", true));
+            for (int i = 0; i < 2; i++) {
+                scoreboardObjectives.add(new ScoreboardObjective(Objective.Highscore.extendName(i + 1), ObjectiveType.dummy));
+                scoreboardObjectives.add(new ScoreboardObjective(Objective.ControlPoint.extendName(i + 1), ObjectiveType.dummy));
+                scoreboardObjectives.add(new ScoreboardObjective(Objective.CollarCheck.extendName(i), ObjectiveType.dummy));
+                for (int j = 0; j < 2; j++) {
+                    scoreboardObjectives.add(new ScoreboardObjective(Objective.MSGDum.extendName((i + 1) + "CP" + (j + 1)), ObjectiveType.dummy));
+                }
+            }
+        }
+
+        if (OperationMode.teamCreationInGame) {
+            scoreboardObjectives.add(new ScoreboardObjective(Objective.TempKills, ObjectiveType.playerKillCount));
+            scoreboardObjectives.add(new ScoreboardObjective(Objective.IsKiller, ObjectiveType.dummy));
+            scoreboardObjectives.add(new ScoreboardObjective(Objective.FoundTeam, ObjectiveType.dummy));
+            scoreboardObjectives.add(new ScoreboardObjective(Objective.Distance, ObjectiveType.dummy));
+            scoreboardObjectives.add(new ScoreboardObjective(Objective.TimesCalled, "minecraft.used:minecraft.goat_horn"));
+            for (String s : cartesian) {
+                scoreboardObjectives.add(new ScoreboardObjective(Objective.Pos + s, ObjectiveType.dummy));
+                scoreboardObjectives.add(new ScoreboardObjective(Objective.Square + s, ObjectiveType.dummy));
+            }
         }
     }
 
