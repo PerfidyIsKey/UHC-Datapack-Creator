@@ -1887,23 +1887,6 @@ public class Main {
                     CommandBuilder.summonEntity(EntityType.area_effect_cloud, new Coordinate(0, 300, 0), "{Passengers:[{id:\"minecraft:falling_block\",BlockState:{Name:\"" + BlockType.CHEST + "\"},TileEntityData:{LootTable:\"uhc:supply_drop\",CustomName:\"Care Package\"},Time:1,DropItem:0b,Tags:[\"CarePackage\"]}]}"));
         }
 
-        if (debug) {
-
-            texts.add(new Select(false, false, "@e[type=area_effect_cloud]"));
-            texts.add(new Text(false, false, " summoned!"));
-
-            fileCommands.add(new TellRaw("@a[tag=Debug]", texts).sendRaw());
-            texts.clear();
-        }
-
-        if (debug) {
-            texts.add(new Select(false, false, "@e[type=falling_block]"));
-            texts.add(new Text(false, false, " ready to be spread!"));
-
-            fileCommands.add(new TellRaw("@a[tag=Debug]", texts).sendRaw());
-            texts.clear();
-        }
-
         // Spread Care Packages
         fileCommands.add(Execute.In(Dimension.overworld, true) +
                 CommandBuilder.spreadPlayers(0, 0, 10, carePackageSpread, false, "@e[type=falling_block,nbt={Tags:[\"CarePackage\"]}]"));
@@ -2019,14 +2002,16 @@ public class Main {
                     scoreboard.Operation(Constant.admin, getObjectiveByName("" + Objective.CP + 2 + t.getName()), ComparatorType.greater, Constant.admin, getObjectiveByName("" + Objective.CP + 1 + t.getName())));
         }
 
-        // Individual players
-        fileCommands.add(Execute.In(controlPoints.get(0).getCoordinate().getDimension(), false) +
-                Execute.AsNext(new Entity("@r[limit=1,gamemode=!spectator,x=" + (controlPoints.get(0).getCoordinate().getX() - 6) + ",y=" + (controlPoints.get(0).getCoordinate().getY() - 1) + ",z=" + (controlPoints.get(0).getCoordinate().getZ() - 6) + ",dx=12,dy=12,dz=12,team=]"), true) +
-                scoreboard.Operation("@s", getObjectiveByName(Objective.ControlPoint.extendName(1)), ComparatorType.greater, "@s", getObjectiveByName(Objective.ControlPoint.extendName(2))));
+        if (OperationMode.teamCreationInGame) {
+            // Individual players
+            fileCommands.add(Execute.In(controlPoints.get(0).getCoordinate().getDimension(), false) +
+                    Execute.AsNext(new Entity("@r[limit=1,gamemode=!spectator,x=" + (controlPoints.get(0).getCoordinate().getX() - 6) + ",y=" + (controlPoints.get(0).getCoordinate().getY() - 1) + ",z=" + (controlPoints.get(0).getCoordinate().getZ() - 6) + ",dx=12,dy=12,dz=12,team=]"), true) +
+                    scoreboard.Operation("@s", getObjectiveByName(Objective.ControlPoint.extendName(1)), ComparatorType.greater, "@s", getObjectiveByName(Objective.ControlPoint.extendName(2))));
 
-        fileCommands.add(Execute.In(controlPoints.get(1).getCoordinate().getDimension(), false) +
-                Execute.AsNext(new Entity("@r[limit=1,gamemode=!spectator,x=" + (controlPoints.get(1).getCoordinate().getX() - 6) + ",y=" + (controlPoints.get(1).getCoordinate().getY() - 1) + ",z=" + (controlPoints.get(1).getCoordinate().getZ() - 6) + ",dx=12,dy=12,dz=12,team=]"), true) +
-                scoreboard.Operation("@s", getObjectiveByName(Objective.ControlPoint.extendName(2)), ComparatorType.greater, "@s", getObjectiveByName(Objective.ControlPoint.extendName(1))));
+            fileCommands.add(Execute.In(controlPoints.get(1).getCoordinate().getDimension(), false) +
+                    Execute.AsNext(new Entity("@r[limit=1,gamemode=!spectator,x=" + (controlPoints.get(1).getCoordinate().getX() - 6) + ",y=" + (controlPoints.get(1).getCoordinate().getY() - 1) + ",z=" + (controlPoints.get(1).getCoordinate().getZ() - 6) + ",dx=12,dy=12,dz=12,team=]"), true) +
+                    scoreboard.Operation("@s", getObjectiveByName(Objective.ControlPoint.extendName(2)), ComparatorType.greater, "@s", getObjectiveByName(Objective.ControlPoint.extendName(1))));
+        }
 
         return new FileData(FileName.team_score, fileCommands);
     }
