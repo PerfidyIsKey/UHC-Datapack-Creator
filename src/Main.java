@@ -773,7 +773,6 @@ public class Main {
             files.add(Minute(i));
         }
         files.add(TeamsAliveCheck());
-        files.add(TeamsHighscoreCheck());
         files.add(Victory());
         for (int i = 0; i < teams.size(); i++) {
             files.add(VictoryMessage(teams.get(i), i));
@@ -803,6 +802,7 @@ public class Main {
             files.add(ControlPointPerks());
             files.add(UpdatePublicCPScore());
             files.add(TeamScore());
+            files.add(TeamsHighscoreCheck());
         }
 
         // Traitor Faction
@@ -2412,25 +2412,51 @@ public class Main {
         // Players in teams
         for (int i = 0; i < teams.size(); i++) {
             for (int j = 1; j < 3; j++) {
-                fileCommands.add(Execute.If(new Entity("@e[scores={Victory=1}]"), false) +
-                        Execute.IfNext(new Entity("@p[team=" + teams.get(i).getName() + ",gamemode=!spectator,scores={ControlPoint" + j + "=" + maxCPScore + "..},tag=!" + Tag.Traitor + "]"), true) +
-                        Schedule.callFunction("" + FileName.victory_message_ + i));
-                fileCommands.add(Execute.If(new Entity("@e[scores={Victory=1}]"), false) +
-                        Execute.IfNext("@p[team=" + teams.get(i).getName() + ",gamemode=!spectator,scores={ControlPoint" + j + "=" + maxCPScore + "..},tag=" + Tag.Traitor + "]") +
-                        Execute.UnlessNext("@p[team=" + teams.get(i).getName() + ",gamemode=!spectator,scores={ControlPoint" + j + "=" + maxCPScore + "..},tag=!" + Tag.Traitor + "]", true) +
-                        Schedule.callFunction(FileName.victory_message_traitor));
+                if (OperationMode.traitorFaction) {
+                    // Regular teams
+                    fileCommands.add(Execute.If(new Entity("@e[scores={Victory=1}]"), false) +
+                            Execute.IfNext(new Entity("@p[team=" + teams.get(i).getName() + ",gamemode=!spectator,scores={ControlPoint" + j + "=" + maxCPScore + "..},tag=!" + Tag.Traitor + "]"), true) +
+                            Schedule.callFunction("" + FileName.victory_message_ + i));
+
+                    // Traitor teams
+                    fileCommands.add(Execute.If(new Entity("@e[scores={Victory=1}]"), false) +
+                            Execute.IfNext("@p[team=" + teams.get(i).getName() + ",gamemode=!spectator,scores={ControlPoint" + j + "=" + maxCPScore + "..},tag=" + Tag.Traitor + "]") +
+                            Execute.UnlessNext("@p[team=" + teams.get(i).getName() + ",gamemode=!spectator,scores={ControlPoint" + j + "=" + maxCPScore + "..},tag=!" + Tag.Traitor + "]", true) +
+                            Schedule.callFunction(FileName.victory_message_traitor));
+                }
+                else {
+
+                    // Regular teams
+                    fileCommands.add(Execute.If(new Entity("@e[scores={Victory=1}]"), false) +
+                            Execute.IfNext(new Entity("@p[team=" + teams.get(i).getName() + ",gamemode=!spectator,scores={ControlPoint" + j + "=" + maxCPScore + "..}]"), true) +
+                            Schedule.callFunction("" + FileName.victory_message_ + i));
+                }
             }
         }
 
-        // Individual players
-        for (int j = 1; j < 3; j++) {
-            fileCommands.add(Execute.If(new Entity("@e[scores={Victory=1}]"), false) +
-                    Execute.IfNext(new Entity("@p[team=,gamemode=!spectator,scores={ControlPoint" + j + "=" + maxCPScore + "..},tag=!" + Tag.Traitor + "]")) +
-                    Execute.AsNext("@p[team=,gamemode=!spectator,scores={ControlPoint" + j + "=" + maxCPScore + "..},tag=!" + Tag.Traitor + "]", true) +
-                    Schedule.callFunction(FileName.victory_message_solo));
-            fileCommands.add(Execute.If(new Entity("@e[scores={Victory=1}]"), false) +
-                    Execute.IfNext("@p[team=,gamemode=!spectator,scores={ControlPoint" + j + "=" + maxCPScore + "..},tag=" + Tag.Traitor + "]", true) +
-                    Schedule.callFunction(FileName.victory_message_traitor));
+        if (OperationMode.teamCreationInGame) {
+            // Individual players
+            for (int j = 1; j < 3; j++) {
+                if (OperationMode.traitorFaction) {
+                    // Regular solo
+                    fileCommands.add(Execute.If(new Entity("@e[scores={Victory=1}]"), false) +
+                            Execute.IfNext(new Entity("@p[team=,gamemode=!spectator,scores={ControlPoint" + j + "=" + maxCPScore + "..},tag=!" + Tag.Traitor + "]")) +
+                            Execute.AsNext("@p[team=,gamemode=!spectator,scores={ControlPoint" + j + "=" + maxCPScore + "..},tag=!" + Tag.Traitor + "]", true) +
+                            Schedule.callFunction(FileName.victory_message_solo));
+
+                    // Traitor solo
+                    fileCommands.add(Execute.If(new Entity("@e[scores={Victory=1}]"), false) +
+                            Execute.IfNext("@p[team=,gamemode=!spectator,scores={ControlPoint" + j + "=" + maxCPScore + "..},tag=" + Tag.Traitor + "]", true) +
+                            Schedule.callFunction(FileName.victory_message_traitor));
+                }
+                else {
+                    // Solo
+                    fileCommands.add(Execute.If(new Entity("@e[scores={Victory=1}]"), false) +
+                            Execute.IfNext(new Entity("@p[team=,gamemode=!spectator,scores={ControlPoint" + j + "=" + maxCPScore + "..}]")) +
+                            Execute.AsNext("@p[team=,gamemode=!spectator,scores={ControlPoint" + j + "=" + maxCPScore + "..}]", true) +
+                            Schedule.callFunction(FileName.victory_message_solo));
+                }
+            }
         }
 
         return new FileData(FileName.teams_highscore_alive_check, fileCommands);
