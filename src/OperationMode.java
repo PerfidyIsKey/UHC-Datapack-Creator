@@ -1,7 +1,7 @@
 public class OperationMode {
     public static final Boolean otherVersions = true;
     public static final Boolean debug = true;
-    public static final Boolean bots = false;
+    public static final Boolean bots = true;
     public static final Boolean proximity = false;
 
     // Game events
@@ -11,5 +11,5 @@ public class OperationMode {
     public static final Boolean eternalDay = true;
 
     // Game mechanics
-    public static final Boolean teamCreationInGame = false;
+    public static final Boolean teamCreationInGame = true;
 }

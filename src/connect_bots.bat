@@ -2,7 +2,7 @@
 setlocal enabledelayedexpansion
 
 REM Set server and JAR info
-set SERVER_IP=uhc.mr9madness.com
+set SERVER_IP=localhost
 set SERVER_PORT=25565
 set JAR=mc-bots-1.2.14.jar
 set BASE_CMD=java -jar ..\plugins\%JAR% -s %SERVER_IP%:%SERVER_PORT%

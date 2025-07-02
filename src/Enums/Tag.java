@@ -17,6 +17,7 @@ public enum Tag {
     IsFlying("IsFlying"),
     LookingForTeamMate("LookingForTeamMate"),
     OnCP("OnCP"),
+    PredictionCandidate("PredictionCandidate"),
     PredictionsCompleted("PredictionsCompleted"),
     ReceivedPerk("ReceivedPerk"),
     Respawn("Respawn"),

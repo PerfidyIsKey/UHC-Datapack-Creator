@@ -1281,25 +1281,50 @@ public class Main {
         ArrayList<String> fileCommands = new ArrayList<>();
         ArrayList<TextItem> texts = new ArrayList<>();
 
-        // Check if any team has won
-        for (Team t: teams) {
+        // Check if anyone has won
+        if (!OperationMode.teamCreationInGame) {
+            for (Team t : teams) {
+                // Get tag that predictions have been completed
+                fileCommands.add(Execute.If("@p[team=" + t.getName() + ",scores={Deaths=0}]", false) +
+                        Execute.UnlessNext("@p[team=!" + t.getName() + ",scores={Deaths=0}]", true) +
+                        CommandBuilder.addTag(Constant.admin, Tag.PredictionsCompleted));
+
+                // Chat message
+                texts.add(bannerText);
+                texts.add(new Text(Color.gold, true, false, communityName + " UHC"));
+                texts.add(bannerText);
+                texts.add(new Text(t.getColor(), true, false, t.getJSONColor()));
+                texts.add(new Text(Color.light_purple, true, false, " WILL WIN THE SEASON!"));
+                texts.add(bannerText);
+
+                fileCommands.add(Execute.If("@p[team=" + t.getName() + ",scores={Deaths=0}]", false) +
+                        Execute.UnlessNext("@p[team=!" + t.getName() + ",scores={Deaths=0}]", true) +
+                        new TellRaw("@a", texts).sendRaw());
+                texts.clear();
+            }
+        }
+        else {
+            // Choose player as candidate for having won
+            fileCommands.add(CommandBuilder.addTag("@r[team=,scores={Deaths=0}]", Tag.PredictionCandidate));
+
             // Get tag that predictions have been completed
-            fileCommands.add(Execute.If("@p[team=" + t.getName() + ",scores={Deaths=0}]", false) +
-                            Execute.UnlessNext("@p[team=!" + t.getName() + ",scores={Deaths=0}]", true) +
-                            CommandBuilder.addTag(Constant.admin, Tag.PredictionsCompleted));
+            fileCommands.add(Execute.Unless("@p[tag=!" + Tag.PredictionCandidate + ",scores={Deaths=0}]") +
+                    CommandBuilder.addTag(Constant.admin, Tag.PredictionsCompleted));
 
             // Chat message
             texts.add(bannerText);
             texts.add(new Text(Color.gold, true, false, communityName + " UHC"));
             texts.add(bannerText);
-            texts.add(new Text(t.getColor(), true, false, t.getJSONColor()));
+            texts.add(new Select("@p[tag=" + Tag.PredictionCandidate + "]"));
             texts.add(new Text(Color.light_purple, true, false, " WILL WIN THE SEASON!"));
             texts.add(bannerText);
 
-            fileCommands.add(Execute.If("@p[team=" + t.getName() + ",scores={Deaths=0}]", false) +
-                    Execute.UnlessNext("@p[team=!" + t.getName() + ",scores={Deaths=0}]", true) +
+            fileCommands.add(Execute.Unless("@p[tag=!" + Tag.PredictionCandidate + ",scores={Deaths=0}]") +
                     new TellRaw("@a", texts).sendRaw());
             texts.clear();
+
+            // Clear candidate tag
+            fileCommands.add(CommandBuilder.removeTag("@p[tag=" + Tag.PredictionCandidate + "]", Tag.PredictionCandidate));
         }
 
         // Self-schedule function
