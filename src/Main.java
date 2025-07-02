@@ -724,7 +724,6 @@ public class Main {
         files.add(ClearSchedule());
         files.add(DebugGive());
         files.add(DebugRemove());
-        files.add(CurrentTestFunction());
 
         // Game start up
         for (int i = 1; i < 9; i++) {
@@ -748,7 +747,9 @@ public class Main {
         // Messages
         files.add(ScheduleSingleMessages());
         files.add(MessagePVP());
-        files.add(MessageEternalDay());
+        if (OperationMode.eternalDay) {
+            files.add(MessageEternalDay());
+        }
 
         // Updates
         files.add(HorseFrostWalker());
@@ -2474,13 +2475,19 @@ public class Main {
         fileCommands.add(Schedule.clearFunction(FileName.timer_main_1));
         fileCommands.add(Schedule.clearFunction(FileName.timer_main_5));
         fileCommands.add(Schedule.clearFunction(FileName.timer_main_20));
-        fileCommands.add(Schedule.clearFunction(FileName.timer_control_point_20));
-        fileCommands.add(Schedule.clearFunction(FileName.timer_traitor_5));
-        fileCommands.add(Schedule.clearFunction(FileName.timer_traitor_20));
+        if (OperationMode.controlPoints) {
+            fileCommands.add(Schedule.clearFunction(FileName.timer_control_point_20));
+        }
+        if (OperationMode.traitorFaction) {
+            fileCommands.add(Schedule.clearFunction(FileName.timer_traitor_5));
+            fileCommands.add(Schedule.clearFunction(FileName.timer_traitor_20));
+        }
 
         // Extra scheduled functions
         fileCommands.add(Schedule.clearFunction(FileName.display_quotes));
-        fileCommands.add(Schedule.clearFunction(FileName.messages_eternal_day));
+        if (OperationMode.eternalDay) {
+            fileCommands.add(Schedule.clearFunction(FileName.messages_eternal_day));
+        }
         fileCommands.add(Schedule.clearFunction(FileName.messages_pvp));
         fileCommands.add(Schedule.clearFunction(FileName.disable_respawn));
 
@@ -2489,7 +2496,6 @@ public class Main {
 
     private FileData LocateTeammate() {
         ArrayList<String> fileCommands = new ArrayList<>();
-        boolean debug = false;
 
         for (Team t : teams) {
             for (int i = 0; i < 3; i++) {
@@ -2500,17 +2506,6 @@ public class Main {
                         Execute.PositionedNext(new Coordinate(0, 1, 0, ReferenceFrame.relative)) +
                         Execute.PositionedNext(new Coordinate(0, 0, i + 1, ReferenceFrame.relative_facing), true) +
                         CommandBuilder.createParticle(Particle.dust + "{color:[" + t.getDustColor() + "],scale:1}", new Coordinate(0, 0, 0, ReferenceFrame.relative), new Coordinate(0, 0, 0), 0, 1, "@s"));
-            }
-
-            if (debug) {
-                ArrayList<TextItem> texts = new ArrayList<>();
-
-                texts.add(new Text(false, false, t.getName() + " has players "));
-                texts.add(new Select(false, false, "@a[team=" + t.getName() + ",nbt={SelectedItem:{id:\\\"" + BlockType.BUNDLE.extendColor(t.getGlassColor()) + "\\\",components:{\\\"minecraft:custom_data\\\":{locateTeammate:1b}}}}]"));
-                texts.add(new Text(false, false, "Who are holding their bundle"));
-
-                fileCommands.add(new TellRaw("@a[tag=Debug]", texts).sendRaw());
-                texts.clear();
             }
         }
 
@@ -2542,13 +2537,15 @@ public class Main {
             fileCommands.add(CommandBuilder.removeTag("@a[team=" + t.getName() + "]", Tag.CollarCheck));
         }
 
-        // Individual players
-        fileCommands.add(CommandBuilder.addTag("@a[team=]", Tag.CollarCheck));
-        fileCommands.add(Execute.As(new Entity("@e[type=wolf]"), false) +
-                Execute.IfNext("@s", getObjectiveByName(Objective.CollarCheck.extendName(0)), ComparatorType.equal, "@p[tag=" + Tag.CollarCheck + "]", getObjectiveByName(Objective.CollarCheck.extendName(0))) +
-                Execute.IfNext("@s", getObjectiveByName(Objective.CollarCheck.extendName(1)), ComparatorType.equal, "@p[tag=" + Tag.CollarCheck + "]", getObjectiveByName(Objective.CollarCheck.extendName(1)), true) +
-                CommandBuilder.modifyData("@s", "CollarColor", "0"));
-        fileCommands.add(CommandBuilder.removeTag("@a[team=]", Tag.CollarCheck));
+        if (OperationMode.teamCreationInGame) {
+            // Individual players
+            fileCommands.add(CommandBuilder.addTag("@a[team=]", Tag.CollarCheck));
+            fileCommands.add(Execute.As(new Entity("@e[type=wolf]"), false) +
+                    Execute.IfNext("@s", getObjectiveByName(Objective.CollarCheck.extendName(0)), ComparatorType.equal, "@p[tag=" + Tag.CollarCheck + "]", getObjectiveByName(Objective.CollarCheck.extendName(0))) +
+                    Execute.IfNext("@s", getObjectiveByName(Objective.CollarCheck.extendName(1)), ComparatorType.equal, "@p[tag=" + Tag.CollarCheck + "]", getObjectiveByName(Objective.CollarCheck.extendName(1)), true) +
+                    CommandBuilder.modifyData("@s", "CollarColor", "0"));
+            fileCommands.add(CommandBuilder.removeTag("@a[team=]", Tag.CollarCheck));
+        }
 
         // Eliminate baby wolves
         Entity babyWolf = new Entity("@e[type=wolf,scores={WolfAge=..-1}]");
@@ -2579,10 +2576,12 @@ public class Main {
             }
         }
 
-        // Players without a team
-        for (int i = 1; i < controlPoints.size() + 1; i++) {
-            fileCommands.add(Execute.As("@a[team=]") +
-                    scoreboard.Operation("Solo", getObjectiveByName(Objective.CPScore), ComparatorType.greater, "@s", getObjectiveByName(Objective.ControlPoint.extendName(i))));
+        if (OperationMode.teamCreationInGame) {
+            // Players without a team
+            for (int i = 1; i < controlPoints.size() + 1; i++) {
+                fileCommands.add(Execute.As("@a[team=]") +
+                        scoreboard.Operation("Solo", getObjectiveByName(Objective.CPScore), ComparatorType.greater, "@s", getObjectiveByName(Objective.ControlPoint.extendName(i))));
+            }
         }
 
         return new FileData(FileName.update_public_cp_score, fileCommands);
@@ -2602,7 +2601,6 @@ public class Main {
 
     private FileData JoinTeam() {
         ArrayList<String> fileCommands = new ArrayList<>();
-        Boolean debug = false;
 
         String lookingPlayer = "@p[tag=LookingForTeamMate]";
 
@@ -2610,31 +2608,6 @@ public class Main {
         ArrayList<TextItem> texts = new ArrayList<>();
         for (int i = 0; i < (teams.size() - 1); i++) {
             filledTeam = Execute.Unless("@p[team=" + teams.get(i).getName() + "]", false);
-
-            if (debug) {
-                texts.add(new Select(false, false, lookingPlayer));
-                texts.add(new Text(Color.white, false, false, " is looking for a team mate"));
-                fileCommands.add(new TellRaw("@a[tag=Debug]", texts).sendRaw());
-                texts.clear();
-
-                texts.add(new Select(false, false, "@p[tag=LookingForTeamMate,team=]"));
-                texts.add(new Text(Color.white, false, false, " is looking for a team mate and is not in a team"));
-                fileCommands.add(new TellRaw("@a[tag=Debug]", texts).sendRaw());
-                texts.clear();
-
-                texts.add(new Select(false, false, "@p[team=" + teams.get(i).getName() + "]"));
-                texts.add(new Text(Color.white, false, false, " is already in team "));
-                texts.add(new Text(teams.get(i).getColor(), false, false, teams.get(i).getJSONColor()));
-                fileCommands.add(new TellRaw("@a[tag=Debug]", texts).sendRaw());
-                texts.clear();
-
-                texts.add(new Select(false, false, "@p[limit=2,team=,gamemode=!spectator]"));
-                texts.add(new Text(Color.white, false, false, " will join "));
-                texts.add(new Text(teams.get(i).getColor(), false, false, teams.get(i).getJSONColor()));
-                fileCommands.add(Execute.At(lookingPlayer) +
-                        new TellRaw("@a[tag=Debug]", texts).sendRaw());
-                texts.clear();
-            }
 
             // Announce that players formed a team
             texts.add(new Select(false, false, "@p[limit=2,team=,gamemode=!spectator]"));
@@ -2671,20 +2644,12 @@ public class Main {
     private FileData UpdatePlayerDistance() {
         ArrayList<String> fileCommands = new ArrayList<>();
         ArrayList<TextItem> texts = new ArrayList<>();
-        boolean debug = false;
 
         String checkingPlayer = "@p[team=,scores={TimesCalled=1..}]";
         ComparatorType comparator;
 
         // Give player playing the horn a tag
         fileCommands.add(CommandBuilder.addTag(checkingPlayer, Tag.LookingForTeamMate));
-
-        if (debug) {
-            texts.add(new Select(false, false, "@p[team=,scores={TimesCalled=1..}]"));
-            texts.add(new Text(Color.white, false, false, " has been given the LookingForTeamMate tag."));
-            fileCommands.add(new TellRaw("@a[tag=Debug]", texts).sendRaw());
-            texts.clear();
-        }
 
         // Loop through Cartesian coordinates
         for (int i = 0; i < cartesian.length; i++) {
@@ -2693,33 +2658,10 @@ public class Main {
                     Execute.StoreNext(ExecuteStore.result, "@s", getObjectiveByName(Objective.Pos + cartesian[i]), true) +
                     CommandBuilder.getData("@s", "Pos[" + i + "]", 1));
 
-            if (debug) {
-                for (Player player : players) {
-                    texts.add(new Select(false, false, "@p[name=" + player.getPlayerName() + ",team=]"));
-                    texts.add(new Text(Color.white, false, false, " is located at " + cartesian[i] + " = "));
-                    texts.add(new Score(false, false, "@p[name=" + player.getPlayerName() + ",team=]", Objective.Pos.extendName(cartesian[i])));
-                    fileCommands.add(new TellRaw("@a[tag=Debug]", texts).sendRaw());
-                    texts.clear();
-                }
-            }
-
             // Subtract distance of nearest player in Cartesian coordinate
             fileCommands.add(Execute.As(checkingPlayer, false) +
                     Execute.AtNext(checkingPlayer, true) +
                     scoreboard.Operation("@s", getObjectiveByName(Objective.Pos + cartesian[i]), ComparatorType.subtract, "@p[tag=!LookingForTeamMate,team=,gamemode=!spectator]", getObjectiveByName(Objective.Pos + cartesian[i])));
-
-            if (debug) {
-                texts.add(new Text(Color.white, false, false, "The closest person to "));
-                texts.add(new Select(false, false, checkingPlayer));
-                texts.add(new Text(Color.white, false, false, " without the LookingForTeamMate tag is "));
-                texts.add(new Select(false, false, "@p[tag=!LookingForTeamMate,team=]"));
-                texts.add(new Text(Color.white, false, false, ".\\nThey are "));
-                texts.add(new Score(false, false, checkingPlayer, Objective.Pos.extendName(cartesian[i])));
-                texts.add(new Text(Color.white, false, false, " blocks away in the " + cartesian[i] + " direction."));
-                fileCommands.add(Execute.At(checkingPlayer) +
-                        new TellRaw("@a[tag=Debug]", texts).sendRaw());
-                texts.clear();
-            }
 
             // Square the difference in Cartesian coordinates
             fileCommands.add(Execute.As(checkingPlayer) +
@@ -2738,19 +2680,6 @@ public class Main {
                     scoreboard.Operation("@s", getObjectiveByName(Objective.Distance), comparator, "@s", getObjectiveByName(Objective.Square + cartesian[i])));
         }
 
-        if (debug) {
-            texts.add(new Text(Color.white, false, false, "The distance between "));
-            texts.add(new Select(false, false, "@p[tag=!LookingForTeamMate]"));
-            texts.add(new Text(Color.white, false, false, " without the LookingForTeamMate tag and "));
-            texts.add(new Select(false, false, checkingPlayer));
-            texts.add(new Text(Color.white, false, false, " is "));
-            texts.add(new Score(false, false, checkingPlayer, Objective.Distance));
-            texts.add(new Text(Color.white, false, false, "\\nThe distance needs to be less than " + (minJoinDistance * minJoinDistance)));
-            fileCommands.add(Execute.At(checkingPlayer) +
-                    new TellRaw("@a[tag=Debug]", texts).sendRaw());
-            texts.clear();
-        }
-
         // Ignore players that are already in a team
         texts.add(new Text(Color.red, true, false, "You are already on a team! Don't be greedy!"));
 
@@ -2758,18 +2687,6 @@ public class Main {
         fileCommands.add(Execute.If(playerInTeam) +
                 new TellRaw(playerInTeam, texts).sendRaw());
         texts.clear();
-
-        if (debug) {
-            texts.add(new Select(false, false, "@p[scores={TimesCalled=1..},team=!]"));
-            texts.add(new Text(Color.white, false, false, " already has a team and tries to team up."));
-            fileCommands.add(new TellRaw("@a[tag=Debug]", texts).sendRaw());
-            texts.clear();
-
-            texts.add(new Select(false, false, "@p[tag=LookingForTeamMate,scores={Distance=.." + (minJoinDistance * minJoinDistance) + "},team=]"));
-            texts.add(new Text(Color.white, false, false, " tries to team up, is in range and has no team yet."));
-            fileCommands.add(new TellRaw("@a[tag=Debug]", texts).sendRaw());
-            texts.clear();
-        }
 
         // Call join team function if other player is in range
         String playerInRange = "@p[tag=LookingForTeamMate,scores={Distance=.." + (minJoinDistance * minJoinDistance) + ",IsKiller=0},team=]";
@@ -2786,13 +2703,6 @@ public class Main {
                 Execute.UnlessNext(playerTooFar, Objective.IsKiller, 1, true) +
                 new TellRaw(playerTooFar, texts).sendRaw());
         texts.clear();
-
-        if (debug) {
-            texts.add(new Select(false, false, "@p[tag=LookingForTeamMate,scores={Distance=" + (minJoinDistance * minJoinDistance) + "..},team=]"));
-            texts.add(new Text(Color.white, false, false, " tries to team up, but is not in range."));
-            fileCommands.add(new TellRaw("@a[tag=Debug]", texts).sendRaw());
-            texts.clear();
-        }
 
         // Refuse killers
         texts.add(new Text(Color.red, true, false, "You are a killer! No team for you!"));
@@ -2867,12 +2777,6 @@ public class Main {
         return new FileData(FileName.debug_remove, fileCommands);
     }
 
-    private FileData CurrentTestFunction() {
-        ArrayList<String> fileCommands = new ArrayList<>();
-
-        return new FileData(FileName.current_test_function, fileCommands);
-    }
-
     private FileData DeveloperPotionControl() {
         // Turn potion effect into function execution
         ArrayList<String> fileCommands = new ArrayList<>();
@@ -2896,7 +2800,9 @@ public class Main {
         ArrayList<String> fileCommands = new ArrayList<>();
 
         fileCommands.add(Schedule.callFunction(FileName.messages_pvp, 5 * Constant.secPerMinute));
-        fileCommands.add(Schedule.callFunction(FileName.messages_eternal_day, 20 * Constant.secPerMinute));
+        if (OperationMode.eternalDay) {
+            fileCommands.add(Schedule.callFunction(FileName.messages_eternal_day, 20 * Constant.secPerMinute));
+        }
 
         return new FileData(FileName.messages_schedule_single, fileCommands);
     }

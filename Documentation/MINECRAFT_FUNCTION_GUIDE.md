@@ -83,10 +83,6 @@ A list of all functions in the Java project with descriptions and their executio
 - Parents: control_point_i
 - Children: -
 
-### **current_test_function**
-  - Currently used for development testing.
-  - Execution Method: Single-use
-
 ### **death_match**
   - Prepares world for deathmatch and spreads living players. 
   - Execution Method: Single-use

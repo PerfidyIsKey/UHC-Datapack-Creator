@@ -21,7 +21,6 @@ public enum FileName {
     timer_main_1,
     timer_main_5,
     timer_main_20,
-    timer_control_point_5,
     timer_control_point_20,
     timer_traitor_5,
     timer_traitor_20,

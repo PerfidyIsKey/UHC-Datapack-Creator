@@ -22,15 +22,21 @@ public class Update {
         fileCommands.add(Main.scoreboard.Add(Constant.admin, Objective.Time2, 1));
 
         // Scheduled events
-        fileCommands.add(Execute.If("@e[scores={Time2=" + (20 * Constant.secPerMinute * Constant.tickFrequencyShort) + "..}]", false) +
-                Execute.UnlessNext("@e[tag=" + Tag.CarePackagesDropped + "]", true) +
-                Schedule.callFunction(FileName.drop_carepackages));
-        fileCommands.add(Execute.If("@e[scores={Time2=" + (30 * Constant.secPerMinute * Constant.tickFrequencyShort) + "..}]", false) +
-                Execute.UnlessNext("@e[tag=" + Tag.ControlPoint1Enabled + "]", true) +
-                Schedule.callFunction(FileName.initialize_control_point));
-        fileCommands.add(Execute.If("@e[scores={Time2=" + (40 * Constant.secPerMinute * Constant.tickFrequencyShort) + "..}]", false) +
-                Execute.UnlessNext("@e[tag=" + Tag.TraitorsAssigned + "]", true) +
-                Schedule.callFunction(FileName.traitor_handout));
+        if (OperationMode.carePackages) {
+            fileCommands.add(Execute.If("@e[scores={Time2=" + (20 * Constant.secPerMinute * Constant.tickFrequencyShort) + "..}]", false) +
+                    Execute.UnlessNext("@e[tag=" + Tag.CarePackagesDropped + "]", true) +
+                    Schedule.callFunction(FileName.drop_carepackages));
+        }
+        if (OperationMode.controlPoints) {
+            fileCommands.add(Execute.If("@e[scores={Time2=" + (30 * Constant.secPerMinute * Constant.tickFrequencyShort) + "..}]", false) +
+                    Execute.UnlessNext("@e[tag=" + Tag.ControlPoint1Enabled + "]", true) +
+                    Schedule.callFunction(FileName.initialize_control_point));
+        }
+        if (OperationMode.traitorFaction) {
+            fileCommands.add(Execute.If("@e[scores={Time2=" + (40 * Constant.secPerMinute * Constant.tickFrequencyShort) + "..}]", false) +
+                    Execute.UnlessNext("@e[tag=" + Tag.TraitorsAssigned + "]", true) +
+                    Schedule.callFunction(FileName.traitor_handout));
+        }
 
         // Schedule functions
         fileCommands.add(Schedule.callFunction(FileName.update_min_health));
@@ -49,8 +55,10 @@ public class Update {
 
         // Schedule functions
         fileCommands.add(Schedule.callFunction(FileName.remove_banned_items));
-        fileCommands.add(Execute.If("@p[scores={TimesCalled=1..}]") +
-                Schedule.callFunction(FileName.update_player_distance));    // Check if custom team can be made
+        if (OperationMode.teamCreationInGame) {
+            fileCommands.add(Execute.If("@p[scores={TimesCalled=1..}]") +
+                    Schedule.callFunction(FileName.update_player_distance));    // Check if custom team can be made
+        }
 
         // Self-schedule timer
         fileCommands.add(Schedule.callFunction(FileName.timer_main_5, 5, Duration.ticks));
@@ -85,16 +93,6 @@ public class Update {
         fileCommands.add(Schedule.callFunction(FileName.timer_main_20, 20, Duration.ticks));
 
         return new FileData(FileName.timer_main_20, fileCommands);
-    }
-
-    public FileData TimerControlPoint5() {
-        // Timer for Control Point continuous functions with interval of 5 ticks
-        ArrayList<String> fileCommands = new ArrayList<>();
-
-        // Self-schedule timer
-        fileCommands.add(Schedule.callFunction(FileName.timer_control_point_5, 5, Duration.ticks));
-
-        return new FileData(FileName.timer_control_point_5, fileCommands);
     }
 
     public FileData TimerControlPoint20() {
