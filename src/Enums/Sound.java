@@ -1,22 +1,26 @@
 package Enums;
 
 public enum Sound {
-    BASALT("minecraft:ambient.basalt_deltas.mood"),
-    CRIMSON("minecraft:ambient.crimson_forest.mood"),
-    WARPED("minecraft:ambient.warped_forest.mood"),
-    WITHER("minecraft:entity.wither.spawn"),
-
-    THUNDER("minecraft:entity.lightning_bolt.thunder")
+    BASALT("ambient.basalt_deltas.mood"),
+    CRIMSON("ambient.crimson_forest.mood"),
+    WARPED("ambient.warped_forest.mood"),
+    WITHER("entity.wither.spawn"),
+    THUNDER("entity.lightning_bolt.thunder")
     ;
 
-    private String value;
+    private String symbol;
 
-    Sound(String value) {
-        this.value = value;
+    Sound(String symbol) {
+        this.symbol = symbol;
     }
 
-    public String getValue() {
-        return value;
+    public String getSymbol() {
+        return symbol;
+    }
+
+    @Override
+    public String toString() {
+        return "minecraft:" + symbol;
     }
 }
 

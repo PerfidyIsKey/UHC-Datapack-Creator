@@ -22,7 +22,6 @@ public enum Objective {
         Deaths("Deaths"),
         Kills("Kills"),
         Rank("Rank"),
-        WorldLoad("WorldLoad"),
         CollarCheck("CollarCheck"),
         MinHealth("MinHealth"),
         Victory("Victory"),

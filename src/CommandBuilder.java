@@ -140,7 +140,7 @@ public class CommandBuilder {
 
     // Play sound
     public static String playSound(Sound sound, SoundSource source, String entity, String x, String y, String z, String x1, String y1, String z1) {
-        return "playsound " + sound.getValue() + " " + source + " " + entity + " " + x + " " + y + " " + z + " " + x1 + " " + y1 + " " + z1;
+        return "playsound " + sound + " " + source + " " + entity + " " + x + " " + y + " " + z + " " + x1 + " " + y1 + " " + z1;
     }
 
     public static String setAttributeBase(String entity, AttributeType attribute, double value) {
