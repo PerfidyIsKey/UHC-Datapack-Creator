@@ -1,4 +1,5 @@
 public class OperationMode {
+    // Plugins
     public static final Boolean otherVersions = true;
     public static final Boolean debug = true;
     public static final Boolean bots = true;
@@ -11,5 +12,5 @@ public class OperationMode {
     public static final Boolean eternalDay = true;
 
     // Game mechanics
-    public static final Boolean teamCreationInGame = true;
+    public static final Boolean teamCreationInGame = false;
 }

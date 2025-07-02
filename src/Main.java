@@ -335,13 +335,15 @@ public class Main {
         scoreboardObjectives.add(new ScoreboardObjective(Objective.WolfAge, ObjectiveType.dummy));
         scoreboardObjectives.add(new ScoreboardObjective(Objective.RandomQuotes, ObjectiveType.dummy));
         scoreboardObjectives.add(new ScoreboardObjective(Objective.DamageTaken, "minecraft.custom:minecraft.damage_taken"));
+        for (int i = 0; i < 2; i++) {
+            scoreboardObjectives.add(new ScoreboardObjective(Objective.CollarCheck.extendName(i), ObjectiveType.dummy));
+        }
 
         if (OperationMode.controlPoints) {
             scoreboardObjectives.add(new ScoreboardObjective(Objective.CPScore, ObjectiveType.dummy, "\"Control Point score\"", true));
             for (int i = 0; i < 2; i++) {
                 scoreboardObjectives.add(new ScoreboardObjective(Objective.Highscore.extendName(i + 1), ObjectiveType.dummy));
                 scoreboardObjectives.add(new ScoreboardObjective(Objective.ControlPoint.extendName(i + 1), ObjectiveType.dummy));
-                scoreboardObjectives.add(new ScoreboardObjective(Objective.CollarCheck.extendName(i), ObjectiveType.dummy));
                 for (int j = 0; j < 2; j++) {
                     scoreboardObjectives.add(new ScoreboardObjective(Objective.MSGDum.extendName((i + 1) + "CP" + (j + 1)), ObjectiveType.dummy));
                 }
