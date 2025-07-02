@@ -2301,23 +2301,21 @@ public class Main {
                     CommandBuilder.spreadPlayers(0, 0, (int) (0.3 * world.getSize()), (int) (0.7 * world.getSize()), false, "@s[team=" + t.getName() + "]"));
         }
 
-        // Teleport player if they are not in a team
-        fileCommands.add(Execute.As(new Entity(respawnPlayer)) +
-                CommandBuilder.spreadPlayers(0, 0, (int) (0.3 * world.getSize()), (int) (0.7 * world.getSize()), false, "@s[team=]"));
+        if (OperationMode.teamCreationInGame) {
+            // Teleport player if they are not in a team
+            fileCommands.add(Execute.As(new Entity(respawnPlayer)) +
+                    CommandBuilder.spreadPlayers(0, 0, (int) (0.3 * world.getSize()), (int) (0.7 * world.getSize()), false, "@s[team=]"));
 
+            // Team caller
+            fileCommands.add(Execute.As(new Entity(respawnPlayer)) +
+                    CommandBuilder.giveItem("@s[team=]", BlockType.GOAT_HORN, "[instrument=\"minecraft:ponder_goat_horn\",use_cooldown={seconds:30},enchantments={\"" + EnchantmentType.VANISHING_CURSE + "\":1}]"));
+        }
 
         // Remove player heads
         fileCommands.add(Execute.As(new Entity("@a[nbt={Inventory:[{id:\"" + BlockType.PLAYER_HEAD + "\"}]}]")) +
                 CommandBuilder.clearInventory("@s", BlockType.PLAYER_HEAD));  // Remove from inventory
         fileCommands.add(Execute.As(new Entity("@e[type=item,nbt={Item:{id:\"" + BlockType.PLAYER_HEAD + "\"}}]")) +
                 CommandBuilder.killEntity("@s")); // Remove item
-
-        // Give players teammate tools
-        if (teamMode == 2) {
-            // Team caller
-            fileCommands.add(Execute.As(new Entity(respawnPlayer)) +
-                    CommandBuilder.giveItem("@s[team=]", BlockType.GOAT_HORN, "[instrument=\"minecraft:ponder_goat_horn\",use_cooldown={seconds:30},enchantments={\"" + EnchantmentType.VANISHING_CURSE + "\":1}]"));
-        }
 
         // Teammate tracker
         for (Team team : teams) {
