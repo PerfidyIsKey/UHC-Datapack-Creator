@@ -739,10 +739,11 @@ public class Main {
         files.add(GameStart.GameStarter());
 
         // Timers
-        files.add(Update.TimerMain1());
-        files.add(Update.TimerMain5());
-        files.add(Update.TimerMain20());
-        files.add(Update.TimerDeveloper20());
+        Update Updating = new Update();
+        files.add(Updating.TimerMain1());
+        files.add(Updating.TimerMain5());
+        files.add(Updating.TimerMain20());
+        files.add(Updating.TimerDeveloper20());
 
         // Messages
         files.add(ScheduleSingleMessages());
@@ -790,7 +791,7 @@ public class Main {
 
         // Control Points
         if (OperationMode.controlPoints) {
-            files.add(Update.TimerControlPoint20());
+            files.add(Updating.TimerControlPoint20());
             files.add(SpawnControlPoints());
             files.add(BossBarValue());
             files.add(InitializeControlpoint());
@@ -809,8 +810,8 @@ public class Main {
 
         // Traitor Faction
         if (OperationMode.traitorFaction) {
-            files.add(Update.TimerTraitor5());
-            files.add(Update.TimerTraitor20());
+            files.add(Updating.TimerTraitor5());
+            files.add(Updating.TimerTraitor20());
             files.add(TraitorHandout());
             files.add(TraitorActionBar());
         }
