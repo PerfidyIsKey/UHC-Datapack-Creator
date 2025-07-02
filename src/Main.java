@@ -1416,12 +1416,12 @@ public class Main {
         fileCommands.add(CommandBuilder.setExperience("@a", 0, ExperienceType.points));
 
         // Give players teammate tools
-        if (teamMode == 1) {
+        if (!OperationMode.teamCreationInGame) {
             // Teammate tracker
-            for (int i = 0; i < teams.size(); i++) {
-                fileCommands.add(CommandBuilder.giveItem("@a[team=" + teams.get(i).getName() + "]", BlockType.BUNDLE.extendColor(teams.get(i).getGlassColor()), "[enchantments={\"" + EnchantmentType.VANISHING_CURSE + "\":1},custom_data={locateTeammate:1b}]"));
+            for (Team team : teams) {
+                fileCommands.add(CommandBuilder.giveItem("@a[team=" + team.getName() + "]", BlockType.BUNDLE.extendColor(team.getGlassColor()), "[enchantments={\"" + EnchantmentType.VANISHING_CURSE + "\":1},custom_data={locateTeammate:1b}]"));
             }
-        } else if (teamMode == 2) {
+        } else {
             // Team caller
             fileCommands.add(CommandBuilder.giveItem("@a", BlockType.GOAT_HORN, "[instrument=\"minecraft:ponder_goat_horn\",use_cooldown={seconds:30},enchantments={\"" + EnchantmentType.VANISHING_CURSE + "\":1}]"));
         }
