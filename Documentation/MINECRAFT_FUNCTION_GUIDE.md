@@ -299,7 +299,7 @@ A list of all functions in the Java project with descriptions and their executio
   - Checks if only a single team/player is alive.
   - Execution Method: Continuous
   - Interval: 5 ticks
-  - Parents: traitor_check
+  - Parents: traitor_check (Traitor Faction enabled), timer_main_20 (Traitor Faction disabled)
   - Children: victory_message_0 to victory_message_12, victory_message_solo
 
 ### **teams_highscore_alive_check**
@@ -349,7 +349,7 @@ A list of all functions in the Java project with descriptions and their executio
   - Execution Method: Continuous (self-scheduling)
   - Interval: 20 ticks
   - Parents: game_starter
-  - Children: locate_teammate, check_iron_man, update_mine_count, update_sidebar, wolf_updates
+  - Children: locate_teammate, check_iron_man, update_mine_count, update_sidebar, wolf_updates, teams_alive_check (Traitor Faction disabled)
 
 ### **timer_traitor_5**
   - Timer for Traitor Faction functions with interval of 5 ticks

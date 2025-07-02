@@ -772,7 +772,6 @@ public class Main {
         for (int i = 1; i < 3; i++) {
             files.add(Minute(i));
         }
-        files.add(TraitorCheck());
         files.add(TeamsAliveCheck());
         files.add(TeamsHighscoreCheck());
         files.add(Victory());
@@ -813,6 +812,7 @@ public class Main {
             files.add(TraitorHandout());
             files.add(TraitorActionBar());
             files.add(VictoryTraitor());
+            files.add(TraitorCheck());
         }
 
         // In game teams
@@ -2394,12 +2394,14 @@ public class Main {
                     Schedule.callFunction("" + FileName.victory_message_ + i));
         }
 
-        // Players without a team
-        fileCommands.add(CommandBuilder.addTag("@p[team=,gamemode=!spectator]", Tag.AmIWinning));
-        fileCommands.add(Execute.Unless("@p[tag=!AmIWinning,gamemode=!spectator]", false) +
-                Execute.AsNext("@p[tag=AmIWinning]", true) +
-                Schedule.callFunction(FileName.victory_message_solo));
-        fileCommands.add(CommandBuilder.removeTag("@p[tag=AmIWinning]", Tag.AmIWinning));
+        if (OperationMode.teamCreationInGame) {
+            // Players without a team
+            fileCommands.add(CommandBuilder.addTag("@p[team=,gamemode=!spectator]", Tag.AmIWinning));
+            fileCommands.add(Execute.Unless("@p[tag=!AmIWinning,gamemode=!spectator]", false) +
+                    Execute.AsNext("@p[tag=AmIWinning]", true) +
+                    Schedule.callFunction(FileName.victory_message_solo));
+            fileCommands.add(CommandBuilder.removeTag("@p[tag=AmIWinning]", Tag.AmIWinning));
+        }
 
         return new FileData(FileName.teams_alive_check, fileCommands);
     }

@@ -71,6 +71,10 @@ public class Update {
                 Schedule.callFunction(FileName.update_mine_count)); // Update strip mine count
         fileCommands.add(Schedule.callFunction(FileName.update_sidebar));
         fileCommands.add(Schedule.callFunction(FileName.wolf_updates));
+        if (!OperationMode.traitorFaction) {
+            fileCommands.add(Execute.If(new Entity("@e[scores={Victory=1}]")) +
+                    Schedule.callFunction(FileName.teams_alive_check));  // Check if teams have won
+        }
 
         // Timer scoreboard
         fileCommands.add(Main.scoreboard.Add(Constant.admin, Objective.TimeDum, 1));
