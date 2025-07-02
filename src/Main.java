@@ -890,7 +890,7 @@ public class Main {
         fileCommands.add(Execute.In(Dimension.overworld) +
                 CommandBuilder.fill(-5, 221, -5, 5, 226, 5, BlockType.AIR));
         fileCommands.add(Execute.In(Dimension.overworld) +
-                CommandBuilder.setBlock(0, 222, -5, BlockType.CHERRY_WALL_SIGN + "[facing=south,waterlogged=false]{back_text:{messages:[\"You have\",\"angered\",\"the Gods!\",\"\"]},front_text:{messages:[{\"text\":\"In rememberance\",\"click_event\":{\"action\":\"run_command\",\"command\":\"summon minecraft:firework_rocket ~ ~ ~\"}},\"of our\",\"Command Center\",\"2014-2025\"]},is_waxed:0b}"));
+                CommandBuilder.setBlock(0, 222, -5, BlockType.CHERRY_WALL_SIGN + "[facing=south,waterlogged=false]{back_text:{messages:[\"You have\",\"angered\",\"the Gods!\",\"\"]},front_text:{messages:[{\"text\":\"In rememberance\",\"click_event\":{\"action\":\"run_command\",\"command\":\"" + CommandBuilder.summonEntity(EntityType.FIREWORK_ROCKET, new Coordinate(0, 0, 0, ReferenceFrame.relative)) + "\"}},\"of our\",\"Command Center\",\"2014-2025\"]},is_waxed:0b}"));
 
         // Control Point
         if (OperationMode.controlPoints) {
@@ -994,7 +994,7 @@ public class Main {
         // Summon a player head upon dying
         for (Player p : players) {
             fileCommands.add(Execute.At(new Entity("@p[name=" + p.getPlayerName() + ",scores={Deaths=1}]")) +
-                    CommandBuilder.summonEntity(EntityType.item, "{Item:{id:\"" + BlockType.PLAYER_HEAD + "\",count:1,components:{\"minecraft:profile\":{name:" + p.getPlayerName() + "}}}}"));
+                    CommandBuilder.summonEntity(EntityType.ITEM, "{Item:{id:\"" + BlockType.PLAYER_HEAD + "\",count:1,components:{\"minecraft:profile\":{name:" + p.getPlayerName() + "}}}}"));
         }
 
         return new FileData(FileName.drop_player_heads, fileCommands);
@@ -1015,7 +1015,7 @@ public class Main {
         }
 
         // Individual players
-        fileCommands.add(Execute.If("@r[limit=1,team=]", getObjectiveByName(Objective.ControlPoint.extendName(1)), ComparatorType.greater, "@e[type=marker,limit=1]", getObjectiveByName(Objective.Highscore.extendName(1))) +
+        fileCommands.add(Execute.If("@r[limit=1,team=]", getObjectiveByName(Objective.ControlPoint.extendName(1)), ComparatorType.greater, Constant.adminSingle, getObjectiveByName(Objective.Highscore.extendName(1))) +
                 getBossbarByName("cp1").setColor(BossBarColor.white));
         fileCommands.add(Execute.If("@r[limit=1,team=]", getObjectiveByName(Objective.ControlPoint.extendName(2)), ComparatorType.greater, "@e[scores={Highscore1=" + cp2ActivationScore + "..},limit=1]", getObjectiveByName(Objective.Highscore.extendName(2))) +
                 getBossbarByName("cp2").setColor(BossBarColor.white));
@@ -1094,8 +1094,8 @@ public class Main {
         ArrayList<String> fileCommands = new ArrayList<>();
 
         // Create marker entity
-        fileCommands.add(CommandBuilder.killEntity("@e[type=marker]"));
-        fileCommands.add(CommandBuilder.summonEntity(EntityType.marker, new Coordinate(0, Constant.worldBottom, 0), "{CustomName:\"Admin\"}"));
+        fileCommands.add(CommandBuilder.killEntity(Constant.admin));
+        fileCommands.add(CommandBuilder.summonEntity(EntityType.MARKER, new Coordinate(0, Constant.worldBottom, 0), "{CustomName:\"Admin\"}"));
 
         // Set time
         fileCommands.add(CommandBuilder.setTime(0));
@@ -1464,7 +1464,7 @@ public class Main {
         fileCommands.add(CommandBuilder.titleDefaultTiming("@a"));
 
         // Destroy all ground items
-        fileCommands.add(CommandBuilder.killEntity("@e[type=item]"));
+        fileCommands.add(CommandBuilder.killEntity("@e[type=" + EntityType.ITEM + "]"));
 
         // Schedule continuous functions
         fileCommands.add(Schedule.callFunction(FileName.game_starter));
@@ -1905,12 +1905,12 @@ public class Main {
         // Summon Care Package entities
         for (int i = 0; i < carePackageAmount; i++) {
             fileCommands.add(Execute.In(Dimension.overworld) +
-                    CommandBuilder.summonEntity(EntityType.area_effect_cloud, new Coordinate(0, 300, 0), "{Passengers:[{id:\"minecraft:falling_block\",BlockState:{Name:\"" + BlockType.CHEST + "\"},TileEntityData:{LootTable:\"uhc:supply_drop\",CustomName:\"Care Package\"},Time:1,DropItem:0b,Tags:[\"CarePackage\"]}]}"));
+                    CommandBuilder.summonEntity(EntityType.AREA_EFFECT_CLOUD, new Coordinate(0, 300, 0), "{Passengers:[{id:\"" + EntityType.FALLING_BLOCK + "\",BlockState:{Name:\"" + BlockType.CHEST + "\"},TileEntityData:{LootTable:\"uhc:supply_drop\",CustomName:\"Care Package\"},Time:1,DropItem:0b,Tags:[\"CarePackage\"]}]}"));
         }
 
         // Spread Care Packages
         fileCommands.add(Execute.In(Dimension.overworld, true) +
-                CommandBuilder.spreadPlayers(0, 0, 10, carePackageSpread, false, "@e[type=falling_block,nbt={Tags:[\"CarePackage\"]}]"));
+                CommandBuilder.spreadPlayers(0, 0, 10, carePackageSpread, false, "@e[type=" + EntityType.FALLING_BLOCK + ",nbt={Tags:[\"CarePackage\"]}]"));
 
         // Give admin tag for disabling self-rescheduling
         fileCommands.add(CommandBuilder.addTag(Constant.admin, Tag.CarePackagesDropped));
@@ -2068,7 +2068,7 @@ public class Main {
         }
 
         // Remove leftover music discs from legacy Control Point
-        fileCommands.add(CommandBuilder.killEntity("@e[type=item,nbt={Item:{id:\"" + BlockType.MUSIC_DISC_STAL + "\",count:1}}]"));
+        fileCommands.add(CommandBuilder.killEntity("@e[type=" + EntityType.ITEM + ",nbt={Item:{id:\"" + BlockType.MUSIC_DISC_STAL + "\",count:1}}]"));
 
         return new FileData(FileName.spawn_control_points, fileCommands);
     }
@@ -2087,7 +2087,7 @@ public class Main {
     private FileData HorseFrostWalker() {
         ArrayList<String> fileCommands = new ArrayList<>();
 
-        fileCommands.add(Execute.At(new Entity("@a[nbt={RootVehicle:{Entity:{id:\"minecraft:horse\"}}}]")) +
+        fileCommands.add(Execute.At(new Entity("@a[nbt={RootVehicle:{Entity:{id:\"" + EntityType.HORSE + "\"}}}]")) +
                 CommandBuilder.relativeFill(-2, -2, -2, 2, 0, 2, "ice", SetBlockType.replace, "water"));
 
         return new FileData(FileName.horse_frost_walker, fileCommands);
@@ -2335,7 +2335,7 @@ public class Main {
         // Remove player heads
         fileCommands.add(Execute.As(new Entity("@a[nbt={Inventory:[{id:\"" + BlockType.PLAYER_HEAD + "\"}]}]")) +
                 CommandBuilder.clearInventory("@s", BlockType.PLAYER_HEAD));  // Remove from inventory
-        fileCommands.add(Execute.As(new Entity("@e[type=item,nbt={Item:{id:\"" + BlockType.PLAYER_HEAD + "\"}}]")) +
+        fileCommands.add(Execute.As(new Entity("@e[type=" + EntityType.ITEM + ",nbt={Item:{id:\"" + BlockType.PLAYER_HEAD + "\"}}]")) +
                 CommandBuilder.killEntity("@s")); // Remove item
 
         // Teammate tracker
@@ -2538,7 +2538,7 @@ public class Main {
         // Set wolf collar color
         // Get data
         for (int i = 0; i < 2; i++) {
-            fileCommands.add(Execute.As(new Entity("@e[type=minecraft:wolf]"), false) +
+            fileCommands.add(Execute.As(new Entity("@e[type=" + EntityType.WOLF +"]"), false) +
                     Execute.StoreNext(ExecuteStore.result, "@s", getObjectiveByName(Objective.CollarCheck.extendName(i)), true) +
                     CommandBuilder.getData("@s", "Owner[" + i + "]"));
 
@@ -2550,7 +2550,7 @@ public class Main {
         // Players in a team
         for (Team t : teams) {
             fileCommands.add(CommandBuilder.addTag("@a[team=" + t.getName() + "]", Tag.CollarCheck));
-            fileCommands.add(Execute.As(new Entity("@e[type=wolf]"), false) +
+            fileCommands.add(Execute.As(new Entity("@e[type=" + EntityType.WOLF + "]"), false) +
                     Execute.IfNext("@s", getObjectiveByName(Objective.CollarCheck.extendName(0)), ComparatorType.equal, "@p[tag=" + Tag.CollarCheck + "]", getObjectiveByName(Objective.CollarCheck.extendName(0))) +
                     Execute.IfNext("@s", getObjectiveByName(Objective.CollarCheck.extendName(1)), ComparatorType.equal, "@p[tag=" + Tag.CollarCheck + "]", getObjectiveByName(Objective.CollarCheck.extendName(1)), true) +
                     CommandBuilder.modifyData("@s", "CollarColor", t.getCollarColor()));
@@ -2560,7 +2560,7 @@ public class Main {
         if (OperationMode.teamCreationInGame) {
             // Individual players
             fileCommands.add(CommandBuilder.addTag("@a[team=]", Tag.CollarCheck));
-            fileCommands.add(Execute.As(new Entity("@e[type=wolf]"), false) +
+            fileCommands.add(Execute.As(new Entity("@e[type=" + EntityType.WOLF + "]"), false) +
                     Execute.IfNext("@s", getObjectiveByName(Objective.CollarCheck.extendName(0)), ComparatorType.equal, "@p[tag=" + Tag.CollarCheck + "]", getObjectiveByName(Objective.CollarCheck.extendName(0))) +
                     Execute.IfNext("@s", getObjectiveByName(Objective.CollarCheck.extendName(1)), ComparatorType.equal, "@p[tag=" + Tag.CollarCheck + "]", getObjectiveByName(Objective.CollarCheck.extendName(1)), true) +
                     CommandBuilder.modifyData("@s", "CollarColor", "0"));
@@ -2568,18 +2568,18 @@ public class Main {
         }
 
         // Eliminate baby wolves
-        Entity babyWolf = new Entity("@e[type=wolf,scores={WolfAge=..-1}]");
+        Entity babyWolf = new Entity("@e[type=" + EntityType.WOLF + ",scores={WolfAge=..-1}]");
 
-        fileCommands.add(Execute.As(new Entity("@e[limit=1, type=wolf, sort=random]"), false) +
+        fileCommands.add(Execute.As(new Entity("@e[limit=1,type=" + EntityType.WOLF +",sort=random]"), false) +
                 Execute.StoreNext(ExecuteStore.result, "@s", getObjectiveByName(Objective.WolfAge), true) +
                 CommandBuilder.getData("@s", "Age"));
         fileCommands.add(Execute.At(babyWolf) +
-                CommandBuilder.summonEntity(EntityType.dolphin));
+                CommandBuilder.summonEntity(EntityType.DOLPHIN));
         fileCommands.add(Execute.As(babyWolf) +
                 CommandBuilder.killEntity("@s"));
 
         // Set tamed wolf base health
-        fileCommands.add(Execute.As(new Entity("@e[type=wolf]"), false) +
+        fileCommands.add(Execute.As(new Entity("@e[type=" + EntityType.WOLF + "]"), false) +
                 Execute.IfNext(DataClasses.entity, "@s Owner", true) +
                 CommandBuilder.setAttributeBase("@s", AttributeType.max_health, 20));
 
