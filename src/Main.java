@@ -2195,35 +2195,37 @@ public class Main {
                 }
             }
 
-            // Individual players
-            for (Perk perk : perks) {
-                // Set variables
-                currentPlayer.setEntity("@p[team=,scores={ControlPoint" + (i + 1) + "=" + perk.getActivationTime() + "..},tag=!" + Tag.ReceivedPerk.extendName(perk.getId()) + "]");
-                currentScoreCheck.setEntity("@p[team=,scores={ControlPoint" + (i + 1) + "=" + perk.getActivationTime() + "..}]");
+            if (OperationMode.teamCreationInGame) {
+                // Individual players
+                for (Perk perk : perks) {
+                    // Set variables
+                    currentPlayer.setEntity("@p[team=,scores={ControlPoint" + (i + 1) + "=" + perk.getActivationTime() + "..},tag=!" + Tag.ReceivedPerk.extendName(perk.getId()) + "]");
+                    currentScoreCheck.setEntity("@p[team=,scores={ControlPoint" + (i + 1) + "=" + perk.getActivationTime() + "..}]");
 
-                // Create text to be displayed
-                ArrayList<TextItem> texts = new ArrayList<>();
-                texts.add(new Select(false, false, currentPlayer.getEntity()));
-                texts.add(new Text(Color.light_purple, false, false, " HAS REACHED"));
-                texts.add(new Text(Color.gold, false, false, " PERK " + perk.getId() + "!"));
+                    // Create text to be displayed
+                    ArrayList<TextItem> texts = new ArrayList<>();
+                    texts.add(new Select(false, false, currentPlayer.getEntity()));
+                    texts.add(new Text(Color.light_purple, false, false, " HAS REACHED"));
+                    texts.add(new Text(Color.gold, false, false, " PERK " + perk.getId() + "!"));
 
-                // Display text
-                fileCommands.add(Execute.If(currentScoreCheck, false) +
-                        Execute.IfNext(currentPlayer, true) +
-                        new TellRaw("@a", texts).sendRaw());
+                    // Display text
+                    fileCommands.add(Execute.If(currentScoreCheck, false) +
+                            Execute.IfNext(currentPlayer, true) +
+                            new TellRaw("@a", texts).sendRaw());
 
-                // Give rewards
-                fileCommands.add(Execute.If(currentScoreCheck) +
-                        perk.getReward(currentPlayer.getEntity()));
+                    // Give rewards
+                    fileCommands.add(Execute.If(currentScoreCheck) +
+                            perk.getReward(currentPlayer.getEntity()));
 
-                // Play sound
-                fileCommands.add(Execute.If(currentScoreCheck, false) +
-                        Execute.IfNext(currentPlayer, true) +
-                        CommandBuilder.playSound(perk.getSound(), SoundSource.master, "@a", "~", "~50", "~", "100", "1", "0"));
+                    // Play sound
+                    fileCommands.add(Execute.If(currentScoreCheck, false) +
+                            Execute.IfNext(currentPlayer, true) +
+                            CommandBuilder.playSound(perk.getSound(), SoundSource.master, "@a", "~", "~50", "~", "100", "1", "0"));
 
-                // Add tag
-                fileCommands.add(Execute.If(currentScoreCheck) +
-                        CommandBuilder.addTag(currentPlayer.getEntity(), Tag.ReceivedPerk.extendName(perk.getId())));
+                    // Add tag
+                    fileCommands.add(Execute.If(currentScoreCheck) +
+                            CommandBuilder.addTag(currentPlayer.getEntity(), Tag.ReceivedPerk.extendName(perk.getId())));
+                }
             }
         }
 
