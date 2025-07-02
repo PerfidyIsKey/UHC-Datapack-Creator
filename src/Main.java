@@ -1627,14 +1627,25 @@ public class Main {
     private FileData DeathMatch() {
         ArrayList<String> fileCommands = new ArrayList<>();
 
+        // Set start worldborder size
         fileCommands.add(CommandBuilder.setWorldBorder(400));
+
+        // Set destination worldborder size
         fileCommands.add(CommandBuilder.setWorldBorder(20, 180));
+
+        // Teleport all living players
         fileCommands.add(Execute.In(Dimension.overworld) +
                 CommandBuilder.teleportEntity("@a[gamemode=!spectator]", new Coordinate(3, 153, 3)));
+
+        // Spread players in a team together
         fileCommands.add(Execute.In(Dimension.overworld) +
                 CommandBuilder.spreadPlayers(0, 0, 75, 150, true, "@a[gamemode=!spectator,team=!]"));
-        fileCommands.add(Execute.In(Dimension.overworld) +
-                CommandBuilder.spreadPlayers(0, 0, 75, 150, false, "@a[gamemode=!spectator,team=]"));
+
+        if (OperationMode.teamCreationInGame) {
+            // Spread players without a team alone
+            fileCommands.add(Execute.In(Dimension.overworld) +
+                    CommandBuilder.spreadPlayers(0, 0, 75, 150, false, "@a[gamemode=!spectator,team=]"));
+        }
 
         return new FileData(FileName.death_match, fileCommands);
     }
