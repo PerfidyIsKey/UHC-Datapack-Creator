@@ -1,9 +1,9 @@
 package Enums;
 
 public enum Duration {
-    days("d"),
-    seconds("s"),
-    ticks("t");
+    DAYS("d"),
+    SECONDS("s"),
+    TICKS("t");
 
     private final String symbol;
 

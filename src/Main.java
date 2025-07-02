@@ -937,7 +937,7 @@ public class Main {
 
         // Do automatic respawn in the first 20 minutes
         fileCommands.add(Execute.Unless("@e[tag=" + Tag.RespawnDisabled + "]") +
-                Schedule.callFunction(FileName.respawn_player, 5, Duration.ticks));
+                Schedule.callFunction(FileName.respawn_player, 5, Duration.TICKS));
 
         // Control Point
         if (OperationMode.controlPoints) {
@@ -1350,7 +1350,7 @@ public class Main {
 
         // Self-schedule function
         fileCommands.add(Execute.Unless("@e[tag=" + Tag.PredictionsCompleted + "]") +
-                Schedule.callFunction(FileName.predictions_loop, 1, Duration.ticks));
+                Schedule.callFunction(FileName.predictions_loop, 1, Duration.TICKS));
 
         return new FileData(FileName.predictions_loop, fileCommands);
     }
