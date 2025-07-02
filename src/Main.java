@@ -1666,10 +1666,12 @@ public class Main {
                     CommandBuilder.setBlock(currentCP.getCoordinate().getX(), currentCP.getCoordinate().getY() + 1, currentCP.getCoordinate().getZ(), "minecraft:" + team.getGlassColor() + "_stained_glass", SetBlockType.replace));
         }
 
-        // Update CP glass color solo
-        fileCommands.add(Execute.In(currentCP.getCoordinate().getDimension(), false) +
-                Execute.IfNext("@r[limit=1,gamemode=!spectator,team=]", getObjectiveByName(Objective.ControlPoint.extendName(i)), ComparatorType.greater, Constant.adminSingle, getObjectiveByName(Objective.Highscore.extendName(i)), true) +
-                CommandBuilder.setBlock(currentCP.getCoordinate().getX(), currentCP.getCoordinate().getY() + 1, currentCP.getCoordinate().getZ(), BlockType.STAINED_GLASS.extendColor("white"), SetBlockType.replace));
+        if (OperationMode.teamCreationInGame) {
+            // Update CP glass color solo
+            fileCommands.add(Execute.In(currentCP.getCoordinate().getDimension(), false) +
+                    Execute.IfNext("@r[limit=1,gamemode=!spectator,team=]", getObjectiveByName(Objective.ControlPoint.extendName(i)), ComparatorType.greater, Constant.adminSingle, getObjectiveByName(Objective.Highscore.extendName(i)), true) +
+                    CommandBuilder.setBlock(currentCP.getCoordinate().getX(), currentCP.getCoordinate().getY() + 1, currentCP.getCoordinate().getZ(), BlockType.STAINED_GLASS.extendColor("white"), SetBlockType.replace));
+        }
 
         // Keep beacon active
         fileCommands.add(Execute.In(currentCP.getCoordinate().getDimension()) +
@@ -1695,10 +1697,12 @@ public class Main {
                     scoreboard.Add("@s", getObjectiveByName(Objective.ControlPoint.extendName(i)), currentCP.getAddRate()));
         }
 
-        // Give single players on the Control Point score
-        fileCommands.add(Execute.In(currentCP.getCoordinate().getDimension(), false) +
-                Execute.AsNext("@a[tag=" + Tag.Capping + i + "]", true) +
-                scoreboard.Add("@s", getObjectiveByName(Objective.ControlPoint.extendName(i)), currentCP.getAddRate()));
+        if (OperationMode.teamCreationInGame) {
+            // Give single players on the Control Point score
+            fileCommands.add(Execute.In(currentCP.getCoordinate().getDimension(), false) +
+                    Execute.AsNext("@a[tag=" + Tag.Capping + i + "]", true) +
+                    scoreboard.Add("@s", getObjectiveByName(Objective.ControlPoint.extendName(i)), currentCP.getAddRate()));
+        }
 
         return new FileData("" + FileName.control_point_score_ + i, fileCommands);
     }
@@ -1718,22 +1722,24 @@ public class Main {
                 Execute.UnlessNext("@s[x=" + (currentCP.getCoordinate().getX() - 6) + ",y=" + (currentCP.getCoordinate().getY() - 1) + ",z=" + (currentCP.getCoordinate().getZ() - 6) + ",dx=12,dy=12,dz=12]", true) +
                 CommandBuilder.removeTag("@s", Tag.OnCP + "" + i));
 
-        //Give player Capping tag
-        fileCommands.add(Execute.In(currentCP.getCoordinate().getDimension(), false) +
-                Execute.AsNext("@p[gamemode=!spectator,team=,tag=" + Tag.OnCP + i + "]") +
-                Execute.UnlessNext("@a[tag=" + Tag.Capping + i + "]", true) +
-                CommandBuilder.addTag("@s", Tag.Capping + "" + i));
+        if (OperationMode.teamCreationInGame) {
+            //Give player Capping tag
+            fileCommands.add(Execute.In(currentCP.getCoordinate().getDimension(), false) +
+                    Execute.AsNext("@p[gamemode=!spectator,team=,tag=" + Tag.OnCP + i + "]") +
+                    Execute.UnlessNext("@a[tag=" + Tag.Capping + i + "]", true) +
+                    CommandBuilder.addTag("@s", Tag.Capping + "" + i));
 
-        //remove player Capping tag
-        fileCommands.add(Execute.In(currentCP.getCoordinate().getDimension(), false) +
-                Execute.AsNext("@a[gamemode=!spectator,tag="+Tag.OnCP + i +"]") +
-                Execute.IfNext("@s[gamemode=!spectator,tag=!" + Tag.Capping + i + "]", true) +
-                CommandBuilder.removeTag("@a", Tag.Capping + "" + i));
+            //remove player Capping tag
+            fileCommands.add(Execute.In(currentCP.getCoordinate().getDimension(), false) +
+                    Execute.AsNext("@a[gamemode=!spectator,tag=" + Tag.OnCP + i + "]") +
+                    Execute.IfNext("@s[gamemode=!spectator,tag=!" + Tag.Capping + i + "]", true) +
+                    CommandBuilder.removeTag("@a", Tag.Capping + "" + i));
 
-        fileCommands.add(Execute.In(currentCP.getCoordinate().getDimension(), false) +
-                Execute.AsNext("@a[gamemode=!spectator,tag="+Tag.Capping + i +"]") +
-                Execute.UnlessNext("@s[gamemode=!spectator,tag=" + Tag.OnCP + i + "]", true) +
-                CommandBuilder.removeTag("@a", Tag.Capping + "" + i));
+            fileCommands.add(Execute.In(currentCP.getCoordinate().getDimension(), false) +
+                    Execute.AsNext("@a[gamemode=!spectator,tag=" + Tag.Capping + i + "]") +
+                    Execute.UnlessNext("@s[gamemode=!spectator,tag=" + Tag.OnCP + i + "]", true) +
+                    CommandBuilder.removeTag("@a", Tag.Capping + "" + i));
+        }
 
         return new FileData("" + FileName.control_point_tag_ + i, fileCommands);
     }

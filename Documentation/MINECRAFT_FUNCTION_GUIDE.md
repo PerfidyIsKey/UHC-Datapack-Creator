@@ -44,18 +44,8 @@ A list of all functions in the Java project with descriptions and their executio
   - Execution Method: Continuous
   - Interval: 5 ticks
   - Parents: timer_control_point_5
-  - Children: - 
+  - Children: control_point_score_i, control_point_tag_i
   - Note: Computationally heavy
-
-### **control_point_score_i**
-  - Add `cp score` to team player if they have the `OnCP i` tag. Unless a player from another team has the `OnCP i` tag.
-  - Add `cp score` to solo player if they have the `Capping i` tag.
-
-### **control_point_tag_i**
-  - Add `OnCP i` tag to players on respective CP.
-  - Remove `OnCP i` tag when players leave respective CP.
-  - Add `Capping i` tag when player without team gets `OnCP i` tag, unless other player has the `Capping i` tag.
-  - Remove `Capping i` tag when player with `OnCP i` tag exists, that does not have the `Capping i` tag.
 
 ### **control_point_captured**
   - Announces that the Control Point has been captured.
@@ -78,6 +68,20 @@ A list of all functions in the Java project with descriptions and their executio
   - Interval: 20 ticks
   - Parents: timer_control_point_20
   - Children: -
+
+### **control_point_score_i**
+- Add `cp score` to team player if they have the `OnCP i` tag. Unless a player from another team has the `OnCP i` tag.
+- Add `cp score` to solo player if they have the `Capping i` tag.
+- Parents: control_point_i
+- Children: -
+
+### **control_point_tag_i**
+- Add `OnCP i` tag to players on respective CP.
+- Remove `OnCP i` tag when players leave respective CP.
+- Add `Capping i` tag when player without team gets `OnCP i` tag, unless other player has the `Capping i` tag.
+- Remove `Capping i` tag when player with `OnCP i` tag exists, that does not have the `Capping i` tag.
+- Parents: control_point_i
+- Children: -
 
 ### **current_test_function**
   - Currently used for development testing.
