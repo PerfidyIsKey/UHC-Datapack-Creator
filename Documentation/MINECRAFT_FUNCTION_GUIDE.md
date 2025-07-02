@@ -12,6 +12,8 @@ A list of all functions in the Java project with descriptions and their executio
   - Spreads players for battle royale mode.
   - Execution Method: Single-use
   - Note: Not used in regular game
+  - Parents: -
+  - Children: -
 
 ### **bbvalue**
   - Update value of bossbar, and color of bossbar and glass block.

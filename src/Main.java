@@ -779,8 +779,6 @@ public class Main {
         for (int i = 0; i < teams.size(); i++) {
             files.add(VictoryMessage(teams.get(i), i));
         }
-        files.add(VictoryMessageSolo());
-        files.add(VictoryTraitor());
         files.add(InitiateDeathMatch());
         files.add(DeathMatch());
 
@@ -814,12 +812,14 @@ public class Main {
             files.add(Updating.TimerTraitor20());
             files.add(TraitorHandout());
             files.add(TraitorActionBar());
+            files.add(VictoryTraitor());
         }
 
         // In game teams
         if (OperationMode.teamCreationInGame) {
             files.add(JoinTeam());
             files.add(UpdatePlayerDistance());
+            files.add(VictoryMessageSolo());
         }
 
         // Misc
@@ -1453,6 +1453,7 @@ public class Main {
 
     private FileData BattleRoyale() {
         ArrayList<String> fileCommands = new ArrayList<>();
+
         fileCommands.add(Execute.In(Dimension.overworld, false) +
                 Execute.PositionedNext(new Coordinate(0, 151, 0), true) +
                 CommandBuilder.setGameMode(GameMode.survival, "@a[distance=..20,gamemode=!creative]"));
