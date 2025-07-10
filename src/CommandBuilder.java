@@ -151,8 +151,13 @@ public class CommandBuilder {
         return "playsound " + sound + " " + source + " " + entity + " " + x + " " + y + " " + z + " " + x1 + " " + y1 + " " + z1;
     }
 
-    public static String setAttributeBase(String entity, AttributeType attribute, double value) {
-        return "attribute " + entity + " " + attribute + " base set " + value;
+    public static String setAttributeBase(String target, AttributeType attribute, double value) {
+        return "attribute " + target + " " + attribute + " base set " + value;
+    }
+
+    public static String setAttributeBaseMultiple(String targets, AttributeType attribute, double value) {
+        return Execute.As(targets) +
+                "attribute @s " + attribute + " base set " + value;
     }
 
     // Status effects

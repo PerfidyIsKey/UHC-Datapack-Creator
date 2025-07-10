@@ -1144,9 +1144,9 @@ public class Main {
             fileCommands.add(t.emptyTeam());
         }
 
-        // Reset player scales
-        fileCommands.add(Execute.As(new Entity("@a")) +
-                CommandBuilder.setAttributeBase("@s", AttributeType.SCALE, 1));
+        // Reset player attributes
+        fileCommands.add(CommandBuilder.setAttributeBaseMultiple("@a", AttributeType.SCALE, 1));
+        fileCommands.add(CommandBuilder.setAttributeBaseMultiple("@a", AttributeType.WAYPOINT_TRANSMIT_RANGE, 0));
 
         // Set gamemode of player executing the command to creative
         fileCommands.add(CommandBuilder.setGameMode(GameMode.creative, "@s"));
@@ -2367,8 +2367,7 @@ public class Main {
         }
         fileCommands.add(CommandBuilder.giveEffect(respawnPlayer, Effect.HEALTH_BOOST, 1, 0));
         fileCommands.add(CommandBuilder.clearEffect(respawnPlayer, Effect.HEALTH_BOOST));
-        fileCommands.add(Execute.As(respawnPlayer) +
-                CommandBuilder.setAttributeBase("@s", AttributeType.MAX_HEALTH, 20));
+        fileCommands.add(CommandBuilder.setAttributeBaseMultiple(respawnPlayer, AttributeType.MAX_HEALTH, 20));
 
         // Set player's gamemode to survival
         fileCommands.add(Execute.As(new Entity(respawnPlayer)) +
