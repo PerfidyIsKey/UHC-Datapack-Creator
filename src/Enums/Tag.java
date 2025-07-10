@@ -9,6 +9,7 @@ public enum Tag {
     ControlPoint1Enabled("ControlPoint1Enabled"),
     ControlPoint2Enabled("ControlPoint2Enabled"),
     ControlPointCaptured("ControlPointCaptured"),
+    CP("CP"),
     Debug("Debug"),
     DontMakeTraitor("DontMakeTraitor"),
     GameStarted("GameStarted"),

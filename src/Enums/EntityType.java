@@ -2,6 +2,7 @@ package Enums;
 
 public enum EntityType {
     AREA_EFFECT_CLOUD("area_effect_cloud"),
+    ARMOR_STAND("armor_stand"),
     DOLPHIN("dolphin"),
     FALLING_BLOCK("falling_block"),
     FIREWORK_ROCKET("firework_rocket"),

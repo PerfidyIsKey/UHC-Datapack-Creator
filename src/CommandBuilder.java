@@ -56,8 +56,16 @@ public class CommandBuilder {
         return "forceload add " + x1 + " " + z1 + " " + x2 + " " + z2;
     }
 
+    public static String addForceLoad(Coordinate coordinate) {
+        return "forceload add " + coordinate.getX() + " " + coordinate.getZ() + " " + coordinate.getX() + " " + coordinate.getZ();
+    }
+
     public static String removeForceLoad(int x1, int z1, int x2, int z2) {
         return "forceload remove " + x1 + " " + z1 + " " + x2 + " " + z2;
+    }
+
+    public static String removeForceLoad() {
+        return "forceload remove all";
     }
 
     public static String setBlock(String x, String y, String z, String blockType) {
@@ -438,5 +446,21 @@ public class CommandBuilder {
 
     public static ArrayList<String> warnAndReplace(String targets, TextItem warning, BlockType replacement) {
         return warnAndReplace(targets, warning, replacement.toString());
+    }
+
+    // Waypoints
+    public static ArrayList<String> createWaypoint(Coordinate coordinate, String tag) {
+        ArrayList<String> fileCommands = new ArrayList<>();
+
+        // Forceload chunk
+        fileCommands.add(addForceLoad(coordinate));
+
+        // Summon armor stand to be tracked
+        fileCommands.add(summonEntity(EntityType.ARMOR_STAND, coordinate, "{Invulnerable:1b,Marker:1b,Invisible:1b,Tags:[\"" + tag + "\"]}"));
+
+        // Set transmit range of waypoint
+        fileCommands.add(setAttributeBase("@n[tag=" + tag + "]", AttributeType.WAYPOINT_TRANSMIT_RANGE, Main.world.getFullSize()));
+
+        return fileCommands;
     }
 }

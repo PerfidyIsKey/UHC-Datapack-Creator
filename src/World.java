@@ -52,4 +52,8 @@ public class World {
     public int getSize() {
         return size;
     }
+
+    public int getFullSize() {
+        return 2 * size;
+    }
 }

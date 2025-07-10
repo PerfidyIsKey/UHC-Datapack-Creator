@@ -50,7 +50,7 @@ public class Main {
     private ArrayList<Season> seasons = new ArrayList<>();
     private ArrayList<String> quotes = new ArrayList<>();
     private ArrayList<BossBar> bossBars = new ArrayList<>();
-    private World world = new World(0, Constant.worldHeight, Constant.worldBottom, Constant.worldShape);
+    public static World world = new World(0, Constant.worldHeight, Constant.worldBottom, Constant.worldShape);
     private static final int cpTickPerSecond = 1;
     private static final int cp2ActivationInMin = 6;
     private int cp2ActivationScore;
@@ -305,7 +305,7 @@ public class Main {
             for (int i = 0; i < addRates.length; i++) {
                 controlPoints.add(cpList.get(i));
                 controlPoints.get(i).setAddRate(addRates[i]);
-                controlPoints.get(i).setName("CP" + (i + 1));
+                controlPoints.get(i).setName(Tag.CP.extendName(i + 1));
             }
 
             // Control Point parameters
@@ -1113,7 +1113,6 @@ public class Main {
         fileCommands.add(CommandBuilder.setGameRule(GameRule.doImmediateRespawn, true));
         fileCommands.add(CommandBuilder.setGameRule(GameRule.disableRaids, true));
         fileCommands.add(CommandBuilder.setGameRule(GameRule.doInsomnia, false));
-        fileCommands.add(CommandBuilder.setGameRule(GameRule.locatorBar, false));
 
         // Reset scores of all entities
         fileCommands.add(scoreboard.Reset("@e"));
@@ -1232,6 +1231,13 @@ public class Main {
             fileCommands.add(bossBarCp2.setVisible(false));
             fileCommands.add(bossBarCp2.setPlayers("@a"));
             fileCommands.add(bossBarCp2.setTitle(controlPoints.get(1).getName() + " soon: " + controlPoints.get(1).getCoordinate().getX() + ", " + controlPoints.get(1).getCoordinate().getY() + ", " + controlPoints.get(1).getCoordinate().getZ() + " (" + controlPoints.get(1).getCoordinate().getDimensionName() + ")"));
+
+            // Kill waypoints
+            for (ControlPoint controlPoint : controlPoints) {
+                fileCommands.add(CommandBuilder.killEntity("@n[tag=" + controlPoint.getName() + "]"));
+            }
+            fileCommands.add(CommandBuilder.removeForceLoad());
+
         }
 
         // Traitor Faction
@@ -1499,6 +1505,9 @@ public class Main {
         // Remove CP1 reinforced deepslate block
         fileCommands.addAll(CommandBuilder.forceLoadAndSet(controlPoints.get(0).getCoordinate().getX(), controlPoints.get(0).getCoordinate().getY() + 3, controlPoints.get(0).getCoordinate().getZ(), BlockType.AIR, SetBlockType.replace));
 
+        // Summon armor stand for locator bar tracking
+        fileCommands.addAll(CommandBuilder.createWaypoint(controlPoints.get(0).getCoordinate(), controlPoints.get(0).getName()));
+
         // Schedule continuous functions
         fileCommands.add(Schedule.callFunction(FileName.timer_control_point_20));
 
@@ -1525,6 +1534,9 @@ public class Main {
 
         // Change bossbar text
         fileCommands.add(getBossbarByName("cp2").setTitle("CP2: " + controlPoints.get(1).getCoordinate().getX() + ", " + controlPoints.get(1).getCoordinate().getY() + ", " + controlPoints.get(1).getCoordinate().getZ() + " (" + controlPoints.get(1).getCoordinate().getDimensionName() + ") - FASTER!!"));
+
+        // Summon armor stand for locator bar tracking
+        fileCommands.addAll(CommandBuilder.createWaypoint(controlPoints.get(1).getCoordinate(), controlPoints.get(1).getName()));
 
         // Give admin tag for disabling self-rescheduling
         fileCommands.add(CommandBuilder.addTag(Constant.admin, Tag.ControlPoint2Enabled));
