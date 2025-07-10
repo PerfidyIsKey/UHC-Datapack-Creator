@@ -189,7 +189,7 @@ public class CommandBuilder {
     }
 
     public static String summonEntity(String entity, Coordinate coordinate) {
-        return "summon minecraft:" + entity + " " + coordinate.getCoordinateString();
+        return "summon " + entity + " " + coordinate.getCoordinateString();
     }
 
     public static String summonEntity(String entity, String nbt) {
@@ -197,7 +197,7 @@ public class CommandBuilder {
     }
 
     public static String summonEntity(String entity, Coordinate coordinate, String nbt) {
-        return "summon minecraft:" + entity + " " + coordinate.getCoordinateString() + " " + nbt;
+        return "summon " + entity + " " + coordinate.getCoordinateString() + " " + nbt;
     }
 
     public static String summonEntity(EntityType entity) {
@@ -205,7 +205,7 @@ public class CommandBuilder {
     }
 
     public static String summonEntity(EntityType entity, Coordinate coordinate) {
-        return "summon minecraft:" + entity + " " + coordinate.getCoordinateString();
+        return "summon " + entity + " " + coordinate.getCoordinateString();
     }
 
     public static String summonEntity(EntityType entity, String nbt) {
@@ -213,7 +213,7 @@ public class CommandBuilder {
     }
 
     public static String summonEntity(EntityType entity, Coordinate coordinate, String nbt) {
-        return "summon minecraft:" + entity + " " + coordinate.getCoordinateString() + " " + nbt;
+        return "summon " + entity + " " + coordinate.getCoordinateString() + " " + nbt;
     }
 
     public static String killEntity(String entity) {
