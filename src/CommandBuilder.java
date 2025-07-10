@@ -466,6 +466,17 @@ public class CommandBuilder {
         // Set transmit range of waypoint
         fileCommands.add(setAttributeBase("@n[tag=" + tag + "]", AttributeType.WAYPOINT_TRANSMIT_RANGE, Main.world.getFullSize()));
 
+        // Set color of waypoint to white
+        fileCommands.add(modifyWaypointColor("@n[tag=" + tag + "]"));
+
         return fileCommands;
+    }
+
+    public static String modifyWaypointColor(String waypoint, Color color) {
+        return "waypoint modify " + waypoint + " color " + color;
+    }
+
+    public static String modifyWaypointColor(String waypoint) {
+        return modifyWaypointColor(waypoint, Color.white);
     }
 }
