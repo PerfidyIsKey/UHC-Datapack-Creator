@@ -2550,7 +2550,7 @@ public class Main {
                 fileCommands.add(Execute.As(new Entity("@a[team=" + t.getName() + ",nbt={SelectedItem:{id:\"" + BlockType.BUNDLE.extendColor(t.getGlassColor()) + "\",components:{\"minecraft:custom_data\":{locateTeammate:1b}}}}]"), false) +
                         Execute.AtNext(new Entity("@s")) +
                         Execute.IfNext(new Entity("@a[team=" + t.getName() + ",distance=0.1..,gamemode=!spectator]")) +
-                        Execute.FacingNext(new Entity("@a[team=" + t.getName() + ",distance=0.1..,gamemode=!spectator,limit=1,sort=nearest]"), EntityAnchor.eyes) +
+                        Execute.FacingNext(new Entity("@a[team=" + t.getName() + ",distance=0.1..,gamemode=!spectator,limit=1,sort=random]"), EntityAnchor.eyes) +
                         Execute.PositionedNext(new Coordinate(0, 1, 0, ReferenceFrame.relative)) +
                         Execute.PositionedNext(new Coordinate(0, 0, i + 1, ReferenceFrame.relative_facing), true) +
                         CommandBuilder.createParticle(Particle.dust + "{color:[" + t.getDustColor() + "],scale:1}", new Coordinate(0, 0, 0, ReferenceFrame.relative), new Coordinate(0, 0, 0), 0, 1, "@s"));
