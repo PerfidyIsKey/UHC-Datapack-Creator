@@ -1523,8 +1523,10 @@ public class Main {
         // Remove CP1 reinforced deepslate block
         fileCommands.addAll(CommandBuilder.forceLoadAndSet(controlPoints.get(0).getCoordinate().getX(), controlPoints.get(0).getCoordinate().getY() + 3, controlPoints.get(0).getCoordinate().getZ(), BlockType.AIR, SetBlockType.replace));
 
-        // Summon armor stand for locator bar tracking
-        fileCommands.addAll(CommandBuilder.createWaypoint(controlPoints.get(0).getCoordinate(), controlPoints.get(0).getName()));
+        // Summon armor stands for locator bar tracking
+        for (ControlPoint controlPoint : controlPoints) {
+            fileCommands.addAll(CommandBuilder.createWaypoint(controlPoint.getCoordinate(), controlPoint.getName()));
+        }
 
         // Schedule continuous functions
         fileCommands.add(Schedule.callFunction(FileName.timer_control_point_20));
@@ -1552,9 +1554,6 @@ public class Main {
 
         // Change bossbar text
         fileCommands.add(getBossbarByName("cp2").setTitle("CP2: " + controlPoints.get(1).getCoordinate().getX() + ", " + controlPoints.get(1).getCoordinate().getY() + ", " + controlPoints.get(1).getCoordinate().getZ() + " (" + controlPoints.get(1).getCoordinate().getDimensionName() + ") - FASTER!!"));
-
-        // Summon armor stand for locator bar tracking
-        fileCommands.addAll(CommandBuilder.createWaypoint(controlPoints.get(1).getCoordinate(), controlPoints.get(1).getName()));
 
         // Give admin tag for disabling self-rescheduling
         fileCommands.add(CommandBuilder.addTag(Constant.admin, Tag.ControlPoint2Enabled));
