@@ -50,7 +50,7 @@ public class Main {
     private ArrayList<Season> seasons = new ArrayList<>();
     private ArrayList<String> quotes = new ArrayList<>();
     private ArrayList<BossBar> bossBars = new ArrayList<>();
-    private World world = new World(0, Constant.worldHeight, Constant.worldBottom, Constant.worldShape);
+    public static World world = new World(0, Constant.worldHeight, Constant.worldBottom, Constant.worldShape);
     private static final int cpTickPerSecond = 1;
     private static final int cp2ActivationInMin = 6;
     private int cp2ActivationScore;
@@ -305,7 +305,7 @@ public class Main {
             for (int i = 0; i < addRates.length; i++) {
                 controlPoints.add(cpList.get(i));
                 controlPoints.get(i).setAddRate(addRates[i]);
-                controlPoints.get(i).setName("CP" + (i + 1));
+                controlPoints.get(i).setName(Tag.CP.extendName(i + 1));
             }
 
             // Control Point parameters
@@ -1005,20 +1005,38 @@ public class Main {
 
         // Players in a team
         for (Team t : teams) {
+            // Bossbar
             fileCommands.add(Execute.If(Constant.adminSingle, getObjectiveByName(Objective.CP.toString() + 1 + t.getName()), ComparatorType.GREATER, Constant.adminSingle, getObjectiveByName(Objective.Highscore.extendName(1))) +
                     getBossbarByName("cp1").setColor(t.getBossbarColor()));
             fileCommands.add(Execute.If(Constant.adminSingle, getObjectiveByName(Objective.CP.toString() + 2 + t.getName()), ComparatorType.GREATER, "@e[limit=1,scores={Highscore1=" + cp2ActivationScore + "..}]", getObjectiveByName(Objective.Highscore.extendName(2))) +
                     getBossbarByName("cp2").setColor(t.getBossbarColor()));
+
+            // Locator bar
+            fileCommands.add(Execute.If(Constant.adminSingle, getObjectiveByName(Objective.CP.toString() + 1 + t.getName()), ComparatorType.GREATER, Constant.adminSingle, getObjectiveByName(Objective.Highscore.extendName(1))) +
+                    CommandBuilder.modifyWaypointColor("@n[tag=" + Tag.CP.extendName(1) + "]", t.getColor()));
+            fileCommands.add(Execute.If(Constant.adminSingle, getObjectiveByName(Objective.CP.toString() + 2 + t.getName()), ComparatorType.GREATER, "@e[limit=1,scores={Highscore1=" + cp2ActivationScore + "..}]", getObjectiveByName(Objective.Highscore.extendName(2))) +
+                    CommandBuilder.modifyWaypointColor("@n[tag=" + Tag.CP.extendName(2) + "]", t.getColor()));
+
+            // Scoreboard objective
             for (int i = 0; i < controlPoints.size(); i++) {
                 fileCommands.add(scoreboard.Operation(Constant.admin, getObjectiveByName(Objective.Highscore.extendName(i + 1)), ComparatorType.GREATER, Constant.admin, getObjectiveByName("" + Objective.CP + (i + 1) + t.getName())));
             }
         }
 
         // Individual players
+        // Bossbar
         fileCommands.add(Execute.If("@r[limit=1,team=]", getObjectiveByName(Objective.ControlPoint.extendName(1)), ComparatorType.GREATER, Constant.adminSingle, getObjectiveByName(Objective.Highscore.extendName(1))) +
                 getBossbarByName("cp1").setColor(BossBarColor.white));
         fileCommands.add(Execute.If("@r[limit=1,team=]", getObjectiveByName(Objective.ControlPoint.extendName(2)), ComparatorType.GREATER, "@e[scores={Highscore1=" + cp2ActivationScore + "..},limit=1]", getObjectiveByName(Objective.Highscore.extendName(2))) +
                 getBossbarByName("cp2").setColor(BossBarColor.white));
+
+        // Locator bar
+        fileCommands.add(Execute.If("@r[limit=1,team=]", getObjectiveByName(Objective.ControlPoint.extendName(1)), ComparatorType.GREATER, Constant.adminSingle, getObjectiveByName(Objective.Highscore.extendName(1))) +
+                CommandBuilder.modifyWaypointColor("@n[tag=" + Tag.CP.extendName(1) + "]"));
+        fileCommands.add(Execute.If("@r[limit=1,team=]", getObjectiveByName(Objective.ControlPoint.extendName(2)), ComparatorType.GREATER, "@e[scores={Highscore1=" + cp2ActivationScore + "..},limit=1]", getObjectiveByName(Objective.Highscore.extendName(2))) +
+                CommandBuilder.modifyWaypointColor("@n[tag=" + Tag.CP.extendName(2) + "]"));
+
+        // Scoreboard objective
         for (int i = 0; i < controlPoints.size(); i++) {
             fileCommands.add(scoreboard.Operation(Constant.admin, getObjectiveByName(Objective.Highscore.extendName(i + 1)), ComparatorType.GREATER, "@r[limit=1,team=]", getObjectiveByName(Objective.ControlPoint.extendName(i + 1))));
         }
@@ -1113,7 +1131,6 @@ public class Main {
         fileCommands.add(CommandBuilder.setGameRule(GameRule.doImmediateRespawn, true));
         fileCommands.add(CommandBuilder.setGameRule(GameRule.disableRaids, true));
         fileCommands.add(CommandBuilder.setGameRule(GameRule.doInsomnia, false));
-        fileCommands.add(CommandBuilder.setGameRule(GameRule.locatorBar, false));
 
         // Reset scores of all entities
         fileCommands.add(scoreboard.Reset("@e"));
@@ -1145,9 +1162,9 @@ public class Main {
             fileCommands.add(t.emptyTeam());
         }
 
-        // Reset player scales
-        fileCommands.add(Execute.As(new Entity("@a")) +
-                CommandBuilder.setAttributeBase("@s", AttributeType.SCALE, 1));
+        // Reset player attributes
+        fileCommands.add(CommandBuilder.setAttributeBaseMultiple("@a", AttributeType.SCALE, 1));
+        fileCommands.add(CommandBuilder.setAttributeBaseMultiple("@a", AttributeType.WAYPOINT_TRANSMIT_RANGE, 0));
 
         // Set gamemode of player executing the command to creative
         fileCommands.add(CommandBuilder.setGameMode(GameMode.creative, "@s"));
@@ -1232,6 +1249,13 @@ public class Main {
             fileCommands.add(bossBarCp2.setVisible(false));
             fileCommands.add(bossBarCp2.setPlayers("@a"));
             fileCommands.add(bossBarCp2.setTitle(controlPoints.get(1).getName() + " soon: " + controlPoints.get(1).getCoordinate().getX() + ", " + controlPoints.get(1).getCoordinate().getY() + ", " + controlPoints.get(1).getCoordinate().getZ() + " (" + controlPoints.get(1).getCoordinate().getDimensionName() + ")"));
+
+            // Kill waypoints
+            for (ControlPoint controlPoint : controlPoints) {
+                fileCommands.add(CommandBuilder.killEntity("@n[tag=" + controlPoint.getName() + "]"));
+            }
+            fileCommands.add(CommandBuilder.removeForceLoad());
+
         }
 
         // Traitor Faction
@@ -1498,6 +1522,11 @@ public class Main {
 
         // Remove CP1 reinforced deepslate block
         fileCommands.addAll(CommandBuilder.forceLoadAndSet(controlPoints.get(0).getCoordinate().getX(), controlPoints.get(0).getCoordinate().getY() + 3, controlPoints.get(0).getCoordinate().getZ(), BlockType.AIR, SetBlockType.replace));
+
+        // Summon armor stands for locator bar tracking
+        for (ControlPoint controlPoint : controlPoints) {
+            fileCommands.addAll(CommandBuilder.createWaypoint(controlPoint.getCoordinate(), controlPoint.getName()));
+        }
 
         // Schedule continuous functions
         fileCommands.add(Schedule.callFunction(FileName.timer_control_point_20));
@@ -2355,8 +2384,7 @@ public class Main {
         }
         fileCommands.add(CommandBuilder.giveEffect(respawnPlayer, Effect.HEALTH_BOOST, 1, 0));
         fileCommands.add(CommandBuilder.clearEffect(respawnPlayer, Effect.HEALTH_BOOST));
-        fileCommands.add(Execute.As(respawnPlayer) +
-                CommandBuilder.setAttributeBase("@s", AttributeType.MAX_HEALTH, 20));
+        fileCommands.add(CommandBuilder.setAttributeBaseMultiple(respawnPlayer, AttributeType.MAX_HEALTH, 20));
 
         // Set player's gamemode to survival
         fileCommands.add(Execute.As(new Entity(respawnPlayer)) +
@@ -2522,7 +2550,7 @@ public class Main {
                 fileCommands.add(Execute.As(new Entity("@a[team=" + t.getName() + ",nbt={SelectedItem:{id:\"" + BlockType.BUNDLE.extendColor(t.getGlassColor()) + "\",components:{\"minecraft:custom_data\":{locateTeammate:1b}}}}]"), false) +
                         Execute.AtNext(new Entity("@s")) +
                         Execute.IfNext(new Entity("@a[team=" + t.getName() + ",distance=0.1..,gamemode=!spectator]")) +
-                        Execute.FacingNext(new Entity("@a[team=" + t.getName() + ",distance=0.1..,gamemode=!spectator,limit=1,sort=nearest]"), EntityAnchor.eyes) +
+                        Execute.FacingNext(new Entity("@a[team=" + t.getName() + ",distance=0.1..,gamemode=!spectator,limit=1,sort=random]"), EntityAnchor.eyes) +
                         Execute.PositionedNext(new Coordinate(0, 1, 0, ReferenceFrame.relative)) +
                         Execute.PositionedNext(new Coordinate(0, 0, i + 1, ReferenceFrame.relative_facing), true) +
                         CommandBuilder.createParticle(Particle.dust + "{color:[" + t.getDustColor() + "],scale:1}", new Coordinate(0, 0, 0, ReferenceFrame.relative), new Coordinate(0, 0, 0), 0, 1, "@s"));

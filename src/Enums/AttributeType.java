@@ -6,7 +6,8 @@ public enum AttributeType {
     JUMP_STRENGTH("jump_strength"),
     MAX_HEALTH("max_health"),
     MOVEMENT_SPEED("movement_speed"),
-    SCALE("scale");
+    SCALE("scale"),
+    WAYPOINT_TRANSMIT_RANGE("waypoint_transmit_range");
 
     private final String symbol;
 

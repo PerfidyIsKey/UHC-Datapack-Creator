@@ -56,8 +56,16 @@ public class CommandBuilder {
         return "forceload add " + x1 + " " + z1 + " " + x2 + " " + z2;
     }
 
+    public static String addForceLoad(Coordinate coordinate) {
+        return "forceload add " + coordinate.getX() + " " + coordinate.getZ() + " " + coordinate.getX() + " " + coordinate.getZ();
+    }
+
     public static String removeForceLoad(int x1, int z1, int x2, int z2) {
         return "forceload remove " + x1 + " " + z1 + " " + x2 + " " + z2;
+    }
+
+    public static String removeForceLoad() {
+        return "forceload remove all";
     }
 
     public static String setBlock(String x, String y, String z, String blockType) {
@@ -143,8 +151,13 @@ public class CommandBuilder {
         return "playsound " + sound + " " + source + " " + entity + " " + x + " " + y + " " + z + " " + x1 + " " + y1 + " " + z1;
     }
 
-    public static String setAttributeBase(String entity, AttributeType attribute, double value) {
-        return "attribute " + entity + " " + attribute + " base set " + value;
+    public static String setAttributeBase(String target, AttributeType attribute, double value) {
+        return "attribute " + target + " " + attribute + " base set " + value;
+    }
+
+    public static String setAttributeBaseMultiple(String targets, AttributeType attribute, double value) {
+        return Execute.As(targets) +
+                "attribute @s " + attribute + " base set " + value;
     }
 
     // Status effects
@@ -189,7 +202,7 @@ public class CommandBuilder {
     }
 
     public static String summonEntity(String entity, Coordinate coordinate) {
-        return "summon minecraft:" + entity + " " + coordinate.getCoordinateString();
+        return "summon " + entity + " " + coordinate.getCoordinateString();
     }
 
     public static String summonEntity(String entity, String nbt) {
@@ -197,7 +210,7 @@ public class CommandBuilder {
     }
 
     public static String summonEntity(String entity, Coordinate coordinate, String nbt) {
-        return "summon minecraft:" + entity + " " + coordinate.getCoordinateString() + " " + nbt;
+        return "summon " + entity + " " + coordinate.getCoordinateString() + " " + nbt;
     }
 
     public static String summonEntity(EntityType entity) {
@@ -205,7 +218,7 @@ public class CommandBuilder {
     }
 
     public static String summonEntity(EntityType entity, Coordinate coordinate) {
-        return "summon minecraft:" + entity + " " + coordinate.getCoordinateString();
+        return "summon " + entity + " " + coordinate.getCoordinateString();
     }
 
     public static String summonEntity(EntityType entity, String nbt) {
@@ -213,7 +226,7 @@ public class CommandBuilder {
     }
 
     public static String summonEntity(EntityType entity, Coordinate coordinate, String nbt) {
-        return "summon minecraft:" + entity + " " + coordinate.getCoordinateString() + " " + nbt;
+        return "summon " + entity + " " + coordinate.getCoordinateString() + " " + nbt;
     }
 
     public static String killEntity(String entity) {
@@ -438,5 +451,32 @@ public class CommandBuilder {
 
     public static ArrayList<String> warnAndReplace(String targets, TextItem warning, BlockType replacement) {
         return warnAndReplace(targets, warning, replacement.toString());
+    }
+
+    // Waypoints
+    public static ArrayList<String> createWaypoint(Coordinate coordinate, String tag) {
+        ArrayList<String> fileCommands = new ArrayList<>();
+
+        // Forceload chunk
+        fileCommands.add(addForceLoad(coordinate));
+
+        // Summon armor stand to be tracked
+        fileCommands.add(summonEntity(EntityType.ARMOR_STAND, coordinate, "{Invulnerable:1b,Marker:1b,Invisible:1b,Tags:[\"" + tag + "\"]}"));
+
+        // Set transmit range of waypoint
+        fileCommands.add(setAttributeBase("@n[tag=" + tag + "]", AttributeType.WAYPOINT_TRANSMIT_RANGE, Main.world.getFullSize()));
+
+        // Set color of waypoint to white
+        fileCommands.add(modifyWaypointColor("@n[tag=" + tag + "]"));
+
+        return fileCommands;
+    }
+
+    public static String modifyWaypointColor(String waypoint, Color color) {
+        return "waypoint modify " + waypoint + " color " + color;
+    }
+
+    public static String modifyWaypointColor(String waypoint) {
+        return modifyWaypointColor(waypoint, Color.white);
     }
 }
