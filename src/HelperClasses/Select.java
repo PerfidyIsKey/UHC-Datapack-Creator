@@ -15,6 +15,11 @@ public class Select extends TextItem {
         this.selector = selector;
     }
 
+    public Select(String selector) {
+        super(Color.white);
+        this.selector = selector;
+    }
+
     public String getText() {
         return "{\"selector\":\"" + selector + "\"" + bold() + italic() + colorShow() +"}";
     }

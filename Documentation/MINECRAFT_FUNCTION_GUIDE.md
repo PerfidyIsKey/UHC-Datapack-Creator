@@ -12,6 +12,8 @@ A list of all functions in the Java project with descriptions and their executio
   - Spreads players for battle royale mode.
   - Execution Method: Single-use
   - Note: Not used in regular game
+  - Parents: -
+  - Children: -
 
 ### **bbvalue**
   - Update value of bossbar, and color of bossbar and glass block.
@@ -42,18 +44,8 @@ A list of all functions in the Java project with descriptions and their executio
   - Execution Method: Continuous
   - Interval: 5 ticks
   - Parents: timer_control_point_5
-  - Children: - 
+  - Children: control_point_score_i, control_point_tag_i
   - Note: Computationally heavy
-
-### **control_point_score_i**
-  - Add `cp score` to team player if they have the `OnCP i` tag. Unless a player from another team has the `OnCP i` tag.
-  - Add `cp score` to solo player if they have the `Capping i` tag.
-
-### **control_point_tag_i**
-  - Add `OnCP i` tag to players on respective CP.
-  - Remove `OnCP i` tag when players leave respective CP.
-  - Add `Capping i` tag when player without team gets `OnCP i` tag, unless other player has the `Capping i` tag.
-  - Remove `Capping i` tag when player with `OnCP i` tag exists, that does not have the `Capping i` tag.
 
 ### **control_point_captured**
   - Announces that the Control Point has been captured.
@@ -77,9 +69,19 @@ A list of all functions in the Java project with descriptions and their executio
   - Parents: timer_control_point_20
   - Children: -
 
-### **current_test_function**
-  - Currently used for development testing.
-  - Execution Method: Single-use
+### **control_point_score_i**
+- Add `cp score` to team player if they have the `OnCP i` tag. Unless a player from another team has the `OnCP i` tag.
+- Add `cp score` to solo player if they have the `Capping i` tag.
+- Parents: control_point_i
+- Children: -
+
+### **control_point_tag_i**
+- Add `OnCP i` tag to players on respective CP.
+- Remove `OnCP i` tag when players leave respective CP.
+- Add `Capping i` tag when player without team gets `OnCP i` tag, unless other player has the `Capping i` tag.
+- Remove `Capping i` tag when player with `OnCP i` tag exists, that does not have the `Capping i` tag.
+- Parents: control_point_i
+- Children: -
 
 ### **death_match**
   - Prepares world for deathmatch and spreads living players. 
@@ -293,7 +295,7 @@ A list of all functions in the Java project with descriptions and their executio
   - Checks if only a single team/player is alive.
   - Execution Method: Continuous
   - Interval: 5 ticks
-  - Parents: traitor_check
+  - Parents: traitor_check (Traitor Faction enabled), timer_main_20 (Traitor Faction disabled)
   - Children: victory_message_0 to victory_message_12, victory_message_solo
 
 ### **teams_highscore_alive_check**
@@ -343,7 +345,7 @@ A list of all functions in the Java project with descriptions and their executio
   - Execution Method: Continuous (self-scheduling)
   - Interval: 20 ticks
   - Parents: game_starter
-  - Children: locate_teammate, check_iron_man, update_mine_count, update_sidebar, wolf_updates
+  - Children: locate_teammate, check_iron_man, update_mine_count, update_sidebar, wolf_updates, teams_alive_check (Traitor Faction disabled)
 
 ### **timer_traitor_5**
   - Timer for Traitor Faction functions with interval of 5 ticks
