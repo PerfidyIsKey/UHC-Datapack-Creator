@@ -182,7 +182,7 @@ public class Main {
         properties.set("difficulty", Difficulty.hard);
         properties.set("enable-command-block", true);
         properties.set("gamemode", GameMode.adventure);
-        properties.set("level-seed", 27515851);
+        properties.set("level-seed", -43193001);
         properties.set("max-players", 50);
         properties.set("motd", communityName + " UHC S" + uhcNumber);
         properties.set("simulation-distance", 5);
@@ -439,8 +439,8 @@ public class Main {
         // Entry #28
         ArrayList<Attributes> attributes = new ArrayList<>();
         attributes.add(new JumpStrength(1));
-        attributes.add(new MovementSpeed(0.1));
-        Text text = new Text(false, false, "Driftwood");
+        attributes.add(new MovementSpeed(0.2));
+        String text = "Driftwood";
         EntityData horse = new Horse(60, true, 5, text, attributes);
 
         SetName name = new SetName(new Text(false, false, "Driftwood's return"));
@@ -533,7 +533,7 @@ public class Main {
         attributes = new ArrayList<>();
         attributes.add(new JumpStrength(0.7));
         attributes.add(new MovementSpeed(0.34));
-        text = new Text(false, false, "Scuderia");
+        text = "Scuderia";
         horse = new Horse(5, true, 4, text, attributes);
 
         name = new SetName(new Text(false, false, "Grazie Ragazzi"));
@@ -690,6 +690,7 @@ public class Main {
     }
 
     private void definePlugins() throws IOException {
+        plugins.add(new PaperPlugin("ViaVersion-5.4.0.jar", OperationMode.otherVersions, "ViaBackwards-5.4.0.jar"));
         plugins.add(new PaperPlugin("spark-1.10.119-bukkit.jar", OperationMode.debug));
         plugins.add(new PaperPlugin("Chunky-Bukkit-1.4.28.jar", OperationMode.debug));
         plugins.add(new PaperPlugin("openaudiomc-6.10.7.jar", OperationMode.proximity, "OpenAudioMc\\"));
@@ -876,7 +877,7 @@ public class Main {
         fileCommands.add(Execute.In(Dimension.overworld) +
                 CommandBuilder.fill(-5, 221, -5, 5, 226, 5, BlockType.air));
         fileCommands.add(Execute.In(Dimension.overworld) +
-                CommandBuilder.setBlock(0, 222, -5, BlockType.cherry_wall_sign + "[facing=south,waterlogged=false]{back_text:{messages:['{\"text\":\"You have\"}','{\"text\":\"angered\"}','{\"text\":\"the Gods!\"}','{\"text\":\"\"}']},front_text:{messages:['{\"text\":\"In rememberance\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"" + CommandBuilder.summonEntity(EntityType.firework_rocket, new Coordinate(0, 0, 0, ReferenceFrame.relative)) + "\"}}','{\"text\":\"of our\"}','{\"text\":\"Command Center\"}','{\"text\":\"2014-2025\"}']},is_waxed:0b}"));
+                CommandBuilder.setBlock(0, 222, -5, BlockType.cherry_wall_sign + "[facing=south,waterlogged=false]{back_text:{messages:[\"You have\",\"angered\",\"the Gods!\",\"\"]},front_text:{messages:[{\"text\":\"In rememberance\",\"click_event\":{\"action\":\"run_command\",\"command\":\"summon minecraft:firework_rocket ~ ~ ~\"}},\"of our\",\"Command Center\",\"2014-2025\"]},is_waxed:0b}"));
 
         return new FileData(FileName.initialize, fileCommands);
     }
@@ -1050,7 +1051,7 @@ public class Main {
     private FileData GodMode() {
         ArrayList<String> fileCommands = new ArrayList<>();
         fileCommands.add(CommandBuilder.giveEffect("@s", Effect.resistance, 99999, 4, true));
-        fileCommands.add(CommandBuilder.replaceItem("@s", InventorySlot.mainhand, BlockType.trident + "[custom_name='[{\"bold\":false,\"color\":\"white\",\"italic\":false,\"obfuscated\":true,\"text\":\"aA\"},{\"bold\":true,\"color\":\"#8C3CC1\",\"obfuscated\":false,\"text\":\" The\"},{\"bold\":true,\"color\":\"#E280FF\",\"obfuscated\":false,\"text\":\" Impaler \"},{\"color\":\"white\",\"obfuscated\":true,\"text\":\"Aa\"}]',lore=['{\"text\":\"This holy weapon impales anything it touches\"}'],unbreakable={show_in_tooltip:false},damage=0,enchantments={levels:{\"minecraft:fire_aspect\":255,\"minecraft:sharpness\":255,\"minecraft:efficiency\":255,'impaling':255},show_in_tooltip:false},attribute_modifiers={modifiers:[{id:\"" + AttributeType.armor + "\",type:\"" + AttributeType.attack_damage + "\",amount:1000,operation:\"add_value\",slot:\"mainhand\"}],show_in_tooltip:false}]"));
+        fileCommands.add(CommandBuilder.replaceItem("@s", InventorySlot.mainhand, BlockType.trident + "[custom_name=[{\"bold\":false,\"color\":\"white\",\"italic\":false,\"obfuscated\":true,\"text\":\"aA\"},{\"bold\":true,\"color\":\"#8C3CC1\",\"obfuscated\":false,\"text\":\"The\"},{\"bold\":true,\"color\":\"#E280FF\",\"obfuscated\":false,\"text\":\" Impaler \"},{\"color\":\"white\",\"obfuscated\":true,\"text\":\"Aa\"}],lore=[\"This holy weapon impales anything it touches\"],damage=0,enchantments={\"minecraft:fire_aspect\":255,\"minecraft:sharpness\":255,\"minecraft:impaling\":255,\"minecraft:loyalty\":255,\"minecraft:efficiency\":255},attribute_modifiers=[{id:\"armor\",type:\"armor\",amount:1000,operation:\"add_value\",slot:\"armor\",display:{type:\"hidden\"}},{id:\"attack_damage\",type:\"attack_damage\",amount:1000,operation:\"add_value\",slot:\"mainhand\",display:{type:\"hidden\"}}],unbreakable={}]"));
 
         return new FileData(FileName.god_mode, fileCommands);
     }
@@ -1087,7 +1088,7 @@ public class Main {
 
         // Create marker entity
         fileCommands.add(CommandBuilder.killEntity("@e[type=marker]"));
-        fileCommands.add(CommandBuilder.summonEntity(EntityType.marker, new Coordinate(0, Constant.worldBottom, 0), "{CustomName:\"\\\"Admin\\\"\"}"));
+        fileCommands.add(CommandBuilder.summonEntity(EntityType.marker, new Coordinate(0, Constant.worldBottom, 0), "{CustomName:\"Admin\"}"));
 
         // Set time
         fileCommands.add(CommandBuilder.setTime(0));
@@ -1105,6 +1106,7 @@ public class Main {
         fileCommands.add(CommandBuilder.setGameRule(GameRule.doImmediateRespawn, true));
         fileCommands.add(CommandBuilder.setGameRule(GameRule.disableRaids, true));
         fileCommands.add(CommandBuilder.setGameRule(GameRule.doInsomnia, false));
+        fileCommands.add(CommandBuilder.setGameRule(GameRule.locatorBar, false));
 
         // Reset scores of all entities
         fileCommands.add(scoreboard.Reset("@e"));
@@ -1384,7 +1386,7 @@ public class Main {
         if (teamMode == 1) {
             // Teammate tracker
             for (int i = 0; i < teams.size(); i++) {
-                fileCommands.add(CommandBuilder.giveItem("@a[team=" + teams.get(i).getName() + "]", BlockType.bundle.extendColor(teams.get(i).getGlassColor()), "[enchantments={levels:{\"minecraft:vanishing_curse\":1}},custom_data={locateTeammate:1b}]"));
+                fileCommands.add(CommandBuilder.giveItem("@a[team=" + teams.get(i).getName() + "]", BlockType.bundle.extendColor(teams.get(i).getGlassColor()), "[enchantments={\"minecraft:vanishing_curse\":1},custom_data={locateTeammate:1b}]"));
             }
         } else if (teamMode == 2) {
             // Team caller
@@ -2056,14 +2058,14 @@ public class Main {
 
         for (int ii = 0; ii < 5; ii++) {
             // Piercing enchantment
-            fileCommands.add(Execute.If(new Entity("@p[nbt={SelectedItem:{id:\"minecraft:crossbow\",count:1,components:{\"minecraft:enchantments\":{levels:{\"minecraft:piercing\":" + (ii + 1) + "}}}}}]")) +
-                    new TellRaw("@p[nbt={SelectedItem:{id:\"minecraft:crossbow\",count:1,components:{\"minecraft:enchantments\":{levels:{\"minecraft:piercing\":" + (ii + 1) + "}}}}}]", new Text(Color.red, true, false, "PIERCING IS NOT ALLOWED, YOU NAUGHTY BUM!")).sendRaw());
-            fileCommands.add(CommandBuilder.replaceItem("@p[nbt={SelectedItem:{id:\"minecraft:crossbow\",count:1,components:{\"minecraft:enchantments\":{levels:{\"minecraft:piercing\":" + (ii + 1) + "}}}}}]", InventorySlot.mainhand, BlockType.crossbow));
+            fileCommands.add(Execute.If(new Entity("@p[nbt={SelectedItem:{id:\"minecraft:crossbow\",count:1,components:{\"minecraft:enchantments\":{\"minecraft:piercing\":" + (ii + 1) + "}}}}]")) +
+                    new TellRaw("@p[nbt={SelectedItem:{id:\"minecraft:crossbow\",count:1,components:{\"minecraft:enchantments\":{\"minecraft:piercing\":" + (ii + 1) + "}}}}]", new Text(Color.red, true, false, "PIERCING IS NOT ALLOWED, YOU NAUGHTY BUM!")).sendRaw());
+            fileCommands.add(CommandBuilder.replaceItem("@p[nbt={SelectedItem:{id:\"minecraft:crossbow\",count:1,components:{\"minecraft:enchantments\":{\"minecraft:piercing\":" + (ii + 1) + "}}}}]", InventorySlot.mainhand, BlockType.crossbow));
 
             // Power enchantment
-            fileCommands.add(Execute.If(new Entity("@p[nbt={SelectedItem:{id:\"minecraft:bow\",count:1,components:{\"minecraft:enchantments\":{levels:{\"minecraft:power\":" + (ii + 1) + "}}}}}]")) +
-                    new TellRaw("@p[nbt={SelectedItem:{id:\"minecraft:bow\",count:1,components:{\"minecraft:enchantments\":{levels:{\"minecraft:power\":" + (ii + 1) + "}}}}}]", new Text(Color.red, true, false, "POWER IS NOT ALLOWED, YOU NAUGHTY BUM!")).sendRaw());
-            fileCommands.add(CommandBuilder.replaceItem("@p[nbt={SelectedItem:{id:\"minecraft:bow\",count:1,components:{\"minecraft:enchantments\":{levels:{\"minecraft:power\":" + (ii + 1) + "}}}}}]", InventorySlot.mainhand, BlockType.bow));
+            fileCommands.add(Execute.If(new Entity("@p[nbt={SelectedItem:{id:\"minecraft:bow\",count:1,components:{\"minecraft:enchantments\":{\"minecraft:power\":" + (ii + 1) + "}}}}]")) +
+                    new TellRaw("@p[nbt={SelectedItem:{id:\"minecraft:bow\",count:1,components:{\"minecraft:enchantments\":{\"minecraft:power\":" + (ii + 1) + "}}}}]", new Text(Color.red, true, false, "POWER IS NOT ALLOWED, YOU NAUGHTY BUM!")).sendRaw());
+            fileCommands.add(CommandBuilder.replaceItem("@p[nbt={SelectedItem:{id:\"minecraft:bow\",count:1,components:{\"minecraft:enchantments\":{\"minecraft:power\":" + (ii + 1) + "}}}}]", InventorySlot.mainhand, BlockType.bow));
         }
         // Wolf armor
         fileCommands.add(Execute.If(new Entity("@p[nbt={SelectedItem:{id:\"minecraft:wolf_armor\",count:1}}]")) +
@@ -2255,7 +2257,7 @@ public class Main {
         // Teammate tracker
         for (Team team : teams) {
             fileCommands.add(Execute.As(respawnPlayer) +
-                    CommandBuilder.giveItem("@s[team=" + team.getName() + "]", BlockType.bundle.extendColor(team.getGlassColor()), "[enchantments={levels:{\"minecraft:vanishing_curse\":1}},custom_data={locateTeammate:1b}]"));
+                    CommandBuilder.giveItem("@s[team=" + team.getName() + "]", BlockType.bundle.extendColor(team.getGlassColor()), "[enchantments={\"minecraft:vanishing_curse\":1},custom_data={locateTeammate:1b}]"));
         }
 
         // Set respawn health
@@ -2389,6 +2391,7 @@ public class Main {
         fileCommands.add(Schedule.clearFunction(FileName.display_quotes));
         fileCommands.add(Schedule.clearFunction(FileName.messages_eternal_day));
         fileCommands.add(Schedule.clearFunction(FileName.messages_pvp));
+        fileCommands.add(Schedule.clearFunction(FileName.disable_respawn));
 
         return new FileData(FileName.clear_schedule, fileCommands);
     }
@@ -2568,7 +2571,7 @@ public class Main {
         for (Team team : teams) {
             fileCommands.add(Execute.At(lookingPlayer, false) +
                     Execute.IfNext("@p[tag=LookingForTeamMate,team=" + team.getName() + "]", true) +
-                    CommandBuilder.giveItem("@p[limit=2,gamemode=!spectator]", BlockType.bundle.extendColor(team.getGlassColor()), "[enchantments={levels:{\"minecraft:vanishing_curse\":1}},custom_data={locateTeammate:1b}]"));
+                    CommandBuilder.giveItem("@p[limit=2,gamemode=!spectator]", BlockType.bundle.extendColor(team.getGlassColor()), "[enchantments={\"minecraft:vanishing_curse\":1},custom_data={locateTeammate:1b}]"));
         }
 
         return new FileData(FileName.join_team, fileCommands);

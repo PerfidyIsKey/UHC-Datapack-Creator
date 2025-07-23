@@ -12,13 +12,13 @@ public class Horse extends Mob{
     int Variant;    // The variant of the horse. Determines colors. Stored as baseColor | (markings << 8). Unused values lead to white horses.
 
     // Constructors
-    public Horse(float health, Boolean tame, int variant, Text name, ArrayList<Attributes> attributes) {
+    public Horse(float health, Boolean tame, int variant, String name, ArrayList<Attributes> attributes) {
         super(EntityName.horse, health, name, attributes);
         this.Tame = tame ? 1 : 0;
         this.Variant = variant;
     }
 
-    public Horse(float health, Boolean tame, int variant, Text name, Attributes attribute) {
+    public Horse(float health, Boolean tame, int variant, String name, Attributes attribute) {
         super(EntityName.horse, health, name, attribute);
         this.Tame = tame ? 1 : 0;
         this.Variant = variant;
@@ -37,7 +37,7 @@ public class Horse extends Mob{
                 "\"Health\":\"" + Health + "f\",\n" +
                 "\"Tame\":" + Tame + ",\n" +
                 "\"Variant\":" + Variant + ",\n" +
-                "\"CustomName\":\"" + CustomName.getText(true) + "\",\n" +
+                "\"CustomName\":\"" + CustomName + "\",\n" +
                 "\"attributes\":[\n" +
                 getAttributes() +
                 "]\n" +
