@@ -12,11 +12,11 @@ public class Schedule {
     }
 
     public static String callFunction(String functionName, int delayInSeconds) {
-        return callFunction(functionName, delayInSeconds, Duration.seconds);
+        return callFunction(functionName, delayInSeconds, Duration.SECONDS);
     }
 
     public static String callFunction(FileName functionName, int delayInSeconds) {
-        return callFunction("" + functionName, delayInSeconds, Duration.seconds);
+        return callFunction("" + functionName, delayInSeconds, Duration.SECONDS);
     }
 
     public static String callFunction(String functionName, int delay, Duration unit) {

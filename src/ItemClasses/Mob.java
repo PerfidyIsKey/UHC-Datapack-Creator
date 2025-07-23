@@ -1,8 +1,7 @@
 package ItemClasses;
 
 import EntityClasses.Attributes;
-import Enums.EntityName;
-import HelperClasses.Text;
+import Enums.EntityType;
 
 import java.util.ArrayList;
 
@@ -12,13 +11,13 @@ public class Mob extends EntityData{
     ArrayList<Attributes> attributes;   // A list of Attributes for this mob. These are used for many purposes in internal calculations, and can be considered a mob's "statistics".
 
     // Constructors
-    public Mob(EntityName id, float health, String name, ArrayList<Attributes> attributes) {
+    public Mob(EntityType id, float health, String name, ArrayList<Attributes> attributes) {
         super(id, name);
         this.Health = health;
         this.attributes = attributes;
     }
 
-    public Mob(EntityName id, float health, String name, Attributes attribute) {
+    public Mob(EntityType id, float health, String name, Attributes attribute) {
         super(id, name);
         this.Health = health;
         ArrayList<Attributes> attributes = new ArrayList<>();

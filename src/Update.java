@@ -44,7 +44,7 @@ public class Update {
         fileCommands.add(Schedule.callFunction(FileName.locate_teammate));
 
         // Self-schedule timer
-        fileCommands.add(Schedule.callFunction(FileName.timer_main_1, 1, Duration.ticks));
+        fileCommands.add(Schedule.callFunction(FileName.timer_main_1, 1, Duration.TICKS));
 
         return new FileData(FileName.timer_main_1, fileCommands);
     }
@@ -61,7 +61,7 @@ public class Update {
         }
 
         // Self-schedule timer
-        fileCommands.add(Schedule.callFunction(FileName.timer_main_5, 5, Duration.ticks));
+        fileCommands.add(Schedule.callFunction(FileName.timer_main_5, 5, Duration.TICKS));
 
         return new FileData(FileName.timer_main_5, fileCommands);
     }
@@ -90,7 +90,7 @@ public class Update {
                 Main.scoreboard.Get(Constant.adminSingle,Objective.TimeDum));
 
         // Self-schedule timer
-        fileCommands.add(Schedule.callFunction(FileName.timer_main_20, 20, Duration.ticks));
+        fileCommands.add(Schedule.callFunction(FileName.timer_main_20, 20, Duration.TICKS));
 
         return new FileData(FileName.timer_main_20, fileCommands);
     }
@@ -131,7 +131,7 @@ public class Update {
 
 
         // Self-schedule timer
-        fileCommands.add(Schedule.callFunction(FileName.timer_control_point_20, 20, Duration.ticks));
+        fileCommands.add(Schedule.callFunction(FileName.timer_control_point_20, 20, Duration.TICKS));
 
         return new FileData(FileName.timer_control_point_20, fileCommands);
     }
@@ -145,7 +145,7 @@ public class Update {
                 Schedule.callFunction(FileName.traitor_check));  // Check if traitors have won
 
         // Self-schedule timer
-        fileCommands.add(Schedule.callFunction(FileName.timer_traitor_5, 5, Duration.ticks));
+        fileCommands.add(Schedule.callFunction(FileName.timer_traitor_5, 5, Duration.TICKS));
 
         return new FileData(FileName.timer_traitor_5, fileCommands);
     }
@@ -158,7 +158,7 @@ public class Update {
         fileCommands.add(Schedule.callFunction(FileName.traitor_actionbar)); // Display traitor actionbar
 
         // Self-schedule timer
-        fileCommands.add(Schedule.callFunction(FileName.timer_traitor_20, 20, Duration.ticks));
+        fileCommands.add(Schedule.callFunction(FileName.timer_traitor_20, 20, Duration.TICKS));
 
         return new FileData(FileName.timer_traitor_20, fileCommands);
     }
@@ -172,7 +172,7 @@ public class Update {
 
         // Self-schedule timer
         fileCommands.add(Execute.Unless("@e[tag=" + Tag.GameStarted +"]") +
-                Schedule.callFunction(FileName.timer_developer_20, 20, Duration.ticks));
+                Schedule.callFunction(FileName.timer_developer_20, 20, Duration.TICKS));
 
         return new FileData(FileName.timer_developer_20, fileCommands);
     }

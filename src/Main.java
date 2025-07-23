@@ -890,7 +890,7 @@ public class Main {
         fileCommands.add(Execute.In(Dimension.overworld) +
                 CommandBuilder.fill(-5, 221, -5, 5, 226, 5, BlockType.AIR));
         fileCommands.add(Execute.In(Dimension.overworld) +
-                CommandBuilder.setBlock(0, 222, -5, BlockType.CHERRY_WALL_SIGN + "[facing=south,waterlogged=false]{back_text:{messages:[\"You have\",\"angered\",\"the Gods!\",\"\"]},front_text:{messages:[{\"text\":\"In rememberance\",\"click_event\":{\"action\":\"run_command\",\"command\":\"summon minecraft:firework_rocket ~ ~ ~\"}},\"of our\",\"Command Center\",\"2014-2025\"]},is_waxed:0b}"));
+                CommandBuilder.setBlock(0, 222, -5, BlockType.CHERRY_WALL_SIGN + "[facing=south,waterlogged=false]{back_text:{messages:[\"You have\",\"angered\",\"the Gods!\",\"\"]},front_text:{messages:[{\"text\":\"In rememberance\",\"click_event\":{\"action\":\"run_command\",\"command\":\"" + CommandBuilder.summonEntity(EntityType.FIREWORK_ROCKET, new Coordinate(0, 0, 0, ReferenceFrame.relative)) + "\"}},\"of our\",\"Command Center\",\"2014-2025\"]},is_waxed:0b}"));
 
         // Control Point
         if (OperationMode.controlPoints) {
@@ -937,7 +937,7 @@ public class Main {
 
         // Do automatic respawn in the first 20 minutes
         fileCommands.add(Execute.Unless("@e[tag=" + Tag.RespawnDisabled + "]") +
-                Schedule.callFunction(FileName.respawn_player, 5, Duration.ticks));
+                Schedule.callFunction(FileName.respawn_player, 5, Duration.TICKS));
 
         // Control Point
         if (OperationMode.controlPoints) {
@@ -994,7 +994,7 @@ public class Main {
         // Summon a player head upon dying
         for (Player p : players) {
             fileCommands.add(Execute.At(new Entity("@p[name=" + p.getPlayerName() + ",scores={Deaths=1}]")) +
-                    CommandBuilder.summonEntity(EntityType.item, "{Item:{id:\"" + BlockType.PLAYER_HEAD + "\",count:1,components:{\"minecraft:profile\":{name:" + p.getPlayerName() + "}}}}"));
+                    CommandBuilder.summonEntity(EntityType.ITEM, "{Item:{id:\"" + BlockType.PLAYER_HEAD + "\",count:1,components:{\"minecraft:profile\":{name:" + p.getPlayerName() + "}}}}"));
         }
 
         return new FileData(FileName.drop_player_heads, fileCommands);
@@ -1005,22 +1005,22 @@ public class Main {
 
         // Players in a team
         for (Team t : teams) {
-            fileCommands.add(Execute.If(Constant.adminSingle, getObjectiveByName(Objective.CP.toString() + 1 + t.getName()), ComparatorType.greater, Constant.adminSingle, getObjectiveByName(Objective.Highscore.extendName(1))) +
+            fileCommands.add(Execute.If(Constant.adminSingle, getObjectiveByName(Objective.CP.toString() + 1 + t.getName()), ComparatorType.GREATER, Constant.adminSingle, getObjectiveByName(Objective.Highscore.extendName(1))) +
                     getBossbarByName("cp1").setColor(t.getBossbarColor()));
-            fileCommands.add(Execute.If(Constant.adminSingle, getObjectiveByName(Objective.CP.toString() + 2 + t.getName()), ComparatorType.greater, "@e[limit=1,scores={Highscore1=" + cp2ActivationScore + "..}]", getObjectiveByName(Objective.Highscore.extendName(2))) +
+            fileCommands.add(Execute.If(Constant.adminSingle, getObjectiveByName(Objective.CP.toString() + 2 + t.getName()), ComparatorType.GREATER, "@e[limit=1,scores={Highscore1=" + cp2ActivationScore + "..}]", getObjectiveByName(Objective.Highscore.extendName(2))) +
                     getBossbarByName("cp2").setColor(t.getBossbarColor()));
             for (int i = 0; i < controlPoints.size(); i++) {
-                fileCommands.add(scoreboard.Operation(Constant.admin, getObjectiveByName(Objective.Highscore.extendName(i + 1)), ComparatorType.greater, Constant.admin, getObjectiveByName("" + Objective.CP + (i + 1) + t.getName())));
+                fileCommands.add(scoreboard.Operation(Constant.admin, getObjectiveByName(Objective.Highscore.extendName(i + 1)), ComparatorType.GREATER, Constant.admin, getObjectiveByName("" + Objective.CP + (i + 1) + t.getName())));
             }
         }
 
         // Individual players
-        fileCommands.add(Execute.If("@r[limit=1,team=]", getObjectiveByName(Objective.ControlPoint.extendName(1)), ComparatorType.greater, "@e[type=marker,limit=1]", getObjectiveByName(Objective.Highscore.extendName(1))) +
+        fileCommands.add(Execute.If("@r[limit=1,team=]", getObjectiveByName(Objective.ControlPoint.extendName(1)), ComparatorType.GREATER, Constant.adminSingle, getObjectiveByName(Objective.Highscore.extendName(1))) +
                 getBossbarByName("cp1").setColor(BossBarColor.white));
-        fileCommands.add(Execute.If("@r[limit=1,team=]", getObjectiveByName(Objective.ControlPoint.extendName(2)), ComparatorType.greater, "@e[scores={Highscore1=" + cp2ActivationScore + "..},limit=1]", getObjectiveByName(Objective.Highscore.extendName(2))) +
+        fileCommands.add(Execute.If("@r[limit=1,team=]", getObjectiveByName(Objective.ControlPoint.extendName(2)), ComparatorType.GREATER, "@e[scores={Highscore1=" + cp2ActivationScore + "..},limit=1]", getObjectiveByName(Objective.Highscore.extendName(2))) +
                 getBossbarByName("cp2").setColor(BossBarColor.white));
         for (int i = 0; i < controlPoints.size(); i++) {
-            fileCommands.add(scoreboard.Operation(Constant.admin, getObjectiveByName(Objective.Highscore.extendName(i + 1)), ComparatorType.greater, "@r[limit=1,team=]", getObjectiveByName(Objective.ControlPoint.extendName(i + 1))));
+            fileCommands.add(scoreboard.Operation(Constant.admin, getObjectiveByName(Objective.Highscore.extendName(i + 1)), ComparatorType.GREATER, "@r[limit=1,team=]", getObjectiveByName(Objective.ControlPoint.extendName(i + 1))));
         }
 
         // Update value of bossbars
@@ -1035,7 +1035,7 @@ public class Main {
     private FileData ClearEnderChest() {
         ArrayList<String> fileCommands = new ArrayList<>();
         for (int i = 0; i < chestSize; i++) {
-            fileCommands.add(CommandBuilder.replaceItem("@a", InventorySlot.enderchest.setSlotNumber(i), BlockType.AIR, 1));
+            fileCommands.add(CommandBuilder.replaceItem("@a", InventorySlot.ENDERCHEST.setSlotNumber(i), BlockType.AIR, 1));
         }
 
         return new FileData(FileName.clear_enderchest, fileCommands);
@@ -1043,13 +1043,13 @@ public class Main {
 
     private FileData EquipGear() {
         ArrayList<String> fileCommands = new ArrayList<>();
-        fileCommands.add(CommandBuilder.replaceItem("@a", InventorySlot.chest, BlockType.IRON_CHESTPLATE));
-        fileCommands.add(CommandBuilder.replaceItem("@a", InventorySlot.feet, BlockType.IRON_BOOTS));
-        fileCommands.add(CommandBuilder.replaceItem("@a", InventorySlot.head, BlockType.IRON_HELMET));
-        fileCommands.add(CommandBuilder.replaceItem("@a", InventorySlot.legs, BlockType.IRON_LEGGINGS));
-        fileCommands.add(CommandBuilder.replaceItem("@a", InventorySlot.offhand, BlockType.SHIELD));
-        fileCommands.add(CommandBuilder.replaceItem("@a", InventorySlot.mainhand, BlockType.IRON_AXE));
-        fileCommands.add(CommandBuilder.replaceItem("@a", InventorySlot.inventory.setSlotNumber(0), BlockType.IRON_SWORD));
+        fileCommands.add(CommandBuilder.replaceItem("@a", InventorySlot.CHEST, BlockType.IRON_CHESTPLATE));
+        fileCommands.add(CommandBuilder.replaceItem("@a", InventorySlot.FEET, BlockType.IRON_BOOTS));
+        fileCommands.add(CommandBuilder.replaceItem("@a", InventorySlot.HEAD, BlockType.IRON_HELMET));
+        fileCommands.add(CommandBuilder.replaceItem("@a", InventorySlot.LEGS, BlockType.IRON_LEGGINGS));
+        fileCommands.add(CommandBuilder.replaceItem("@a", InventorySlot.OFFHAND, BlockType.SHIELD));
+        fileCommands.add(CommandBuilder.replaceItem("@a", InventorySlot.MAINHAND, BlockType.IRON_AXE));
+        fileCommands.add(CommandBuilder.replaceItem("@a", InventorySlot.INVENTORY.setSlotNumber(0), BlockType.IRON_SWORD));
         fileCommands.add(CommandBuilder.giveEffect("@a", Effect.REGENERATION, 1, 255, true));
 
         return new FileData(FileName.equip_gear, fileCommands);
@@ -1058,7 +1058,7 @@ public class Main {
     private FileData GodMode() {
         ArrayList<String> fileCommands = new ArrayList<>();
         fileCommands.add(CommandBuilder.giveEffect("@s", Effect.RESISTANCE, 99999, 4, true));
-        fileCommands.add(CommandBuilder.replaceItem("@s", InventorySlot.mainhand, BlockType.TRIDENT + "[custom_name=[{\"bold\":false,\"color\":\"white\",\"italic\":false,\"obfuscated\":true,\"text\":\"aA\"},{\"bold\":true,\"color\":\"#8C3CC1\",\"obfuscated\":false,\"text\":\"The\"},{\"bold\":true,\"color\":\"#E280FF\",\"obfuscated\":false,\"text\":\" Impaler \"},{\"color\":\"white\",\"obfuscated\":true,\"text\":\"Aa\"}],lore=[\"This holy weapon impales anything it touches\"],damage=0,enchantments={\"" + EnchantmentType.FIRE_ASPECT + "\":255,\"" + EnchantmentType.SHARPNESS + "\":255,\"" + EnchantmentType.IMPALING + "\":255,\"" + EnchantmentType.LOYALTY + "\":255,\"" + EnchantmentType.EFFICIENCY + "\":255},attribute_modifiers=[{id:\"armor\",type:\"armor\",amount:1000,operation:\"add_value\",slot:\"armor\",display:{type:\"hidden\"}},{id:\"attack_damage\",type:\"attack_damage\",amount:1000,operation:\"add_value\",slot:\"mainhand\",display:{type:\"hidden\"}}],unbreakable={}]"));
+        fileCommands.add(CommandBuilder.replaceItem("@s", InventorySlot.MAINHAND, BlockType.TRIDENT + "[custom_name=[{\"bold\":false,\"color\":\"white\",\"italic\":false,\"obfuscated\":true,\"text\":\"aA\"},{\"bold\":true,\"color\":\"#8C3CC1\",\"obfuscated\":false,\"text\":\"The\"},{\"bold\":true,\"color\":\"#E280FF\",\"obfuscated\":false,\"text\":\" Impaler \"},{\"color\":\"white\",\"obfuscated\":true,\"text\":\"Aa\"}],lore=[\"This holy weapon impales anything it touches\"],damage=0,enchantments={\"" + EnchantmentType.FIRE_ASPECT + "\":255,\"" + EnchantmentType.SHARPNESS + "\":255,\"" + EnchantmentType.IMPALING + "\":255,\"" + EnchantmentType.LOYALTY + "\":255,\"" + EnchantmentType.EFFICIENCY + "\":255},attribute_modifiers=[{id:\"" + AttributeType.ARMOR + "\",type:\"armor\",amount:1000,operation:\"add_value\",slot:\"armor\",display:{type:\"hidden\"}},{id:\"" + AttributeType.ATTACK_DAMAGE + "\",type:\"attack_damage\",amount:1000,operation:\"add_value\",slot:\"mainhand\",display:{type:\"hidden\"}}],unbreakable={}]"));
 
         return new FileData(FileName.god_mode, fileCommands);
     }
@@ -1094,8 +1094,8 @@ public class Main {
         ArrayList<String> fileCommands = new ArrayList<>();
 
         // Create marker entity
-        fileCommands.add(CommandBuilder.killEntity("@e[type=marker]"));
-        fileCommands.add(CommandBuilder.summonEntity(EntityType.marker, new Coordinate(0, Constant.worldBottom, 0), "{CustomName:\"Admin\"}"));
+        fileCommands.add(CommandBuilder.killEntity(Constant.admin));
+        fileCommands.add(CommandBuilder.summonEntity(EntityType.MARKER, new Coordinate(0, Constant.worldBottom, 0), "{CustomName:\"Admin\"}"));
 
         // Set time
         fileCommands.add(CommandBuilder.setTime(0));
@@ -1147,7 +1147,7 @@ public class Main {
 
         // Reset player scales
         fileCommands.add(Execute.As(new Entity("@a")) +
-                CommandBuilder.setAttributeBase("@s", AttributeType.scale, 1));
+                CommandBuilder.setAttributeBase("@s", AttributeType.SCALE, 1));
 
         // Set gamemode of player executing the command to creative
         fileCommands.add(CommandBuilder.setGameMode(GameMode.creative, "@s"));
@@ -1350,7 +1350,7 @@ public class Main {
 
         // Self-schedule function
         fileCommands.add(Execute.Unless("@e[tag=" + Tag.PredictionsCompleted + "]") +
-                Schedule.callFunction(FileName.predictions_loop, 1, Duration.ticks));
+                Schedule.callFunction(FileName.predictions_loop, 1, Duration.TICKS));
 
         return new FileData(FileName.predictions_loop, fileCommands);
     }
@@ -1464,7 +1464,7 @@ public class Main {
         fileCommands.add(CommandBuilder.titleDefaultTiming("@a"));
 
         // Destroy all ground items
-        fileCommands.add(CommandBuilder.killEntity("@e[type=item]"));
+        fileCommands.add(CommandBuilder.killEntity("@e[type=" + EntityType.ITEM + "]"));
 
         // Schedule continuous functions
         fileCommands.add(Schedule.callFunction(FileName.game_starter));
@@ -1683,14 +1683,14 @@ public class Main {
         for (Team team : teams) {
             // Update CP glass color
             fileCommands.add(Execute.In(currentCP.getCoordinate().getDimension(), false) +
-                    Execute.IfNext("@p[gamemode=!spectator,team=" + team.getName() + "]", getObjectiveByName(Objective.ControlPoint.extendName(i)), ComparatorType.greater, Constant.adminSingle, getObjectiveByName(Objective.Highscore.extendName(i)), true) +
+                    Execute.IfNext("@p[gamemode=!spectator,team=" + team.getName() + "]", getObjectiveByName(Objective.ControlPoint.extendName(i)), ComparatorType.GREATER, Constant.adminSingle, getObjectiveByName(Objective.Highscore.extendName(i)), true) +
                     CommandBuilder.setBlock(currentCP.getCoordinate().getX(), currentCP.getCoordinate().getY() + 1, currentCP.getCoordinate().getZ(), "minecraft:" + team.getGlassColor() + "_stained_glass", SetBlockType.replace));
         }
 
         if (OperationMode.teamCreationInGame) {
             // Update CP glass color solo
             fileCommands.add(Execute.In(currentCP.getCoordinate().getDimension(), false) +
-                    Execute.IfNext("@r[limit=1,gamemode=!spectator,team=]", getObjectiveByName(Objective.ControlPoint.extendName(i)), ComparatorType.greater, Constant.adminSingle, getObjectiveByName(Objective.Highscore.extendName(i)), true) +
+                    Execute.IfNext("@r[limit=1,gamemode=!spectator,team=]", getObjectiveByName(Objective.ControlPoint.extendName(i)), ComparatorType.GREATER, Constant.adminSingle, getObjectiveByName(Objective.Highscore.extendName(i)), true) +
                     CommandBuilder.setBlock(currentCP.getCoordinate().getX(), currentCP.getCoordinate().getY() + 1, currentCP.getCoordinate().getZ(), BlockType.STAINED_GLASS.extendColor("white"), SetBlockType.replace));
         }
 
@@ -1905,12 +1905,12 @@ public class Main {
         // Summon Care Package entities
         for (int i = 0; i < carePackageAmount; i++) {
             fileCommands.add(Execute.In(Dimension.overworld) +
-                    CommandBuilder.summonEntity(EntityType.area_effect_cloud, new Coordinate(0, 300, 0), "{Passengers:[{id:\"minecraft:falling_block\",BlockState:{Name:\"" + BlockType.CHEST + "\"},TileEntityData:{LootTable:\"uhc:supply_drop\",CustomName:\"Care Package\"},Time:1,DropItem:0b,Tags:[\"CarePackage\"]}]}"));
+                    CommandBuilder.summonEntity(EntityType.AREA_EFFECT_CLOUD, new Coordinate(0, 300, 0), "{Passengers:[{id:\"" + EntityType.FALLING_BLOCK + "\",BlockState:{Name:\"" + BlockType.CHEST + "\"},TileEntityData:{LootTable:\"uhc:supply_drop\",CustomName:\"Care Package\"},Time:1,DropItem:0b,Tags:[\"CarePackage\"]}]}"));
         }
 
         // Spread Care Packages
         fileCommands.add(Execute.In(Dimension.overworld, true) +
-                CommandBuilder.spreadPlayers(0, 0, 10, carePackageSpread, false, "@e[type=falling_block,nbt={Tags:[\"CarePackage\"]}]"));
+                CommandBuilder.spreadPlayers(0, 0, 10, carePackageSpread, false, "@e[type=" + EntityType.FALLING_BLOCK + ",nbt={Tags:[\"CarePackage\"]}]"));
 
         // Give admin tag for disabling self-rescheduling
         fileCommands.add(CommandBuilder.addTag(Constant.admin, Tag.CarePackagesDropped));
@@ -2006,32 +2006,32 @@ public class Main {
         for (int i = 1; i < controlPoints.size() + 1; i++) {
             for (Team t : teams) {
                 fileCommands.add(Execute.As(new Entity("@r[limit=1,gamemode=!spectator,team=" + t.getName() + "]")) +
-                        scoreboard.Operation(Constant.admin, getObjectiveByName("" + Objective.CP + i + t.getName()), ComparatorType.greater, "@s", getObjectiveByName(Objective.ControlPoint.extendName(i))));
+                        scoreboard.Operation(Constant.admin, getObjectiveByName("" + Objective.CP + i + t.getName()), ComparatorType.GREATER, "@s", getObjectiveByName(Objective.ControlPoint.extendName(i))));
 
                 fileCommands.add(Execute.As(new Entity("@r[limit=1,gamemode=!spectator,team=" + t.getName() + "]")) +
-                        scoreboard.Operation("@s", getObjectiveByName(Objective.ControlPoint.extendName(i)), ComparatorType.greater, Constant.admin, getObjectiveByName("" + Objective.CP + i + t.getName())));
+                        scoreboard.Operation("@s", getObjectiveByName(Objective.ControlPoint.extendName(i)), ComparatorType.GREATER, Constant.admin, getObjectiveByName("" + Objective.CP + i + t.getName())));
             }
         }
 
         for (Team t : teams) {
             fileCommands.add(Execute.In(controlPoints.get(0).getCoordinate().getDimension(), false) +
                     Execute.AsNext(new Entity("@r[limit=1,gamemode=!spectator,x=" + (controlPoints.get(0).getCoordinate().getX() - 6) + ",y=" + (controlPoints.get(0).getCoordinate().getY() - 1) + ",z=" + (controlPoints.get(0).getCoordinate().getZ() - 6) + ",dx=12,dy=12,dz=12,team=" + t.getName() + "]"), true) +
-                    scoreboard.Operation(Constant.admin, getObjectiveByName("" + Objective.CP + 1 + t.getName()), ComparatorType.greater, Constant.admin, getObjectiveByName("" + Objective.CP + 2 + t.getName())));
+                    scoreboard.Operation(Constant.admin, getObjectiveByName("" + Objective.CP + 1 + t.getName()), ComparatorType.GREATER, Constant.admin, getObjectiveByName("" + Objective.CP + 2 + t.getName())));
 
             fileCommands.add(Execute.In(controlPoints.get(1).getCoordinate().getDimension(), false) +
                     Execute.AsNext(new Entity("@r[limit=1,gamemode=!spectator,x=" + (controlPoints.get(1).getCoordinate().getX() - 6) + ",y=" + (controlPoints.get(1).getCoordinate().getY() - 1) + ",z=" + (controlPoints.get(1).getCoordinate().getZ() - 6) + ",dx=12,dy=12,dz=12,team=" + t.getName() + "]"), true) +
-                    scoreboard.Operation(Constant.admin, getObjectiveByName("" + Objective.CP + 2 + t.getName()), ComparatorType.greater, Constant.admin, getObjectiveByName("" + Objective.CP + 1 + t.getName())));
+                    scoreboard.Operation(Constant.admin, getObjectiveByName("" + Objective.CP + 2 + t.getName()), ComparatorType.GREATER, Constant.admin, getObjectiveByName("" + Objective.CP + 1 + t.getName())));
         }
 
         if (OperationMode.teamCreationInGame) {
             // Individual players
             fileCommands.add(Execute.In(controlPoints.get(0).getCoordinate().getDimension(), false) +
                     Execute.AsNext(new Entity("@r[limit=1,gamemode=!spectator,x=" + (controlPoints.get(0).getCoordinate().getX() - 6) + ",y=" + (controlPoints.get(0).getCoordinate().getY() - 1) + ",z=" + (controlPoints.get(0).getCoordinate().getZ() - 6) + ",dx=12,dy=12,dz=12,team=]"), true) +
-                    scoreboard.Operation("@s", getObjectiveByName(Objective.ControlPoint.extendName(1)), ComparatorType.greater, "@s", getObjectiveByName(Objective.ControlPoint.extendName(2))));
+                    scoreboard.Operation("@s", getObjectiveByName(Objective.ControlPoint.extendName(1)), ComparatorType.GREATER, "@s", getObjectiveByName(Objective.ControlPoint.extendName(2))));
 
             fileCommands.add(Execute.In(controlPoints.get(1).getCoordinate().getDimension(), false) +
                     Execute.AsNext(new Entity("@r[limit=1,gamemode=!spectator,x=" + (controlPoints.get(1).getCoordinate().getX() - 6) + ",y=" + (controlPoints.get(1).getCoordinate().getY() - 1) + ",z=" + (controlPoints.get(1).getCoordinate().getZ() - 6) + ",dx=12,dy=12,dz=12,team=]"), true) +
-                    scoreboard.Operation("@s", getObjectiveByName(Objective.ControlPoint.extendName(2)), ComparatorType.greater, "@s", getObjectiveByName(Objective.ControlPoint.extendName(1))));
+                    scoreboard.Operation("@s", getObjectiveByName(Objective.ControlPoint.extendName(2)), ComparatorType.GREATER, "@s", getObjectiveByName(Objective.ControlPoint.extendName(1))));
         }
 
         return new FileData(FileName.team_score, fileCommands);
@@ -2068,7 +2068,7 @@ public class Main {
         }
 
         // Remove leftover music discs from legacy Control Point
-        fileCommands.add(CommandBuilder.killEntity("@e[type=item,nbt={Item:{id:\"" + BlockType.MUSIC_DISC_STAL + "\",count:1}}]"));
+        fileCommands.add(CommandBuilder.killEntity("@e[type=" + EntityType.ITEM + ",nbt={Item:{id:\"" + BlockType.MUSIC_DISC_STAL + "\",count:1}}]"));
 
         return new FileData(FileName.spawn_control_points, fileCommands);
     }
@@ -2087,7 +2087,7 @@ public class Main {
     private FileData HorseFrostWalker() {
         ArrayList<String> fileCommands = new ArrayList<>();
 
-        fileCommands.add(Execute.At(new Entity("@a[nbt={RootVehicle:{Entity:{id:\"minecraft:horse\"}}}]")) +
+        fileCommands.add(Execute.At(new Entity("@a[nbt={RootVehicle:{Entity:{id:\"" + EntityType.HORSE + "\"}}}]")) +
                 CommandBuilder.relativeFill(-2, -2, -2, 2, 0, 2, "ice", SetBlockType.replace, "water"));
 
         return new FileData(FileName.horse_frost_walker, fileCommands);
@@ -2171,7 +2171,7 @@ public class Main {
         // Define perk activation times
         ArrayList<Perk> perks = new ArrayList<>();
         perks.add(new Perk(1, new StatusEffect(Effect.SPEED, 999999, 0, false), Sound.BASALT, 3 * singleton.getMinToCPScore()));
-        perks.add(new Perk(2, new Attribute(AttributeType.scale, 0.8), Sound.CRIMSON, 6 * singleton.getMinToCPScore()));
+        perks.add(new Perk(2, new Attribute(AttributeType.SCALE, 0.8), Sound.CRIMSON, 6 * singleton.getMinToCPScore()));
         perks.add(new Perk(3, new StatusEffect(Effect.HASTE, 999999, 2, false), Sound.WARPED, 12 * singleton.getMinToCPScore()));
         perks.add(new Perk(4, new StatusEffect(Effect.ABSORPTION, 999999, 1, false), Sound.WITHER, 15 * singleton.getMinToCPScore()));
 
@@ -2288,7 +2288,7 @@ public class Main {
         blocks.add("Granite");
 
         for (String block : blocks) {
-            fileCommands.add(scoreboard.Operation("@s", getObjectiveByName(Objective.Mining), ComparatorType.add, "@s", getObjectiveByName(block)));
+            fileCommands.add(scoreboard.Operation("@s", getObjectiveByName(Objective.Mining), ComparatorType.ADD, "@s", getObjectiveByName(block)));
         }
 
         return new FileData(FileName.update_mine_count, fileCommands);
@@ -2299,7 +2299,7 @@ public class Main {
         ArrayList<String> fileCommands = new ArrayList<>();
 
         // Find player with lowest health
-        fileCommands.add(scoreboard.Operation(Constant.admin, Objective.MinHealth, ComparatorType.less, "@a[gamemode=!spectator]", Objective.Hearts));
+        fileCommands.add(scoreboard.Operation(Constant.admin, Objective.MinHealth, ComparatorType.LESS, "@a[gamemode=!spectator]", Objective.Hearts));
 
         return new FileData(FileName.update_min_health, fileCommands);
     }
@@ -2335,7 +2335,7 @@ public class Main {
         // Remove player heads
         fileCommands.add(Execute.As(new Entity("@a[nbt={Inventory:[{id:\"" + BlockType.PLAYER_HEAD + "\"}]}]")) +
                 CommandBuilder.clearInventory("@s", BlockType.PLAYER_HEAD));  // Remove from inventory
-        fileCommands.add(Execute.As(new Entity("@e[type=item,nbt={Item:{id:\"" + BlockType.PLAYER_HEAD + "\"}}]")) +
+        fileCommands.add(Execute.As(new Entity("@e[type=" + EntityType.ITEM + ",nbt={Item:{id:\"" + BlockType.PLAYER_HEAD + "\"}}]")) +
                 CommandBuilder.killEntity("@s")); // Remove item
 
         // Teammate tracker
@@ -2351,12 +2351,12 @@ public class Main {
 
             fileCommands.add(Execute.As(respawnPlayer, false) +
                     Execute.IfNext(new Entity("@e[scores={MinHealth=" + indexFront + ".." + indexRear + "}]"), true) +
-                    CommandBuilder.setAttributeBase("@s", AttributeType.max_health, i + 1));
+                    CommandBuilder.setAttributeBase("@s", AttributeType.MAX_HEALTH, i + 1));
         }
         fileCommands.add(CommandBuilder.giveEffect(respawnPlayer, Effect.HEALTH_BOOST, 1, 0));
         fileCommands.add(CommandBuilder.clearEffect(respawnPlayer, Effect.HEALTH_BOOST));
         fileCommands.add(Execute.As(respawnPlayer) +
-                CommandBuilder.setAttributeBase("@s", AttributeType.max_health, 20));
+                CommandBuilder.setAttributeBase("@s", AttributeType.MAX_HEALTH, 20));
 
         // Set player's gamemode to survival
         fileCommands.add(Execute.As(new Entity(respawnPlayer)) +
@@ -2538,7 +2538,7 @@ public class Main {
         // Set wolf collar color
         // Get data
         for (int i = 0; i < 2; i++) {
-            fileCommands.add(Execute.As(new Entity("@e[type=minecraft:wolf]"), false) +
+            fileCommands.add(Execute.As(new Entity("@e[type=" + EntityType.WOLF +"]"), false) +
                     Execute.StoreNext(ExecuteStore.result, "@s", getObjectiveByName(Objective.CollarCheck.extendName(i)), true) +
                     CommandBuilder.getData("@s", "Owner[" + i + "]"));
 
@@ -2550,9 +2550,9 @@ public class Main {
         // Players in a team
         for (Team t : teams) {
             fileCommands.add(CommandBuilder.addTag("@a[team=" + t.getName() + "]", Tag.CollarCheck));
-            fileCommands.add(Execute.As(new Entity("@e[type=wolf]"), false) +
-                    Execute.IfNext("@s", getObjectiveByName(Objective.CollarCheck.extendName(0)), ComparatorType.equal, "@p[tag=" + Tag.CollarCheck + "]", getObjectiveByName(Objective.CollarCheck.extendName(0))) +
-                    Execute.IfNext("@s", getObjectiveByName(Objective.CollarCheck.extendName(1)), ComparatorType.equal, "@p[tag=" + Tag.CollarCheck + "]", getObjectiveByName(Objective.CollarCheck.extendName(1)), true) +
+            fileCommands.add(Execute.As(new Entity("@e[type=" + EntityType.WOLF + "]"), false) +
+                    Execute.IfNext("@s", getObjectiveByName(Objective.CollarCheck.extendName(0)), ComparatorType.EQUAL, "@p[tag=" + Tag.CollarCheck + "]", getObjectiveByName(Objective.CollarCheck.extendName(0))) +
+                    Execute.IfNext("@s", getObjectiveByName(Objective.CollarCheck.extendName(1)), ComparatorType.EQUAL, "@p[tag=" + Tag.CollarCheck + "]", getObjectiveByName(Objective.CollarCheck.extendName(1)), true) +
                     CommandBuilder.modifyData("@s", "CollarColor", t.getCollarColor()));
             fileCommands.add(CommandBuilder.removeTag("@a[team=" + t.getName() + "]", Tag.CollarCheck));
         }
@@ -2560,28 +2560,28 @@ public class Main {
         if (OperationMode.teamCreationInGame) {
             // Individual players
             fileCommands.add(CommandBuilder.addTag("@a[team=]", Tag.CollarCheck));
-            fileCommands.add(Execute.As(new Entity("@e[type=wolf]"), false) +
-                    Execute.IfNext("@s", getObjectiveByName(Objective.CollarCheck.extendName(0)), ComparatorType.equal, "@p[tag=" + Tag.CollarCheck + "]", getObjectiveByName(Objective.CollarCheck.extendName(0))) +
-                    Execute.IfNext("@s", getObjectiveByName(Objective.CollarCheck.extendName(1)), ComparatorType.equal, "@p[tag=" + Tag.CollarCheck + "]", getObjectiveByName(Objective.CollarCheck.extendName(1)), true) +
+            fileCommands.add(Execute.As(new Entity("@e[type=" + EntityType.WOLF + "]"), false) +
+                    Execute.IfNext("@s", getObjectiveByName(Objective.CollarCheck.extendName(0)), ComparatorType.EQUAL, "@p[tag=" + Tag.CollarCheck + "]", getObjectiveByName(Objective.CollarCheck.extendName(0))) +
+                    Execute.IfNext("@s", getObjectiveByName(Objective.CollarCheck.extendName(1)), ComparatorType.EQUAL, "@p[tag=" + Tag.CollarCheck + "]", getObjectiveByName(Objective.CollarCheck.extendName(1)), true) +
                     CommandBuilder.modifyData("@s", "CollarColor", "0"));
             fileCommands.add(CommandBuilder.removeTag("@a[team=]", Tag.CollarCheck));
         }
 
         // Eliminate baby wolves
-        Entity babyWolf = new Entity("@e[type=wolf,scores={WolfAge=..-1}]");
+        Entity babyWolf = new Entity("@e[type=" + EntityType.WOLF + ",scores={WolfAge=..-1}]");
 
-        fileCommands.add(Execute.As(new Entity("@e[limit=1, type=wolf, sort=random]"), false) +
+        fileCommands.add(Execute.As(new Entity("@e[limit=1,type=" + EntityType.WOLF +",sort=random]"), false) +
                 Execute.StoreNext(ExecuteStore.result, "@s", getObjectiveByName(Objective.WolfAge), true) +
                 CommandBuilder.getData("@s", "Age"));
         fileCommands.add(Execute.At(babyWolf) +
-                CommandBuilder.summonEntity(EntityType.dolphin));
+                CommandBuilder.summonEntity(EntityType.DOLPHIN));
         fileCommands.add(Execute.As(babyWolf) +
                 CommandBuilder.killEntity("@s"));
 
         // Set tamed wolf base health
-        fileCommands.add(Execute.As(new Entity("@e[type=wolf]"), false) +
+        fileCommands.add(Execute.As(new Entity("@e[type=" + EntityType.WOLF + "]"), false) +
                 Execute.IfNext(DataClasses.entity, "@s Owner", true) +
-                CommandBuilder.setAttributeBase("@s", AttributeType.max_health, 20));
+                CommandBuilder.setAttributeBase("@s", AttributeType.MAX_HEALTH, 20));
 
         return new FileData(FileName.wolf_updates, fileCommands);
     }
@@ -2592,7 +2592,7 @@ public class Main {
         // Players in teams
         for (Team t : teams) {
             for (int i = 1; i < controlPoints.size() + 1; i++) {
-                fileCommands.add(scoreboard.Operation(t.getPlayerColor(), getObjectiveByName(Objective.CPScore), ComparatorType.greater, Constant.admin, getObjectiveByName("" + Objective.CP + i + t.getName())));
+                fileCommands.add(scoreboard.Operation(t.getPlayerColor(), getObjectiveByName(Objective.CPScore), ComparatorType.GREATER, Constant.admin, getObjectiveByName("" + Objective.CP + i + t.getName())));
             }
         }
 
@@ -2600,7 +2600,7 @@ public class Main {
             // Players without a team
             for (int i = 1; i < controlPoints.size() + 1; i++) {
                 fileCommands.add(Execute.As("@a[team=]") +
-                        scoreboard.Operation("Solo", getObjectiveByName(Objective.CPScore), ComparatorType.greater, "@s", getObjectiveByName(Objective.ControlPoint.extendName(i))));
+                        scoreboard.Operation("Solo", getObjectiveByName(Objective.CPScore), ComparatorType.GREATER, "@s", getObjectiveByName(Objective.ControlPoint.extendName(i))));
             }
         }
 
@@ -2681,18 +2681,18 @@ public class Main {
             // Subtract distance of nearest player in Cartesian coordinate
             fileCommands.add(Execute.As(checkingPlayer, false) +
                     Execute.AtNext(checkingPlayer, true) +
-                    scoreboard.Operation("@s", getObjectiveByName(Objective.Pos + cartesian[i]), ComparatorType.subtract, "@p[tag=!LookingForTeamMate,team=,gamemode=!spectator]", getObjectiveByName(Objective.Pos + cartesian[i])));
+                    scoreboard.Operation("@s", getObjectiveByName(Objective.Pos + cartesian[i]), ComparatorType.SUBTRACT, "@p[tag=!LookingForTeamMate,team=,gamemode=!spectator]", getObjectiveByName(Objective.Pos + cartesian[i])));
 
             // Square the difference in Cartesian coordinates
             fileCommands.add(Execute.As(checkingPlayer) +
-                    scoreboard.Operation("@s", getObjectiveByName(Objective.Square + cartesian[i]), ComparatorType.equal, "@s", getObjectiveByName(Objective.Pos + cartesian[i])));
+                    scoreboard.Operation("@s", getObjectiveByName(Objective.Square + cartesian[i]), ComparatorType.EQUAL, "@s", getObjectiveByName(Objective.Pos + cartesian[i])));
             fileCommands.add(Execute.As(checkingPlayer) +
-                    scoreboard.Operation("@s", getObjectiveByName(Objective.Square + cartesian[i]), ComparatorType.multiply, "@s", getObjectiveByName(Objective.Pos + cartesian[i])));
+                    scoreboard.Operation("@s", getObjectiveByName(Objective.Square + cartesian[i]), ComparatorType.MULTIPLY, "@s", getObjectiveByName(Objective.Pos + cartesian[i])));
 
             if (i == 0) {
-                comparator = ComparatorType.equal;
+                comparator = ComparatorType.EQUAL;
             } else {
-                comparator = ComparatorType.add;
+                comparator = ComparatorType.ADD;
             }
 
             // Calculate distance to nearest player

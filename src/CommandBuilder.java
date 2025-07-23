@@ -140,11 +140,11 @@ public class CommandBuilder {
 
     // Play sound
     public static String playSound(Sound sound, SoundSource source, String entity, String x, String y, String z, String x1, String y1, String z1) {
-        return "playsound " + sound.getValue() + " " + source + " " + entity + " " + x + " " + y + " " + z + " " + x1 + " " + y1 + " " + z1;
+        return "playsound " + sound + " " + source + " " + entity + " " + x + " " + y + " " + z + " " + x1 + " " + y1 + " " + z1;
     }
 
     public static String setAttributeBase(String entity, AttributeType attribute, double value) {
-        return "attribute " + entity + " minecraft:" + attribute + " base set " + value;
+        return "attribute " + entity + " " + attribute + " base set " + value;
     }
 
     // Status effects
@@ -382,7 +382,7 @@ public class CommandBuilder {
         // Convert hex to decimal
         int potionColor = Integer.parseInt(colorHex, 16);
 
-        return "item replace entity " + targets + " " + InventorySlot.hotbar.setSlotNumber(slotNumber) + " with " + BlockType.SPLASH_POTION + "[potion_contents={custom_color:" + potionColor + ",custom_effects:[{id:\"" + effect + "\",amplifier:0,duration:200,show_particles:0b,show_icon:0b,ambient:0b}]},lore=[\"" + lore + "\"],custom_name=\"" + displayName + "\"]";
+        return "item replace entity " + targets + " " + InventorySlot.HOTBAR.setSlotNumber(slotNumber) + " with " + BlockType.SPLASH_POTION + "[potion_contents={custom_color:" + potionColor + ",custom_effects:[{id:\"" + effect + "\",amplifier:0,duration:200,show_particles:0b,show_icon:0b,ambient:0b}]},lore=[\"" + lore + "\"],custom_name=\"" + displayName + "\"]";
     }
 
     // Trigger
@@ -392,7 +392,7 @@ public class CommandBuilder {
 
     // Change title display time
     public static String changeTitleDisplayTime(String targets, int fadeIn, int stay, int fadeOut) {
-        return changeTitleDisplayTime(targets, fadeIn, stay, fadeOut, Duration.seconds);
+        return changeTitleDisplayTime(targets, fadeIn, stay, fadeOut, Duration.SECONDS);
     }
 
     public static String changeTitleDisplayTime(String targets, int fadeIn, int stay, int fadeOut, Duration durationType) {
@@ -404,7 +404,7 @@ public class CommandBuilder {
     }
 
     public static String titleDefaultTiming(String targets) {
-        return changeTitleDisplayTime(targets, 10, 70, 20, Duration.ticks);
+        return changeTitleDisplayTime(targets, 10, 70, 20, Duration.TICKS);
     }
 
     // Store random number
@@ -431,7 +431,7 @@ public class CommandBuilder {
 
         fileCommands.add(Execute.If(targets) +
                 new TellRaw(targets, warning).sendRaw());
-        fileCommands.add(replaceItem(targets, InventorySlot.mainhand, replacement));
+        fileCommands.add(replaceItem(targets, InventorySlot.MAINHAND, replacement));
 
         return fileCommands;
     }

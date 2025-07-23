@@ -1,10 +1,27 @@
 package Enums;
 
 public enum EntityType {
-    area_effect_cloud,
-    dolphin,
-    falling_block,
-    firework_rocket,
-    item,
-    marker
+    AREA_EFFECT_CLOUD("area_effect_cloud"),
+    DOLPHIN("dolphin"),
+    FALLING_BLOCK("falling_block"),
+    FIREWORK_ROCKET("firework_rocket"),
+    HORSE("horse"),
+    ITEM("item"),
+    MARKER("marker"),
+    WOLF("wolf");
+
+    private final String symbol;
+
+    EntityType(String symbol) {
+        this.symbol = symbol;
+    }
+
+    public String setNamespace(Namespace namespace) {
+        return namespace + ":" + symbol;
+    }
+
+    @Override
+    public String toString() {
+        return "minecraft:" + symbol;
+    }
 }

@@ -1,12 +1,12 @@
 package Enums;
 
 public enum ComparatorType {
-    add("+="),
-    equal("="),
-    greater(">"),
-    less("<"),
-    multiply("*="),
-    subtract("-=");
+    ADD("+="),
+    EQUAL("="),
+    GREATER(">"),
+    LESS("<"),
+    MULTIPLY("*="),
+    SUBTRACT("-=");
 
     private final String symbol;
 

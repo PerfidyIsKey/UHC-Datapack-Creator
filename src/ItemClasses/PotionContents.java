@@ -23,7 +23,7 @@ public class PotionContents implements Components {
         this.id = id;
         this.amplifier = amplifier;
         int unitConversion = 1;
-        if (durationType == Duration.seconds) {
+        if (durationType == Duration.SECONDS) {
             unitConversion = 20;
         }
         this.duration = duration * unitConversion;
