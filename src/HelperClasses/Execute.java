@@ -338,7 +338,7 @@ public class Execute {
     }
 
     public static String UnlessNext(Coordinate coordinate, BlockType blockType, Boolean run) {
-        return Next("unless block " + coordinate.getCoordinateString() + " minecraft:" + blockType + " ", run);
+        return Next("unless block " + coordinate.getCoordinateString() + " " + blockType + " ", run);
     }
 
     public static String Unless(int x, int y, int z, BlockType blockType) {
@@ -354,7 +354,7 @@ public class Execute {
     }
 
     public static String UnlessNext(int x, int y, int z, BlockType blockType, Boolean run) {
-        return Next("unless block " + x + " " + y + " " + z + " minecraft:" + blockType + " ", run);
+        return Next("unless block " + x + " " + y + " " + z + " " + blockType + " ", run);
     }
 
     // unless entity
