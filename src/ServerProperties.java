@@ -100,6 +100,10 @@ public class ServerProperties {
         set(key, Integer.toString(value));
     }
 
+    public void set(String key, long value) {
+        set(key, Long.toString(value));
+    }
+
     public void saveToFile(String filePath) throws IOException {
         try (FileWriter writer = new FileWriter(filePath)) {
             properties.store(writer, "Minecraft Server Properties");
