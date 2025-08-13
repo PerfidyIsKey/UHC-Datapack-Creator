@@ -808,6 +808,7 @@ public class Main {
 
         // Control Points
         if (OperationMode.controlPoints) {
+            files.add(Updating.TimerControlPoint5());
             files.add(Updating.TimerControlPoint20());
             files.add(SpawnControlPoints());
             files.add(BossBarValue());
@@ -1529,6 +1530,7 @@ public class Main {
         }
 
         // Schedule continuous functions
+        fileCommands.add(Schedule.callFunction(FileName.timer_control_point_5));
         fileCommands.add(Schedule.callFunction(FileName.timer_control_point_20));
 
         // Give admin tag for disabling self-rescheduling
@@ -2037,7 +2039,7 @@ public class Main {
                 fileCommands.add(Execute.As(new Entity("@r[limit=1,gamemode=!spectator,team=" + t.getName() + "]")) +
                         scoreboard.Operation(Constant.admin, getObjectiveByName("" + Objective.CP + i + t.getName()), ComparatorType.GREATER, "@s", getObjectiveByName(Objective.ControlPoint.extendName(i))));
 
-                fileCommands.add(Execute.As(new Entity("@r[limit=1,gamemode=!spectator,team=" + t.getName() + "]")) +
+                fileCommands.add(Execute.As(new Entity("@a[gamemode=!spectator,team=" + t.getName() + "]")) +
                         scoreboard.Operation("@s", getObjectiveByName(Objective.ControlPoint.extendName(i)), ComparatorType.GREATER, Constant.admin, getObjectiveByName("" + Objective.CP + i + t.getName())));
             }
         }
@@ -2462,16 +2464,16 @@ public class Main {
         for (int i = 0; i < teams.size(); i++) {
             for (int j = 1; j < 3; j++) {
                 if (OperationMode.traitorFaction) {
-                    // Regular teams
-                    fileCommands.add(Execute.If(new Entity("@e[scores={Victory=1}]"), false) +
-                            Execute.IfNext(new Entity("@p[team=" + teams.get(i).getName() + ",gamemode=!spectator,scores={ControlPoint" + j + "=" + maxCPScore + "..},tag=!" + Tag.Traitor + "]"), true) +
-                            Schedule.callFunction("" + FileName.victory_message_ + i));
-
                     // Traitor teams
                     fileCommands.add(Execute.If(new Entity("@e[scores={Victory=1}]"), false) +
                             Execute.IfNext("@p[team=" + teams.get(i).getName() + ",gamemode=!spectator,scores={ControlPoint" + j + "=" + maxCPScore + "..},tag=" + Tag.Traitor + "]") +
-                            Execute.UnlessNext("@p[team=" + teams.get(i).getName() + ",gamemode=!spectator,scores={ControlPoint" + j + "=" + maxCPScore + "..},tag=!" + Tag.Traitor + "]", true) +
+                            Execute.UnlessNext("@p[team=" + teams.get(i).getName() + ",gamemode=!spectator,tag=!" + Tag.Traitor + "]", true) +
                             Schedule.callFunction(FileName.victory_message_traitor));
+
+                    // Regular teams
+                    fileCommands.add(Execute.If(new Entity("@e[scores={Victory=1}]"), false) +
+                            Execute.IfNext(new Entity("@p[team=" + teams.get(i).getName() + ",gamemode=!spectator,scores={ControlPoint" + j + "=" + maxCPScore + "..}]"), true) +
+                            Schedule.callFunction("" + FileName.victory_message_ + i));
                 }
                 else {
 

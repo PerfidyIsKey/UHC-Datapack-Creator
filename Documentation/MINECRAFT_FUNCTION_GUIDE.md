@@ -288,7 +288,7 @@ A list of all functions in the Java project with descriptions and their executio
   - Updates and tracks team Control Point score.
   - Execution Method: Continuous
   - Interval: 5 ticks
-  - Parents: timer_control_point_20
+  - Parents: timer_control_point_5
   - Children: -
 
 ### **teams_alive_check**
@@ -305,12 +305,19 @@ A list of all functions in the Java project with descriptions and their executio
   - Parents: control_point_captured
   - Children: victory_message_0 to victory_message_12, victory_message_solo, victory_message_traitor
 
+### **timer_control_point_5**
+- Timer for Control Point related functions with interval of 5 ticks
+- Execution Method: Continuous (self-scheduling)
+- Interval: 5 ticks
+- Parents: initialize_control_point
+- Children: team_score
+
 ### **timer_control_point_20**
   - Timer for Control Point related functions with interval of 20 ticks
   - Execution Method: Continuous (self-scheduling)
   - Interval: 20 ticks
   - Parents: initialize_control_point
-  - Children: bbvalue, control_point_1, control_point_2, team_score, control_point_captured, control_point_messages_1, control_point_messages_2, control_point_perks, update_public_cp_score, second_control_point
+  - Children: bbvalue, control_point_1, control_point_2, control_point_captured, control_point_messages_1, control_point_messages_2, control_point_perks, update_public_cp_score, second_control_point
 
 ### **timer_developer_20**
   - Timer for developer related functions with interval of 20 ticks

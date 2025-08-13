@@ -95,6 +95,19 @@ public class Update {
         return new FileData(FileName.timer_main_20, fileCommands);
     }
 
+    public FileData TimerControlPoint5() {
+        // Timer for Control Point continuous functions with interval of 5 ticks
+        ArrayList<String> fileCommands = new ArrayList<>();
+
+        // Update team score
+        fileCommands.add(Schedule.callFunction(FileName.team_score));
+
+        // Self-schedule timer
+        fileCommands.add(Schedule.callFunction(FileName.timer_control_point_5, 5, Duration.TICKS));
+
+        return new FileData(FileName.timer_control_point_5, fileCommands);
+    }
+
     public FileData TimerControlPoint20() {
         // Timer for Control Point continuous functions with interval of 20 ticks
         ArrayList<String> fileCommands = new ArrayList<>();
@@ -125,10 +138,8 @@ public class Update {
                 Execute.UnlessNext("@e[tag=" + Tag.ControlPoint2Enabled + "]", true) +
                 Schedule.callFunction(FileName.second_control_point));
 
-        // manage boss bar
+        // Manage boss bar
         fileCommands.add(Schedule.callFunction(FileName.bbvalue));
-        fileCommands.add(Schedule.callFunction(FileName.team_score));
-
 
         // Self-schedule timer
         fileCommands.add(Schedule.callFunction(FileName.timer_control_point_20, 20, Duration.TICKS));
