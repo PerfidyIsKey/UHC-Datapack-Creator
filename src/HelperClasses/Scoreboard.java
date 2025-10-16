@@ -34,6 +34,14 @@ public class Scoreboard {
         return "scoreboard players operation " + targets + " " + targetObjective + " " + operation + " " + source + " " + sourceObjective;
     }
 
+    // players remove
+    public String Remove(String targets, ScoreboardObjective objective, int score) {
+        return "scoreboard players remove " + targets + " " + objective.getName() + " " + score;
+    }
+    public String Remove(String targets, Objective objective, int score) {
+        return "scoreboard players remove " + targets + " " + objective + " " + score;
+    }
+
     // players reset
     public String Reset(String targets) {
         return "scoreboard players reset " + targets;
@@ -53,6 +61,10 @@ public class Scoreboard {
     }
 
     public String Set(String targets, Objective objective, int score) {
+        return "scoreboard players set " + targets + " " + objective + " " + score;
+    }
+
+    public String Set(String targets, String objective, int score) {
         return "scoreboard players set " + targets + " " + objective + " " + score;
     }
 }
