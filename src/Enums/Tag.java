@@ -10,6 +10,8 @@ public enum Tag {
     ControlPoint2Enabled("ControlPoint2Enabled"),
     ControlPointCaptured("ControlPointCaptured"),
     CP("CP"),
+    CPAbandon("CPAbandon"),
+    CPAttack("CPAttack"),
     Debug("Debug"),
     DontMakeTraitor("DontMakeTraitor"),
     GameStarted("GameStarted"),
