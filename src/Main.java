@@ -1811,10 +1811,13 @@ public class Main {
             fileCommands.add(Execute.In(currentCP.getCoordinate().getDimension(), false) +
                     Execute.UnlessNext(playerOnCP, true) +
                     scoreboard.Remove("@a[team=" + team.getName() + "]", getObjectiveByName(Objective.MSGDum.extendName("CP" + i)), 1));
+
+            // Abandonment tag
+            fileCommands.add(Execute.Unless("@p[gamemode=!spectator,team=" + team.getName() + ",x=" + (currentCP.getCoordinate().getX() - 6) + ",y=" + (currentCP.getCoordinate().getY() - 1) + ",z=" + (currentCP.getCoordinate().getZ() - 6) + ",dx=12,dy=12,dz=12]") +
+                    CommandBuilder.addTag("@a[team=" + team.getName() + ",scores={" + Objective.MSGDum.extendName("CP" + i) + "=0," + Objective.ControlPoint.extendName(i) + "=1..}]", Tag.CPAbandon.extendName(i)));
         }
 
             // Clamp attacking counter
-            fileCommands.add(CommandBuilder.addTag("@a[scores={" + Objective.MSGDum.extendName("CP" + i) + "=0," + Objective.ControlPoint.extendName(i) + "=1..}]", Tag.CPAbandon.extendName(i)));
             fileCommands.add(scoreboard.Set("@a[scores={" + Objective.MSGDum.extendName("CP" + i) + "=..0}]", Objective.MSGDum.extendName("CP" + i), 0));
             fileCommands.add(CommandBuilder.addTag("@a[scores={" + Objective.MSGDum.extendName("CP" + i) + "=" + (10) + "," + Objective.ControlPoint.extendName(i) + "=1..}]", Tag.CPAttack.extendName(i)));
             fileCommands.add(scoreboard.Set("@a[scores={" + Objective.MSGDum.extendName("CP" + i) + "=" + (10) + "..}]", Objective.MSGDum.extendName("CP" + i), 10));
