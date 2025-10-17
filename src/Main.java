@@ -1798,63 +1798,51 @@ public class Main {
         // Current Control Point
         ControlPoint currentCP = controlPoints.get(i - 1);
 
+        // Increment attacking counter for all players on CP
+        fileCommands.add(Execute.In(currentCP.getCoordinate().getDimension()) +
+                scoreboard.Add("@a[gamemode=!spectator,x=" + (currentCP.getCoordinate().getX() - 6) + ",y=" + (currentCP.getCoordinate().getY() - 1) + ",z=" + (currentCP.getCoordinate().getZ() - 6) + ",dx=12,dy=12,dz=12]", getObjectiveByName(Objective.MSGDum.extendName("CP" + i)), 1));
+
         // Players in a team
         for (Team team : teams) {
             /* Under attack message */
             String playerOnCP = "@p[gamemode=!spectator,team=" + team.getName() + ",x=" + (currentCP.getCoordinate().getX() - 6) + ",y=" + (currentCP.getCoordinate().getY() - 1) + ",z=" + (currentCP.getCoordinate().getZ() - 6) + ",dx=12,dy=12,dz=12]";
 
-            // Increment attacking counter if team is on CP
-            fileCommands.add(Execute.In(currentCP.getCoordinate().getDimension(), false) +
-                    Execute.IfNext(playerOnCP, true) +
-                    scoreboard.Add("@a[team=" + team.getName() + "]", getObjectiveByName(Objective.MSGDum.extendName("CP" + i)), 1));
-
             // Decrement attacking counter if team is not on CP
             fileCommands.add(Execute.In(currentCP.getCoordinate().getDimension(), false) +
                     Execute.UnlessNext(playerOnCP, true) +
                     scoreboard.Remove("@a[team=" + team.getName() + "]", getObjectiveByName(Objective.MSGDum.extendName("CP" + i)), 1));
+        }
 
             // Clamp attacking counter
-            fileCommands.add(Execute.As("@a[team=" + team.getName() + "]", false) +
-                    Execute.IfNext("@s[scores={" + Objective.MSGDum.extendName("CP" + i) + "=0}]", true) +
-                    CommandBuilder.addTag("@s", Tag.CPAbandon.extendName(i)));
-            fileCommands.add(Execute.As("@a[team=" + team.getName() + "]", false) +
-                    Execute.IfNext("@s[scores={" + Objective.MSGDum.extendName("CP" + i) + "=..0}]", true) +
-                    scoreboard.Set("@s", Objective.MSGDum.extendName("CP" + i), 0));
-            fileCommands.add(Execute.As("@a[team=" + team.getName() + "]", false) +
-                    Execute.IfNext("@s[scores={" + Objective.MSGDum.extendName("CP" + i) + "=" + (10) + "}]", true) +
-                    CommandBuilder.addTag("@s", Tag.CPAttack.extendName(i)));
-            fileCommands.add(Execute.As("@a[team=" + team.getName() + "]", false) +
-                    Execute.IfNext("@s[scores={" + Objective.MSGDum.extendName("CP" + i) + "=" + (10) + "..}]", true) +
-                    scoreboard.Set("@s", Objective.MSGDum.extendName("CP" + i), 10));
+            fileCommands.add(CommandBuilder.addTag("@a[scores={" + Objective.MSGDum.extendName("CP" + i) + "=0," + Objective.ControlPoint.extendName(i) + "=1..}]", Tag.CPAbandon.extendName(i)));
+            fileCommands.add(scoreboard.Set("@a[scores={" + Objective.MSGDum.extendName("CP" + i) + "=..0}]", Objective.MSGDum.extendName("CP" + i), 0));
+            fileCommands.add(CommandBuilder.addTag("@a[scores={" + Objective.MSGDum.extendName("CP" + i) + "=" + (10) + "," + Objective.ControlPoint.extendName(i) + "=1..}]", Tag.CPAttack.extendName(i)));
+            fileCommands.add(scoreboard.Set("@a[scores={" + Objective.MSGDum.extendName("CP" + i) + "=" + (10) + "..}]", Objective.MSGDum.extendName("CP" + i), 10));
 
-            // Define CP attacking message
-            ArrayList<TextItem> texts = new ArrayList<>();
-            texts.add(new Text(Color.light_purple, false, false, "TEAM "));
-            texts.add(new Text(team.getColor(), false, false, team.getJSONColor()));
-            texts.add(new Text(Color.light_purple, false, false, " IS ATTACKING CONTROL POINT " + i + "!"));
+            for (Team team : teams) {
+                // Define CP attacking message
+                ArrayList<TextItem> texts = new ArrayList<>();
+                texts.add(new Text(Color.light_purple, false, false, "TEAM "));
+                texts.add(new Text(team.getColor(), false, false, team.getJSONColor()));
+                texts.add(new Text(Color.light_purple, false, false, " IS ATTACKING CONTROL POINT " + i + "!"));
 
-            // Attacking message
-            fileCommands.add(Execute.As("@a[team=" + team.getName() + "]",false) +
-                    Execute.IfNext("@s[tag=" + Tag.CPAttack.extendName(i) + "]", true) +
-                    new TellRaw("@a", texts).sendRaw());
-            fileCommands.add(Execute.As("@a[team=" + team.getName() + "]", false) +
-                    Execute.IfNext("@s[scores={" + Objective.MSGDum.extendName("CP" + i) + "=" + (10) + "}]", true) +
-                    CommandBuilder.removeTag("@s", Tag.CPAttack.extendName(i)));
+                // Attacking message
+                fileCommands.add(Execute.If("@a[team=" + team.getName() + ",tag=" + Tag.CPAttack.extendName(i) + "]") +
+                        new TellRaw("@a", texts).sendRaw());
+                fileCommands.add(CommandBuilder.removeTag("@a[team=" + team.getName() + ",scores={" + Objective.MSGDum.extendName("CP" + i) + "=" + (10) + "}]", Tag.CPAttack.extendName(i)));
 
-            // Define CP abandonment message
-            texts.clear();
-            texts.add(new Text(Color.light_purple, false, false, "TEAM "));
-            texts.add(new Text(team.getColor(), false, false, team.getJSONColor()));
-            texts.add(new Text(Color.light_purple, false, false, " HAS ABANDONED CONTROL POINT " + i + "!"));
+                // Define CP abandonment message
+                texts.clear();
+                texts.add(new Text(Color.light_purple, false, false, "TEAM "));
+                texts.add(new Text(team.getColor(), false, false, team.getJSONColor()));
+                texts.add(new Text(Color.light_purple, false, false, " HAS ABANDONED CONTROL POINT " + i + "!"));
 
-            // Abandonment message
-            fileCommands.add(Execute.As("@a[team=" + team.getName() + "]",false) +
-                    Execute.IfNext("@s[tag=" + Tag.CPAbandon.extendName(i) + "]", true) +
-                    new TellRaw("@a", texts).sendRaw());
-            fileCommands.add(Execute.As("@a[team=" + team.getName() + "]", false) +
-                    Execute.IfNext("@s[scores={" + Objective.MSGDum.extendName("CP" + i) + "=0}]", true) +
-                    CommandBuilder.removeTag("@s", Tag.CPAbandon.extendName(i)));
-        }
+                // Abandonment message
+                fileCommands.add(Execute.If("@a[team=" + team.getName() + ",tag=" + Tag.CPAbandon.extendName(i) + "]") +
+                        new TellRaw("@a", texts).sendRaw());
+                fileCommands.add(CommandBuilder.removeTag("@a[team=" + team.getName() + ",scores={" + Objective.MSGDum.extendName("CP" + i) + "=0}]", Tag.CPAbandon.extendName(i)));
+            }
+
 
         if (OperationMode.teamCreationInGame) {
             // Players without a team
