@@ -209,6 +209,54 @@ public class Execute {
         return Next("if score " + target + " " + targetObjective + " matches " + value + " ", run);
     }
 
+    public static String If(String target, String targetObjective, int value) {
+        return If(target, targetObjective, value, true);
+    }
+
+    public static String If(String target, String targetObjective, int value, Boolean run) {
+        return Standard(IfNext(target, targetObjective, value), run);
+    }
+
+    public static String IfNext(String target, String targetObjective, int value) {
+        return IfNext(target, targetObjective, value, false);
+    }
+
+    public static String IfNext(String target, String targetObjective, int value, Boolean run) {
+        return Next("if score " + target + " " + targetObjective + " matches " + value + " ", run);
+    }
+
+    public static String If(String target, Objective targetObjective, String value) {
+        return If(target, targetObjective, value, true);
+    }
+
+    public static String If(String target, Objective targetObjective, String value, Boolean run) {
+        return Standard(IfNext(target, targetObjective, value), run);
+    }
+
+    public static String IfNext(String target, Objective targetObjective, String value) {
+        return IfNext(target, targetObjective, value, false);
+    }
+
+    public static String IfNext(String target, Objective targetObjective, String value, Boolean run) {
+        return Next("if score " + target + " " + targetObjective + " matches " + value + " ", run);
+    }
+
+    public static String If(String target, String targetObjective, String value) {
+        return If(target, targetObjective, value, true);
+    }
+
+    public static String If(String target, String targetObjective, String value, Boolean run) {
+        return Standard(IfNext(target, targetObjective, value), run);
+    }
+
+    public static String IfNext(String target, String targetObjective, String value) {
+        return IfNext(target, targetObjective, value, false);
+    }
+
+    public static String IfNext(String target, String targetObjective, String value, Boolean run) {
+        return Next("if score " + target + " " + targetObjective + " matches " + value + " ", run);
+    }
+
     /*
         execute in
      */

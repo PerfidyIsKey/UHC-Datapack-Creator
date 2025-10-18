@@ -25,6 +25,10 @@ public class Text extends TextItem {
 
     }
 
+    public Text(String text) {
+        this.text = text;
+    }
+
     public String getText(Boolean technical) {
         if (technical) {
             text = convertSpecial(text);
