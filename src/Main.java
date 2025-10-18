@@ -1834,55 +1834,32 @@ public class Main {
 
         if (OperationMode.teamCreationInGame) {
             // Players without a team
-            /* Under attack message */
-            // Increment attacking counter if team is on CP and message is not sent
-            fileCommands.add(Execute.In(currentCP.getCoordinate().getDimension(), false) +
-                    Execute.IfNext(new Entity("@p[gamemode=!spectator,team=,x=" + (currentCP.getCoordinate().getX() - 6) + ",y=" + (currentCP.getCoordinate().getY() - 1) + ",z=" + (currentCP.getCoordinate().getZ() - 6) + ",dx=12,dy=12,dz=12,scores={MSGDum1CP" + i + "=.." + cpMessageThreshold + "}]"), true) +
-                    scoreboard.Add("@a[team=]", getObjectiveByName(Objective.MSGDum.extendName("1CP" + i)), 1));
+            // Count players on CP
+            fileCommands.add(scoreboard.Set("Solo", Objective.OnCP.extendName(i), 0));
+            fileCommands.add(Execute.In(Dimension.overworld, false) +
+                    Execute.AsNext("@a[gamemode=!spectator,team=,x=" + (currentCP.getCoordinate().getX() - 6) + ",y=" + (currentCP.getCoordinate().getY() - 1) + ",z=" + (currentCP.getCoordinate().getZ() - 6) + ",dx=12,dy=12,dz=12]", true) +
+                    scoreboard.Add("Solo", Objective.OnCP.extendName(i), 1));
 
-            // Reset abandonment counter
-            fileCommands.add(Execute.In(currentCP.getCoordinate().getDimension(), false) +
-                    Execute.IfNext(new Entity("@p[gamemode=!spectator,team=,x=" + (currentCP.getCoordinate().getX() - 6) + ",y=" + (currentCP.getCoordinate().getY() - 1) + ",z=" + (currentCP.getCoordinate().getZ() - 6) + ",dx=12,dy=12,dz=12]"), true) +
-                    scoreboard.Set("@a[gamemode=!spectator,team=]", getObjectiveByName(Objective.MSGDum.extendName("2CP" + i)), 1));
-
-            // Define CP attacking message
+            // Announce attacking
             texts.clear();
             texts.add(new Text(Color.light_purple, false, false, "A "));
             texts.add(new Text(Color.white, false, false, "SOLO"));
             texts.add(new Text(Color.light_purple, false, false, " IS ATTACKING CONTROL POINT " + i + "!"));
-
-            // Display message in chat if time threshold has been exceeded
-            fileCommands.add(Execute.If(new Entity("@p[team=,scores={MSGDum1CP" + i + "=" + cpMessageThreshold + "}]")) +
+            fileCommands.add(Execute.If("Solo", Objective.OnCP.extendName(i), "1..", false) +
+                    Execute.IfNext("Solo", Objective.PrevCP.extendName(i), 0, true) +
                     new TellRaw("@a", texts).sendRaw());
 
-            // Grant attacking players Attacking tag
-            fileCommands.add(Execute.If(new Entity("@p[team=,scores={MSGDum1CP" + i + "=" + cpMessageThreshold + "}]")) +
-                    CommandBuilder.addTag("@a[team=]", Tag.AttackingCP.extendName(i)));
-
-            /* Abandoned message */
-            // Increment abandonment counter unless team is on the CP
-            fileCommands.add(Execute.In(currentCP.getCoordinate().getDimension(), false) +
-                    Execute.IfNext("@p[gamemode=!spectator,team=,tag=" + Tag.AttackingCP.extendName(i) + "]") +
-                    Execute.UnlessNext("@p[gamemode=!spectator,team=,x=" + (currentCP.getCoordinate().getX() - 6) + ",y=" + (currentCP.getCoordinate().getY() - 1) + ",z=" + (currentCP.getCoordinate().getZ() - 6) + ",dx=12,dy=12,dz=12]", true) +
-                    scoreboard.Add("@a[team=]", getObjectiveByName(Objective.MSGDum.extendName("2CP" + i)), 1));
-
-            // Define CP abandonment message
+            // Announce abandoning
             texts.clear();
             texts.add(new Text(Color.light_purple, false, false, "A "));
             texts.add(new Text(Color.white, false, false, "SOLO"));
             texts.add(new Text(Color.light_purple, false, false, " HAS ABANDONED CONTROL POINT " + i + "!"));
-
-            // Display message in chat if time threshold has been exceeded
-            fileCommands.add(Execute.If(new Entity("@p[team=,scores={MSGDum2CP" + i + "=" + (cpMessageThreshold - 1) + "}]")) +
+            fileCommands.add(Execute.If("Solo", Objective.OnCP.extendName(i), 0, false) +
+                    Execute.IfNext("Solo", Objective.PrevCP.extendName(i), "1..", true) +
                     new TellRaw("@a", texts).sendRaw());
 
-            // Reset attacking counter
-            fileCommands.add(Execute.If(new Entity("@p[team=,scores={MSGDum2CP" + i + "=" + cpMessageThreshold + "}]")) +
-                    scoreboard.Set("@a[gamemode=!spectator,team=]", getObjectiveByName(Objective.MSGDum.extendName("1CP" + i)), 1));
-
-            // Remove Attacking tag
-            fileCommands.add(Execute.If(new Entity("@p[team=,scores={MSGDum2CP" + i + "=" + cpMessageThreshold + "}]")) +
-                    CommandBuilder.removeTag("@a[team=]", Tag.AttackingCP.extendName(i)));
+            // Update state
+            fileCommands.add(scoreboard.Operation("Solo", Objective.PrevCP.extendName(i), ComparatorType.EQUAL, "Solo", Objective.OnCP.extendName(i)));
         }
 
         return new FileData("" + FileName.control_point_messages_ + i, fileCommands);
