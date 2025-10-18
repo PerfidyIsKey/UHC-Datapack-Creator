@@ -60,7 +60,6 @@ A list of all functions in the Java project with descriptions and their executio
   - Interval: 20 ticks
   - Parents: timer_control_point_20
   - Children: -
-  - Note: Computationally heavy
 
 ### **control_point_perks**
   - Grants perks for Control Point progress.
