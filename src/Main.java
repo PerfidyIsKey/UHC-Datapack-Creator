@@ -1014,32 +1014,34 @@ public class Main {
         // Players in a team
         for (Team t : teams) {
             // Bossbar
-            fileCommands.add(Execute.If(Constant.adminSingle, getObjectiveByName(Objective.CP.toString() + 1 + t.getName()), ComparatorType.GREATER, Constant.adminSingle, getObjectiveByName(Objective.Highscore.extendName(1))) +
+            fileCommands.add(Execute.If(Constant.admin, getObjectiveByName(Objective.CP.toString() + 1 + t.getName()), ComparatorType.GREATER, Constant.admin, getObjectiveByName(Objective.Highscore.extendName(1))) +
                     getBossbarByName("cp1").setColor(t.getBossbarColor()));
-            fileCommands.add(Execute.If(Constant.adminSingle, getObjectiveByName(Objective.CP.toString() + 2 + t.getName()), ComparatorType.GREATER, "@e[limit=1,scores={Highscore1=" + cp2ActivationScore + "..}]", getObjectiveByName(Objective.Highscore.extendName(2))) +
+            fileCommands.add(Execute.If(Constant.admin, getObjectiveByName(Objective.CP.toString() + 2 + t.getName()), ComparatorType.GREATER, Constant.admin, getObjectiveByName(Objective.Highscore.extendName(2))) +
                     getBossbarByName("cp2").setColor(t.getBossbarColor()));
 
             // Locator bar
-            fileCommands.add(Execute.If(Constant.adminSingle, getObjectiveByName(Objective.CP.toString() + 1 + t.getName()), ComparatorType.GREATER, Constant.adminSingle, getObjectiveByName(Objective.Highscore.extendName(1))) +
+            fileCommands.add(Execute.If(Constant.admin, getObjectiveByName(Objective.CP.toString() + 1 + t.getName()), ComparatorType.GREATER, Constant.admin, getObjectiveByName(Objective.Highscore.extendName(1))) +
                     CommandBuilder.modifyWaypointColor("@n[tag=" + Tag.CP.extendName(1) + "]", t.getColor()));
-            fileCommands.add(Execute.If(Constant.adminSingle, getObjectiveByName(Objective.CP.toString() + 2 + t.getName()), ComparatorType.GREATER, "@e[limit=1,scores={Highscore1=" + cp2ActivationScore + "..}]", getObjectiveByName(Objective.Highscore.extendName(2))) +
+            fileCommands.add(Execute.If(Constant.admin, getObjectiveByName(Objective.CP.toString() + 2 + t.getName()), ComparatorType.GREATER, Constant.admin, getObjectiveByName(Objective.Highscore.extendName(2))) +
                     CommandBuilder.modifyWaypointColor("@n[tag=" + Tag.CP.extendName(2) + "]", t.getColor()));
 
             // Scoreboard objective
-            for (int i = 0; i < controlPoints.size(); i++) {
-                fileCommands.add(scoreboard.Operation(Constant.admin, getObjectiveByName(Objective.Highscore.extendName(i + 1)), ComparatorType.GREATER, Constant.admin, getObjectiveByName("" + Objective.CP + (i + 1) + t.getName())));
-            }
+            fileCommands.add(Execute.If(t.getName(), Objective.OnCP.extendName(1), "1..") +
+                    scoreboard.Operation(Constant.admin, getObjectiveByName(Objective.Highscore.extendName(1)), ComparatorType.GREATER, Constant.admin, getObjectiveByName("" + Objective.CP + (1) + t.getName())));
+            fileCommands.add(Execute.If("@n[scores={Highscore1=" + cp2ActivationScore + "..}]", false) +
+                    Execute.IfNext(t.getName(), Objective.OnCP.extendName(2), "1..", true) +
+                    scoreboard.Operation(Constant.admin, getObjectiveByName(Objective.Highscore.extendName(2)), ComparatorType.GREATER, Constant.admin, getObjectiveByName("" + Objective.CP + (2) + t.getName())));
         }
 
         // Individual players
         // Bossbar
-        fileCommands.add(Execute.If("@r[limit=1,team=]", getObjectiveByName(Objective.ControlPoint.extendName(1)), ComparatorType.GREATER, Constant.adminSingle, getObjectiveByName(Objective.Highscore.extendName(1))) +
+        fileCommands.add(Execute.If("@r[limit=1,team=]", getObjectiveByName(Objective.ControlPoint.extendName(1)), ComparatorType.GREATER, Constant.admin, getObjectiveByName(Objective.Highscore.extendName(1))) +
                 getBossbarByName("cp1").setColor(BossBarColor.white));
         fileCommands.add(Execute.If("@r[limit=1,team=]", getObjectiveByName(Objective.ControlPoint.extendName(2)), ComparatorType.GREATER, "@e[scores={Highscore1=" + cp2ActivationScore + "..},limit=1]", getObjectiveByName(Objective.Highscore.extendName(2))) +
                 getBossbarByName("cp2").setColor(BossBarColor.white));
 
         // Locator bar
-        fileCommands.add(Execute.If("@r[limit=1,team=]", getObjectiveByName(Objective.ControlPoint.extendName(1)), ComparatorType.GREATER, Constant.adminSingle, getObjectiveByName(Objective.Highscore.extendName(1))) +
+        fileCommands.add(Execute.If("@r[limit=1,team=]", getObjectiveByName(Objective.ControlPoint.extendName(1)), ComparatorType.GREATER, Constant.admin, getObjectiveByName(Objective.Highscore.extendName(1))) +
                 CommandBuilder.modifyWaypointColor("@n[tag=" + Tag.CP.extendName(1) + "]"));
         fileCommands.add(Execute.If("@r[limit=1,team=]", getObjectiveByName(Objective.ControlPoint.extendName(2)), ComparatorType.GREATER, "@e[scores={Highscore1=" + cp2ActivationScore + "..},limit=1]", getObjectiveByName(Objective.Highscore.extendName(2))) +
                 CommandBuilder.modifyWaypointColor("@n[tag=" + Tag.CP.extendName(2) + "]"));
@@ -1051,7 +1053,7 @@ public class Main {
 
         // Update value of bossbars
         fileCommands.add(Execute.Store(ExecuteStore.result, getBossbarByName("cp1"), BossBarStore.value) +
-                scoreboard.Get(Constant.adminSingle, getObjectiveByName(Objective.Highscore.extendName(1))));
+                scoreboard.Get(Constant.admin, getObjectiveByName(Objective.Highscore.extendName(1))));
         fileCommands.add(Execute.Store(ExecuteStore.result, getBossbarByName("cp2"), BossBarStore.value) +
                 scoreboard.Get("@e[limit=1,scores={Highscore1=" + cp2ActivationScore + "..}]", getObjectiveByName(Objective.Highscore.extendName(2))));
 
@@ -1722,14 +1724,14 @@ public class Main {
         for (Team team : teams) {
             // Update CP glass color
             fileCommands.add(Execute.In(currentCP.getCoordinate().getDimension(), false) +
-                    Execute.IfNext("@p[gamemode=!spectator,team=" + team.getName() + "]", getObjectiveByName(Objective.ControlPoint.extendName(i)), ComparatorType.GREATER, Constant.adminSingle, getObjectiveByName(Objective.Highscore.extendName(i)), true) +
+                    Execute.IfNext("@p[gamemode=!spectator,team=" + team.getName() + "]", getObjectiveByName(Objective.ControlPoint.extendName(i)), ComparatorType.GREATER, Constant.admin, getObjectiveByName(Objective.Highscore.extendName(i)), true) +
                     CommandBuilder.setBlock(currentCP.getCoordinate().getX(), currentCP.getCoordinate().getY() + 1, currentCP.getCoordinate().getZ(), "minecraft:" + team.getGlassColor() + "_stained_glass", SetBlockType.replace));
         }
 
         if (OperationMode.teamCreationInGame) {
             // Update CP glass color solo
             fileCommands.add(Execute.In(currentCP.getCoordinate().getDimension(), false) +
-                    Execute.IfNext("@r[limit=1,gamemode=!spectator,team=]", getObjectiveByName(Objective.ControlPoint.extendName(i)), ComparatorType.GREATER, Constant.adminSingle, getObjectiveByName(Objective.Highscore.extendName(i)), true) +
+                    Execute.IfNext("@r[limit=1,gamemode=!spectator,team=]", getObjectiveByName(Objective.ControlPoint.extendName(i)), ComparatorType.GREATER, Constant.admin, getObjectiveByName(Objective.Highscore.extendName(i)), true) +
                     CommandBuilder.setBlock(currentCP.getCoordinate().getX(), currentCP.getCoordinate().getY() + 1, currentCP.getCoordinate().getZ(), BlockType.STAINED_GLASS.extendColor("white"), SetBlockType.replace));
         }
 
@@ -2251,7 +2253,7 @@ public class Main {
             int i = 0;
             for (Perk perk : perks) {
                 i++;
-                fileCommands.add(Execute.If(Constant.adminSingle, Objective.CP.extendName(1 + team.getName()), perk.getActivationTime() + "..", false) +
+                fileCommands.add(Execute.If(Constant.admin, Objective.CP.extendName(1 + team.getName()), perk.getActivationTime() + "..", false) +
                         Execute.IfNext("@p[gamemode=!spectator,team=" + team.getName() + ",tag=!" + Tag.ReceivedPerk.extendName(i) + "]") +
                         Execute.AsNext("@a[gamemode=!spectator,team=" + team.getName() + "]", true) +
                         Schedule.callFunction("" + FileName.perk_ + i));

@@ -87,7 +87,7 @@ public class Update {
         // Timer scoreboard
         fileCommands.add(Main.scoreboard.Add(Constant.admin, Objective.TimeDum, 1));
         fileCommands.add(Execute.Store(ExecuteStore.result, "CurrentTime", Objective.Time) +
-                Main.scoreboard.Get(Constant.adminSingle,Objective.TimeDum));
+                Main.scoreboard.Get(Constant.admin,Objective.TimeDum));
 
         // Self-schedule timer
         fileCommands.add(Schedule.callFunction(FileName.timer_main_20, 20, Duration.TICKS));
