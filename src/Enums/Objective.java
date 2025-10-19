@@ -9,7 +9,6 @@ public enum Objective {
         SideDum("SideDum"),
         ControlPoint("ControlPoint"),
         CPScore("CPScore"),
-        MSGDum("MSGDum"),
         OnCP("OnCP"),
         PrevCP("PrevCP"),
         Highscore("Highscore"),

@@ -45,6 +45,7 @@ public class Main {
     private ArrayList<Team> teams = new ArrayList<>();
     private ArrayList<ControlPoint> cpList = new ArrayList<>();
     private ArrayList<ControlPoint> controlPoints = new ArrayList<>();
+    private ArrayList<Perk> perks = new ArrayList<>();
     private ArrayList<ScoreboardObjective> scoreboardObjectives = new ArrayList<>();
     private ArrayList<Player> players = new ArrayList<>();
     private ArrayList<Season> seasons = new ArrayList<>();
@@ -250,19 +251,6 @@ public class Main {
             teams.add(team);
         }
 
-        if (OperationMode.controlPoints) {
-            // Bossbars
-            bossBars.add(new BossBar("cp1"));
-            bossBars.add(new BossBar("cp2"));
-
-            // ControlPoints
-            ArrayList<String> controlPointString = fileTools.GetLinesFromFile("Files\\" + communityMode + "\\controlPoints.txt");
-            for (String controlPoint : controlPointString) {
-                String[] controlPointSplit = fileTools.splitLineOnComma(controlPoint);
-                cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, new Coordinate(Integer.parseInt(controlPointSplit[0]), Integer.parseInt(controlPointSplit[1]), Integer.parseInt(controlPointSplit[2])), Biome.valueOf(controlPointSplit[3])));
-            }
-        }
-
         // Players
         ArrayList<String> playersString = fileTools.GetLinesFromFile("Files\\" + communityMode + "\\players.txt");
         for (String player : playersString) {
@@ -300,6 +288,13 @@ public class Main {
         quotes = fileTools.GetLinesFromFile("Files\\" + communityMode + "\\quotes.txt");
 
         if (OperationMode.controlPoints) {
+            // ControlPoints
+            ArrayList<String> controlPointString = fileTools.GetLinesFromFile("Files\\" + communityMode + "\\controlPoints.txt");
+            for (String controlPoint : controlPointString) {
+                String[] controlPointSplit = fileTools.splitLineOnComma(controlPoint);
+                cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, new Coordinate(Integer.parseInt(controlPointSplit[0]), Integer.parseInt(controlPointSplit[1]), Integer.parseInt(controlPointSplit[2])), Biome.valueOf(controlPointSplit[3])));
+            }
+
             int[] addRates = {2, 3};
             Collections.shuffle(cpList);
             for (int i = 0; i < addRates.length; i++) {
@@ -312,6 +307,16 @@ public class Main {
             singleton.setMinToCPScore(Constant.secPerMinute * cpTickPerSecond * controlPoints.get(0).getAddRate());
             cp2ActivationScore = cp2ActivationInMin * singleton.getMinToCPScore();
             maxCPScore = cpCaptureInMin * singleton.getMinToCPScore();
+
+            // Bossbars
+            bossBars.add(new BossBar("cp1"));
+            bossBars.add(new BossBar("cp2"));
+
+            // Perks
+            perks.add(new Perk(1, new StatusEffect(Effect.SPEED, 999999, 0, false), Sound.BASALT, 3 * singleton.getMinToCPScore()));
+            perks.add(new Perk(2, new Attribute(AttributeType.SCALE, 0.8), Sound.CRIMSON, 6 * singleton.getMinToCPScore()));
+            perks.add(new Perk(3, new StatusEffect(Effect.HASTE, 999999, 2, false), Sound.WARPED, 12 * singleton.getMinToCPScore()));
+            perks.add(new Perk(4, new StatusEffect(Effect.ABSORPTION, 999999, 1, false), Sound.WITHER, 15 * singleton.getMinToCPScore()));
         }
 
         // Scoreboard objectives
@@ -820,7 +825,10 @@ public class Main {
                 files.add(ControlPointScore(i));
                 files.add(ControlPointMessages(i));
             }
-            files.add(ControlPointPerks());
+            files.add(ControlPointPerksCheck());
+            for (int i = 0; i < perks.size(); i++) {
+                files.add(ControlPointPerks(i));
+            }
             files.add(UpdatePublicCPScore());
             files.add(TeamScore());
             files.add(TeamsHighscoreCheck());
@@ -2237,6 +2245,54 @@ public class Main {
 
         return new FileData(FileName.control_point_perks, fileCommands);
 
+    }
+
+    /* Control Point perks */
+    // Check if perk can be handed out
+    private FileData ControlPointPerksCheck() {
+        ArrayList<String> fileCommands = new ArrayList<>();
+
+        for (Team team : teams) {
+            int i = 0;
+            for (Perk perk : perks) {
+                i++;
+                fileCommands.add(Execute.If(Constant.adminSingle, Objective.CP.extendName(1 + team.getName()), perk.getActivationTime() + "..", false) +
+                        Execute.IfNext("@p[gamemode=!spectator,team=" + team.getName() + ",tag=!" + Tag.ReceivedPerk.extendName(i) + "]") +
+                        Execute.AsNext("@a[gamemode=!spectator,team=" + team.getName() + "]", true) +
+                        Schedule.callFunction("" + FileName.perk_ + i));
+            }
+        }
+
+        return new FileData(FileName.control_point_perks_check, fileCommands);
+    }
+
+    // Hand out perks
+    private FileData ControlPointPerks(int i) {
+        ArrayList<String> fileCommands = new ArrayList<>();
+
+        for (Team team : teams) {
+            // Create text to be displayed
+            ArrayList<TextItem> texts = new ArrayList<>();
+            texts.add(new Text(Color.light_purple, false, false, "TEAM "));
+            texts.add(new Text(team.getColor(), false, false, team.getJSONColor()));
+            texts.add(new Text(Color.light_purple, false, false, " HAS REACHED"));
+            texts.add(new Text(Color.gold, false, false, " PERK " + perks.get(i).getId() + "!"));
+
+            // Display text
+            fileCommands.add(Execute.If("@s[team=" + team.getName() + "]") +
+                    new TellRaw("@a", texts).sendRaw());
+
+            // Add tag
+            fileCommands.add(CommandBuilder.addTag("@s[team=" + team.getName() + "]", Tag.ReceivedPerk.extendName(perks.get(i).getId())));
+        }
+
+        // Give rewards
+        fileCommands.add(perks.get(i).getReward("@s"));
+
+        // Play sound
+        fileCommands.add(CommandBuilder.playSound(perks.get(i).getSound(), SoundSource.master, "@a", "~", "~50", "~", "100", "1", "0"));
+
+        return new FileData("" + FileName.perk_ + (i + 1), fileCommands);
     }
 
     // Display quotes during the match

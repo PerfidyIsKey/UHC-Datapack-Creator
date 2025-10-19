@@ -130,7 +130,7 @@ public class Update {
                     Schedule.callFunction(FileName.control_point_captured));
         }
 
-        fileCommands.add(Schedule.callFunction(FileName.control_point_perks));
+        fileCommands.add(Schedule.callFunction(FileName.control_point_perks_check));
         fileCommands.add(Schedule.callFunction(FileName.update_public_cp_score));
 
         //enable second controlpoint when necessary.
