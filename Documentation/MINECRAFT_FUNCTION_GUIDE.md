@@ -61,12 +61,12 @@ A list of all functions in the Java project with descriptions and their executio
   - Parents: timer_control_point_20
   - Children: -
 
-### **control_point_perks**
-  - Grants perks for Control Point progress.
+### **control_point_perks_check**
+  - Checks if Control Point perks can be handed out.
   - Execution Method: Continuous
   - Interval: 20 ticks
   - Parents: timer_control_point_20
-  - Children: -
+  - Children: perk_i
 
 ### **control_point_score_i**
 - Add `cp score` to team player if they have the `OnCP i` tag. Unless a player from another team has the `OnCP i` tag.
@@ -219,6 +219,12 @@ A list of all functions in the Java project with descriptions and their executio
 ### **minute_1** and **minute_2**
   - Announces that there are 1, 2 minutes remaining, respectively. 
   - Execution Method: Single-use
+
+### **perk_i**
+- Give perk `i` to teams who have accumulated enough CP score.
+- Execution Method: Single-use
+- Parents: control_point_perks_check
+- Children: -
 
 ### **predictions**
   - Teleport all players into the void for season predictions. 
