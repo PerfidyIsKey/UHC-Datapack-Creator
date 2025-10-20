@@ -2255,7 +2255,7 @@ public class Main {
                 i++;
                 fileCommands.add(Execute.If(Constant.admin, Objective.CP.extendName(1 + team.getName()), perk.getActivationTime() + "..", false) +
                         Execute.IfNext("@p[gamemode=!spectator,team=" + team.getName() + ",tag=!" + Tag.ReceivedPerk.extendName(i) + "]") +
-                        Execute.AsNext("@a[gamemode=!spectator,team=" + team.getName() + "]", true) +
+                        Execute.AsNext("@p[gamemode=!spectator,team=" + team.getName() + "]", true) +
                         Schedule.callFunction("" + FileName.perk_ + i));
             }
         }
@@ -2280,11 +2280,13 @@ public class Main {
                     new TellRaw("@a", texts).sendRaw());
 
             // Add tag
-            fileCommands.add(CommandBuilder.addTag("@s[team=" + team.getName() + "]", Tag.ReceivedPerk.extendName(perks.get(i).getId())));
-        }
+            fileCommands.add(Execute.If("@s[team=" + team.getName() + "]") +
+                    CommandBuilder.addTag("@a[team=" + team.getName() + "]", Tag.ReceivedPerk.extendName(perks.get(i).getId())));
 
-        // Give rewards
-        fileCommands.add(perks.get(i).getReward("@s"));
+            // Give rewards
+            fileCommands.add(Execute.If("@s[team=" + team.getName() + "]") +
+                    perks.get(i).getReward("@a[team=" + team.getName() + "]"));
+        }
 
         // Play sound
         fileCommands.add(CommandBuilder.playSound(perks.get(i).getSound(), SoundSource.master, "@a", "~", "~50", "~", "100", "1", "0"));
