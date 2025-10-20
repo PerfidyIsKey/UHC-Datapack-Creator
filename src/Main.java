@@ -1016,13 +1016,13 @@ public class Main {
             // Bossbar
             fileCommands.add(Execute.If(Constant.admin, getObjectiveByName(Objective.CP.toString() + 1 + t.getName()), ComparatorType.GREATER, Constant.admin, getObjectiveByName(Objective.Highscore.extendName(1))) +
                     getBossbarByName("cp1").setColor(t.getBossbarColor()));
-            fileCommands.add(Execute.If(Constant.admin, getObjectiveByName(Objective.CP.toString() + 2 + t.getName()), ComparatorType.GREATER, Constant.admin, getObjectiveByName(Objective.Highscore.extendName(2))) +
+            fileCommands.add(Execute.If(Constant.admin, getObjectiveByName(Objective.CP.toString() + 2 + t.getName()), ComparatorType.GREATER, "@n[scores={Highscore1=" + cp2ActivationScore + "..}]", getObjectiveByName(Objective.Highscore.extendName(2))) +
                     getBossbarByName("cp2").setColor(t.getBossbarColor()));
 
             // Locator bar
             fileCommands.add(Execute.If(Constant.admin, getObjectiveByName(Objective.CP.toString() + 1 + t.getName()), ComparatorType.GREATER, Constant.admin, getObjectiveByName(Objective.Highscore.extendName(1))) +
                     CommandBuilder.modifyWaypointColor("@n[tag=" + Tag.CP.extendName(1) + "]", t.getColor()));
-            fileCommands.add(Execute.If(Constant.admin, getObjectiveByName(Objective.CP.toString() + 2 + t.getName()), ComparatorType.GREATER, Constant.admin, getObjectiveByName(Objective.Highscore.extendName(2))) +
+            fileCommands.add(Execute.If(Constant.admin, getObjectiveByName(Objective.CP.toString() + 2 + t.getName()), ComparatorType.GREATER, "@n[scores={Highscore1=" + cp2ActivationScore + "..}]", getObjectiveByName(Objective.Highscore.extendName(2))) +
                     CommandBuilder.modifyWaypointColor("@n[tag=" + Tag.CP.extendName(2) + "]", t.getColor()));
 
             // Scoreboard objective
