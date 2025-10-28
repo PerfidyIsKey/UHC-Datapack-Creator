@@ -112,7 +112,7 @@ public class Update {
                 Execute.UnlessNext("@n[tag=" + Tag.ControlPointCaptured + "]", true) +
                 Schedule.callFunction(FileName.control_point_captured));
 
-        fileCommands.add(Schedule.callFunction(FileName.control_point_perks));
+        fileCommands.add(Schedule.callFunction(FileName.control_point_perks_check));
         fileCommands.add(Schedule.callFunction(FileName.control_point_team_score));
 
         // Enable second Control Point when necessary.

@@ -28,7 +28,6 @@ public enum Objective {
         MinHealth("MinHealth"),
         Victory("Victory"),
         WolfAge("WolfAge"),
-        CP("CP"),
         FoundTeam("FoundTeam"),
         TimesCalled("TimesCalled"),
         Distance("Distance"),
