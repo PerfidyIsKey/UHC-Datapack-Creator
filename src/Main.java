@@ -940,7 +940,6 @@ public class Main {
         if (OperationMode.controlPoints) {
             // Reset scores
             for (int i = 0; i < 2; i++) {
-                fileCommands.add(scoreboard.Set("@a[scores={Deaths=1}]", getObjectiveByName(Objective.ControlPoint.extendName(i + 1)), 0));
                 fileCommands.add(scoreboard.Set(Constant.admin, getObjectiveByName(Objective.Highscore.extendName(i + 1)), 1));
             }
         }
@@ -1195,6 +1194,7 @@ public class Main {
                 for (Team team: teams) {
                     fileCommands.add(scoreboard.Reset(team.getName(), getObjectiveByName(Objective.OnCP.extendName(i))));
                     fileCommands.add(scoreboard.Reset(team.getName(), getObjectiveByName(Objective.PrevCP.extendName(i))));
+                    fileCommands.add(scoreboard.Reset(team.getName(), getObjectiveByName(Objective.ControlPoint.extendName(i))));
                 }
             }
             fileCommands.add(scoreboard.Reset("Solo", getObjectiveByName(Objective.CPScore)));
