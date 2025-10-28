@@ -40,12 +40,11 @@ A list of all functions in the Java project with descriptions and their executio
   - Children: -
 
 ### control_point_i
-  - Award players CP score. Keep glass, beacon active. Call Control Point messages
+  - Update amount of players on Control Point `i`. Keep glass, beacon active. Call Control Point score and messages functions.
   - Execution Method: Continuous
   - Interval: 5 ticks
   - Parents: timer_control_point_20
-  - Children: control_point_score_i, control_point_tag_i
-  - Note: Computationally heavy
+  - Children: control_point_score_i, control_point_messages_i
 
 ### **control_point_captured**
   - Announces that the Control Point has been captured.
@@ -58,7 +57,7 @@ A list of all functions in the Java project with descriptions and their executio
   - Message logic and announcements for Control Point attacks and abandonment
   - Execution Method: Continuous
   - Interval: 20 ticks
-  - Parents: timer_control_point_20
+  - Parents: control_point_i
   - Children: -
 
 ### **control_point_perks**
@@ -69,16 +68,7 @@ A list of all functions in the Java project with descriptions and their executio
   - Children: -
 
 ### **control_point_score_i**
-- Add `cp score` to team player if they have the `OnCP i` tag. Unless a player from another team has the `OnCP i` tag.
-- Add `cp score` to solo player if they have the `Capping i` tag.
-- Parents: control_point_i
-- Children: -
-
-### **control_point_tag_i**
-- Add `OnCP i` tag to players on respective CP.
-- Remove `OnCP i` tag when players leave respective CP.
-- Add `Capping i` tag when player without team gets `OnCP i` tag, unless other player has the `Capping i` tag.
-- Remove `Capping i` tag when player with `OnCP i` tag exists, that does not have the `Capping i` tag.
+- Add CP score to teams on the Control Point.
 - Parents: control_point_i
 - Children: -
 
@@ -173,7 +163,7 @@ A list of all functions in the Java project with descriptions and their executio
   - Activates command blocks for Control Point functions. Sends activation message.
   - Execution Method: Single-use
   - Parents: timer_main_1
-  - Children: timer_control_point
+  - Children: timer_control_point_20
 
 ### **initiate_deathmatch**
   - Schedules deathmatch related functions.
@@ -283,13 +273,6 @@ A list of all functions in the Java project with descriptions and their executio
   - Parents: developer_potion_control
   - Children: -
 
-### **team_score**
-  - Updates and tracks team Control Point score.
-  - Execution Method: Continuous
-  - Interval: 5 ticks
-  - Parents: timer_control_point_5
-  - Children: -
-
 ### **teams_alive_check**
   - Checks if only a single team/player is alive.
   - Execution Method: Continuous
@@ -303,13 +286,6 @@ A list of all functions in the Java project with descriptions and their executio
   - Priority: Low
   - Parents: control_point_captured
   - Children: victory_message_0 to victory_message_12, victory_message_solo, victory_message_traitor
-
-### **timer_control_point_5**
-- Timer for Control Point related functions with interval of 5 ticks
-- Execution Method: Continuous (self-scheduling)
-- Interval: 5 ticks
-- Parents: initialize_control_point
-- Children: team_score
 
 ### **timer_control_point_20**
   - Timer for Control Point related functions with interval of 20 ticks
