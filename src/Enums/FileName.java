@@ -53,7 +53,8 @@ public enum FileName {
     control_point_score_,
     second_control_point,
     bbvalue,
-    control_point_perks,
+    control_point_perks_check,
+    perk_,
     control_point_messages_,
     control_point_team_score,
 

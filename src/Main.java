@@ -45,6 +45,7 @@ public class Main {
     private ArrayList<Team> teams = new ArrayList<>();
     private ArrayList<ControlPoint> cpList = new ArrayList<>();
     private ArrayList<ControlPoint> controlPoints = new ArrayList<>();
+    private ArrayList<Perk> perks = new ArrayList<>();
     private ArrayList<ScoreboardObjective> scoreboardObjectives = new ArrayList<>();
     private ArrayList<Player> players = new ArrayList<>();
     private ArrayList<Season> seasons = new ArrayList<>();
@@ -250,19 +251,6 @@ public class Main {
             teams.add(team);
         }
 
-        if (OperationMode.controlPoints) {
-            // Bossbars
-            bossBars.add(new BossBar("cp1"));
-            bossBars.add(new BossBar("cp2"));
-
-            // ControlPoints
-            ArrayList<String> controlPointString = fileTools.GetLinesFromFile("Files\\" + communityMode + "\\controlPoints.txt");
-            for (String controlPoint : controlPointString) {
-                String[] controlPointSplit = fileTools.splitLineOnComma(controlPoint);
-                cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, new Coordinate(Integer.parseInt(controlPointSplit[0]), Integer.parseInt(controlPointSplit[1]), Integer.parseInt(controlPointSplit[2])), Biome.valueOf(controlPointSplit[3])));
-            }
-        }
-
         // Players
         ArrayList<String> playersString = fileTools.GetLinesFromFile("Files\\" + communityMode + "\\players.txt");
         for (String player : playersString) {
@@ -300,6 +288,13 @@ public class Main {
         quotes = fileTools.GetLinesFromFile("Files\\" + communityMode + "\\quotes.txt");
 
         if (OperationMode.controlPoints) {
+            // ControlPoints
+            ArrayList<String> controlPointString = fileTools.GetLinesFromFile("Files\\" + communityMode + "\\controlPoints.txt");
+            for (String controlPoint : controlPointString) {
+                String[] controlPointSplit = fileTools.splitLineOnComma(controlPoint);
+                cpList.add(new ControlPoint("CP", maxCPScoreBossbar, 0, new Coordinate(Integer.parseInt(controlPointSplit[0]), Integer.parseInt(controlPointSplit[1]), Integer.parseInt(controlPointSplit[2])), Biome.valueOf(controlPointSplit[3])));
+            }
+
             int[] addRates = {2, 3};
             Collections.shuffle(cpList);
             for (int i = 0; i < addRates.length; i++) {
@@ -312,6 +307,16 @@ public class Main {
             singleton.setMinToCPScore(Constant.secPerMinute * cpTickPerSecond * controlPoints.get(0).getAddRate());
             cp2ActivationScore = cp2ActivationInMin * singleton.getMinToCPScore();
             maxCPScore = cpCaptureInMin * singleton.getMinToCPScore();
+
+            // Bossbars
+            bossBars.add(new BossBar("cp1"));
+            bossBars.add(new BossBar("cp2"));
+
+            // Perks
+            perks.add(new Perk(1, new StatusEffect(Effect.SPEED, 999999, 0, false), Sound.BASALT, 3 * singleton.getMinToCPScore()));
+            perks.add(new Perk(2, new Attribute(AttributeType.SCALE, 0.8), Sound.CRIMSON, 6 * singleton.getMinToCPScore()));
+            perks.add(new Perk(3, new StatusEffect(Effect.HASTE, 999999, 2, false), Sound.WARPED, 12 * singleton.getMinToCPScore()));
+            perks.add(new Perk(4, new StatusEffect(Effect.ABSORPTION, 999999, 1, false), Sound.WITHER, 15 * singleton.getMinToCPScore()));
         }
 
         // Scoreboard objectives
@@ -820,7 +825,10 @@ public class Main {
                 files.add(ControlPointTeamScore());
                 files.add(ControlPointMessages(i));
             }
-            files.add(ControlPointPerks());
+            files.add(ControlPointPerksCheck());
+            for (int i = 0; i < perks.size(); i++) {
+                files.add(ControlPointPerks(i));
+            }
             files.add(TeamsHighscoreCheck());
         }
 
@@ -1003,32 +1011,34 @@ public class Main {
         // Players in a team
         for (Team t : teams) {
             // Bossbar
-            fileCommands.add(Execute.If(Constant.adminSingle, getObjectiveByName(Objective.CP.toString() + 1 + t.getName()), ComparatorType.GREATER, Constant.adminSingle, getObjectiveByName(Objective.Highscore.extendName(1))) +
+            fileCommands.add(Execute.If(Constant.admin, getObjectiveByName(Objective.CP.toString() + 1 + t.getName()), ComparatorType.GREATER, Constant.admin, getObjectiveByName(Objective.Highscore.extendName(1))) +
                     getBossbarByName("cp1").setColor(t.getBossbarColor()));
-            fileCommands.add(Execute.If(Constant.adminSingle, getObjectiveByName(Objective.CP.toString() + 2 + t.getName()), ComparatorType.GREATER, "@e[limit=1,scores={Highscore1=" + cp2ActivationScore + "..}]", getObjectiveByName(Objective.Highscore.extendName(2))) +
+            fileCommands.add(Execute.If(Constant.admin, getObjectiveByName(Objective.CP.toString() + 2 + t.getName()), ComparatorType.GREATER, "@n[scores={Highscore1=" + cp2ActivationScore + "..}]", getObjectiveByName(Objective.Highscore.extendName(2))) +
                     getBossbarByName("cp2").setColor(t.getBossbarColor()));
 
             // Locator bar
-            fileCommands.add(Execute.If(Constant.adminSingle, getObjectiveByName(Objective.CP.toString() + 1 + t.getName()), ComparatorType.GREATER, Constant.adminSingle, getObjectiveByName(Objective.Highscore.extendName(1))) +
+            fileCommands.add(Execute.If(Constant.admin, getObjectiveByName(Objective.CP.toString() + 1 + t.getName()), ComparatorType.GREATER, Constant.admin, getObjectiveByName(Objective.Highscore.extendName(1))) +
                     CommandBuilder.modifyWaypointColor("@n[tag=" + Tag.CP.extendName(1) + "]", t.getColor()));
-            fileCommands.add(Execute.If(Constant.adminSingle, getObjectiveByName(Objective.CP.toString() + 2 + t.getName()), ComparatorType.GREATER, "@e[limit=1,scores={Highscore1=" + cp2ActivationScore + "..}]", getObjectiveByName(Objective.Highscore.extendName(2))) +
+            fileCommands.add(Execute.If(Constant.admin, getObjectiveByName(Objective.CP.toString() + 2 + t.getName()), ComparatorType.GREATER, "@n[scores={Highscore1=" + cp2ActivationScore + "..}]", getObjectiveByName(Objective.Highscore.extendName(2))) +
                     CommandBuilder.modifyWaypointColor("@n[tag=" + Tag.CP.extendName(2) + "]", t.getColor()));
 
             // Scoreboard objective
-            for (int i = 0; i < controlPoints.size(); i++) {
-                fileCommands.add(scoreboard.Operation(Constant.admin, getObjectiveByName(Objective.Highscore.extendName(i + 1)), ComparatorType.GREATER, Constant.admin, getObjectiveByName("" + Objective.CP + (i + 1) + t.getName())));
-            }
+            fileCommands.add(Execute.If(t.getName(), Objective.OnCP.extendName(1), "1..") +
+                    scoreboard.Operation(Constant.admin, getObjectiveByName(Objective.Highscore.extendName(1)), ComparatorType.GREATER, Constant.admin, getObjectiveByName("" + Objective.CP + (1) + t.getName())));
+            fileCommands.add(Execute.If("@n[scores={Highscore1=" + cp2ActivationScore + "..}]", false) +
+                    Execute.IfNext(t.getName(), Objective.OnCP.extendName(2), "1..", true) +
+                    scoreboard.Operation(Constant.admin, getObjectiveByName(Objective.Highscore.extendName(2)), ComparatorType.GREATER, Constant.admin, getObjectiveByName("" + Objective.CP + (2) + t.getName())));
         }
 
         // Individual players
         // Bossbar
-        fileCommands.add(Execute.If("@r[limit=1,team=]", getObjectiveByName(Objective.ControlPoint.extendName(1)), ComparatorType.GREATER, Constant.adminSingle, getObjectiveByName(Objective.Highscore.extendName(1))) +
+        fileCommands.add(Execute.If("@r[limit=1,team=]", getObjectiveByName(Objective.ControlPoint.extendName(1)), ComparatorType.GREATER, Constant.admin, getObjectiveByName(Objective.Highscore.extendName(1))) +
                 getBossbarByName("cp1").setColor(BossBarColor.white));
         fileCommands.add(Execute.If("@r[limit=1,team=]", getObjectiveByName(Objective.ControlPoint.extendName(2)), ComparatorType.GREATER, "@e[scores={Highscore1=" + cp2ActivationScore + "..},limit=1]", getObjectiveByName(Objective.Highscore.extendName(2))) +
                 getBossbarByName("cp2").setColor(BossBarColor.white));
 
         // Locator bar
-        fileCommands.add(Execute.If("@r[limit=1,team=]", getObjectiveByName(Objective.ControlPoint.extendName(1)), ComparatorType.GREATER, Constant.adminSingle, getObjectiveByName(Objective.Highscore.extendName(1))) +
+        fileCommands.add(Execute.If("@r[limit=1,team=]", getObjectiveByName(Objective.ControlPoint.extendName(1)), ComparatorType.GREATER, Constant.admin, getObjectiveByName(Objective.Highscore.extendName(1))) +
                 CommandBuilder.modifyWaypointColor("@n[tag=" + Tag.CP.extendName(1) + "]"));
         fileCommands.add(Execute.If("@r[limit=1,team=]", getObjectiveByName(Objective.ControlPoint.extendName(2)), ComparatorType.GREATER, "@e[scores={Highscore1=" + cp2ActivationScore + "..},limit=1]", getObjectiveByName(Objective.Highscore.extendName(2))) +
                 CommandBuilder.modifyWaypointColor("@n[tag=" + Tag.CP.extendName(2) + "]"));
@@ -1040,7 +1050,7 @@ public class Main {
 
         // Update value of bossbars
         fileCommands.add(Execute.Store(ExecuteStore.result, getBossbarByName("cp1"), BossBarStore.value) +
-                scoreboard.Get(Constant.adminSingle, getObjectiveByName(Objective.Highscore.extendName(1))));
+                scoreboard.Get(Constant.admin, getObjectiveByName(Objective.Highscore.extendName(1))));
         fileCommands.add(Execute.Store(ExecuteStore.result, getBossbarByName("cp2"), BossBarStore.value) +
                 scoreboard.Get("@e[limit=1,scores={Highscore1=" + cp2ActivationScore + "..}]", getObjectiveByName(Objective.Highscore.extendName(2))));
 
@@ -1709,14 +1719,14 @@ public class Main {
         for (Team team : teams) {
             // Update CP glass color
             fileCommands.add(Execute.In(currentCP.getCoordinate().getDimension(), false) +
-                    Execute.IfNext("@p[gamemode=!spectator,team=" + team.getName() + "]", getObjectiveByName(Objective.ControlPoint.extendName(i)), ComparatorType.GREATER, Constant.adminSingle, getObjectiveByName(Objective.Highscore.extendName(i)), true) +
+                    Execute.IfNext("@p[gamemode=!spectator,team=" + team.getName() + "]", getObjectiveByName(Objective.ControlPoint.extendName(i)), ComparatorType.GREATER, Constant.admin, getObjectiveByName(Objective.Highscore.extendName(i)), true) +
                     CommandBuilder.setBlock(currentCP.getCoordinate().getX(), currentCP.getCoordinate().getY() + 1, currentCP.getCoordinate().getZ(), "minecraft:" + team.getGlassColor() + "_stained_glass", SetBlockType.replace));
         }
 
         if (OperationMode.teamCreationInGame) {
             // Update CP glass color solo
             fileCommands.add(Execute.In(currentCP.getCoordinate().getDimension(), false) +
-                    Execute.IfNext("@r[limit=1,gamemode=!spectator,team=]", getObjectiveByName(Objective.ControlPoint.extendName(i)), ComparatorType.GREATER, Constant.adminSingle, getObjectiveByName(Objective.Highscore.extendName(i)), true) +
+                    Execute.IfNext("@r[limit=1,gamemode=!spectator,team=]", getObjectiveByName(Objective.ControlPoint.extendName(i)), ComparatorType.GREATER, Constant.admin, getObjectiveByName(Objective.Highscore.extendName(i)), true) +
                     CommandBuilder.setBlock(currentCP.getCoordinate().getX(), currentCP.getCoordinate().getY() + 1, currentCP.getCoordinate().getZ(), BlockType.STAINED_GLASS.extendColor("white"), SetBlockType.replace));
         }
 
@@ -2105,94 +2115,54 @@ public class Main {
         return new FileData(FileName.remove_banned_items, fileCommands);
     }
 
-    // Perks for being on the Control Point
-    private FileData ControlPointPerks() {
+    /* Control Point perks */
+    // Check if perk can be handed out
+    private FileData ControlPointPerksCheck() {
         ArrayList<String> fileCommands = new ArrayList<>();
 
-        // Define perk activation times
-        ArrayList<Perk> perks = new ArrayList<>();
-        perks.add(new Perk(1, new StatusEffect(Effect.SPEED, 999999, 0, false), Sound.BASALT, 3 * singleton.getMinToCPScore()));
-        perks.add(new Perk(2, new Attribute(AttributeType.SCALE, 0.8), Sound.CRIMSON, 6 * singleton.getMinToCPScore()));
-        perks.add(new Perk(3, new StatusEffect(Effect.HASTE, 999999, 2, false), Sound.WARPED, 12 * singleton.getMinToCPScore()));
-        perks.add(new Perk(4, new StatusEffect(Effect.ABSORPTION, 999999, 1, false), Sound.WITHER, 15 * singleton.getMinToCPScore()));
-
-
-        Entity currentPlayer = new Entity("");
-        Entity currentScoreCheck = new Entity("");
-
-        for (int i = 0; i < controlPoints.size(); i++) {
-            // Players in a team
-            for (Team team : teams) {
-                // Display team receiving perk
-                for (Perk perk : perks) {
-                    // Set variables
-                    currentPlayer.setEntity("@p[team=" + team.getName() + ",tag=!" + Tag.ReceivedPerk.extendName(perk.getId()) + "]");
-                    currentScoreCheck.setEntity("@e[scores={CP" + (i + 1) + team.getName() + "=" + perk.getActivationTime() + "..}]");
-
-                    // Create text to be displayed
-                    ArrayList<TextItem> texts = new ArrayList<>();
-                    texts.add(new Text(Color.light_purple, false, false, "TEAM "));
-                    texts.add(new Text(team.getColor(), false, false, team.getJSONColor()));
-                    texts.add(new Text(Color.light_purple, false, false, " HAS REACHED"));
-                    texts.add(new Text(Color.gold, false, false, " PERK " + perk.getId() + "!"));
-
-                    // Display text
-                    fileCommands.add(Execute.If(currentScoreCheck, false) +
-                            Execute.IfNext(currentPlayer, true) +
-                            new TellRaw("@a", texts).sendRaw());
-
-                    // Give rewards
-                    String perkReceivers = "@a[team=" + team.getName() + ",tag=!" + Tag.ReceivedPerk.extendName(perk.getId()) + "]";
-                    fileCommands.add(Execute.If(currentScoreCheck) +
-                            perk.getReward(perkReceivers));
-
-                    // Play sound
-                    fileCommands.add(Execute.If(currentScoreCheck, false) +
-                            Execute.IfNext(currentPlayer, true) +
-                            CommandBuilder.playSound(perk.getSound(), SoundSource.master, "@a", "~", "~50", "~", "100", "1", "0"));
-
-                    // Add tag
-                    fileCommands.add(Execute.If(currentScoreCheck) +
-                            CommandBuilder.addTag("@a[team=" + team.getName() + "]", Tag.ReceivedPerk.extendName(perk.getId())));
-                }
-            }
-
-            if (OperationMode.teamCreationInGame) {
-                // Individual players
-                for (Perk perk : perks) {
-                    // Set variables
-                    currentPlayer.setEntity("@p[team=,scores={ControlPoint" + (i + 1) + "=" + perk.getActivationTime() + "..},tag=!" + Tag.ReceivedPerk.extendName(perk.getId()) + "]");
-                    currentScoreCheck.setEntity("@p[team=,scores={ControlPoint" + (i + 1) + "=" + perk.getActivationTime() + "..}]");
-
-                    // Create text to be displayed
-                    ArrayList<TextItem> texts = new ArrayList<>();
-                    texts.add(new Select(false, false, currentPlayer.getEntity()));
-                    texts.add(new Text(Color.light_purple, false, false, " HAS REACHED"));
-                    texts.add(new Text(Color.gold, false, false, " PERK " + perk.getId() + "!"));
-
-                    // Display text
-                    fileCommands.add(Execute.If(currentScoreCheck, false) +
-                            Execute.IfNext(currentPlayer, true) +
-                            new TellRaw("@a", texts).sendRaw());
-
-                    // Give rewards
-                    fileCommands.add(Execute.If(currentScoreCheck) +
-                            perk.getReward(currentPlayer.getEntity()));
-
-                    // Play sound
-                    fileCommands.add(Execute.If(currentScoreCheck, false) +
-                            Execute.IfNext(currentPlayer, true) +
-                            CommandBuilder.playSound(perk.getSound(), SoundSource.master, "@a", "~", "~50", "~", "100", "1", "0"));
-
-                    // Add tag
-                    fileCommands.add(Execute.If(currentScoreCheck) +
-                            CommandBuilder.addTag(currentPlayer.getEntity(), Tag.ReceivedPerk.extendName(perk.getId())));
-                }
+        for (Team team : teams) {
+            int i = 0;
+            for (Perk perk : perks) {
+                i++;
+                fileCommands.add(Execute.If(Constant.admin, Objective.CP.extendName(1 + team.getName()), perk.getActivationTime() + "..", false) +
+                        Execute.IfNext("@p[gamemode=!spectator,team=" + team.getName() + ",tag=!" + Tag.ReceivedPerk.extendName(i) + "]") +
+                        Execute.AsNext("@p[gamemode=!spectator,team=" + team.getName() + "]", true) +
+                        Schedule.callFunction("" + FileName.perk_ + i));
             }
         }
 
-        return new FileData(FileName.control_point_perks, fileCommands);
+        return new FileData(FileName.control_point_perks_check, fileCommands);
+    }
 
+    // Hand out perks
+    private FileData ControlPointPerks(int i) {
+        ArrayList<String> fileCommands = new ArrayList<>();
+
+        for (Team team : teams) {
+            // Create text to be displayed
+            ArrayList<TextItem> texts = new ArrayList<>();
+            texts.add(new Text(Color.light_purple, false, false, "TEAM "));
+            texts.add(new Text(team.getColor(), false, false, team.getJSONColor()));
+            texts.add(new Text(Color.light_purple, false, false, " HAS REACHED"));
+            texts.add(new Text(Color.gold, false, false, " PERK " + perks.get(i).getId() + "!"));
+
+            // Display text
+            fileCommands.add(Execute.If("@s[team=" + team.getName() + "]") +
+                    new TellRaw("@a", texts).sendRaw());
+
+            // Add tag
+            fileCommands.add(Execute.If("@s[team=" + team.getName() + "]") +
+                    CommandBuilder.addTag("@a[team=" + team.getName() + "]", Tag.ReceivedPerk.extendName(perks.get(i).getId())));
+
+            // Give rewards
+            fileCommands.add(Execute.If("@s[team=" + team.getName() + "]") +
+                    perks.get(i).getReward("@a[team=" + team.getName() + "]"));
+        }
+
+        // Play sound
+        fileCommands.add(CommandBuilder.playSound(perks.get(i).getSound(), SoundSource.master, "@a", "~", "~50", "~", "100", "1", "0"));
+
+        return new FileData("" + FileName.perk_ + (i + 1), fileCommands);
     }
 
     // Display quotes during the match

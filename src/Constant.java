@@ -7,7 +7,6 @@ public class Constant {
 
     // Admin entity
     public static final String admin = "@n[type=" + EntityType.MARKER +"]";
-    public static final String adminSingle = "@e[type=" + EntityType.MARKER + ",limit=1]";
 
     // Tick speed
     public static final int tickFrequencyShort = 20;
