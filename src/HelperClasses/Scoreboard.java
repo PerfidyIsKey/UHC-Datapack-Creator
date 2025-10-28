@@ -38,6 +38,10 @@ public class Scoreboard {
         return "scoreboard players operation " + targets + " " + targetObjective + " " + operation + " " + source + " " + sourceObjective;
     }
 
+    public String Operation(String targets, Objective targetObjective, ComparatorType operation, String source, String sourceObjective) {
+        return "scoreboard players operation " + targets + " " + targetObjective + " " + operation + " " + source + " " + sourceObjective;
+    }
+
     public String Operation(String targets, String targetObjective, ComparatorType operation, String source, String sourceObjective) {
         return "scoreboard players operation " + targets + " " + targetObjective + " " + operation + " " + source + " " + sourceObjective;
     }

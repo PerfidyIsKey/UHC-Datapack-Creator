@@ -341,6 +341,7 @@ public class Main {
 
         if (OperationMode.controlPoints) {
             scoreboardObjectives.add(new ScoreboardObjective(Objective.CPScore, ObjectiveType.dummy, "\"Control Point score\"", true));
+            scoreboardObjectives.add(new ScoreboardObjective(Objective.CPHighscore, ObjectiveType.dummy));
             for (int i = 0; i < 2; i++) {
                 scoreboardObjectives.add(new ScoreboardObjective(Objective.Highscore.extendName(i + 1), ObjectiveType.dummy));
                 scoreboardObjectives.add(new ScoreboardObjective(Objective.ControlPoint.extendName(i + 1), ObjectiveType.dummy));
@@ -816,10 +817,10 @@ public class Main {
             for (int i = 1; i < controlPoints.size() + 1; i++) {
                 files.add(ControlPoint(i));
                 files.add(ControlPointScore(i));
+                files.add(ControlPointTeamScore());
                 files.add(ControlPointMessages(i));
             }
             files.add(ControlPointPerks());
-            files.add(UpdatePublicCPScore());
             files.add(TeamsHighscoreCheck());
         }
 
@@ -1194,7 +1195,7 @@ public class Main {
                 for (Team team: teams) {
                     fileCommands.add(scoreboard.Reset(team.getName(), getObjectiveByName(Objective.OnCP.extendName(i))));
                     fileCommands.add(scoreboard.Reset(team.getName(), getObjectiveByName(Objective.PrevCP.extendName(i))));
-                    fileCommands.add(scoreboard.Reset(team.getName(), getObjectiveByName(Objective.ControlPoint.extendName(i))));
+                    fileCommands.add(scoreboard.Reset(team.getPlayerColor(), getObjectiveByName(Objective.ControlPoint.extendName(i))));
                 }
             }
             fileCommands.add(scoreboard.Reset("Solo", getObjectiveByName(Objective.CPScore)));
@@ -1775,11 +1776,27 @@ public class Main {
         for (Team team : teams) {
             fileCommands.add(Execute.If(team.getName(), Objective.OnCP.extendName(i), "1..", false) +
                     Execute.IfNext("ContestedCP" + i, Objective.OnCP.extendName(i), 0, true) +
-                    scoreboard.Add(team.getName(), Objective.ControlPoint.extendName(i), currentCP.getAddRate()));
+                    scoreboard.Add(team.getPlayerColor(), Objective.ControlPoint.extendName(i), currentCP.getAddRate()));
         }
 
 
         return new FileData("" + FileName.control_point_score_ + i, fileCommands);
+    }
+
+    private FileData ControlPointTeamScore() {
+        ArrayList<String> fileCommands = new ArrayList<>();
+
+        // Update team score
+        for (Team team : teams) {
+            // Update team display scores
+            fileCommands.add(scoreboard.Operation(team.getPlayerColor(), Objective.CPScore, ComparatorType.EQUAL, team.getPlayerColor(), Objective.ControlPoint.extendName(1)));
+            fileCommands.add(scoreboard.Operation(team.getPlayerColor(), Objective.CPScore, ComparatorType.ADD, team.getPlayerColor(), Objective.ControlPoint.extendName(2)));
+
+            // Update global highscore
+            fileCommands.add(scoreboard.Operation(Constant.admin, Objective.CPHighscore, ComparatorType.GREATER, team.getPlayerColor(), Objective.CPScore));
+        }
+
+    return new FileData(FileName.control_point_team_score, fileCommands);
     }
 
     private FileData ControlPointMessages(int i) {
@@ -2355,24 +2372,28 @@ public class Main {
 
         // Players in teams
         for (int i = 0; i < teams.size(); i++) {
+            Team team = teams.get(i);
+
             for (int j = 1; j < 3; j++) {
                 if (OperationMode.traitorFaction) {
                     // Traitor teams
-                    fileCommands.add(Execute.If(new Entity("@e[scores={Victory=1}]"), false) +
-                            Execute.IfNext("@p[team=" + teams.get(i).getName() + ",gamemode=!spectator,scores={ControlPoint" + j + "=" + maxCPScore + "..},tag=" + Tag.Traitor + "]") +
-                            Execute.UnlessNext("@p[team=" + teams.get(i).getName() + ",gamemode=!spectator,tag=!" + Tag.Traitor + "]", true) +
+                    fileCommands.add(Execute.If(Constant.admin, Objective.Victory, 1, false) +
+                            Execute.IfNext(team.getPlayerColor(), Objective.CPScore, maxCPScore + "..") +
+                            Execute.IfNext("@p[team=" + team.getName() + ",gamemode=!spectator,tag=" + Tag.Traitor + "]") +
+                            Execute.UnlessNext("@p[team=" + team.getName() + ",gamemode=!spectator,tag=!" + Tag.Traitor + "]", true) +
                             Schedule.callFunction(FileName.victory_message_traitor));
 
                     // Regular teams
-                    fileCommands.add(Execute.If(new Entity("@e[scores={Victory=1}]"), false) +
-                            Execute.IfNext(new Entity("@p[team=" + teams.get(i).getName() + ",gamemode=!spectator,scores={ControlPoint" + j + "=" + maxCPScore + "..}]"), true) +
+                    fileCommands.add(Execute.If(Constant.admin, Objective.Victory, 1, false) +
+                            Execute.IfNext(team.getPlayerColor(), Objective.CPScore, maxCPScore + "..") +
+                            Execute.IfNext("@p[team=" + team.getName() + ",gamemode=!spectator,tag=!" + Tag.Traitor + "]", true) +
                             Schedule.callFunction("" + FileName.victory_message_ + i));
                 }
                 else {
 
                     // Regular teams
-                    fileCommands.add(Execute.If(new Entity("@e[scores={Victory=1}]"), false) +
-                            Execute.IfNext(new Entity("@p[team=" + teams.get(i).getName() + ",gamemode=!spectator,scores={ControlPoint" + j + "=" + maxCPScore + "..}]"), true) +
+                    fileCommands.add(Execute.If(Constant.admin, Objective.Victory, 1, false) +
+                            Execute.IfNext(team.getPlayerColor(), Objective.CPScore, maxCPScore + "..", true) +
                             Schedule.callFunction("" + FileName.victory_message_ + i));
                 }
             }
@@ -2507,27 +2528,6 @@ public class Main {
                 CommandBuilder.setAttributeBase("@s", AttributeType.MAX_HEALTH, 20));
 
         return new FileData(FileName.wolf_updates, fileCommands);
-    }
-
-    private FileData UpdatePublicCPScore() {
-        ArrayList<String> fileCommands = new ArrayList<>();
-
-        // Players in teams
-        for (Team t : teams) {
-            for (int i = 1; i < controlPoints.size() + 1; i++) {
-                fileCommands.add(scoreboard.Operation(t.getPlayerColor(), getObjectiveByName(Objective.CPScore), ComparatorType.GREATER, Constant.admin, getObjectiveByName("" + Objective.CP + i + t.getName())));
-            }
-        }
-
-        if (OperationMode.teamCreationInGame) {
-            // Players without a team
-            for (int i = 1; i < controlPoints.size() + 1; i++) {
-                fileCommands.add(Execute.As("@a[team=]") +
-                        scoreboard.Operation("Solo", getObjectiveByName(Objective.CPScore), ComparatorType.GREATER, "@s", getObjectiveByName(Objective.ControlPoint.extendName(i))));
-            }
-        }
-
-        return new FileData(FileName.update_public_cp_score, fileCommands);
     }
 
     private FileData DisableRespawn() {

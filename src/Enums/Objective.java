@@ -8,6 +8,7 @@ public enum Objective {
         Time2("Time2"),
         SideDum("SideDum"),
         ControlPoint("ControlPoint"),
+        CPHighscore("CPHighscore"),
         CPScore("CPScore"),
         MSGDum("MSGDum"),
         OnCP("OnCP"),

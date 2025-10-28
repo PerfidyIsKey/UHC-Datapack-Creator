@@ -55,7 +55,7 @@ public enum FileName {
     bbvalue,
     control_point_perks,
     control_point_messages_,
-    update_public_cp_score,
+    control_point_team_score,
 
     // Care Packages
     drop_carepackages,
