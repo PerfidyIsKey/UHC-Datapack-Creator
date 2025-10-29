@@ -46,4 +46,8 @@ public class BossBar {
     public String setValue(String value) {
         return prefix + "minecraft:" + name + " value " + value;
     }
+
+    public String setValue(int value) {
+        return prefix + "minecraft:" + name + " value " + value;
+    }
 }

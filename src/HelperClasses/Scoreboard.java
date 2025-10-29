@@ -29,6 +29,10 @@ public class Scoreboard {
         return "scoreboard players get " + target + " " + objective;
     }
 
+    public String Get(String target, String objective) {
+        return "scoreboard players get " + target + " " + objective;
+    }
+
     // players operation
     public String Operation(String targets, ScoreboardObjective targetObjective, ComparatorType operation, String source, ScoreboardObjective sourceObjective) {
         return "scoreboard players operation " + targets + " " + targetObjective.getName() + " " + operation + " " + source + " " + sourceObjective.getName();
@@ -38,7 +42,15 @@ public class Scoreboard {
         return "scoreboard players operation " + targets + " " + targetObjective + " " + operation + " " + source + " " + sourceObjective;
     }
 
+    public String Operation(String targets, Objective targetObjective, ComparatorType operation, String source, String sourceObjective) {
+        return "scoreboard players operation " + targets + " " + targetObjective + " " + operation + " " + source + " " + sourceObjective;
+    }
+
     public String Operation(String targets, String targetObjective, ComparatorType operation, String source, String sourceObjective) {
+        return "scoreboard players operation " + targets + " " + targetObjective + " " + operation + " " + source + " " + sourceObjective;
+    }
+
+    public String Operation(String targets, String targetObjective, ComparatorType operation, String source, Objective sourceObjective) {
         return "scoreboard players operation " + targets + " " + targetObjective + " " + operation + " " + source + " " + sourceObjective;
     }
 
