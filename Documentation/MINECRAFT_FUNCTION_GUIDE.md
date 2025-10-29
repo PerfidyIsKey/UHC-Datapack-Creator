@@ -15,13 +15,6 @@ A list of all functions in the Java project with descriptions and their executio
   - Parents: -
   - Children: -
 
-### **bbvalue**
-  - Update value of bossbar and scoreboard objective, and color of bossbar and locator bar waypoint.
-  - Execution Method: Continuous
-  - Interval: 20 ticks
-  - Parents: timer_control_point_20
-  - Children: -
-
 ### **check_iron_man**
   - Regularly checks which players are still at full health.
   - Execution Method: Continuous
@@ -40,16 +33,16 @@ A list of all functions in the Java project with descriptions and their executio
   - Children: -
 
 ### control_point_i
-  - Update amount of players on Control Point `i`. Keep glass, beacon active. Call Control Point score and messages functions.
+  - Update amount of players on Control Point `i`. Call Control Point score, messages and visuals functions.
   - Execution Method: Continuous
-  - Interval: 5 ticks
+  - Interval: 20 ticks
   - Parents: timer_control_point_20
-  - Children: control_point_score_i, control_point_messages_i
+  - Children: control_point_score_i, control_point_messages_i, control_point_update_records_i, control_point_visuals_i
 
 ### **control_point_captured**
   - Announces that the Control Point has been captured.
   - Execution Method: Continuous
-  - Interval: 5 ticks
+  - Interval: 20 ticks
   - Parents: timer_control_point_20
   - Children: teams_highscore_alive_check
 
@@ -79,6 +72,20 @@ A list of all functions in the Java project with descriptions and their executio
 - Execution Method: Continuous
 - Interval: 20 ticks
 - Parents: timer_control_point_20
+- Children: -
+
+### **control_point_update_records**
+- Update value and color of team with most points on the Control Point.
+- Execution Method: Continuous
+- Interval: 20 ticks
+- Parents: control_point_i
+- Children: -
+
+### **control_point_visuals**
+- Update color of bossbars, glass blocks, locator bar waypoints, and keep the beacon active.
+- Execution Method: Continuous
+- Interval: 20 ticks
+- Parents: control_point_i
 - Children: -
 
 ### **death_match**
@@ -307,7 +314,7 @@ A list of all functions in the Java project with descriptions and their executio
   - Execution Method: Continuous (self-scheduling)
   - Interval: 20 ticks
   - Parents: initialize_control_point
-  - Children: bbvalue, control_point_1, control_point_2, control_point_captured, control_point_messages_1, control_point_messages_2, control_point_perks, second_control_point, control_point_team_score
+  - Children: control_point_visuals, control_point_1, control_point_2, control_point_captured, control_point_messages_1, control_point_messages_2, control_point_perks, second_control_point, control_point_team_score
 
 ### **timer_developer_20**
   - Timer for developer related functions with interval of 20 ticks

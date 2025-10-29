@@ -247,7 +247,7 @@ public class Main {
         // Teams
         teamMode = Integer.parseInt(fileTools.getContentOutOfFile("Files\\" + communityMode + "\\uhc_data.txt", "teamMode"));
         for (int i = 0; i < colors.length; i++) {
-            Team team = new Team("Team" + i, colors[i], bossbarColors[i], glassColors[i], collarColors[i], jsonColors[i], playerColors[i], dustColors[i]);
+            Team team = new Team(i, colors[i], bossbarColors[i], glassColors[i], collarColors[i], jsonColors[i], playerColors[i], dustColors[i]);
             teams.add(team);
         }
 
@@ -351,6 +351,8 @@ public class Main {
                 scoreboardObjectives.add(new ScoreboardObjective(Objective.ControlPoint.extendName(i + 1), ObjectiveType.dummy));
                 scoreboardObjectives.add(new ScoreboardObjective(Objective.OnCP.extendName(i + 1), ObjectiveType.dummy));
                 scoreboardObjectives.add(new ScoreboardObjective(Objective.PrevCP.extendName(i + 1), ObjectiveType.dummy));
+                scoreboardObjectives.add(new ScoreboardObjective(Objective.DisplayCP.extendName(i + 1), ObjectiveType.dummy));
+                scoreboardObjectives.add(new ScoreboardObjective(Objective.ColorCP.extendName(i + 1), ObjectiveType.dummy));
             }
         }
 
@@ -814,15 +816,16 @@ public class Main {
         if (OperationMode.controlPoints) {
             files.add(Updating.TimerControlPoint20());
             files.add(SpawnControlPoints());
-            files.add(BossBarValue());
             files.add(InitializeControlPoint());
             files.add(SecondControlPoint());
             files.add(ControlPointCaptured());
+            files.add(ControlPointTeamScore());
             for (int i = 1; i < controlPoints.size() + 1; i++) {
                 files.add(ControlPoint(i));
                 files.add(ControlPointScore(i));
-                files.add(ControlPointTeamScore());
                 files.add(ControlPointMessages(i));
+                files.add(ControlPointVisuals(i));
+                files.add(ControlPointUpdateRecords(i));
             }
             files.add(ControlPointPerksCheck());
             for (int i = 0; i < perks.size(); i++) {
@@ -988,75 +991,52 @@ public class Main {
         return new FileData(FileName.drop_player_heads, fileCommands);
     }
 
-    private FileData BossBarValue() {
+    private FileData ControlPointVisuals(int i) {
         ArrayList<String> fileCommands = new ArrayList<>();
+        ControlPoint currentCP = controlPoints.get(i - 1);
+
+        // Update bossbar value
+        fileCommands.add(Execute.Store(ExecuteStore.result, getBossbarByName("cp" + i), BossBarStore.value) +
+                scoreboard.Get(Constant.admin, Objective.DisplayCP.extendName(i)));
 
         // Players in a team
         for (Team team : teams) {
-            // Bossbar
-            fileCommands.add(Execute.If(team.getName(), Objective.OnCP.extendName(1), "1..", false) +
-                    Execute.IfNext(team.getPlayerColor(), Objective.CPScore, ComparatorType.GREATEREQUAL, Constant.admin, Objective.CPHighscore, true) +
-                    getBossbarByName("cp1").setColor(team.getBossbarColor()));
-            fileCommands.add(Execute.If(Constant.admin, Objective.CPHighscore, cp2ActivationScore + "..", false) +
-                    Execute.IfNext(team.getName(), Objective.OnCP.extendName(2), "1..") +
-                    Execute.IfNext(team.getPlayerColor(), Objective.CPScore, ComparatorType.GREATEREQUAL, Constant.admin, Objective.CPHighscore, true) +
-                    getBossbarByName("cp2").setColor(team.getBossbarColor()));
+            // Update bossbar color
+            fileCommands.add(Execute.If(Constant.admin, Objective.ColorCP.extendName(i), team.getID()) +
+                    getBossbarByName("cp" + i).setColor(team.getBossbarColor()));
 
-            // Locator bar
-            fileCommands.add(Execute.If(team.getName(), Objective.OnCP.extendName(1), "1..", false) +
-                    Execute.IfNext(team.getPlayerColor(), Objective.CPScore, ComparatorType.GREATEREQUAL, Constant.admin, Objective.CPHighscore, true) +
-                    CommandBuilder.modifyWaypointColor("@n[tag=" + Tag.CP.extendName(1) + "]", team.getColor()));
-            fileCommands.add(Execute.If(Constant.admin, Objective.CPHighscore, cp2ActivationScore + "..", false) +
-                    Execute.IfNext(team.getName(), Objective.OnCP.extendName(2), "1..") +
-                    Execute.IfNext(team.getPlayerColor(), Objective.CPScore, ComparatorType.GREATEREQUAL, Constant.admin, Objective.CPHighscore, true) +
-                    CommandBuilder.modifyWaypointColor("@n[tag=" + Tag.CP.extendName(2) + "]", team.getColor()));
+            // Update waypoiny color
+            fileCommands.add(Execute.If(Constant.admin, Objective.ColorCP.extendName(i), team.getID()) +
+                    CommandBuilder.modifyWaypointColor("@n[tag=" + Tag.CP.extendName(i) + "]", team.getColor()));
 
-            // Glass
-            fileCommands.add(Execute.If(team.getName(), Objective.OnCP.extendName(1), "1..", false) +
-                    Execute.IfNext(team.getPlayerColor(), Objective.CPScore, ComparatorType.GREATEREQUAL, Constant.admin, Objective.CPHighscore) +
-                    Execute.InNext(controlPoints.get(0).getCoordinate().getDimension(), true) +
-                    CommandBuilder.setBlock(controlPoints.get(0).getCoordinate().getX(), controlPoints.get(0).getCoordinate().getY() + 1, controlPoints.get(0).getCoordinate().getZ(), "minecraft:" + team.getGlassColor() + "_stained_glass", SetBlockType.replace));
-            fileCommands.add(Execute.If(Constant.admin, Objective.CPHighscore, cp2ActivationScore + "..", false) +
-                    Execute.IfNext(team.getName(), Objective.OnCP.extendName(2), "1..") +
-                    Execute.IfNext(team.getPlayerColor(), Objective.CPScore, ComparatorType.GREATEREQUAL, Constant.admin, Objective.CPHighscore) +
-                    Execute.InNext(controlPoints.get(1).getCoordinate().getDimension(), true) +
-                    CommandBuilder.setBlock(controlPoints.get(1).getCoordinate().getX(), controlPoints.get(1).getCoordinate().getY() + 1, controlPoints.get(1).getCoordinate().getZ(), "minecraft:" + team.getGlassColor() + "_stained_glass", SetBlockType.replace));
-
-            // Update value of bossbars
-            fileCommands.add(Execute.If(team.getName(), Objective.OnCP.extendName(1), "1..", false) +
-                    Execute.IfNext(team.getPlayerColor(), Objective.CPScore, ComparatorType.GREATEREQUAL, Constant.admin, Objective.CPHighscore) +
-                    Execute.StoreNext(ExecuteStore.result, getBossbarByName("cp1"), BossBarStore.value, true) +
-                    scoreboard.Get(Constant.admin, Objective.CPHighscore));
-            fileCommands.add(Execute.If(Constant.admin, Objective.CPHighscore, cp2ActivationScore + "..", false) +
-                    Execute.IfNext(team.getName(), Objective.OnCP.extendName(2), "1..") +
-                    Execute.IfNext(team.getPlayerColor(), Objective.CPScore, ComparatorType.GREATEREQUAL, Constant.admin, Objective.CPHighscore) +
-                    Execute.StoreNext(ExecuteStore.result, getBossbarByName("cp2"), BossBarStore.value, true) +
-                    scoreboard.Get(Constant.admin, Objective.CPHighscore));
+            // Update glass color
+            fileCommands.add(Execute.If(Constant.admin, Objective.ColorCP.extendName(i), team.getID(), false) +
+                    Execute.InNext(currentCP.getCoordinate().getDimension(), true) +
+                    CommandBuilder.setBlock(currentCP.getCoordinate().getX(), currentCP.getCoordinate().getY() + 1, currentCP.getCoordinate().getZ(), "minecraft:" + team.getGlassColor() + "_stained_glass", SetBlockType.replace));
         }
 
-        // TODO: Distinction in CP1 and CP2 highscores
+        // Keep beacon active
+        fileCommands.add(Execute.In(currentCP.getCoordinate().getDimension()) +
+                CommandBuilder.fill(currentCP.getCoordinate().getX() - 1, currentCP.getCoordinate().getY() - 1, currentCP.getCoordinate().getZ() - 1, currentCP.getCoordinate().getX() + 1, currentCP.getCoordinate().getY() - 1, currentCP.getCoordinate().getZ() + 1, BlockType.EMERALD_BLOCK));
+        fileCommands.add(Execute.In(currentCP.getCoordinate().getDimension()) +
+                CommandBuilder.fill(currentCP.getCoordinate().getX(), currentCP.getCoordinate().getY(), currentCP.getCoordinate().getZ(), currentCP.getCoordinate().getX(), currentCP.getCoordinate().getY(), currentCP.getCoordinate().getZ(), BlockType.BEACON));
 
-        if (OperationMode.teamCreationInGame) {
-            // Individual players
-            // Bossbar
-            fileCommands.add(Execute.If("@r[limit=1,team=]", getObjectiveByName(Objective.ControlPoint.extendName(1)), ComparatorType.GREATER, Constant.admin, getObjectiveByName(Objective.Highscore.extendName(1))) +
-                    getBossbarByName("cp1").setColor(BossBarColor.white));
-            fileCommands.add(Execute.If("@r[limit=1,team=]", getObjectiveByName(Objective.ControlPoint.extendName(2)), ComparatorType.GREATER, "@e[scores={Highscore1=" + cp2ActivationScore + "..},limit=1]", getObjectiveByName(Objective.Highscore.extendName(2))) +
-                    getBossbarByName("cp2").setColor(BossBarColor.white));
+        return new FileData(FileName.control_point_visuals_ + "" + i, fileCommands);
+    }
 
-            // Locator bar
-            fileCommands.add(Execute.If("@r[limit=1,team=]", getObjectiveByName(Objective.ControlPoint.extendName(1)), ComparatorType.GREATER, Constant.admin, getObjectiveByName(Objective.Highscore.extendName(1))) +
-                    CommandBuilder.modifyWaypointColor("@n[tag=" + Tag.CP.extendName(1) + "]"));
-            fileCommands.add(Execute.If("@r[limit=1,team=]", getObjectiveByName(Objective.ControlPoint.extendName(2)), ComparatorType.GREATER, "@e[scores={Highscore1=" + cp2ActivationScore + "..},limit=1]", getObjectiveByName(Objective.Highscore.extendName(2))) +
-                    CommandBuilder.modifyWaypointColor("@n[tag=" + Tag.CP.extendName(2) + "]"));
+    private FileData ControlPointUpdateRecords(int i) {
+        ArrayList<String> fileCommands = new ArrayList<>();
 
-            // Scoreboard objective
-            for (int i = 0; i < controlPoints.size(); i++) {
-                fileCommands.add(scoreboard.Operation(Constant.admin, getObjectiveByName(Objective.Highscore.extendName(i + 1)), ComparatorType.GREATER, "@r[limit=1,team=]", getObjectiveByName(Objective.ControlPoint.extendName(i + 1))));
-            }
+        for (Team team : teams) {
+            fileCommands.add(Execute.If(team.getName(), Objective.OnCP.extendName(i), "1..", false) +
+                    Execute.IfNext(team.getPlayerColor(), Objective.CPScore, ComparatorType.GREATER, Constant.admin, Objective.DisplayCP.extendName(i), true) +
+                    scoreboard.Set(Constant.admin, Objective.ColorCP.extendName(i), team.getID()));
+            fileCommands.add(Execute.If(team.getName(), Objective.OnCP.extendName(i), "1..", false) +
+                    Execute.IfNext(team.getPlayerColor(), Objective.CPScore, ComparatorType.GREATER, Constant.admin, Objective.DisplayCP.extendName(i), true) +
+                    scoreboard.Operation(Constant.admin, Objective.DisplayCP.extendName(i), ComparatorType.EQUAL, team.getPlayerColor(), Objective.CPScore));
         }
 
-        return new FileData(FileName.bbvalue, fileCommands);
+        return new FileData(FileName.control_point_update_records_ + "" + i, fileCommands);
     }
 
     private FileData ClearEnderChest() {
@@ -1208,6 +1188,8 @@ public class Main {
                     fileCommands.add(scoreboard.Reset(team.getName(), getObjectiveByName(Objective.PrevCP.extendName(i))));
                     fileCommands.add(scoreboard.Reset(team.getPlayerColor(), getObjectiveByName(Objective.ControlPoint.extendName(i))));
                 }
+                fileCommands.add(scoreboard.Set(Constant.admin, Objective.DisplayCP.extendName(i), 0));
+                fileCommands.add(scoreboard.Set(Constant.admin, Objective.ColorCP.extendName(i), -1));
             }
             fileCommands.add(scoreboard.Reset("Solo", getObjectiveByName(Objective.CPScore)));
             for (Team t : teams) {
@@ -1253,10 +1235,12 @@ public class Main {
             fileCommands.add(bossBarCp1.setVisible(false));
             fileCommands.add(bossBarCp1.setPlayers("@a"));
             fileCommands.add(bossBarCp1.setTitle(controlPoints.get(0).getName() + ": " + controlPoints.get(0).getCoordinate().getX() + ", " + controlPoints.get(0).getCoordinate().getY() + ", " + controlPoints.get(0).getCoordinate().getZ() + " (" + controlPoints.get(0).getCoordinate().getDimensionName() + ")"));
+            fileCommands.add(bossBarCp1.setValue(0));
             fileCommands.add(bossBarCp2.setColor(BossBarColor.white));
             fileCommands.add(bossBarCp2.setVisible(false));
             fileCommands.add(bossBarCp2.setPlayers("@a"));
             fileCommands.add(bossBarCp2.setTitle(controlPoints.get(1).getName() + " soon: " + controlPoints.get(1).getCoordinate().getX() + ", " + controlPoints.get(1).getCoordinate().getY() + ", " + controlPoints.get(1).getCoordinate().getZ() + " (" + controlPoints.get(1).getCoordinate().getDimensionName() + ")"));
+            fileCommands.add(bossBarCp2.setValue(0));
 
             // Kill waypoints
             for (ControlPoint controlPoint : controlPoints) {
@@ -1721,12 +1705,6 @@ public class Main {
                     CommandBuilder.setBlock(currentCP.getCoordinate().getX(), currentCP.getCoordinate().getY() + 1, currentCP.getCoordinate().getZ(), BlockType.STAINED_GLASS.extendColor("white"), SetBlockType.replace));
         }
 
-        // Keep beacon active
-        fileCommands.add(Execute.In(currentCP.getCoordinate().getDimension()) +
-                CommandBuilder.fill(currentCP.getCoordinate().getX() - 1, currentCP.getCoordinate().getY() - 1, currentCP.getCoordinate().getZ() - 1, currentCP.getCoordinate().getX() + 1, currentCP.getCoordinate().getY() - 1, currentCP.getCoordinate().getZ() + 1, BlockType.EMERALD_BLOCK));
-        fileCommands.add(Execute.In(currentCP.getCoordinate().getDimension()) +
-                CommandBuilder.fill(currentCP.getCoordinate().getX(), currentCP.getCoordinate().getY(), currentCP.getCoordinate().getZ(), currentCP.getCoordinate().getX(), currentCP.getCoordinate().getY(), currentCP.getCoordinate().getZ(), BlockType.BEACON));
-
         // Check which teams are on the Control Point
         for (Team team : teams) {
             fileCommands.add(scoreboard.Set(team.getName(), Objective.OnCP.extendName(i), 0));
@@ -1746,10 +1724,14 @@ public class Main {
                 scoreboard.Set("ContestedCP" + i, Objective.OnCP.extendName(i), 1));
 
         // Give teams score
-        fileCommands.add(Schedule.callFunction("" + FileName.control_point_score_ + i));
+        fileCommands.add(Schedule.callFunction(FileName.control_point_score_ + "" + i));
 
         // Send CP messages
-        fileCommands.add(Schedule.callFunction("" + FileName.control_point_messages_ + i));
+        fileCommands.add(Schedule.callFunction(FileName.control_point_messages_ + "" + i));
+
+        // Update CP visuals
+        fileCommands.add(Schedule.callFunction(FileName.control_point_update_records_ + "" + i));
+        fileCommands.add(Schedule.callFunction(FileName.control_point_visuals_ + "" + i));
 
         // Update CP state
         for (Team team : teams) {

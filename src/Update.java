@@ -120,9 +120,6 @@ public class Update {
                 Execute.UnlessNext("@n[tag=" + Tag.ControlPoint2Enabled + "]", true) +
                 Schedule.callFunction(FileName.second_control_point));
 
-        // Manage boss bar
-        fileCommands.add(Schedule.callFunction(FileName.bbvalue));
-
         // Self-schedule timer
         fileCommands.add(Schedule.callFunction(FileName.timer_control_point_20, 20, Duration.TICKS));
 

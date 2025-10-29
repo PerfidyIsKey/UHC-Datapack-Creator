@@ -12,6 +12,8 @@ public enum Objective {
         CPScore("CPScore"),
         OnCP("OnCP"),
         PrevCP("PrevCP"),
+        DisplayCP("DisplayCP"),
+        ColorCP("ColorCP"),
         Highscore("Highscore"),
         Hearts("Hearts"),
         Apples("Apples"),

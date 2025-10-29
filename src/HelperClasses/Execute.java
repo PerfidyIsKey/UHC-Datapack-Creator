@@ -209,6 +209,22 @@ public class Execute {
         return Next("if score " + entity1 + " " + objective1 + " " + comp + " " + entity2 + " " + objective2 + " ", run);
     }
 
+    public static String If(String entity1, Objective objective1, ComparatorType comp, String entity2, String objective2) {
+        return If(entity1, objective1, comp, entity2, objective2, true);
+    }
+
+    public static String If(String entity1, Objective objective1, ComparatorType comp, String entity2, String objective2, Boolean run) {
+        return Standard(IfNext(entity1, objective1, comp, entity2, objective2), run);
+    }
+
+    public static String IfNext(String entity1, Objective objective1, ComparatorType comp, String entity2, String objective2) {
+        return IfNext(entity1, objective1, comp, entity2, objective2, false);
+    }
+
+    public static String IfNext(String entity1, Objective objective1, ComparatorType comp, String entity2, String objective2, Boolean run) {
+        return Next("if score " + entity1 + " " + objective1 + " " + comp + " " + entity2 + " " + objective2 + " ", run);
+    }
+
     public static String If(String target, Objective targetObjective, int value) {
         return If(target, targetObjective, value, true);
     }
