@@ -5,6 +5,7 @@ import Enums.Color;
 
 public class Team {
 
+    private int id;
     private String name;
     private Color color;
     private BossBarColor bossbarColor;
@@ -14,8 +15,9 @@ public class Team {
     private String playerColor;
     private String dustColor;
 
-    public Team(String name, Color color, BossBarColor bossbarColor, String glassColor, String collarColor, String jsonColor, String playerColor, String dustColor) {
-        this.name = name;
+    public Team(int id, Color color, BossBarColor bossbarColor, String glassColor, String collarColor, String jsonColor, String playerColor, String dustColor) {
+        this.id = id;
+        this.name = "Team" + id;
         this.color = color;
         this.bossbarColor = bossbarColor;
         this.glassColor = glassColor;
@@ -92,4 +94,12 @@ public class Team {
     public String joinTeam(String entity) { return "team join " + this.name + " " + entity; }
 
     public String emptyTeam() { return "team empty " + this.name; }
+
+    public int getID() {
+        return id;
+    }
+
+    public void setID(int id) {
+        this.id = id;
+    }
 }

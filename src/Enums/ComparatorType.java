@@ -4,6 +4,7 @@ public enum ComparatorType {
     ADD("+="),
     EQUAL("="),
     GREATER(">"),
+    GREATEREQUAL(">="),
     LESS("<"),
     MULTIPLY("*="),
     SUBTRACT("-=");

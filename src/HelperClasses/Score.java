@@ -31,6 +31,16 @@ public class Score extends TextItem {
         this.objective = objective.toString();
     }
 
+    public Score(String name, Objective objective) {
+        this.name = name;
+        this.objective = objective.toString();
+    }
+
+    public Score(String name, String objective) {
+        this.name = name;
+        this.objective = objective;
+    }
+
     public String getText() {
         return "{\"score\":{\"name\":\"" + name + "\",\"objective\":\"" + objective + "\"}" + bold() + italic() + colorShow() +"}";
     }

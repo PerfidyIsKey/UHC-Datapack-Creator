@@ -1,6 +1,6 @@
-263,56,165,cave
-138,72,432,savanna
--173,58,336,jungle
--398,63,-257,plains
-214,103,-242,meadow
--204,64,-217,savanna
+-44,63,109,river
+430,63,316,river
+357,51,-140,cave
+76,96,-144,meadow
+-295,79,-75,sunflower_plains
+-184,88,260,savanna

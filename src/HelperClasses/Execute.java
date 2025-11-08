@@ -193,6 +193,38 @@ public class Execute {
         return Next("if score " + entity1 + " " + objective1.getName() + " " + comp + " " + entity2 + " " + objective2.getName() + " ", run);
     }
 
+    public static String If(String entity1, Objective objective1, ComparatorType comp, String entity2, Objective objective2) {
+        return If(entity1, objective1, comp, entity2, objective2, true);
+    }
+
+    public static String If(String entity1, Objective objective1, ComparatorType comp, String entity2, Objective objective2, Boolean run) {
+        return Standard(IfNext(entity1, objective1, comp, entity2, objective2), run);
+    }
+
+    public static String IfNext(String entity1, Objective objective1, ComparatorType comp, String entity2, Objective objective2) {
+        return IfNext(entity1, objective1, comp, entity2, objective2, false);
+    }
+
+    public static String IfNext(String entity1, Objective objective1, ComparatorType comp, String entity2, Objective objective2, Boolean run) {
+        return Next("if score " + entity1 + " " + objective1 + " " + comp + " " + entity2 + " " + objective2 + " ", run);
+    }
+
+    public static String If(String entity1, Objective objective1, ComparatorType comp, String entity2, String objective2) {
+        return If(entity1, objective1, comp, entity2, objective2, true);
+    }
+
+    public static String If(String entity1, Objective objective1, ComparatorType comp, String entity2, String objective2, Boolean run) {
+        return Standard(IfNext(entity1, objective1, comp, entity2, objective2), run);
+    }
+
+    public static String IfNext(String entity1, Objective objective1, ComparatorType comp, String entity2, String objective2) {
+        return IfNext(entity1, objective1, comp, entity2, objective2, false);
+    }
+
+    public static String IfNext(String entity1, Objective objective1, ComparatorType comp, String entity2, String objective2, Boolean run) {
+        return Next("if score " + entity1 + " " + objective1 + " " + comp + " " + entity2 + " " + objective2 + " ", run);
+    }
+
     public static String If(String target, Objective targetObjective, int value) {
         return If(target, targetObjective, value, true);
     }
@@ -206,6 +238,54 @@ public class Execute {
     }
 
     public static String IfNext(String target, Objective targetObjective, int value, Boolean run) {
+        return Next("if score " + target + " " + targetObjective + " matches " + value + " ", run);
+    }
+
+    public static String If(String target, String targetObjective, int value) {
+        return If(target, targetObjective, value, true);
+    }
+
+    public static String If(String target, String targetObjective, int value, Boolean run) {
+        return Standard(IfNext(target, targetObjective, value), run);
+    }
+
+    public static String IfNext(String target, String targetObjective, int value) {
+        return IfNext(target, targetObjective, value, false);
+    }
+
+    public static String IfNext(String target, String targetObjective, int value, Boolean run) {
+        return Next("if score " + target + " " + targetObjective + " matches " + value + " ", run);
+    }
+
+    public static String If(String target, Objective targetObjective, String value) {
+        return If(target, targetObjective, value, true);
+    }
+
+    public static String If(String target, Objective targetObjective, String value, Boolean run) {
+        return Standard(IfNext(target, targetObjective, value), run);
+    }
+
+    public static String IfNext(String target, Objective targetObjective, String value) {
+        return IfNext(target, targetObjective, value, false);
+    }
+
+    public static String IfNext(String target, Objective targetObjective, String value, Boolean run) {
+        return Next("if score " + target + " " + targetObjective + " matches " + value + " ", run);
+    }
+
+    public static String If(String target, String targetObjective, String value) {
+        return If(target, targetObjective, value, true);
+    }
+
+    public static String If(String target, String targetObjective, String value, Boolean run) {
+        return Standard(IfNext(target, targetObjective, value), run);
+    }
+
+    public static String IfNext(String target, String targetObjective, String value) {
+        return IfNext(target, targetObjective, value, false);
+    }
+
+    public static String IfNext(String target, String targetObjective, String value, Boolean run) {
         return Next("if score " + target + " " + targetObjective + " matches " + value + " ", run);
     }
 

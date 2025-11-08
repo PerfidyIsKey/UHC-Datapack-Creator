@@ -15,13 +15,6 @@ A list of all functions in the Java project with descriptions and their executio
   - Parents: -
   - Children: -
 
-### **bbvalue**
-  - Update value of bossbar and scoreboard objective, and color of bossbar and locator bar waypoint.
-  - Execution Method: Continuous
-  - Interval: 20 ticks
-  - Parents: timer_control_point_20
-  - Children: -
-
 ### **check_iron_man**
   - Regularly checks which players are still at full health.
   - Execution Method: Continuous
@@ -40,17 +33,16 @@ A list of all functions in the Java project with descriptions and their executio
   - Children: -
 
 ### control_point_i
-  - Award players CP score. Keep glass, beacon active. Call Control Point messages
+  - Update amount of players on Control Point `i`. Call Control Point score, messages and visuals functions.
   - Execution Method: Continuous
-  - Interval: 5 ticks
+  - Interval: 20 ticks
   - Parents: timer_control_point_20
-  - Children: control_point_score_i, control_point_tag_i
-  - Note: Computationally heavy
+  - Children: control_point_score_i, control_point_messages_i, control_point_update_records_i, control_point_visuals_i
 
 ### **control_point_captured**
   - Announces that the Control Point has been captured.
   - Execution Method: Continuous
-  - Interval: 5 ticks
+  - Interval: 20 ticks
   - Parents: timer_control_point_20
   - Children: teams_highscore_alive_check
 
@@ -58,28 +50,41 @@ A list of all functions in the Java project with descriptions and their executio
   - Message logic and announcements for Control Point attacks and abandonment
   - Execution Method: Continuous
   - Interval: 20 ticks
-  - Parents: timer_control_point_20
+  - Parents: control_point_i
   - Children: -
-  - Note: Computationally heavy
 
-### **control_point_perks**
-  - Grants perks for Control Point progress.
+### **control_point_perks_check**
+  - Checks if Control Point perks can be handed out.
   - Execution Method: Continuous
   - Interval: 20 ticks
   - Parents: timer_control_point_20
-  - Children: -
+  - Children: perk_i
 
 ### **control_point_score_i**
-- Add `cp score` to team player if they have the `OnCP i` tag. Unless a player from another team has the `OnCP i` tag.
-- Add `cp score` to solo player if they have the `Capping i` tag.
+- Add CP score to teams on the Control Point.
+- Execution Method: Continuous
+- Interval: 20 ticks
 - Parents: control_point_i
 - Children: -
 
-### **control_point_tag_i**
-- Add `OnCP i` tag to players on respective CP.
-- Remove `OnCP i` tag when players leave respective CP.
-- Add `Capping i` tag when player without team gets `OnCP i` tag, unless other player has the `Capping i` tag.
-- Remove `Capping i` tag when player with `OnCP i` tag exists, that does not have the `Capping i` tag.
+### **control_point_team_sore**
+- Add CP score from both CP1 and CP2 to form a team score.
+- Execution Method: Continuous
+- Interval: 20 ticks
+- Parents: timer_control_point_20
+- Children: -
+
+### **control_point_update_records**
+- Update value and color of team with most points on the Control Point.
+- Execution Method: Continuous
+- Interval: 20 ticks
+- Parents: control_point_i
+- Children: -
+
+### **control_point_visuals**
+- Update color of bossbars, glass blocks, locator bar waypoints, and keep the beacon active.
+- Execution Method: Continuous
+- Interval: 20 ticks
 - Parents: control_point_i
 - Children: -
 
@@ -174,7 +179,7 @@ A list of all functions in the Java project with descriptions and their executio
   - Activates command blocks for Control Point functions. Sends activation message.
   - Execution Method: Single-use
   - Parents: timer_main_1
-  - Children: timer_control_point
+  - Children: timer_control_point_20
 
 ### **initiate_deathmatch**
   - Schedules deathmatch related functions.
@@ -220,6 +225,12 @@ A list of all functions in the Java project with descriptions and their executio
 ### **minute_1** and **minute_2**
   - Announces that there are 1, 2 minutes remaining, respectively. 
   - Execution Method: Single-use
+
+### **perk_i**
+- Give perk `i` to teams who have accumulated enough CP score.
+- Execution Method: Single-use
+- Parents: control_point_perks_check
+- Children: -
 
 ### **predictions**
   - Teleport all players into the void for season predictions. 
@@ -284,13 +295,6 @@ A list of all functions in the Java project with descriptions and their executio
   - Parents: developer_potion_control
   - Children: -
 
-### **team_score**
-  - Updates and tracks team Control Point score.
-  - Execution Method: Continuous
-  - Interval: 5 ticks
-  - Parents: timer_control_point_20
-  - Children: -
-
 ### **teams_alive_check**
   - Checks if only a single team/player is alive.
   - Execution Method: Continuous
@@ -310,7 +314,7 @@ A list of all functions in the Java project with descriptions and their executio
   - Execution Method: Continuous (self-scheduling)
   - Interval: 20 ticks
   - Parents: initialize_control_point
-  - Children: bbvalue, control_point_1, control_point_2, team_score, control_point_captured, control_point_messages_1, control_point_messages_2, control_point_perks, update_public_cp_score, second_control_point
+  - Children: control_point_visuals, control_point_1, control_point_2, control_point_captured, control_point_messages_1, control_point_messages_2, control_point_perks, second_control_point, control_point_team_score
 
 ### **timer_developer_20**
   - Timer for developer related functions with interval of 20 ticks
@@ -398,13 +402,6 @@ A list of all functions in the Java project with descriptions and their executio
   - Interval: 5 ticks
   - Parents: timer_main_5
   - Children: join_team
-
-### **update_public_cp_score**
-  - Displays CP scores publicly.
-  - Execution Method: Continuous
-  - Interval: 20 ticks
-  - Parents: timer_control_point_20
-  - Children: -
 
 ### **update_sidebar**
   - Updates sidebar scoreboard elements.
