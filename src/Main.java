@@ -1975,17 +1975,9 @@ public class Main {
             fileCommands.add(Execute.In(c.getDimension()) +
                     CommandBuilder.setBlock(c.getX(), c.getY() + 10, c.getZ(), BlockType.REDSTONE_BLOCK, SetBlockType.destroy));
 
-            // Initialize object
-            for (int i = c.getY() + 12; i < Constant.worldHeight; i++) {
-                // Specify block to be changed
-
-                fileCommands.add(Execute.In(c.getDimension(), false) +
-                        Execute.UnlessNext(c.getX(), i, c.getZ(), BlockType.AIR) +
-                        Execute.UnlessNext(c.getX(), i, c.getZ(), BlockType.CAVE_AIR) +
-                        Execute.UnlessNext(c.getX(), i, c.getZ(), BlockType.VOID_AIR) +
-                        Execute.UnlessNext(c.getX(), i, c.getZ(), BlockType.BEDROCK, true) +
-                        CommandBuilder.setBlock(c.getX(), i, c.getZ(), BlockType.GLASS));
-            }
+            // Replace blocks that do not emit light
+            fileCommands.add(Execute.In(c.getDimension()) +
+                    CommandBuilder.fill(c.getX(), c.getY() + 12, c.getZ(), c.getX(), Constant.worldHeight - 1, c.getZ(), BlockType.GLASS, "#uhc:block_beacon_light"));
 
             fileCommands.add(Execute.In(c.getDimension()) +
                     CommandBuilder.removeForceLoad(c.getX(), c.getZ(), c.getX(), c.getZ()));
