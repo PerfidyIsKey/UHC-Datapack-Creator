@@ -1,21 +1,26 @@
 package ArgumentTypes;
-import Enums.Block;
+import Enums.*;
 
 public class BlockPredicate implements ArgumentType {
     private final String block_id;
     private String block_states;
     private String data_tags;
 
-
-    public BlockPredicate(String id) {
-        this.block_id = id;
-    }
-
     public BlockPredicate(Block id) {
         this.block_id = id.toString();
     }
 
     public BlockPredicate(Block id, String states, String tags) {
+        this.block_id = id.toString();
+        this.block_states = states;
+        this.data_tags = tags;
+    }
+
+    public BlockPredicate(RegistryTag id) {
+        this.block_id = id.toString();
+    }
+
+    public BlockPredicate(RegistryTag id, String states, String tags) {
         this.block_id = id.toString();
         this.block_states = states;
         this.data_tags = tags;

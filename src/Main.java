@@ -1998,7 +1998,7 @@ public class Main {
                     new BlockPos(c.getX(), Constant.worldHeight - 1, c.getZ()),
                     new BlockState(Block.GLASS)
             ).filter(
-                    new BlockPredicate("#uhc:block_beacon_light")
+                    new BlockPredicate(RegistryTag.BLOCK_BEACON_LIGHT)
             );
 
             fileCommands.add(Execute.In(c.getDimension()) +
