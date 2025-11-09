@@ -405,35 +405,35 @@ public class Execute {
         execute unless
      */
     // unless block
-    public static String Unless(Coordinate coordinate, BlockType blockType) {
+    public static String Unless(Coordinate coordinate, Block blockType) {
         return Unless(coordinate, blockType, true);
     }
 
-    public static String Unless(Coordinate coordinate, BlockType blockType, Boolean run) {
+    public static String Unless(Coordinate coordinate, Block blockType, Boolean run) {
         return Standard(UnlessNext(coordinate, blockType), run);
     }
 
-    public static String UnlessNext(Coordinate coordinate, BlockType blockType) {
+    public static String UnlessNext(Coordinate coordinate, Block blockType) {
         return UnlessNext(coordinate, blockType, false);
     }
 
-    public static String UnlessNext(Coordinate coordinate, BlockType blockType, Boolean run) {
+    public static String UnlessNext(Coordinate coordinate, Block blockType, Boolean run) {
         return Next("unless block " + coordinate.getCoordinateString() + " " + blockType + " ", run);
     }
 
-    public static String Unless(int x, int y, int z, BlockType blockType) {
+    public static String Unless(int x, int y, int z, Block blockType) {
         return Unless(x, y, z, blockType, true);
     }
 
-    public static String Unless(int x, int y, int z, BlockType blockType, Boolean run) {
+    public static String Unless(int x, int y, int z, Block blockType, Boolean run) {
         return Standard(UnlessNext(x, y, z, blockType), run);
     }
 
-    public static String UnlessNext(int x, int y, int z, BlockType blockType) {
+    public static String UnlessNext(int x, int y, int z, Block blockType) {
         return UnlessNext(x, y, z, blockType, false);
     }
 
-    public static String UnlessNext(int x, int y, int z, BlockType blockType, Boolean run) {
+    public static String UnlessNext(int x, int y, int z, Block blockType, Boolean run) {
         return Next("unless block " + x + " " + y + " " + z + " " + blockType + " ", run);
     }
 
