@@ -895,10 +895,20 @@ public class Main {
         }
 
         // Create staging area
+        Fill cmd = Fill.create(
+                new BlockPos(-6, 220, -6),
+                new BlockPos(6, 226, 6),
+                new BlockState(Block.BARRIER)
+        );
         fileCommands.add(Execute.In(Dimension.overworld) +
-                CommandBuilder.fill(-6, 220, -6, 6, 226, 6, Block.BARRIER));
+                cmd.build());
+        cmd = Fill.create(
+                new BlockPos(-5, 221, -5),
+                new BlockPos(6, 226, 5),
+                new BlockState(Block.AIR)
+        );
         fileCommands.add(Execute.In(Dimension.overworld) +
-                CommandBuilder.fill(-5, 221, -5, 5, 226, 5, Block.AIR));
+                cmd.build());
         fileCommands.add(Execute.In(Dimension.overworld) +
                 CommandBuilder.setBlock(0, 222, -5, Block.CHERRY_WALL_SIGN + "[facing=south,waterlogged=false]{back_text:{messages:[\"You have\",\"angered\",\"the Gods!\",\"\"]},front_text:{messages:[{\"text\":\"In rememberance\",\"click_event\":{\"action\":\"run_command\",\"command\":\"" + CommandBuilder.summonEntity(EntityType.FIREWORK_ROCKET, new Coordinate(0, 0, 0, ReferenceFrame.relative)) + "\"}},\"of our\",\"Command Center\",\"2014-2025\"]},is_waxed:0b}"));
 
@@ -1018,10 +1028,15 @@ public class Main {
         }
 
         // Keep beacon active
+        Fill cmd = Fill.create(
+                new BlockPos(currentCP.getCoordinate().getX() - 1, currentCP.getCoordinate().getY() - 1, currentCP.getCoordinate().getZ() - 1),
+                new BlockPos(currentCP.getCoordinate().getX() + 1, currentCP.getCoordinate().getY() - 1, currentCP.getCoordinate().getZ() + 1),
+                new BlockState(Block.EMERALD_BLOCK)
+        );
         fileCommands.add(Execute.In(currentCP.getCoordinate().getDimension()) +
-                CommandBuilder.fill(currentCP.getCoordinate().getX() - 1, currentCP.getCoordinate().getY() - 1, currentCP.getCoordinate().getZ() - 1, currentCP.getCoordinate().getX() + 1, currentCP.getCoordinate().getY() - 1, currentCP.getCoordinate().getZ() + 1, Block.EMERALD_BLOCK));
+                cmd.build());
         fileCommands.add(Execute.In(currentCP.getCoordinate().getDimension()) +
-                CommandBuilder.fill(currentCP.getCoordinate().getX(), currentCP.getCoordinate().getY(), currentCP.getCoordinate().getZ(), currentCP.getCoordinate().getX(), currentCP.getCoordinate().getY(), currentCP.getCoordinate().getZ(), Block.BEACON));
+                CommandBuilder.setBlock(currentCP.getCoordinate().getX(), currentCP.getCoordinate().getY(), currentCP.getCoordinate().getZ(), Block.BEACON));
 
         return new FileData(FileName.control_point_visuals_ + "" + i, fileCommands);
     }
@@ -1983,7 +1998,7 @@ public class Main {
                     new BlockPos(c.getX(), Constant.worldHeight - 1, c.getZ()),
                     new BlockState(Block.GLASS)
             ).filter(
-                    new BlockPredicate("#uhc:block_beacon_light")
+                    new BlockPredicate(RegistryTag.BLOCK_BEACON_LIGHT)
             );
 
             fileCommands.add(Execute.In(c.getDimension()) +
@@ -2013,8 +2028,13 @@ public class Main {
     private FileData HorseFrostWalker() {
         ArrayList<String> fileCommands = new ArrayList<>();
 
+        Fill cmd = Fill.create(
+                new BlockPos("~-2", "~-2", "~-2"),
+                new BlockPos("~2", "~", "~2"),
+                new BlockState(Block.ICE)
+        ).filter(new BlockPredicate(Block.WATER));
         fileCommands.add(Execute.At(new Entity("@a[nbt={RootVehicle:{Entity:{id:\"" + EntityType.HORSE + "\"}}}]")) +
-                CommandBuilder.relativeFill(-2, -2, -2, 2, 0, 2, "ice", SetBlockType.replace, "water"));
+                cmd.build());
 
         return new FileData(FileName.horse_frost_walker, fileCommands);
     }

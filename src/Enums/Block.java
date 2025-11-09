@@ -78,6 +78,7 @@ public enum Block {
     TNT("tnt"),
     TRIDENT("trident"),
     VOID_AIR("void_air"),
+    WATER("water"),
     WIND_CHARGE("wind_charge"),
     WOLF_ARMOR("wolf_armor"),
     WOLF_SPAWN_EGG("wolf_spawn_egg"),
