@@ -43,7 +43,7 @@ public class Main {
 
     //GameData<
     private static final int chestSize = 27;
-    private Coordinate startCoordinate;
+    private BlockPos startCoordinate;
     private ArrayList<Team> teams = new ArrayList<>();
     private ArrayList<ControlPoint> cpList = new ArrayList<>();
     private ArrayList<ControlPoint> controlPoints = new ArrayList<>();
@@ -174,7 +174,7 @@ public class Main {
         // Get data from uhc_data.txt
         uhcNumber = fileTools.getContentOutOfFile("Files\\" + communityMode + "\\uhc_data.txt", "uhcNumber");
         String[] splitStartCoordinates = fileTools.splitLineOnComma(fileTools.getContentOutOfFile("Files\\" + communityMode + "\\uhc_data.txt", "startCoordinate"));
-        startCoordinate = new Coordinate(Integer.parseInt(splitStartCoordinates[0]), Integer.parseInt(splitStartCoordinates[1]), Integer.parseInt(splitStartCoordinates[2]));
+        startCoordinate = new BlockPos(Integer.parseInt(splitStartCoordinates[0]), Integer.parseInt(splitStartCoordinates[1]), Integer.parseInt(splitStartCoordinates[2]));
         communityName = fileTools.getContentOutOfFile("Files\\" + communityMode + "\\uhc_data.txt", "communityName");
 
         if (OperationMode.traitorFaction) {
@@ -909,8 +909,17 @@ public class Main {
         );
         fileCommands.add(Execute.In(Dimension.overworld) +
                 cmd.build());
+
+        SetBlock sb = SetBlock.create(
+                new BlockPos(0, 222, -5),
+                new BlockState(
+                        Block.CHERRY_WALL_SIGN,
+                        "facing=south,waterlogged=false",
+                        "back_text:{messages:[\"You have\",\"angered\",\"the Gods!\",\"\"]},front_text:{messages:[{\"text\":\"In rememberance\",\"click_event\":{\"action\":\"run_command\",\"command\":\"" + CommandBuilder.summonEntity(EntityType.FIREWORK_ROCKET, new Coordinate(0, 0, 0, ReferenceFrame.relative)) + "\"}},\"of our\",\"Command Center\",\"2014-2025\"]},is_waxed:0b"
+                )
+        );
         fileCommands.add(Execute.In(Dimension.overworld) +
-                CommandBuilder.setBlock(0, 222, -5, Block.CHERRY_WALL_SIGN + "[facing=south,waterlogged=false]{back_text:{messages:[\"You have\",\"angered\",\"the Gods!\",\"\"]},front_text:{messages:[{\"text\":\"In rememberance\",\"click_event\":{\"action\":\"run_command\",\"command\":\"" + CommandBuilder.summonEntity(EntityType.FIREWORK_ROCKET, new Coordinate(0, 0, 0, ReferenceFrame.relative)) + "\"}},\"of our\",\"Command Center\",\"2014-2025\"]},is_waxed:0b}"));
+                sb.build());
 
         // Control Point
         if (OperationMode.controlPoints) {
@@ -1035,8 +1044,13 @@ public class Main {
         );
         fileCommands.add(Execute.In(currentCP.getCoordinate().getDimension()) +
                 cmd.build());
+
+        SetBlock sb = SetBlock.create(
+                new BlockPos(currentCP.getCoordinate().getX(), currentCP.getCoordinate().getY(), currentCP.getCoordinate().getZ()),
+                new BlockState(Block.BEACON)
+        );
         fileCommands.add(Execute.In(currentCP.getCoordinate().getDimension()) +
-                CommandBuilder.setBlock(currentCP.getCoordinate().getX(), currentCP.getCoordinate().getY(), currentCP.getCoordinate().getZ(), Block.BEACON));
+                sb.build());
 
         return new FileData(FileName.control_point_visuals_ + "" + i, fileCommands);
     }
@@ -1144,8 +1158,16 @@ public class Main {
         fileCommands.add(scoreboard.Set(Constant.admin, Objective.Victory, 1));
 
         // Create jukebox at 0,0
+        SetBlock sb = SetBlock.create(
+                startCoordinate,
+                new BlockState(
+                        Block.JUKEBOX,
+                        "has_record=true",
+                        "RecordItem:{Count:1b,id:\"" + Block.MUSIC_DISC_STAL + "\"}"
+                        )
+        );
         fileCommands.add(Execute.In(Dimension.overworld) +
-                CommandBuilder.setBlock(startCoordinate, Block.JUKEBOX + "[has_record=true]{RecordItem:{Count:1b,id:\"" + Block.MUSIC_DISC_STAL + "\"}}", SetBlockType.replace));
+                sb.build());
 
         // Remove tags
         fileCommands.add(CommandBuilder.removeTag("@a", Tag.RespawnDisabled));
@@ -1314,7 +1336,7 @@ public class Main {
 
         // Teleport everyone underneath the world
         fileCommands.add(Execute.In(Dimension.overworld) +
-                CommandBuilder.teleportEntity("@a", new Coordinate(0, -100, 0)));
+                CommandBuilder.teleportEntity("@a", new BlockPos(0, -100, 0)));
 
         // Announcement message
         ArrayList<TextItem> texts = new ArrayList<>();
@@ -1694,7 +1716,7 @@ public class Main {
 
         // Teleport all living players
         fileCommands.add(Execute.In(Dimension.overworld) +
-                CommandBuilder.teleportEntity("@a[gamemode=!spectator]", new Coordinate(3, 153, 3)));
+                CommandBuilder.teleportEntity("@a[gamemode=!spectator]", new BlockPos(3, 153, 3)));
 
         // Spread players in a team together
         fileCommands.add(Execute.In(Dimension.overworld) +
@@ -1985,12 +2007,25 @@ public class Main {
             Coordinate c = cp.getCoordinate();
             fileCommands.add(Execute.In(c.getDimension()) +
                     CommandBuilder.addForceLoad(c.getX(), c.getZ(), c.getX(), c.getZ()));
+
+            SetBlock sb = SetBlock.create(
+                    new BlockPos(c.getX(), c.getY() + 11, c.getZ()),
+                    new BlockState(
+                            Block.STRUCTURE_BLOCK,
+                            "mode=load",
+                            "metadata:\"\",mirror:\"NONE\",ignoreEntities:1b,powered:0b,seed:0L,author:\"?\",rotation:\"NONE\",posX:-6,mode:\"LOAD\",posY:-13,sizeX:13,posZ:-6,integrity:1.0f,showair:0b,name:\"" + cp.getStructureName() + "\",sizeY:14,sizeZ:13,showboundingbox:1b"
+                            )
+            );
             fileCommands.add(Execute.In(c.getDimension()) +
-                    CommandBuilder.setBlock(c.getX(), c.getY() + 11, c.getZ(), Block.STRUCTURE_BLOCK + "[mode=load]{metadata:\"\",mirror:\"NONE\",ignoreEntities:1b,powered:0b,seed:0L,author:\"?\",rotation:\"NONE\",posX:-6,mode:\"LOAD\",posY:-13,sizeX:13,posZ:-6,integrity:1.0f,showair:0b,name:\"" + cp.getStructureName() + "\",sizeY:14,sizeZ:13,showboundingbox:1b}", SetBlockType.destroy));
+                    sb.build());
 
             // Activate structure block
+            sb = SetBlock.create(
+                    new BlockPos(c.getX(), c.getY() + 10, c.getZ()),
+                    new BlockState(Block.REDSTONE_BLOCK)
+            ).mode(SetMode.DESTROY);
             fileCommands.add(Execute.In(c.getDimension()) +
-                    CommandBuilder.setBlock(c.getX(), c.getY() + 10, c.getZ(), Block.REDSTONE_BLOCK, SetBlockType.destroy));
+                    sb.build());
 
             // Replace blocks that do not emit light
             Fill cmd = Fill.create(

@@ -1,3 +1,4 @@
+import ArgumentTypes.BlockPos;
 import Enums.*;
 import HelperClasses.*;
 
@@ -76,28 +77,8 @@ public class CommandBuilder {
         return setBlock("" + x, "" + y, "" + z, blockType);
     }
 
-    public static String setBlock(int x, int y, int z, Block blockType) {
-        return setBlock("" + x, "" + y, "" + z, blockType.toString());
-    }
-
-    public static String setBlock(Coordinate coordinate, String blockType) {
-        return setBlock("" + coordinate.getX(), "" + coordinate.getY(), "" + coordinate.getZ(), blockType);
-    }
-
     public static String setBlock(int x, int y, int z, String blockType, SetBlockType type) {
         return setBlock(x, y, z, blockType) + " " + type;
-    }
-
-    public static String setBlock(Coordinate coordinate, String blockType, SetBlockType type) {
-        return setBlock(coordinate, blockType) + " " + type;
-    }
-
-    public static String setBlock(int x, int y, int z, Block blockType, SetBlockType type) {
-        return setBlock(x, y, z, blockType) + " " + type;
-    }
-
-    public static String setBlockRelative(int x, int y, int z, String blockType) {
-        return setBlock("~" + x, "~" + y, "~" + z, blockType);
     }
 
     // Gamerules
@@ -201,8 +182,8 @@ public class CommandBuilder {
     }
 
     // Teleportation
-    public static String teleportEntity(String entity, Coordinate coordinate) {
-        return "tp " + entity + " " + coordinate.getCoordinateString();
+    public static String teleportEntity(String entity, BlockPos coordinate) {
+        return "tp " + entity + " " + coordinate.toString();
     }
 
     public static String teleportEntity(String entity1, String entity2) {
