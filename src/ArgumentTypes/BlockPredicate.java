@@ -1,15 +1,36 @@
 package ArgumentTypes;
+import Enums.Block;
 
 public class BlockPredicate implements ArgumentType {
-    private final String predicate;
+    private final String block_id;
+    private String block_states;
+    private String data_tags;
 
-    public BlockPredicate(String predicate) {
-        this.predicate = predicate;
+
+    public BlockPredicate(String id) {
+        this.block_id = id;
+    }
+
+    public BlockPredicate(Block id) {
+        this.block_id = id.toString();
+    }
+
+    public BlockPredicate(Block id, String states, String tags) {
+        this.block_id = id.toString();
+        this.block_states = states;
+        this.data_tags = tags;
     }
 
     @Override
     public String toString() {
-        return predicate;
+        StringBuilder sb = new StringBuilder(block_id);
+        if (block_states != null) {
+            sb.append("[").append(block_states).append("]");
+        }
+        if (data_tags != null) {
+            sb.append("{").append(data_tags).append("}");
+        }
+        return sb.toString();
     }
 
     public void Sync() {

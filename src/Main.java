@@ -2032,7 +2032,7 @@ public class Main {
                 new BlockPos("~-2", "~-2", "~-2"),
                 new BlockPos("~2", "~", "~2"),
                 new BlockState(Block.ICE)
-        ).filter(new BlockPredicate("minecraft:water"));
+        ).filter(new BlockPredicate(Block.WATER));
         fileCommands.add(Execute.At(new Entity("@a[nbt={RootVehicle:{Entity:{id:\"" + EntityType.HORSE + "\"}}}]")) +
                 cmd.build());
 
