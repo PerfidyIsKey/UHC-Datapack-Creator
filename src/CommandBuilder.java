@@ -129,6 +129,10 @@ public class CommandBuilder {
         return fill(x1, y1, z1, x2, y2, z2, blockType, type) + " " + blockToReplace;
     }
 
+    public static String fill(int x1, int y1, int z1, int x2, int y2, int z2, BlockType block, String filter) {
+        return "fill " + x1 + " " + y1 + " " + z1 + " " + x2 + " " + y2 + " " + z2 + " " + block + " replace " + filter + " strict";
+    }
+
     public static String relativeFill(int x1, int y1, int z1, int x2, int y2, int z2, String blockType, SetBlockType type, String blockToReplace) {
         return fill("~" + x1, "~" + y1, "~" + z1, "~" + x2, "~" + y2, "~" + z2, blockType) + " " + type + " " + blockToReplace;
     }

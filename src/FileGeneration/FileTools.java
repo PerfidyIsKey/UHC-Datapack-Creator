@@ -175,6 +175,11 @@ public class FileTools {
             from = "worldgen";
             to = dataPackLocation + dataPackName + "\\data\\minecraft\\worldgen";
             copyDirectory(from, to);
+
+            // tags folder
+            from = "tags";
+            to = dataPackLocation + dataPackName + "\\data\\" + namespace + "\\tags";
+            copyDirectory(from, to);
         } else {
             System.out.println("Datapack already exists: Updating files now...");
             updateAllFiles(files, fileLocation);

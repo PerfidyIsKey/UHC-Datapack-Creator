@@ -1,4 +1,4 @@
-1,Snodog627,738,52,true
+1,Snodog627,73,52,true
 2,Mr9Madness,86,60,true
 17,Kalazniq,68,58,true
 18,Vladik71,48,0,true
