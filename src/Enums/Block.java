@@ -1,6 +1,6 @@
 package Enums;
 
-public enum BlockType {
+public enum Block {
     AIR("air"),
     AMETHYST_BLOCK("amethyst_block"),
     ANVIL("anvil"),
@@ -85,7 +85,7 @@ public enum BlockType {
 
     private final String symbol;
 
-    BlockType(String symbol) {
+    Block(String symbol) {
         this.symbol = symbol;
     }
 

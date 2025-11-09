@@ -1,28 +1,28 @@
 package FileGeneration;
 
-import Enums.BlockType;
+import Enums.Block;
 import ItemModifiers.ItemModifier;
 import java.util.ArrayList;
 
 public class LootTableEntry {
 
     private int weight;
-    private BlockType item;
+    private Block item;
 
     private ArrayList<ItemModifier> functions;
 
-    public LootTableEntry(int weight, BlockType item) {
+    public LootTableEntry(int weight, Block item) {
         this.weight = weight;
         this.item = item;
     }
 
-    public LootTableEntry(int weight, BlockType item, ArrayList<ItemModifier> functions) {
+    public LootTableEntry(int weight, Block item, ArrayList<ItemModifier> functions) {
         this.weight = weight;
         this.item = item;
         this.functions = functions;
     }
 
-    public LootTableEntry(int weight, BlockType item, ItemModifier function) {
+    public LootTableEntry(int weight, Block item, ItemModifier function) {
         ArrayList<ItemModifier> functions = new ArrayList<>();
         functions.add(function);
 
@@ -59,7 +59,7 @@ public class LootTableEntry {
                 functionContent += ",\n";
             } else {  // Close functions
                 functionContent += "\n" +
-                "]\n";
+                        "]\n";
             }
         }
 
@@ -74,7 +74,7 @@ public class LootTableEntry {
         this.weight = weight;
     }
 
-    public BlockType getItem() {
+    public Block getItem() {
         return item;
     }
 }

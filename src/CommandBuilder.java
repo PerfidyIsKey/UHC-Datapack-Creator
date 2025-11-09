@@ -10,7 +10,7 @@ public class CommandBuilder {
         return forceLoadAndSet(x, y, z, Dimension.overworld, blockType);
     }
 
-    public static ArrayList<String> forceLoadAndSet(int x, int y, int z, BlockType blockType) {
+    public static ArrayList<String> forceLoadAndSet(int x, int y, int z, Block blockType) {
         return forceLoadAndSet(x, y, z, blockType + "");
     }
 
@@ -18,7 +18,7 @@ public class CommandBuilder {
         return forceLoadAndSet(x, y, z, Dimension.overworld, blockType, type);
     }
 
-    public static ArrayList<String> forceLoadAndSet(int x, int y, int z, BlockType blockType, SetBlockType type) {
+    public static ArrayList<String> forceLoadAndSet(int x, int y, int z, Block blockType, SetBlockType type) {
         return forceLoadAndSet(x, y, z, blockType + "", type);
     }
 
@@ -33,7 +33,7 @@ public class CommandBuilder {
         return fileCommands;
     }
 
-    public static ArrayList<String> forceLoadAndSet(int x, int y, int z, Dimension dimension, BlockType blockType) {
+    public static ArrayList<String> forceLoadAndSet(int x, int y, int z, Dimension dimension, Block blockType) {
         return forceLoadAndSet(x, y, z, dimension, blockType + "");
     }
 
@@ -48,7 +48,7 @@ public class CommandBuilder {
         return fileCommands;
     }
 
-    public static ArrayList<String> forceLoadAndSet(int x, int y, int z, Dimension dimension, BlockType blockType, SetBlockType type) {
+    public static ArrayList<String> forceLoadAndSet(int x, int y, int z, Dimension dimension, Block blockType, SetBlockType type) {
         return forceLoadAndSet(x, y, z, dimension, blockType + "", type);
     }
 
@@ -76,7 +76,7 @@ public class CommandBuilder {
         return setBlock("" + x, "" + y, "" + z, blockType);
     }
 
-    public static String setBlock(int x, int y, int z, BlockType blockType) {
+    public static String setBlock(int x, int y, int z, Block blockType) {
         return setBlock("" + x, "" + y, "" + z, blockType.toString());
     }
 
@@ -92,7 +92,7 @@ public class CommandBuilder {
         return setBlock(coordinate, blockType) + " " + type;
     }
 
-    public static String setBlock(int x, int y, int z, BlockType blockType, SetBlockType type) {
+    public static String setBlock(int x, int y, int z, Block blockType, SetBlockType type) {
         return setBlock(x, y, z, blockType) + " " + type;
     }
 
@@ -117,20 +117,16 @@ public class CommandBuilder {
         return fill(x1, y1, z1, x2, y2, z2, blockType, type) + " " + blockToReplace;
     }
 
-    public static String fill(int x1, int y1, int z1, int x2, int y2, int z2, BlockType blockType) {
+    public static String fill(int x1, int y1, int z1, int x2, int y2, int z2, Block blockType) {
         return fill(x1, y1, z1, x2, y2, z2, blockType.toString());
     }
 
-    public static String fill(int x1, int y1, int z1, int x2, int y2, int z2, BlockType blockType, SetBlockType type) {
+    public static String fill(int x1, int y1, int z1, int x2, int y2, int z2, Block blockType, SetBlockType type) {
         return fill(x1, y1, z1, x2, y2, z2, blockType) + " " + type;
     }
 
-    public static String fill(int x1, int y1, int z1, int x2, int y2, int z2, BlockType blockType, SetBlockType type, String blockToReplace) {
+    public static String fill(int x1, int y1, int z1, int x2, int y2, int z2, Block blockType, SetBlockType type, String blockToReplace) {
         return fill(x1, y1, z1, x2, y2, z2, blockType, type) + " " + blockToReplace;
-    }
-
-    public static String fill(int x1, int y1, int z1, int x2, int y2, int z2, BlockType block, String filter) {
-        return "fill " + x1 + " " + y1 + " " + z1 + " " + x2 + " " + y2 + " " + z2 + " " + block + " replace " + filter + " strict";
     }
 
     public static String relativeFill(int x1, int y1, int z1, int x2, int y2, int z2, String blockType, SetBlockType type, String blockToReplace) {
@@ -272,11 +268,11 @@ public class CommandBuilder {
     }
 
     // Give item
-    public static String giveItem(String entity, BlockType item) {
+    public static String giveItem(String entity, Block item) {
         return giveItem(entity, item, "");
     }
 
-    public static String giveItem(String entity, BlockType item, String nbt) {
+    public static String giveItem(String entity, Block item, String nbt) {
         return "give " + entity + " " + item + nbt;
     }
 
@@ -284,19 +280,19 @@ public class CommandBuilder {
         return "give " + entity + " " + item + nbt;
     }
 
-    public static String replaceItem(String targets, InventorySlot slot, BlockType item) {
+    public static String replaceItem(String targets, InventorySlot slot, Block item) {
         return "item replace entity " + targets + " " + slot + " with " + item;
     }
 
-    public static String replaceItem(String targets, String slot, BlockType item) {
+    public static String replaceItem(String targets, String slot, Block item) {
         return "item replace entity " + targets + " " + slot + " with " + item;
     }
 
-    public static String replaceItem(String targets, InventorySlot slot, BlockType item, int count) {
+    public static String replaceItem(String targets, InventorySlot slot, Block item, int count) {
         return "item replace entity " + targets + " " + slot + " with " + item + " " + count;
     }
 
-    public static String replaceItem(String targets, String slot, BlockType item, int count) {
+    public static String replaceItem(String targets, String slot, Block item, int count) {
         return "item replace entity " + targets + " " + slot + " with " + item + " " + count;
     }
 
@@ -355,7 +351,7 @@ public class CommandBuilder {
     }
 
     // Clear inventory
-    public static String clearInventory(String targets, BlockType item) {
+    public static String clearInventory(String targets, Block item) {
         return "clear " + targets + " " + item;
     }
 
@@ -369,7 +365,7 @@ public class CommandBuilder {
     }
 
     // Recipes
-    public static String giveRecipe(String targets, BlockType recipe) {
+    public static String giveRecipe(String targets, Block recipe) {
         return "recipe give " + targets + " " + recipe;
     }
 
@@ -377,7 +373,7 @@ public class CommandBuilder {
         return "recipe give " + targets + " " + recipe;
     }
 
-    public static String takeRecipe(String targets, BlockType recipe) {
+    public static String takeRecipe(String targets, Block recipe) {
         return "recipe take " + targets + " " + recipe;
     }
 
@@ -399,7 +395,7 @@ public class CommandBuilder {
         // Convert hex to decimal
         int potionColor = Integer.parseInt(colorHex, 16);
 
-        return "item replace entity " + targets + " " + InventorySlot.HOTBAR.setSlotNumber(slotNumber) + " with " + BlockType.SPLASH_POTION + "[potion_contents={custom_color:" + potionColor + ",custom_effects:[{id:\"" + effect + "\",amplifier:0,duration:200,show_particles:0b,show_icon:0b,ambient:0b}]},lore=[\"" + lore + "\"],custom_name=\"" + displayName + "\"]";
+        return "item replace entity " + targets + " " + InventorySlot.HOTBAR.setSlotNumber(slotNumber) + " with " + Block.SPLASH_POTION + "[potion_contents={custom_color:" + potionColor + ",custom_effects:[{id:\"" + effect + "\",amplifier:0,duration:200,show_particles:0b,show_icon:0b,ambient:0b}]},lore=[\"" + lore + "\"],custom_name=\"" + displayName + "\"]";
     }
 
     // Trigger
@@ -453,7 +449,7 @@ public class CommandBuilder {
         return fileCommands;
     }
 
-    public static ArrayList<String> warnAndReplace(String targets, TextItem warning, BlockType replacement) {
+    public static ArrayList<String> warnAndReplace(String targets, TextItem warning, Block replacement) {
         return warnAndReplace(targets, warning, replacement.toString());
     }
 
