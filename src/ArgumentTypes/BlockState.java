@@ -1,35 +1,79 @@
 package ArgumentTypes;
 
-import Enums.Block;
+import Enums.*;
+import java.util.*;
 
-public class BlockState implements ArgumentType {
-    private final Block blockId;
-    private String blockStates; // e.g. "[facing=north]"
-    private String dataTags;    // e.g. "{CustomName:\"MyChest\"}"
+public class BlockState {
 
-    public BlockState(Block blockId, String blockStates, String dataTags) {
-        this.blockId = blockId;
-        this.blockStates = blockStates;
-        this.dataTags = dataTags;
+    private final Block block;
+    private final Map<BlockProperty, Object> properties = new EnumMap<>(BlockProperty.class);
+    private final Map<BlockTag, Object> dataTags = new EnumMap<>(BlockTag.class);
+
+    public BlockState(Block block) {
+        this.block = block;
     }
 
-    public BlockState(Block blockId) {
-        this.blockId = blockId;
+    public Block getBlock() {
+        return block;
+    }
+
+    /** Add or update a block state property (type-checked at runtime). */
+    public <T> BlockState with(BlockProperty property, T value) {
+        if (!block.getValidProperties().contains(property)) {
+            throw new IllegalArgumentException("Property " + property + " is not valid for block " + block);
+        }
+
+        // Null-check if you don't allow null values
+        if (value == null) {
+            throw new IllegalArgumentException("Null value not allowed for property " + property.getName());
+        }
+
+        // Type check at runtime
+        if (!property.getType().isInstance(value)) {
+            throw new IllegalArgumentException("Invalid type for property " + property.getName() +
+                    ": expected " + property.getType().getSimpleName() + ", got " + value.getClass().getSimpleName());
+        }
+
+        properties.put(property, value);
+        return this;
+    }
+
+    /** Add or update a data tag. */
+    public BlockState with(BlockTag tag, Object value) {
+        if (!block.getValidTags().contains(tag)) {
+            throw new IllegalArgumentException("Tag " + tag + " is not valid for block " + block);
+        }
+        dataTags.put(tag, value);
+        return this;
     }
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder(blockId.toString());
-        if (blockStates != null) {
-            sb.append("[").append(blockStates).append("]");
+        StringBuilder sb = new StringBuilder(block.getId());
+
+        if (!properties.isEmpty()) {
+            sb.append("[");
+            sb.append(properties.entrySet().stream()
+                    .map(e -> e.getKey().getName() + "=" + formatValue(e.getValue()))
+                    .reduce((a, b) -> a + "," + b).orElse(""));
+            sb.append("]");
         }
-        if (dataTags != null) {
-            sb.append("{").append(dataTags).append("}");
+
+        if (!dataTags.isEmpty()) {
+            sb.append("{");
+            sb.append(dataTags.entrySet().stream()
+                    .map(e -> e.getKey().getName() + ":" + e.getValue())
+                    .reduce((a, b) -> a + "," + b).orElse(""));
+            sb.append("}");
         }
 
         return sb.toString();
     }
 
-    public void Sync() {
+    private String formatValue(Object v) {
+        // customize formatting if needed (e.g. strings quoted, enums lowercased)
+        if (v instanceof String) return "\"" + v + "\"";
+        if (v instanceof Enum) return ((Enum<?>) v).name().toLowerCase();
+        return v.toString();
     }
 }

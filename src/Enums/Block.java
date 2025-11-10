@@ -1,5 +1,7 @@
 package Enums;
 
+import java.util.EnumSet;
+
 public enum Block {
     AIR("air"),
     AMETHYST_BLOCK("amethyst_block"),
@@ -48,7 +50,11 @@ public enum Block {
     IRON_INGOT("iron_ingot"),
     IRON_LEGGINGS("iron_leggings"),
     IRON_SWORD("iron_sword"),
-    JUKEBOX("jukebox"),
+    JUKEBOX(
+            "jukebox",
+            EnumSet.of(BlockProperty.HAS_RECORD),
+            EnumSet.of(BlockTag.RECORD_ITEM)
+    ),
     LADDER("ladder"),
     LAPIS_LAZULI("lapis_lazuli"),
     LAVA("lava"),
@@ -84,24 +90,44 @@ public enum Block {
     WOLF_SPAWN_EGG("wolf_spawn_egg"),
     WRITTEN_BOOK("written_book");
 
-    private final String symbol;
+    private final String id;
+    private EnumSet<BlockProperty> validProperties;
+    private EnumSet<BlockTag> validTags;
 
-    Block(String symbol) {
-        this.symbol = symbol;
+    Block(String id) {
+        this.id = id;
+    }
+
+    Block(String id, EnumSet<BlockProperty> validProperties, EnumSet<BlockTag> validTags) {
+        this.id = id;
+        this.validProperties = validProperties;
+        this.validTags = validTags;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public EnumSet<BlockProperty> getValidProperties() {
+        return validProperties;
+    }
+
+    public EnumSet<BlockTag> getValidTags() {
+        return validTags;
     }
 
     public String setNamespace(Namespace namespace) {
-        return namespace + ":" + symbol;
+        return namespace + ":" + id;
     }
 
     public String extendColor(String color) {
-        return "minecraft:" + color + "_" + symbol;
+        return "minecraft:" + color + "_" + id;
     }
 
-    public String addNBT(String nbt) { return "minecraft:" + symbol + nbt; }
+    public String addNBT(String nbt) { return "minecraft:" + id + nbt; }
 
     @Override
     public String toString() {
-        return "minecraft:" + symbol;
+        return "minecraft:" + id;
     }
 }

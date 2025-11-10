@@ -1160,12 +1160,11 @@ public class Main {
         // Create jukebox at 0,0
         SetBlock sb = SetBlock.create(
                 startCoordinate,
-                new BlockState(
-                        Block.JUKEBOX,
-                        "has_record=true",
-                        "RecordItem:{Count:1b,id:\"" + Block.MUSIC_DISC_STAL + "\"}"
-                        )
+                new BlockState(Block.JUKEBOX)
+                        .with(BlockProperty.HAS_RECORD, true)
+                        .with(BlockTag.RECORD_ITEM, "{Count:1b,id:\"" + Block.MUSIC_DISC_STAL + "\"}")
         );
+
         fileCommands.add(Execute.In(Dimension.overworld) +
                 sb.build());
 
