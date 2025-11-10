@@ -4,24 +4,30 @@ import Enums.Block;
 
 public class BlockState implements ArgumentType {
     private final Block blockId;
-    private final String blockStates; // e.g. "[facing=north]"
-    private final String dataTags;    // e.g. "{CustomName:\"MyChest\"}"
+    private String blockStates; // e.g. "[facing=north]"
+    private String dataTags;    // e.g. "{CustomName:\"MyChest\"}"
 
     public BlockState(Block blockId, String blockStates, String dataTags) {
         this.blockId = blockId;
-        this.blockStates = blockStates == null ? "" : blockStates;
-        this.dataTags = dataTags == null ? "" : dataTags;
+        this.blockStates = blockStates;
+        this.dataTags = dataTags;
     }
 
     public BlockState(Block blockId) {
         this.blockId = blockId;
-        this.blockStates = "";
-        this.dataTags = "";
     }
 
     @Override
     public String toString() {
-        return blockId + blockStates + dataTags;
+        StringBuilder sb = new StringBuilder(blockId.toString());
+        if (blockStates != null) {
+            sb.append("[").append(blockStates).append("]");
+        }
+        if (dataTags != null) {
+            sb.append("{").append(dataTags).append("}");
+        }
+
+        return sb.toString();
     }
 
     public void Sync() {
