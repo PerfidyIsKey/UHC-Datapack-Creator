@@ -1,7 +1,10 @@
 package Enums;
 
 public enum BlockProperty {
-    HAS_RECORD("has_record", Boolean.class);
+    FACING("facing", Direction.class),
+    HAS_RECORD("has_record", Boolean.class),
+    MODE("mode", StructureBlockMode.class),
+    WATERLOGGED("waterlogged", Boolean.class);
 
     private final String name;
     private final Class<?> type;

@@ -912,9 +912,9 @@ public class Main {
 
         SetBlock sb = SetBlock.create(
                 new BlockPos(0, 222, -5),
-                new BlockState(
-                        Block.CHERRY_WALL_SIGN,
-                        "facing=south,waterlogged=false",
+                new BlockState(Block.CHERRY_WALL_SIGN)
+                        .with(BlockProperty.FACING, Direction.SOUTH)
+                        .with(BlockProperty.WATERLOGGED, false)
                         "back_text:{messages:[\"You have\",\"angered\",\"the Gods!\",\"\"]},front_text:{messages:[{\"text\":\"In rememberance\",\"click_event\":{\"action\":\"run_command\",\"command\":\"" + CommandBuilder.summonEntity(EntityType.FIREWORK_ROCKET, new Coordinate(0, 0, 0, ReferenceFrame.relative)) + "\"}},\"of our\",\"Command Center\",\"2014-2025\"]},is_waxed:0b"
                 )
         );
@@ -2009,11 +2009,10 @@ public class Main {
 
             SetBlock sb = SetBlock.create(
                     new BlockPos(c.getX(), c.getY() + 11, c.getZ()),
-                    new BlockState(
-                            Block.STRUCTURE_BLOCK,
-                            "mode=load",
+                    new BlockState(Block.STRUCTURE_BLOCK)
+                            .with(BlockProperty.MODE, StructureBlockMode.LOAD)
                             "metadata:\"\",mirror:\"NONE\",ignoreEntities:1b,powered:0b,seed:0L,author:\"?\",rotation:\"NONE\",posX:-6,mode:\"LOAD\",posY:-13,sizeX:13,posZ:-6,integrity:1.0f,showair:0b,name:\"" + cp.getStructureName() + "\",sizeY:14,sizeZ:13,showboundingbox:1b"
-                            )
+
             );
             fileCommands.add(Execute.In(c.getDimension()) +
                     sb.build());

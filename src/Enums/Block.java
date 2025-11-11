@@ -20,7 +20,13 @@ public enum Block {
     BRICKS("bricks"),
     BUNDLE("bundle"),
     CAVE_AIR("cave_air"),
-    CHERRY_WALL_SIGN("cherry_wall_sign"),
+    CHERRY_WALL_SIGN(
+            "cherry_wall_sign",
+            EnumSet.of(
+                    BlockProperty.FACING,
+                    BlockProperty.WATERLOGGED
+                    )
+    ),
     CHEST("chest"),
     COBWEB("cobweb"),
     COPPER_BLOCK("copper_block"),
@@ -102,6 +108,11 @@ public enum Block {
         this.id = id;
         this.validProperties = validProperties;
         this.validTags = validTags;
+    }
+
+    Block(String id, EnumSet<BlockProperty> validProperties) {
+        this.id = id;
+        this.validProperties = validProperties;
     }
 
     public String getId() {
