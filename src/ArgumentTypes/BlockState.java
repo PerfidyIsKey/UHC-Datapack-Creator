@@ -3,11 +3,16 @@ package ArgumentTypes;
 import Enums.*;
 import java.util.*;
 
+// Import the necessary NBT classes
+import nbt.blockentity.BlockEntity;
+import nbt.tags.CompoundTag;
+import nbt.util.TagConverter;
+
 public class BlockState {
 
     private final Block block;
     private final Map<BlockProperty, Object> properties = new EnumMap<>(BlockProperty.class);
-    private final Map<BlockTag, Object> dataTags = new EnumMap<>(BlockTag.class);
+    private final Map<String, BlockEntity> blockEntityData = new HashMap<>();
 
     public BlockState(Block block) {
         this.block = block;
@@ -17,18 +22,15 @@ public class BlockState {
         return block;
     }
 
-    /** Add or update a block state property (type-checked at runtime). */
     public <T> BlockState with(BlockProperty property, T value) {
         if (!block.getValidProperties().contains(property)) {
             throw new IllegalArgumentException("Property " + property + " is not valid for block " + block);
         }
 
-        // Null-check if you don't allow null values
         if (value == null) {
             throw new IllegalArgumentException("Null value not allowed for property " + property.getName());
         }
 
-        // Type check at runtime
         if (!property.getType().isInstance(value)) {
             throw new IllegalArgumentException("Invalid type for property " + property.getName() +
                     ": expected " + property.getType().getSimpleName() + ", got " + value.getClass().getSimpleName());
@@ -38,12 +40,17 @@ public class BlockState {
         return this;
     }
 
-    /** Add or update a data tag. */
-    public BlockState with(BlockTag tag, Object value) {
-        if (!block.getValidTags().contains(tag)) {
-            throw new IllegalArgumentException("Tag " + tag + " is not valid for block " + block);
-        }
-        dataTags.put(tag, value);
+    /** * Adds a specialized Block Entity (NBT data) to the block state.
+     * The Block Entity's name (if set) is used as the key.
+     * If the Block Entity name is missing, an empty string is used as the key
+     * to indicate it should be treated as the root NBT compound without a key wrapper.
+     */
+    public BlockState with(BlockEntity entity) {
+        String key = entity.getName() != null && !entity.getName().isEmpty()
+                ? entity.getName()
+                : "";
+
+        blockEntityData.put(key, entity);
         return this;
     }
 
@@ -51,6 +58,7 @@ public class BlockState {
     public String toString() {
         StringBuilder sb = new StringBuilder(block.getId());
 
+        // Standard properties output remains the same
         if (!properties.isEmpty()) {
             sb.append("[");
             sb.append(properties.entrySet().stream()
@@ -59,10 +67,22 @@ public class BlockState {
             sb.append("]");
         }
 
-        if (!dataTags.isEmpty()) {
+        // Block Entity (NBT) data output, using TagConverter for SNBT format
+        if (!blockEntityData.isEmpty()) {
             sb.append("{");
-            sb.append(dataTags.entrySet().stream()
-                    .map(e -> e.getKey().getName() + ":" + e.getValue())
+            sb.append(blockEntityData.entrySet().stream()
+                    .map(e -> {
+                        // All BlockEntity implementations extend CompoundTag, so this cast is safe.
+                        CompoundTag entityTag = (CompoundTag) e.getValue();
+
+                        if (e.getKey().isEmpty()) {
+                            // If it's the root entity (key == ""), use toJsonRoot to skip inner braces.
+                            return TagConverter.toJsonRoot(entityTag);
+                        } else {
+                            // For named NBT (e.g., custom data), use standard toJson (which includes braces).
+                            return e.getKey() + ":" + TagConverter.toJson(entityTag);
+                        }
+                    })
                     .reduce((a, b) -> a + "," + b).orElse(""));
             sb.append("}");
         }
@@ -71,7 +91,6 @@ public class BlockState {
     }
 
     private String formatValue(Object v) {
-        // customize formatting if needed (e.g. strings quoted, enums lowercased)
         if (v instanceof String) return "\"" + v + "\"";
         if (v instanceof Enum) return ((Enum<?>) v).name().toLowerCase();
         return v.toString();

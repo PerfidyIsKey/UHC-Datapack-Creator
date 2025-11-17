@@ -8,6 +8,13 @@ import ItemModifiers.*;
 import Predicates.*;
 import TeamGeneration.*;
 import Commands.*;
+import nbt.*;
+import nbt.blockentity.JukeboxEntity;
+import nbt.blockentity.SignEntity;
+import nbt.blockentity.StructureBlockEntity;
+import nbt.blockentity.StructureBlockEntity.StructureDataKey;
+import nbt.tags.CompoundTag;
+import nbt.util.TextComponent;
 
 import java.io.IOException;
 import java.nio.file.*;
@@ -915,8 +922,24 @@ public class Main {
                 new BlockState(Block.CHERRY_WALL_SIGN)
                         .with(BlockProperty.FACING, Direction.SOUTH)
                         .with(BlockProperty.WATERLOGGED, false)
-                        "back_text:{messages:[\"You have\",\"angered\",\"the Gods!\",\"\"]},front_text:{messages:[{\"text\":\"In rememberance\",\"click_event\":{\"action\":\"run_command\",\"command\":\"" + CommandBuilder.summonEntity(EntityType.FIREWORK_ROCKET, new Coordinate(0, 0, 0, ReferenceFrame.relative)) + "\"}},\"of our\",\"Command Center\",\"2014-2025\"]},is_waxed:0b"
-                )
+                        .with(new SignEntity("")
+                            .setWaxed(false)
+                            .getBackSide()
+                                .addMessage(TextComponent.simple("You have"))
+                                .addMessage(TextComponent.simple("angered"))
+                                .addMessage(TextComponent.simple("the Gods!"))
+                                .addMessage(TextComponent.simple(""))
+                            .done()
+                            .getFrontSide()
+                                .addMessage(TextComponent.withClickCommand(
+                                    "In rememberance",
+                                    "run_command",
+                                    "summon minecraft:firework_rocket ~0 ~0 ~0"))
+                                .addMessage(TextComponent.simple("of our"))
+                                .addMessage(TextComponent.simple("Command Center"))
+                                .addMessage(TextComponent.simple("2014-2025"))
+                            .done()
+                        )
         );
         fileCommands.add(Execute.In(Dimension.overworld) +
                 sb.build());
@@ -1162,7 +1185,9 @@ public class Main {
                 startCoordinate,
                 new BlockState(Block.JUKEBOX)
                         .with(BlockProperty.HAS_RECORD, true)
-                        .with(BlockTag.RECORD_ITEM, "{Count:1b,id:\"" + Block.MUSIC_DISC_STAL + "\"}")
+                        .with(new JukeboxEntity("")
+                                .setRecord("minecraft:music_disc_stal", (byte)1)
+                        )
         );
 
         fileCommands.add(Execute.In(Dimension.overworld) +
@@ -2011,8 +2036,25 @@ public class Main {
                     new BlockPos(c.getX(), c.getY() + 11, c.getZ()),
                     new BlockState(Block.STRUCTURE_BLOCK)
                             .with(BlockProperty.MODE, StructureBlockMode.LOAD)
-                            "metadata:\"\",mirror:\"NONE\",ignoreEntities:1b,powered:0b,seed:0L,author:\"?\",rotation:\"NONE\",posX:-6,mode:\"LOAD\",posY:-13,sizeX:13,posZ:-6,integrity:1.0f,showair:0b,name:\"" + cp.getStructureName() + "\",sizeY:14,sizeZ:13,showboundingbox:1b"
-
+                            .with(new StructureBlockEntity("")
+                                    .setString(StructureBlockEntity.StructureDataKey.METADATA, "")
+                                    .setString(StructureDataKey.MIRROR, "NONE")
+                                    .setByte(StructureDataKey.IGNORE_ENTITIES, (byte)1)
+                                    .setByte(StructureDataKey.POWERED, (byte)0)
+                                    .setLong(StructureDataKey.SEED, 0L)
+                                    .setString(StructureDataKey.AUTHOR, "?")
+                                    .setString(StructureDataKey.ROTATION, "NONE")
+                                    .setInt(StructureDataKey.POS_X, -6)
+                                    .setString(StructureDataKey.MODE, "LOAD")
+                                    .setInt(StructureDataKey.POS_Y, -13)
+                                    .setInt(StructureDataKey.SIZE_X, 13)
+                                    .setInt(StructureDataKey.POS_Z, -6)
+                                    .setFloat(StructureDataKey.INTEGRITY, 1.0f)
+                                    .setString(StructureDataKey.NAME, cp.getStructureName())
+                                    .setInt(StructureDataKey.SIZE_Y, 14)
+                                    .setInt(StructureDataKey.SIZE_Z, 13)
+                                    .setByte(StructureDataKey.SHOW_BOUNDING_BOX, (byte)1)
+                            )
             );
             fileCommands.add(Execute.In(c.getDimension()) +
                     sb.build());

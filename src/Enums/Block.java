@@ -58,8 +58,7 @@ public enum Block {
     IRON_SWORD("iron_sword"),
     JUKEBOX(
             "jukebox",
-            EnumSet.of(BlockProperty.HAS_RECORD),
-            EnumSet.of(BlockTag.RECORD_ITEM)
+            EnumSet.of(BlockProperty.HAS_RECORD)
     ),
     LADDER("ladder"),
     LAPIS_LAZULI("lapis_lazuli"),
@@ -85,7 +84,10 @@ public enum Block {
     SPYGLASS("spyglass"),
     STAINED_GLASS("stained_glass"),
     STICK("stick"),
-    STRUCTURE_BLOCK("structure_block"),
+    STRUCTURE_BLOCK(
+            "structure_block",
+            EnumSet.of(BlockProperty.MODE)
+            ),
     SUSPICIOUS_STEW("suspicious_stew"),
     TNT("tnt"),
     TRIDENT("trident"),
