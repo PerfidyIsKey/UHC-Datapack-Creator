@@ -8,6 +8,9 @@ import nbt.blockentity.BlockEntity;
 import nbt.tags.CompoundTag;
 import nbt.util.TagConverter;
 
+// Import the centralized enum for the BlockState argument
+import shared.StructureBlockMode;
+
 public class BlockState {
 
     private final Block block;
@@ -58,7 +61,7 @@ public class BlockState {
     public String toString() {
         StringBuilder sb = new StringBuilder(block.getId());
 
-        // Standard properties output remains the same
+        // Standard properties output
         if (!properties.isEmpty()) {
             sb.append("[");
             sb.append(properties.entrySet().stream()
@@ -67,7 +70,7 @@ public class BlockState {
             sb.append("]");
         }
 
-        // Block Entity (NBT) data output, using TagConverter for SNBT format
+        // Block Entity (NBT) data output
         if (!blockEntityData.isEmpty()) {
             sb.append("{");
             sb.append(blockEntityData.entrySet().stream()
@@ -91,6 +94,11 @@ public class BlockState {
     }
 
     private String formatValue(Object v) {
+        if (v instanceof StructureBlockMode) {
+            // Use the method designed to return the lowercase BlockState value ("save", "load", etc.)
+            return ((StructureBlockMode) v).getBlockStateValue();
+        }
+
         if (v instanceof String) return "\"" + v + "\"";
         if (v instanceof Enum) return ((Enum<?>) v).name().toLowerCase();
         return v.toString();

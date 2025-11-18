@@ -8,13 +8,11 @@ import ItemModifiers.*;
 import Predicates.*;
 import TeamGeneration.*;
 import Commands.*;
-import nbt.*;
-import nbt.blockentity.JukeboxEntity;
-import nbt.blockentity.SignEntity;
-import nbt.blockentity.StructureBlockEntity;
+import nbt.blockentity.*;
 import nbt.blockentity.StructureBlockEntity.StructureDataKey;
-import nbt.tags.CompoundTag;
+import shared.ItemId;
 import nbt.util.TextComponent;
+import shared.StructureBlockMode;
 
 import java.io.IOException;
 import java.nio.file.*;
@@ -1186,7 +1184,7 @@ public class Main {
                 new BlockState(Block.JUKEBOX)
                         .with(BlockProperty.HAS_RECORD, true)
                         .with(new JukeboxEntity("")
-                                .setRecord("minecraft:music_disc_stal", (byte)1)
+                                .setRecord(ItemId.MUSIC_DISC_STAL, (byte)1)
                         )
         );
 
@@ -2038,14 +2036,14 @@ public class Main {
                             .with(BlockProperty.MODE, StructureBlockMode.LOAD)
                             .with(new StructureBlockEntity("")
                                     .setString(StructureBlockEntity.StructureDataKey.METADATA, "")
-                                    .setString(StructureDataKey.MIRROR, "NONE")
+                                    .setMirror(StructureMirror.NONE)
                                     .setByte(StructureDataKey.IGNORE_ENTITIES, (byte)1)
                                     .setByte(StructureDataKey.POWERED, (byte)0)
                                     .setLong(StructureDataKey.SEED, 0L)
                                     .setString(StructureDataKey.AUTHOR, "?")
-                                    .setString(StructureDataKey.ROTATION, "NONE")
+                                    .setRotation(StructureRotation.NONE)
                                     .setInt(StructureDataKey.POS_X, -6)
-                                    .setString(StructureDataKey.MODE, "LOAD")
+                                    .setMode(StructureBlockMode.LOAD)
                                     .setInt(StructureDataKey.POS_Y, -13)
                                     .setInt(StructureDataKey.SIZE_X, 13)
                                     .setInt(StructureDataKey.POS_Z, -6)

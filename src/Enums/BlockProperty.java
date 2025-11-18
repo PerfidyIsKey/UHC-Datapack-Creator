@@ -1,5 +1,7 @@
 package Enums;
 
+import shared.StructureBlockMode;
+
 public enum BlockProperty {
     FACING("facing", Direction.class),
     HAS_RECORD("has_record", Boolean.class),

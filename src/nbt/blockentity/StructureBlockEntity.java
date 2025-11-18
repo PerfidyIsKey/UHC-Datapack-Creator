@@ -2,6 +2,7 @@ package nbt.blockentity;
 
 import nbt.NBTTag;
 import nbt.tags.*;
+import shared.StructureBlockMode;
 
 public class StructureBlockEntity extends CompoundTag implements BlockEntity {
 
@@ -92,6 +93,30 @@ public class StructureBlockEntity extends CompoundTag implements BlockEntity {
         } else {
             throw new IllegalArgumentException("NBTTag '" + key.getNbtName() + "' is not a StringTag.");
         }
+        return this;
+    }
+
+    /** * Sets the structure's rotation using the type-safe Rotation enum.
+     */
+    public StructureBlockEntity setRotation(StructureRotation rotation) {
+        // Use the existing setString method, converting the enum to its required NBT string name.
+        setString(StructureDataKey.ROTATION, rotation.getNbtName());
+        return this;
+    }
+
+    /** * Sets the structure's mirror using the type-safe Mirror enum.
+     */
+    public StructureBlockEntity setMirror(StructureMirror mirror) {
+        // Use the existing setString method, converting the enum to its required NBT string name.
+        setString(StructureDataKey.MIRROR, mirror.getNbtName());
+        return this;
+    }
+
+    /** * Sets the structure's mode using the type-safe Mode enum.
+     */
+    public StructureBlockEntity setMode(StructureBlockMode mode) {
+        // Use the existing setString method, converting the enum to its required NBT string name.
+        setString(StructureDataKey.MODE, mode.getNbtValue());
         return this;
     }
 

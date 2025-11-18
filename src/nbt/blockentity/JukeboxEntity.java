@@ -1,6 +1,7 @@
 package nbt.blockentity;
 
 import nbt.NBTTag;
+import shared.ItemId;
 import nbt.tags.CompoundTag;
 import nbt.tags.StringTag;
 import nbt.tags.ByteTag;
@@ -43,12 +44,12 @@ public class JukeboxEntity extends CompoundTag implements BlockEntity {
     /**
      * Sets the contents of the RecordItem CompoundTag using a chained API.
      */
-    public JukeboxEntity setRecord(String id, byte count) {
+    public JukeboxEntity setRecord(ItemId id, byte count) {
         CompoundTag record = getRecordItem();
 
         // Use the chained put() method from CompoundTag
         record.put(new ByteTag("Count", count))
-                .put(new StringTag("id", id));
+                .put(new StringTag("id", id.getResourceLocation()));
 
         return this; // Return this for chaining on the JukeboxEntity itself
     }
