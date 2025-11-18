@@ -145,35 +145,6 @@ public class CommandBuilder {
         return "setworldspawn " + coordinate.getCoordinateString();
     }
 
-    // Entities
-    public static String summonEntity(String entity) {
-        return summonEntity(entity, new Coordinate(0, 0, 0, ReferenceFrame.relative));
-    }
-
-    public static String summonEntity(String entity, Coordinate coordinate) {
-        return "summon " + entity + " " + coordinate.getCoordinateString();
-    }
-
-    public static String summonEntity(String entity, String nbt) {
-        return summonEntity(entity, new Coordinate(0, 0, 0, ReferenceFrame.relative), nbt);
-    }
-
-    public static String summonEntity(String entity, Coordinate coordinate, String nbt) {
-        return "summon " + entity + " " + coordinate.getCoordinateString() + " " + nbt;
-    }
-
-    public static String summonEntity(EntityType entity) {
-        return summonEntity(entity, new Coordinate(0, 0, 0, ReferenceFrame.relative));
-    }
-
-    public static String summonEntity(EntityType entity, Coordinate coordinate) {
-        return "summon " + entity + " " + coordinate.getCoordinateString();
-    }
-
-    public static String summonEntity(EntityType entity, String nbt) {
-        return summonEntity(entity, new Coordinate(0, 0, 0, ReferenceFrame.relative), nbt);
-    }
-
     public static String summonEntity(EntityType entity, Coordinate coordinate, String nbt) {
         return "summon " + entity + " " + coordinate.getCoordinateString() + " " + nbt;
     }

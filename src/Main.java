@@ -10,9 +10,12 @@ import TeamGeneration.*;
 import commands.*;
 import nbt.blockentity.*;
 import nbt.blockentity.StructureBlockEntity.StructureDataKey;
+import nbt.entity.BaseEntityNbt;
+import nbt.entity.FallingBlockNbtBuilder;
 import nbt.entity.FireworkRocketNbtBuilder;
-import nbt.entity.data.FireworkRocketDataBuilder;
-import nbt.entity.data.FireworkStarDataBuilder;
+import nbt.entity.ItemNbtBuilder;
+import nbt.entity.data.*;
+import nbt.item.PlayerProfileComponentBuilder;
 import utils.TextComponent;
 import shared.*;
 
@@ -948,7 +951,7 @@ public class Main {
                                                                     .build()
                                                     )
                                                             .buildNbt()
-                                            ).toString()
+                                            ).build()
                                         ))
                                 .addMessage(TextComponent.simple("of our"))
                                 .addMessage(TextComponent.simple("Command Center"))
@@ -1044,7 +1047,24 @@ public class Main {
         // Summon a player head upon dying
         for (Player p : players) {
             fileCommands.add(Execute.At(new Entity("@p[name=" + p.getPlayerName() + ",scores={Deaths=1}]")) +
-                    CommandBuilder.summonEntity(EntityType.ITEM, "{Item:{id:\"" + Block.PLAYER_HEAD + "\",count:1,components:{\"minecraft:profile\":{name:" + p.getPlayerName() + "}}}}"));
+                    Summon.create(EntityType.ITEM)
+                                    .setPos(new Vec3("~", "~", "~"))
+                                            .setNbt(
+                                                    new ItemNbtBuilder(
+                                                            new ItemData(
+                                                                    "minecraft:player_head",
+                                                                    1,
+                                                                    Map.of(
+                                                                            "minecraft:profile",
+                                                                            PlayerProfileComponentBuilder.build(
+                                                                                    new PlayerProfileComponentData(p.getPlayerName()
+                                                                                    )
+                                                                            )
+                                                                    )
+                                                            )
+                                                    ).buildNbt()
+                                            )
+            );
         }
 
         return new FileData(FileName.drop_player_heads, fileCommands);
@@ -1171,7 +1191,16 @@ public class Main {
 
         // Create marker entity
         fileCommands.add(CommandBuilder.killEntity(Constant.admin));
-        fileCommands.add(CommandBuilder.summonEntity(EntityType.MARKER, new Coordinate(0, Constant.worldBottom, 0), "{CustomName:\"Admin\"}"));
+        fileCommands.add(
+                Summon.create(EntityType.MARKER)
+                        .setPos(
+                                new Vec3(0, Constant.worldBottom, 0)
+                        )
+                        .setNbt(
+                                new BaseEntityNbt(EntityType.MARKER, "Admin").buildNbt()
+                        )
+                        .build()
+        );
 
         // Set time
         fileCommands.add(CommandBuilder.setTime(0));
@@ -1945,7 +1974,21 @@ public class Main {
         // Summon Care Package entities
         for (int i = 0; i < carePackageAmount; i++) {
             fileCommands.add(Execute.In(Dimension.overworld) +
-                    CommandBuilder.summonEntity(EntityType.AREA_EFFECT_CLOUD, new Coordinate(0, 300, 0), "{Passengers:[{id:\"" + EntityType.FALLING_BLOCK + "\",BlockState:{Name:\"" + Block.CHEST + "\"},TileEntityData:{LootTable:\"uhc:supply_drop\",CustomName:\"Care Package\"},Time:1,DropItem:0b,Tags:[\"CarePackage\"]}]}"));
+                    Summon.create(EntityType.FALLING_BLOCK)
+                                    .setPos(new Vec3(0, 300, 0))
+                                            .setNbt(
+                                                    new FallingBlockNbtBuilder(
+                                                            new FallingBlockData(
+                                                                    "minecraft:chest",
+                                                                    "uhc:supply_drop",
+                                                                    "Care Package",
+                                                                    1,
+                                                                    false,
+                                                                    new String[]{"CarePackage"}
+                                                            )
+                                                    ).buildNbt()
+                                            )
+            );
         }
 
         // Spread Care Packages
@@ -2573,7 +2616,7 @@ public class Main {
                 Execute.StoreNext(ExecuteStore.result, "@s", getObjectiveByName(Objective.WolfAge), true) +
                 CommandBuilder.getData("@s", "Age"));
         fileCommands.add(Execute.At(babyWolf) +
-                CommandBuilder.summonEntity(EntityType.DOLPHIN));
+                Summon.create(EntityType.DOLPHIN));
         fileCommands.add(Execute.As(babyWolf) +
                 CommandBuilder.killEntity("@s"));
 

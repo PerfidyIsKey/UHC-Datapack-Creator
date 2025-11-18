@@ -28,8 +28,7 @@ public class Summon {
         return this;
     }
 
-    @Override
-    public String toString() {
+    public String build() {
         StringBuilder command = new StringBuilder("summon ");
 
         command.append(entity.toString());
@@ -43,6 +42,11 @@ public class Summon {
         }
 
         return command.toString();
+    }
+
+    @Override
+    public String toString() {
+        return build();
     }
 
 }
