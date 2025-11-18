@@ -1,6 +1,7 @@
-import ArgumentTypes.BlockPos;
+import arguments.BlockPos;
 import Enums.*;
 import HelperClasses.*;
+import shared.EntityType;
 
 import java.util.ArrayList;
 

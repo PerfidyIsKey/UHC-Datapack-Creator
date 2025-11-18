@@ -1,4 +1,4 @@
-import ArgumentTypes.*;
+import arguments.*;
 import EntityClasses.*;
 import Enums.*;
 import FileGeneration.*;
@@ -7,12 +7,14 @@ import ItemClasses.*;
 import ItemModifiers.*;
 import Predicates.*;
 import TeamGeneration.*;
-import Commands.*;
+import commands.*;
 import nbt.blockentity.*;
 import nbt.blockentity.StructureBlockEntity.StructureDataKey;
-import shared.ItemId;
-import nbt.util.TextComponent;
-import shared.StructureBlockMode;
+import nbt.entity.FireworkRocketNbtBuilder;
+import nbt.entity.data.FireworkRocketDataBuilder;
+import nbt.entity.data.FireworkStarDataBuilder;
+import utils.TextComponent;
+import shared.*;
 
 import java.io.IOException;
 import java.nio.file.*;
@@ -932,7 +934,22 @@ public class Main {
                                 .addMessage(TextComponent.withClickCommand(
                                     "In rememberance",
                                     "run_command",
-                                    "summon minecraft:firework_rocket ~0 ~0 ~0"))
+                                    Summon.create(EntityType.FIREWORK_ROCKET)
+                                            .setPos(new Vec3("~", "~", "~"))
+                                            .setNbt(
+                                                    new FireworkRocketNbtBuilder(
+                                                            FireworkRocketDataBuilder.create()
+                                                                    .setProperty(BooleanNbtProperty.GLOWING)
+                                                                    .addStar(
+                                                                            FireworkStarDataBuilder.create()
+                                                                                    .setShape(FireworkShape.STAR)
+                                                                                    .build()
+                                                                    )
+                                                                    .build()
+                                                    )
+                                                            .buildNbt()
+                                            ).toString()
+                                        ))
                                 .addMessage(TextComponent.simple("of our"))
                                 .addMessage(TextComponent.simple("Command Center"))
                                 .addMessage(TextComponent.simple("2014-2025"))

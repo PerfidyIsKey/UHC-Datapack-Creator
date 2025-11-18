@@ -1,5 +1,5 @@
-import Enums.EntityType;
 import Enums.WorldShape;
+import shared.EntityType;
 
 public class Constant {
     // Unit conversion

@@ -1,6 +1,6 @@
-package Commands;
+package commands;
 
-import ArgumentTypes.*;
+import arguments.*;
 import Enums.FillMode;
 
 public class Fill {
