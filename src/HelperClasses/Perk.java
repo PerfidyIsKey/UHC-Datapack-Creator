@@ -1,25 +1,23 @@
 package HelperClasses;
 
-import Enums.AttributeType;
-import Enums.Sound;
-import HelperClasses.Execute;
+import shared.SoundId;
 
 public class Perk {
 
     private int id;
     private StatusEffect effect;
     private Attribute attribute;
-    private Sound sound;
+    private SoundId sound;
     private int activationTime;
 
-    public Perk(int id, StatusEffect reward, Sound sound, int activationTime) {
+    public Perk(int id, StatusEffect reward, SoundId sound, int activationTime) {
         this.id = id;
         this.effect = reward;
         this.sound = sound;
         this.activationTime = activationTime;
     }
 
-    public Perk(int id, Attribute reward, Sound sound, int activationTime) {
+    public Perk(int id, Attribute reward, SoundId sound, int activationTime) {
         this.id = id;
         this.attribute = reward;
         this.sound = sound;
@@ -42,7 +40,7 @@ public class Perk {
         return reward;
     }
 
-    public Sound getSound() {
+    public SoundId getSound() {
         return sound;
     }
 
