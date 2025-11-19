@@ -942,7 +942,7 @@ public class Main {
                                             .setNbt(
                                                     new FireworkRocketNbtBuilder(
                                                             FireworkRocketDataBuilder.create()
-                                                                    .setProperty(BooleanNbtProperty.GLOWING)
+                                                                    .setProperty(BooleanNbtProperty.GLOWING, true)
                                                                     .addStar(
                                                                             FireworkStarDataBuilder.create()
                                                                                     .setShape(FireworkShape.STAR)
@@ -1048,22 +1048,21 @@ public class Main {
         for (Player p : players) {
             fileCommands.add(Execute.At(new Entity("@p[name=" + p.getPlayerName() + ",scores={Deaths=1}]")) +
                     Summon.create(EntityType.ITEM)
-                                    .setPos(new Vec3("~", "~", "~"))
-                                            .setNbt(
-                                                    new ItemNbtBuilder(
-                                                            new ItemData(
-                                                                    "minecraft:player_head",
-                                                                    1,
-                                                                    Map.of(
-                                                                            "minecraft:profile",
-                                                                            PlayerProfileComponentBuilder.build(
-                                                                                    new PlayerProfileComponentData(p.getPlayerName()
-                                                                                    )
-                                                                            )
-                                                                    )
+                            .setPos(new Vec3("~", "~", "~"))
+                            .setNbt(
+                                    new ItemNbtBuilder(
+                                            new ItemData(
+                                                    ItemId.PLAYER_HEAD,
+                                                    1,
+                                                    Map.of(
+                                                            ItemComponentType.PROFILE,
+                                                            PlayerProfileComponentBuilder.build(
+                                                                    new PlayerProfileComponentData(p.getPlayerName())
                                                             )
-                                                    ).buildNbt()
+                                                    )
                                             )
+                                    ).buildNbt()
+                            )
             );
         }
 
@@ -1979,12 +1978,12 @@ public class Main {
                                             .setNbt(
                                                     new FallingBlockNbtBuilder(
                                                             new FallingBlockData(
-                                                                    "minecraft:chest",
-                                                                    "uhc:supply_drop",
+                                                                    ItemId.CHEST,
+                                                                    LootTableId.SUPPLY_DROP,
                                                                     "Care Package",
                                                                     1,
                                                                     false,
-                                                                    new String[]{"CarePackage"}
+                                                                    new EntityTag[]{EntityTag.CARE_PACKAGE}
                                                             )
                                                     ).buildNbt()
                                             )

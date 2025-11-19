@@ -5,6 +5,7 @@ import nbt.entity.data.ItemData;
 import shared.EntityType;
 import java.util.Map;
 import nbt.NBTTag;
+import shared.ItemComponentType;
 
 /**
  * Factory/Builder for the Item Entity NBT structure.
@@ -23,23 +24,24 @@ public class ItemNbtBuilder implements EntityNbtBuilder {
 
     @Override
     public CompoundTag buildNbt() {
-        // Start with the base NBT (which is currently just an empty compound tag)
         CompoundTag rootNbt = baseNbt.buildNbt();
-
-        // The root NBT must contain the 'Item' compound tag
         CompoundTag itemTag = new CompoundTag("Item");
 
         // 1. Item ID and Count
-        itemTag.put(new StringTag("id", data.itemId()));
+        itemTag.put(new StringTag("id", data.id().getResourceLocation()));
         itemTag.put(new IntTag("count", data.count()));
 
         // 2. Components Map: {"components": {...}}
         if (!data.components().isEmpty()) {
             CompoundTag componentsMap = new CompoundTag("components");
 
-            // Iterate over the components map (key is "minecraft:profile", value is the component data NBT)
-            for (Map.Entry<String, CompoundTag> entry : data.components().entrySet()) {
-                CompoundTag namedComponentTag = createNamedCompoundTag(entry.getKey(), entry.getValue());
+            for (Map.Entry<ItemComponentType, CompoundTag> entry : data.components().entrySet()) {
+
+                // Retrieve the actual string resource location from the enum key
+                String componentKey = entry.getKey().getResourceLocation();
+
+                // Build the named tag (e.g., "minecraft:profile": {...})
+                CompoundTag namedComponentTag = createNamedCompoundTag(componentKey, entry.getValue());
                 componentsMap.put(namedComponentTag);
             }
             itemTag.put(componentsMap);

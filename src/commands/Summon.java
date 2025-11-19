@@ -34,7 +34,7 @@ public class Summon {
         command.append(entity.toString());
 
         if (pos != null) {
-            command.append(" ").append(pos.toString());
+            command.append(" ").append(pos);
 
             if (nbt != null) {
                 command.append(" ").append(TagConverter.toJson(nbt));

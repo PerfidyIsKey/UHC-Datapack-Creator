@@ -2,6 +2,7 @@ package nbt.entity;
 
 import nbt.tags.*;
 import nbt.entity.data.FallingBlockData;
+import shared.EntityTag;
 
 /**
  * Factory/Builder for the Falling Block Entity NBT structure (used for Care Packages).
@@ -20,8 +21,7 @@ public class FallingBlockNbtBuilder implements EntityNbtBuilder {
 
         // 1. BlockState:{Name:"minecraft:chest"}
         CompoundTag blockState = new CompoundTag("BlockState");
-        // Accessor updated: data.getBlockName() -> data.blockName()
-        blockState.put(new StringTag("Name", data.blockName()));
+        blockState.put(new StringTag("Name", data.blockName().getResourceLocation()));
         rootNbt.put(blockState);
 
         // 2. TileEntityData:{LootTable:"uhc:supply_drop",CustomName:"Care Package"}
@@ -29,7 +29,7 @@ public class FallingBlockNbtBuilder implements EntityNbtBuilder {
 
         // LootTable
         // Accessor updated: data.getLootTable() -> data.lootTable()
-        tileEntityData.put(new StringTag("LootTable", data.lootTable()));
+        tileEntityData.put(new StringTag("LootTable", data.lootTable().getResourceLocation()));
 
         // CustomName
         // Accessor updated: data.getCustomName() -> data.customName()
@@ -48,9 +48,9 @@ public class FallingBlockNbtBuilder implements EntityNbtBuilder {
         // 5. Tags:["CarePackage"]
         ListTag tagsList = new ListTag("Tags");
         // Accessor updated: data.getTags() -> data.tags()
-        for (String tag : data.tags()) {
+        for (EntityTag tag : data.tags()) {
             // String tags inside a ListTag should have an empty name (key)
-            tagsList.add(new StringTag("", tag));
+            tagsList.add(new StringTag("", tag.getTagName()));
         }
         rootNbt.put(tagsList);
 
