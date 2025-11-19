@@ -1,4 +1,4 @@
-package ArgumentTypes;
+package arguments;
 
 public class BlockPos implements ArgumentType {
 

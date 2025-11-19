@@ -1,4 +1,4 @@
-package ArgumentTypes;
+package arguments;
 import Enums.*;
 
 public class BlockPredicate implements ArgumentType {

@@ -1,4 +1,4 @@
-package nbt.util;
+package utils;
 
 /**
  * Utility class for creating Minecraft Text Component strings.

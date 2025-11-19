@@ -4,10 +4,8 @@ package shared;
  * Defines item IDs (resource locations) used in NBT data,
  * automatically applying the 'minecraft' namespace by default.
  */
-public enum ItemId {
-    CHEST("chest"),
-    MUSIC_DISC_STAL("music_disc_stal"),
-    PLAYER_HEAD("player_head");
+public enum LootTableId {
+    SUPPLY_DROP("supply_drop", "uhc");
 
     private final String resourceLocation;
     private static final String DEFAULT_NAMESPACE = "minecraft";
@@ -16,11 +14,11 @@ public enum ItemId {
      * Constructor. Prefixes with "minecraft:" unless a namespace is already present.
      */
 
-    ItemId(String path, String namespace) {
+    LootTableId(String path, String namespace) {
         this.resourceLocation = namespace + ":" + path;
     }
 
-    ItemId(String path) {
+    LootTableId(String path) {
         this.resourceLocation = DEFAULT_NAMESPACE + ":" + path;
     }
 

@@ -13,11 +13,15 @@ import nbt.tags.DoubleTag;
 import nbt.tags.ByteArrayTag;
 import nbt.tags.IntArrayTag;
 import nbt.tags.LongArrayTag;
+
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream; // Required for byte[] iteration
 import java.util.Arrays;
 
 public final class TagConverter {
+    // Regex to check if a key needs quotes (contains non-alphanumeric characters, e.g., ":")
+    private static final Pattern SIMPLE_KEY = Pattern.compile("^[a-zA-Z0-9_]+$");
 
     /**
      * Checks if a string starts and ends with brackets/braces, indicating it is raw JSON.
@@ -27,6 +31,13 @@ public final class TagConverter {
         if (s == null || s.isEmpty()) return false;
         s = s.trim();
         return (s.startsWith("{") && s.endsWith("}")) || (s.startsWith("[") && s.endsWith("]"));
+    }
+
+    private static String formatKey(String key) {
+        if (SIMPLE_KEY.matcher(key).matches()) {
+            return key; // No quotes needed for simple keys like "id" or "Count"
+        }
+        return "\"" + key + "\""; // Quote keys like "minecraft:fireworks"
     }
 
     /**
@@ -45,9 +56,10 @@ public final class TagConverter {
      * Converts an NBT NBTTag into the compact SNBT (Stringified NBT) representation.
      */
     public static String toJson(NBTTag tag) {
-        if (tag instanceof CompoundTag compound) {
+        if (tag instanceof CompoundTag) {
+            CompoundTag compound = (CompoundTag) tag;
             String content = compound.getValue().entrySet().stream()
-                    .map(entry -> String.format("%s:%s", entry.getKey(), toJson(entry.getValue())))
+                    .map(entry -> String.format("%s:%s", formatKey(entry.getKey()), toJson(entry.getValue())))
                     .collect(Collectors.joining(","));
             return "{" + content + "}";
         }

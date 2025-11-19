@@ -1,4 +1,4 @@
-package ArgumentTypes;
+package arguments;
 
 import Enums.*;
 import java.util.*;

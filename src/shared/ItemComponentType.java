@@ -1,13 +1,11 @@
 package shared;
 
 /**
- * Defines item IDs (resource locations) used in NBT data,
- * automatically applying the 'minecraft' namespace by default.
+ * Enum for type-safe representation of Minecraft Item Component resource locations.
+ * Using an enum prevents string typos when building ItemData.
  */
-public enum ItemId {
-    CHEST("chest"),
-    MUSIC_DISC_STAL("music_disc_stal"),
-    PLAYER_HEAD("player_head");
+public enum ItemComponentType {
+    PROFILE("profile");
 
     private final String resourceLocation;
     private static final String DEFAULT_NAMESPACE = "minecraft";
@@ -16,11 +14,11 @@ public enum ItemId {
      * Constructor. Prefixes with "minecraft:" unless a namespace is already present.
      */
 
-    ItemId(String path, String namespace) {
+    ItemComponentType(String path, String namespace) {
         this.resourceLocation = namespace + ":" + path;
     }
 
-    ItemId(String path) {
+    ItemComponentType(String path) {
         this.resourceLocation = DEFAULT_NAMESPACE + ":" + path;
     }
 

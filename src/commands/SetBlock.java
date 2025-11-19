@@ -1,6 +1,6 @@
-package Commands;
+package commands;
 
-import ArgumentTypes.*;
+import arguments.*;
 import Enums.SetMode;
 
 public class SetBlock {
