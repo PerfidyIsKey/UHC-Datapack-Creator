@@ -2,6 +2,8 @@ import arguments.BlockPos;
 import Enums.*;
 import HelperClasses.*;
 import shared.EntityType;
+import shared.SoundId;
+import shared.SoundSource;
 
 import java.util.ArrayList;
 
@@ -93,11 +95,6 @@ public class CommandBuilder {
 
     public static String setGameRule(GameRule gamerule, String string) {
         return "gamerule " + gamerule + " " + string;
-    }
-
-    // Play sound
-    public static String playSound(Sound sound, SoundSource source, String entity, String x, String y, String z, String x1, String y1, String z1) {
-        return "playsound " + sound + " " + source + " " + entity + " " + x + " " + y + " " + z + " " + x1 + " " + y1 + " " + z1;
     }
 
     public static String setAttributeBase(String target, AttributeType attribute, double value) {
