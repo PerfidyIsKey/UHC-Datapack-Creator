@@ -5,7 +5,7 @@ package shared;
  * Using an enum prevents string typos when assigning tags to entities.
  */
 public enum EntityTag {
-    AMIWINNING("AmIWinning"),
+    AM_I_WINNING("AmIWinning"),
     CARE_PACKAGE("CarePackage"),
     CARE_PACKAGES_DROPPED("CarePackagesDropped"),
     COLLAR_CHECK("CollarCheck"),
@@ -13,7 +13,7 @@ public enum EntityTag {
     CONTROL_POINT_1_ENABLED("ControlPoint1Enabled"),
     CONTROL_POINT_2_ENABLED("ControlPoint2Enabled"),
     DEBUG("Debug"),
-    DONTMAKETRAITOR("DontMakeTraitor"),
+    DONT_MAKE_TRAITOR("DontMakeTraitor"),
     GAME_STARTED("GameStarted"),
     IRON_MAN("IronMan"),
     IRON_MAN_CANDIDATE("IronManCandidate"),
@@ -24,7 +24,7 @@ public enum EntityTag {
     RESPAWN("Respawn"),
     RESPAWN_DISABLED("RespawnDisabled"),
     TRAITOR("Traitor"),
-    TRAITORSASSIGNED("TraitorsAssigned");
+    TRAITORS_ASSIGNED("TraitorsAssigned");
 
     private final String tagName;
 
@@ -38,4 +38,7 @@ public enum EntityTag {
     public String getTagName() {
         return tagName;
     }
+
+    @Override
+    public String toString() { return tagName; }
 }

@@ -148,24 +148,6 @@ public class CommandBuilder {
         return "tp " + entity1 + " " + entity2;
     }
 
-    // Tags
-
-    public static String removeTag(String entity, TagTemp tag) {
-        return "tag " + entity + " remove " + tag;
-    }
-
-    public static String removeTag(String entity, String tag) {
-        return "tag " + entity + " remove " + tag;
-    }
-
-    public static String removeTag(TagTemp tag) {
-        return removeTag("@a", tag);
-    }
-
-    public static String removeTag(String tag) {
-        return removeTag("@a", tag);
-    }
-
     // Give item
     public static String giveItem(String entity, Block item) {
         return giveItem(entity, item, "");
