@@ -38,7 +38,8 @@ public enum Objective {
         DamageTaken("DamageTaken"),
         IsKiller("IsKiller"),
         TempKills("TempKills"),
-        RandomQuotes("RandomQuotes");
+        RandomQuotes("RandomQuotes"),
+        PerkReceived("PerkReceived");
 
         private final String symbol;
 

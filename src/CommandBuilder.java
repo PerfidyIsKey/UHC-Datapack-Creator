@@ -2,9 +2,6 @@ import arguments.BlockPos;
 import Enums.*;
 import HelperClasses.*;
 import shared.EntityType;
-import shared.GameMode;
-import shared.SoundId;
-import shared.SoundSource;
 
 import java.util.ArrayList;
 
@@ -152,15 +149,8 @@ public class CommandBuilder {
     }
 
     // Tags
-    public static String addTag(String entity, Tag tag) {
-        return "tag " + entity + " add " + tag;
-    }
 
-    public static String addTag(String entity, String tag) {
-        return "tag " + entity + " add " + tag;
-    }
-
-    public static String removeTag(String entity, Tag tag) {
+    public static String removeTag(String entity, TagTemp tag) {
         return "tag " + entity + " remove " + tag;
     }
 
@@ -168,7 +158,7 @@ public class CommandBuilder {
         return "tag " + entity + " remove " + tag;
     }
 
-    public static String removeTag(Tag tag) {
+    public static String removeTag(TagTemp tag) {
         return removeTag("@a", tag);
     }
 
@@ -341,11 +331,11 @@ public class CommandBuilder {
     }
 
     public static String storeRandomNumber(String objective, int min, int max) {
-        return storeRandomNumber(Constant.admin, objective, min, max);
+        return storeRandomNumber(Constant.adminOld, objective, min, max);
     }
 
     public static String storeRandomNumber(Objective objective, int min, int max) {
-        return storeRandomNumber(Constant.admin, objective, min, max);
+        return storeRandomNumber(Constant.adminOld, objective, min, max);
     }
 
     public static ArrayList<String> warnAndReplace(String targets, TextItem warning, String replacement) {

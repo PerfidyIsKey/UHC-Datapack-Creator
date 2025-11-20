@@ -1,6 +1,6 @@
 package Enums;
 
-public enum Tag {
+public enum TagTemp {
     AmIWinning("AmIWinning"),
     AttackingCP("AttackingCP"),
     Capping("Capping"),
@@ -30,7 +30,7 @@ public enum Tag {
 
     private final String symbol;
 
-    Tag(String symbol) {
+    TagTemp(String symbol) {
         this.symbol = symbol;
     }
 

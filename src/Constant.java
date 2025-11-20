@@ -1,4 +1,7 @@
 import Enums.WorldShape;
+import arguments.Entity;
+import arguments.targetselector.SelectorArgumentsBuilder;
+import arguments.targetselector.TargetSelector;
 import shared.EntityType;
 
 public class Constant {
@@ -6,7 +9,12 @@ public class Constant {
     public static final int secPerMinute = 60;
 
     // Admin entity
-    public static final String admin = "@n[type=" + EntityType.MARKER +"]";
+    public static final String adminOld = "@n[type=" + EntityType.MARKER +"]";
+    public static final Entity admin = Entity.ofSelector(
+            TargetSelector.NEAREST_ENTITY,
+            SelectorArgumentsBuilder.create()
+                    .type(EntityType.MARKER)
+    );
 
     // Tick speed
     public static final int tickFrequencyShort = 20;

@@ -5,8 +5,11 @@ package shared;
  * Ensures objective names used in selectors are always spelled correctly.
  */
 public enum ScoreObjective {
+    DAMAGE_TAKEN("DamageTaken"),
     DEATHS("Deaths"),
-    KILLS("Kills");
+    KILLS("Kills"),
+    RANK("Rank"),
+    TIMES_CALLED("TimesCalled");
 
     private final String objectiveName;
 
