@@ -5,7 +5,8 @@ package shared;
  * Using an enum prevents string typos when assigning tags to entities.
  */
 public enum EntityTag {
-    CARE_PACKAGE("CarePackage");
+    CARE_PACKAGE("CarePackage"),
+    IS_FLYING("IsFlying");
 
     private final String tagName;
 

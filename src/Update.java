@@ -1,8 +1,6 @@
 import Enums.*;
 import FileGeneration.FileData;
-import HelperClasses.Entity;
 import HelperClasses.Execute;
-import  HelperClasses.Scoreboard;
 
 
 import java.util.ArrayList;
@@ -80,7 +78,7 @@ public class Update {
         fileCommands.add(Schedule.callFunction(FileName.update_sidebar));
         fileCommands.add(Schedule.callFunction(FileName.wolf_updates));
         if (!OperationMode.traitorFaction) {
-            fileCommands.add(Execute.If(new Entity("@e[scores={Victory=1}]")) +
+            fileCommands.add(Execute.If("@e[scores={Victory=1}]") +
                     Schedule.callFunction(FileName.teams_alive_check));  // Check if teams have won
         }
 
@@ -131,7 +129,7 @@ public class Update {
         ArrayList<String> fileCommands = new ArrayList<>();
 
         // Schedule continuous functions
-        fileCommands.add(Execute.If(new Entity("@e[scores={Victory=1}]")) +
+        fileCommands.add(Execute.If("@e[scores={Victory=1}]") +
                 Schedule.callFunction(FileName.traitor_check));  // Check if traitors have won
 
         // Self-schedule timer

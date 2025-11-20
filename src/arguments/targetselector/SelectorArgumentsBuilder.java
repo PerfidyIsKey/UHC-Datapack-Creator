@@ -1,8 +1,13 @@
 package arguments.targetselector;
 
+import shared.EntityTag;
 import shared.EntityType;
+import shared.GameMode;
+import shared.ScoreObjective;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Fluent builder for creating type-safe target selector arguments (e.g., [limit=1, type=!cow]).
@@ -44,6 +49,11 @@ public class SelectorArgumentsBuilder {
         return this;
     }
 
+    public SelectorArgumentsBuilder distance(int range) {
+        this.arguments.add("distance=" + range);
+        return this;
+    }
+
     // --- Type Arguments ---
 
     /**
@@ -55,14 +65,14 @@ public class SelectorArgumentsBuilder {
         return this;
     }
 
-    /**
-     * Excludes a specific entity type from the selection.
-     * @param type The EntityType to exclude.
-     */
-    public SelectorArgumentsBuilder excludeType(EntityType type) {
-        this.arguments.add("type=!" + type.getResourceLocation());
+    public SelectorArgumentsBuilder type(EntityType type, Boolean not) {
+
+        String prefix = not ? "!" : "";
+
+        this.arguments.add("type=" + prefix + type.getResourceLocation());
         return this;
     }
+
 
     // --- Tag Arguments ---
 
@@ -70,23 +80,51 @@ public class SelectorArgumentsBuilder {
      * Includes entities that have a specific tag.
      * @param tag The tag name (string).
      */
-    public SelectorArgumentsBuilder tag(String tag) {
-        if (tag == null || tag.trim().isEmpty()) {
-            throw new IllegalArgumentException("Tag cannot be null or empty.");
-        }
-        this.arguments.add("tag=" + tag.trim());
+    public SelectorArgumentsBuilder tag(EntityTag tag) {
+        this.arguments.add("tag=" + tag);
         return this;
     }
 
-    /**
-     * Excludes entities that have a specific tag.
-     * @param tag The tag name (string).
-     */
-    public SelectorArgumentsBuilder excludeTag(String tag) {
-        if (tag == null || tag.trim().isEmpty()) {
-            throw new IllegalArgumentException("Tag cannot be null or empty.");
+    public SelectorArgumentsBuilder tag(EntityTag tag, Boolean not) {
+        String prefix = not ? "!" : "";
+
+        this.arguments.add("tag=" + prefix + tag);
+        return this;
+    }
+
+
+    public SelectorArgumentsBuilder scores(Map<ScoreObjective, Object> scores) {
+        if (scores == null || scores.isEmpty()) {
+            throw new IllegalArgumentException("Scores cannot be null or empty.");
         }
-        this.arguments.add("tag=!" + tag.trim());
+
+        StringBuilder sb = new StringBuilder("scores={");
+
+        boolean first = true;
+        for (var entry : scores.entrySet()) {
+            if (!first) sb.append(",");
+            sb.append(entry.getKey()).append("=").append(entry.getValue());
+            first = false;
+        }
+
+        sb.append("}");
+        arguments.add(sb.toString());
+
+        return this;
+    }
+
+    public SelectorArgumentsBuilder gamemode(GameMode gamemode) {
+        if (gamemode == null) throw new IllegalArgumentException("Gamemode cannot be null or empty.");
+
+        arguments.add("gamemode=" + gamemode);
+        return this;
+    }
+
+    public SelectorArgumentsBuilder gamemode(GameMode gamemode, boolean not) {
+        if (gamemode == null) throw new IllegalArgumentException("Gamemode cannot be null or empty.");
+
+        String prefix = not ? "!" : "";
+        arguments.add("gamemode=" + prefix + gamemode);
         return this;
     }
 

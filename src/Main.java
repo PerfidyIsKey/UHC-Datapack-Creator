@@ -8,6 +8,7 @@ import ItemModifiers.*;
 import Predicates.*;
 import TeamGeneration.*;
 import arguments.Entity;
+import arguments.targetselector.SelectorArgumentsBuilder;
 import arguments.targetselector.TargetSelector;
 import commands.*;
 import nbt.blockentity.*;
@@ -201,7 +202,7 @@ public class Main {
         // Override fields
         properties.set("difficulty", Difficulty.hard);
         properties.set("enable-command-block", true);
-        properties.set("gamemode", GameMode.adventure);
+        properties.set("gamemode", GameMode.ADVENTURE);
         properties.set("level-seed", -2901703172L);
         properties.set("max-players", 50);
         properties.set("motd", communityName + " UHC S" + uhcNumber);
@@ -888,7 +889,9 @@ public class Main {
         fileCommands.add(CommandBuilder.setDifficulty(Difficulty.hard));
 
         // Set default gamemode
-        fileCommands.add(CommandBuilder.setDefaultGameMode(GameMode.adventure));
+        fileCommands.add(SetGameMode.create(GameMode.ADVENTURE)
+                .setDefault()
+        );
 
         // Set world spawn
         fileCommands.add(CommandBuilder.setWorldSpawn(new Coordinate(0, 221, 0)));
@@ -928,37 +931,37 @@ public class Main {
                         .with(BlockProperty.FACING, Direction.SOUTH)
                         .with(BlockProperty.WATERLOGGED, false)
                         .with(new SignEntity("")
-                            .setWaxed(false)
-                            .getBackSide()
+                                .setWaxed(false)
+                                .getBackSide()
                                 .addMessage(TextComponent.simple("You have"))
                                 .addMessage(TextComponent.simple("angered"))
                                 .addMessage(TextComponent.simple("the Gods!"))
                                 .addMessage(TextComponent.simple(""))
-                            .done()
-                            .getFrontSide()
+                                .done()
+                                .getFrontSide()
                                 .addMessage(TextComponent.withClickCommand(
-                                    "In rememberance",
-                                    "run_command",
-                                    Summon.create(EntityType.FIREWORK_ROCKET)
-                                            .setPos(new Vec3("~", "~", "~"))
-                                            .setNbt(
-                                                    new FireworkRocketNbtBuilder(
-                                                            FireworkRocketDataBuilder.create()
-                                                                    .setProperty(BooleanNbtProperty.GLOWING, true)
-                                                                    .addStar(
-                                                                            FireworkStarDataBuilder.create()
-                                                                                    .setShape(FireworkShape.STAR)
-                                                                                    .build()
-                                                                    )
-                                                                    .build()
-                                                    )
-                                                            .buildNbt()
-                                            ).build()
-                                        ))
+                                        "In rememberance",
+                                        "run_command",
+                                        Summon.create(EntityType.FIREWORK_ROCKET)
+                                                .setPos(new Vec3("~", "~", "~"))
+                                                .setNbt(
+                                                        new FireworkRocketNbtBuilder(
+                                                                FireworkRocketDataBuilder.create()
+                                                                        .setProperty(BooleanNbtProperty.GLOWING, true)
+                                                                        .addStar(
+                                                                                FireworkStarDataBuilder.create()
+                                                                                        .setShape(FireworkShape.STAR)
+                                                                                        .build()
+                                                                        )
+                                                                        .build()
+                                                        )
+                                                                .buildNbt()
+                                                ).build()
+                                ))
                                 .addMessage(TextComponent.simple("of our"))
                                 .addMessage(TextComponent.simple("Command Center"))
                                 .addMessage(TextComponent.simple("2014-2025"))
-                            .done()
+                                .done()
                         )
         );
         fileCommands.add(Execute.In(Dimension.overworld) +
@@ -993,7 +996,15 @@ public class Main {
         );
 
         // Set all dead players to spectator mode
-        fileCommands.add(CommandBuilder.setGameMode(GameMode.spectator, "@a[scores={Deaths=1},gamemode=!spectator]"));
+        fileCommands.add(SetGameMode.create(GameMode.SPECTATOR)
+                .target(Entity.ofSelector(
+                                TargetSelector.ALL_PLAYERS,
+                                SelectorArgumentsBuilder.create()
+                                        .scores(Map.of(ScoreObjective.DEATHS, 1))
+                                        .gamemode(GameMode.SPECTATOR, true)
+                        )
+                ).build()
+        );
 
         // Reset player with lowest health
         fileCommands.add(scoreboard.Set(Constant.admin, getObjectiveByName(Objective.MinHealth), 20));
@@ -1237,7 +1248,7 @@ public class Main {
                 new BlockState(Block.JUKEBOX)
                         .with(BlockProperty.HAS_RECORD, true)
                         .with(new JukeboxEntity("")
-                                .setRecord(ItemId.MUSIC_DISC_STAL, (byte)1)
+                                .setRecord(ItemId.MUSIC_DISC_STAL, (byte) 1)
                         )
         );
 
@@ -1270,7 +1281,10 @@ public class Main {
         fileCommands.add(CommandBuilder.setAttributeBaseMultiple("@a", AttributeType.WAYPOINT_TRANSMIT_RANGE, 0));
 
         // Set gamemode of player executing the command to creative
-        fileCommands.add(CommandBuilder.setGameMode(GameMode.creative, "@s"));
+        fileCommands.add(SetGameMode.create(GameMode.CREATIVE)
+                .target(Entity.ofSelector(TargetSelector.SENDER))
+                .build()
+        );
 
         // Clear scheduled commands
         fileCommands.add(Schedule.callFunction(FileName.clear_schedule));
@@ -1297,7 +1311,7 @@ public class Main {
         if (OperationMode.controlPoints) {
             // Reset scoreboard objectives
             for (int i = 1; i < controlPoints.size() + 1; i++) {
-                for (Team team: teams) {
+                for (Team team : teams) {
                     fileCommands.add(scoreboard.Reset(team.getName(), getObjectiveByName(Objective.OnCP.extendName(i))));
                     fileCommands.add(scoreboard.Reset(team.getName(), getObjectiveByName(Objective.PrevCP.extendName(i))));
                     fileCommands.add(scoreboard.Reset(team.getPlayerColor(), getObjectiveByName(Objective.ControlPoint.extendName(i))));
@@ -1402,8 +1416,24 @@ public class Main {
 
         // Make players fall
         fileCommands.add(CommandBuilder.addTag("@a[gamemode=!adventure]", Tag.IsFlying));
-        fileCommands.add(CommandBuilder.setGameMode(GameMode.adventure, "@a[tag=" + Tag.IsFlying + "]"));
-        fileCommands.add(CommandBuilder.setGameMode(GameMode.creative, "@a[tag=" + Tag.IsFlying + "]"));
+        fileCommands.add(SetGameMode.create(GameMode.ADVENTURE)
+                .target(Entity.ofSelector(
+                                TargetSelector.ALL_PLAYERS,
+                                SelectorArgumentsBuilder.create()
+                                        .tag(EntityTag.IS_FLYING)
+                        )
+                )
+                .build()
+        );
+        fileCommands.add(SetGameMode.create(GameMode.CREATIVE)
+                .target(Entity.ofSelector(
+                                TargetSelector.ALL_PLAYERS,
+                                SelectorArgumentsBuilder.create()
+                                        .tag(EntityTag.IS_FLYING)
+                        )
+                )
+                .build()
+        );
         fileCommands.add(CommandBuilder.removeTag("@a[tag=" + Tag.IsFlying + "]", Tag.IsFlying));
 
         // Set death count for comparison
@@ -1453,8 +1483,7 @@ public class Main {
                         new TellRaw("@a", texts).sendRaw());
                 texts.clear();
             }
-        }
-        else {
+        } else {
             // Choose player as candidate for having won
             fileCommands.add(CommandBuilder.addTag("@r[team=,scores={Deaths=0}]", Tag.PredictionCandidate));
 
@@ -1557,7 +1586,10 @@ public class Main {
         fileCommands.add(CommandBuilder.clearInventory("@a"));
 
         // Set all players to survival mode
-        fileCommands.add(CommandBuilder.setGameMode(GameMode.survival, "@a"));
+        fileCommands.add(SetGameMode.create(GameMode.SURVIVAL)
+                .target(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
+                .build()
+        );
 
         // Revoke all advancements
         fileCommands.add(CommandBuilder.revokeAdvancement("@a"));
@@ -1607,7 +1639,17 @@ public class Main {
 
         fileCommands.add(Execute.In(Dimension.overworld, false) +
                 Execute.PositionedNext(new Coordinate(0, 151, 0), true) +
-                CommandBuilder.setGameMode(GameMode.survival, "@a[distance=..20,gamemode=!creative]"));
+                SetGameMode.create(GameMode.SURVIVAL)
+                        .target(
+                                Entity.ofSelector(
+                                        TargetSelector.ALL_PLAYERS,
+                                        SelectorArgumentsBuilder.create()
+                                                .distance("..20")
+                                                .gamemode(GameMode.CREATIVE, true)
+                                )
+                        )
+                        .build()
+        );
         fileCommands.add(Execute.In(Dimension.overworld, false) +
                 Execute.PositionedNext(new Coordinate(0, 151, 0), true) +
                 CommandBuilder.spreadPlayers(0, 0, (int) (0.3 * world.getSize()), (int) (0.9 * world.getSize()), true, "@a[distance=..20,gamemode=survival]"));
@@ -1903,7 +1945,7 @@ public class Main {
         // Current Control Point
         ControlPoint currentCP = controlPoints.get(i - 1);
 
-        for (Team team: teams) {
+        for (Team team : teams) {
             // Announce attacking
             texts.clear();
             texts.add(new Text(Color.light_purple, false, false, "TEAM "));
@@ -1982,19 +2024,19 @@ public class Main {
         for (int i = 0; i < carePackageAmount; i++) {
             fileCommands.add(Execute.In(Dimension.overworld) +
                     Summon.create(EntityType.FALLING_BLOCK)
-                                    .setPos(new Vec3(0, 300, 0))
-                                            .setNbt(
-                                                    new FallingBlockNbtBuilder(
-                                                            new FallingBlockData(
-                                                                    ItemId.CHEST,
-                                                                    LootTableId.SUPPLY_DROP,
-                                                                    "Care Package",
-                                                                    1,
-                                                                    false,
-                                                                    new EntityTag[]{EntityTag.CARE_PACKAGE}
-                                                            )
-                                                    ).buildNbt()
+                            .setPos(new Vec3(0, 300, 0))
+                            .setNbt(
+                                    new FallingBlockNbtBuilder(
+                                            new FallingBlockData(
+                                                    ItemId.CHEST,
+                                                    LootTableId.SUPPLY_DROP,
+                                                    "Care Package",
+                                                    1,
+                                                    false,
+                                                    new EntityTag[]{EntityTag.CARE_PACKAGE}
                                             )
+                                    ).buildNbt()
+                            )
             );
         }
 
@@ -2104,8 +2146,8 @@ public class Main {
                             .with(new StructureBlockEntity("")
                                     .setString(StructureBlockEntity.StructureDataKey.METADATA, "")
                                     .setMirror(StructureMirror.NONE)
-                                    .setByte(StructureDataKey.IGNORE_ENTITIES, (byte)1)
-                                    .setByte(StructureDataKey.POWERED, (byte)0)
+                                    .setByte(StructureDataKey.IGNORE_ENTITIES, (byte) 1)
+                                    .setByte(StructureDataKey.POWERED, (byte) 0)
                                     .setLong(StructureDataKey.SEED, 0L)
                                     .setString(StructureDataKey.AUTHOR, "?")
                                     .setRotation(StructureRotation.NONE)
@@ -2118,7 +2160,7 @@ public class Main {
                                     .setString(StructureDataKey.NAME, cp.getStructureName())
                                     .setInt(StructureDataKey.SIZE_Y, 14)
                                     .setInt(StructureDataKey.SIZE_Z, 13)
-                                    .setByte(StructureDataKey.SHOW_BOUNDING_BOX, (byte)1)
+                                    .setByte(StructureDataKey.SHOW_BOUNDING_BOX, (byte) 1)
                             )
             );
             fileCommands.add(Execute.In(c.getDimension()) +
@@ -2297,10 +2339,10 @@ public class Main {
         // Play sound
         fileCommands.add(PlaySound.create(perks.get(i).getSound())
                 .source(SoundSource.MASTER)
-                        .targets(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
-                                .pos(new Vec3("~", "~50", "~"))
-                                        .volume(100)
-                                                .build()
+                .targets(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
+                .pos(new Vec3("~", "~50", "~"))
+                .volume(100)
+                .build()
         );
 
         return new FileData("" + FileName.perk_ + (i + 1), fileCommands);
@@ -2411,7 +2453,10 @@ public class Main {
 
         // Set player's gamemode to survival
         fileCommands.add(Execute.As(respawnPlayer) +
-                CommandBuilder.setGameMode(GameMode.survival, "@s"));
+                SetGameMode.create(GameMode.SURVIVAL)
+                        .target(Entity.ofSelector(TargetSelector.SENDER))
+                        .build()
+        );
 
         // Remove respawn tag
         fileCommands.add(CommandBuilder.removeTag(respawnPlayer, Tag.Respawn));
@@ -2499,8 +2544,7 @@ public class Main {
                             Execute.IfNext(team.getPlayerColor(), Objective.CPScore, maxCPScore + "..") +
                             Execute.IfNext("@p[team=" + team.getName() + ",gamemode=!spectator,tag=!" + Tag.Traitor + "]", true) +
                             Schedule.callFunction("" + FileName.victory_message_ + i));
-                }
-                else {
+                } else {
 
                     // Regular teams
                     fileCommands.add(Execute.If(Constant.admin, Objective.Victory, 1, false) +
@@ -2524,8 +2568,7 @@ public class Main {
                     fileCommands.add(Execute.If("@e[scores={Victory=1}]", false) +
                             Execute.IfNext("@p[team=,gamemode=!spectator,scores={ControlPoint" + j + "=" + maxCPScore + "..},tag=" + Tag.Traitor + "]", true) +
                             Schedule.callFunction(FileName.victory_message_traitor));
-                }
-                else {
+                } else {
                     // Solo
                     fileCommands.add(Execute.If("@e[scores={Victory=1}]", false) +
                             Execute.IfNext("@p[team=,gamemode=!spectator,scores={ControlPoint" + j + "=" + maxCPScore + "..}]") +
@@ -2593,7 +2636,7 @@ public class Main {
         // Set wolf collar color
         // Get data
         for (int i = 0; i < 2; i++) {
-            fileCommands.add(Execute.As("@e[type=" + EntityType.WOLF +"]", false) +
+            fileCommands.add(Execute.As("@e[type=" + EntityType.WOLF + "]", false) +
                     Execute.StoreNext(ExecuteStore.result, "@s", getObjectiveByName(Objective.CollarCheck.extendName(i)), true) +
                     CommandBuilder.getData("@s", "Owner[" + i + "]"));
 
@@ -2625,7 +2668,7 @@ public class Main {
         // Eliminate baby wolves
         String babyWolf = "@e[type=" + EntityType.WOLF + ",scores={WolfAge=..-1}]";
 
-        fileCommands.add(Execute.As("@e[limit=1,type=" + EntityType.WOLF +",sort=random]", false) +
+        fileCommands.add(Execute.As("@e[limit=1,type=" + EntityType.WOLF + ",sort=random]", false) +
                 Execute.StoreNext(ExecuteStore.result, "@s", getObjectiveByName(Objective.WolfAge), true) +
                 CommandBuilder.getData("@s", "Age"));
         fileCommands.add(Execute.At(babyWolf) +

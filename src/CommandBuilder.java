@@ -2,6 +2,7 @@ import arguments.BlockPos;
 import Enums.*;
 import HelperClasses.*;
 import shared.EntityType;
+import shared.GameMode;
 import shared.SoundId;
 import shared.SoundSource;
 
@@ -126,15 +127,6 @@ public class CommandBuilder {
     // Difficulty
     public static String setDifficulty(Difficulty difficulty) {
         return "difficulty " + difficulty;
-    }
-
-    // Gamemode
-    public static String setDefaultGameMode(GameMode gameMode) {
-        return "defaultgamemode " + gameMode;
-    }
-
-    public static String setGameMode(GameMode gameMode, String entity) {
-        return "gamemode " + gameMode + " " + entity;
     }
 
     // Set world spawn
