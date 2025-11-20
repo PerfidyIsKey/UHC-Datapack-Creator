@@ -1,6 +1,7 @@
 import arguments.BlockPos;
 import Enums.*;
 import HelperClasses.*;
+import controlpoints.ControlPointTag;
 import shared.EntityType;
 
 import java.util.ArrayList;
@@ -133,10 +134,6 @@ public class CommandBuilder {
 
     public static String summonEntity(EntityType entity, Coordinate coordinate, String nbt) {
         return "summon " + entity + " " + coordinate.getCoordinateString() + " " + nbt;
-    }
-
-    public static String killEntity(String entity) {
-        return "kill " + entity;
     }
 
     // Teleportation
@@ -335,7 +332,7 @@ public class CommandBuilder {
     }
 
     // Waypoints
-    public static ArrayList<String> createWaypoint(Coordinate coordinate, String tag) {
+    public static ArrayList<String> createWaypoint(Coordinate coordinate, ControlPointTag tag) {
         ArrayList<String> fileCommands = new ArrayList<>();
 
         // Forceload chunk

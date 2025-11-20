@@ -2,7 +2,7 @@ package nbt.entity;
 
 import nbt.tags.*;
 import nbt.entity.data.FallingBlockData;
-import shared.EntityTag;
+import shared.StaticEntityTag;
 
 /**
  * Factory/Builder for the Falling Block Entity NBT structure (used for Care Packages).
@@ -48,7 +48,7 @@ public class FallingBlockNbtBuilder implements EntityNbtBuilder {
         // 5. Tags:["CarePackage"]
         ListTag tagsList = new ListTag("Tags");
         // Accessor updated: data.getTags() -> data.tags()
-        for (EntityTag tag : data.tags()) {
+        for (StaticEntityTag tag : data.tags()) {
             // String tags inside a ListTag should have an empty name (key)
             tagsList.add(new StringTag("", tag.getTagName()));
         }

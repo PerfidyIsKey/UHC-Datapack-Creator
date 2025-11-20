@@ -1,9 +1,8 @@
 package arguments.targetselector;
 
-import shared.EntityTag;
-import shared.EntityType;
-import shared.GameMode;
-import shared.ScoreObjective;
+import nbt.tags.CompoundTag;
+import nbt.util.TagConverter;
+import shared.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -152,6 +151,21 @@ public class SelectorArgumentsBuilder {
 
         String prefix = not ? "!" : "";
         arguments.add("team=" + prefix + team);
+        return this;
+    }
+
+    /**
+     * Filters selection by requiring the entity to match the provided NBT structure.
+     * This is the method required to generate the 'nbt={...}' part of the command.
+     * * @param nbt The root NBT compound tag for the entity.
+     */
+    public SelectorArgumentsBuilder nbt(CompoundTag nbt) {
+        if (nbt == null) {
+            throw new IllegalArgumentException("NBT tag cannot be null.");
+        }
+        // Assuming your CompoundTag has a custom method to output the command string format.
+        // We call the method that produces the required Minecraft string format {key:value, ...}
+        this.arguments.add("nbt=" + TagConverter.toJson(nbt));
         return this;
     }
 

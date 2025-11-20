@@ -1,10 +1,8 @@
 import Enums.FileName;
 
-import Enums.TagTemp;
-
 import FileGeneration.FileData;
 import commands.Tag;
-import shared.EntityTag;
+import shared.StaticEntityTag;
 import shared.TagAction;
 
 import java.util.ArrayList;
@@ -34,7 +32,7 @@ public class GameStart {
         fileCommands.add(Schedule.callFunction(FileName.disable_respawn, 20 * Constant.secPerMinute));
 
         fileCommands.add(Tag.action(Constant.admin, TagAction.ADD)
-                        .name(EntityTag.GAME_STARTED)
+                        .name(StaticEntityTag.GAME_STARTED)
                                 .build());
 
         return new FileData(FileName.game_starter, fileCommands);
