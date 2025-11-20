@@ -129,6 +129,32 @@ public class SelectorArgumentsBuilder {
     }
 
 
+    public SelectorArgumentsBuilder team() {
+
+        arguments.add("team=");
+        return this;
+    }
+
+    public SelectorArgumentsBuilder team(Boolean not) {
+
+        String prefix = not ? "!" : "";
+        arguments.add("team=" + prefix);
+        return this;
+    }
+
+    public SelectorArgumentsBuilder team(String team) {
+
+        arguments.add("team=" + team);
+        return this;
+    }
+
+    public SelectorArgumentsBuilder team(String team, boolean not) {
+
+        String prefix = not ? "!" : "";
+        arguments.add("team=" + prefix + team);
+        return this;
+    }
+
     /**
      * Finalizes the builder and returns the formatted selector arguments string,
      * including the enclosing square brackets, e.g., "[limit=1,tag=!test_tag]".
