@@ -1,13 +1,11 @@
-package HelperClasses;
+package controlpoints;
 
 import Enums.Biome;
-import Enums.Dimension;
-
-import static Enums.Dimension.overworld;
+import HelperClasses.Coordinate;
 
 public class ControlPoint {
 
-    private String name;
+    private ControlPointTag name;
 
     private int maxVal;
     private int addRate;
@@ -15,7 +13,7 @@ public class ControlPoint {
     private Coordinate coordinate;
     private Enums.Biome biome;
 
-    public ControlPoint(String name, int maxVal, int addRate, Coordinate coordinate) {
+    public ControlPoint(ControlPointTag name, int maxVal, int addRate, Coordinate coordinate) {
         this.name = name;
         this.maxVal = maxVal;
         this.addRate = addRate;
@@ -23,7 +21,7 @@ public class ControlPoint {
         this.biome = Biome.plains;
     }
 
-    public ControlPoint(String name, int maxVal, int addRate, Coordinate coordinate, Enums.Biome biome) {
+    public ControlPoint(ControlPointTag name, int maxVal, int addRate, Coordinate coordinate, Enums.Biome biome) {
         this.name = name;
         this.maxVal = maxVal;
         this.addRate = addRate;
@@ -31,11 +29,11 @@ public class ControlPoint {
         this.biome = biome;
     }
 
-    public String getName() {
+    public ControlPointTag getName() {
         return name;
     }
 
-    public void setName(String name) {
+    public void setName(ControlPointTag name) {
         this.name = name;
     }
 

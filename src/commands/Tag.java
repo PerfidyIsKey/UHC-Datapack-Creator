@@ -1,7 +1,7 @@
 package commands;
 
 import arguments.Entity;
-import shared.EntityTag;
+import shared.StaticEntityTag;
 import shared.TagAction;
 
 /**
@@ -11,7 +11,7 @@ import shared.TagAction;
 public class Tag {
     private final Entity target;
     private final TagAction action;
-    private EntityTag tagName;
+    private StaticEntityTag tagName;
 
     private Tag(Entity target, TagAction action) {
         if (target == null) {
@@ -47,9 +47,9 @@ public class Tag {
     /**
      * Specifies the type-safe name for the ADD or REMOVE action.
      * This method is optional for LIST, but required for ADD/REMOVE.
-     * @param tagName The type-safe name of the tag (e.g., EntityTag.IS_FLYING).
+     * @param tagName The type-safe name of the tag (e.g., StaticEntityTag.IS_FLYING).
      */
-    public Tag name(EntityTag tagName) {
+    public Tag name(StaticEntityTag tagName) {
         if (this.action == TagAction.LIST) {
             throw new IllegalStateException("The LIST action does not accept a tag name.");
         }
