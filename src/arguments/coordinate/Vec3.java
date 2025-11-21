@@ -1,12 +1,12 @@
-package arguments;
+package arguments.coordinate;
 
-public class Vec3 implements ArgumentType {
+public class Vec3 {
 
     private final String x;
     private final String y;
     private final String z;
 
-    public Vec3(String x, String y, String z) {
+    private Vec3(String x, String y, String z) {
         if (!isValidCoordinate(x) || !isValidCoordinate(y) || !isValidCoordinate(z)) {
             throw new IllegalArgumentException("Invalid coordinate format");
         }
@@ -15,18 +15,17 @@ public class Vec3 implements ArgumentType {
         this.z = z;
     }
 
-    public Vec3(int x, int y, int z) {
-        this.x = "" + x;
-        this.y = "" + y;
-        this.z = "" + z;
+    public static Vec3 create(String x, String y, String z) {
+        return new Vec3(x, y, z);
     }
 
-    public Vec3(double x, double y, double z) {
-        this.x = "" + x;
-        this.y = "" + y;
-        this.z = "" + z;
+    public static Vec3 create(int x, int y, int z) {
+        return new Vec3("" + x, "" + y, "" + z);
     }
 
+    public static Vec3 create(double x, double y, double z) {
+        return new Vec3("" + x, "" + y, "" + z);
+    }
 
     private boolean isValidCoordinate(String value) {
         return value.matches("~?\\^?-?\\d*"); // allows 0, -1, ~, ~1, ^2 etc.
@@ -37,6 +36,4 @@ public class Vec3 implements ArgumentType {
         return x + " " + y + " " + z;
     }
 
-    public void Sync() {
-    }
 }

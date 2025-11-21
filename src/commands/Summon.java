@@ -1,6 +1,6 @@
 package commands;
 
-import arguments.Vec3;
+import arguments.coordinate.Vec3;
 import nbt.tags.CompoundTag;
 import nbt.util.TagConverter;
 import shared.EntityType;

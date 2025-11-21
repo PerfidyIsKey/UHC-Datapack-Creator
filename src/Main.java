@@ -8,6 +8,7 @@ import ItemModifiers.*;
 import Predicates.*;
 import TeamGeneration.*;
 import arguments.Entity;
+import arguments.coordinate.Vec3;
 import arguments.itempredicate.SimpleItemPredicate;
 import arguments.itemstack.BundleItemStack;
 import arguments.itemstack.GoatHornItemStack;
@@ -955,7 +956,7 @@ public class Main {
                                         "In rememberance",
                                         "run_command",
                                         Summon.create(EntityType.FIREWORK_ROCKET)
-                                                .setPos(new Vec3("~", "~", "~"))
+                                                .setPos(Vec3.create("~", "~", "~"))
                                                 .setNbt(
                                                         new FireworkRocketNbtBuilder(
                                                                 FireworkRocketDataBuilder.create()
@@ -1002,7 +1003,7 @@ public class Main {
         fileCommands.add(PlaySound.create(SoundId.THUNDER)
                 .source(SoundSource.MASTER)
                 .targets(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
-                .pos(new Vec3("~", "~50", "~"))
+                .pos(Vec3.create("~", "~50", "~"))
                 .volume(100)
                 .build()
         );
@@ -1085,7 +1086,7 @@ public class Main {
         for (Player p : players) {
             fileCommands.add(Execute.At("@p[name=" + p.getPlayerName() + ",scores={Deaths=1}]") +
                     Summon.create(EntityType.ITEM)
-                            .setPos(new Vec3("~", "~", "~"))
+                            .setPos(Vec3.create("~", "~", "~"))
                             .setNbt(
                                     new ItemNbtBuilder(
                                             new ItemData(
@@ -1233,12 +1234,8 @@ public class Main {
                                 .build());
         fileCommands.add(
                 Summon.create(EntityType.MARKER)
-                        .setPos(
-                                new Vec3(0, Constant.worldBottom, 0)
-                        )
-                        .setNbt(
-                                new BaseEntityNbt(EntityType.MARKER, "Admin").buildNbt()
-                        )
+                        .setPos(Vec3.create(0, Constant.worldBottom, 0))
+                        .setNbt(new BaseEntityNbt(EntityType.MARKER, "Admin").buildNbt())
                         .build()
         );
 
@@ -2127,7 +2124,7 @@ public class Main {
         for (int i = 0; i < carePackageAmount; i++) {
             fileCommands.add(Execute.In(Dimension.overworld) +
                     Summon.create(EntityType.FALLING_BLOCK)
-                            .setPos(new Vec3(0, 300, 0))
+                            .setPos(Vec3.create(0, 300, 0))
                             .setNbt(
                                     new FallingBlockNbtBuilder(
                                             new FallingBlockData(
@@ -2512,7 +2509,7 @@ public class Main {
         fileCommands.add(PlaySound.create(perks.get(i).getSound())
                 .source(SoundSource.MASTER)
                 .targets(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
-                .pos(new Vec3("~", "~50", "~"))
+                .pos(Vec3.create("~", "~50", "~"))
                 .volume(100)
                 .build()
         );

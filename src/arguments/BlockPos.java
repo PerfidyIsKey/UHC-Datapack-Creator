@@ -1,6 +1,6 @@
 package arguments;
 
-public class BlockPos implements ArgumentType {
+public class BlockPos {
 
     private final String x;
     private final String y;
@@ -28,8 +28,5 @@ public class BlockPos implements ArgumentType {
     @Override
     public String toString() {
         return x + " " + y + " " + z;
-    }
-
-    public void Sync() {
     }
 }
