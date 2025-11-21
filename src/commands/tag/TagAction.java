@@ -1,4 +1,4 @@
-package shared;
+package commands.tag;
 
 /**
  * Defines the available actions for the Minecraft /tag command.

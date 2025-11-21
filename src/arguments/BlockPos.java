@@ -6,19 +6,22 @@ public class BlockPos {
     private final String y;
     private final String z;
 
-    public BlockPos(String x, String y, String z) {
+    private BlockPos(String x, String y, String z) {
         if (!isValidCoordinate(x) || !isValidCoordinate(y) || !isValidCoordinate(z)) {
             throw new IllegalArgumentException("Invalid coordinate format");
         }
+
         this.x = x;
         this.y = y;
         this.z = z;
     }
 
-    public BlockPos(int x, int y, int z) {
-        this.x = "" + x;
-        this.y = "" + y;
-        this.z = "" + z;
+    public static BlockPos create(String x, String y, String z) {
+        return new BlockPos(x, y, z);
+    }
+
+    public static BlockPos create(int x, int y, int z) {
+        return new BlockPos("" + x, "" + y, "" + z);
     }
 
     private boolean isValidCoordinate(String value) {

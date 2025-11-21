@@ -3,7 +3,7 @@ import Enums.FileName;
 import FileGeneration.FileData;
 import commands.Tag;
 import shared.StaticEntityTag;
-import shared.TagAction;
+import commands.tag.TagAction;
 
 import java.util.ArrayList;
 

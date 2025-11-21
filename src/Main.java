@@ -8,7 +8,6 @@ import ItemModifiers.*;
 import Predicates.*;
 import TeamGeneration.*;
 import arguments.Entity;
-import arguments.coordinate.Vec2;
 import arguments.coordinate.Vec3;
 import arguments.itempredicate.SimpleItemPredicate;
 import arguments.itemstack.BundleItemStack;
@@ -20,6 +19,7 @@ import arguments.itemstack.components.UseCooldownComponent;
 import arguments.targetselector.SelectorArgumentsBuilder;
 import arguments.targetselector.TargetSelector;
 import commands.*;
+import commands.tag.TagAction;
 import controlpoints.ControlPoint;
 import controlpoints.ControlPointTag;
 import nbt.blockentity.*;
@@ -200,7 +200,7 @@ public class Main {
         // Get data from uhc_data.txt
         uhcNumber = fileTools.getContentOutOfFile("Files\\" + communityMode + "\\uhc_data.txt", "uhcNumber");
         String[] splitStartCoordinates = fileTools.splitLineOnComma(fileTools.getContentOutOfFile("Files\\" + communityMode + "\\uhc_data.txt", "startCoordinate"));
-        startCoordinate = new BlockPos(Integer.parseInt(splitStartCoordinates[0]), Integer.parseInt(splitStartCoordinates[1]), Integer.parseInt(splitStartCoordinates[2]));
+        startCoordinate = BlockPos.create(Integer.parseInt(splitStartCoordinates[0]), Integer.parseInt(splitStartCoordinates[1]), Integer.parseInt(splitStartCoordinates[2]));
         communityName = fileTools.getContentOutOfFile("Files\\" + communityMode + "\\uhc_data.txt", "communityName");
 
         if (OperationMode.traitorFaction) {
@@ -925,22 +925,22 @@ public class Main {
 
         // Create staging area
         Fill cmd = Fill.create(
-                new BlockPos(-6, 220, -6),
-                new BlockPos(6, 226, 6),
+                BlockPos.create(-6, 220, -6),
+                BlockPos.create(6, 226, 6),
                 new BlockState(Block.BARRIER)
         );
         fileCommands.add(Execute.In(Dimension.overworld) +
                 cmd.build());
         cmd = Fill.create(
-                new BlockPos(-5, 221, -5),
-                new BlockPos(6, 226, 5),
+                BlockPos.create(-5, 221, -5),
+                BlockPos.create(6, 226, 5),
                 new BlockState(Block.AIR)
         );
         fileCommands.add(Execute.In(Dimension.overworld) +
                 cmd.build());
 
         SetBlock sb = SetBlock.create(
-                new BlockPos(0, 222, -5),
+                BlockPos.create(0, 222, -5),
                 new BlockState(Block.CHERRY_WALL_SIGN)
                         .with(BlockProperty.FACING, Direction.SOUTH)
                         .with(BlockProperty.WATERLOGGED, false)
@@ -1134,15 +1134,15 @@ public class Main {
 
         // Keep beacon active
         Fill cmd = Fill.create(
-                new BlockPos(currentCP.getCoordinate().getX() - 1, currentCP.getCoordinate().getY() - 1, currentCP.getCoordinate().getZ() - 1),
-                new BlockPos(currentCP.getCoordinate().getX() + 1, currentCP.getCoordinate().getY() - 1, currentCP.getCoordinate().getZ() + 1),
+                BlockPos.create(currentCP.getCoordinate().getX() - 1, currentCP.getCoordinate().getY() - 1, currentCP.getCoordinate().getZ() - 1),
+                BlockPos.create(currentCP.getCoordinate().getX() + 1, currentCP.getCoordinate().getY() - 1, currentCP.getCoordinate().getZ() + 1),
                 new BlockState(Block.EMERALD_BLOCK)
         );
         fileCommands.add(Execute.In(currentCP.getCoordinate().getDimension()) +
                 cmd.build());
 
         SetBlock sb = SetBlock.create(
-                new BlockPos(currentCP.getCoordinate().getX(), currentCP.getCoordinate().getY(), currentCP.getCoordinate().getZ()),
+                BlockPos.create(currentCP.getCoordinate().getX(), currentCP.getCoordinate().getY(), currentCP.getCoordinate().getZ()),
                 new BlockState(Block.BEACON)
         );
         fileCommands.add(Execute.In(currentCP.getCoordinate().getDimension()) +
@@ -1169,7 +1169,7 @@ public class Main {
     private FileData ClearEnderChest() {
         ArrayList<String> fileCommands = new ArrayList<>();
         for (int i = 0; i < chestSize; i++) {
-            fileCommands.add(CommandBuilder.replaceItem("@a", InventorySlot.ENDERCHEST.setSlotNumber(i), Block.AIR, 1));
+            fileCommands.add(CommandBuilder.replaceItem("@a", ItemSlot.ENDERCHEST.setSlotNumber(i), Block.AIR, 1));
         }
 
         return new FileData(FileName.clear_enderchest, fileCommands);
@@ -1177,13 +1177,13 @@ public class Main {
 
     private FileData EquipGear() {
         ArrayList<String> fileCommands = new ArrayList<>();
-        fileCommands.add(CommandBuilder.replaceItem("@a", InventorySlot.CHEST, Block.IRON_CHESTPLATE));
-        fileCommands.add(CommandBuilder.replaceItem("@a", InventorySlot.FEET, Block.IRON_BOOTS));
-        fileCommands.add(CommandBuilder.replaceItem("@a", InventorySlot.HEAD, Block.IRON_HELMET));
-        fileCommands.add(CommandBuilder.replaceItem("@a", InventorySlot.LEGS, Block.IRON_LEGGINGS));
-        fileCommands.add(CommandBuilder.replaceItem("@a", InventorySlot.OFFHAND, Block.SHIELD));
-        fileCommands.add(CommandBuilder.replaceItem("@a", InventorySlot.MAINHAND, Block.IRON_AXE));
-        fileCommands.add(CommandBuilder.replaceItem("@a", InventorySlot.INVENTORY.setSlotNumber(0), Block.IRON_SWORD));
+        fileCommands.add(CommandBuilder.replaceItem("@a", ItemSlot.CHEST, Block.IRON_CHESTPLATE));
+        fileCommands.add(CommandBuilder.replaceItem("@a", ItemSlot.FEET, Block.IRON_BOOTS));
+        fileCommands.add(CommandBuilder.replaceItem("@a", ItemSlot.HEAD, Block.IRON_HELMET));
+        fileCommands.add(CommandBuilder.replaceItem("@a", ItemSlot.LEGS, Block.IRON_LEGGINGS));
+        fileCommands.add(CommandBuilder.replaceItem("@a", ItemSlot.OFFHAND, Block.SHIELD));
+        fileCommands.add(CommandBuilder.replaceItem("@a", ItemSlot.MAINHAND, Block.IRON_AXE));
+        fileCommands.add(CommandBuilder.replaceItem("@a", ItemSlot.INVENTORY.setSlotNumber(0), Block.IRON_SWORD));
         fileCommands.add(CommandBuilder.giveEffect("@a", Effect.REGENERATION, 1, 255, true));
 
         return new FileData(FileName.equip_gear, fileCommands);
@@ -1192,7 +1192,7 @@ public class Main {
     private FileData GodMode() {
         ArrayList<String> fileCommands = new ArrayList<>();
         fileCommands.add(CommandBuilder.giveEffect("@s", Effect.RESISTANCE, 99999, 4, true));
-        fileCommands.add(CommandBuilder.replaceItem("@s", InventorySlot.MAINHAND, Block.TRIDENT + "[custom_name=[{\"bold\":false,\"color\":\"white\",\"italic\":false,\"obfuscated\":true,\"text\":\"aA\"},{\"bold\":true,\"color\":\"#8C3CC1\",\"obfuscated\":false,\"text\":\"The\"},{\"bold\":true,\"color\":\"#E280FF\",\"obfuscated\":false,\"text\":\" Impaler \"},{\"color\":\"white\",\"obfuscated\":true,\"text\":\"Aa\"}],lore=[\"This holy weapon impales anything it touches\"],damage=0,enchantments={\"" + EnchantmentType.FIRE_ASPECT + "\":255,\"" + EnchantmentType.SHARPNESS + "\":255,\"" + EnchantmentType.IMPALING + "\":255,\"" + EnchantmentType.LOYALTY + "\":255,\"" + EnchantmentType.EFFICIENCY + "\":255},attribute_modifiers=[{id:\"" + AttributeType.ARMOR + "\",type:\"armor\",amount:1000,operation:\"add_value\",slot:\"armor\",display:{type:\"hidden\"}},{id:\"" + AttributeType.ATTACK_DAMAGE + "\",type:\"attack_damage\",amount:1000,operation:\"add_value\",slot:\"mainhand\",display:{type:\"hidden\"}}],unbreakable={}]"));
+        fileCommands.add(CommandBuilder.replaceItem("@s", ItemSlot.MAINHAND, Block.TRIDENT + "[custom_name=[{\"bold\":false,\"color\":\"white\",\"italic\":false,\"obfuscated\":true,\"text\":\"aA\"},{\"bold\":true,\"color\":\"#8C3CC1\",\"obfuscated\":false,\"text\":\"The\"},{\"bold\":true,\"color\":\"#E280FF\",\"obfuscated\":false,\"text\":\" Impaler \"},{\"color\":\"white\",\"obfuscated\":true,\"text\":\"Aa\"}],lore=[\"This holy weapon impales anything it touches\"],damage=0,enchantments={\"" + EnchantmentType.FIRE_ASPECT + "\":255,\"" + EnchantmentType.SHARPNESS + "\":255,\"" + EnchantmentType.IMPALING + "\":255,\"" + EnchantmentType.LOYALTY + "\":255,\"" + EnchantmentType.EFFICIENCY + "\":255},attribute_modifiers=[{id:\"" + AttributeType.ARMOR + "\",type:\"armor\",amount:1000,operation:\"add_value\",slot:\"armor\",display:{type:\"hidden\"}},{id:\"" + AttributeType.ATTACK_DAMAGE + "\",type:\"attack_damage\",amount:1000,operation:\"add_value\",slot:\"mainhand\",display:{type:\"hidden\"}}],unbreakable={}]"));
 
         return new FileData(FileName.god_mode, fileCommands);
     }
@@ -1497,7 +1497,7 @@ public class Main {
 
         // Teleport everyone underneath the world
         fileCommands.add(Execute.In(Dimension.overworld) +
-                CommandBuilder.teleportEntity("@a", new BlockPos(0, -100, 0)));
+                CommandBuilder.teleportEntity("@a", BlockPos.create(0, -100, 0)));
 
         // Announcement message
         ArrayList<TextItem> texts = new ArrayList<>();
@@ -1947,7 +1947,7 @@ public class Main {
 
         // Teleport all living players
         fileCommands.add(Execute.In(Dimension.overworld) +
-                CommandBuilder.teleportEntity("@a[gamemode=!spectator]", new BlockPos(3, 153, 3)));
+                CommandBuilder.teleportEntity("@a[gamemode=!spectator]", BlockPos.create(3, 153, 3)));
 
         // Spread players in a team together
         fileCommands.add(Execute.In(Dimension.overworld) +
@@ -2345,7 +2345,7 @@ public class Main {
                     CommandBuilder.addForceLoad(c.getX(), c.getZ(), c.getX(), c.getZ()));
 
             SetBlock sb = SetBlock.create(
-                    new BlockPos(c.getX(), c.getY() + 11, c.getZ()),
+                    BlockPos.create(c.getX(), c.getY() + 11, c.getZ()),
                     new BlockState(Block.STRUCTURE_BLOCK)
                             .with(BlockProperty.MODE, StructureBlockMode.LOAD)
                             .with(new StructureBlockEntity("")
@@ -2373,7 +2373,7 @@ public class Main {
 
             // Activate structure block
             sb = SetBlock.create(
-                    new BlockPos(c.getX(), c.getY() + 10, c.getZ()),
+                    BlockPos.create(c.getX(), c.getY() + 10, c.getZ()),
                     new BlockState(Block.REDSTONE_BLOCK)
             ).mode(SetMode.DESTROY);
             fileCommands.add(Execute.In(c.getDimension()) +
@@ -2381,8 +2381,8 @@ public class Main {
 
             // Replace blocks that do not emit light
             Fill cmd = Fill.create(
-                    new BlockPos(c.getX(), c.getY() + 12, c.getZ()),
-                    new BlockPos(c.getX(), Constant.worldHeight - 1, c.getZ()),
+                    BlockPos.create(c.getX(), c.getY() + 12, c.getZ()),
+                    BlockPos.create(c.getX(), Constant.worldHeight - 1, c.getZ()),
                     new BlockState(Block.GLASS)
             ).filter(
                     new BlockPredicate(RegistryTag.BLOCK_BEACON_LIGHT)
@@ -2430,8 +2430,8 @@ public class Main {
         ArrayList<String> fileCommands = new ArrayList<>();
 
         Fill cmd = Fill.create(
-                new BlockPos("~-2", "~-2", "~-2"),
-                new BlockPos("~2", "~", "~2"),
+                BlockPos.create("~-2", "~-2", "~-2"),
+                BlockPos.create("~2", "~", "~2"),
                 new BlockState(Block.ICE)
         ).filter(new BlockPredicate(Block.WATER));
         fileCommands.add(Execute.At("@a[nbt={RootVehicle:{Entity:{id:\"" + EntityType.HORSE + "\"}}}]") +

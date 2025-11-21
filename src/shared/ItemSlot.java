@@ -1,6 +1,6 @@
-package Enums;
+package shared;
 
-public enum InventorySlot {
+public enum ItemSlot {
     CHEST("armor.chest"),
     ENDERCHEST("enderchest"),
     FEET("armor.feet"),
@@ -13,7 +13,7 @@ public enum InventorySlot {
 
     private final String symbol;
 
-    InventorySlot(String symbol) {
+    ItemSlot(String symbol) {
         this.symbol = symbol;
     }
 
