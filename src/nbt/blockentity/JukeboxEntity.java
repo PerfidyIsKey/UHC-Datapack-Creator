@@ -1,7 +1,7 @@
 package nbt.blockentity;
 
 import nbt.NBTTag;
-import shared.ItemId;
+import shared.item.ItemId;
 import nbt.tags.CompoundTag;
 import nbt.tags.StringTag;
 import nbt.tags.ByteTag;

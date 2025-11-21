@@ -1,7 +1,7 @@
 package nbt.entity.data;
 
 import shared.StaticEntityTag;
-import shared.ItemId;
+import shared.item.ItemId;
 import shared.LootTableId;
 
 /**

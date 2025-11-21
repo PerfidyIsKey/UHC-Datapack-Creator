@@ -1,6 +1,6 @@
 package arguments.itempredicate;
 
-import shared.ItemId;
+import shared.item.ItemId;
 
 /**
  * Defines the structure for a Minecraft Item Predicate used in commands:

@@ -1,14 +1,14 @@
 package HelperClasses;
 
 import Enums.BossBarColor;
-import Enums.Color;
-import shared.DyeColor;
+import shared.TextColor;
+import shared.item.DyeColor;
 
 public class Team {
 
     private int id;
     private String name;
-    private Color color;
+    private TextColor color;
     private BossBarColor bossbarColor;
     private DyeColor dyeColor;
     private String collarColor;
@@ -16,7 +16,7 @@ public class Team {
     private String playerColor;
     private String dustColor;
 
-    public Team(int id, Color color, BossBarColor bossbarColor, DyeColor dyeColor, String collarColor, String jsonColor, String playerColor, String dustColor) {
+    public Team(int id, TextColor color, BossBarColor bossbarColor, DyeColor dyeColor, String collarColor, String jsonColor, String playerColor, String dustColor) {
         this.id = id;
         this.name = "Team" + id;
         this.color = color;
@@ -36,11 +36,11 @@ public class Team {
         this.name = name;
     }
 
-    public Color getColor() {
+    public TextColor getColor() {
         return color;
     }
 
-    public void setColor(Color color) {
+    public void setColor(TextColor color) {
         this.color = color;
     }
 

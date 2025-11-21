@@ -1,9 +1,6 @@
 package arguments.itemstack;
 
-import arguments.itemstack.components.EnchantmentsComponent;
-import arguments.itemstack.components.InstrumentComponent;
-import arguments.itemstack.components.UseCooldownComponent;
-import shared.ItemId;
+import shared.item.ItemId;
 import java.util.Arrays;
 import java.util.List;
 import java.util.StringJoiner;

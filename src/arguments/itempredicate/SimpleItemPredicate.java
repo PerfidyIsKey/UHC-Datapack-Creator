@@ -1,6 +1,6 @@
 package arguments.itempredicate;
 
-import shared.ItemId;
+import shared.item.ItemId;
 
 import java.util.List;
 import java.util.StringJoiner;

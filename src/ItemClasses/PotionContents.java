@@ -54,7 +54,7 @@ public class PotionContents implements Components {
     // Make component tag
     public String GenerateComponent() {
         // Optional fields
-        // Color
+        // TextColor
         String colorContent = "";
         if (custom_color != 0) {
             colorContent = "\"custom_color\":" + custom_color + ",\n";

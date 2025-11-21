@@ -1,7 +1,6 @@
 package arguments.itemstack;
 
-import shared.ItemId;
-import java.util.List;
+import shared.item.ItemId;
 
 /**
  * Defines the structure for a Minecraft ItemStack used in commands:
