@@ -8,6 +8,7 @@ import ItemModifiers.*;
 import Predicates.*;
 import TeamGeneration.*;
 import arguments.Entity;
+import arguments.itempredicate.SimpleItemPredicate;
 import arguments.itemstack.BundleItemStack;
 import arguments.itemstack.GoatHornItemStack;
 import arguments.itemstack.components.CustomDataComponent;
@@ -1198,7 +1199,9 @@ public class Main {
         ArrayList<String> fileCommands = new ArrayList<>();
 
         // Clear inventory
-        fileCommands.add(CommandBuilder.clearInventory("@s"));
+        fileCommands.add(Clear.create()
+                        .targets(Entity.ofSelector(TargetSelector.SENDER))
+                                .build());
 
         // Give potions
         if (!OperationMode.teamCreationInGame) {
@@ -1655,7 +1658,9 @@ public class Main {
         fileCommands.add(CommandBuilder.giveEffect("@a", Effect.RESISTANCE, 20 * 60, 2, true));
 
         // Clear player inventories
-        fileCommands.add(CommandBuilder.clearInventory("@a"));
+        fileCommands.add(Clear.create()
+                .targets(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
+                .build());
 
         // Set all players to survival mode
         fileCommands.add(SetGameMode.create(GameMode.SURVIVAL)
@@ -2608,7 +2613,10 @@ public class Main {
 
         // Remove player heads
         fileCommands.add(Execute.As("@a[nbt={Inventory:[{id:\"" + Block.PLAYER_HEAD + "\"}]}]") +
-                CommandBuilder.clearInventory("@s", Block.PLAYER_HEAD));  // Remove from inventory
+                Clear.create()
+                        .targets(Entity.ofSelector(TargetSelector.SENDER))
+                        .item(SimpleItemPredicate.create(ItemId.PLAYER_HEAD))
+                        .build());  // Remove from inventory
         fileCommands.add(Execute.As("@e[type=" + EntityType.ITEM + ",nbt={Item:{id:\"" + Block.PLAYER_HEAD + "\"}}]") +
                 Kill.create().targets(Entity.ofSelector(TargetSelector.SENDER)).build());   // Remove item
 
@@ -2958,7 +2966,14 @@ public class Main {
         }
 
         fileCommands.add(Execute.At(lookingPlayer) +
-                CommandBuilder.clearInventory("@p[limit=2,gamemode=!spectator]", Block.GOAT_HORN));
+                Clear.create()
+                        .targets(Entity.ofSelector(
+                                TargetSelector.NEAREST_PLAYER,
+                                SelectorArgumentsBuilder.create()
+                                        .limit(2)
+                                        .gamemode(GameMode.SPECTATOR, true)))
+                        .item(SimpleItemPredicate.create(ItemId.GOAT_HORN))
+                        .build());
 
 
         for (Team team : teams) {

@@ -215,15 +215,6 @@ public class CommandBuilder {
         return "data modify entity " + target + " " + targetPath + " set value " + value + "b";
     }
 
-    // Clear inventory
-    public static String clearInventory(String targets, Block item) {
-        return "clear " + targets + " " + item;
-    }
-
-    public static String clearInventory(String targets) {
-        return "clear " + targets;
-    }
-
     // Game time
     public static String setTime(int time) {
         return "time set " + time;
