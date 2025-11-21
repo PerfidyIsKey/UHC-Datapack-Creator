@@ -2,7 +2,7 @@ package commands;
 
 import shared.SoundSource;
 import arguments.Entity;
-import arguments.Vec3;
+import arguments.coordinate.Vec3;
 import shared.SoundId;
 
 public class PlaySound {

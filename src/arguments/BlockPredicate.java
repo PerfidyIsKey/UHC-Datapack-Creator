@@ -1,7 +1,7 @@
 package arguments;
 import Enums.*;
 
-public class BlockPredicate implements ArgumentType {
+public class BlockPredicate {
     private final String block_id;
     private String block_states;
     private String data_tags;
@@ -36,8 +36,5 @@ public class BlockPredicate implements ArgumentType {
             sb.append("{").append(data_tags).append("}");
         }
         return sb.toString();
-    }
-
-    public void Sync() {
     }
 }

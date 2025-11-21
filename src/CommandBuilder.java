@@ -187,11 +187,6 @@ public class CommandBuilder {
         return "worldborder set " + size;
     }
 
-    // Spreadplayers
-    public static String spreadPlayers(int xCenter, int yCenter, int minRange, int maxRange, Boolean respectTeam, String entities) {
-        return "spreadplayers " + xCenter + " " + yCenter + " " + minRange + " " + maxRange + " " + respectTeam + " " + entities;
-    }
-
     // Experience
     public static String setExperience(String target, int amount, ExperienceType type) {
         return "xp set " + target + " " + amount + " " + type;
