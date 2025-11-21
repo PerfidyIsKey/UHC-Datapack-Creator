@@ -145,19 +145,6 @@ public class CommandBuilder {
         return "tp " + entity1 + " " + entity2;
     }
 
-    // Give item
-    public static String giveItem(String entity, Block item) {
-        return giveItem(entity, item, "");
-    }
-
-    public static String giveItem(String entity, Block item, String nbt) {
-        return "give " + entity + " " + item + nbt;
-    }
-
-    public static String giveItem(String entity, String item, String nbt) {
-        return "give " + entity + " " + item + nbt;
-    }
-
     public static String replaceItem(String targets, InventorySlot slot, Block item) {
         return "item replace entity " + targets + " " + slot + " with " + item;
     }

@@ -2,6 +2,7 @@ package HelperClasses;
 
 import Enums.BossBarColor;
 import Enums.Color;
+import shared.DyeColor;
 
 public class Team {
 
@@ -9,18 +10,18 @@ public class Team {
     private String name;
     private Color color;
     private BossBarColor bossbarColor;
-    private String glassColor;
+    private DyeColor dyeColor;
     private String collarColor;
     private String jsonColor;
     private String playerColor;
     private String dustColor;
 
-    public Team(int id, Color color, BossBarColor bossbarColor, String glassColor, String collarColor, String jsonColor, String playerColor, String dustColor) {
+    public Team(int id, Color color, BossBarColor bossbarColor, DyeColor dyeColor, String collarColor, String jsonColor, String playerColor, String dustColor) {
         this.id = id;
         this.name = "Team" + id;
         this.color = color;
         this.bossbarColor = bossbarColor;
-        this.glassColor = glassColor;
+        this.dyeColor = dyeColor;
         this.collarColor = collarColor;
         this.jsonColor = jsonColor;
         this.playerColor = playerColor;
@@ -51,12 +52,12 @@ public class Team {
         this.bossbarColor = color2;
     }
 
-    public String getGlassColor() {
-        return glassColor;
+    public DyeColor getDyeColor() {
+        return dyeColor;
     }
 
-    public void setGlassColor(String color2) {
-        this.glassColor = color2;
+    public void setDyeColor(DyeColor color) {
+        this.dyeColor = color;
     }
 
     public String getCollarColor() {
