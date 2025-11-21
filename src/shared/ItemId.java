@@ -6,6 +6,7 @@ package shared;
  */
 public enum ItemId {
     CHEST("chest"),
+    GOAT_HORN("goat_horn"),
     MUSIC_DISC_STAL("music_disc_stal"),
     PLAYER_HEAD("player_head");
 

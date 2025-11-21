@@ -8,6 +8,12 @@ import ItemModifiers.*;
 import Predicates.*;
 import TeamGeneration.*;
 import arguments.Entity;
+import arguments.itemstack.BundleItemStack;
+import arguments.itemstack.GoatHornItemStack;
+import arguments.itemstack.components.CustomDataComponent;
+import arguments.itemstack.components.EnchantmentsComponent;
+import arguments.itemstack.components.InstrumentComponent;
+import arguments.itemstack.components.UseCooldownComponent;
 import arguments.targetselector.SelectorArgumentsBuilder;
 import arguments.targetselector.TargetSelector;
 import commands.*;
@@ -21,10 +27,11 @@ import nbt.entity.FireworkRocketNbtBuilder;
 import nbt.entity.ItemNbtBuilder;
 import nbt.entity.data.*;
 import nbt.item.PlayerProfileComponentBuilder;
+import nbt.tags.ByteTag;
+import nbt.tags.CompoundTag;
 import utils.TextComponent;
 import shared.*;
 
-import javax.swing.plaf.basic.BasicDirectoryModel;
 import java.io.IOException;
 import java.nio.file.*;
 import java.util.*;
@@ -256,7 +263,7 @@ public class Main {
         // Colors
         Color[] colors = {Color.yellow, Color.blue, Color.red, Color.dark_purple, Color.dark_green, Color.light_purple, Color.black, Color.gold, Color.gray, Color.aqua, Color.dark_red, Color.dark_blue, Color.dark_aqua};
         BossBarColor[] bossbarColors = {BossBarColor.yellow, BossBarColor.blue, BossBarColor.red, BossBarColor.purple, BossBarColor.green, BossBarColor.pink, BossBarColor.white, BossBarColor.white, BossBarColor.white, BossBarColor.white, BossBarColor.white, BossBarColor.white, BossBarColor.white};
-        String[] glassColors = {"yellow", "light_blue", "red", "purple", "green", "pink", "black", "orange", "gray", "cyan", "red", "blue", "blue"};
+        DyeColor[] glassColors = {DyeColor.YELLOW, DyeColor.LIGHT_BLUE, DyeColor.RED, DyeColor.PURPLE, DyeColor.GREEN, DyeColor.PINK, DyeColor.BLACK, DyeColor.ORANGE, DyeColor.GRAY, DyeColor.CYAN, DyeColor.RED, DyeColor.BLUE, DyeColor.BLUE};
         String[] collarColors = {"4", "3", "14", "10", "13", "6", "15", "1", "7", "9", "2", "11", "9"};
         String[] jsonColors = {"YELLOW", "BLUE", "RED", "PURPLE", "GREEN", "PINK", "BLACK", "ORANGE", "GRAY", "AQUA", "DARK RED", "DARK BLUE", "DARK AQUA"};
         String[] playerColors = {"Yellow", "Blue", "Red", "Purple", "Green", "Pink", "Black", "Orange", "Gray", "Aqua", "DarkRed", "DarkBlue", "DarkAqua"};
@@ -1119,7 +1126,7 @@ public class Main {
             // Update glass color
             fileCommands.add(Execute.If(Constant.adminOld, Objective.ColorCP.extendName(i), team.getID(), false) +
                     Execute.InNext(currentCP.getCoordinate().getDimension(), true) +
-                    CommandBuilder.setBlock(currentCP.getCoordinate().getX(), currentCP.getCoordinate().getY() + 1, currentCP.getCoordinate().getZ(), "minecraft:" + team.getGlassColor() + "_stained_glass", SetBlockType.replace));
+                    CommandBuilder.setBlock(currentCP.getCoordinate().getX(), currentCP.getCoordinate().getY() + 1, currentCP.getCoordinate().getZ(), "minecraft:" + team.getDyeColor() + "_stained_glass", SetBlockType.replace));
         }
 
         // Keep beacon active
@@ -1667,11 +1674,25 @@ public class Main {
         if (!OperationMode.teamCreationInGame) {
             // Teammate tracker
             for (Team team : teams) {
-                fileCommands.add(CommandBuilder.giveItem("@a[team=" + team.getName() + "]", Block.BUNDLE.extendColor(team.getGlassColor()), "[enchantments={\"" + EnchantmentType.VANISHING_CURSE + "\":1},custom_data={locateTeammate:1b}]"));
+                fileCommands.add(Give.create(Entity.ofSelector(
+                                        TargetSelector.ALL_PLAYERS,
+                                        SelectorArgumentsBuilder.create()
+                                                .team(team.getName())),
+                                BundleItemStack.create(
+                                        team.getDyeColor(),
+                                        EnchantmentsComponent.create(Map.of(EnchantmentId.VANISHING_CURSE, 1)),
+                                        CustomDataComponent.create(new CompoundTag()
+                                                .put(new ByteTag("locateTeammate", (byte) 1)))))
+                        .build());
             }
         } else {
             // Team caller
-            fileCommands.add(CommandBuilder.giveItem("@a", Block.GOAT_HORN, "[instrument=\"minecraft:ponder_goat_horn\",use_cooldown={seconds:30},enchantments={\"" + EnchantmentType.VANISHING_CURSE + "\":1}]"));
+            fileCommands.add(Give.create(Entity.ofSelector(TargetSelector.ALL_PLAYERS),
+                            GoatHornItemStack.create(
+                                    InstrumentComponent.create(GoatHornInstrumentId.PONDER_GOAT_HORN),
+                                    UseCooldownComponent.create(30),
+                                    EnchantmentsComponent.create(Map.of(EnchantmentId.VANISHING_CURSE, 1))))
+                    .build());
         }
 
         // Show world border size in actionbar
@@ -1928,11 +1949,13 @@ public class Main {
         // Current Control Point
         ControlPoint currentCP = controlPoints.get(i - 1);
 
+        // TODO: Change for players without a team
         if (OperationMode.teamCreationInGame) {
             // Update CP glass color solo
+            /*
             fileCommands.add(Execute.In(currentCP.getCoordinate().getDimension(), false) +
                     Execute.IfNext("@r[limit=1,gamemode=!spectator,team=]", getObjectiveByName(Objective.ControlPoint.extendName(i)), ComparatorType.GREATER, Constant.adminOld, getObjectiveByName(Objective.Highscore.extendName(i)), true) +
-                    CommandBuilder.setBlock(currentCP.getCoordinate().getX(), currentCP.getCoordinate().getY() + 1, currentCP.getCoordinate().getZ(), Block.STAINED_GLASS.extendColor("white"), SetBlockType.replace));
+                    CommandBuilder.setBlock(currentCP.getCoordinate().getX(), currentCP.getCoordinate().getY() + 1, currentCP.getCoordinate().getZ(), Block.STAINED_GLASS.extendColor("white"), SetBlockType.replace));*/
         }
 
         // Check which teams are on the Control Point
@@ -2571,7 +2594,16 @@ public class Main {
 
             // Team caller
             fileCommands.add(Execute.As(respawnPlayerOld) +
-                    CommandBuilder.giveItem("@s[team=]", Block.GOAT_HORN, "[instrument=\"minecraft:ponder_goat_horn\",use_cooldown={seconds:30},enchantments={\"" + EnchantmentType.VANISHING_CURSE + "\":1}]"));
+                    Give.create(Entity.ofSelector(
+                                            TargetSelector.SENDER,
+                                            SelectorArgumentsBuilder.create()
+                                                    .team()),
+                                    GoatHornItemStack.create(
+                                            InstrumentComponent.create(GoatHornInstrumentId.PONDER_GOAT_HORN),
+                                            UseCooldownComponent.create(30),
+                                            EnchantmentsComponent.create(
+                                                    Map.of(EnchantmentId.VANISHING_CURSE, 1))))
+                            .build());
         }
 
         // Remove player heads
@@ -2583,7 +2615,16 @@ public class Main {
         // Teammate tracker
         for (Team team : teams) {
             fileCommands.add(Execute.As(respawnPlayerOld) +
-                    CommandBuilder.giveItem("@s[team=" + team.getName() + "]", Block.BUNDLE.extendColor(team.getGlassColor()), "[enchantments={\"" + EnchantmentType.VANISHING_CURSE + "\":1},custom_data={locateTeammate:1b}]"));
+                    Give.create(Entity.ofSelector(
+                                            TargetSelector.SENDER,
+                                            SelectorArgumentsBuilder.create()
+                                                    .team(team.getName())),
+                                    BundleItemStack.create(
+                                            team.getDyeColor(),
+                                            EnchantmentsComponent.create(Map.of(EnchantmentId.VANISHING_CURSE, 1)),
+                                            CustomDataComponent.create(new CompoundTag()
+                                                    .put(new ByteTag("locateTeammate", (byte) 1)))))
+                            .build());
         }
 
         // Set respawn health
@@ -2782,7 +2823,7 @@ public class Main {
 
         for (Team t : teams) {
             for (int i = 0; i < 3; i++) {
-                fileCommands.add(Execute.As("@a[team=" + t.getName() + ",nbt={SelectedItem:{id:\"" + Block.BUNDLE.extendColor(t.getGlassColor()) + "\",components:{\"minecraft:custom_data\":{locateTeammate:1b}}}}]", false) +
+                fileCommands.add(Execute.As("@a[team=" + t.getName() + ",nbt={SelectedItem:{id:\"" + t.getDyeColor() + "_" + Block.BUNDLE + "\",components:{\"minecraft:custom_data\":{locateTeammate:1b}}}}]", false) +
                         Execute.AtNext("@s") +
                         Execute.IfNext("@a[team=" + t.getName() + ",distance=0.1..,gamemode=!spectator]") +
                         Execute.FacingNext("@a[team=" + t.getName() + ",distance=0.1..,gamemode=!spectator,limit=1,sort=random]", EntityAnchor.eyes) +
@@ -2923,7 +2964,17 @@ public class Main {
         for (Team team : teams) {
             fileCommands.add(Execute.At(lookingPlayer, false) +
                     Execute.IfNext("@p[tag=LookingForTeamMate,team=" + team.getName() + "]", true) +
-                    CommandBuilder.giveItem("@p[limit=2,gamemode=!spectator]", Block.BUNDLE.extendColor(team.getGlassColor()), "[enchantments={\"" + EnchantmentType.VANISHING_CURSE + "\":1},custom_data={locateTeammate:1b}]"));
+                    Give.create(Entity.ofSelector(
+                                            TargetSelector.NEAREST_PLAYER,
+                                            SelectorArgumentsBuilder.create()
+                                                    .limit(2)
+                                                    .gamemode(GameMode.SPECTATOR, true)),
+                                    BundleItemStack.create(
+                                            team.getDyeColor(),
+                                            EnchantmentsComponent.create(Map.of(EnchantmentId.VANISHING_CURSE, 1)),
+                                            CustomDataComponent.create(new CompoundTag()
+                                                    .put(new ByteTag("locateTeammate", (byte) 1)))))
+                            .build());
         }
 
         return new FileData(FileName.join_team, fileCommands);
