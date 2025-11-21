@@ -1,8 +1,7 @@
 package arguments.itemstack;
 
-import arguments.itemstack.ItemComponentTag;
-import shared.DyeColor;
-import shared.ItemId;
+import shared.item.DyeColor;
+import shared.item.ItemId;
 
 import java.util.Arrays;
 import java.util.List;

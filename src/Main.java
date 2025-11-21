@@ -8,18 +8,18 @@ import ItemModifiers.*;
 import Predicates.*;
 import TeamGeneration.*;
 import arguments.Entity;
-import arguments.coordinate.Vec2;
 import arguments.coordinate.Vec3;
 import arguments.itempredicate.SimpleItemPredicate;
-import arguments.itemstack.BundleItemStack;
-import arguments.itemstack.GoatHornItemStack;
-import arguments.itemstack.components.CustomDataComponent;
-import arguments.itemstack.components.EnchantmentsComponent;
-import arguments.itemstack.components.InstrumentComponent;
-import arguments.itemstack.components.UseCooldownComponent;
+import arguments.itemstack.*;
+import arguments.itemstack.components.*;
+import arguments.itemstack.components.attributes.AttributeDisplayTag;
+import arguments.itemstack.components.attributes.AttributeModifierEntry;
 import arguments.targetselector.SelectorArgumentsBuilder;
 import arguments.targetselector.TargetSelector;
 import commands.*;
+import commands.item.ItemAction;
+import commands.item.ItemTargetEntity;
+import commands.tag.TagAction;
 import controlpoints.ControlPoint;
 import controlpoints.ControlPointTag;
 import nbt.blockentity.*;
@@ -32,6 +32,11 @@ import nbt.entity.data.*;
 import nbt.item.PlayerProfileComponentBuilder;
 import nbt.tags.ByteTag;
 import nbt.tags.CompoundTag;
+import shared.attributes.AttributeId;
+import shared.attributes.AttributeOperation;
+import shared.attributes.AttributeSlot;
+import shared.attributes.AttributeTooltipDisplayType;
+import shared.item.*;
 import utils.TextComponent;
 import shared.*;
 
@@ -98,7 +103,7 @@ public class Main {
     private String communityName;
     public static final Scoreboard scoreboard = new Scoreboard();
 
-    private final Text bannerText = new Text(Color.dark_gray, true, false, " | ");
+    private final Text bannerText = new Text(TextColor.DARK_GRAY, true, false, " | ");
 
     private TeamGenerator teamGenerator;
     private ServerProperties properties = new ServerProperties();
@@ -200,7 +205,7 @@ public class Main {
         // Get data from uhc_data.txt
         uhcNumber = fileTools.getContentOutOfFile("Files\\" + communityMode + "\\uhc_data.txt", "uhcNumber");
         String[] splitStartCoordinates = fileTools.splitLineOnComma(fileTools.getContentOutOfFile("Files\\" + communityMode + "\\uhc_data.txt", "startCoordinate"));
-        startCoordinate = new BlockPos(Integer.parseInt(splitStartCoordinates[0]), Integer.parseInt(splitStartCoordinates[1]), Integer.parseInt(splitStartCoordinates[2]));
+        startCoordinate = BlockPos.create(Integer.parseInt(splitStartCoordinates[0]), Integer.parseInt(splitStartCoordinates[1]), Integer.parseInt(splitStartCoordinates[2]));
         communityName = fileTools.getContentOutOfFile("Files\\" + communityMode + "\\uhc_data.txt", "communityName");
 
         if (OperationMode.traitorFaction) {
@@ -264,7 +269,7 @@ public class Main {
         }
 
         // Colors
-        Color[] colors = {Color.yellow, Color.blue, Color.red, Color.dark_purple, Color.dark_green, Color.light_purple, Color.black, Color.gold, Color.gray, Color.aqua, Color.dark_red, Color.dark_blue, Color.dark_aqua};
+        TextColor[] colors = {TextColor.YELLOW, TextColor.BLUE, TextColor.RED, TextColor.DARK_PURPLE, TextColor.DARK_GREEN, TextColor.LIGHT_PURPLE, TextColor.BLACK, TextColor.GOLD, TextColor.GRAY, TextColor.AQUA, TextColor.DARK_RED, TextColor.DARK_BLUE, TextColor.DARK_AQUA};
         BossBarColor[] bossbarColors = {BossBarColor.yellow, BossBarColor.blue, BossBarColor.red, BossBarColor.purple, BossBarColor.green, BossBarColor.pink, BossBarColor.white, BossBarColor.white, BossBarColor.white, BossBarColor.white, BossBarColor.white, BossBarColor.white, BossBarColor.white};
         DyeColor[] glassColors = {DyeColor.YELLOW, DyeColor.LIGHT_BLUE, DyeColor.RED, DyeColor.PURPLE, DyeColor.GREEN, DyeColor.PINK, DyeColor.BLACK, DyeColor.ORANGE, DyeColor.GRAY, DyeColor.CYAN, DyeColor.RED, DyeColor.BLUE, DyeColor.BLUE};
         String[] collarColors = {"4", "3", "14", "10", "13", "6", "15", "1", "7", "9", "2", "11", "9"};
@@ -925,22 +930,22 @@ public class Main {
 
         // Create staging area
         Fill cmd = Fill.create(
-                new BlockPos(-6, 220, -6),
-                new BlockPos(6, 226, 6),
+                BlockPos.create(-6, 220, -6),
+                BlockPos.create(6, 226, 6),
                 new BlockState(Block.BARRIER)
         );
         fileCommands.add(Execute.In(Dimension.overworld) +
                 cmd.build());
         cmd = Fill.create(
-                new BlockPos(-5, 221, -5),
-                new BlockPos(6, 226, 5),
+                BlockPos.create(-5, 221, -5),
+                BlockPos.create(6, 226, 5),
                 new BlockState(Block.AIR)
         );
         fileCommands.add(Execute.In(Dimension.overworld) +
                 cmd.build());
 
         SetBlock sb = SetBlock.create(
-                new BlockPos(0, 222, -5),
+                BlockPos.create(0, 222, -5),
                 new BlockState(Block.CHERRY_WALL_SIGN)
                         .with(BlockProperty.FACING, Direction.SOUTH)
                         .with(BlockProperty.WATERLOGGED, false)
@@ -1044,9 +1049,9 @@ public class Main {
         if (OperationMode.traitorFaction) {
             // Announce traitor deaths
             texts.add(bannerText);
-            texts.add(new Text(Color.red, true, false, "A TRAITOR HAS BEEN ELIMINATED"));
+            texts.add(new Text(TextColor.RED, true, false, "A TRAITOR HAS BEEN ELIMINATED"));
             texts.add(bannerText);
-            texts.add(new Text(Color.gold, true, false, "WELL DONE"));
+            texts.add(new Text(TextColor.GOLD, true, false, "WELL DONE"));
             texts.add(bannerText);
             fileCommands.add(Execute.If("@p[scores={Deaths=1},tag=" + TagTemp.Traitor + "]") +
                     new TellRaw("@a", texts).sendRaw());
@@ -1059,7 +1064,7 @@ public class Main {
             String killer = "@p[team=,scores={TempKills=1}]";
             String dead = "@p[team=,scores={Deaths=1}]";
 
-            texts.add(new Text(Color.red, true, false, "Looks like you do not want a teammate."));
+            texts.add(new Text(TextColor.RED, true, false, "Looks like you do not want a teammate."));
             fileCommands.add(Execute.If(killer, false) +
                     Execute.IfNext(dead) +
                     Execute.UnlessNext(killer, Objective.IsKiller, 1, true) +
@@ -1134,15 +1139,15 @@ public class Main {
 
         // Keep beacon active
         Fill cmd = Fill.create(
-                new BlockPos(currentCP.getCoordinate().getX() - 1, currentCP.getCoordinate().getY() - 1, currentCP.getCoordinate().getZ() - 1),
-                new BlockPos(currentCP.getCoordinate().getX() + 1, currentCP.getCoordinate().getY() - 1, currentCP.getCoordinate().getZ() + 1),
+                BlockPos.create(currentCP.getCoordinate().getX() - 1, currentCP.getCoordinate().getY() - 1, currentCP.getCoordinate().getZ() - 1),
+                BlockPos.create(currentCP.getCoordinate().getX() + 1, currentCP.getCoordinate().getY() - 1, currentCP.getCoordinate().getZ() + 1),
                 new BlockState(Block.EMERALD_BLOCK)
         );
         fileCommands.add(Execute.In(currentCP.getCoordinate().getDimension()) +
                 cmd.build());
 
         SetBlock sb = SetBlock.create(
-                new BlockPos(currentCP.getCoordinate().getX(), currentCP.getCoordinate().getY(), currentCP.getCoordinate().getZ()),
+                BlockPos.create(currentCP.getCoordinate().getX(), currentCP.getCoordinate().getY(), currentCP.getCoordinate().getZ()),
                 new BlockState(Block.BEACON)
         );
         fileCommands.add(Execute.In(currentCP.getCoordinate().getDimension()) +
@@ -1169,7 +1174,11 @@ public class Main {
     private FileData ClearEnderChest() {
         ArrayList<String> fileCommands = new ArrayList<>();
         for (int i = 0; i < chestSize; i++) {
-            fileCommands.add(CommandBuilder.replaceItem("@a", InventorySlot.ENDERCHEST.setSlotNumber(i), Block.AIR, 1));
+            fileCommands.add(Item.create(ItemAction.REPLACE_WITH,
+                            ItemTargetEntity.create(Entity.ofSelector(TargetSelector.ALL_PLAYERS)))
+                    .slot(ItemSlot.ENDERCHEST.withSlotNumber(i))
+                    .replaceWith(SimpleItemStack.create(ItemId.AIR), 1)
+                    .build());
         }
 
         return new FileData(FileName.clear_enderchest, fileCommands);
@@ -1177,13 +1186,44 @@ public class Main {
 
     private FileData EquipGear() {
         ArrayList<String> fileCommands = new ArrayList<>();
-        fileCommands.add(CommandBuilder.replaceItem("@a", InventorySlot.CHEST, Block.IRON_CHESTPLATE));
-        fileCommands.add(CommandBuilder.replaceItem("@a", InventorySlot.FEET, Block.IRON_BOOTS));
-        fileCommands.add(CommandBuilder.replaceItem("@a", InventorySlot.HEAD, Block.IRON_HELMET));
-        fileCommands.add(CommandBuilder.replaceItem("@a", InventorySlot.LEGS, Block.IRON_LEGGINGS));
-        fileCommands.add(CommandBuilder.replaceItem("@a", InventorySlot.OFFHAND, Block.SHIELD));
-        fileCommands.add(CommandBuilder.replaceItem("@a", InventorySlot.MAINHAND, Block.IRON_AXE));
-        fileCommands.add(CommandBuilder.replaceItem("@a", InventorySlot.INVENTORY.setSlotNumber(0), Block.IRON_SWORD));
+
+        ItemTargetEntity targets = ItemTargetEntity.create(Entity.ofSelector(TargetSelector.ALL_PLAYERS));
+
+        fileCommands.add(Item.create(ItemAction.REPLACE_WITH,
+                        targets)
+                .slot(ItemSlot.CHEST)
+                .replaceWith(DynamicItemStack.create(ItemId.getArmorResourceLocation(ArmorMaterial.IRON, ArmorPiece.CHESTPLATE)))
+                .build());
+        fileCommands.add(Item.create(ItemAction.REPLACE_WITH,
+                        targets)
+                .slot(ItemSlot.FEET)
+                .replaceWith(DynamicItemStack.create(ItemId.getArmorResourceLocation(ArmorMaterial.IRON, ArmorPiece.BOOTS)))
+                .build());
+        fileCommands.add(Item.create(ItemAction.REPLACE_WITH,
+                        targets)
+                .slot(ItemSlot.HEAD)
+                .replaceWith(DynamicItemStack.create(ItemId.getArmorResourceLocation(ArmorMaterial.IRON, ArmorPiece.HELMET)))
+                .build());
+        fileCommands.add(Item.create(ItemAction.REPLACE_WITH,
+                        targets)
+                .slot(ItemSlot.LEGS)
+                .replaceWith(DynamicItemStack.create(ItemId.getArmorResourceLocation(ArmorMaterial.IRON, ArmorPiece.LEGGINGS)))
+                .build());
+        fileCommands.add(Item.create(ItemAction.REPLACE_WITH,
+                        targets)
+                .slot(ItemSlot.OFFHAND)
+                .replaceWith(SimpleItemStack.create(ItemId.SHIELD))
+                .build());
+        fileCommands.add(Item.create(ItemAction.REPLACE_WITH,
+                        targets)
+                .slot(ItemSlot.MAINHAND)
+                .replaceWith(DynamicItemStack.create(ItemId.getToolResourceLocation(ToolMaterial.IRON, ToolPiece.AXE)))
+                .build());
+        fileCommands.add(Item.create(ItemAction.REPLACE_WITH,
+                        targets)
+                .slot(ItemSlot.INVENTORY.withSlotNumber(0))
+                .replaceWith(DynamicItemStack.create(ItemId.getToolResourceLocation(ToolMaterial.IRON, ToolPiece.SWORD)))
+                .build());
         fileCommands.add(CommandBuilder.giveEffect("@a", Effect.REGENERATION, 1, 255, true));
 
         return new FileData(FileName.equip_gear, fileCommands);
@@ -1192,7 +1232,42 @@ public class Main {
     private FileData GodMode() {
         ArrayList<String> fileCommands = new ArrayList<>();
         fileCommands.add(CommandBuilder.giveEffect("@s", Effect.RESISTANCE, 99999, 4, true));
-        fileCommands.add(CommandBuilder.replaceItem("@s", InventorySlot.MAINHAND, Block.TRIDENT + "[custom_name=[{\"bold\":false,\"color\":\"white\",\"italic\":false,\"obfuscated\":true,\"text\":\"aA\"},{\"bold\":true,\"color\":\"#8C3CC1\",\"obfuscated\":false,\"text\":\"The\"},{\"bold\":true,\"color\":\"#E280FF\",\"obfuscated\":false,\"text\":\" Impaler \"},{\"color\":\"white\",\"obfuscated\":true,\"text\":\"Aa\"}],lore=[\"This holy weapon impales anything it touches\"],damage=0,enchantments={\"" + EnchantmentType.FIRE_ASPECT + "\":255,\"" + EnchantmentType.SHARPNESS + "\":255,\"" + EnchantmentType.IMPALING + "\":255,\"" + EnchantmentType.LOYALTY + "\":255,\"" + EnchantmentType.EFFICIENCY + "\":255},attribute_modifiers=[{id:\"" + AttributeType.ARMOR + "\",type:\"armor\",amount:1000,operation:\"add_value\",slot:\"armor\",display:{type:\"hidden\"}},{id:\"" + AttributeType.ATTACK_DAMAGE + "\",type:\"attack_damage\",amount:1000,operation:\"add_value\",slot:\"mainhand\",display:{type:\"hidden\"}}],unbreakable={}]"));
+        fileCommands.add(Item.create(ItemAction.REPLACE_WITH,
+                        ItemTargetEntity.create(Entity.ofSelector(TargetSelector.SENDER)))
+                .slot(ItemSlot.MAINHAND)
+                .replaceWith(
+                        ComponentItemStack.create(ItemId.TRIDENT)
+                                .addComponent(CustomNameComponent.create(
+                                        TextComponent.array(List.of(
+                                                TextComponent.complex("aA", TextColor.WHITE, false, false, true),
+                                                TextComponent.complex("The", "#8C3CC1", true, false, false),
+                                                TextComponent.complex(" Impaler ", "#E280FF", true, false, false),
+                                                TextComponent.complex("Aa", TextColor.WHITE, null, null, true)))))
+                                .addComponent(LoreComponent.create("This holy weapon impales anything it touches"))
+                                .addComponent(DamageComponent.create(0))
+                                .addComponent(EnchantmentsComponent.create(Map.of(
+                                        EnchantmentId.FIRE_ASPECT, 255,
+                                        EnchantmentId.SHARPNESS, 255,
+                                        EnchantmentId.IMPALING, 255,
+                                        EnchantmentId.LOYALTY, 255,
+                                        EnchantmentId.EFFICIENCY, 255)))
+                                .addComponent(AttributeModifiersComponent.create(List.of(
+                                        AttributeModifierEntry.create(
+                                                AttributeId.ARMOR,
+                                                AttributeId.ARMOR,
+                                                1000.0,
+                                                AttributeOperation.ADD_VALUE,
+                                                AttributeSlot.ARMOR,
+                                                AttributeDisplayTag.create(AttributeTooltipDisplayType.HIDDEN)),
+                                        AttributeModifierEntry.create(
+                                                AttributeId.ATTACK_DAMAGE,
+                                                AttributeId.ATTACK_DAMAGE,
+                                                1000.0,
+                                                AttributeOperation.ADD_VALUE,
+                                                AttributeSlot.MAINHAND,
+                                                AttributeDisplayTag.create(AttributeTooltipDisplayType.HIDDEN)))))
+                                .addComponent(UnbreakableComponent.create()))
+                .build());
 
         return new FileData(FileName.god_mode, fileCommands);
     }
@@ -1497,14 +1572,14 @@ public class Main {
 
         // Teleport everyone underneath the world
         fileCommands.add(Execute.In(Dimension.overworld) +
-                CommandBuilder.teleportEntity("@a", new BlockPos(0, -100, 0)));
+                CommandBuilder.teleportEntity("@a", BlockPos.create(0, -100, 0)));
 
         // Announcement message
         ArrayList<TextItem> texts = new ArrayList<>();
         texts.add(bannerText);
-        texts.add(new Text(Color.gold, true, false, communityName + " UHC"));
+        texts.add(new Text(TextColor.GOLD, true, false, communityName + " UHC"));
         texts.add(bannerText);
-        texts.add(new Text(Color.light_purple, true, false, "PREDICTIONS STARTED! GOOD LUCK"));
+        texts.add(new Text(TextColor.LIGHT_PURPLE, true, false, "PREDICTIONS STARTED! GOOD LUCK"));
         texts.add(bannerText);
         fileCommands.add(new TellRaw("@a", texts).sendRaw());
 
@@ -1530,10 +1605,10 @@ public class Main {
 
                 // Chat message
                 texts.add(bannerText);
-                texts.add(new Text(Color.gold, true, false, communityName + " UHC"));
+                texts.add(new Text(TextColor.GOLD, true, false, communityName + " UHC"));
                 texts.add(bannerText);
                 texts.add(new Text(t.getColor(), true, false, t.getJSONColor()));
-                texts.add(new Text(Color.light_purple, true, false, " WILL WIN THE SEASON!"));
+                texts.add(new Text(TextColor.LIGHT_PURPLE, true, false, " WILL WIN THE SEASON!"));
                 texts.add(bannerText);
 
                 fileCommands.add(Execute.If("@p[team=" + t.getName() + ",scores={Deaths=0}]", false) +
@@ -1560,10 +1635,10 @@ public class Main {
 
             // Chat message
             texts.add(bannerText);
-            texts.add(new Text(Color.gold, true, false, communityName + " UHC"));
+            texts.add(new Text(TextColor.GOLD, true, false, communityName + " UHC"));
             texts.add(bannerText);
             texts.add(new Select("@p[tag=" + TagTemp.PredictionCandidate + "]"));
-            texts.add(new Text(Color.light_purple, true, false, " WILL WIN THE SEASON!"));
+            texts.add(new Text(TextColor.LIGHT_PURPLE, true, false, " WILL WIN THE SEASON!"));
             texts.add(bannerText);
 
             fileCommands.add(Execute.Unless("@p[tag=!" + TagTemp.PredictionCandidate + ",scores={Deaths=0}]") +
@@ -1705,7 +1780,7 @@ public class Main {
         }
 
         // Show world border size in actionbar
-        texts.add(new Text(Color.light_purple, false, false, "World size: ±" + world.getSize() + " blocks"));
+        texts.add(new Text(TextColor.LIGHT_PURPLE, false, false, "World size: ±" + world.getSize() + " blocks"));
         Title showWorldSize = new Title("@a", TitleType.subtitle, texts);
 
         // Change title display time
@@ -1715,7 +1790,7 @@ public class Main {
         fileCommands.add(showWorldSize.displayTitle());
 
         // Display game start
-        fileCommands.add(new Title("@a", TitleType.title, new Text(Color.gold, true, true, "Game Starting Now!")).displayTitle());
+        fileCommands.add(new Title("@a", TitleType.title, new Text(TextColor.GOLD, true, true, "Game Starting Now!")).displayTitle());
 
         // Change title display time
         fileCommands.add(CommandBuilder.titleDefaultTiming("@a"));
@@ -1771,8 +1846,8 @@ public class Main {
         ArrayList<String> fileCommands = new ArrayList<>();
 
         // Display Control Point 1 enabled
-        fileCommands.add(new Title("@a", TitleType.subtitle, new Text(Color.light_purple, true, true, "is now enabled!")).displayTitle());
-        fileCommands.add(new Title("@a", TitleType.title, new Text(Color.gold, true, true, "Control Point 1")).displayTitle());
+        fileCommands.add(new Title("@a", TitleType.subtitle, new Text(TextColor.LIGHT_PURPLE, true, true, "is now enabled!")).displayTitle());
+        fileCommands.add(new Title("@a", TitleType.title, new Text(TextColor.GOLD, true, true, "Control Point 1")).displayTitle());
 
         // Make bossbars visible
         fileCommands.add(getBossbarByName("cp1").setVisible(true));
@@ -1803,9 +1878,9 @@ public class Main {
         // Announce that Control Point 2 is enabled
         ArrayList<TextItem> texts = new ArrayList<>();
         texts.add(bannerText);
-        texts.add(new Text(Color.gold, true, false, communityName + " UHC"));
+        texts.add(new Text(TextColor.GOLD, true, false, communityName + " UHC"));
         texts.add(bannerText);
-        texts.add(new Text(Color.light_purple, true, false, "CONTROL POINT 2 IS NOW AVAILABLE!"));
+        texts.add(new Text(TextColor.LIGHT_PURPLE, true, false, "CONTROL POINT 2 IS NOW AVAILABLE!"));
         texts.add(bannerText);
         fileCommands.add(new TellRaw("@a", texts).sendRaw());
 
@@ -1827,13 +1902,13 @@ public class Main {
         ArrayList<String> fileCommands = new ArrayList<>();
         ArrayList<TextItem> texts = new ArrayList<>();
         texts.add(bannerText);
-        texts.add(new Text(Color.gold, true, false, communityName + " UHC"));
+        texts.add(new Text(TextColor.GOLD, true, false, communityName + " UHC"));
         texts.add(bannerText);
-        texts.add(new Text(Color.light_purple, true, false, i + " MINUTE(S) REMAINING"));
+        texts.add(new Text(TextColor.LIGHT_PURPLE, true, false, i + " MINUTE(S) REMAINING"));
         texts.add(bannerText);
 
         fileCommands.add(new TellRaw("@a", texts).sendRaw());
-        fileCommands.add(new Title("@a", TitleType.title, new Text(Color.gold, true, true, i + " minute(s) remaining.")).displayTitle());
+        fileCommands.add(new Title("@a", TitleType.title, new Text(TextColor.GOLD, true, true, i + " minute(s) remaining.")).displayTitle());
         return new FileData("" + FileName.minute_ + i, fileCommands);
     }
 
@@ -1871,16 +1946,16 @@ public class Main {
 
         // Chat message
         texts.add(bannerText);
-        texts.add(new Text(Color.gold, true, false, communityName + " UHC"));
+        texts.add(new Text(TextColor.GOLD, true, false, communityName + " UHC"));
         texts.add(bannerText);
         texts.add(new Text(team.getColor(), true, false, team.getJSONColor()));
-        texts.add(new Text(Color.light_purple, true, false, " TEAM VICTORY HAS BEEN ACHIEVED! 3 MINUTES UNTIL THE FINAL DEATHMATCH"));
+        texts.add(new Text(TextColor.LIGHT_PURPLE, true, false, " TEAM VICTORY HAS BEEN ACHIEVED! 3 MINUTES UNTIL THE FINAL DEATHMATCH"));
         texts.add(bannerText);
         fileCommands.add(new TellRaw("@a", texts).sendRaw());
 
         // Title
-        fileCommands.add(new Title("@a", TitleType.subtitle, new Text(Color.light_purple, true, true, "has been achieved!")).displayTitle());
-        fileCommands.add(new Title("@a", TitleType.title, new Text(Color.gold, true, true, team.getJSONColor() + " team victory")).displayTitle());
+        fileCommands.add(new Title("@a", TitleType.subtitle, new Text(TextColor.LIGHT_PURPLE, true, true, "has been achieved!")).displayTitle());
+        fileCommands.add(new Title("@a", TitleType.title, new Text(TextColor.GOLD, true, true, team.getJSONColor() + " team victory")).displayTitle());
 
         // Proceed to victory mode
         fileCommands.add(Schedule.callFunction(FileName.victory));
@@ -1894,18 +1969,18 @@ public class Main {
 
         // Chat message
         texts.add(bannerText);
-        texts.add(new Text(Color.gold, true, false, communityName + " UHC"));
+        texts.add(new Text(TextColor.GOLD, true, false, communityName + " UHC"));
         texts.add(bannerText);
-        texts.add(new Select(Color.white, false, true, "@s"));
-        texts.add(new Text(Color.light_purple, true, false, " HAS ACHIEVED VICTORY!"));
+        texts.add(new Select(TextColor.WHITE, false, true, "@s"));
+        texts.add(new Text(TextColor.LIGHT_PURPLE, true, false, " HAS ACHIEVED VICTORY!"));
         texts.add(bannerText);
 
         // Title
         fileCommands.add(new TellRaw("@a", texts).sendRaw());
         texts.clear();
-        fileCommands.add(new Title("@a", TitleType.subtitle, new Text(Color.light_purple, true, true, "Absolute chad.")).displayTitle());
-        texts.add(new Select(Color.white, false, true, "@s"));
-        texts.add(new Text(Color.gold, true, false, " victorious"));
+        fileCommands.add(new Title("@a", TitleType.subtitle, new Text(TextColor.LIGHT_PURPLE, true, true, "Absolute chad.")).displayTitle());
+        texts.add(new Select(TextColor.WHITE, false, true, "@s"));
+        texts.add(new Text(TextColor.GOLD, true, false, " victorious"));
         fileCommands.add(new Title("@a", TitleType.title, texts).displayTitle());
 
         // Proceed to victory mode
@@ -1920,15 +1995,15 @@ public class Main {
 
         // Chat message
         texts.add(bannerText);
-        texts.add(new Text(Color.gold, true, false, communityName + " UHC"));
+        texts.add(new Text(TextColor.GOLD, true, false, communityName + " UHC"));
         texts.add(bannerText);
-        texts.add(new Text(Color.light_purple, true, false, " TRAITOR VICTORY HAS BEEN ACHIEVED! 3 MINUTES UNTIL THE FINAL DEATHMATCH"));
+        texts.add(new Text(TextColor.LIGHT_PURPLE, true, false, " TRAITOR VICTORY HAS BEEN ACHIEVED! 3 MINUTES UNTIL THE FINAL DEATHMATCH"));
         texts.add(bannerText);
         fileCommands.add(new TellRaw("@a", texts).sendRaw());
 
         // Title
-        fileCommands.add(new Title("@a", TitleType.subtitle, new Text(Color.light_purple, true, true, "ggez")).displayTitle());
-        fileCommands.add(new Title("@a", TitleType.title, new Text(Color.gold, true, true, "Traitors Win")).displayTitle());
+        fileCommands.add(new Title("@a", TitleType.subtitle, new Text(TextColor.LIGHT_PURPLE, true, true, "ggez")).displayTitle());
+        fileCommands.add(new Title("@a", TitleType.title, new Text(TextColor.GOLD, true, true, "Traitors Win")).displayTitle());
 
         // Proceed to victory mode
         fileCommands.add(Schedule.callFunction(FileName.victory));
@@ -1947,7 +2022,7 @@ public class Main {
 
         // Teleport all living players
         fileCommands.add(Execute.In(Dimension.overworld) +
-                CommandBuilder.teleportEntity("@a[gamemode=!spectator]", new BlockPos(3, 153, 3)));
+                CommandBuilder.teleportEntity("@a[gamemode=!spectator]", BlockPos.create(3, 153, 3)));
 
         // Spread players in a team together
         fileCommands.add(Execute.In(Dimension.overworld) +
@@ -2085,18 +2160,18 @@ public class Main {
         for (Team team : teams) {
             // Announce attacking
             texts.clear();
-            texts.add(new Text(Color.light_purple, false, false, "TEAM "));
+            texts.add(new Text(TextColor.LIGHT_PURPLE, false, false, "TEAM "));
             texts.add(new Text(team.getColor(), false, false, team.getJSONColor()));
-            texts.add(new Text(Color.light_purple, false, false, " IS ATTACKING CONTROL POINT " + i + "!"));
+            texts.add(new Text(TextColor.LIGHT_PURPLE, false, false, " IS ATTACKING CONTROL POINT " + i + "!"));
             fileCommands.add(Execute.If(team.getName(), Objective.OnCP.extendName(i), "1..", false) +
                     Execute.IfNext(team.getName(), Objective.PrevCP.extendName(i), 0, true) +
                     new TellRaw("@a", texts).sendRaw());
 
             // Announce abandoning
             texts.clear();
-            texts.add(new Text(Color.light_purple, false, false, "TEAM "));
+            texts.add(new Text(TextColor.LIGHT_PURPLE, false, false, "TEAM "));
             texts.add(new Text(team.getColor(), false, false, team.getJSONColor()));
-            texts.add(new Text(Color.light_purple, false, false, " HAS ABANDONED CONTROL POINT " + i + "!"));
+            texts.add(new Text(TextColor.LIGHT_PURPLE, false, false, " HAS ABANDONED CONTROL POINT " + i + "!"));
             fileCommands.add(Execute.If(team.getName(), Objective.OnCP.extendName(i), 0, false) +
                     Execute.IfNext(team.getName(), Objective.PrevCP.extendName(i), "1..", true) +
                     new TellRaw("@a", texts).sendRaw());
@@ -2112,18 +2187,18 @@ public class Main {
 
             // Announce attacking
             texts.clear();
-            texts.add(new Text(Color.light_purple, false, false, "A "));
-            texts.add(new Text(Color.white, false, false, "SOLO"));
-            texts.add(new Text(Color.light_purple, false, false, " IS ATTACKING CONTROL POINT " + i + "!"));
+            texts.add(new Text(TextColor.LIGHT_PURPLE, false, false, "A "));
+            texts.add(new Text(TextColor.WHITE, false, false, "SOLO"));
+            texts.add(new Text(TextColor.LIGHT_PURPLE, false, false, " IS ATTACKING CONTROL POINT " + i + "!"));
             fileCommands.add(Execute.If("Solo", Objective.OnCP.extendName(i), "1..", false) +
                     Execute.IfNext("Solo", Objective.PrevCP.extendName(i), 0, true) +
                     new TellRaw("@a", texts).sendRaw());
 
             // Announce abandoning
             texts.clear();
-            texts.add(new Text(Color.light_purple, false, false, "A "));
-            texts.add(new Text(Color.white, false, false, "SOLO"));
-            texts.add(new Text(Color.light_purple, false, false, " HAS ABANDONED CONTROL POINT " + i + "!"));
+            texts.add(new Text(TextColor.LIGHT_PURPLE, false, false, "A "));
+            texts.add(new Text(TextColor.WHITE, false, false, "SOLO"));
+            texts.add(new Text(TextColor.LIGHT_PURPLE, false, false, " HAS ABANDONED CONTROL POINT " + i + "!"));
             fileCommands.add(Execute.If("Solo", Objective.OnCP.extendName(i), 0, false) +
                     Execute.IfNext("Solo", Objective.PrevCP.extendName(i), "1..", true) +
                     new TellRaw("@a", texts).sendRaw());
@@ -2141,7 +2216,7 @@ public class Main {
         Boolean debug = false;
 
         // Show world border size in actionbar
-        texts.add(new Text(Color.light_purple, false, false, "To be found at ±" + carePackageSpread + " blocks"));
+        texts.add(new Text(TextColor.LIGHT_PURPLE, false, false, "To be found at ±" + carePackageSpread + " blocks"));
         Title showWorldSize = new Title("@a", TitleType.subtitle, texts);
         texts.clear();
 
@@ -2152,7 +2227,7 @@ public class Main {
         fileCommands.add(showWorldSize.displayTitle());
 
         // Announce Care Packages
-        fileCommands.add(new Title("@a", TitleType.title, new Text(Color.gold, true, true, carePackageAmount + " Care Packages!")).displayTitle());
+        fileCommands.add(new Title("@a", TitleType.title, new Text(TextColor.GOLD, true, true, carePackageAmount + " Care Packages!")).displayTitle());
 
         // Change title display time
         fileCommands.add(CommandBuilder.titleDefaultTiming("@a"));
@@ -2299,15 +2374,15 @@ public class Main {
 
         // Inform traitors
         ArrayList<TextItem> texts = new ArrayList<>();
-        texts.add(new Text(Color.red, false, true, "You feel like betrayal today. You have become a Traitor. Your faction consists of: "));
+        texts.add(new Text(TextColor.RED, false, true, "You feel like betrayal today. You have become a Traitor. Your faction consists of: "));
         texts.add(new Select(false, true, "@a[tag=" + TagTemp.Traitor + "]"));
-        texts.add(new Text(Color.red, false, true, "."));
+        texts.add(new Text(TextColor.RED, false, true, "."));
         fileCommands.add(Execute.As("@a[tag=" + TagTemp.Traitor + "]") +
                 new TellRaw("@s", texts).sendRaw());
 
         // Announce Traitor Faction
-        fileCommands.add(new Title("@a", TitleType.title, new Text(Color.red, true, false, "A Traitor Faction")).displayTitle());
-        fileCommands.add(new Title("@a", TitleType.subtitle, new Text(Color.dark_red, true, false, "has been founded!")).displayTitle());
+        fileCommands.add(new Title("@a", TitleType.title, new Text(TextColor.RED, true, false, "A Traitor Faction")).displayTitle());
+        fileCommands.add(new Title("@a", TitleType.subtitle, new Text(TextColor.DARK_RED, true, false, "has been founded!")).displayTitle());
 
         // Enable timers
         fileCommands.add(Schedule.callFunction(FileName.timer_traitor_5));
@@ -2326,10 +2401,10 @@ public class Main {
         ArrayList<TextItem> texts = new ArrayList<>();
 
         // Show all traitors in actionbar
-        texts.add(new Text(Color.gold, false, false, ">>> "));
-        texts.add(new Text(Color.light_purple, false, false, "Traitor Faction: "));
-        texts.add(new Select(Color.white, false, false, "@a[tag=" + TagTemp.Traitor + "]"));
-        texts.add(new Text(Color.gold, false, false, " <<<"));
+        texts.add(new Text(TextColor.GOLD, false, false, ">>> "));
+        texts.add(new Text(TextColor.LIGHT_PURPLE, false, false, "Traitor Faction: "));
+        texts.add(new Select(TextColor.WHITE, false, false, "@a[tag=" + TagTemp.Traitor + "]"));
+        texts.add(new Text(TextColor.GOLD, false, false, " <<<"));
         fileCommands.add(Execute.As("@a[tag=" + TagTemp.Traitor + "]") +
                 new Title("@s", TitleType.actionbar, texts).displayTitle());
 
@@ -2345,7 +2420,7 @@ public class Main {
                     CommandBuilder.addForceLoad(c.getX(), c.getZ(), c.getX(), c.getZ()));
 
             SetBlock sb = SetBlock.create(
-                    new BlockPos(c.getX(), c.getY() + 11, c.getZ()),
+                    BlockPos.create(c.getX(), c.getY() + 11, c.getZ()),
                     new BlockState(Block.STRUCTURE_BLOCK)
                             .with(BlockProperty.MODE, StructureBlockMode.LOAD)
                             .with(new StructureBlockEntity("")
@@ -2373,7 +2448,7 @@ public class Main {
 
             // Activate structure block
             sb = SetBlock.create(
-                    new BlockPos(c.getX(), c.getY() + 10, c.getZ()),
+                    BlockPos.create(c.getX(), c.getY() + 10, c.getZ()),
                     new BlockState(Block.REDSTONE_BLOCK)
             ).mode(SetMode.DESTROY);
             fileCommands.add(Execute.In(c.getDimension()) +
@@ -2381,8 +2456,8 @@ public class Main {
 
             // Replace blocks that do not emit light
             Fill cmd = Fill.create(
-                    new BlockPos(c.getX(), c.getY() + 12, c.getZ()),
-                    new BlockPos(c.getX(), Constant.worldHeight - 1, c.getZ()),
+                    BlockPos.create(c.getX(), c.getY() + 12, c.getZ()),
+                    BlockPos.create(c.getX(), Constant.worldHeight - 1, c.getZ()),
                     new BlockState(Block.GLASS)
             ).filter(
                     new BlockPredicate(RegistryTag.BLOCK_BEACON_LIGHT)
@@ -2430,8 +2505,8 @@ public class Main {
         ArrayList<String> fileCommands = new ArrayList<>();
 
         Fill cmd = Fill.create(
-                new BlockPos("~-2", "~-2", "~-2"),
-                new BlockPos("~2", "~", "~2"),
+                BlockPos.create("~-2", "~-2", "~-2"),
+                BlockPos.create("~2", "~", "~2"),
                 new BlockState(Block.ICE)
         ).filter(new BlockPredicate(Block.WATER));
         fileCommands.add(Execute.At("@a[nbt={RootVehicle:{Entity:{id:\"" + EntityType.HORSE + "\"}}}]") +
@@ -2463,7 +2538,7 @@ public class Main {
         ArrayList<String> fileCommands = new ArrayList<>();
 
         // Regeneration potions (normal + splash, strong, long)
-        Text warning = new Text(Color.red, true, false, "REGENERATION POTIONS ARE NOT ALLOWED, YOU NAUGHTY BUM!");
+        Text warning = new Text(TextColor.RED, true, false, "REGENERATION POTIONS ARE NOT ALLOWED, YOU NAUGHTY BUM!");
         String target = "@p[nbt={SelectedItem:{id:\"" + Block.SPLASH_POTION + "\",count:1,components:{\"minecraft:potion_contents\":{potion:\"" + Effect.REGENERATION.getPotionTag() + "\"}}}}]";
         String replacement = Block.GLASS_BOTTLE.toString();
         fileCommands.addAll(CommandBuilder.warnAndReplace(target, warning, replacement));
@@ -2537,10 +2612,10 @@ public class Main {
         for (Team team : teams) {
             // Create text to be displayed
             ArrayList<TextItem> texts = new ArrayList<>();
-            texts.add(new Text(Color.light_purple, false, false, "TEAM "));
+            texts.add(new Text(TextColor.LIGHT_PURPLE, false, false, "TEAM "));
             texts.add(new Text(team.getColor(), false, false, team.getJSONColor()));
-            texts.add(new Text(Color.light_purple, false, false, " HAS REACHED"));
-            texts.add(new Text(Color.gold, false, false, " PERK " + perks.get(i).getId() + "!"));
+            texts.add(new Text(TextColor.LIGHT_PURPLE, false, false, " HAS REACHED"));
+            texts.add(new Text(TextColor.GOLD, false, false, " PERK " + perks.get(i).getId() + "!"));
 
             // Display text
             fileCommands.add(Execute.If("@s[team=" + team.getName() + "]") +
@@ -2577,7 +2652,7 @@ public class Main {
         // Pick a quote from the listAdd commentMore actions
         for (int i = 0; i < quotes.size(); i++) {
             fileCommands.add(Execute.If("@e[scores={RandomQuotes=" + i + "}]") +
-                    new TellRaw("@a", new Text(Color.white, false, false, quotes.get(i))).sendRaw());
+                    new TellRaw("@a", new Text(TextColor.WHITE, false, false, quotes.get(i))).sendRaw());
 
         }
 
@@ -2734,14 +2809,14 @@ public class Main {
 
         // Announce that Control Point has been captured
         texts.add(bannerText);
-        texts.add(new Text(Color.gold, true, false, communityName + " UHC"));
+        texts.add(new Text(TextColor.GOLD, true, false, communityName + " UHC"));
         texts.add(bannerText);
-        texts.add(new Text(Color.light_purple, true, false, "THE CONTROL POINT HAS BEEN CAPTURED!"));
+        texts.add(new Text(TextColor.LIGHT_PURPLE, true, false, "THE CONTROL POINT HAS BEEN CAPTURED!"));
         texts.add(bannerText);
         fileCommands.add(new TellRaw("@a", texts).sendRaw());
         texts.clear();
-        fileCommands.add(new Title("@a", TitleType.subtitle, new Text(Color.light_purple, true, true, "has been captured!")).displayTitle());
-        fileCommands.add(new Title("@a", TitleType.title, new Text(Color.gold, true, true, "The Control Point")).displayTitle());
+        fileCommands.add(new Title("@a", TitleType.subtitle, new Text(TextColor.LIGHT_PURPLE, true, true, "has been captured!")).displayTitle());
+        fileCommands.add(new Title("@a", TitleType.title, new Text(TextColor.GOLD, true, true, "The Control Point")).displayTitle());
 
         // Check which team has captured the Control Point
         fileCommands.add(Schedule.callFunction(FileName.teams_highscore_alive_check));
@@ -3013,9 +3088,9 @@ public class Main {
 
             // Announce that players formed a team
             texts.add(new Select(false, false, "@p[limit=2,team=,gamemode=!spectator]"));
-            texts.add(new Text(Color.white, false, false, " have decided to join forces as team "));
+            texts.add(new Text(TextColor.WHITE, false, false, " have decided to join forces as team "));
             texts.add(new Text(teams.get(i).getColor(), false, false, teams.get(i).getJSONColor()));
-            texts.add(new Text(Color.white, false, false, "!"));
+            texts.add(new Text(TextColor.WHITE, false, false, "!"));
 
             fileCommands.add(filledTeam +
                     Execute.IfNext("@p[tag=LookingForTeamMate,team=]") +
@@ -3107,7 +3182,7 @@ public class Main {
         }
 
         // Ignore players that are already in a team
-        texts.add(new Text(Color.red, true, false, "You are already on a team! Don't be greedy!"));
+        texts.add(new Text(TextColor.RED, true, false, "You are already on a team! Don't be greedy!"));
 
         String playerInTeam = "@p[scores={TimesCalled=1..},team=!]";
         fileCommands.add(Execute.If(playerInTeam) +
@@ -3122,7 +3197,7 @@ public class Main {
                 Schedule.callFunction(FileName.join_team));
 
         // Refuse call if player is too far away
-        texts.add(new Text(Color.red, true, false, "You need to be within " + minJoinDistance + " blocks of a player without a team to form a team!"));
+        texts.add(new Text(TextColor.RED, true, false, "You need to be within " + minJoinDistance + " blocks of a player without a team to form a team!"));
 
         String playerTooFar = "@p[tag=LookingForTeamMate,scores={Distance=" + (minJoinDistance * minJoinDistance) + "..},team=,gamemode=!spectator]";
         fileCommands.add(Execute.If(playerTooFar, false) +
@@ -3131,7 +3206,7 @@ public class Main {
         texts.clear();
 
         // Refuse killers
-        texts.add(new Text(Color.red, true, false, "You are a killer! No team for you!"));
+        texts.add(new Text(TextColor.RED, true, false, "You are a killer! No team for you!"));
 
         String playerKiller = "@p[tag=LookingForTeamMate,scores={IsKiller=1}]";
         fileCommands.add(Execute.If(playerKiller) +
@@ -3139,7 +3214,7 @@ public class Main {
         texts.clear();
 
         // Warn against killers
-        texts.add(new Text(Color.red, true, false, "Watch out! They are a killer!"));
+        texts.add(new Text(TextColor.RED, true, false, "Watch out! They are a killer!"));
 
         fileCommands.add(Execute.At(playerInRange, false) +
                 Execute.IfNext("@p[tag=!LookingForTeamMate,gamemode=!spectator]", Objective.IsKiller, 1, true) +
@@ -3194,7 +3269,7 @@ public class Main {
         // Announce iron man
         ArrayList<TextItem> texts = new ArrayList<>();
         texts.add(new Select(false, false, "@s"));
-        texts.add(new Text(Color.white, false, false, " is S" + uhcNumber + " iron man!"));
+        texts.add(new Text(TextColor.WHITE, false, false, " is S" + uhcNumber + " iron man!"));
         fileCommands.add(new TellRaw("@a", texts).sendRaw());
 
         // Award the iron man with their crown
@@ -3262,7 +3337,7 @@ public class Main {
         ArrayList<String> fileCommands = new ArrayList<>();
 
         // Message
-        fileCommands.add(new TellRaw("@a", new Text(Color.gray, false, false, "PVP IS NOT ALLOWED UNTIL DAY 2!")).sendRaw());
+        fileCommands.add(new TellRaw("@a", new Text(TextColor.GRAY, false, false, "PVP IS NOT ALLOWED UNTIL DAY 2!")).sendRaw());
 
         return new FileData(FileName.messages_pvp, fileCommands);
     }
@@ -3274,9 +3349,9 @@ public class Main {
         // Message
         ArrayList<TextItem> texts = new ArrayList<>();
         texts.add(bannerText);
-        texts.add(new Text(Color.gold, true, false, communityName + " UHC"));
+        texts.add(new Text(TextColor.GOLD, true, false, communityName + " UHC"));
         texts.add(bannerText);
-        texts.add(new Text(Color.light_purple, true, false, "DAY TIME HAS ARRIVED & ETERNAL DAY ENABLED!"));
+        texts.add(new Text(TextColor.LIGHT_PURPLE, true, false, "DAY TIME HAS ARRIVED & ETERNAL DAY ENABLED!"));
         texts.add(bannerText);
         fileCommands.add(new TellRaw("@a", texts).sendRaw());
         texts.clear();

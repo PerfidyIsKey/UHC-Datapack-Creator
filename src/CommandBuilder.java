@@ -3,6 +3,8 @@ import Enums.*;
 import HelperClasses.*;
 import controlpoints.ControlPointTag;
 import shared.EntityType;
+import shared.ItemSlot;
+import shared.TextColor;
 
 import java.util.ArrayList;
 
@@ -145,36 +147,8 @@ public class CommandBuilder {
         return "tp " + entity1 + " " + entity2;
     }
 
-    public static String replaceItem(String targets, InventorySlot slot, Block item) {
-        return "item replace entity " + targets + " " + slot + " with " + item;
-    }
-
-    public static String replaceItem(String targets, String slot, Block item) {
-        return "item replace entity " + targets + " " + slot + " with " + item;
-    }
-
-    public static String replaceItem(String targets, InventorySlot slot, Block item, int count) {
-        return "item replace entity " + targets + " " + slot + " with " + item + " " + count;
-    }
-
-    public static String replaceItem(String targets, String slot, Block item, int count) {
-        return "item replace entity " + targets + " " + slot + " with " + item + " " + count;
-    }
-
-    public static String replaceItem(String targets, InventorySlot slot, String item) {
-        return "item replace entity " + targets + " " + slot + " with " + item;
-    }
-
-    public static String replaceItem(String targets, String slot, String item) {
-        return "item replace entity " + targets + " " + slot + " with " + item;
-    }
-
-    public static String replaceItem(String targets, InventorySlot slot, String item, int count) {
-        return "item replace entity " + targets + " " + slot + " with " + item + " " + count;
-    }
-
-    public static String replaceItem(String targets, String slot, String item, int count) {
-        return "item replace entity " + targets + " " + slot + " with " + item + " " + count;
+    public static String replaceItem(String targets, ItemSlot slot, String item) {
+        return "item replace entity " + targets + " " + slot.getCommandString() + " with " + item;
     }
 
 
@@ -246,7 +220,7 @@ public class CommandBuilder {
         // Convert hex to decimal
         int potionColor = Integer.parseInt(colorHex, 16);
 
-        return "item replace entity " + targets + " " + InventorySlot.HOTBAR.setSlotNumber(slotNumber) + " with " + Block.SPLASH_POTION + "[potion_contents={custom_color:" + potionColor + ",custom_effects:[{id:\"" + effect + "\",amplifier:0,duration:200,show_particles:0b,show_icon:0b,ambient:0b}]},lore=[\"" + lore + "\"],custom_name=\"" + displayName + "\"]";
+        return "item replace entity " + targets + " " + ItemSlot.HOTBAR.withSlotNumber(slotNumber).getCommandString() + " with " + Block.SPLASH_POTION + "[potion_contents={custom_color:" + potionColor + ",custom_effects:[{id:\"" + effect + "\",amplifier:0,duration:200,show_particles:0b,show_icon:0b,ambient:0b}]},lore=[\"" + lore + "\"],custom_name=\"" + displayName + "\"]";
     }
 
     // Trigger
@@ -295,7 +269,7 @@ public class CommandBuilder {
 
         fileCommands.add(Execute.If(targets) +
                 new TellRaw(targets, warning).sendRaw());
-        fileCommands.add(replaceItem(targets, InventorySlot.MAINHAND, replacement));
+        fileCommands.add(replaceItem(targets, ItemSlot.MAINHAND, replacement));
 
         return fileCommands;
     }
@@ -323,11 +297,11 @@ public class CommandBuilder {
         return fileCommands;
     }
 
-    public static String modifyWaypointColor(String waypoint, Color color) {
+    public static String modifyWaypointColor(String waypoint, TextColor color) {
         return "waypoint modify " + waypoint + " color " + color;
     }
 
     public static String modifyWaypointColor(String waypoint) {
-        return modifyWaypointColor(waypoint, Color.white);
+        return modifyWaypointColor(waypoint, TextColor.WHITE);
     }
 }

@@ -1,4 +1,4 @@
-package shared;
+package shared.item;
 
 /**
  * Represents all 16 standard Minecraft dye colors.

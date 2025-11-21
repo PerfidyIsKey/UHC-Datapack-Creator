@@ -4,7 +4,7 @@ import java.util.Collections;
 import java.util.Map;
 import nbt.tags.CompoundTag;
 import shared.ItemComponentType;
-import shared.ItemId;
+import shared.item.ItemId;
 
 /**
  * Data Transfer Object for the content of the Item CompoundTag inside the Item entity NBT.

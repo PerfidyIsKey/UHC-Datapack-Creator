@@ -2,7 +2,7 @@ package commands;
 
 import arguments.Entity;
 import shared.StaticEntityTag;
-import shared.TagAction;
+import commands.tag.TagAction;
 
 /**
  * Fluent builder for the Minecraft /tag command.

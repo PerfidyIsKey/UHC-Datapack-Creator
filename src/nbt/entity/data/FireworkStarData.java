@@ -9,7 +9,7 @@ import java.util.List;
  */
 public class FireworkStarData {
     private final FireworkShape shape;
-    private final List<Integer> colors; // Color IDs (int)
+    private final List<Integer> colors; // TextColor IDs (int)
     private final boolean trail;
     private final boolean flicker;
 
