@@ -8,6 +8,7 @@ import ItemModifiers.*;
 import Predicates.*;
 import TeamGeneration.*;
 import arguments.Entity;
+import arguments.coordinate.Vec2;
 import arguments.coordinate.Vec3;
 import arguments.itempredicate.SimpleItemPredicate;
 import arguments.itemstack.BundleItemStack;
@@ -1610,7 +1611,13 @@ public class Main {
         Boolean respectTeams = !OperationMode.teamCreationInGame;
 
         fileCommands.add(Execute.In(Dimension.overworld) +
-                CommandBuilder.spreadPlayers(0, 0, (int) (0.3 * world.getSize()), (int) (0.9 * world.getSize()), respectTeams, "@a"));
+                SpreadPlayers.create(
+                                Constant.spawnCenter,
+                                0.3f * world.getSize(),
+                                0.9f * world.getSize(),
+                                respectTeams,
+                                Entity.ofSelector(TargetSelector.ALL_PLAYERS))
+                        .build());
 
         return new FileData(FileName.spread_players, fileCommands);
     }
@@ -1745,7 +1752,17 @@ public class Main {
         );
         fileCommands.add(Execute.In(Dimension.overworld, false) +
                 Execute.PositionedNext(new Coordinate(0, 151, 0), true) +
-                CommandBuilder.spreadPlayers(0, 0, (int) (0.3 * world.getSize()), (int) (0.9 * world.getSize()), true, "@a[distance=..20,gamemode=survival]"));
+                SpreadPlayers.create(
+                                Constant.spawnCenter,
+                                0.3f * world.getSize(),
+                                0.9f * world.getSize(),
+                                true,
+                                Entity.ofSelector(
+                                        TargetSelector.ALL_PLAYERS,
+                                        SelectorArgumentsBuilder.create()
+                                                .distance("..20")
+                                                .gamemode(GameMode.SURVIVAL)))
+                        .build());
 
         return new FileData(FileName.battle_royale, fileCommands);
     }
@@ -1934,12 +1951,32 @@ public class Main {
 
         // Spread players in a team together
         fileCommands.add(Execute.In(Dimension.overworld) +
-                CommandBuilder.spreadPlayers(0, 0, 75, 150, true, "@a[gamemode=!spectator,team=!]"));
+                SpreadPlayers.create(
+                                Constant.spawnCenter,
+                                75,
+                                150,
+                                true,
+                                Entity.ofSelector(
+                                        TargetSelector.ALL_PLAYERS,
+                                        SelectorArgumentsBuilder.create()
+                                                .gamemode(GameMode.SPECTATOR, true)
+                                                .team()))
+                        .build());
 
         if (OperationMode.teamCreationInGame) {
             // Spread players without a team alone
             fileCommands.add(Execute.In(Dimension.overworld) +
-                    CommandBuilder.spreadPlayers(0, 0, 75, 150, false, "@a[gamemode=!spectator,team=]"));
+                    SpreadPlayers.create(
+                                    Constant.spawnCenter,
+                                    75,
+                                    150,
+                                    false,
+                                    Entity.ofSelector(
+                                            TargetSelector.ALL_PLAYERS,
+                                            SelectorArgumentsBuilder.create()
+                                                    .gamemode(GameMode.SPECTATOR, true)
+                                                    .team()))
+                            .build());
         }
 
         return new FileData(FileName.death_match, fileCommands);
@@ -2126,7 +2163,7 @@ public class Main {
                     Summon.create(EntityType.FALLING_BLOCK)
                             .setPos(Vec3.create(0, 300, 0))
                             .setNbt(
-                                    new FallingBlockNbtBuilder(
+                                    FallingBlockNbtBuilder.create(
                                             new FallingBlockData(
                                                     ItemId.CHEST,
                                                     LootTableId.SUPPLY_DROP,
@@ -2142,7 +2179,20 @@ public class Main {
 
         // Spread Care Packages
         fileCommands.add(Execute.In(Dimension.overworld, true) +
-                CommandBuilder.spreadPlayers(0, 0, 10, carePackageSpread, false, "@e[type=" + EntityType.FALLING_BLOCK + ",nbt={Tags:[\"CarePackage\"]}]"));
+                SpreadPlayers.create(
+                                Constant.spawnCenter,
+                                10,
+                                carePackageSpread,
+                                false,
+                                Entity.ofSelector(
+                                        TargetSelector.ALL_ENTITIES,
+                                        SelectorArgumentsBuilder.create()
+                                                .type(EntityType.FALLING_BLOCK)
+                                                .nbt(FallingBlockNbtBuilder.create(
+                                                                new FallingBlockData(
+                                                                        new StaticEntityTag[]{StaticEntityTag.CARE_PACKAGE}))
+                                                        .buildNbt())))
+                        .build());
 
         // Give admin tag for disabling self-rescheduling
         fileCommands.add(Tag.action(Constant.admin, TagAction.ADD)
@@ -2586,13 +2636,31 @@ public class Main {
             fileCommands.add(Execute.At(respawnPlayerOld, false) +
                     Execute.AsNext(respawnPlayerOld) +
                     Execute.UnlessNext("@p[team=" + t.getName() + ",tag=!Respawn]", true) +
-                    CommandBuilder.spreadPlayers(0, 0, (int) (0.3 * world.getSize()), (int) (0.7 * world.getSize()), false, "@s[team=" + t.getName() + "]"));
+                    SpreadPlayers.create(
+                                    Constant.spawnCenter,
+                                    0.3f * world.getSize(),
+                                    0.7f * world.getSize(),
+                                    false,
+                                    Entity.ofSelector(
+                                            TargetSelector.SENDER,
+                                            SelectorArgumentsBuilder.create()
+                                                    .team(t.getName())))
+                            .build());
         }
 
         if (OperationMode.teamCreationInGame) {
             // Teleport player if they are not in a team
             fileCommands.add(Execute.As(respawnPlayerOld) +
-                    CommandBuilder.spreadPlayers(0, 0, (int) (0.3 * world.getSize()), (int) (0.7 * world.getSize()), false, "@s[team=]"));
+                    SpreadPlayers.create(
+                                    Constant.spawnCenter,
+                                    0.3f * world.getSize(),
+                                    0.7f * world.getSize(),
+                                    false,
+                                    Entity.ofSelector(
+                                            TargetSelector.SENDER,
+                                            SelectorArgumentsBuilder.create()
+                                                    .team()))
+                            .build());
 
             // Team caller
             fileCommands.add(Execute.As(respawnPlayerOld) +

@@ -1,5 +1,6 @@
 import Enums.WorldShape;
 import arguments.Entity;
+import arguments.coordinate.Vec2;
 import arguments.targetselector.SelectorArgumentsBuilder;
 import arguments.targetselector.TargetSelector;
 import shared.EntityType;
@@ -25,4 +26,5 @@ public class Constant {
     public static final int worldHeight = 257;
     public static final int worldBottom = -64;
     public static final WorldShape worldShape = WorldShape.square;
+    public static final Vec2 spawnCenter = Vec2.create(0, 0);
 }
