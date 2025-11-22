@@ -17,6 +17,7 @@ import arguments.itemstack.components.attributes.AttributeModifierEntry;
 import arguments.targetselector.SelectorArgumentsBuilder;
 import arguments.targetselector.TargetSelector;
 import commands.*;
+import commands.effect.EffectAction;
 import commands.item.ItemAction;
 import commands.item.ItemTargetEntity;
 import commands.tag.TagAction;
@@ -1224,14 +1225,27 @@ public class Main {
                 .slot(ItemSlot.INVENTORY.withSlotNumber(0))
                 .replaceWith(DynamicItemStack.create(ItemId.getToolResourceLocation(ToolMaterial.IRON, ToolPiece.SWORD)))
                 .build());
-        fileCommands.add(CommandBuilder.giveEffect("@a", EffectId.REGENERATION, 1, 255, true));
+
+        fileCommands.add(Effect.create(EffectAction.GIVE)
+                .targets(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
+                .effect(EffectId.REGENERATION)
+                .seconds(1)
+                .amplifier(255)
+                .hideParticles(true)
+                .build());
 
         return new FileData(FileName.equip_gear, fileCommands);
     }
 
     private FileData GodMode() {
         ArrayList<String> fileCommands = new ArrayList<>();
-        fileCommands.add(CommandBuilder.giveEffect("@s", EffectId.RESISTANCE, 99999, 4, true));
+        fileCommands.add(Effect.create(EffectAction.GIVE)
+                .targets(Entity.ofSelector(TargetSelector.SENDER))
+                .effect(EffectId.RESISTANCE)
+                .seconds(99999)
+                .amplifier(4)
+                .hideParticles(true)
+                .build());
         fileCommands.add(Item.create(ItemAction.REPLACE_WITH,
                         ItemTargetEntity.create(Entity.ofSelector(TargetSelector.SENDER)))
                 .slot(ItemSlot.MAINHAND)
@@ -1395,7 +1409,9 @@ public class Main {
         fileCommands.add(Schedule.callFunction(FileName.clear_schedule));
 
         // Clear all player effects
-        fileCommands.add(CommandBuilder.clearEffect("@a"));
+        fileCommands.add(Effect.create(EffectAction.CLEAR)
+                .targets(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
+                .build());
 
         // Give admin start potions
         fileCommands.add(Schedule.callFunction(FileName.start_potions));
@@ -1529,8 +1545,15 @@ public class Main {
         ArrayList<String> fileCommands = new ArrayList<>();
 
         // Remove resistance and give regeneration
-        fileCommands.add(CommandBuilder.clearEffect("@a"));
-        fileCommands.add(CommandBuilder.giveEffect("@a", EffectId.REGENERATION, 1, 255));
+        fileCommands.add(Effect.create(EffectAction.CLEAR)
+                .targets(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
+                .build());
+        fileCommands.add(Effect.create(EffectAction.GIVE)
+                .targets(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
+                .effect(EffectId.REGENERATION)
+                .seconds(1)
+                .amplifier(255)
+                .build());
 
         // Make players fall
         fileCommands.add(Tag.action(Entity.ofSelector(
@@ -1674,7 +1697,13 @@ public class Main {
         fileCommands.add(scoreboard.Set("@a", getObjectiveByName(Objective.Kills), 0));
 
         // Make players invulnerable
-        fileCommands.add(CommandBuilder.giveEffect("@a", EffectId.RESISTANCE, 99999, 4, true));
+        fileCommands.add(Effect.create(EffectAction.GIVE)
+                .targets(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
+                .effect(EffectId.RESISTANCE)
+                .seconds(99999)
+                .amplifier(4)
+                .hideParticles(true)
+                .build());
 
         return new FileData(FileName.into_calls, fileCommands);
     }
@@ -1715,7 +1744,10 @@ public class Main {
         fileCommands.add(CommandBuilder.takeRecipe("@a", Block.DRAGON_HEAD.setNamespace(Namespace.uhc)));
 
         // Remove resistance
-        fileCommands.add(CommandBuilder.clearEffect("@a", EffectId.RESISTANCE));
+        fileCommands.add(Effect.create(EffectAction.CLEAR)
+                .targets(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
+                .effect(EffectId.RESISTANCE)
+                .build());
 
         // Set scoreboard values
         fileCommands.add(scoreboard.Set("@a", getObjectiveByName(Objective.Hearts), 20));
@@ -1732,9 +1764,25 @@ public class Main {
         fileCommands.add(CommandBuilder.setTime(0));
 
         // Give potion effect
-        fileCommands.add(CommandBuilder.giveEffect("@a", EffectId.REGENERATION, 1, 255));
-        fileCommands.add(CommandBuilder.giveEffect("@a", EffectId.SATURATION, 1, 255));
-        fileCommands.add(CommandBuilder.giveEffect("@a", EffectId.RESISTANCE, 20 * 60, 2, true));
+        fileCommands.add(Effect.create(EffectAction.GIVE)
+                .targets(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
+                .effect(EffectId.REGENERATION)
+                .seconds(1)
+                .amplifier(255)
+                .build());
+        fileCommands.add(Effect.create(EffectAction.GIVE)
+                .targets(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
+                .effect(EffectId.SATURATION)
+                .seconds(1)
+                .amplifier(255)
+                .build());
+        fileCommands.add(Effect.create(EffectAction.GIVE)
+                .targets(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
+                .effect(EffectId.RESISTANCE)
+                .seconds(20 * 60)
+                .amplifier(2)
+                .hideParticles(true)
+                .build());
 
         // Clear player inventories
         fileCommands.add(Clear.create()
@@ -2784,8 +2832,16 @@ public class Main {
                     Execute.IfNext("@e[scores={MinHealth=" + indexFront + ".." + indexRear + "}]", true) +
                     CommandBuilder.setAttributeBase("@s", AttributeType.MAX_HEALTH, i + 1));
         }
-        fileCommands.add(CommandBuilder.giveEffect(respawnPlayerOld, EffectId.HEALTH_BOOST, 1, 0));
-        fileCommands.add(CommandBuilder.clearEffect(respawnPlayerOld, EffectId.HEALTH_BOOST));
+        fileCommands.add(Effect.create(EffectAction.GIVE)
+                .targets(respawnPlayer)
+                .effect(EffectId.HEALTH_BOOST)
+                .seconds(1)
+                .amplifier(0)
+                .build());
+        fileCommands.add(Effect.create(EffectAction.CLEAR)
+                .targets(respawnPlayer)
+                .effect(EffectId.HEALTH_BOOST)
+                .build());
         fileCommands.add(CommandBuilder.setAttributeBaseMultiple(respawnPlayerOld, AttributeType.MAX_HEALTH, 20));
 
         // Set player's gamemode to survival
@@ -3314,7 +3370,10 @@ public class Main {
                     Schedule.callFunction(functions[i]));
 
             fileCommands.add(Execute.If("@a[nbt={active_effects:[{id:\"" + effects[i] + "\"}]}]") +
-                    CommandBuilder.clearEffect("@e", effects[i]));
+                    Effect.create(EffectAction.CLEAR)
+                            .targets(Entity.ofSelector(TargetSelector.ALL_ENTITIES))
+                            .effect(effects[i])
+                            .build());
         }
 
         return new FileData(FileName.developer_potion_control, fileCommands);

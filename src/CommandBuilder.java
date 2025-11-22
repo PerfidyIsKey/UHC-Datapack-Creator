@@ -108,23 +108,6 @@ public class CommandBuilder {
                 "attribute @s " + attribute + " base set " + value;
     }
 
-    // Status effects
-    public static String giveEffect(String entity, EffectId effect, int duration, int amplifier) {
-        return giveEffect(entity, effect, duration, amplifier, false);
-    }
-
-    public static String giveEffect(String entity, EffectId effect, int duration, int amplifier, Boolean hideParticles) {
-        return "effect give " + entity + " " + effect + " " + duration + " " + amplifier + " " + hideParticles;
-    }
-
-    public static String clearEffect(String entity, EffectId effect) {
-        return "effect clear " + entity + " " + effect;
-    }
-
-    public static String clearEffect(String entity) {
-        return "effect clear " + entity;
-    }
-
     // Difficulty
     public static String setDifficulty(Difficulty difficulty) {
         return "difficulty " + difficulty;
