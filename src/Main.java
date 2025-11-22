@@ -17,6 +17,7 @@ import arguments.itemstack.components.attributes.AttributeModifierEntry;
 import arguments.targetselector.SelectorArgumentsBuilder;
 import arguments.targetselector.TargetSelector;
 import commands.*;
+import commands.effect.EffectAction;
 import commands.item.ItemAction;
 import commands.item.ItemTargetEntity;
 import commands.tag.TagAction;
@@ -346,10 +347,10 @@ public class Main {
             bossBars.add(new BossBar("cp2"));
 
             // Perks
-            perks.add(new Perk(1, new StatusEffect(Effect.SPEED, 999999, 0, false), SoundId.BASALT, 3 * singleton.getMinToCPScore()));
+            perks.add(new Perk(1, new StatusEffect(EffectId.SPEED, 999999, 0, false), SoundId.BASALT, 3 * singleton.getMinToCPScore()));
             perks.add(new Perk(2, new Attribute(AttributeType.SCALE, 0.8), SoundId.CRIMSON, 6 * singleton.getMinToCPScore()));
-            perks.add(new Perk(3, new StatusEffect(Effect.HASTE, 999999, 2, false), SoundId.WARPED, 12 * singleton.getMinToCPScore()));
-            perks.add(new Perk(4, new StatusEffect(Effect.ABSORPTION, 999999, 1, false), SoundId.WITHER, 15 * singleton.getMinToCPScore()));
+            perks.add(new Perk(3, new StatusEffect(EffectId.HASTE, 999999, 2, false), SoundId.WARPED, 12 * singleton.getMinToCPScore()));
+            perks.add(new Perk(4, new StatusEffect(EffectId.ABSORPTION, 999999, 1, false), SoundId.WITHER, 15 * singleton.getMinToCPScore()));
         }
 
         // Scoreboard objectives
@@ -553,7 +554,7 @@ public class Main {
         entries.add(new LootTableEntry(1, Block.NETHERITE_SCRAP, new SetCount(4, condition)));
 
         // Entry #43
-        PotionContents contents = new PotionContents(Effect.LUCK, 0, 600, "59C106", true, false, true);
+        PotionContents contents = new PotionContents(EffectId.LUCK, 0, 600, "59C106", true, false, true);
         name = new SetName(new Text(false, false, "Potion of Care Package luck"));
 
         functions.add(new SetComponents(contents));
@@ -563,7 +564,7 @@ public class Main {
         functions = new ArrayList<>();
 
         // Entry #44
-        contents = new PotionContents(Effect.POISON, 0, 5, "4E9331", false, true, true);
+        contents = new PotionContents(EffectId.POISON, 0, 5, "4E9331", false, true, true);
         name = new SetName(new Text(false, false, "Potion of Poison"));
 
         functions.add(new SetComponents(contents));
@@ -573,7 +574,7 @@ public class Main {
         functions = new ArrayList<>();
 
         // Entry #45
-        contents = new PotionContents(Effect.BLINDNESS, 0, 10, "1F1F23", false, true, true);
+        contents = new PotionContents(EffectId.BLINDNESS, 0, 10, "1F1F23", false, true, true);
         MaxStackSize stack = new MaxStackSize(64);
         name = new SetName(new Text(false, false, "Potion of Blindness"));
         SetCount count = new SetCount(5, new RandomChance(0.3));
@@ -1224,14 +1225,27 @@ public class Main {
                 .slot(ItemSlot.INVENTORY.withSlotNumber(0))
                 .replaceWith(DynamicItemStack.create(ItemId.getToolResourceLocation(ToolMaterial.IRON, ToolPiece.SWORD)))
                 .build());
-        fileCommands.add(CommandBuilder.giveEffect("@a", Effect.REGENERATION, 1, 255, true));
+
+        fileCommands.add(Effect.create(EffectAction.GIVE)
+                .targets(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
+                .effect(EffectId.REGENERATION)
+                .seconds(1)
+                .amplifier(255)
+                .hideParticles(true)
+                .build());
 
         return new FileData(FileName.equip_gear, fileCommands);
     }
 
     private FileData GodMode() {
         ArrayList<String> fileCommands = new ArrayList<>();
-        fileCommands.add(CommandBuilder.giveEffect("@s", Effect.RESISTANCE, 99999, 4, true));
+        fileCommands.add(Effect.create(EffectAction.GIVE)
+                .targets(Entity.ofSelector(TargetSelector.SENDER))
+                .effect(EffectId.RESISTANCE)
+                .seconds(99999)
+                .amplifier(4)
+                .hideParticles(true)
+                .build());
         fileCommands.add(Item.create(ItemAction.REPLACE_WITH,
                         ItemTargetEntity.create(Entity.ofSelector(TargetSelector.SENDER)))
                 .slot(ItemSlot.MAINHAND)
@@ -1282,20 +1296,20 @@ public class Main {
 
         // Give potions
         if (!OperationMode.teamCreationInGame) {
-            fileCommands.add(CommandBuilder.giveSplashPotion("@s", 0, Effect.SPEED, "808080", "Developer Mode", "Set operational mode to Developer Mode."));
-            fileCommands.add(CommandBuilder.giveSplashPotion("@s", 1, Effect.WEAKNESS, "FF9933", "Assign Teams", "Assign players to teams."));
-            fileCommands.add(CommandBuilder.giveSplashPotion("@s", 2, Effect.SLOW_FALLING, "6633CC", "Predictions", "Who will win this season?."));
-            fileCommands.add(CommandBuilder.giveSplashPotion("@s", 3, Effect.INVISIBILITY, "3399FF", "Into Calls", "Allow players to gather in their Discord channel."));
-            fileCommands.add(CommandBuilder.giveSplashPotion("@s", 4, Effect.POISON, "00CC66", "Spread players", "Spread players across the map."));
-            fileCommands.add(CommandBuilder.giveSplashPotion("@s", 5, Effect.STRENGTH, "CC3333", "Survival Mode", "Set operational mode to Ready to Play."));
-            fileCommands.add(CommandBuilder.giveSplashPotion("@s", 6, Effect.SLOWNESS, "00FF7F", "Start Game", "Start the game. Good luck!"));
+            fileCommands.add(CommandBuilder.giveSplashPotion("@s", 0, EffectId.SPEED, "808080", "Developer Mode", "Set operational mode to Developer Mode."));
+            fileCommands.add(CommandBuilder.giveSplashPotion("@s", 1, EffectId.WEAKNESS, "FF9933", "Assign Teams", "Assign players to teams."));
+            fileCommands.add(CommandBuilder.giveSplashPotion("@s", 2, EffectId.SLOW_FALLING, "6633CC", "Predictions", "Who will win this season?."));
+            fileCommands.add(CommandBuilder.giveSplashPotion("@s", 3, EffectId.INVISIBILITY, "3399FF", "Into Calls", "Allow players to gather in their Discord channel."));
+            fileCommands.add(CommandBuilder.giveSplashPotion("@s", 4, EffectId.POISON, "00CC66", "Spread players", "Spread players across the map."));
+            fileCommands.add(CommandBuilder.giveSplashPotion("@s", 5, EffectId.STRENGTH, "CC3333", "Survival Mode", "Set operational mode to Ready to Play."));
+            fileCommands.add(CommandBuilder.giveSplashPotion("@s", 6, EffectId.SLOWNESS, "00FF7F", "Start Game", "Start the game. Good luck!"));
         } else {
-            fileCommands.add(CommandBuilder.giveSplashPotion("@s", 0, Effect.SPEED, "808080", "Developer Mode", "Set operational mode to Developer Mode."));
-            fileCommands.add(CommandBuilder.giveSplashPotion("@s", 1, Effect.SLOW_FALLING, "6633CC", "Predictions", "Who will win this season?."));
-            fileCommands.add(CommandBuilder.giveSplashPotion("@s", 2, Effect.INVISIBILITY, "3399FF", "Into Calls", "Allow players to gather in their Discord channel."));
-            fileCommands.add(CommandBuilder.giveSplashPotion("@s", 3, Effect.POISON, "00CC66", "Spread players", "Spread players across the map."));
-            fileCommands.add(CommandBuilder.giveSplashPotion("@s", 4, Effect.STRENGTH, "CC3333", "Survival Mode", "Set operational mode to Ready to Play."));
-            fileCommands.add(CommandBuilder.giveSplashPotion("@s", 5, Effect.SLOWNESS, "00FF7F", "Start Game", "Start the game. Good luck!"));
+            fileCommands.add(CommandBuilder.giveSplashPotion("@s", 0, EffectId.SPEED, "808080", "Developer Mode", "Set operational mode to Developer Mode."));
+            fileCommands.add(CommandBuilder.giveSplashPotion("@s", 1, EffectId.SLOW_FALLING, "6633CC", "Predictions", "Who will win this season?."));
+            fileCommands.add(CommandBuilder.giveSplashPotion("@s", 2, EffectId.INVISIBILITY, "3399FF", "Into Calls", "Allow players to gather in their Discord channel."));
+            fileCommands.add(CommandBuilder.giveSplashPotion("@s", 3, EffectId.POISON, "00CC66", "Spread players", "Spread players across the map."));
+            fileCommands.add(CommandBuilder.giveSplashPotion("@s", 4, EffectId.STRENGTH, "CC3333", "Survival Mode", "Set operational mode to Ready to Play."));
+            fileCommands.add(CommandBuilder.giveSplashPotion("@s", 5, EffectId.SLOWNESS, "00FF7F", "Start Game", "Start the game. Good luck!"));
         }
 
         return new FileData(FileName.start_potions, fileCommands);
@@ -1395,7 +1409,9 @@ public class Main {
         fileCommands.add(Schedule.callFunction(FileName.clear_schedule));
 
         // Clear all player effects
-        fileCommands.add(CommandBuilder.clearEffect("@a"));
+        fileCommands.add(Effect.create(EffectAction.CLEAR)
+                .targets(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
+                .build());
 
         // Give admin start potions
         fileCommands.add(Schedule.callFunction(FileName.start_potions));
@@ -1529,8 +1545,15 @@ public class Main {
         ArrayList<String> fileCommands = new ArrayList<>();
 
         // Remove resistance and give regeneration
-        fileCommands.add(CommandBuilder.clearEffect("@a"));
-        fileCommands.add(CommandBuilder.giveEffect("@a", Effect.REGENERATION, 1, 255));
+        fileCommands.add(Effect.create(EffectAction.CLEAR)
+                .targets(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
+                .build());
+        fileCommands.add(Effect.create(EffectAction.GIVE)
+                .targets(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
+                .effect(EffectId.REGENERATION)
+                .seconds(1)
+                .amplifier(255)
+                .build());
 
         // Make players fall
         fileCommands.add(Tag.action(Entity.ofSelector(
@@ -1674,7 +1697,13 @@ public class Main {
         fileCommands.add(scoreboard.Set("@a", getObjectiveByName(Objective.Kills), 0));
 
         // Make players invulnerable
-        fileCommands.add(CommandBuilder.giveEffect("@a", Effect.RESISTANCE, 99999, 4, true));
+        fileCommands.add(Effect.create(EffectAction.GIVE)
+                .targets(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
+                .effect(EffectId.RESISTANCE)
+                .seconds(99999)
+                .amplifier(4)
+                .hideParticles(true)
+                .build());
 
         return new FileData(FileName.into_calls, fileCommands);
     }
@@ -1715,7 +1744,10 @@ public class Main {
         fileCommands.add(CommandBuilder.takeRecipe("@a", Block.DRAGON_HEAD.setNamespace(Namespace.uhc)));
 
         // Remove resistance
-        fileCommands.add(CommandBuilder.clearEffect("@a", Effect.RESISTANCE));
+        fileCommands.add(Effect.create(EffectAction.CLEAR)
+                .targets(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
+                .effect(EffectId.RESISTANCE)
+                .build());
 
         // Set scoreboard values
         fileCommands.add(scoreboard.Set("@a", getObjectiveByName(Objective.Hearts), 20));
@@ -1732,9 +1764,25 @@ public class Main {
         fileCommands.add(CommandBuilder.setTime(0));
 
         // Give potion effect
-        fileCommands.add(CommandBuilder.giveEffect("@a", Effect.REGENERATION, 1, 255));
-        fileCommands.add(CommandBuilder.giveEffect("@a", Effect.SATURATION, 1, 255));
-        fileCommands.add(CommandBuilder.giveEffect("@a", Effect.RESISTANCE, 20 * 60, 2, true));
+        fileCommands.add(Effect.create(EffectAction.GIVE)
+                .targets(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
+                .effect(EffectId.REGENERATION)
+                .seconds(1)
+                .amplifier(255)
+                .build());
+        fileCommands.add(Effect.create(EffectAction.GIVE)
+                .targets(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
+                .effect(EffectId.SATURATION)
+                .seconds(1)
+                .amplifier(255)
+                .build());
+        fileCommands.add(Effect.create(EffectAction.GIVE)
+                .targets(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
+                .effect(EffectId.RESISTANCE)
+                .seconds(20 * 60)
+                .amplifier(2)
+                .hideParticles(true)
+                .build());
 
         // Clear player inventories
         fileCommands.add(Clear.create()
@@ -2539,27 +2587,27 @@ public class Main {
 
         // Regeneration potions (normal + splash, strong, long)
         Text warning = new Text(TextColor.RED, true, false, "REGENERATION POTIONS ARE NOT ALLOWED, YOU NAUGHTY BUM!");
-        String target = "@p[nbt={SelectedItem:{id:\"" + Block.SPLASH_POTION + "\",count:1,components:{\"minecraft:potion_contents\":{potion:\"" + Effect.REGENERATION.getPotionTag() + "\"}}}}]";
+        String target = "@p[nbt={SelectedItem:{id:\"" + Block.SPLASH_POTION + "\",count:1,components:{\"minecraft:potion_contents\":{potion:\"" + EffectId.REGENERATION.getPotionTag() + "\"}}}}]";
         String replacement = Block.GLASS_BOTTLE.toString();
         fileCommands.addAll(CommandBuilder.warnAndReplace(target, warning, replacement));
-        target = "@p[nbt={SelectedItem:{id:\"" + Block.SPLASH_POTION + "\",count:1,components:{\"minecraft:potion_contents\":{potion:\"" + Effect.REGENERATION.getPotionTag(true, false) + "\"}}}}]";
+        target = "@p[nbt={SelectedItem:{id:\"" + Block.SPLASH_POTION + "\",count:1,components:{\"minecraft:potion_contents\":{potion:\"" + EffectId.REGENERATION.getPotionTag(true, false) + "\"}}}}]";
         fileCommands.addAll(CommandBuilder.warnAndReplace(target, warning, replacement));
-        target = "@p[nbt={SelectedItem:{id:\"" + Block.SPLASH_POTION + "\",count:1,components:{\"minecraft:potion_contents\":{potion:\"" + Effect.REGENERATION.getPotionTag(false, true) + "\"}}}}]";
+        target = "@p[nbt={SelectedItem:{id:\"" + Block.SPLASH_POTION + "\",count:1,components:{\"minecraft:potion_contents\":{potion:\"" + EffectId.REGENERATION.getPotionTag(false, true) + "\"}}}}]";
         fileCommands.addAll(CommandBuilder.warnAndReplace(target, warning, replacement));
-        target = "@p[nbt={SelectedItem:{id:\"" + Block.POTION + "\",count:1,components:{\"minecraft:potion_contents\":{potion:\"" + Effect.REGENERATION.getPotionTag() + "\"}}}}]";
+        target = "@p[nbt={SelectedItem:{id:\"" + Block.POTION + "\",count:1,components:{\"minecraft:potion_contents\":{potion:\"" + EffectId.REGENERATION.getPotionTag() + "\"}}}}]";
         fileCommands.addAll(CommandBuilder.warnAndReplace(target, warning, replacement));
-        target = "@p[nbt={SelectedItem:{id:\"" + Block.POTION + "\",count:1,components:{\"minecraft:potion_contents\":{potion:\"" + Effect.REGENERATION.getPotionTag(true, false) + "\"}}}}]";
+        target = "@p[nbt={SelectedItem:{id:\"" + Block.POTION + "\",count:1,components:{\"minecraft:potion_contents\":{potion:\"" + EffectId.REGENERATION.getPotionTag(true, false) + "\"}}}}]";
         fileCommands.addAll(CommandBuilder.warnAndReplace(target, warning, replacement));
-        target = "@p[nbt={SelectedItem:{id:\"" + Block.POTION + "\",count:1,components:{\"minecraft:potion_contents\":{potion:\"" + Effect.REGENERATION.getPotionTag(false, true) + "\"}}}}]";
+        target = "@p[nbt={SelectedItem:{id:\"" + Block.POTION + "\",count:1,components:{\"minecraft:potion_contents\":{potion:\"" + EffectId.REGENERATION.getPotionTag(false, true) + "\"}}}}]";
         fileCommands.addAll(CommandBuilder.warnAndReplace(target, warning, replacement));
 
         // Strength II potions
         warning.setText("STRENGTH II POTIONS ARE NOT ALLOWED, YOU NAUGHTY BUM!");
-        target = "@p[nbt={SelectedItem:{id:\"" + Block.SPLASH_POTION + "\",count:1,components:{\"minecraft:potion_contents\":{potion:\"" + Effect.STRENGTH.getPotionTag(true, false) + "\"}}}}]";
-        replacement = Block.SPLASH_POTION.addNBT("[potion_contents={potion:\"" + Effect.STRENGTH.getPotionTag() + "\"}]");
+        target = "@p[nbt={SelectedItem:{id:\"" + Block.SPLASH_POTION + "\",count:1,components:{\"minecraft:potion_contents\":{potion:\"" + EffectId.STRENGTH.getPotionTag(true, false) + "\"}}}}]";
+        replacement = Block.SPLASH_POTION.addNBT("[potion_contents={potion:\"" + EffectId.STRENGTH.getPotionTag() + "\"}]");
         fileCommands.addAll(CommandBuilder.warnAndReplace(target, warning, replacement));
-        target = "@p[nbt={SelectedItem:{id:\"" + Block.POTION + "\",count:1,components:{\"minecraft:potion_contents\":{potion:\"" + Effect.STRENGTH.getPotionTag(true, false) + "\"}}}}]";
-        replacement = Block.POTION.addNBT("[potion_contents={potion:\"" + Effect.STRENGTH.getPotionTag() + "\"}]");
+        target = "@p[nbt={SelectedItem:{id:\"" + Block.POTION + "\",count:1,components:{\"minecraft:potion_contents\":{potion:\"" + EffectId.STRENGTH.getPotionTag(true, false) + "\"}}}}]";
+        replacement = Block.POTION.addNBT("[potion_contents={potion:\"" + EffectId.STRENGTH.getPotionTag() + "\"}]");
         fileCommands.addAll(CommandBuilder.warnAndReplace(target, warning, replacement));
 
         for (int ii = 0; ii < 5; ii++) {
@@ -2784,8 +2832,16 @@ public class Main {
                     Execute.IfNext("@e[scores={MinHealth=" + indexFront + ".." + indexRear + "}]", true) +
                     CommandBuilder.setAttributeBase("@s", AttributeType.MAX_HEALTH, i + 1));
         }
-        fileCommands.add(CommandBuilder.giveEffect(respawnPlayerOld, Effect.HEALTH_BOOST, 1, 0));
-        fileCommands.add(CommandBuilder.clearEffect(respawnPlayerOld, Effect.HEALTH_BOOST));
+        fileCommands.add(Effect.create(EffectAction.GIVE)
+                .targets(respawnPlayer)
+                .effect(EffectId.HEALTH_BOOST)
+                .seconds(1)
+                .amplifier(0)
+                .build());
+        fileCommands.add(Effect.create(EffectAction.CLEAR)
+                .targets(respawnPlayer)
+                .effect(EffectId.HEALTH_BOOST)
+                .build());
         fileCommands.add(CommandBuilder.setAttributeBaseMultiple(respawnPlayerOld, AttributeType.MAX_HEALTH, 20));
 
         // Set player's gamemode to survival
@@ -3306,7 +3362,7 @@ public class Main {
         // Turn potion effect into function execution
         ArrayList<String> fileCommands = new ArrayList<>();
 
-        Effect[] effects = {Effect.SPEED, Effect.WEAKNESS, Effect.SLOW_FALLING, Effect.INVISIBILITY, Effect.POISON, Effect.STRENGTH, Effect.SLOWNESS};
+        EffectId[] effects = {EffectId.SPEED, EffectId.WEAKNESS, EffectId.SLOW_FALLING, EffectId.INVISIBILITY, EffectId.POISON, EffectId.STRENGTH, EffectId.SLOWNESS};
         FileName[] functions = {FileName.developer_mode, FileName.random_teams, FileName.predictions, FileName.into_calls, FileName.spread_players, FileName.survival_mode, FileName.start_game};
 
         for (int i = 0; i < effects.length; i++) {
@@ -3314,7 +3370,10 @@ public class Main {
                     Schedule.callFunction(functions[i]));
 
             fileCommands.add(Execute.If("@a[nbt={active_effects:[{id:\"" + effects[i] + "\"}]}]") +
-                    CommandBuilder.clearEffect("@e", effects[i]));
+                    Effect.create(EffectAction.CLEAR)
+                            .targets(Entity.ofSelector(TargetSelector.ALL_ENTITIES))
+                            .effect(effects[i])
+                            .build());
         }
 
         return new FileData(FileName.developer_potion_control, fileCommands);

@@ -2,6 +2,7 @@ import arguments.BlockPos;
 import Enums.*;
 import HelperClasses.*;
 import controlpoints.ControlPointTag;
+import shared.EffectId;
 import shared.EntityType;
 import shared.ItemSlot;
 import shared.TextColor;
@@ -107,23 +108,6 @@ public class CommandBuilder {
                 "attribute @s " + attribute + " base set " + value;
     }
 
-    // Status effects
-    public static String giveEffect(String entity, Effect effect, int duration, int amplifier) {
-        return giveEffect(entity, effect, duration, amplifier, false);
-    }
-
-    public static String giveEffect(String entity, Effect effect, int duration, int amplifier, Boolean hideParticles) {
-        return "effect give " + entity + " " + effect + " " + duration + " " + amplifier + " " + hideParticles;
-    }
-
-    public static String clearEffect(String entity, Effect effect) {
-        return "effect clear " + entity + " " + effect;
-    }
-
-    public static String clearEffect(String entity) {
-        return "effect clear " + entity;
-    }
-
     // Difficulty
     public static String setDifficulty(Difficulty difficulty) {
         return "difficulty " + difficulty;
@@ -216,7 +200,7 @@ public class CommandBuilder {
     }
 
     // Potions
-    public static String giveSplashPotion(String targets, int slotNumber, Effect effect, String colorHex, String displayName, String lore) {
+    public static String giveSplashPotion(String targets, int slotNumber, EffectId effect, String colorHex, String displayName, String lore) {
         // Convert hex to decimal
         int potionColor = Integer.parseInt(colorHex, 16);
 

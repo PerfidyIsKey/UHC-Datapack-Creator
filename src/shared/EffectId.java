@@ -1,6 +1,6 @@
-package Enums;
+package shared;
 
-public enum Effect {
+public enum EffectId {
     ABSORPTION("absorption"),
     BLINDNESS("blindness"),
     FIRE_RESISTANCE("fire_resistance"),
@@ -22,7 +22,7 @@ public enum Effect {
 
     private final String symbol;
 
-    Effect(String symbol) {
+    EffectId(String symbol) {
         this.symbol = symbol;
     }
 

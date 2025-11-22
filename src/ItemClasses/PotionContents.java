@@ -1,11 +1,11 @@
 package ItemClasses;
 
 import Enums.Duration;
-import Enums.Effect;
+import shared.EffectId;
 
 public class PotionContents implements Components {
     // Fields
-    private Effect id; // The ID of the effect.
+    private EffectId id; // The ID of the effect.
     private int custom_color; // The overriding color of this potion texture, and/or the particles of the area effect cloud created.
     private int amplifier; // The amplifier of the effect, with level I having value 0.
     private int duration;   // The duration of the effect in ticks. Value -1 is treated as infinity. Values 0 or less than -2 are treated as 1.
@@ -14,12 +14,12 @@ public class PotionContents implements Components {
     private Boolean show_icon; // Whether or not an icon should be shown for this effect.
 
     // Constructors
-    public PotionContents(Effect id, int amplifier, int duration) {
+    public PotionContents(EffectId id, int amplifier, int duration) {
         this.id = id;
         this.amplifier = amplifier;
         this.duration = duration * 20;
     }
-    public PotionContents(Effect id, int amplifier, int duration, Duration durationType) {
+    public PotionContents(EffectId id, int amplifier, int duration, Duration durationType) {
         this.id = id;
         this.amplifier = amplifier;
         int unitConversion = 1;
@@ -29,14 +29,14 @@ public class PotionContents implements Components {
         this.duration = duration * unitConversion;
     }
 
-    public PotionContents(Effect id, int amplifier, int duration, String custom_color) {
+    public PotionContents(EffectId id, int amplifier, int duration, String custom_color) {
         this.id = id;
         this.amplifier = amplifier;
         this.duration = duration * 20;
         this.custom_color = Integer.parseInt(custom_color, 16);
     }
 
-    public PotionContents(Effect id, int amplifier, int duration, String custom_color, Boolean ambient, Boolean show_particles, Boolean show_icon) {
+    public PotionContents(EffectId id, int amplifier, int duration, String custom_color, Boolean ambient, Boolean show_particles, Boolean show_icon) {
         this.id = id;
         this.amplifier = amplifier;
         this.duration = duration * 20;
