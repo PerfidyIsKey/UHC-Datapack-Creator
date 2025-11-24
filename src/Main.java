@@ -459,7 +459,7 @@ public class Main {
         entries.add(new LootTableEntry(2, Block.DIAMOND, new SetCount(2, new RandomChance(0.3))));
 
         // Entry #26
-        entries.add(new LootTableEntry(3, Block.SADDLE));
+        entries.add(new LootTableEntry(7, Block.SADDLE));
 
         // Entry #27
         entries.add(new LootTableEntry(3, Block.SPECTRAL_ARROW, new SetCount(10)));
@@ -569,7 +569,7 @@ public class Main {
         functions.add(new SetComponents(horse));
         functions.add(name);
 
-        entries.add(new LootTableEntry(2, Block.HORSE_SPAWN_EGG, functions));
+        entries.add(new LootTableEntry(4, Block.HORSE_SPAWN_EGG, functions));
         functions = new ArrayList<>();
 
         // Entry #47
