@@ -2,10 +2,7 @@ import arguments.BlockPos;
 import Enums.*;
 import HelperClasses.*;
 import controlpoints.ControlPointTag;
-import shared.EffectId;
-import shared.EntityType;
-import shared.ItemSlot;
-import shared.TextColor;
+import shared.*;
 
 import java.util.ArrayList;
 
@@ -143,11 +140,6 @@ public class CommandBuilder {
 
     public static String setWorldBorder(int size) {
         return "worldborder set " + size;
-    }
-
-    // Experience
-    public static String setExperience(String target, int amount, ExperienceType type) {
-        return "xp set " + target + " " + amount + " " + type;
     }
 
     // Advancements
