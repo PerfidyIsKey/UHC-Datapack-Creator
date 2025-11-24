@@ -18,6 +18,7 @@ import arguments.targetselector.SelectorArgumentsBuilder;
 import arguments.targetselector.TargetSelector;
 import commands.*;
 import commands.effect.EffectAction;
+import commands.experience.ExperienceAction;
 import commands.item.ItemAction;
 import commands.item.ItemTargetEntity;
 import commands.tag.TagAction;
@@ -1799,8 +1800,18 @@ public class Main {
         fileCommands.add(CommandBuilder.revokeAdvancement("@a"));
 
         // Experience
-        fileCommands.add(CommandBuilder.setExperience("@a", 0, ExperienceType.levels));
-        fileCommands.add(CommandBuilder.setExperience("@a", 0, ExperienceType.points));
+        fileCommands.add(Experience.create(
+                        ExperienceAction.SET,
+                        Entity.ofSelector(TargetSelector.ALL_PLAYERS))
+                .amount(0)
+                .type(ExperienceType.LEVELS)
+                .build());
+        fileCommands.add(Experience.create(
+                        ExperienceAction.SET,
+                        Entity.ofSelector(TargetSelector.ALL_PLAYERS))
+                .amount(0)
+                .type(ExperienceType.POINTS)
+                .build());
 
         // Give players teammate tools
         if (!OperationMode.teamCreationInGame) {
