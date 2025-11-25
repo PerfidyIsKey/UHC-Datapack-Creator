@@ -14,6 +14,8 @@ import arguments.itemstack.*;
 import arguments.itemstack.components.*;
 import arguments.itemstack.components.attributes.AttributeDisplayTag;
 import arguments.itemstack.components.attributes.AttributeModifierEntry;
+import arguments.particle.ParticleArgument;
+import arguments.particle.ParticleArgumentBuilder;
 import arguments.targetselector.SelectorArgumentsBuilder;
 import arguments.targetselector.TargetSelector;
 import commands.*;
@@ -277,7 +279,21 @@ public class Main {
         String[] collarColors = {"4", "3", "14", "10", "13", "6", "15", "1", "7", "9", "2", "11", "9"};
         String[] jsonColors = {"YELLOW", "BLUE", "RED", "PURPLE", "GREEN", "PINK", "BLACK", "ORANGE", "GRAY", "AQUA", "DARK RED", "DARK BLUE", "DARK AQUA"};
         String[] playerColors = {"Yellow", "Blue", "Red", "Purple", "Green", "Pink", "Black", "Orange", "Gray", "Aqua", "DarkRed", "DarkBlue", "DarkAqua"};
-        String[] dustColors = {"1.0,1.0,0.3", "0.3,0.3,1.0", "1.0,0.3,0.3", "0.7,0.0,0.7", "0.3,1.0,0.3", "1.0,0.3,1.0", "0.0,0.0,0.0", "1.0,0.7,0.0", "0.7,0.7,0.7", "0.3,1.0,1.0", "0.7,0.0,0.0", "0.0,0.0,0.7", "0.0,0.7,0.7"};
+        float[][] dustColors = {
+                {1.0f, 1.0f, 0.3f}, // Yellow/White
+                {0.3f, 0.3f, 1.0f}, // Blue
+                {1.0f, 0.3f, 0.3f}, // Red
+                {0.7f, 0.0f, 0.7f}, // Purple
+                {0.3f, 1.0f, 0.3f}, // Green
+                {1.0f, 0.3f, 1.0f}, // Magenta
+                {0.0f, 0.0f, 0.0f}, // Black
+                {1.0f, 0.7f, 0.0f}, // Orange
+                {0.7f, 0.7f, 0.7f}, // Gray
+                {0.3f, 1.0f, 1.0f}, // Cyan
+                {0.7f, 0.0f, 0.0f}, // Dark Red
+                {0.0f, 0.0f, 0.7f}, // Dark Blue
+                {0.0f, 0.7f, 0.7f}  // Teal
+        };
 
         // Teams
         teamMode = Integer.parseInt(fileTools.getContentOutOfFile("Files\\" + communityMode + "\\uhc_data.txt", "teamMode"));
@@ -3044,7 +3060,18 @@ public class Main {
                         Execute.FacingNext("@a[team=" + t.getName() + ",distance=0.1..,gamemode=!spectator,limit=1,sort=random]", EntityAnchor.eyes) +
                         Execute.PositionedNext(new Coordinate(0, 1, 0, ReferenceFrame.relative)) +
                         Execute.PositionedNext(new Coordinate(0, 0, i + 1, ReferenceFrame.relative_facing), true) +
-                        CommandBuilder.createParticle(Particle.dust + "{color:[" + t.getDustColor() + "],scale:1}", new Coordinate(0, 0, 0, ReferenceFrame.relative), new Coordinate(0, 0, 0), 0, 1, "@s"));
+                        Particle.create(ParticleArgument.create(
+                                        ParticleId.DUST,
+                                        ParticleArgumentBuilder.create()
+                                                .color(t.getDustColor())
+                                                .scale(1)))
+                                .pos(Vec3.relative(0, 0, 0))
+                                .delta(Vec3.absolute(0, 0, 0))
+                                .speed(0.0f)
+                                .count(1)
+                                .display(DisplayType.NORMAL)
+                                .viewers(Entity.ofSelector(TargetSelector.SENDER))
+                                .build());
             }
         }
 

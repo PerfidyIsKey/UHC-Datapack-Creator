@@ -182,15 +182,6 @@ public class CommandBuilder {
         return "recipe take " + targets + " " + recipe;
     }
 
-    // Particle
-    public static String createParticle(Particle name, Coordinate pos, Coordinate delta, int speed, int count, String viewers) {
-        return "particle " + name + " " + pos.getCoordinateString() + " " + delta.getCoordinateString() + " " + speed + " " + count + " normal " + viewers;
-    }
-
-    public static String createParticle(String name, Coordinate pos, Coordinate delta, int speed, int count, String viewers) {
-        return "particle " + name + " " + pos.getCoordinateString() + " " + delta.getCoordinateString() + " " + speed + " " + count + " normal " + viewers;
-    }
-
     // Potions
     public static String giveSplashPotion(String targets, int slotNumber, EffectId effect, String colorHex, String displayName, String lore) {
         // Convert hex to decimal

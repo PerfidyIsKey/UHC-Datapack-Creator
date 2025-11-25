@@ -27,6 +27,30 @@ public class Vec3 {
         return new Vec3("" + x, "" + y, "" + z);
     }
 
+    public static Vec3 absolute(double x, double y, double z)  {
+        return new Vec3("" + x, "" + y, "" + z);
+    }
+
+    public static Vec3 absolute(int x, int y, int z)  {
+        return new Vec3("" + x, "" + y, "" + z);
+    }
+
+    public static Vec3 relative(double x, double y, double z)  {
+        return new Vec3("~" + x, "~" + y, "~" + z);
+    }
+
+    public static Vec3 relative(int x, int y, int z)  {
+        return new Vec3("~" + x, "~" + y, "~" + z);
+    }
+
+    public static Vec3 local(double x, double y, double z)  {
+        return new Vec3("^" + x, "^" + y, "^" + z);
+    }
+
+    public static Vec3 local(int x, int y, int z)  {
+        return new Vec3("^" + x, "^" + y, "^" + z);
+    }
+
     private boolean isValidCoordinate(String value) {
         return value.matches("~?\\^?-?\\d*"); // allows 0, -1, ~, ~1, ^2 etc.
     }
