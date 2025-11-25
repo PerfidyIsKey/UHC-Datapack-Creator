@@ -123,16 +123,6 @@ public class CommandBuilder {
         return "item replace entity " + targets + " " + slot.getCommandString() + " with " + item;
     }
 
-
-    // Worldborder
-    public static String setWorldBorder(int size, int duration) {
-        return "worldborder set " + size + " " + duration;
-    }
-
-    public static String setWorldBorder(int size) {
-        return "worldborder set " + size;
-    }
-
     // Advancements
     public static String revokeAdvancement(String target) {
         return "advancement revoke " + target + " everything";
