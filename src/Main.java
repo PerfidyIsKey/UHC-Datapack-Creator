@@ -80,7 +80,7 @@ public class Main {
 
     //GameData<
     private static final int chestSize = 27;
-    private BlockPos startCoordinate;
+    private int[] startCoordinate;
     private ArrayList<Team> teams = new ArrayList<>();
     private ArrayList<ControlPoint> cpList = new ArrayList<>();
     private ArrayList<ControlPoint> controlPoints = new ArrayList<>();
@@ -211,7 +211,7 @@ public class Main {
         // Get data from uhc_data.txt
         uhcNumber = fileTools.getContentOutOfFile("Files\\" + communityMode + "\\uhc_data.txt", "uhcNumber");
         String[] splitStartCoordinates = fileTools.splitLineOnComma(fileTools.getContentOutOfFile("Files\\" + communityMode + "\\uhc_data.txt", "startCoordinate"));
-        startCoordinate = BlockPos.absolute(Integer.parseInt(splitStartCoordinates[0]), Integer.parseInt(splitStartCoordinates[1]), Integer.parseInt(splitStartCoordinates[2]));
+        startCoordinate = new int[]{Integer.parseInt(splitStartCoordinates[0]), Integer.parseInt(splitStartCoordinates[1]), Integer.parseInt(splitStartCoordinates[2])};
         communityName = fileTools.getContentOutOfFile("Files\\" + communityMode + "\\uhc_data.txt", "communityName");
 
         if (OperationMode.traitorFaction) {
@@ -1372,7 +1372,7 @@ public class Main {
 
         // Create jukebox at 0,0
         SetBlock sb = SetBlock.create(
-                startCoordinate,
+                BlockPos.absolute(startCoordinate),
                 new BlockState(Block.JUKEBOX)
                         .with(BlockProperty.HAS_RECORD, true)
                         .with(new JukeboxEntity("")
@@ -1614,7 +1614,10 @@ public class Main {
 
         // Teleport everyone underneath the world
         fileCommands.add(Execute.In(Dimension.overworld) +
-                CommandBuilder.teleportEntity("@a", BlockPos.absolute(0, -100, 0)));
+                Teleport.create()
+                                .targets(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
+                                        .location(Vec3.absolute(0, -100, 0))
+                                                .build());
 
         // Announcement message
         ArrayList<TextItem> texts = new ArrayList<>();
@@ -1709,7 +1712,10 @@ public class Main {
 
         // Teleport to starting coordinates
         fileCommands.add(Execute.In(Dimension.overworld) +
-                CommandBuilder.teleportEntity("@a", startCoordinate));
+                Teleport.create()
+                                .targets(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
+                                        .location(Vec3.absolute(startCoordinate))
+                                                .build());
 
         // Reset scores
         fileCommands.add(scoreboard.Set("@a", getObjectiveByName(Objective.Deaths), 0));
@@ -2099,7 +2105,13 @@ public class Main {
 
         // Teleport all living players
         fileCommands.add(Execute.In(Dimension.overworld) +
-                CommandBuilder.teleportEntity("@a[gamemode=!spectator]", BlockPos.absolute(3, 153, 3)));
+                Teleport.create()
+                        .targets(Entity.ofSelector(
+                                TargetSelector.ALL_PLAYERS,
+                                SelectorArgumentsBuilder.create()
+                                        .gamemode(GameMode.SPECTATOR, true)))
+                        .location(Vec3.absolute(3, 153, 3))
+                        .build());
 
         // Spread players in a team together
         fileCommands.add(Execute.In(Dimension.overworld) +
@@ -2786,7 +2798,17 @@ public class Main {
         // Teleport player to their team
         for (Team t : teams) {
             fileCommands.add(Execute.As(respawnPlayerOld) +
-                    CommandBuilder.teleportEntity("@s[team=" + t.getName() + "]", "@r[gamemode=!spectator, team=" + t.getName() + "]"));
+                    Teleport.create()
+                            .targets(Entity.ofSelector(
+                                    TargetSelector.SENDER,
+                                    SelectorArgumentsBuilder.create()
+                                            .team(t.getName())))
+                            .destination(Entity.ofSelector(
+                                    TargetSelector.RANDOM_PLAYER,
+                                    SelectorArgumentsBuilder.create()
+                                            .gamemode(GameMode.SPECTATOR, true)
+                                            .team(t.getName())))
+                            .build());
 
             fileCommands.add(Execute.At(respawnPlayerOld, false) +
                     Execute.AsNext(respawnPlayerOld) +
