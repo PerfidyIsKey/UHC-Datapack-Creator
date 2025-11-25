@@ -14,9 +14,9 @@ public class Team {
     private String collarColor;
     private String jsonColor;
     private String playerColor;
-    private String dustColor;
+    private float[] dustColor;
 
-    public Team(int id, TextColor color, BossBarColor bossbarColor, DyeColor dyeColor, String collarColor, String jsonColor, String playerColor, String dustColor) {
+    public Team(int id, TextColor color, BossBarColor bossbarColor, DyeColor dyeColor, String collarColor, String jsonColor, String playerColor, float[] dustColor) {
         this.id = id;
         this.name = "Team" + id;
         this.color = color;
@@ -80,9 +80,9 @@ public class Team {
 
     public void setPlayerColor(String playerColor) { this.playerColor = playerColor; }
 
-    public String getDustColor() { return dustColor; }
+    public float[] getDustColor() { return dustColor; }
 
-    public void setDustColor(String dustColor) { this.dustColor = dustColor; }
+    public void setDustColor(float[] dustColor) { this.dustColor = dustColor; }
 
     public String add(){
         return "team add " + this.name;
