@@ -19,10 +19,12 @@ import arguments.particle.ParticleArgumentBuilder;
 import arguments.targetselector.SelectorArgumentsBuilder;
 import arguments.targetselector.TargetSelector;
 import commands.*;
+import commands.Random;
 import commands.effect.EffectAction;
 import commands.experience.ExperienceAction;
 import commands.item.ItemAction;
 import commands.item.ItemTargetEntity;
+import commands.random.RandomAction;
 import commands.tag.TagAction;
 import controlpoints.ControlPoint;
 import controlpoints.ControlPointTag;
@@ -2722,7 +2724,10 @@ public class Main {
         ArrayList<String> fileCommands = new ArrayList<>();
 
         // Roll a random number to pick a quote
-        fileCommands.add(CommandBuilder.storeRandomNumber(Objective.RandomQuotes, 0, quotes.size() - 1));
+        fileCommands.add(Execute.Store(ExecuteStore.result, Constant.adminOld, Objective.RandomQuotes) +
+                Random.create(RandomAction.VALUE)
+                        .range(0, quotes.size() - 1)
+                                .build());
 
         // Pick a quote from the listAdd commentMore actions
         for (int i = 0; i < quotes.size(); i++) {

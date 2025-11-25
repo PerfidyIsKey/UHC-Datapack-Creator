@@ -212,25 +212,6 @@ public class CommandBuilder {
         return changeTitleDisplayTime(targets, 10, 70, 20, Duration.TICKS);
     }
 
-    // Store random number
-    public static String storeRandomNumber(String targets, String objective, int min, int max) {
-        return Execute.Store(ExecuteStore.result, targets, objective) +
-                "random value " + min + ".." + max;
-    }
-
-    public static String storeRandomNumber(String targets, Objective objective, int min, int max) {
-        return Execute.Store(ExecuteStore.result, targets, objective) +
-                "random value " + min + ".." + max;
-    }
-
-    public static String storeRandomNumber(String objective, int min, int max) {
-        return storeRandomNumber(Constant.adminOld, objective, min, max);
-    }
-
-    public static String storeRandomNumber(Objective objective, int min, int max) {
-        return storeRandomNumber(Constant.adminOld, objective, min, max);
-    }
-
     public static ArrayList<String> warnAndReplace(String targets, TextItem warning, String replacement) {
         ArrayList<String> fileCommands = new ArrayList<>();
 
