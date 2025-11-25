@@ -16,12 +16,16 @@ public class BlockPos {
         this.z = z;
     }
 
-    public static BlockPos create(String x, String y, String z) {
-        return new BlockPos(x, y, z);
+    public static BlockPos absolute(int x, int y, int z)  {
+        return new BlockPos("" + x, "" + y, "" + z);
     }
 
-    public static BlockPos create(int x, int y, int z) {
-        return new BlockPos("" + x, "" + y, "" + z);
+    public static BlockPos relative(int x, int y, int z)  {
+        return new BlockPos("~" + x, "~" + y, "~" + z);
+    }
+
+    public static BlockPos local(int x, int y, int z)  {
+        return new BlockPos("^" + x, "^" + y, "^" + z);
     }
 
     private boolean isValidCoordinate(String value) {

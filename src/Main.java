@@ -209,7 +209,7 @@ public class Main {
         // Get data from uhc_data.txt
         uhcNumber = fileTools.getContentOutOfFile("Files\\" + communityMode + "\\uhc_data.txt", "uhcNumber");
         String[] splitStartCoordinates = fileTools.splitLineOnComma(fileTools.getContentOutOfFile("Files\\" + communityMode + "\\uhc_data.txt", "startCoordinate"));
-        startCoordinate = BlockPos.create(Integer.parseInt(splitStartCoordinates[0]), Integer.parseInt(splitStartCoordinates[1]), Integer.parseInt(splitStartCoordinates[2]));
+        startCoordinate = BlockPos.absolute(Integer.parseInt(splitStartCoordinates[0]), Integer.parseInt(splitStartCoordinates[1]), Integer.parseInt(splitStartCoordinates[2]));
         communityName = fileTools.getContentOutOfFile("Files\\" + communityMode + "\\uhc_data.txt", "communityName");
 
         if (OperationMode.traitorFaction) {
@@ -948,22 +948,22 @@ public class Main {
 
         // Create staging area
         Fill cmd = Fill.create(
-                BlockPos.create(-6, 220, -6),
-                BlockPos.create(6, 226, 6),
+                BlockPos.absolute(-6, 220, -6),
+                BlockPos.absolute(6, 226, 6),
                 new BlockState(Block.BARRIER)
         );
         fileCommands.add(Execute.In(Dimension.overworld) +
                 cmd.build());
         cmd = Fill.create(
-                BlockPos.create(-5, 221, -5),
-                BlockPos.create(6, 226, 5),
+                BlockPos.absolute(-5, 221, -5),
+                BlockPos.absolute(6, 226, 5),
                 new BlockState(Block.AIR)
         );
         fileCommands.add(Execute.In(Dimension.overworld) +
                 cmd.build());
 
         SetBlock sb = SetBlock.create(
-                BlockPos.create(0, 222, -5),
+                BlockPos.absolute(0, 222, -5),
                 new BlockState(Block.CHERRY_WALL_SIGN)
                         .with(BlockProperty.FACING, Direction.SOUTH)
                         .with(BlockProperty.WATERLOGGED, false)
@@ -1157,15 +1157,15 @@ public class Main {
 
         // Keep beacon active
         Fill cmd = Fill.create(
-                BlockPos.create(currentCP.getCoordinate().getX() - 1, currentCP.getCoordinate().getY() - 1, currentCP.getCoordinate().getZ() - 1),
-                BlockPos.create(currentCP.getCoordinate().getX() + 1, currentCP.getCoordinate().getY() - 1, currentCP.getCoordinate().getZ() + 1),
+                BlockPos.absolute(currentCP.getCoordinate().getX() - 1, currentCP.getCoordinate().getY() - 1, currentCP.getCoordinate().getZ() - 1),
+                BlockPos.absolute(currentCP.getCoordinate().getX() + 1, currentCP.getCoordinate().getY() - 1, currentCP.getCoordinate().getZ() + 1),
                 new BlockState(Block.EMERALD_BLOCK)
         );
         fileCommands.add(Execute.In(currentCP.getCoordinate().getDimension()) +
                 cmd.build());
 
         SetBlock sb = SetBlock.create(
-                BlockPos.create(currentCP.getCoordinate().getX(), currentCP.getCoordinate().getY(), currentCP.getCoordinate().getZ()),
+                BlockPos.absolute(currentCP.getCoordinate().getX(), currentCP.getCoordinate().getY(), currentCP.getCoordinate().getZ()),
                 new BlockState(Block.BEACON)
         );
         fileCommands.add(Execute.In(currentCP.getCoordinate().getDimension()) +
@@ -1612,7 +1612,7 @@ public class Main {
 
         // Teleport everyone underneath the world
         fileCommands.add(Execute.In(Dimension.overworld) +
-                CommandBuilder.teleportEntity("@a", BlockPos.create(0, -100, 0)));
+                CommandBuilder.teleportEntity("@a", BlockPos.absolute(0, -100, 0)));
 
         // Announcement message
         ArrayList<TextItem> texts = new ArrayList<>();
@@ -2097,7 +2097,7 @@ public class Main {
 
         // Teleport all living players
         fileCommands.add(Execute.In(Dimension.overworld) +
-                CommandBuilder.teleportEntity("@a[gamemode=!spectator]", BlockPos.create(3, 153, 3)));
+                CommandBuilder.teleportEntity("@a[gamemode=!spectator]", BlockPos.absolute(3, 153, 3)));
 
         // Spread players in a team together
         fileCommands.add(Execute.In(Dimension.overworld) +
@@ -2495,7 +2495,7 @@ public class Main {
                     CommandBuilder.addForceLoad(c.getX(), c.getZ(), c.getX(), c.getZ()));
 
             SetBlock sb = SetBlock.create(
-                    BlockPos.create(c.getX(), c.getY() + 11, c.getZ()),
+                    BlockPos.absolute(c.getX(), c.getY() + 11, c.getZ()),
                     new BlockState(Block.STRUCTURE_BLOCK)
                             .with(BlockProperty.MODE, StructureBlockMode.LOAD)
                             .with(new StructureBlockEntity("")
@@ -2523,7 +2523,7 @@ public class Main {
 
             // Activate structure block
             sb = SetBlock.create(
-                    BlockPos.create(c.getX(), c.getY() + 10, c.getZ()),
+                    BlockPos.absolute(c.getX(), c.getY() + 10, c.getZ()),
                     new BlockState(Block.REDSTONE_BLOCK)
             ).mode(SetMode.DESTROY);
             fileCommands.add(Execute.In(c.getDimension()) +
@@ -2531,8 +2531,8 @@ public class Main {
 
             // Replace blocks that do not emit light
             Fill cmd = Fill.create(
-                    BlockPos.create(c.getX(), c.getY() + 12, c.getZ()),
-                    BlockPos.create(c.getX(), Constant.worldHeight - 1, c.getZ()),
+                    BlockPos.absolute(c.getX(), c.getY() + 12, c.getZ()),
+                    BlockPos.absolute(c.getX(), Constant.worldHeight - 1, c.getZ()),
                     new BlockState(Block.GLASS)
             ).filter(
                     new BlockPredicate(RegistryTag.BLOCK_BEACON_LIGHT)
@@ -2580,8 +2580,8 @@ public class Main {
         ArrayList<String> fileCommands = new ArrayList<>();
 
         Fill cmd = Fill.create(
-                BlockPos.create("~-2", "~-2", "~-2"),
-                BlockPos.create("~2", "~", "~2"),
+                BlockPos.relative(-2, -2, -2),
+                BlockPos.relative(2, 0, 2),
                 new BlockState(Block.ICE)
         ).filter(new BlockPredicate(Block.WATER));
         fileCommands.add(Execute.At("@a[nbt={RootVehicle:{Entity:{id:\"" + EntityType.HORSE + "\"}}}]") +
