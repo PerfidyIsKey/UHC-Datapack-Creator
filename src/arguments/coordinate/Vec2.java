@@ -12,16 +12,28 @@ public class Vec2 {
         this.z = z;
     }
 
-    public static Vec2 create(String x, String z) {
-        return new Vec2(x, z);
-    }
-
-    public static Vec2 create(int x, int z) {
+    public static Vec2 absolute(double x, double z)  {
         return new Vec2("" + x, "" + z);
     }
 
-    public static Vec2 create(double x, double z) {
+    public static Vec2 absolute(int x, int z)  {
         return new Vec2("" + x, "" + z);
+    }
+
+    public static Vec2 relative(double x, double z)  {
+        return new Vec2("~" + x, "~" + z);
+    }
+
+    public static Vec2 relative(int x, int z)  {
+        return new Vec2("~" + x, "~" + z);
+    }
+
+    public static Vec2 local(double x, double z)  {
+        return new Vec2("^" + x, "^" + z);
+    }
+
+    public static Vec2 local(int x, int z)  {
+        return new Vec2("^" + x, "^" + z);
     }
 
     private boolean isValidCoordinate(String value) {

@@ -26,5 +26,5 @@ public class Constant {
     public static final int worldHeight = 257;
     public static final int worldBottom = -64;
     public static final WorldShape worldShape = WorldShape.square;
-    public static final Vec2 spawnCenter = Vec2.create(0, 0);
+    public static final Vec2 spawnCenter = Vec2.absolute(0, 0);
 }

@@ -15,18 +15,6 @@ public class Vec3 {
         this.z = z;
     }
 
-    public static Vec3 create(String x, String y, String z) {
-        return new Vec3(x, y, z);
-    }
-
-    public static Vec3 create(int x, int y, int z) {
-        return new Vec3("" + x, "" + y, "" + z);
-    }
-
-    public static Vec3 create(double x, double y, double z) {
-        return new Vec3("" + x, "" + y, "" + z);
-    }
-
     public static Vec3 absolute(double x, double y, double z)  {
         return new Vec3("" + x, "" + y, "" + z);
     }

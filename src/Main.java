@@ -980,7 +980,7 @@ public class Main {
                                         "In rememberance",
                                         "run_command",
                                         Summon.create(EntityType.FIREWORK_ROCKET)
-                                                .setPos(Vec3.create("~", "~", "~"))
+                                                .setPos(Vec3.relative(0, 0, 0))
                                                 .setNbt(
                                                         new FireworkRocketNbtBuilder(
                                                                 FireworkRocketDataBuilder.create()
@@ -1027,7 +1027,7 @@ public class Main {
         fileCommands.add(PlaySound.create(SoundId.THUNDER)
                 .source(SoundSource.MASTER)
                 .targets(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
-                .pos(Vec3.create("~", "~50", "~"))
+                .pos(Vec3.relative(0, 50, 0))
                 .volume(100)
                 .build()
         );
@@ -1110,7 +1110,7 @@ public class Main {
         for (Player p : players) {
             fileCommands.add(Execute.At("@p[name=" + p.getPlayerName() + ",scores={Deaths=1}]") +
                     Summon.create(EntityType.ITEM)
-                            .setPos(Vec3.create("~", "~", "~"))
+                            .setPos(Vec3.relative(0, 0, 0))
                             .setNbt(
                                     new ItemNbtBuilder(
                                             new ItemData(
@@ -1341,7 +1341,7 @@ public class Main {
                                 .build());
         fileCommands.add(
                 Summon.create(EntityType.MARKER)
-                        .setPos(Vec3.create(0, Constant.worldBottom, 0))
+                        .setPos(Vec3.absolute(0, Constant.worldBottom, 0))
                         .setNbt(new BaseEntityNbt(EntityType.MARKER, "Admin").buildNbt())
                         .build()
         );
@@ -2311,7 +2311,7 @@ public class Main {
         for (int i = 0; i < carePackageAmount; i++) {
             fileCommands.add(Execute.In(Dimension.overworld) +
                     Summon.create(EntityType.FALLING_BLOCK)
-                            .setPos(Vec3.create(0, 300, 0))
+                            .setPos(Vec3.absolute(0, 300, 0))
                             .setNbt(
                                     FallingBlockNbtBuilder.create(
                                             new FallingBlockData(
@@ -2709,7 +2709,7 @@ public class Main {
         fileCommands.add(PlaySound.create(perks.get(i).getSound())
                 .source(SoundSource.MASTER)
                 .targets(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
-                .pos(Vec3.create("~", "~50", "~"))
+                .pos(Vec3.relative(0, 50, 0))
                 .volume(100)
                 .build()
         );
