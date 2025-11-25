@@ -26,6 +26,7 @@ import commands.item.ItemAction;
 import commands.item.ItemTargetEntity;
 import commands.random.RandomAction;
 import commands.tag.TagAction;
+import commands.worldborder.WorldBorderAction;
 import controlpoints.ControlPoint;
 import controlpoints.ControlPointTag;
 import nbt.blockentity.*;
@@ -1401,7 +1402,9 @@ public class Main {
                 .build());
 
         // Set world border
-        fileCommands.add(CommandBuilder.setWorldBorder(2 * world.getSize()));
+        fileCommands.add(WorldBorder.create(WorldBorderAction.SET)
+                .distance(2 * world.getSize())
+                .build());
 
         // Display ranks
         fileCommands.add(Schedule.callFunction(FileName.display_rank));
@@ -2098,10 +2101,15 @@ public class Main {
         ArrayList<String> fileCommands = new ArrayList<>();
 
         // Set start worldborder size
-        fileCommands.add(CommandBuilder.setWorldBorder(400));
+        fileCommands.add(WorldBorder.create(WorldBorderAction.SET)
+                .distance(400)
+                .build());
 
         // Set destination worldborder size
-        fileCommands.add(CommandBuilder.setWorldBorder(20, 180));
+        fileCommands.add(WorldBorder.create(WorldBorderAction.SET)
+                .distance(20)
+                .time(180)
+                .build());
 
         // Teleport all living players
         fileCommands.add(Execute.In(Dimension.overworld) +
