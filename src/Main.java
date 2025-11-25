@@ -20,6 +20,7 @@ import arguments.targetselector.SelectorArgumentsBuilder;
 import arguments.targetselector.TargetSelector;
 import commands.*;
 import commands.Random;
+import commands.advancement.AdvancementAction;
 import commands.effect.EffectAction;
 import commands.experience.ExperienceAction;
 import commands.item.ItemAction;
@@ -1824,7 +1825,11 @@ public class Main {
         );
 
         // Revoke all advancements
-        fileCommands.add(CommandBuilder.revokeAdvancement("@a"));
+        fileCommands.add(Advancement.create(
+                AdvancementAction.REVOKE,
+                        Entity.ofSelector(TargetSelector.ALL_PLAYERS))
+                        .everything()
+                        .build());
 
         // Experience
         fileCommands.add(Experience.create(

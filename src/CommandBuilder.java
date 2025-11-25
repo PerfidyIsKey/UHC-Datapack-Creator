@@ -123,11 +123,6 @@ public class CommandBuilder {
         return "item replace entity " + targets + " " + slot.getCommandString() + " with " + item;
     }
 
-    // Advancements
-    public static String revokeAdvancement(String target) {
-        return "advancement revoke " + target + " everything";
-    }
-
     // Data
     public static String getData(String target, String path) {
         return "data get entity " + target + " " + path;
