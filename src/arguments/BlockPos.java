@@ -20,6 +20,10 @@ public class BlockPos {
         return new BlockPos("" + x, "" + y, "" + z);
     }
 
+    public static BlockPos absolute(int[] pos)  {
+        return new BlockPos("" + pos[0], "" + pos[1], "" + pos[2]);
+    }
+
     public static BlockPos relative(int x, int y, int z)  {
         return new BlockPos("~" + x, "~" + y, "~" + z);
     }

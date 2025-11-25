@@ -119,15 +119,6 @@ public class CommandBuilder {
         return "summon " + entity + " " + coordinate.getCoordinateString() + " " + nbt;
     }
 
-    // Teleportation
-    public static String teleportEntity(String entity, BlockPos coordinate) {
-        return "tp " + entity + " " + coordinate.toString();
-    }
-
-    public static String teleportEntity(String entity1, String entity2) {
-        return "tp " + entity1 + " " + entity2;
-    }
-
     public static String replaceItem(String targets, ItemSlot slot, String item) {
         return "item replace entity " + targets + " " + slot.getCommandString() + " with " + item;
     }

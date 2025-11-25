@@ -23,6 +23,10 @@ public class Vec3 {
         return new Vec3("" + x, "" + y, "" + z);
     }
 
+    public static Vec3 absolute(int[] pos)  {
+        return new Vec3("" + pos[0], "" + pos[1], "" + pos[2]);
+    }
+
     public static Vec3 relative(double x, double y, double z)  {
         return new Vec3("~" + x, "~" + y, "~" + z);
     }
