@@ -226,7 +226,7 @@ public class Main {
         String filePath = "Server\\server.properties";
 
         // Override fields
-        properties.set("difficulty", Difficulty.hard);
+        properties.set("difficulty", DifficultyId.HARD);
         properties.set("enable-command-block", true);
         properties.set("gamemode", GameMode.ADVENTURE);
         properties.set("level-seed", -2901703172L);
@@ -927,7 +927,9 @@ public class Main {
         fileCommands.add(CommandBuilder.setGameRule(GameRule.doWeatherCycle, false));
 
         // Set difficulty
-        fileCommands.add(CommandBuilder.setDifficulty(Difficulty.hard));
+        fileCommands.add(Difficulty.create()
+                .difficulty(DifficultyId.HARD)
+                .build());
 
         // Set default gamemode
         fileCommands.add(SetGameMode.create(GameMode.ADVENTURE)
