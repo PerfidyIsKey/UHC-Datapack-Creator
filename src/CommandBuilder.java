@@ -87,11 +87,6 @@ public class CommandBuilder {
         return setBlock(x, y, z, blockType) + " " + type;
     }
 
-    // Set world spawn
-    public static String setWorldSpawn(Coordinate coordinate) {
-        return "setworldspawn " + coordinate.getCoordinateString();
-    }
-
     public static String summonEntity(EntityType entity, Coordinate coordinate, String nbt) {
         return "summon " + entity + " " + coordinate.getCoordinateString() + " " + nbt;
     }

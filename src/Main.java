@@ -947,7 +947,9 @@ public class Main {
         );
 
         // Set world spawn
-        fileCommands.add(CommandBuilder.setWorldSpawn(new Coordinate(0, 221, 0)));
+        fileCommands.add(SetWorldSpawn.create()
+                .pos(BlockPos.absolute(0, 221, 0))
+                .build());
 
         // Create scoreboard objectives
         for (ScoreboardObjective objective : scoreboardObjectives) {
