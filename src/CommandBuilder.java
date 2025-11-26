@@ -87,19 +87,6 @@ public class CommandBuilder {
         return setBlock(x, y, z, blockType) + " " + type;
     }
 
-    // Gamerules
-    public static String setGameRule(GameRule gamerule, boolean bool) {
-        return setGameRule(gamerule, "" + bool);
-    }
-
-    public static String setGameRule(GameRule gamerule, int num) {
-        return setGameRule(gamerule, "" + num);
-    }
-
-    public static String setGameRule(GameRule gamerule, String string) {
-        return "gamerule " + gamerule + " " + string;
-    }
-
     // Set world spawn
     public static String setWorldSpawn(Coordinate coordinate) {
         return "setworldspawn " + coordinate.getCoordinateString();
