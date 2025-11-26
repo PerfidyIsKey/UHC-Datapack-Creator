@@ -5,7 +5,10 @@ package shared.attributes;
  */
 public enum AttributeId {
     ARMOR("armor"),
-    ATTACK_DAMAGE("attack_damage");
+    ATTACK_DAMAGE("attack_damage"),
+    MAX_HEALTH("max_health"),
+    SCALE("scale"),
+    WAYPOINT_TRANSMIT_RANGE("waypoint_transmit_range");
     // ... add all other attributes as needed
 
     private final String resourceLocation;
@@ -16,6 +19,11 @@ public enum AttributeId {
     }
 
     public String getResourceLocation() {
+        return resourceLocation;
+    }
+
+    @Override
+    public String toString() {
         return resourceLocation;
     }
 }
