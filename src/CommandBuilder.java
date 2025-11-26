@@ -1,4 +1,3 @@
-import arguments.BlockPos;
 import Enums.*;
 import HelperClasses.*;
 import controlpoints.ControlPointTag;
@@ -103,11 +102,6 @@ public class CommandBuilder {
     public static String setAttributeBaseMultiple(String targets, AttributeType attribute, double value) {
         return Execute.As(targets) +
                 "attribute @s " + attribute + " base set " + value;
-    }
-
-    // Difficulty
-    public static String setDifficulty(Difficulty difficulty) {
-        return "difficulty " + difficulty;
     }
 
     // Set world spawn
