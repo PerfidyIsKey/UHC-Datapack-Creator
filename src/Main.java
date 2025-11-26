@@ -369,7 +369,7 @@ public class Main {
 
             // Perks
             perks.add(new Perk(1, new StatusEffect(EffectId.SPEED, 999999, 0, false), SoundId.BASALT, 3 * singleton.getMinToCPScore()));
-            perks.add(new Perk(2, new Attribute(AttributeType.SCALE, 0.8), SoundId.CRIMSON, 6 * singleton.getMinToCPScore()));
+            perks.add(new Perk(2, Attribute.create(Entity.ofSelector(TargetSelector.SENDER), AttributeId.SCALE).value(0.8), SoundId.CRIMSON, 6 * singleton.getMinToCPScore()));
             perks.add(new Perk(3, new StatusEffect(EffectId.HASTE, 999999, 2, false), SoundId.WARPED, 12 * singleton.getMinToCPScore()));
             perks.add(new Perk(4, new StatusEffect(EffectId.ABSORPTION, 999999, 1, false), SoundId.WITHER, 15 * singleton.getMinToCPScore()));
         }
@@ -1421,8 +1421,16 @@ public class Main {
         }
 
         // Reset player attributes
-        fileCommands.add(CommandBuilder.setAttributeBaseMultiple("@a", AttributeType.SCALE, 1));
-        fileCommands.add(CommandBuilder.setAttributeBaseMultiple("@a", AttributeType.WAYPOINT_TRANSMIT_RANGE, 0));
+        fileCommands.add(Execute.As("@a") +
+                Attribute.create(
+                        Entity.ofSelector(TargetSelector.SENDER),
+                        AttributeId.SCALE)
+                                .setBase(1));
+        fileCommands.add(Execute.As("@a") +
+                Attribute.create(
+                                Entity.ofSelector(TargetSelector.SENDER),
+                                AttributeId.WAYPOINT_TRANSMIT_RANGE)
+                        .setBase(0));
 
         // Set gamemode of player executing the command to creative
         fileCommands.add(SetGameMode.create(GameMode.CREATIVE)
@@ -2899,7 +2907,10 @@ public class Main {
 
             fileCommands.add(Execute.As(respawnPlayerOld, false) +
                     Execute.IfNext("@e[scores={MinHealth=" + indexFront + ".." + indexRear + "}]", true) +
-                    CommandBuilder.setAttributeBase("@s", AttributeType.MAX_HEALTH, i + 1));
+                    Attribute.create(
+                                    Entity.ofSelector(TargetSelector.SENDER),
+                                    AttributeId.MAX_HEALTH)
+                            .setBase(i + 1));
         }
         fileCommands.add(Effect.create(EffectAction.GIVE)
                 .targets(respawnPlayer)
@@ -2911,7 +2922,11 @@ public class Main {
                 .targets(respawnPlayer)
                 .effect(EffectId.HEALTH_BOOST)
                 .build());
-        fileCommands.add(CommandBuilder.setAttributeBaseMultiple(respawnPlayerOld, AttributeType.MAX_HEALTH, 20));
+        fileCommands.add(Execute.As(respawnPlayerOld) +
+                Attribute.create(
+                                Entity.ofSelector(TargetSelector.SENDER),
+                                AttributeId.MAX_HEALTH)
+                        .setBase(20));
 
         // Set player's gamemode to survival
         fileCommands.add(Execute.As(respawnPlayerOld) +
@@ -3193,7 +3208,10 @@ public class Main {
         // Set tamed wolf base health
         fileCommands.add(Execute.As("@e[type=" + EntityType.WOLF + "]", false) +
                 Execute.IfNext(DataClasses.entity, "@s Owner", true) +
-                CommandBuilder.setAttributeBase("@s", AttributeType.MAX_HEALTH, 20));
+                Attribute.create(
+                        Entity.ofSelector(TargetSelector.SENDER),
+                        AttributeId.MAX_HEALTH)
+                        .setBase(20));
 
         return new FileData(FileName.wolf_updates, fileCommands);
     }

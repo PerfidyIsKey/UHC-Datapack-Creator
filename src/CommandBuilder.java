@@ -1,7 +1,12 @@
 import Enums.*;
 import HelperClasses.*;
+import arguments.Entity;
+import arguments.targetselector.SelectorArgumentsBuilder;
+import arguments.targetselector.TargetSelector;
+import commands.Attribute;
 import controlpoints.ControlPointTag;
 import shared.*;
+import shared.attributes.AttributeId;
 
 import java.util.ArrayList;
 
@@ -93,15 +98,6 @@ public class CommandBuilder {
 
     public static String setGameRule(GameRule gamerule, String string) {
         return "gamerule " + gamerule + " " + string;
-    }
-
-    public static String setAttributeBase(String target, AttributeType attribute, double value) {
-        return "attribute " + target + " " + attribute + " base set " + value;
-    }
-
-    public static String setAttributeBaseMultiple(String targets, AttributeType attribute, double value) {
-        return Execute.As(targets) +
-                "attribute @s " + attribute + " base set " + value;
     }
 
     // Set world spawn
@@ -207,7 +203,13 @@ public class CommandBuilder {
         fileCommands.add(summonEntity(EntityType.ARMOR_STAND, coordinate, "{Invulnerable:1b,Marker:1b,Invisible:1b,Tags:[\"" + tag + "\"]}"));
 
         // Set transmit range of waypoint
-        fileCommands.add(setAttributeBase("@n[tag=" + tag + "]", AttributeType.WAYPOINT_TRANSMIT_RANGE, Main.world.getFullSize()));
+        fileCommands.add(Attribute.create(
+                        Entity.ofSelector(
+                                TargetSelector.NEAREST_ENTITY,
+                                SelectorArgumentsBuilder.create()
+                                        .tag(tag)),
+                        AttributeId.WAYPOINT_TRANSMIT_RANGE)
+                .setBase(Main.world.getFullSize()));
 
         // Set color of waypoint to white
         fileCommands.add(modifyWaypointColor("@n[tag=" + tag + "]"));
