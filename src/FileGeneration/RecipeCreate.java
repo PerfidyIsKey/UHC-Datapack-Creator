@@ -2,14 +2,14 @@ package FileGeneration;
 
 import java.util.ArrayList;
 
-public class Recipe {
+public class RecipeCreate {
     private String type;
     private String[] grid;
     private ArrayList<String> keys;
     private String resultItem;
     private int resultAmount;
 
-    public Recipe(String type, String[] grid, ArrayList<String> keys, String resultItem, int resultAmount) {
+    public RecipeCreate(String type, String[] grid, ArrayList<String> keys, String resultItem, int resultAmount) {
         this.type = type;
         this.grid = grid;
         this.keys = keys;

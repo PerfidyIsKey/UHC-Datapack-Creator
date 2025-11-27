@@ -30,6 +30,7 @@ import commands.experience.ExperienceAction;
 import commands.item.ItemAction;
 import commands.item.ItemTargetEntity;
 import commands.random.RandomAction;
+import commands.recipe.RecipeAction;
 import commands.tag.TagAction;
 import commands.worldborder.WorldBorderAction;
 import controlpoints.ControlPoint;
@@ -1832,7 +1833,11 @@ public class Main {
 
         // Recipes
         // fileCommands.add(giveRecipe("@a", Block.GOLDEN_APPLE.setNamespace(Namespace.uhc)));
-        fileCommands.add(CommandBuilder.takeRecipe("@a", "uhc:dragon_head"));
+        fileCommands.add(Recipe.create(
+                        RecipeAction.TAKE,
+                        Entity.ofSelector(TargetSelector.ALL_PLAYERS))
+                .recipe(RecipeId.DRAGON_HEAD)
+                .build());
 
         // Remove resistance
         fileCommands.add(Effect.create(EffectAction.CLEAR)

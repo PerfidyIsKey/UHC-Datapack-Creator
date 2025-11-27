@@ -114,23 +114,6 @@ public class CommandBuilder {
         return "time set " + time;
     }
 
-    // Recipes
-    public static String giveRecipe(String targets, StaticBlockId recipe) {
-        return "recipe give " + targets + " " + recipe;
-    }
-
-    public static String giveRecipe(String targets, String recipe) {
-        return "recipe give " + targets + " " + recipe;
-    }
-
-    public static String takeRecipe(String targets, StaticBlockId recipe) {
-        return "recipe take " + targets + " " + recipe;
-    }
-
-    public static String takeRecipe(String targets, String recipe) {
-        return "recipe take " + targets + " " + recipe;
-    }
-
     // Potions
     public static String giveSplashPotion(String targets, int slotNumber, EffectId effect, String colorHex, String displayName, String lore) {
         // Convert hex to decimal
