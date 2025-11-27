@@ -1,8 +1,6 @@
-package Enums;
+package shared;
 
-import java.util.EnumSet;
-
-public enum Block {
+public enum StaticBlockId implements BlockId {
     AIR("air"),
     AMETHYST_BLOCK("amethyst_block"),
     ANVIL("anvil"),
@@ -20,13 +18,7 @@ public enum Block {
     BRICKS("bricks"),
     BUNDLE("bundle"),
     CAVE_AIR("cave_air"),
-    CHERRY_WALL_SIGN(
-            "cherry_wall_sign",
-            EnumSet.of(
-                    BlockProperty.FACING,
-                    BlockProperty.WATERLOGGED
-                    )
-    ),
+    CHERRY_WALL_SIGN("cherry_wall_sign"),
     CHEST("chest"),
     COBWEB("cobweb"),
     COPPER_BLOCK("copper_block"),
@@ -56,10 +48,7 @@ public enum Block {
     IRON_INGOT("iron_ingot"),
     IRON_LEGGINGS("iron_leggings"),
     IRON_SWORD("iron_sword"),
-    JUKEBOX(
-            "jukebox",
-            EnumSet.of(BlockProperty.HAS_RECORD)
-    ),
+    JUKEBOX("jukebox"),
     LADDER("ladder"),
     LAPIS_LAZULI("lapis_lazuli"),
     LAVA("lava"),
@@ -84,10 +73,7 @@ public enum Block {
     SPYGLASS("spyglass"),
     STAINED_GLASS("stained_glass"),
     STICK("stick"),
-    STRUCTURE_BLOCK(
-            "structure_block",
-            EnumSet.of(BlockProperty.MODE)
-            ),
+    STRUCTURE_BLOCK("structure_block"),
     SUSPICIOUS_STEW("suspicious_stew"),
     TNT("tnt"),
     TRIDENT("trident"),
@@ -98,49 +84,30 @@ public enum Block {
     WOLF_SPAWN_EGG("wolf_spawn_egg"),
     WRITTEN_BOOK("written_book");
 
-    private final String id;
-    private EnumSet<BlockProperty> validProperties;
-    private EnumSet<BlockTag> validTags;
+    private final String resourceLocation;
+    private static final String DEFAULT_NAMESPACE = "minecraft";
 
-    Block(String id) {
-        this.id = id;
+    /**
+     * Constructor. Prefixes with "minecraft:" unless a namespace is already present.
+     */
+
+    StaticBlockId(String path, String namespace) {
+        this.resourceLocation = namespace + ":" + path;
     }
 
-    Block(String id, EnumSet<BlockProperty> validProperties, EnumSet<BlockTag> validTags) {
-        this.id = id;
-        this.validProperties = validProperties;
-        this.validTags = validTags;
+    StaticBlockId(String path) {
+        this.resourceLocation = DEFAULT_NAMESPACE + ":" + path;
     }
 
-    Block(String id, EnumSet<BlockProperty> validProperties) {
-        this.id = id;
-        this.validProperties = validProperties;
+    /**
+     * Returns the resource location of the block.
+     */
+    public String getResourceLocation() {
+        return resourceLocation;
     }
-
-    public String getId() {
-        return id;
-    }
-
-    public EnumSet<BlockProperty> getValidProperties() {
-        return validProperties;
-    }
-
-    public EnumSet<BlockTag> getValidTags() {
-        return validTags;
-    }
-
-    public String setNamespace(Namespace namespace) {
-        return namespace + ":" + id;
-    }
-
-    public String extendColor(String color) {
-        return "minecraft:" + color + "_" + id;
-    }
-
-    public String addNBT(String nbt) { return "minecraft:" + id + nbt; }
 
     @Override
     public String toString() {
-        return "minecraft:" + id;
+        return resourceLocation;
     }
 }

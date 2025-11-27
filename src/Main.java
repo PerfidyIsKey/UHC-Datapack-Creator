@@ -437,86 +437,86 @@ public class Main {
         ArrayList<ItemModifier> functions = new ArrayList<>();
 
         // Entry #1
-        entries.add(new LootTableEntry(17, Block.EGG));
+        entries.add(new LootTableEntry(17, ItemId.EGG));
 
         // Entry #2
-        entries.add(new LootTableEntry(17, Block.LADDER, new SetCount(10)));
+        entries.add(new LootTableEntry(17, ItemId.LADDER, new SetCount(10)));
 
         // Entry #3
-        entries.add(new LootTableEntry(15, Block.STICK, new SetCount(8)));
+        entries.add(new LootTableEntry(15, ItemId.STICK, new SetCount(8)));
 
         // Entry #4
-        entries.add(new LootTableEntry(15, Block.DIORITE, new SetCount(16)));
+        entries.add(new LootTableEntry(15, ItemId.DIORITE, new SetCount(16)));
 
         // Entry #5
-        entries.add(new LootTableEntry(15, Block.AMETHYST_BLOCK, new SetCount(16)));
+        entries.add(new LootTableEntry(15, ItemId.AMETHYST_BLOCK, new SetCount(16)));
 
         // Entry #6
-        entries.add(new LootTableEntry(15, Block.IRON_INGOT, new SetCount(8)));
+        entries.add(new LootTableEntry(15, ItemId.IRON_INGOT, new SetCount(8)));
 
         // Entry #7
-        entries.add(new LootTableEntry(14, Block.ARROW, new SetCount(10)));
+        entries.add(new LootTableEntry(14, ItemId.ARROW, new SetCount(10)));
 
         // Entry #8
-        entries.add(new LootTableEntry(11, Block.BONE, new SetCount(3, new RandomChance(0.4))));
+        entries.add(new LootTableEntry(11, ItemId.BONE, new SetCount(3, new RandomChance(0.4))));
 
         // Entry #9
-        entries.add(new LootTableEntry(10, Block.COPPER_BLOCK, new SetCount(16)));
+        entries.add(new LootTableEntry(10, ItemId.COPPER_BLOCK, new SetCount(16)));
 
         // Entry #10
-        entries.add(new LootTableEntry(10, Block.BREAD, new SetCount(5)));
+        entries.add(new LootTableEntry(10, ItemId.BREAD, new SetCount(5)));
 
         // Entry #11
-        entries.add(new LootTableEntry(10, Block.COBWEB, new SetCount(2, new RandomChance(0.4))));
+        entries.add(new LootTableEntry(10, ItemId.COBWEB, new SetCount(2, new RandomChance(0.4))));
 
         // Entry #12
         Enchantments enchantment = new Enchantments(EnchantmentType.LURE, 3);
-        entries.add(new LootTableEntry(8, Block.FISHING_ROD, new SetComponents(enchantment)));
+        entries.add(new LootTableEntry(8, ItemId.FISHING_ROD, new SetComponents(enchantment)));
 
         // Entry #13
-        entries.add(new LootTableEntry(8, Block.OBSIDIAN, new SetCount(4)));
+        entries.add(new LootTableEntry(8, ItemId.OBSIDIAN, new SetCount(4)));
 
         // Entry #14
-        entries.add(new LootTableEntry(7, Block.GLASS, new SetCount(3)));
+        entries.add(new LootTableEntry(7, ItemId.GLASS, new SetCount(3)));
 
         // Entry #15
-        entries.add(new LootTableEntry(7, Block.MELON_SLICE, new SetCount(3, new RandomChance(0.4))));
+        entries.add(new LootTableEntry(7, ItemId.MELON_SLICE, new SetCount(3, new RandomChance(0.4))));
 
         // Entry #16
-        entries.add(new LootTableEntry(5, Block.TNT, new SetCount(4)));
+        entries.add(new LootTableEntry(5, ItemId.TNT, new SetCount(4)));
 
         // Entry #17
-        entries.add(new LootTableEntry(5, Block.EXPERIENCE_BOTTLE, new SetCount(3, new RandomChance(0.2))));
+        entries.add(new LootTableEntry(5, ItemId.EXPERIENCE_BOTTLE, new SetCount(3, new RandomChance(0.2))));
 
         // Entry #18
-        entries.add(new LootTableEntry(5, Block.BOOK));
+        entries.add(new LootTableEntry(5, ItemId.BOOK));
 
         // Entry #19
-        entries.add(new LootTableEntry(5, Block.REDSTONE, new SetCount(16)));
+        entries.add(new LootTableEntry(5, ItemId.REDSTONE, new SetCount(16)));
 
         // Entry #20
-        entries.add(new LootTableEntry(5, Block.GUNPOWDER, new SetCount(16)));
+        entries.add(new LootTableEntry(5, ItemId.GUNPOWDER, new SetCount(16)));
 
         // Entry #21
-        entries.add(new LootTableEntry(5, Block.GOLD_INGOT, new SetCount(4, new RandomChance(0.3))));
+        entries.add(new LootTableEntry(5, ItemId.GOLD_INGOT, new SetCount(4, new RandomChance(0.3))));
 
         // Entry #22
-        entries.add(new LootTableEntry(5, Block.LAPIS_LAZULI, new SetCount(10)));
+        entries.add(new LootTableEntry(5, ItemId.LAPIS_LAZULI, new SetCount(10)));
 
         // Entry #23
-        entries.add(new LootTableEntry(4, Block.LAVA_BUCKET));
+        entries.add(new LootTableEntry(4, ItemId.LAVA_BUCKET));
 
         // Entry #24
-        entries.add(new LootTableEntry(4, Block.APPLE, new SetCount(2, new RandomChance(0.3))));
+        entries.add(new LootTableEntry(4, ItemId.APPLE, new SetCount(2, new RandomChance(0.3))));
 
         // Entry #25
-        entries.add(new LootTableEntry(2, Block.DIAMOND, new SetCount(2, new RandomChance(0.3))));
+        entries.add(new LootTableEntry(2, ItemId.DIAMOND, new SetCount(2, new RandomChance(0.3))));
 
         // Entry #26
-        entries.add(new LootTableEntry(3, Block.SADDLE));
+        entries.add(new LootTableEntry(3, ItemId.SADDLE));
 
         // Entry #27
-        entries.add(new LootTableEntry(3, Block.SPECTRAL_ARROW, new SetCount(10)));
+        entries.add(new LootTableEntry(3, ItemId.SPECTRAL_ARROW, new SetCount(10)));
 
         // Entry #28
         ArrayList<Attributes> attributes = new ArrayList<>();
@@ -530,49 +530,49 @@ public class Main {
         functions.add(new SetComponents(horse));
         functions.add(name);
 
-        entries.add(new LootTableEntry(10, Block.HORSE_SPAWN_EGG, functions));
+        entries.add(new LootTableEntry(10, ItemId.HORSE_SPAWN_EGG, functions));
         functions = new ArrayList<>();
 
         // Entry #29
-        entries.add(new LootTableEntry(3, Block.GLOWSTONE_DUST, new SetCount(6)));
+        entries.add(new LootTableEntry(3, ItemId.GLOWSTONE_DUST, new SetCount(6)));
 
         // Entry #30
-        entries.add(new LootTableEntry(3, Block.ENDER_PEARL, new SetCount(2, new RandomChance(0.5))));
+        entries.add(new LootTableEntry(3, ItemId.ENDER_PEARL, new SetCount(2, new RandomChance(0.5))));
 
         // Entry #31
-        entries.add(new LootTableEntry(2, Block.NETHER_WART, new SetCount(5)));
+        entries.add(new LootTableEntry(2, ItemId.NETHER_WART, new SetCount(5)));
 
         // Entry #32
-        entries.add(new LootTableEntry(2, Block.BLAZE_ROD, new SetCount(2, new RandomChance(0.1))));
+        entries.add(new LootTableEntry(2, ItemId.BLAZE_ROD, new SetCount(2, new RandomChance(0.1))));
 
         // Entry #33
-        entries.add(new LootTableEntry(2, Block.GOLDEN_APPLE));
+        entries.add(new LootTableEntry(2, ItemId.GOLDEN_APPLE));
 
         // Entry #34
-        entries.add(new LootTableEntry(2, Block.ANVIL));
+        entries.add(new LootTableEntry(2, ItemId.ANVIL));
 
         // Entry #35
-        entries.add(new LootTableEntry(4, Block.SPYGLASS));
+        entries.add(new LootTableEntry(4, ItemId.SPYGLASS));
 
         // Entry #36
-        entries.add(new LootTableEntry(2, Block.WOLF_SPAWN_EGG, new SetCount(2, new RandomChance(0.01))));
+        entries.add(new LootTableEntry(2, ItemId.WOLF_SPAWN_EGG, new SetCount(2, new RandomChance(0.01))));
 
         // Entry #37
-        entries.add(new LootTableEntry(1, Block.DIAMOND_HORSE_ARMOR));
+        entries.add(new LootTableEntry(1, ItemId.DIAMOND_HORSE_ARMOR));
 
         // Entry #38
-        entries.add(new LootTableEntry(1, Block.NETHERITE_HOE));
+        entries.add(new LootTableEntry(1, ItemId.NETHERITE_HOE));
 
         // Entry #39
         enchantment = new Enchantments(EnchantmentType.LOYALTY, 3);
-        entries.add(new LootTableEntry(1, Block.TRIDENT, new SetComponents(enchantment)));
+        entries.add(new LootTableEntry(1, ItemId.TRIDENT, new SetComponents(enchantment)));
 
         // Entry #40
-        entries.add(new LootTableEntry(1, Block.NETHERITE_UPGRADE_SMITHING_TEMPLATE));
+        entries.add(new LootTableEntry(1, ItemId.NETHERITE_UPGRADE_SMITHING_TEMPLATE));
 
         // Entry #42
         RandomChance condition = new RandomChance(0.001);
-        entries.add(new LootTableEntry(1, Block.NETHERITE_SCRAP, new SetCount(4, condition)));
+        entries.add(new LootTableEntry(1, ItemId.NETHERITE_SCRAP, new SetCount(4, condition)));
 
         // Entry #43
         PotionContents contents = new PotionContents(EffectId.LUCK, 0, 600, "59C106", true, false, true);
@@ -581,7 +581,7 @@ public class Main {
         functions.add(new SetComponents(contents));
         functions.add(name);
 
-        entries.add(new LootTableEntry(2, Block.SPLASH_POTION, functions));
+        entries.add(new LootTableEntry(2, ItemId.SPLASH_POTION, functions));
         functions = new ArrayList<>();
 
         // Entry #44
@@ -591,7 +591,7 @@ public class Main {
         functions.add(new SetComponents(contents));
         functions.add(name);
 
-        entries.add(new LootTableEntry(2, Block.SPLASH_POTION, functions));
+        entries.add(new LootTableEntry(2, ItemId.SPLASH_POTION, functions));
         functions = new ArrayList<>();
 
         // Entry #45
@@ -607,7 +607,7 @@ public class Main {
         functions.add(name);
         functions.add(count);
 
-        entries.add(new LootTableEntry(2, Block.SPLASH_POTION, functions));
+        entries.add(new LootTableEntry(2, ItemId.SPLASH_POTION, functions));
         functions = new ArrayList<>();
         components = new ArrayList<>();
 
@@ -623,7 +623,7 @@ public class Main {
         functions.add(new SetComponents(horse));
         functions.add(name);
 
-        entries.add(new LootTableEntry(2, Block.HORSE_SPAWN_EGG, functions));
+        entries.add(new LootTableEntry(2, ItemId.HORSE_SPAWN_EGG, functions));
         functions = new ArrayList<>();
 
         // Entry #47
@@ -697,7 +697,7 @@ public class Main {
         texts = new ArrayList<>();
 
         components.add(new WrittenBookContent(title, author, pages));
-        entries.add(new LootTableEntry(1, Block.WRITTEN_BOOK, new SetComponents(components)));
+        entries.add(new LootTableEntry(1, ItemId.WRITTEN_BOOK, new SetComponents(components)));
         components = new ArrayList<>();
 
         // Entry #48
@@ -749,11 +749,11 @@ public class Main {
         texts = new ArrayList<>();
 
         components.add(new WrittenBookContent(title, author, pages));
-        entries.add(new LootTableEntry(1, Block.WRITTEN_BOOK, new SetComponents(components)));
+        entries.add(new LootTableEntry(1, ItemId.WRITTEN_BOOK, new SetComponents(components)));
         components = new ArrayList<>();
 
         // Entry #49
-        entries.add(new LootTableEntry(2, Block.WIND_CHARGE, new SetCount(5)));
+        entries.add(new LootTableEntry(2, ItemId.WIND_CHARGE, new SetCount(5)));
 
         // Make loot table
         LootTable lTable = new LootTable(type, rolls, bonusRolls, entries);
@@ -968,21 +968,21 @@ public class Main {
         Fill cmd = Fill.create(
                 BlockPos.absolute(-6, 220, -6),
                 BlockPos.absolute(6, 226, 6),
-                new BlockState(Block.BARRIER)
+                new BlockState(StaticBlockId.BARRIER)
         );
         fileCommands.add(Execute.In(Dimension.overworld) +
                 cmd.build());
         cmd = Fill.create(
                 BlockPos.absolute(-5, 221, -5),
                 BlockPos.absolute(6, 226, 5),
-                new BlockState(Block.AIR)
+                new BlockState(StaticBlockId.AIR)
         );
         fileCommands.add(Execute.In(Dimension.overworld) +
                 cmd.build());
 
         SetBlock sb = SetBlock.create(
                 BlockPos.absolute(0, 222, -5),
-                new BlockState(Block.CHERRY_WALL_SIGN)
+                new BlockState(StaticBlockId.CHERRY_WALL_SIGN)
                         .with(BlockProperty.FACING, Direction.SOUTH)
                         .with(BlockProperty.WATERLOGGED, false)
                         .with(new SignEntity("")
@@ -1177,14 +1177,14 @@ public class Main {
         Fill cmd = Fill.create(
                 BlockPos.absolute(currentCP.getCoordinate().getX() - 1, currentCP.getCoordinate().getY() - 1, currentCP.getCoordinate().getZ() - 1),
                 BlockPos.absolute(currentCP.getCoordinate().getX() + 1, currentCP.getCoordinate().getY() - 1, currentCP.getCoordinate().getZ() + 1),
-                new BlockState(Block.EMERALD_BLOCK)
+                new BlockState(StaticBlockId.EMERALD_BLOCK)
         );
         fileCommands.add(Execute.In(currentCP.getCoordinate().getDimension()) +
                 cmd.build());
 
         SetBlock sb = SetBlock.create(
                 BlockPos.absolute(currentCP.getCoordinate().getX(), currentCP.getCoordinate().getY(), currentCP.getCoordinate().getZ()),
-                new BlockState(Block.BEACON)
+                new BlockState(StaticBlockId.BEACON)
         );
         fileCommands.add(Execute.In(currentCP.getCoordinate().getDimension()) +
                 sb.build());
@@ -1413,7 +1413,7 @@ public class Main {
         // Create jukebox at 0,0
         SetBlock sb = SetBlock.create(
                 BlockPos.absolute(startCoordinate),
-                new BlockState(Block.JUKEBOX)
+                new BlockState(StaticBlockId.JUKEBOX)
                         .with(BlockProperty.HAS_RECORD, true)
                         .with(new JukeboxEntity("")
                                 .setRecord(ItemId.MUSIC_DISC_STAL, (byte) 1)
@@ -1834,7 +1834,7 @@ public class Main {
 
         // Recipes
         // fileCommands.add(giveRecipe("@a", Block.GOLDEN_APPLE.setNamespace(Namespace.uhc)));
-        fileCommands.add(CommandBuilder.takeRecipe("@a", Block.DRAGON_HEAD.setNamespace(Namespace.uhc)));
+        fileCommands.add(CommandBuilder.takeRecipe("@a", "uhc:dragon_head"));
 
         // Remove resistance
         fileCommands.add(Effect.create(EffectAction.CLEAR)
@@ -2009,7 +2009,7 @@ public class Main {
         fileCommands.add(getBossbarByName("cp2").setVisible(true));
 
         // Remove CP1 reinforced deepslate block
-        fileCommands.addAll(CommandBuilder.forceLoadAndSet(controlPoints.get(0).getCoordinate().getX(), controlPoints.get(0).getCoordinate().getY() + 3, controlPoints.get(0).getCoordinate().getZ(), Block.AIR, SetBlockType.replace));
+        fileCommands.addAll(CommandBuilder.forceLoadAndSet(controlPoints.get(0).getCoordinate().getX(), controlPoints.get(0).getCoordinate().getY() + 3, controlPoints.get(0).getCoordinate().getZ(), StaticBlockId.AIR, SetBlockType.replace));
 
         // Summon armor stands for locator bar tracking
         for (ControlPoint controlPoint : controlPoints) {
@@ -2040,7 +2040,7 @@ public class Main {
         fileCommands.add(new TellRaw("@a", texts).sendRaw());
 
         // Remove reinforced deepslate from CP2
-        fileCommands.addAll(CommandBuilder.forceLoadAndSet(controlPoints.get(1).getCoordinate().getX(), controlPoints.get(1).getCoordinate().getY() + 3, controlPoints.get(1).getCoordinate().getZ(), controlPoints.get(1).getCoordinate().getDimension(), Block.AIR, SetBlockType.replace));
+        fileCommands.addAll(CommandBuilder.forceLoadAndSet(controlPoints.get(1).getCoordinate().getX(), controlPoints.get(1).getCoordinate().getY() + 3, controlPoints.get(1).getCoordinate().getZ(), controlPoints.get(1).getCoordinate().getDimension(), StaticBlockId.AIR, SetBlockType.replace));
 
         // Change bossbar text
         fileCommands.add(getBossbarByName("cp2").setTitle("CP2: " + controlPoints.get(1).getCoordinate().getX() + ", " + controlPoints.get(1).getCoordinate().getY() + ", " + controlPoints.get(1).getCoordinate().getZ() + " (" + controlPoints.get(1).getCoordinate().getDimensionName() + ") - FASTER!!"));
@@ -2587,7 +2587,7 @@ public class Main {
 
             SetBlock sb = SetBlock.create(
                     BlockPos.absolute(c.getX(), c.getY() + 11, c.getZ()),
-                    new BlockState(Block.STRUCTURE_BLOCK)
+                    new BlockState(StaticBlockId.STRUCTURE_BLOCK)
                             .with(BlockProperty.MODE, StructureBlockMode.LOAD)
                             .with(new StructureBlockEntity("")
                                     .setString(StructureBlockEntity.StructureDataKey.METADATA, "")
@@ -2615,7 +2615,7 @@ public class Main {
             // Activate structure block
             sb = SetBlock.create(
                     BlockPos.absolute(c.getX(), c.getY() + 10, c.getZ()),
-                    new BlockState(Block.REDSTONE_BLOCK)
+                    new BlockState(StaticBlockId.REDSTONE_BLOCK)
             ).mode(SetMode.DESTROY);
             fileCommands.add(Execute.In(c.getDimension()) +
                     sb.build());
@@ -2624,7 +2624,7 @@ public class Main {
             Fill cmd = Fill.create(
                     BlockPos.absolute(c.getX(), c.getY() + 12, c.getZ()),
                     BlockPos.absolute(c.getX(), Constant.worldHeight - 1, c.getZ()),
-                    new BlockState(Block.GLASS)
+                    new BlockState(StaticBlockId.GLASS)
             ).filter(
                     new BlockPredicate(RegistryTag.BLOCK_BEACON_LIGHT)
             );
@@ -2673,8 +2673,8 @@ public class Main {
         Fill cmd = Fill.create(
                 BlockPos.relative(-2, -2, -2),
                 BlockPos.relative(2, 0, 2),
-                new BlockState(Block.ICE)
-        ).filter(new BlockPredicate(Block.WATER));
+                new BlockState(StaticBlockId.ICE)
+        ).filter(new BlockPredicate(StaticBlockId.WATER));
         fileCommands.add(Execute.At("@a[nbt={RootVehicle:{Entity:{id:\"" + EntityType.HORSE + "\"}}}]") +
                 cmd.build());
 
@@ -2705,49 +2705,49 @@ public class Main {
 
         // Regeneration potions (normal + splash, strong, long)
         Text warning = new Text(TextColor.RED, true, false, "REGENERATION POTIONS ARE NOT ALLOWED, YOU NAUGHTY BUM!");
-        String target = "@p[nbt={SelectedItem:{id:\"" + Block.SPLASH_POTION + "\",count:1,components:{\"minecraft:potion_contents\":{potion:\"" + EffectId.REGENERATION.getPotionTag() + "\"}}}}]";
-        String replacement = Block.GLASS_BOTTLE.toString();
+        String target = "@p[nbt={SelectedItem:{id:\"" + ItemId.SPLASH_POTION + "\",count:1,components:{\"minecraft:potion_contents\":{potion:\"" + EffectId.REGENERATION.getPotionTag() + "\"}}}}]";
+        String replacement = ItemId.GLASS_BOTTLE.toString();
         fileCommands.addAll(CommandBuilder.warnAndReplace(target, warning, replacement));
-        target = "@p[nbt={SelectedItem:{id:\"" + Block.SPLASH_POTION + "\",count:1,components:{\"minecraft:potion_contents\":{potion:\"" + EffectId.REGENERATION.getPotionTag(true, false) + "\"}}}}]";
+        target = "@p[nbt={SelectedItem:{id:\"" + ItemId.SPLASH_POTION + "\",count:1,components:{\"minecraft:potion_contents\":{potion:\"" + EffectId.REGENERATION.getPotionTag(true, false) + "\"}}}}]";
         fileCommands.addAll(CommandBuilder.warnAndReplace(target, warning, replacement));
-        target = "@p[nbt={SelectedItem:{id:\"" + Block.SPLASH_POTION + "\",count:1,components:{\"minecraft:potion_contents\":{potion:\"" + EffectId.REGENERATION.getPotionTag(false, true) + "\"}}}}]";
+        target = "@p[nbt={SelectedItem:{id:\"" + ItemId.SPLASH_POTION + "\",count:1,components:{\"minecraft:potion_contents\":{potion:\"" + EffectId.REGENERATION.getPotionTag(false, true) + "\"}}}}]";
         fileCommands.addAll(CommandBuilder.warnAndReplace(target, warning, replacement));
-        target = "@p[nbt={SelectedItem:{id:\"" + Block.POTION + "\",count:1,components:{\"minecraft:potion_contents\":{potion:\"" + EffectId.REGENERATION.getPotionTag() + "\"}}}}]";
+        target = "@p[nbt={SelectedItem:{id:\"" + ItemId.POTION + "\",count:1,components:{\"minecraft:potion_contents\":{potion:\"" + EffectId.REGENERATION.getPotionTag() + "\"}}}}]";
         fileCommands.addAll(CommandBuilder.warnAndReplace(target, warning, replacement));
-        target = "@p[nbt={SelectedItem:{id:\"" + Block.POTION + "\",count:1,components:{\"minecraft:potion_contents\":{potion:\"" + EffectId.REGENERATION.getPotionTag(true, false) + "\"}}}}]";
+        target = "@p[nbt={SelectedItem:{id:\"" + ItemId.POTION + "\",count:1,components:{\"minecraft:potion_contents\":{potion:\"" + EffectId.REGENERATION.getPotionTag(true, false) + "\"}}}}]";
         fileCommands.addAll(CommandBuilder.warnAndReplace(target, warning, replacement));
-        target = "@p[nbt={SelectedItem:{id:\"" + Block.POTION + "\",count:1,components:{\"minecraft:potion_contents\":{potion:\"" + EffectId.REGENERATION.getPotionTag(false, true) + "\"}}}}]";
+        target = "@p[nbt={SelectedItem:{id:\"" + ItemId.POTION + "\",count:1,components:{\"minecraft:potion_contents\":{potion:\"" + EffectId.REGENERATION.getPotionTag(false, true) + "\"}}}}]";
         fileCommands.addAll(CommandBuilder.warnAndReplace(target, warning, replacement));
 
         // Strength II potions
         warning.setText("STRENGTH II POTIONS ARE NOT ALLOWED, YOU NAUGHTY BUM!");
-        target = "@p[nbt={SelectedItem:{id:\"" + Block.SPLASH_POTION + "\",count:1,components:{\"minecraft:potion_contents\":{potion:\"" + EffectId.STRENGTH.getPotionTag(true, false) + "\"}}}}]";
-        replacement = Block.SPLASH_POTION.addNBT("[potion_contents={potion:\"" + EffectId.STRENGTH.getPotionTag() + "\"}]");
+        target = "@p[nbt={SelectedItem:{id:\"" + ItemId.SPLASH_POTION + "\",count:1,components:{\"minecraft:potion_contents\":{potion:\"" + EffectId.STRENGTH.getPotionTag(true, false) + "\"}}}}]";
+        replacement = ItemId.SPLASH_POTION + "[potion_contents={potion:\"" + EffectId.STRENGTH.getPotionTag() + "\"}]";
         fileCommands.addAll(CommandBuilder.warnAndReplace(target, warning, replacement));
-        target = "@p[nbt={SelectedItem:{id:\"" + Block.POTION + "\",count:1,components:{\"minecraft:potion_contents\":{potion:\"" + EffectId.STRENGTH.getPotionTag(true, false) + "\"}}}}]";
-        replacement = Block.POTION.addNBT("[potion_contents={potion:\"" + EffectId.STRENGTH.getPotionTag() + "\"}]");
+        target = "@p[nbt={SelectedItem:{id:\"" + ItemId.POTION + "\",count:1,components:{\"minecraft:potion_contents\":{potion:\"" + EffectId.STRENGTH.getPotionTag(true, false) + "\"}}}}]";
+        replacement = ItemId.POTION + "[potion_contents={potion:\"" + EffectId.STRENGTH.getPotionTag() + "\"}]";
         fileCommands.addAll(CommandBuilder.warnAndReplace(target, warning, replacement));
 
         for (int ii = 0; ii < 5; ii++) {
             // Piercing enchantment
             warning.setText("PIERCING IS NOT ALLOWED, YOU NAUGHTY BUM!");
-            target = "@p[nbt={SelectedItem:{id:\"" + Block.CROSSBOW + "\",count:1,components:{\"minecraft:enchantments\":{\"" + EnchantmentType.PIERCING + "\":" + (ii + 1) + "}}}}]";
-            fileCommands.addAll(CommandBuilder.warnAndReplace(target, warning, Block.CROSSBOW));
+            target = "@p[nbt={SelectedItem:{id:\"" + ItemId.CROSSBOW + "\",count:1,components:{\"minecraft:enchantments\":{\"" + EnchantmentType.PIERCING + "\":" + (ii + 1) + "}}}}]";
+            fileCommands.addAll(CommandBuilder.warnAndReplace(target, warning, ItemId.CROSSBOW));
 
             // Power enchantment
             warning.setText("POWER IS NOT ALLOWED, YOU NAUGHTY BUM!");
-            target = "@p[nbt={SelectedItem:{id:\"" + Block.BOW + "\",count:1,components:{\"minecraft:enchantments\":{\"" + EnchantmentType.POWER + "\":" + (ii + 1) + "}}}}]";
-            fileCommands.addAll(CommandBuilder.warnAndReplace(target, warning, Block.BOW));
+            target = "@p[nbt={SelectedItem:{id:\"" + ItemId.BOW + "\",count:1,components:{\"minecraft:enchantments\":{\"" + EnchantmentType.POWER + "\":" + (ii + 1) + "}}}}]";
+            fileCommands.addAll(CommandBuilder.warnAndReplace(target, warning, ItemId.BOW));
         }
         // Wolf armor
         warning.setText("WOLF ARMOR IS NOT ALLOWED, YOU NAUGHTY BUM!");
-        target = "@p[nbt={SelectedItem:{id:\"" + Block.WOLF_ARMOR + "\",count:1}}]";
-        fileCommands.addAll(CommandBuilder.warnAndReplace(target, warning, Block.LEATHER_HORSE_ARMOR));
+        target = "@p[nbt={SelectedItem:{id:\"" + ItemId.WOLF_ARMOR + "\",count:1}}]";
+        fileCommands.addAll(CommandBuilder.warnAndReplace(target, warning, ItemId.LEATHER_HORSE_ARMOR));
 
         // Suspicious stew
         warning.setText("SUSPICIOUS STEW IS NOT ALLOWED, YOU NAUGHTY BUM!");
-        target = "@p[nbt={SelectedItem:{id:\"" + Block.SUSPICIOUS_STEW + "\",count:1}}]";
-        fileCommands.addAll(CommandBuilder.warnAndReplace(target, warning, Block.BOWL));
+        target = "@p[nbt={SelectedItem:{id:\"" + ItemId.SUSPICIOUS_STEW + "\",count:1}}]";
+        fileCommands.addAll(CommandBuilder.warnAndReplace(target, warning, ItemId.BOWL));
 
         return new FileData(FileName.remove_banned_items, fileCommands);
     }
@@ -2931,12 +2931,12 @@ public class Main {
         }
 
         // Remove player heads
-        fileCommands.add(Execute.As("@a[nbt={Inventory:[{id:\"" + Block.PLAYER_HEAD + "\"}]}]") +
+        fileCommands.add(Execute.As("@a[nbt={Inventory:[{id:\"" + ItemId.PLAYER_HEAD + "\"}]}]") +
                 Clear.create()
                         .targets(Entity.ofSelector(TargetSelector.SENDER))
                         .item(SimpleItemPredicate.create(ItemId.PLAYER_HEAD))
                         .build());  // Remove from inventory
-        fileCommands.add(Execute.As("@e[type=" + EntityType.ITEM + ",nbt={Item:{id:\"" + Block.PLAYER_HEAD + "\"}}]") +
+        fileCommands.add(Execute.As("@e[type=" + EntityType.ITEM + ",nbt={Item:{id:\"" + ItemId.PLAYER_HEAD + "\"}}]") +
                 Kill.create().targets(Entity.ofSelector(TargetSelector.SENDER)).build());   // Remove item
 
         // Teammate tracker
@@ -3165,7 +3165,7 @@ public class Main {
 
         for (Team t : teams) {
             for (int i = 0; i < 3; i++) {
-                fileCommands.add(Execute.As("@a[team=" + t.getName() + ",nbt={SelectedItem:{id:\"" + t.getDyeColor() + "_" + Block.BUNDLE + "\",components:{\"minecraft:custom_data\":{locateTeammate:1b}}}}]", false) +
+                fileCommands.add(Execute.As("@a[team=" + t.getName() + ",nbt={SelectedItem:{id:\"" + t.getDyeColor() + "_" + ItemId.BUNDLE + "\",components:{\"minecraft:custom_data\":{locateTeammate:1b}}}}]", false) +
                         Execute.AtNext("@s") +
                         Execute.IfNext("@a[team=" + t.getName() + ",distance=0.1..,gamemode=!spectator]") +
                         Execute.FacingNext("@a[team=" + t.getName() + ",distance=0.1..,gamemode=!spectator,limit=1,sort=random]", EntityAnchor.eyes) +

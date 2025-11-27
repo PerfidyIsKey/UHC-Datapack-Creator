@@ -1,4 +1,4 @@
-package Enums;
+package shared;
 
 public enum SetMode {
     DESTROY("destroy"),

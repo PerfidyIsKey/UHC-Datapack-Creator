@@ -1,16 +1,17 @@
 package arguments;
 import Enums.*;
+import shared.StaticBlockId;
 
 public class BlockPredicate {
     private final String block_id;
     private String block_states;
     private String data_tags;
 
-    public BlockPredicate(Block id) {
+    public BlockPredicate(StaticBlockId id) {
         this.block_id = id.toString();
     }
 
-    public BlockPredicate(Block id, String states, String tags) {
+    public BlockPredicate(StaticBlockId id, String states, String tags) {
         this.block_id = id.toString();
         this.block_states = states;
         this.data_tags = tags;
