@@ -1137,13 +1137,9 @@ public class Main {
                                                     Map.of(
                                                             ItemComponentType.PROFILE,
                                                             PlayerProfileComponentBuilder.build(
-                                                                    new PlayerProfileComponentData(p.getPlayerName())
-                                                            )
-                                                    )
-                                            )
-                                    ).buildNbt()
-                            )
-            );
+                                                                    new PlayerProfileComponentData(p.getPlayerName())))))
+                                            .buildNbt())
+                            .build());
         }
 
         return new FileData(FileName.drop_player_heads, fileCommands);
