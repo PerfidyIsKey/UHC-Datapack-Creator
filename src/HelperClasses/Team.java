@@ -2,7 +2,7 @@ package HelperClasses;
 
 import Enums.BossBarColor;
 import shared.TextColor;
-import shared.item.DyeColor;
+import shared.DyeColor;
 
 public class Team {
 

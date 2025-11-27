@@ -7,6 +7,7 @@ import commands.Attribute;
 import controlpoints.ControlPointTag;
 import shared.*;
 import shared.attributes.AttributeId;
+import shared.item.ItemId;
 
 import java.util.ArrayList;
 
@@ -17,7 +18,7 @@ public class CommandBuilder {
         return forceLoadAndSet(x, y, z, Dimension.overworld, blockType);
     }
 
-    public static ArrayList<String> forceLoadAndSet(int x, int y, int z, Block blockType) {
+    public static ArrayList<String> forceLoadAndSet(int x, int y, int z, StaticBlockId blockType) {
         return forceLoadAndSet(x, y, z, blockType + "");
     }
 
@@ -25,7 +26,7 @@ public class CommandBuilder {
         return forceLoadAndSet(x, y, z, Dimension.overworld, blockType, type);
     }
 
-    public static ArrayList<String> forceLoadAndSet(int x, int y, int z, Block blockType, SetBlockType type) {
+    public static ArrayList<String> forceLoadAndSet(int x, int y, int z, StaticBlockId blockType, SetBlockType type) {
         return forceLoadAndSet(x, y, z, blockType + "", type);
     }
 
@@ -40,7 +41,7 @@ public class CommandBuilder {
         return fileCommands;
     }
 
-    public static ArrayList<String> forceLoadAndSet(int x, int y, int z, Dimension dimension, Block blockType) {
+    public static ArrayList<String> forceLoadAndSet(int x, int y, int z, Dimension dimension, StaticBlockId blockType) {
         return forceLoadAndSet(x, y, z, dimension, blockType + "");
     }
 
@@ -55,7 +56,7 @@ public class CommandBuilder {
         return fileCommands;
     }
 
-    public static ArrayList<String> forceLoadAndSet(int x, int y, int z, Dimension dimension, Block blockType, SetBlockType type) {
+    public static ArrayList<String> forceLoadAndSet(int x, int y, int z, Dimension dimension, StaticBlockId blockType, SetBlockType type) {
         return forceLoadAndSet(x, y, z, dimension, blockType + "", type);
     }
 
@@ -114,7 +115,7 @@ public class CommandBuilder {
     }
 
     // Recipes
-    public static String giveRecipe(String targets, Block recipe) {
+    public static String giveRecipe(String targets, StaticBlockId recipe) {
         return "recipe give " + targets + " " + recipe;
     }
 
@@ -122,7 +123,7 @@ public class CommandBuilder {
         return "recipe give " + targets + " " + recipe;
     }
 
-    public static String takeRecipe(String targets, Block recipe) {
+    public static String takeRecipe(String targets, StaticBlockId recipe) {
         return "recipe take " + targets + " " + recipe;
     }
 
@@ -135,7 +136,7 @@ public class CommandBuilder {
         // Convert hex to decimal
         int potionColor = Integer.parseInt(colorHex, 16);
 
-        return "item replace entity " + targets + " " + ItemSlot.HOTBAR.withSlotNumber(slotNumber).getCommandString() + " with " + Block.SPLASH_POTION + "[potion_contents={custom_color:" + potionColor + ",custom_effects:[{id:\"" + effect + "\",amplifier:0,duration:200,show_particles:0b,show_icon:0b,ambient:0b}]},lore=[\"" + lore + "\"],custom_name=\"" + displayName + "\"]";
+        return "item replace entity " + targets + " " + ItemSlot.HOTBAR.withSlotNumber(slotNumber).getCommandString() + " with " + ItemId.SPLASH_POTION + "[potion_contents={custom_color:" + potionColor + ",custom_effects:[{id:\"" + effect + "\",amplifier:0,duration:200,show_particles:0b,show_icon:0b,ambient:0b}]},lore=[\"" + lore + "\"],custom_name=\"" + displayName + "\"]";
     }
 
     // Trigger
@@ -170,7 +171,7 @@ public class CommandBuilder {
         return fileCommands;
     }
 
-    public static ArrayList<String> warnAndReplace(String targets, TextItem warning, Block replacement) {
+    public static ArrayList<String> warnAndReplace(String targets, TextItem warning, ItemId replacement) {
         return warnAndReplace(targets, warning, replacement.toString());
     }
 

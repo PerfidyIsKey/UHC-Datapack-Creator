@@ -1,6 +1,7 @@
 package HelperClasses;
 
 import Enums.*;
+import shared.StaticBlockId;
 
 public class Execute {
 
@@ -341,35 +342,35 @@ public class Execute {
         execute unless
      */
     // unless block
-    public static String Unless(Coordinate coordinate, Block blockType) {
+    public static String Unless(Coordinate coordinate, StaticBlockId blockType) {
         return Unless(coordinate, blockType, true);
     }
 
-    public static String Unless(Coordinate coordinate, Block blockType, Boolean run) {
+    public static String Unless(Coordinate coordinate, StaticBlockId blockType, Boolean run) {
         return Standard(UnlessNext(coordinate, blockType), run);
     }
 
-    public static String UnlessNext(Coordinate coordinate, Block blockType) {
+    public static String UnlessNext(Coordinate coordinate, StaticBlockId blockType) {
         return UnlessNext(coordinate, blockType, false);
     }
 
-    public static String UnlessNext(Coordinate coordinate, Block blockType, Boolean run) {
+    public static String UnlessNext(Coordinate coordinate, StaticBlockId blockType, Boolean run) {
         return Next("unless block " + coordinate.getCoordinateString() + " " + blockType + " ", run);
     }
 
-    public static String Unless(int x, int y, int z, Block blockType) {
+    public static String Unless(int x, int y, int z, StaticBlockId blockType) {
         return Unless(x, y, z, blockType, true);
     }
 
-    public static String Unless(int x, int y, int z, Block blockType, Boolean run) {
+    public static String Unless(int x, int y, int z, StaticBlockId blockType, Boolean run) {
         return Standard(UnlessNext(x, y, z, blockType), run);
     }
 
-    public static String UnlessNext(int x, int y, int z, Block blockType) {
+    public static String UnlessNext(int x, int y, int z, StaticBlockId blockType) {
         return UnlessNext(x, y, z, blockType, false);
     }
 
-    public static String UnlessNext(int x, int y, int z, Block blockType, Boolean run) {
+    public static String UnlessNext(int x, int y, int z, StaticBlockId blockType, Boolean run) {
         return Next("unless block " + x + " " + y + " " + z + " " + blockType + " ", run);
     }
 
