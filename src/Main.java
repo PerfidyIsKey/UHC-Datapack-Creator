@@ -8,6 +8,9 @@ import ItemModifiers.*;
 import Predicates.*;
 import TeamGeneration.*;
 import arguments.Entity;
+import arguments.block.BlockState;
+import arguments.block.DynamicBlock;
+import arguments.block.SimpleBlock;
 import arguments.coordinate.Vec3;
 import arguments.itempredicate.SimpleItemPredicate;
 import arguments.itemstack.*;
@@ -44,6 +47,8 @@ import shared.attributes.AttributeId;
 import shared.attributes.AttributeOperation;
 import shared.attributes.AttributeSlot;
 import shared.attributes.AttributeTooltipDisplayType;
+import shared.block.ColorableBlockId;
+import shared.block.WoodBlockId;
 import shared.item.*;
 import utils.TextComponent;
 import shared.*;
@@ -965,62 +970,57 @@ public class Main {
         }
 
         // Create staging area
-        Fill cmd = Fill.create(
-                BlockPos.absolute(-6, 220, -6),
-                BlockPos.absolute(6, 226, 6),
-                new BlockState(StaticBlockId.BARRIER)
-        );
         fileCommands.add(Execute.In(Dimension.overworld) +
-                cmd.build());
-        cmd = Fill.create(
-                BlockPos.absolute(-5, 221, -5),
-                BlockPos.absolute(6, 226, 5),
-                new BlockState(StaticBlockId.AIR)
-        );
+                Fill.create(
+                                BlockPos.absolute(-6, 220, -6),
+                                BlockPos.absolute(6, 226, 6),
+                                SimpleBlock.create(StaticBlockId.BARRIER))
+                        .build());
         fileCommands.add(Execute.In(Dimension.overworld) +
-                cmd.build());
+                Fill.create(
+                                BlockPos.absolute(-5, 221, -5),
+                                BlockPos.absolute(6, 226, 5),
+                                SimpleBlock.create(StaticBlockId.AIR))
+                        .build());
 
-        SetBlock sb = SetBlock.create(
-                BlockPos.absolute(0, 222, -5),
-                new BlockState(StaticBlockId.CHERRY_WALL_SIGN)
-                        .with(BlockProperty.FACING, Direction.SOUTH)
-                        .with(BlockProperty.WATERLOGGED, false)
-                        .with(new SignEntity("")
-                                .setWaxed(false)
-                                .getBackSide()
-                                .addMessage(TextComponent.simple("You have"))
-                                .addMessage(TextComponent.simple("angered"))
-                                .addMessage(TextComponent.simple("the Gods!"))
-                                .addMessage(TextComponent.simple(""))
-                                .done()
-                                .getFrontSide()
-                                .addMessage(TextComponent.withClickCommand(
-                                        "In rememberance",
-                                        "run_command",
-                                        Summon.create(EntityType.FIREWORK_ROCKET)
-                                                .setPos(Vec3.relative(0, 0, 0))
-                                                .setNbt(
-                                                        new FireworkRocketNbtBuilder(
-                                                                FireworkRocketDataBuilder.create()
-                                                                        .setProperty(BooleanNbtProperty.GLOWING, true)
-                                                                        .addStar(
-                                                                                FireworkStarDataBuilder.create()
-                                                                                        .setShape(FireworkShape.STAR)
-                                                                                        .build()
-                                                                        )
-                                                                        .build()
-                                                        )
-                                                                .buildNbt()
-                                                ).build()
-                                ))
-                                .addMessage(TextComponent.simple("of our"))
-                                .addMessage(TextComponent.simple("Command Center"))
-                                .addMessage(TextComponent.simple("2014-2025"))
-                                .done()
-                        )
-        );
         fileCommands.add(Execute.In(Dimension.overworld) +
-                sb.build());
+                SetBlock.create(
+                                BlockPos.absolute(0, 222, -5),
+                                DynamicBlock.create(
+                                        WoodBlockId.WALL_SIGN.withWoodType(WoodType.CHERRY),
+                                        BlockState.create()
+                                                .facing(Direction.SOUTH)
+                                                .waterlogged(false),
+                                        SignEntity.create()
+                                                .setWaxed(false)
+                                                .getBackSide()
+                                                .addMessage(TextComponent.simple("You have"))
+                                                .addMessage(TextComponent.simple("angered"))
+                                                .addMessage(TextComponent.simple("the Gods!"))
+                                                .addMessage(TextComponent.simple(""))
+                                                .done()
+                                                .getFrontSide()
+                                                .addMessage(TextComponent.withClickCommand(
+                                                        "In rememberance",
+                                                        "run_command",
+                                                        Summon.create(EntityType.FIREWORK_ROCKET)
+                                                                .setPos(Vec3.relative(0, 0, 0))
+                                                                .setNbt(
+                                                                        new FireworkRocketNbtBuilder(
+                                                                                FireworkRocketDataBuilder.create()
+                                                                                        .setProperty(BooleanNbtProperty.GLOWING, true)
+                                                                                        .addStar(
+                                                                                                FireworkStarDataBuilder.create()
+                                                                                                        .setShape(FireworkShape.STAR)
+                                                                                                        .build())
+                                                                                        .build())
+                                                                                .buildNbt())
+                                                                .build()))
+                                                .addMessage(TextComponent.simple("of our"))
+                                                .addMessage(TextComponent.simple("Command Center"))
+                                                .addMessage(TextComponent.simple("2014-2025"))
+                                                .done()))
+                        .build());
 
         // Control Point
         if (OperationMode.controlPoints) {
@@ -1170,24 +1170,26 @@ public class Main {
             // Update glass color
             fileCommands.add(Execute.If(Constant.adminOld, Objective.ColorCP.extendName(i), team.getID(), false) +
                     Execute.InNext(currentCP.getCoordinate().getDimension(), true) +
-                    CommandBuilder.setBlock(currentCP.getCoordinate().getX(), currentCP.getCoordinate().getY() + 1, currentCP.getCoordinate().getZ(), "minecraft:" + team.getDyeColor() + "_stained_glass", SetBlockType.replace));
+                    SetBlock.create(
+                                    BlockPos.absolute(currentCP.getCoordinate().getX(), currentCP.getCoordinate().getY() + 1, currentCP.getCoordinate().getZ()),
+                                    DynamicBlock.create(ColorableBlockId.STAINED_GLASS.withColor(team.getDyeColor())))
+                            .mode(SetMode.REPLACE)
+                            .build());
         }
 
         // Keep beacon active
-        Fill cmd = Fill.create(
-                BlockPos.absolute(currentCP.getCoordinate().getX() - 1, currentCP.getCoordinate().getY() - 1, currentCP.getCoordinate().getZ() - 1),
-                BlockPos.absolute(currentCP.getCoordinate().getX() + 1, currentCP.getCoordinate().getY() - 1, currentCP.getCoordinate().getZ() + 1),
-                new BlockState(StaticBlockId.EMERALD_BLOCK)
-        );
         fileCommands.add(Execute.In(currentCP.getCoordinate().getDimension()) +
-                cmd.build());
+                Fill.create(
+                                BlockPos.absolute(currentCP.getCoordinate().getX() - 1, currentCP.getCoordinate().getY() - 1, currentCP.getCoordinate().getZ() - 1),
+                                BlockPos.absolute(currentCP.getCoordinate().getX() + 1, currentCP.getCoordinate().getY() - 1, currentCP.getCoordinate().getZ() + 1),
+                                SimpleBlock.create(StaticBlockId.EMERALD_BLOCK))
+                        .build());
 
-        SetBlock sb = SetBlock.create(
-                BlockPos.absolute(currentCP.getCoordinate().getX(), currentCP.getCoordinate().getY(), currentCP.getCoordinate().getZ()),
-                new BlockState(StaticBlockId.BEACON)
-        );
         fileCommands.add(Execute.In(currentCP.getCoordinate().getDimension()) +
-                sb.build());
+                SetBlock.create(
+                                BlockPos.absolute(currentCP.getCoordinate().getX(), currentCP.getCoordinate().getY(), currentCP.getCoordinate().getZ()),
+                                SimpleBlock.create(StaticBlockId.BEACON))
+                        .build());
 
         return new FileData(FileName.control_point_visuals_ + "" + i, fileCommands);
     }
@@ -1411,17 +1413,16 @@ public class Main {
         fileCommands.add(scoreboard.Set(Constant.adminOld, Objective.Victory, 1));
 
         // Create jukebox at 0,0
-        SetBlock sb = SetBlock.create(
-                BlockPos.absolute(startCoordinate),
-                new BlockState(StaticBlockId.JUKEBOX)
-                        .with(BlockProperty.HAS_RECORD, true)
-                        .with(new JukeboxEntity("")
-                                .setRecord(ItemId.MUSIC_DISC_STAL, (byte) 1)
-                        )
-        );
-
         fileCommands.add(Execute.In(Dimension.overworld) +
-                sb.build());
+                SetBlock.create(
+                                BlockPos.absolute(startCoordinate),
+                                DynamicBlock.create(
+                                        StaticBlockId.JUKEBOX,
+                                        BlockState.create()
+                                                .hasRecord(true),
+                                        JukeboxEntity.create()
+                                                .setRecord(ItemId.MUSIC_DISC_STAL, (byte) 1)))
+                        .build());
 
         // Remove tags
         fileCommands.add(Tag.action(Entity.ofSelector(TargetSelector.ALL_PLAYERS), TagAction.REMOVE)
@@ -2585,52 +2586,49 @@ public class Main {
             fileCommands.add(Execute.In(c.getDimension()) +
                     CommandBuilder.addForceLoad(c.getX(), c.getZ(), c.getX(), c.getZ()));
 
-            SetBlock sb = SetBlock.create(
-                    BlockPos.absolute(c.getX(), c.getY() + 11, c.getZ()),
-                    new BlockState(StaticBlockId.STRUCTURE_BLOCK)
-                            .with(BlockProperty.MODE, StructureBlockMode.LOAD)
-                            .with(new StructureBlockEntity("")
-                                    .setString(StructureBlockEntity.StructureDataKey.METADATA, "")
-                                    .setMirror(StructureMirror.NONE)
-                                    .setByte(StructureDataKey.IGNORE_ENTITIES, (byte) 1)
-                                    .setByte(StructureDataKey.POWERED, (byte) 0)
-                                    .setLong(StructureDataKey.SEED, 0L)
-                                    .setString(StructureDataKey.AUTHOR, "?")
-                                    .setRotation(StructureRotation.NONE)
-                                    .setInt(StructureDataKey.POS_X, -6)
-                                    .setMode(StructureBlockMode.LOAD)
-                                    .setInt(StructureDataKey.POS_Y, -13)
-                                    .setInt(StructureDataKey.SIZE_X, 13)
-                                    .setInt(StructureDataKey.POS_Z, -6)
-                                    .setFloat(StructureDataKey.INTEGRITY, 1.0f)
-                                    .setString(StructureDataKey.NAME, cp.getStructureName())
-                                    .setInt(StructureDataKey.SIZE_Y, 14)
-                                    .setInt(StructureDataKey.SIZE_Z, 13)
-                                    .setByte(StructureDataKey.SHOW_BOUNDING_BOX, (byte) 1)
-                            )
-            );
             fileCommands.add(Execute.In(c.getDimension()) +
-                    sb.build());
+                    SetBlock.create(
+                                    BlockPos.absolute(c.getX(), c.getY() + 11, c.getZ()),
+                                    DynamicBlock.create(
+                                            StaticBlockId.STRUCTURE_BLOCK,
+                                            BlockState.create()
+                                                    .mode(StructureBlockMode.LOAD),
+                                            StructureBlockEntity.create()
+                                                    .setString(StructureBlockEntity.StructureDataKey.METADATA, "")
+                                                    .setMirror(StructureMirror.NONE)
+                                                    .setByte(StructureDataKey.IGNORE_ENTITIES, (byte) 1)
+                                                    .setByte(StructureDataKey.POWERED, (byte) 0)
+                                                    .setLong(StructureDataKey.SEED, 0L)
+                                                    .setString(StructureDataKey.AUTHOR, "?")
+                                                    .setRotation(StructureRotation.NONE)
+                                                    .setInt(StructureDataKey.POS_X, -6)
+                                                    .setMode(StructureBlockMode.LOAD)
+                                                    .setInt(StructureDataKey.POS_Y, -13)
+                                                    .setInt(StructureDataKey.SIZE_X, 13)
+                                                    .setInt(StructureDataKey.POS_Z, -6)
+                                                    .setFloat(StructureDataKey.INTEGRITY, 1.0f)
+                                                    .setString(StructureDataKey.NAME, cp.getStructureName())
+                                                    .setInt(StructureDataKey.SIZE_Y, 14)
+                                                    .setInt(StructureDataKey.SIZE_Z, 13)
+                                                    .setByte(StructureDataKey.SHOW_BOUNDING_BOX, (byte) 1)))
+                            .build());
 
             // Activate structure block
-            sb = SetBlock.create(
-                    BlockPos.absolute(c.getX(), c.getY() + 10, c.getZ()),
-                    new BlockState(StaticBlockId.REDSTONE_BLOCK)
-            ).mode(SetMode.DESTROY);
             fileCommands.add(Execute.In(c.getDimension()) +
-                    sb.build());
+                    SetBlock.create(
+                                    BlockPos.absolute(c.getX(), c.getY() + 10, c.getZ()),
+                                    SimpleBlock.create(StaticBlockId.REDSTONE_BLOCK))
+                            .mode(SetMode.DESTROY)
+                            .build());
 
             // Replace blocks that do not emit light
-            Fill cmd = Fill.create(
-                    BlockPos.absolute(c.getX(), c.getY() + 12, c.getZ()),
-                    BlockPos.absolute(c.getX(), Constant.worldHeight - 1, c.getZ()),
-                    new BlockState(StaticBlockId.GLASS)
-            ).filter(
-                    new BlockPredicate(RegistryTag.BLOCK_BEACON_LIGHT)
-            );
-
             fileCommands.add(Execute.In(c.getDimension()) +
-                    cmd.build());
+                    Fill.create(
+                                    BlockPos.absolute(c.getX(), c.getY() + 12, c.getZ()),
+                                    BlockPos.absolute(c.getX(), Constant.worldHeight - 1, c.getZ()),
+                                    SimpleBlock.create(StaticBlockId.GLASS))
+                            .filter(new BlockPredicate(RegistryTag.BLOCK_BEACON_LIGHT))
+                            .build());
 
             fileCommands.add(Execute.In(c.getDimension()) +
                     CommandBuilder.removeForceLoad(c.getX(), c.getZ(), c.getX(), c.getZ()));
@@ -2670,13 +2668,13 @@ public class Main {
     private FileData HorseFrostWalker() {
         ArrayList<String> fileCommands = new ArrayList<>();
 
-        Fill cmd = Fill.create(
-                BlockPos.relative(-2, -2, -2),
-                BlockPos.relative(2, 0, 2),
-                new BlockState(StaticBlockId.ICE)
-        ).filter(new BlockPredicate(StaticBlockId.WATER));
         fileCommands.add(Execute.At("@a[nbt={RootVehicle:{Entity:{id:\"" + EntityType.HORSE + "\"}}}]") +
-                cmd.build());
+                Fill.create(
+                                BlockPos.relative(-2, -2, -2),
+                                BlockPos.relative(2, 0, 2),
+                                SimpleBlock.create(StaticBlockId.ICE))
+                        .filter(new BlockPredicate(StaticBlockId.WATER))
+                        .build());
 
         return new FileData(FileName.horse_frost_walker, fileCommands);
     }

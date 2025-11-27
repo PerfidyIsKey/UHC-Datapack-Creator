@@ -135,4 +135,9 @@ public enum ItemId {
         // Format: minecraft:<material>_<piece>
         return DEFAULT_NAMESPACE + ":" + material.toString() + "_" + piece.toString();
     }
+
+    @Override
+    public String toString() {
+        return getResourceLocation();
+    }
 }

@@ -6,17 +6,17 @@ import Enums.FillMode;
 public class Fill {
     private final BlockPos from;
     private final BlockPos to;
-    private final BlockState block;
+    private final Block block;
     private FillMode mode;
     private BlockPredicate filter; // Only for REPLACE variant
 
-    private Fill(BlockPos from, BlockPos to, BlockState block) {
+    private Fill(BlockPos from, BlockPos to, Block block) {
         this.from = from;
         this.to = to;
         this.block = block;
     }
 
-    public static Fill create(BlockPos from, BlockPos to, BlockState block) {
+    public static Fill create(BlockPos from, BlockPos to, Block block) {
         return new Fill(from, to, block);
     }
 

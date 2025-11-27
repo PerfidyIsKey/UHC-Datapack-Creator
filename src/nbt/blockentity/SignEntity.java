@@ -22,14 +22,16 @@ public class SignEntity extends CompoundTag implements BlockEntity {
     private final SignSide frontSide;
     private final SignSide backSide;
 
-    public SignEntity(String name) {
-        super(name);
-
+    private SignEntity() {
         // PASS 'this' (the current SignEntity instance) to SignSide constructor
         this.frontSide = new SignSide(SignDataKey.FRONT_TEXT.getNbtName(), this);
         this.backSide = new SignSide(SignDataKey.BACK_TEXT.getNbtName(), this);
 
         initializeDefaultTags();
+    }
+
+    public static SignEntity create() {
+        return new SignEntity();
     }
 
     private void initializeDefaultTags() {

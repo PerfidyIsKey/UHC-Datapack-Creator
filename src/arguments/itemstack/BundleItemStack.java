@@ -1,6 +1,6 @@
 package arguments.itemstack;
 
-import shared.item.DyeColor;
+import shared.DyeColor;
 import shared.item.ItemId;
 
 import java.util.Arrays;

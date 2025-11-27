@@ -18,9 +18,12 @@ public class JukeboxEntity extends CompoundTag implements BlockEntity {
         public String getNbtName() { return nbtName; }
     }
 
-    public JukeboxEntity(String name) {
-        super(name);
+    private JukeboxEntity() {
         initializeDefaultTags();
+    }
+
+    public static JukeboxEntity create() {
+        return new JukeboxEntity();
     }
 
     private void initializeDefaultTags() {

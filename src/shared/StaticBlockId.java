@@ -1,113 +1,91 @@
 package shared;
 
+/**
+ * An enumeration representing a fixed list of common Minecraft block IDs
+ * (resource locations) that do not require runtime modifications (like color
+ * or internal state) to determine their basic identifier string.
+ * <p>
+ * This class implements the {@link BlockId} interface to provide the fully
+ * qualified resource location string (e.g., {@code minecraft:chest}).
+ */
 public enum StaticBlockId implements BlockId {
+
+    // Enum constants using the default 'minecraft' namespace
     AIR("air"),
     AMETHYST_BLOCK("amethyst_block"),
     ANVIL("anvil"),
-    APPLE("apple"),
-    ARROW("arrow"),
     BARRIER("barrier"),
     BEACON("beacon"),
     BEDROCK("bedrock"),
-    BLAZE_ROD("blaze_rod"),
-    BONE("bone"),
-    BOOK("book"),
-    BOW("bow"),
-    BOWL("bowl"),
-    BREAD("bread"),
     BRICKS("bricks"),
-    BUNDLE("bundle"),
     CAVE_AIR("cave_air"),
-    CHERRY_WALL_SIGN("cherry_wall_sign"),
     CHEST("chest"),
     COBWEB("cobweb"),
+    CONCRETE_POWDER("concrete_powder"),
     COPPER_BLOCK("copper_block"),
-    CROSSBOW("crossbow"),
-    DIAMOND("diamond"),
-    DIAMOND_HORSE_ARMOR("diamond_horse_armor"),
     DIORITE("diorite"),
     DRAGON_HEAD("dragon_head"),
-    EGG("egg"),
     EMERALD_BLOCK("emerald_block"),
-    ENDER_PEARL("ender_pearl"),
-    EXPERIENCE_BOTTLE("experience_bottle"),
-    FISHING_ROD("fishing_rod"),
     GLASS("glass"),
-    GLASS_BOTTLE("glass_bottle"),
-    GLOWSTONE_DUST("glowstone_dust"),
-    GOAT_HORN("goat_horn"),
-    GOLD_INGOT("gold_ingot"),
-    GOLDEN_APPLE("golden_apple"),
-    GUNPOWDER("gunpowder"),
-    HORSE_SPAWN_EGG("horse_spawn_egg"),
     ICE("ice"),
-    IRON_AXE("iron_axe"),
-    IRON_BOOTS("iron_boots"),
-    IRON_CHESTPLATE("iron_chestplate"),
-    IRON_HELMET("iron_helmet"),
-    IRON_INGOT("iron_ingot"),
-    IRON_LEGGINGS("iron_leggings"),
-    IRON_SWORD("iron_sword"),
     JUKEBOX("jukebox"),
     LADDER("ladder"),
-    LAPIS_LAZULI("lapis_lazuli"),
     LAVA("lava"),
-    LAVA_BUCKET("lava_bucket"),
-    LEATHER_HORSE_ARMOR("leather_horse_armor"),
-    MELON_SLICE("melon_slice"),
-    MUSIC_DISC_STAL("music_disc_stal"),
-    NETHER_WART("nether_wart"),
-    NETHERITE_HOE("netherite_hoe"),
-    NETHERITE_SCRAP("netherite_scrap"),
-    NETHERITE_UPGRADE_SMITHING_TEMPLATE("netherite_upgrade_smithing_template"),
     OBSIDIAN("obsidian"),
     PLAYER_HEAD("player_head"),
-    POTION("potion"),
-    REDSTONE("redstone"),
     REDSTONE_BLOCK("redstone_block"),
     REINFORCED_DEEPSLATE("reinforced_deepslate"),
-    SADDLE("saddle"),
-    SHIELD("shield"),
-    SPECTRAL_ARROW("spectral_arrow"),
-    SPLASH_POTION("splash_potion"),
-    SPYGLASS("spyglass"),
-    STAINED_GLASS("stained_glass"),
-    STICK("stick"),
     STRUCTURE_BLOCK("structure_block"),
-    SUSPICIOUS_STEW("suspicious_stew"),
     TNT("tnt"),
-    TRIDENT("trident"),
     VOID_AIR("void_air"),
-    WATER("water"),
-    WIND_CHARGE("wind_charge"),
-    WOLF_ARMOR("wolf_armor"),
-    WOLF_SPAWN_EGG("wolf_spawn_egg"),
-    WRITTEN_BOOK("written_book");
+    WATER("water");
 
-    private final String resourceLocation;
+    // The block name part of the resource location (e.g., "amethyst_block").
+    private final String path;
+    // The namespace part of the resource location (e.g., "minecraft").
+    private final String namespace;
     private static final String DEFAULT_NAMESPACE = "minecraft";
 
     /**
-     * Constructor. Prefixes with "minecraft:" unless a namespace is already present.
+     * Private constructor for blocks that require a custom namespace (e.g., modded blocks).
+     *
+     * @param path The block name (path) component.
+     * @param namespace The custom namespace component.
      */
-
     StaticBlockId(String path, String namespace) {
-        this.resourceLocation = namespace + ":" + path;
-    }
-
-    StaticBlockId(String path) {
-        this.resourceLocation = DEFAULT_NAMESPACE + ":" + path;
+        this.namespace = namespace;
+        this.path = path;
     }
 
     /**
-     * Returns the resource location of the block.
+     * Private constructor for blocks within the default {@code minecraft} namespace.
+     *
+     * @param path The block name (path) component.
      */
-    public String getResourceLocation() {
-        return resourceLocation;
+    StaticBlockId(String path) {
+        this.namespace = DEFAULT_NAMESPACE;
+        this.path = path;
     }
 
+    /**
+     * Returns the fully qualified resource location of the block.
+     * This combines the namespace and path with a colon separator.
+     *
+     * @return The immutable resource location string (e.g., {@code minecraft:tnt}).
+     */
+    @Override
+    public String getResourceLocation() {
+        return namespace + ":" + path;
+    }
+
+    /**
+     * Returns the fully qualified resource location of the block, allowing the
+     * enum constant to be seamlessly concatenated into command strings.
+     *
+     * @return The immutable resource location string.
+     */
     @Override
     public String toString() {
-        return resourceLocation;
+        return getResourceLocation();
     }
 }

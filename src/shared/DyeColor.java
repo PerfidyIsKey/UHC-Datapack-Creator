@@ -1,8 +1,8 @@
-package shared.item;
+package shared;
 
 /**
  * Represents all 16 standard Minecraft dye colors.
- * Used for building item resource locations (e.g., 'yellow_bundle', 'blue_wool')
+ * Used for building item and block resource locations (e.g., 'yellow_bundle', 'blue_wool')
  * and for other color-related command arguments.
  */
 public enum DyeColor {
@@ -26,7 +26,7 @@ public enum DyeColor {
 
     /**
      * Returns the lowercase name of the color, required for constructing
-     * the Minecraft item resource location path (e.g., "yellow").
+     * the Minecraft resource location path (e.g., "yellow").
      */
     @Override
     public String toString() {

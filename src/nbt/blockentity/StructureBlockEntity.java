@@ -33,9 +33,12 @@ public class StructureBlockEntity extends CompoundTag implements BlockEntity {
     }
     // --------------------------------
 
-    public StructureBlockEntity(String name) {
-        super(name);
+    private StructureBlockEntity() {
         initializeDefaultTags();
+    }
+
+    public static StructureBlockEntity create() {
+        return new StructureBlockEntity();
     }
 
     private void initializeDefaultTags() {
