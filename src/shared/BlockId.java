@@ -6,8 +6,11 @@ package shared;
  * This ID must be a valid Minecraft resource location, which includes
  * the namespace (default is {@code minecraft}) and the block name (e.g., {@code stone}).
  * The full required format is typically {@code namespace:block_name}.
+ * <p>
+ * This interface extends {@link BlockIdentifier}, ensuring that a Block ID can be
+ * used wherever a generic block or block tag identifier is required.
  */
-public interface BlockId {
+public interface BlockId extends BlockIdentifier {
 
     /**
      * Retrieves the complete, fully qualified resource location string for the block.

@@ -16,10 +16,14 @@ public class ItemNbtBuilder implements EntityNbtBuilder {
     private final ItemData data;
     private final BaseEntityNbt baseNbt;
 
-    public ItemNbtBuilder(ItemData data) {
+    private ItemNbtBuilder(ItemData data) {
         this.data = data;
         // Use ITEM entity type for the base NBT (though no common properties are expected)
         this.baseNbt = new BaseEntityNbt(EntityType.ITEM, null);
+    }
+
+    public static ItemNbtBuilder create(ItemData data) {
+        return new ItemNbtBuilder(data);
     }
 
     @Override

@@ -1,41 +1,40 @@
 package arguments;
-import Enums.*;
-import shared.StaticBlockId;
 
-public class BlockPredicate {
-    private final String block_id;
-    private String block_states;
-    private String data_tags;
+/**
+ * Defines the contract for any object representing a Minecraft block predicate.
+ * <p>
+ * A block predicate is used in commands like {@code /fill} or {@code /clone}
+ * and specifies criteria for matching one or more blocks. Unlike a simple block
+ * argument, its identifier can be a single block ID or a block tag, and it
+ * can optionally include block states and NBT data tags.
+ * <p>
+ * **Format:** {@code <block_id_or_tag>[block_states]{data_tags}}
+ */
+public interface BlockPredicate {
 
-    public BlockPredicate(StaticBlockId id) {
-        this.block_id = id.toString();
-    }
+    /**
+     * Returns the raw string representation of the complete block predicate,
+     * including the identifier (ID or Tag), optional block states, and
+     * optional NBT data tags.
+     * <p>
+     * Example outputs:
+     * <ul>
+     * <li>{@code minecraft:stone}</li>
+     * <li>{@code #minecraft:planks}</li>
+     * <li>{@code #minecraft:wooden_stairs[facing=north]}</li>
+     * <li>{@code minecraft:chest{Items:[{id:"minecraft:diamond"}]}}</li>
+     * </ul>
+     *
+     * @return The fully formatted block predicate string.
+     */
+    String getPredicate();
 
-    public BlockPredicate(StaticBlockId id, String states, String tags) {
-        this.block_id = id.toString();
-        this.block_states = states;
-        this.data_tags = tags;
-    }
-
-    public BlockPredicate(RegistryTag id) {
-        this.block_id = id.toString();
-    }
-
-    public BlockPredicate(RegistryTag id, String states, String tags) {
-        this.block_id = id.toString();
-        this.block_states = states;
-        this.data_tags = tags;
-    }
-
+    /**
+     * Overrides the default {@code toString()} method to simply return the
+     * result of {@code getPredicate()}. This ensures that a {@code BlockPredicate} object
+     * can be seamlessly inserted into the final command string.
+     * * @return The fully formatted block predicate string, identical to {@code getPredicate()}.
+     */
     @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder(block_id);
-        if (block_states != null) {
-            sb.append("[").append(block_states).append("]");
-        }
-        if (data_tags != null) {
-            sb.append("{").append(data_tags).append("}");
-        }
-        return sb.toString();
-    }
+    String toString();
 }

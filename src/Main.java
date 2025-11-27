@@ -11,6 +11,7 @@ import arguments.Entity;
 import arguments.block.BlockState;
 import arguments.block.DynamicBlock;
 import arguments.block.SimpleBlock;
+import arguments.block.SimpleBlockPredicate;
 import arguments.coordinate.Vec3;
 import arguments.itempredicate.SimpleItemPredicate;
 import arguments.itemstack.*;
@@ -1130,7 +1131,7 @@ public class Main {
                     Summon.create(EntityType.ITEM)
                             .setPos(Vec3.relative(0, 0, 0))
                             .setNbt(
-                                    new ItemNbtBuilder(
+                                    ItemNbtBuilder.create(
                                             new ItemData(
                                                     ItemId.PLAYER_HEAD,
                                                     1,
@@ -2623,7 +2624,7 @@ public class Main {
                                     BlockPos.absolute(c.getX(), c.getY() + 12, c.getZ()),
                                     BlockPos.absolute(c.getX(), Constant.worldHeight - 1, c.getZ()),
                                     SimpleBlock.create(StaticBlockId.GLASS))
-                            .filter(new BlockPredicate(RegistryTag.BLOCK_BEACON_LIGHT))
+                            .filter(SimpleBlockPredicate.create(BlockTagId.BLOCK_BEACON_LIGHT))
                             .build());
 
             fileCommands.add(Execute.In(c.getDimension()) +
@@ -2637,14 +2638,11 @@ public class Main {
                         SelectorArgumentsBuilder.create()
                                 .type(EntityType.ITEM)
                                 .nbt(
-                                        new ItemNbtBuilder(
-                                                new ItemData(
-                                                        ItemId.MUSIC_DISC_STAL,
-                                                        1
-                                                )
-                                        ).buildNbt()
-                                )
-                ))
+                                        ItemNbtBuilder.create(
+                                                        new ItemData(
+                                                                ItemId.MUSIC_DISC_STAL,
+                                                                1)).
+                                                buildNbt())))
                 .build());
 
         return new FileData(FileName.spawn_control_points, fileCommands);
@@ -2669,7 +2667,7 @@ public class Main {
                                 BlockPos.relative(-2, -2, -2),
                                 BlockPos.relative(2, 0, 2),
                                 SimpleBlock.create(StaticBlockId.ICE))
-                        .filter(new BlockPredicate(StaticBlockId.WATER))
+                        .filter(SimpleBlockPredicate.create(StaticBlockId.WATER))
                         .build());
 
         return new FileData(FileName.horse_frost_walker, fileCommands);
