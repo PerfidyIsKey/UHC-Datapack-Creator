@@ -16,11 +16,15 @@ public class BaseEntityNbt {
     private String customName;
     private final CompoundTag nbt = new CompoundTag("");
 
-    public BaseEntityNbt(EntityType id, String customName) {
+    private BaseEntityNbt(EntityType id, String customName) {
         this.id = id;
         this.customName = customName;
         // The explicit addition of the "id" tag has been removed here to match the
         // minimal output requirements requested for the /summon command.
+    }
+
+    public static BaseEntityNbt create(EntityType id, String customName) {
+        return new BaseEntityNbt(id, customName);
     }
 
     public void setBooleanProperty(BooleanNbtProperty property, boolean value) {

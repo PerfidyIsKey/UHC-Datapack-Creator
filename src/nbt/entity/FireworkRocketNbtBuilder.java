@@ -18,9 +18,13 @@ public class FireworkRocketNbtBuilder implements EntityNbtBuilder {
     // Assuming BaseEntityNbt exists
     private final BaseEntityNbt baseNbt;
 
-    public FireworkRocketNbtBuilder(FireworkRocketData data) {
+    private FireworkRocketNbtBuilder(FireworkRocketData data) {
         this.data = data;
-        this.baseNbt = new BaseEntityNbt(EntityType.FIREWORK_ROCKET, null);
+        this.baseNbt = BaseEntityNbt.create(EntityType.FIREWORK_ROCKET, null);
+    }
+
+    public static FireworkRocketNbtBuilder create(FireworkRocketData data) {
+        return new FireworkRocketNbtBuilder(data);
     }
 
     @Override

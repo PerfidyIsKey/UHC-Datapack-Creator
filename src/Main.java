@@ -1007,14 +1007,14 @@ public class Main {
                                                         Summon.create(EntityType.FIREWORK_ROCKET)
                                                                 .setPos(Vec3.relative(0, 0, 0))
                                                                 .setNbt(
-                                                                        new FireworkRocketNbtBuilder(
+                                                                        FireworkRocketNbtBuilder.create(
                                                                                 FireworkRocketDataBuilder.create()
                                                                                         .setProperty(BooleanNbtProperty.GLOWING, true)
                                                                                         .addStar(
                                                                                                 FireworkStarDataBuilder.create()
                                                                                                         .setShape(FireworkShape.STAR)
-                                                                                                        .build())
-                                                                                        .build())
+                                                                                                        .buildData())
+                                                                                        .buildData())
                                                                                 .buildNbt())
                                                                 .build()))
                                                 .addMessage(TextComponent.simple("of our"))
@@ -1132,13 +1132,13 @@ public class Main {
                             .setPos(Vec3.relative(0, 0, 0))
                             .setNbt(
                                     ItemNbtBuilder.create(
-                                            new ItemData(
-                                                    ItemId.PLAYER_HEAD,
-                                                    1,
-                                                    Map.of(
-                                                            ItemComponentType.PROFILE,
-                                                            PlayerProfileComponentBuilder.build(
-                                                                    new PlayerProfileComponentData(p.getPlayerName())))))
+                                                    ItemData.create(
+                                                            ItemId.PLAYER_HEAD,
+                                                            1,
+                                                            Map.of(
+                                                                    ItemComponentType.PROFILE,
+                                                                    PlayerProfileComponentBuilder.build(
+                                                                            PlayerProfileComponentData.create(p.getPlayerName())))))
                                             .buildNbt())
                             .build());
         }
@@ -1359,7 +1359,7 @@ public class Main {
         fileCommands.add(
                 Summon.create(EntityType.MARKER)
                         .setPos(Vec3.absolute(0, Constant.worldBottom, 0))
-                        .setNbt(new BaseEntityNbt(EntityType.MARKER, "Admin").buildNbt())
+                        .setNbt(BaseEntityNbt.create(EntityType.MARKER, "Admin").buildNbt())
                         .build()
         );
 
@@ -2403,7 +2403,7 @@ public class Main {
                             .setPos(Vec3.absolute(0, 300, 0))
                             .setNbt(
                                     FallingBlockNbtBuilder.create(
-                                            new FallingBlockData(
+                                            FallingBlockData.create(
                                                     ItemId.CHEST,
                                                     LootTableId.SUPPLY_DROP,
                                                     "Care Package",
@@ -2428,7 +2428,7 @@ public class Main {
                                         SelectorArgumentsBuilder.create()
                                                 .type(EntityType.FALLING_BLOCK)
                                                 .nbt(FallingBlockNbtBuilder.create(
-                                                                new FallingBlockData(
+                                                                FallingBlockData.create(
                                                                         new StaticEntityTag[]{StaticEntityTag.CARE_PACKAGE}))
                                                         .buildNbt())))
                         .build());
@@ -2639,10 +2639,10 @@ public class Main {
                                 .type(EntityType.ITEM)
                                 .nbt(
                                         ItemNbtBuilder.create(
-                                                        new ItemData(
+                                                        ItemData.create(
                                                                 ItemId.MUSIC_DISC_STAL,
-                                                                1)).
-                                                buildNbt())))
+                                                                1))
+                                                .buildNbt())))
                 .build());
 
         return new FileData(FileName.spawn_control_points, fileCommands);

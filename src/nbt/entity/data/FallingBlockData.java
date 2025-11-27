@@ -21,7 +21,7 @@ public record FallingBlockData(ItemId blockName, LootTableId lootTable, String c
      * All non-tag properties are set to null/default to signal the builder
      * to only create the {Tags:[...]} structure.
      */
-    public FallingBlockData(StaticEntityTag[] tags) {
+    private FallingBlockData(StaticEntityTag[] tags) {
         // Calls the canonical constructor with nulls and defaults for unused fields.
         this(null, null, null, 0, false, tags);
     }
@@ -31,8 +31,21 @@ public record FallingBlockData(ItemId blockName, LootTableId lootTable, String c
      * Creates an empty FallingBlockData instance to signal the builder
      * to return an empty CompoundTag ({}).
      */
-    public FallingBlockData() {
+    private FallingBlockData() {
         // Calls the canonical constructor with all nulls/defaults.
         this(null, null, null, 0, false, null);
+    }
+
+    public static FallingBlockData create(StaticEntityTag[] tags) {
+        return new FallingBlockData(tags);
+    }
+
+    public static FallingBlockData create() {
+        return new FallingBlockData();
+    }
+
+    public static FallingBlockData create(ItemId blockName, LootTableId lootTable, String customName, int time, boolean dropItem,
+                                          StaticEntityTag[] tags) {
+        return new FallingBlockData(blockName, lootTable, customName, time, dropItem, tags);
     }
 }

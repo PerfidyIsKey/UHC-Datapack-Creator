@@ -51,7 +51,7 @@ public class FireworkStarDataBuilder {
         return this;
     }
 
-    public FireworkStarData build() {
+    public FireworkStarData buildData() {
         if (colors.isEmpty()) {
             throw new IllegalStateException("Firework star must have at least one color.");
         }

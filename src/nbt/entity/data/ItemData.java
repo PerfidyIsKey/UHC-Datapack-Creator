@@ -24,6 +24,14 @@ public record ItemData(
         if (components == null) throw new IllegalArgumentException("Components map cannot be null");
     }
 
+    public static ItemData create(ItemId id, int count) {
+        return new ItemData(id, count);
+    }
+
+    public static ItemData create(ItemId id, int count, Map<ItemComponentType, CompoundTag> components) {
+        return new ItemData(id, count, components);
+    }
+
     // 2. Secondary/Overloaded Constructor (The fix!)
     /**
      * Secondary constructor for simple items that have no custom components.

@@ -6,4 +6,10 @@ package nbt.entity.data;
  */
 public record PlayerProfileComponentData(
         String playerName
-) {}
+) {
+
+    public static PlayerProfileComponentData create(String playerName) {
+        return new PlayerProfileComponentData(playerName);
+    }
+
+}

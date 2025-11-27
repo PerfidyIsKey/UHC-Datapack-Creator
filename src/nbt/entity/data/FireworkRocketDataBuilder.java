@@ -47,7 +47,7 @@ public class FireworkRocketDataBuilder {
         return setProperty(property, true);
     }
 
-    public FireworkRocketData build() {
+    public FireworkRocketData buildData() {
         return new FireworkRocketData(flightDuration, explosions, booleanProperties);
     }
 }
