@@ -14,46 +14,6 @@ import java.util.ArrayList;
 
 public class CommandBuilder {
 
-    // Setblock
-    public static ArrayList<String> forceLoadAndSet(int x, int y, int z, String blockType, SetBlockType type) {
-        return forceLoadAndSet(x, y, z, Dimension.overworld, blockType, type);
-    }
-
-    public static ArrayList<String> forceLoadAndSet(int x, int y, int z, StaticBlockId blockType, SetBlockType type) {
-        return forceLoadAndSet(x, y, z, blockType + "", type);
-    }
-
-    public static ArrayList<String> forceLoadAndSet(int x, int y, int z, Dimension dimension, String blockType, SetBlockType type) {
-        ArrayList<String> fileCommands = new ArrayList<>();
-        fileCommands.add(Execute.In(dimension) +
-                "forceload add " + x + " " + z + " " + x + " " + z);
-        fileCommands.add(Execute.In(dimension) +
-                setBlock(x, y, z, blockType, type));
-        fileCommands.add(Execute.In(dimension) +
-                "forceload remove " + x + " " + z + " " + x + " " + z);
-        return fileCommands;
-    }
-
-    public static ArrayList<String> forceLoadAndSet(int x, int y, int z, Dimension dimension, StaticBlockId blockType, SetBlockType type) {
-        return forceLoadAndSet(x, y, z, dimension, blockType + "", type);
-    }
-
-    public static String addForceLoad(int x1, int z1, int x2, int z2) {
-        return "forceload add " + x1 + " " + z1 + " " + x2 + " " + z2;
-    }
-
-    public static String addForceLoad(Coordinate coordinate) {
-        return "forceload add " + coordinate.getX() + " " + coordinate.getZ() + " " + coordinate.getX() + " " + coordinate.getZ();
-    }
-
-    public static String removeForceLoad(int x1, int z1, int x2, int z2) {
-        return "forceload remove " + x1 + " " + z1 + " " + x2 + " " + z2;
-    }
-
-    public static String removeForceLoad() {
-        return "forceload remove all";
-    }
-
     public static String setBlock(String x, String y, String z, String blockType) {
         return "setblock " + x + " " + y + " " + z + " " + blockType;
     }

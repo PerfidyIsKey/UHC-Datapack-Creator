@@ -28,6 +28,7 @@ import commands.Random;
 import commands.advancement.AdvancementAction;
 import commands.effect.EffectAction;
 import commands.experience.ExperienceAction;
+import commands.forceload.ForceLoadAction;
 import commands.item.ItemAction;
 import commands.item.ItemTargetEntity;
 import commands.random.RandomAction;
@@ -1540,14 +1541,22 @@ public class Main {
 
             // Spawn new Control Points
             fileCommands.add(Execute.In(controlPoints.get(0).getCoordinate().getDimension()) +
-                    CommandBuilder.addForceLoad(controlPoints.get(0).getCoordinate().getX(), controlPoints.get(0).getCoordinate().getZ(), controlPoints.get(0).getCoordinate().getX(), controlPoints.get(0).getCoordinate().getZ()));
+                    ForceLoad.create(ForceLoadAction.ADD)
+                            .from(ColumnPos.absolute(controlPoints.get(0).getCoordinate().getX(), controlPoints.get(0).getCoordinate().getZ()))
+                            .build());
             fileCommands.add(Execute.In(controlPoints.get(1).getCoordinate().getDimension()) +
-                    CommandBuilder.addForceLoad(controlPoints.get(1).getCoordinate().getX(), controlPoints.get(1).getCoordinate().getZ(), controlPoints.get(1).getCoordinate().getX(), controlPoints.get(1).getCoordinate().getZ()));
+                    ForceLoad.create(ForceLoadAction.ADD)
+                            .from(ColumnPos.absolute(controlPoints.get(1).getCoordinate().getX(), controlPoints.get(1).getCoordinate().getZ()))
+                            .build());
             fileCommands.add(Schedule.callFunction(FileName.spawn_control_points));
             fileCommands.add(Execute.In(controlPoints.get(0).getCoordinate().getDimension()) +
-                    CommandBuilder.removeForceLoad(controlPoints.get(0).getCoordinate().getX(), controlPoints.get(0).getCoordinate().getZ(), controlPoints.get(0).getCoordinate().getX(), controlPoints.get(0).getCoordinate().getZ()));
+                    ForceLoad.create(ForceLoadAction.REMOVE)
+                            .from(ColumnPos.absolute(controlPoints.get(0).getCoordinate().getX(), controlPoints.get(0).getCoordinate().getZ()))
+                            .build());
             fileCommands.add(Execute.In(controlPoints.get(1).getCoordinate().getDimension()) +
-                    CommandBuilder.removeForceLoad(controlPoints.get(1).getCoordinate().getX(), controlPoints.get(1).getCoordinate().getZ(), controlPoints.get(1).getCoordinate().getX(), controlPoints.get(1).getCoordinate().getZ()));
+                    ForceLoad.create(ForceLoadAction.REMOVE)
+                            .from(ColumnPos.absolute(controlPoints.get(1).getCoordinate().getX(), controlPoints.get(1).getCoordinate().getZ()))
+                            .build());
 
             // Reset bossbars
             BossBar bossBarCp1 = getBossbarByName("cp1");
@@ -1572,8 +1581,8 @@ public class Main {
                                                 .tag(controlPoint.getName())))
                                         .build());
             }
-            fileCommands.add(CommandBuilder.removeForceLoad());
-
+            fileCommands.add(ForceLoad.create(ForceLoadAction.REMOVE)
+                    .build());
         }
 
         // Traitor Faction
@@ -2017,12 +2026,26 @@ public class Main {
         fileCommands.add(getBossbarByName("cp2").setVisible(true));
 
         // Remove CP1 reinforced deepslate block
-        fileCommands.addAll(CommandBuilder.forceLoadAndSet(controlPoints.get(0).getCoordinate().getX(), controlPoints.get(0).getCoordinate().getY() + 3, controlPoints.get(0).getCoordinate().getZ(), StaticBlockId.AIR, SetBlockType.replace));
+        fileCommands.add(Execute.In(controlPoints.get(0).getCoordinate().getDimension()) +
+                ForceLoad.create(ForceLoadAction.ADD)
+                        .from(ColumnPos.absolute(controlPoints.get(0).getCoordinate().getX(), controlPoints.get(0).getCoordinate().getZ()))
+                        .build());
+        fileCommands.add(Execute.In(controlPoints.get(0).getCoordinate().getDimension()) +
+                SetBlock.create(
+                                BlockPos.absolute(controlPoints.get(0).getCoordinate().getX(), controlPoints.get(0).getCoordinate().getY() + 3, controlPoints.get(0).getCoordinate().getZ()),
+                                SimpleBlock.create(StaticBlockId.AIR))
+                        .build());
+        fileCommands.add(Execute.In(controlPoints.get(0).getCoordinate().getDimension()) +
+                ForceLoad.create(ForceLoadAction.REMOVE)
+                        .from(ColumnPos.absolute(controlPoints.get(0).getCoordinate().getX(), controlPoints.get(0).getCoordinate().getZ()))
+                        .build());
 
         // Summon armor stands for locator bar tracking
         for (ControlPoint controlPoint : controlPoints) {
             // Forceload chunk
-            fileCommands.add(CommandBuilder.addForceLoad(controlPoint.getCoordinate()));
+            fileCommands.add(ForceLoad.create(ForceLoadAction.ADD)
+                    .from(ColumnPos.absolute(controlPoint.getCoordinate().getX(), controlPoint.getCoordinate().getZ()))
+                    .build());
 
             // Summon armor stand to be tracked
             fileCommands.add(Summon.create(EntityType.ARMOR_STAND)
@@ -2073,7 +2096,19 @@ public class Main {
         fileCommands.add(new TellRaw("@a", texts).sendRaw());
 
         // Remove reinforced deepslate from CP2
-        fileCommands.addAll(CommandBuilder.forceLoadAndSet(controlPoints.get(1).getCoordinate().getX(), controlPoints.get(1).getCoordinate().getY() + 3, controlPoints.get(1).getCoordinate().getZ(), controlPoints.get(1).getCoordinate().getDimension(), StaticBlockId.AIR, SetBlockType.replace));
+        fileCommands.add(Execute.In(controlPoints.get(1).getCoordinate().getDimension()) +
+                ForceLoad.create(ForceLoadAction.ADD)
+                        .from(ColumnPos.absolute(controlPoints.get(1).getCoordinate().getX(), controlPoints.get(1).getCoordinate().getZ()))
+                        .build());
+        fileCommands.add(Execute.In(controlPoints.get(1).getCoordinate().getDimension()) +
+                SetBlock.create(
+                                BlockPos.absolute(controlPoints.get(1).getCoordinate().getX(), controlPoints.get(1).getCoordinate().getY() + 3, controlPoints.get(1).getCoordinate().getZ()),
+                                SimpleBlock.create(StaticBlockId.AIR))
+                        .build());
+        fileCommands.add(Execute.In(controlPoints.get(1).getCoordinate().getDimension()) +
+                ForceLoad.create(ForceLoadAction.REMOVE)
+                        .from(ColumnPos.absolute(controlPoints.get(1).getCoordinate().getX(), controlPoints.get(1).getCoordinate().getZ()))
+                        .build());
 
         // Change bossbar text
         fileCommands.add(getBossbarByName("cp2").setTitle("CP2: " + controlPoints.get(1).getCoordinate().getX() + ", " + controlPoints.get(1).getCoordinate().getY() + ", " + controlPoints.get(1).getCoordinate().getZ() + " (" + controlPoints.get(1).getCoordinate().getDimensionName() + ") - FASTER!!"));
@@ -2616,7 +2651,9 @@ public class Main {
         for (ControlPoint cp : cpList) {
             Coordinate c = cp.getCoordinate();
             fileCommands.add(Execute.In(c.getDimension()) +
-                    CommandBuilder.addForceLoad(c.getX(), c.getZ(), c.getX(), c.getZ()));
+                    ForceLoad.create(ForceLoadAction.ADD)
+                            .from(ColumnPos.absolute(c.getX(), c.getZ()))
+                            .build());
 
             fileCommands.add(Execute.In(c.getDimension()) +
                     SetBlock.create(
@@ -2663,7 +2700,9 @@ public class Main {
                             .build());
 
             fileCommands.add(Execute.In(c.getDimension()) +
-                    CommandBuilder.removeForceLoad(c.getX(), c.getZ(), c.getX(), c.getZ()));
+                    ForceLoad.create(ForceLoadAction.REMOVE)
+                            .from(ColumnPos.absolute(c.getX(), c.getZ()))
+                            .build());
         }
 
         // Remove leftover music discs from legacy Control Point
