@@ -22,6 +22,7 @@ import arguments.particle.ParticleArgument;
 import arguments.particle.ParticleArgumentBuilder;
 import arguments.targetselector.SelectorArgumentsBuilder;
 import arguments.targetselector.TargetSelector;
+import arguments.time.VariableGameTime;
 import commands.*;
 import commands.Random;
 import commands.advancement.AdvancementAction;
@@ -32,6 +33,7 @@ import commands.item.ItemTargetEntity;
 import commands.random.RandomAction;
 import commands.recipe.RecipeAction;
 import commands.tag.TagAction;
+import commands.time.TimeAction;
 import commands.worldborder.WorldBorderAction;
 import controlpoints.ControlPoint;
 import controlpoints.ControlPointTag;
@@ -1365,7 +1367,10 @@ public class Main {
         );
 
         // Set time
-        fileCommands.add(CommandBuilder.setTime(0));
+        fileCommands.add(Time.create(
+                        TimeAction.SET,
+                        VariableGameTime.create(0))
+                .build());
 
         // Set gamerules
         fileCommands.add(GameRule.create(GameRuleId.COMMAND_BLOCK_OUTPUT)
@@ -1857,7 +1862,10 @@ public class Main {
         ArrayList<TextItem> texts = new ArrayList<>();
 
         // Set world time
-        fileCommands.add(CommandBuilder.setTime(0));
+        fileCommands.add(Time.create(
+                        TimeAction.SET,
+                        VariableGameTime.create(0))
+                .build());
 
         // Give potion effect
         fileCommands.add(Effect.create(EffectAction.GIVE)

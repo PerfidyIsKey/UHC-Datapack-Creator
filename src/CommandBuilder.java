@@ -109,11 +109,6 @@ public class CommandBuilder {
         return "data modify entity " + target + " " + targetPath + " set value " + value + "b";
     }
 
-    // Game time
-    public static String setTime(int time) {
-        return "time set " + time;
-    }
-
     // Potions
     public static String giveSplashPotion(String targets, int slotNumber, EffectId effect, String colorHex, String displayName, String lore) {
         // Convert hex to decimal
