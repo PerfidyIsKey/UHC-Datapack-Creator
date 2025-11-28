@@ -15,35 +15,12 @@ import java.util.ArrayList;
 public class CommandBuilder {
 
     // Setblock
-    public static ArrayList<String> forceLoadAndSet(int x, int y, int z, String blockType) {
-        return forceLoadAndSet(x, y, z, Dimension.overworld, blockType);
-    }
-
-    public static ArrayList<String> forceLoadAndSet(int x, int y, int z, StaticBlockId blockType) {
-        return forceLoadAndSet(x, y, z, blockType + "");
-    }
-
     public static ArrayList<String> forceLoadAndSet(int x, int y, int z, String blockType, SetBlockType type) {
         return forceLoadAndSet(x, y, z, Dimension.overworld, blockType, type);
     }
 
     public static ArrayList<String> forceLoadAndSet(int x, int y, int z, StaticBlockId blockType, SetBlockType type) {
         return forceLoadAndSet(x, y, z, blockType + "", type);
-    }
-
-    public static ArrayList<String> forceLoadAndSet(int x, int y, int z, Dimension dimension, String blockType) {
-        ArrayList<String> fileCommands = new ArrayList<>();
-        fileCommands.add(Execute.In(dimension) +
-                "forceload add " + x + " " + z + " " + x + " " + z);
-        fileCommands.add(Execute.In(dimension) +
-                setBlock(x, y, z, blockType));
-        fileCommands.add(Execute.In(dimension) +
-                "forceload remove " + x + " " + z + " " + x + " " + z);
-        return fileCommands;
-    }
-
-    public static ArrayList<String> forceLoadAndSet(int x, int y, int z, Dimension dimension, StaticBlockId blockType) {
-        return forceLoadAndSet(x, y, z, dimension, blockType + "");
     }
 
     public static ArrayList<String> forceLoadAndSet(int x, int y, int z, Dimension dimension, String blockType, SetBlockType type) {
@@ -89,10 +66,6 @@ public class CommandBuilder {
         return setBlock(x, y, z, blockType) + " " + type;
     }
 
-    public static String summonEntity(EntityType entity, Coordinate coordinate, String nbt) {
-        return "summon " + entity + " " + coordinate.getCoordinateString() + " " + nbt;
-    }
-
     public static String replaceItem(String targets, ItemSlot slot, String item) {
         return "item replace entity " + targets + " " + slot.getCommandString() + " with " + item;
     }
@@ -118,11 +91,6 @@ public class CommandBuilder {
         return "item replace entity " + targets + " " + ItemSlot.HOTBAR.withSlotNumber(slotNumber).getCommandString() + " with " + ItemId.SPLASH_POTION + "[potion_contents={custom_color:" + potionColor + ",custom_effects:[{id:\"" + effect + "\",amplifier:0,duration:200,show_particles:0b,show_icon:0b,ambient:0b}]},lore=[\"" + lore + "\"],custom_name=\"" + displayName + "\"]";
     }
 
-    // Trigger
-    public static String setTrigger(ScoreboardObjective objective) {
-        return "trigger " + objective.getName();
-    }
-
     // Change title display time
     public static String changeTitleDisplayTime(String targets, int fadeIn, int stay, int fadeOut) {
         return changeTitleDisplayTime(targets, fadeIn, stay, fadeOut, Duration.SECONDS);
@@ -130,10 +98,6 @@ public class CommandBuilder {
 
     public static String changeTitleDisplayTime(String targets, int fadeIn, int stay, int fadeOut, Duration durationType) {
         return "title " + targets + " times " + fadeIn + durationType + " " + stay + durationType + " " + fadeOut + durationType;
-    }
-
-    public static String changeTitleDisplayTime(String targets, String fadeIn, String stay, String fadeOut) {
-        return "title " + targets + " times " + fadeIn + " " + stay + " " + fadeOut;
     }
 
     public static String titleDefaultTiming(String targets) {
