@@ -4,6 +4,7 @@ import arguments.Entity;
 import arguments.targetselector.SelectorArgumentsBuilder;
 import arguments.targetselector.TargetSelector;
 import commands.Attribute;
+import commands.Summon;
 import controlpoints.ControlPointTag;
 import shared.*;
 import shared.attributes.AttributeId;
@@ -151,31 +152,6 @@ public class CommandBuilder {
 
     public static ArrayList<String> warnAndReplace(String targets, TextItem warning, ItemId replacement) {
         return warnAndReplace(targets, warning, replacement.toString());
-    }
-
-    // Waypoints
-    public static ArrayList<String> createWaypoint(Coordinate coordinate, ControlPointTag tag) {
-        ArrayList<String> fileCommands = new ArrayList<>();
-
-        // Forceload chunk
-        fileCommands.add(addForceLoad(coordinate));
-
-        // Summon armor stand to be tracked
-        fileCommands.add(summonEntity(EntityType.ARMOR_STAND, coordinate, "{Invulnerable:1b,Marker:1b,Invisible:1b,Tags:[\"" + tag + "\"]}"));
-
-        // Set transmit range of waypoint
-        fileCommands.add(Attribute.create(
-                        Entity.ofSelector(
-                                TargetSelector.NEAREST_ENTITY,
-                                SelectorArgumentsBuilder.create()
-                                        .tag(tag)),
-                        AttributeId.WAYPOINT_TRANSMIT_RANGE)
-                .setBase(Main.world.getFullSize()));
-
-        // Set color of waypoint to white
-        fileCommands.add(modifyWaypointColor("@n[tag=" + tag + "]"));
-
-        return fileCommands;
     }
 
     public static String modifyWaypointColor(String waypoint, TextColor color) {

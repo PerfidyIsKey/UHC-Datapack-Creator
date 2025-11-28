@@ -18,12 +18,12 @@ public class Summon {
         return new Summon(entity);
     }
 
-    public Summon setPos(Vec3 pos) {
+    public Summon pos(Vec3 pos) {
         this.pos = pos;
         return this;
     }
 
-    public Summon setNbt(CompoundTag nbt) {
+    public Summon nbt(CompoundTag nbt) {
         this.nbt = nbt;
         return this;
     }

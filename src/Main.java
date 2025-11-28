@@ -39,10 +39,7 @@ import controlpoints.ControlPoint;
 import controlpoints.ControlPointTag;
 import nbt.blockentity.*;
 import nbt.blockentity.StructureBlockEntity.StructureDataKey;
-import nbt.entity.BaseEntityNbt;
-import nbt.entity.FallingBlockNbtBuilder;
-import nbt.entity.FireworkRocketNbtBuilder;
-import nbt.entity.ItemNbtBuilder;
+import nbt.entity.*;
 import nbt.entity.data.*;
 import nbt.item.PlayerProfileComponentBuilder;
 import nbt.tags.ByteTag;
@@ -1008,8 +1005,8 @@ public class Main {
                                                         "In rememberance",
                                                         "run_command",
                                                         Summon.create(EntityType.FIREWORK_ROCKET)
-                                                                .setPos(Vec3.relative(0, 0, 0))
-                                                                .setNbt(
+                                                                .pos(Vec3.relative(0, 0, 0))
+                                                                .nbt(
                                                                         FireworkRocketNbtBuilder.create(
                                                                                 FireworkRocketDataBuilder.create()
                                                                                         .setProperty(BooleanNbtProperty.GLOWING, true)
@@ -1132,8 +1129,8 @@ public class Main {
         for (Player p : players) {
             fileCommands.add(Execute.At("@p[name=" + p.getPlayerName() + ",scores={Deaths=1}]") +
                     Summon.create(EntityType.ITEM)
-                            .setPos(Vec3.relative(0, 0, 0))
-                            .setNbt(
+                            .pos(Vec3.relative(0, 0, 0))
+                            .nbt(
                                     ItemNbtBuilder.create(
                                                     ItemData.create(
                                                             ItemId.PLAYER_HEAD,
@@ -1361,8 +1358,8 @@ public class Main {
                                 .build());
         fileCommands.add(
                 Summon.create(EntityType.MARKER)
-                        .setPos(Vec3.absolute(0, Constant.worldBottom, 0))
-                        .setNbt(BaseEntityNbt.create(EntityType.MARKER, "Admin").buildNbt())
+                        .pos(Vec3.absolute(0, Constant.worldBottom, 0))
+                        .nbt(BaseEntityNbt.create(EntityType.MARKER, "Admin").buildNbt())
                         .build()
         );
 
@@ -2024,7 +2021,32 @@ public class Main {
 
         // Summon armor stands for locator bar tracking
         for (ControlPoint controlPoint : controlPoints) {
-            fileCommands.addAll(CommandBuilder.createWaypoint(controlPoint.getCoordinate(), controlPoint.getName()));
+            // Forceload chunk
+            fileCommands.add(CommandBuilder.addForceLoad(controlPoint.getCoordinate()));
+
+            // Summon armor stand to be tracked
+            fileCommands.add(Summon.create(EntityType.ARMOR_STAND)
+                    .pos(Vec3.absolute(controlPoint.getCoordinate().getX(), controlPoint.getCoordinate().getY(), controlPoint.getCoordinate().getZ()))
+                    .nbt(ArmorStandNbtBuilder.create(
+                                    ArmorStandData.create(
+                                            true,
+                                            true,
+                                            true,
+                                            new EntityTag[]{controlPoint.getName()}))
+                            .buildNbt())
+                    .build());
+
+            // Set transmit range of waypoint
+            fileCommands.add(Attribute.create(
+                            Entity.ofSelector(
+                                    TargetSelector.NEAREST_ENTITY,
+                                    SelectorArgumentsBuilder.create()
+                                            .tag(controlPoint.getName())),
+                            AttributeId.WAYPOINT_TRANSMIT_RANGE)
+                    .setBase(Main.world.getFullSize()));
+
+            // Set color of waypoint to white
+            fileCommands.add(CommandBuilder.modifyWaypointColor("@n[tag=" + controlPoint.getName() + "]"));
         }
 
         // Schedule continuous functions
@@ -2413,8 +2435,8 @@ public class Main {
         for (int i = 0; i < carePackageAmount; i++) {
             fileCommands.add(Execute.In(Dimension.overworld) +
                     Summon.create(EntityType.FALLING_BLOCK)
-                            .setPos(Vec3.absolute(0, 300, 0))
-                            .setNbt(
+                            .pos(Vec3.absolute(0, 300, 0))
+                            .nbt(
                                     FallingBlockNbtBuilder.create(
                                             FallingBlockData.create(
                                                     ItemId.CHEST,
