@@ -104,7 +104,7 @@ public class TextComponent {
             Boolean obfuscated
     ) {
         // Calls the base method with the enum's Minecraft name string
-        String colorString = (color != null) ? color.getMinecraftName() : null;
+        String colorString = (color != null) ? color.getColor() : null;
         return complex(text, colorString, bold, italic, obfuscated);
     }
 }

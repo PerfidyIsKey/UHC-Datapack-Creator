@@ -1,16 +1,4 @@
 import Enums.*;
-import HelperClasses.*;
-import arguments.Entity;
-import arguments.targetselector.SelectorArgumentsBuilder;
-import arguments.targetselector.TargetSelector;
-import commands.Attribute;
-import commands.Summon;
-import controlpoints.ControlPointTag;
-import shared.*;
-import shared.attributes.AttributeId;
-import shared.item.ItemId;
-
-import java.util.ArrayList;
 
 public class CommandBuilder {
 
@@ -27,11 +15,4 @@ public class CommandBuilder {
         return changeTitleDisplayTime(targets, 10, 70, 20, Duration.TICKS);
     }
 
-    public static String modifyWaypointColor(String waypoint, TextColor color) {
-        return "waypoint modify " + waypoint + " color " + color;
-    }
-
-    public static String modifyWaypointColor(String waypoint) {
-        return modifyWaypointColor(waypoint, TextColor.WHITE);
-    }
 }

@@ -1,53 +1,49 @@
 package shared;
 
+import java.util.Locale;
+
 /**
  * Defines standard Minecraft text colors used in JSON text components (1.16+ format).
- * The values correspond directly to the official lowercase color names expected by the game's JSON parser.
+ * The enum constants' names automatically map to the official lowercase color names expected by the game's JSON parser.
  */
-public enum TextColor {
-    DARK_RED("dark_red"),
-    RED("red"),
-    GOLD("gold"),
-    YELLOW("yellow"),
-    DARK_GREEN("dark_green"),
-    GREEN("green"),
-    AQUA("aqua"),
-    DARK_AQUA("dark_aqua"),
-    DARK_BLUE("dark_blue"),
-    BLUE("blue"),
-    LIGHT_PURPLE("light_purple"),
-    DARK_PURPLE("dark_purple"),
-    WHITE("white"),
-    GRAY("gray"),
-    DARK_GRAY("dark_gray"),
-    BLACK("black");
-
-    private final String minecraftName;
+public enum TextColor implements ColorType {
+    DARK_RED,
+    RED,
+    GOLD,
+    YELLOW,
+    DARK_GREEN,
+    GREEN,
+    AQUA,
+    DARK_AQUA,
+    DARK_BLUE,
+    BLUE,
+    LIGHT_PURPLE,
+    DARK_PURPLE,
+    WHITE,
+    GRAY,
+    DARK_GRAY,
+    BLACK;
 
     /**
-     * Private constructor to associate the enum constant with its official Minecraft name.
-     * @param minecraftName The lowercase string name used in JSON color fields.
-     */
-    TextColor(String minecraftName) {
-        this.minecraftName = minecraftName;
-    }
-
-    /**
-     * Returns the lowercase name expected by Minecraft JSON components.
-     * This is the value used in the "color" field of a text component object.
+     * Retrieves the raw string representation of the color.
+     * This method automatically converts the enum constant's name (e.g., DARK_RED)
+     * into the required lowercase Minecraft string (e.g., "dark_red").
      * * @return The Minecraft-specific color name (e.g., "dark_red").
      */
-    public String getMinecraftName() {
-        return minecraftName;
+    @Override
+    public String getColor() {
+        // Use Locale.ROOT for consistent, language-independent case conversion,
+        // which is standard practice for technical identifiers like Minecraft color names.
+        return this.name().toLowerCase(Locale.ROOT);
     }
 
     /**
-     * Overrides the default toString to return the official Minecraft color name.
-     * This makes it easy to use the enum directly in methods that accept a String color name.
+     * Overrides the default toString to return the official Minecraft color name,
+     * making the enum usable directly in command string concatenation.
      * * @return The Minecraft-specific color name.
      */
     @Override
     public String toString() {
-        return minecraftName;
+        return getColor();
     }
 }
