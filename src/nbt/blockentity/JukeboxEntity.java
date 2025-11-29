@@ -28,7 +28,7 @@ public class JukeboxEntity extends CompoundTag implements BlockEntity {
 
     private void initializeDefaultTags() {
         // Initialize with a default, empty RecordItem compound tag
-        CompoundTag recordItem = new CompoundTag(JukeboxDataKey.RECORD_ITEM.getNbtName());
+        CompoundTag recordItem = CompoundTag.create(JukeboxDataKey.RECORD_ITEM.getNbtName());
         this.put(recordItem);
     }
 
@@ -41,7 +41,7 @@ public class JukeboxEntity extends CompoundTag implements BlockEntity {
             return (CompoundTag) recordTag;
         }
         // Should not happen if initialized correctly, but good practice to handle.
-        return new CompoundTag(JukeboxDataKey.RECORD_ITEM.getNbtName());
+        return CompoundTag.create(JukeboxDataKey.RECORD_ITEM.getNbtName());
     }
 
     /**

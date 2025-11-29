@@ -29,7 +29,7 @@ public class ItemNbtBuilder implements EntityNbtBuilder {
     @Override
     public CompoundTag buildNbt() {
         CompoundTag rootNbt = baseNbt.buildNbt();
-        CompoundTag itemTag = new CompoundTag("Item");
+        CompoundTag itemTag = CompoundTag.create("Item");
 
         // 1. Item ID and Count
         itemTag.put(new StringTag("id", data.id().getResourceLocation()));
@@ -37,7 +37,7 @@ public class ItemNbtBuilder implements EntityNbtBuilder {
 
         // 2. Components Map: {"components": {...}}
         if (!data.components().isEmpty()) {
-            CompoundTag componentsMap = new CompoundTag("components");
+            CompoundTag componentsMap = CompoundTag.create("components");
 
             for (Map.Entry<ItemComponentType, CompoundTag> entry : data.components().entrySet()) {
 
@@ -64,7 +64,7 @@ public class ItemNbtBuilder implements EntityNbtBuilder {
      */
     private CompoundTag createNamedCompoundTag(String name, CompoundTag source) {
         // Create a new CompoundTag with the desired name (e.g., "minecraft:profile")
-        CompoundTag namedTag = new CompoundTag(name);
+        CompoundTag namedTag = CompoundTag.create(name);
 
         // Copy all inner tags (e.g., the 'name' tag for the player profile) from the source
         // Assuming CompoundTag.getValue() returns the internal Map<String, Tag> used by TagConverter

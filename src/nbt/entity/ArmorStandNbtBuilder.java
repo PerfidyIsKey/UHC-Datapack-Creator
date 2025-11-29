@@ -47,7 +47,7 @@ public class ArmorStandNbtBuilder implements EntityNbtBuilder {
      */
     @Override
     public CompoundTag buildNbt() {
-        CompoundTag rootNbt = new CompoundTag("");
+        CompoundTag rootNbt = CompoundTag.create("");
 
         // Helper to convert boolean (true) NBT values to the required 1b (ByteTag)
         final Byte TRUE_BYTE = (byte)1;

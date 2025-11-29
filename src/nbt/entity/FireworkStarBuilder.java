@@ -12,7 +12,7 @@ public class FireworkStarBuilder {
 
     // Static factory method to perform the conversion
     public static CompoundTag build(FireworkStarData data) {
-        CompoundTag star = new CompoundTag();
+        CompoundTag star = CompoundTag.create();
 
         // Type is type-safe via enum
         star.put(new ByteTag("Type", data.getShape().getValue()));

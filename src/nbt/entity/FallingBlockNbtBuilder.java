@@ -24,18 +24,18 @@ public class FallingBlockNbtBuilder implements EntityNbtBuilder {
 
     @Override
     public CompoundTag buildNbt() {
-        CompoundTag rootNbt = new CompoundTag("");
+        CompoundTag rootNbt = CompoundTag.create("");
 
         // --- 1. BlockState (Requires blockName) ---
         if (data.blockName() != null) {
-            CompoundTag blockState = new CompoundTag("BlockState");
+            CompoundTag blockState = CompoundTag.create("BlockState");
             blockState.put(new StringTag("Name", data.blockName().getResourceLocation()));
             rootNbt.put(blockState);
         }
 
         // --- 2. TileEntityData (Requires lootTable or customName) ---
         if (data.lootTable() != null || data.customName() != null) {
-            CompoundTag tileEntityData = new CompoundTag("TileEntityData");
+            CompoundTag tileEntityData = CompoundTag.create("TileEntityData");
 
             if (data.lootTable() != null) {
                 tileEntityData.put(new StringTag("LootTable", data.lootTable().getResourceLocation()));

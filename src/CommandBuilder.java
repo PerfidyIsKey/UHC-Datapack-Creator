@@ -14,22 +14,6 @@ import java.util.ArrayList;
 
 public class CommandBuilder {
 
-    public static String setBlock(String x, String y, String z, String blockType) {
-        return "setblock " + x + " " + y + " " + z + " " + blockType;
-    }
-
-    public static String setBlock(int x, int y, int z, String blockType) {
-        return setBlock("" + x, "" + y, "" + z, blockType);
-    }
-
-    public static String setBlock(int x, int y, int z, String blockType, SetBlockType type) {
-        return setBlock(x, y, z, blockType) + " " + type;
-    }
-
-    public static String replaceItem(String targets, ItemSlot slot, String item) {
-        return "item replace entity " + targets + " " + slot.getCommandString() + " with " + item;
-    }
-
     // Data
     public static String getData(String target, String path) {
         return "data get entity " + target + " " + path;
@@ -62,20 +46,6 @@ public class CommandBuilder {
 
     public static String titleDefaultTiming(String targets) {
         return changeTitleDisplayTime(targets, 10, 70, 20, Duration.TICKS);
-    }
-
-    public static ArrayList<String> warnAndReplace(String targets, TextItem warning, String replacement) {
-        ArrayList<String> fileCommands = new ArrayList<>();
-
-        fileCommands.add(Execute.If(targets) +
-                new TellRaw(targets, warning).sendRaw());
-        fileCommands.add(replaceItem(targets, ItemSlot.MAINHAND, replacement));
-
-        return fileCommands;
-    }
-
-    public static ArrayList<String> warnAndReplace(String targets, TextItem warning, ItemId replacement) {
-        return warnAndReplace(targets, warning, replacement.toString());
     }
 
     public static String modifyWaypointColor(String waypoint, TextColor color) {

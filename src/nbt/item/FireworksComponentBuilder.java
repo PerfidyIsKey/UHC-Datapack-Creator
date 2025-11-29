@@ -19,13 +19,13 @@ public class FireworksComponentBuilder {
      * Builds the content of the "minecraft:fireworks" component.
      */
     public static CompoundTag build(byte flightDuration, List<FireworkStarData> explosions) {
-        CompoundTag fireworksData = new CompoundTag("minecraft:fireworks");
+        CompoundTag fireworksData = CompoundTag.create("minecraft:fireworks");
 
         // 1. Build the list of explosions (Stars)
         ListTag explosionsList = new ListTag("explosions");
 
         for (FireworkStarData starData : explosions) {
-            CompoundTag explosionTag = new CompoundTag();
+            CompoundTag explosionTag = CompoundTag.create();
 
             // shape:<string> (using the updated enum's string value, e.g., "star")
             explosionTag.put(new StringTag("shape", starData.getShape().getComponentValue()));

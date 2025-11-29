@@ -16,7 +16,7 @@ public final class TagFactory {
             case TagType.TAG_BYTE_ARRAY -> new ByteArrayTag();
             case TagType.TAG_STRING -> new StringTag();
             case TagType.TAG_LIST -> new ListTag();
-            case TagType.TAG_COMPOUND -> new CompoundTag();
+            case TagType.TAG_COMPOUND -> CompoundTag.create();
             case TagType.TAG_INT_ARRAY -> new IntArrayTag();
             case TagType.TAG_LONG_ARRAY -> new LongArrayTag();
             case TagType.TAG_END -> new EndTag();

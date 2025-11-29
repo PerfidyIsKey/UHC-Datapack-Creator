@@ -14,7 +14,7 @@ public class PlayerProfileComponentBuilder {
      * Builds the content of the "minecraft:profile" component.
      */
     public static CompoundTag build(PlayerProfileComponentData data) {
-        CompoundTag profileData = new CompoundTag();
+        CompoundTag profileData = CompoundTag.create();
 
         // The component requires a "name" tag
         profileData.put(new StringTag("name", data.playerName()));

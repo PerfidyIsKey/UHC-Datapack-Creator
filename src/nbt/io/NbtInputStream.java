@@ -19,7 +19,7 @@ public class NbtInputStream implements Closeable {
     // reads a named root tag, expected to be a CompoundTag
     public CompoundTag readNamedCompound() throws IOException {
         byte type = in.readByte();
-        if (type == TagType.TAG_END) return new CompoundTag();
+        if (type == TagType.TAG_END) return CompoundTag.create();
         String name = in.readUTF();
         NBTTag root = TagFactory.create(type);
         root.setName(name);

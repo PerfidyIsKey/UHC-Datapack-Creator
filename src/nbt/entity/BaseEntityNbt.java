@@ -14,7 +14,7 @@ public class BaseEntityNbt {
 
     private final EntityType id;
     private String customName;
-    private final CompoundTag nbt = new CompoundTag("");
+    private final CompoundTag nbt = CompoundTag.create("");
 
     private BaseEntityNbt(EntityType id, String customName) {
         this.id = id;

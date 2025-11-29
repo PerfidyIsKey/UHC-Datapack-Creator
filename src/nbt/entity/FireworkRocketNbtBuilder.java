@@ -41,7 +41,7 @@ public class FireworkRocketNbtBuilder implements EntityNbtBuilder {
         // 2. Build the Item Components Map: {"components": {"minecraft:fireworks": {...}}}
 
         // This CompoundTag is named "components"
-        CompoundTag componentsMap = new CompoundTag("components");
+        CompoundTag componentsMap = CompoundTag.create("components");
 
         // This tag is assumed to be named "minecraft:fireworks" inside the builder
         CompoundTag fireworksComponentData = FireworksComponentBuilder.build(
@@ -55,7 +55,7 @@ public class FireworkRocketNbtBuilder implements EntityNbtBuilder {
 
         // 3. Build the "FireworksItem" tag
         // This CompoundTag is named "FireworksItem"
-        CompoundTag fireworksItem = new CompoundTag("FireworksItem");
+        CompoundTag fireworksItem = CompoundTag.create("FireworksItem");
 
         fireworksItem.put(new StringTag("id", EntityType.FIREWORK_ROCKET.getResourceLocation()));
         fireworksItem.put(new IntTag("count", 1));

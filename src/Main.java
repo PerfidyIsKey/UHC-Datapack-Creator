@@ -45,6 +45,8 @@ import nbt.entity.data.*;
 import nbt.item.PlayerProfileComponentBuilder;
 import nbt.tags.ByteTag;
 import nbt.tags.CompoundTag;
+import nbt.tags.IntTag;
+import nbt.tags.StringTag;
 import shared.attributes.AttributeId;
 import shared.attributes.AttributeOperation;
 import shared.attributes.AttributeSlot;
@@ -52,6 +54,10 @@ import shared.attributes.AttributeTooltipDisplayType;
 import shared.block.ColorableBlockId;
 import shared.block.WoodBlockId;
 import shared.item.*;
+import shared.nbt.ComponentsKey;
+import shared.nbt.ItemNbtKey;
+import shared.nbt.PotionContentsKey;
+import shared.nbt.SelectedItemKey;
 import utils.TextComponent;
 import shared.*;
 
@@ -1937,7 +1943,7 @@ public class Main {
                                 BundleItemStack.create(
                                         team.getDyeColor(),
                                         EnchantmentsComponent.create(Map.of(EnchantmentId.VANISHING_CURSE, 1)),
-                                        CustomDataComponent.create(new CompoundTag()
+                                        CustomDataComponent.create(CompoundTag.create()
                                                 .put(new ByteTag("locateTeammate", (byte) 1)))))
                         .build());
             }
@@ -2711,8 +2717,7 @@ public class Main {
                         TargetSelector.ALL_ENTITIES,
                         SelectorArgumentsBuilder.create()
                                 .type(EntityType.ITEM)
-                                .nbt(
-                                        ItemNbtBuilder.create(
+                                .nbt(ItemNbtBuilder.create(
                                                         ItemData.create(
                                                                 ItemId.MUSIC_DISC_STAL,
                                                                 1))
@@ -2771,49 +2776,334 @@ public class Main {
 
         // Regeneration potions (normal + splash, strong, long)
         Text warning = new Text(TextColor.RED, true, false, "REGENERATION POTIONS ARE NOT ALLOWED, YOU NAUGHTY BUM!");
-        String target = "@p[nbt={SelectedItem:{id:\"" + ItemId.SPLASH_POTION + "\",count:1,components:{\"minecraft:potion_contents\":{potion:\"" + EffectId.REGENERATION.getPotionTag() + "\"}}}}]";
-        String replacement = ItemId.GLASS_BOTTLE.toString();
-        fileCommands.addAll(CommandBuilder.warnAndReplace(target, warning, replacement));
-        target = "@p[nbt={SelectedItem:{id:\"" + ItemId.SPLASH_POTION + "\",count:1,components:{\"minecraft:potion_contents\":{potion:\"" + EffectId.REGENERATION.getPotionTag(true, false) + "\"}}}}]";
-        fileCommands.addAll(CommandBuilder.warnAndReplace(target, warning, replacement));
-        target = "@p[nbt={SelectedItem:{id:\"" + ItemId.SPLASH_POTION + "\",count:1,components:{\"minecraft:potion_contents\":{potion:\"" + EffectId.REGENERATION.getPotionTag(false, true) + "\"}}}}]";
-        fileCommands.addAll(CommandBuilder.warnAndReplace(target, warning, replacement));
-        target = "@p[nbt={SelectedItem:{id:\"" + ItemId.POTION + "\",count:1,components:{\"minecraft:potion_contents\":{potion:\"" + EffectId.REGENERATION.getPotionTag() + "\"}}}}]";
-        fileCommands.addAll(CommandBuilder.warnAndReplace(target, warning, replacement));
-        target = "@p[nbt={SelectedItem:{id:\"" + ItemId.POTION + "\",count:1,components:{\"minecraft:potion_contents\":{potion:\"" + EffectId.REGENERATION.getPotionTag(true, false) + "\"}}}}]";
-        fileCommands.addAll(CommandBuilder.warnAndReplace(target, warning, replacement));
-        target = "@p[nbt={SelectedItem:{id:\"" + ItemId.POTION + "\",count:1,components:{\"minecraft:potion_contents\":{potion:\"" + EffectId.REGENERATION.getPotionTag(false, true) + "\"}}}}]";
-        fileCommands.addAll(CommandBuilder.warnAndReplace(target, warning, replacement));
+        ItemTargetEntity target = ItemTargetEntity.create(Entity.ofSelector(
+                TargetSelector.NEAREST_PLAYER,
+                SelectorArgumentsBuilder.create()
+                        .nbt(CompoundTag.create()
+                                .put(CompoundTag.create(ItemNbtKey.SELECTED_ITEM.toString())
+                                        .put(new StringTag(
+                                                SelectedItemKey.ID.toString(),
+                                                ItemId.SPLASH_POTION.getResourceLocation()))
+                                        .put(new ByteTag(
+                                                SelectedItemKey.COUNT.toString(),
+                                                (byte) 1))
+                                        .put(CompoundTag.create(SelectedItemKey.COMPONENTS.toString())
+                                                .put(CompoundTag.create(ComponentsKey.POTION_CONTENTS.toString())
+                                                        .put(new StringTag(
+                                                                PotionContentsKey.POTION.toString(),
+                                                                EffectId.REGENERATION.getPotionTag()))))))));
+        String targetOld = "@p[nbt={SelectedItem:{id:\"" + ItemId.SPLASH_POTION + "\",count:1,components:{\"minecraft:potion_contents\":{potion:\"" + EffectId.REGENERATION.getPotionTag() + "\"}}}}]";
+        ItemStack replacement = SimpleItemStack.create(ItemId.GLASS_BOTTLE);
+        String replacementOld = ItemId.GLASS_BOTTLE.toString();
+        fileCommands.add(Execute.If(targetOld) +
+                new TellRaw(targetOld, warning).sendRaw());
+        fileCommands.add(Item.create(
+                        ItemAction.REPLACE_WITH,
+                        target)
+                .slot(ItemSlot.MAINHAND)
+                .replaceWith(replacement)
+                .build());
+        target = ItemTargetEntity.create(Entity.ofSelector(
+                TargetSelector.NEAREST_PLAYER,
+                SelectorArgumentsBuilder.create()
+                        .nbt(CompoundTag.create()
+                                .put(CompoundTag.create(ItemNbtKey.SELECTED_ITEM.toString())
+                                        .put(new StringTag(
+                                                SelectedItemKey.ID.toString(),
+                                                ItemId.SPLASH_POTION.getResourceLocation()))
+                                        .put(new ByteTag(
+                                                SelectedItemKey.COUNT.toString(),
+                                                (byte) 1))
+                                        .put(CompoundTag.create(SelectedItemKey.COMPONENTS.toString())
+                                                .put(CompoundTag.create(ComponentsKey.POTION_CONTENTS.toString())
+                                                        .put(new StringTag(
+                                                                PotionContentsKey.POTION.toString(),
+                                                                EffectId.REGENERATION.getPotionTag(true, false)))))))));
+        targetOld = "@p[nbt={SelectedItem:{id:\"" + ItemId.SPLASH_POTION + "\",count:1,components:{\"minecraft:potion_contents\":{potion:\"" + EffectId.REGENERATION.getPotionTag(true, false) + "\"}}}}]";
+        fileCommands.add(Execute.If(targetOld) +
+                new TellRaw(targetOld, warning).sendRaw());
+        fileCommands.add(Item.create(
+                        ItemAction.REPLACE_WITH,
+                        target)
+                .slot(ItemSlot.MAINHAND)
+                .replaceWith(replacement)
+                .build());
+        target = ItemTargetEntity.create(Entity.ofSelector(
+                TargetSelector.NEAREST_PLAYER,
+                SelectorArgumentsBuilder.create()
+                        .nbt(CompoundTag.create()
+                                .put(CompoundTag.create(ItemNbtKey.SELECTED_ITEM.toString())
+                                        .put(new StringTag(
+                                                SelectedItemKey.ID.toString(),
+                                                ItemId.SPLASH_POTION.getResourceLocation()))
+                                        .put(new ByteTag(
+                                                SelectedItemKey.COUNT.toString(),
+                                                (byte) 1))
+                                        .put(CompoundTag.create(SelectedItemKey.COMPONENTS.toString())
+                                                .put(CompoundTag.create(ComponentsKey.POTION_CONTENTS.toString())
+                                                        .put(new StringTag(
+                                                                PotionContentsKey.POTION.toString(),
+                                                                EffectId.REGENERATION.getPotionTag(false, true)))))))));
+        targetOld = "@p[nbt={SelectedItem:{id:\"" + ItemId.SPLASH_POTION + "\",count:1,components:{\"minecraft:potion_contents\":{potion:\"" + EffectId.REGENERATION.getPotionTag(false, true) + "\"}}}}]";
+        fileCommands.add(Execute.If(targetOld) +
+                new TellRaw(targetOld, warning).sendRaw());
+        fileCommands.add(Item.create(
+                        ItemAction.REPLACE_WITH,
+                        target)
+                .slot(ItemSlot.MAINHAND)
+                .replaceWith(replacement)
+                .build());
+
+        target = ItemTargetEntity.create(Entity.ofSelector(
+                TargetSelector.NEAREST_PLAYER,
+                SelectorArgumentsBuilder.create()
+                        .nbt(CompoundTag.create()
+                                .put(CompoundTag.create(ItemNbtKey.SELECTED_ITEM.toString())
+                                        .put(new StringTag(
+                                                SelectedItemKey.ID.toString(),
+                                                ItemId.POTION.getResourceLocation()))
+                                        .put(new ByteTag(
+                                                SelectedItemKey.COUNT.toString(),
+                                                (byte) 1))
+                                        .put(CompoundTag.create(SelectedItemKey.COMPONENTS.toString())
+                                                .put(CompoundTag.create(ComponentsKey.POTION_CONTENTS.toString())
+                                                        .put(new StringTag(
+                                                                PotionContentsKey.POTION.toString(),
+                                                                EffectId.REGENERATION.getPotionTag()))))))));
+        targetOld = "@p[nbt={SelectedItem:{id:\"" + ItemId.POTION + "\",count:1,components:{\"minecraft:potion_contents\":{potion:\"" + EffectId.REGENERATION.getPotionTag() + "\"}}}}]";
+        fileCommands.add(Execute.If(targetOld) +
+                new TellRaw(targetOld, warning).sendRaw());
+        fileCommands.add(Item.create(
+                        ItemAction.REPLACE_WITH,
+                        target)
+                .slot(ItemSlot.MAINHAND)
+                .replaceWith(replacement)
+                .build());
+        target = ItemTargetEntity.create(Entity.ofSelector(
+                TargetSelector.NEAREST_PLAYER,
+                SelectorArgumentsBuilder.create()
+                        .nbt(CompoundTag.create()
+                                .put(CompoundTag.create(ItemNbtKey.SELECTED_ITEM.toString())
+                                        .put(new StringTag(
+                                                SelectedItemKey.ID.toString(),
+                                                ItemId.POTION.getResourceLocation()))
+                                        .put(new ByteTag(
+                                                SelectedItemKey.COUNT.toString(),
+                                                (byte) 1))
+                                        .put(CompoundTag.create(SelectedItemKey.COMPONENTS.toString())
+                                                .put(CompoundTag.create(ComponentsKey.POTION_CONTENTS.toString())
+                                                        .put(new StringTag(
+                                                                PotionContentsKey.POTION.toString(),
+                                                                EffectId.REGENERATION.getPotionTag(true, false)))))))));
+        targetOld = "@p[nbt={SelectedItem:{id:\"" + ItemId.POTION + "\",count:1,components:{\"minecraft:potion_contents\":{potion:\"" + EffectId.REGENERATION.getPotionTag(true, false) + "\"}}}}]";
+        fileCommands.add(Execute.If(targetOld) +
+                new TellRaw(targetOld, warning).sendRaw());
+        fileCommands.add(Item.create(
+                        ItemAction.REPLACE_WITH,
+                        target)
+                .slot(ItemSlot.MAINHAND)
+                .replaceWith(replacement)
+                .build());
+        target = ItemTargetEntity.create(Entity.ofSelector(
+                TargetSelector.NEAREST_PLAYER,
+                SelectorArgumentsBuilder.create()
+                        .nbt(CompoundTag.create()
+                                .put(CompoundTag.create(ItemNbtKey.SELECTED_ITEM.toString())
+                                        .put(new StringTag(
+                                                SelectedItemKey.ID.toString(),
+                                                ItemId.POTION.getResourceLocation()))
+                                        .put(new ByteTag(
+                                                SelectedItemKey.COUNT.toString(),
+                                                (byte) 1))
+                                        .put(CompoundTag.create(SelectedItemKey.COMPONENTS.toString())
+                                                .put(CompoundTag.create(ComponentsKey.POTION_CONTENTS.toString())
+                                                        .put(new StringTag(
+                                                                PotionContentsKey.POTION.toString(),
+                                                                EffectId.REGENERATION.getPotionTag(false, true)))))))));
+        targetOld = "@p[nbt={SelectedItem:{id:\"" + ItemId.POTION + "\",count:1,components:{\"minecraft:potion_contents\":{potion:\"" + EffectId.REGENERATION.getPotionTag(false, true) + "\"}}}}]";
+        fileCommands.add(Execute.If(targetOld) +
+                new TellRaw(targetOld, warning).sendRaw());
+        fileCommands.add(Item.create(
+                        ItemAction.REPLACE_WITH,
+                        target)
+                .slot(ItemSlot.MAINHAND)
+                .replaceWith(replacement)
+                .build());
 
         // Strength II potions
         warning.setText("STRENGTH II POTIONS ARE NOT ALLOWED, YOU NAUGHTY BUM!");
-        target = "@p[nbt={SelectedItem:{id:\"" + ItemId.SPLASH_POTION + "\",count:1,components:{\"minecraft:potion_contents\":{potion:\"" + EffectId.STRENGTH.getPotionTag(true, false) + "\"}}}}]";
-        replacement = ItemId.SPLASH_POTION + "[potion_contents={potion:\"" + EffectId.STRENGTH.getPotionTag() + "\"}]";
-        fileCommands.addAll(CommandBuilder.warnAndReplace(target, warning, replacement));
-        target = "@p[nbt={SelectedItem:{id:\"" + ItemId.POTION + "\",count:1,components:{\"minecraft:potion_contents\":{potion:\"" + EffectId.STRENGTH.getPotionTag(true, false) + "\"}}}}]";
-        replacement = ItemId.POTION + "[potion_contents={potion:\"" + EffectId.STRENGTH.getPotionTag() + "\"}]";
-        fileCommands.addAll(CommandBuilder.warnAndReplace(target, warning, replacement));
+        replacement = DynamicItemStack.create(
+                ItemId.SPLASH_POTION.getResourceLocation(),
+                CompoundTag.create(ComponentsKey.POTION_CONTENTS.toString())
+                        .put(new StringTag(
+                                        PotionContentsKey.POTION.toString(),
+                                EffectId.STRENGTH.getPotionTag(true, false))));
+        replacementOld = ItemId.SPLASH_POTION + "[potion_contents={potion:\"" + EffectId.STRENGTH.getPotionTag() + "\"}]";
+
+        target = ItemTargetEntity.create(Entity.ofSelector(
+                TargetSelector.NEAREST_PLAYER,
+                SelectorArgumentsBuilder.create()
+                        .nbt(CompoundTag.create()
+                                .put(CompoundTag.create(ItemNbtKey.SELECTED_ITEM.toString())
+                                        .put(new StringTag(
+                                                SelectedItemKey.ID.toString(),
+                                                ItemId.SPLASH_POTION.getResourceLocation()))
+                                        .put(new ByteTag(
+                                                SelectedItemKey.COUNT.toString(),
+                                                (byte) 1))
+                                        .put(CompoundTag.create(SelectedItemKey.COMPONENTS.toString())
+                                                .put(CompoundTag.create(ComponentsKey.POTION_CONTENTS.toString())
+                                                        .put(new StringTag(
+                                                                PotionContentsKey.POTION.toString(),
+                                                                EffectId.STRENGTH.getPotionTag(true, false)))))))));
+        targetOld = "@p[nbt={SelectedItem:{id:\"" + ItemId.SPLASH_POTION + "\",count:1,components:{\"minecraft:potion_contents\":{potion:\"" + EffectId.STRENGTH.getPotionTag(true, false) + "\"}}}}]";
+
+        fileCommands.add(Execute.If(targetOld) +
+                new TellRaw(targetOld, warning).sendRaw());
+        fileCommands.add(Item.create(
+                        ItemAction.REPLACE_WITH,
+                        target)
+                .slot(ItemSlot.MAINHAND)
+                .replaceWith(replacement)
+                .build());
+
+        replacement = DynamicItemStack.create(
+                ItemId.POTION.getResourceLocation(),
+                CompoundTag.create(ComponentsKey.POTION_CONTENTS.toString())
+                        .put(new StringTag(
+                                PotionContentsKey.POTION.toString(),
+                                EffectId.STRENGTH.getPotionTag(true, false))));
+        replacementOld = ItemId.POTION + "[potion_contents={potion:\"" + EffectId.STRENGTH.getPotionTag() + "\"}]";
+
+        target = ItemTargetEntity.create(Entity.ofSelector(
+                TargetSelector.NEAREST_PLAYER,
+                SelectorArgumentsBuilder.create()
+                        .nbt(CompoundTag.create()
+                                .put(CompoundTag.create(ItemNbtKey.SELECTED_ITEM.toString())
+                                        .put(new StringTag(
+                                                SelectedItemKey.ID.toString(),
+                                                ItemId.POTION.getResourceLocation()))
+                                        .put(new ByteTag(
+                                                SelectedItemKey.COUNT.toString(),
+                                                (byte) 1))
+                                        .put(CompoundTag.create(SelectedItemKey.COMPONENTS.toString())
+                                                .put(CompoundTag.create(ComponentsKey.POTION_CONTENTS.toString())
+                                                        .put(new StringTag(
+                                                                PotionContentsKey.POTION.toString(),
+                                                                EffectId.STRENGTH.getPotionTag(true, false)))))))));
+        targetOld = "@p[nbt={SelectedItem:{id:\"" + ItemId.POTION + "\",count:1,components:{\"minecraft:potion_contents\":{potion:\"" + EffectId.STRENGTH.getPotionTag(true, false) + "\"}}}}]";
+
+        fileCommands.add(Execute.If(targetOld) +
+                new TellRaw(targetOld, warning).sendRaw());
+        fileCommands.add(Item.create(
+                        ItemAction.REPLACE_WITH,
+                        target)
+                .slot(ItemSlot.MAINHAND)
+                .replaceWith(replacement)
+                .build());
 
         for (int ii = 0; ii < 5; ii++) {
             // Piercing enchantment
             warning.setText("PIERCING IS NOT ALLOWED, YOU NAUGHTY BUM!");
-            target = "@p[nbt={SelectedItem:{id:\"" + ItemId.CROSSBOW + "\",count:1,components:{\"minecraft:enchantments\":{\"" + EnchantmentType.PIERCING + "\":" + (ii + 1) + "}}}}]";
-            fileCommands.addAll(CommandBuilder.warnAndReplace(target, warning, ItemId.CROSSBOW));
+            target = ItemTargetEntity.create(Entity.ofSelector(
+                    TargetSelector.NEAREST_PLAYER,
+                    SelectorArgumentsBuilder.create()
+                            .nbt(CompoundTag.create()
+                                    .put(CompoundTag.create(ItemNbtKey.SELECTED_ITEM.toString())
+                                            .put(new StringTag(
+                                                    SelectedItemKey.ID.toString(),
+                                                    ItemId.CROSSBOW.getResourceLocation()))
+                                            .put(new ByteTag(
+                                                    SelectedItemKey.COUNT.toString(),
+                                                    (byte) 1))
+                                            .put(CompoundTag.create(SelectedItemKey.COMPONENTS.toString())
+                                                    .put(CompoundTag.create(ComponentsKey.ENCHANTMENTS.toString())
+                                                            .put(new IntTag(
+                                                                    EnchantmentType.PIERCING.toString(),
+                                                                    ii + 1))))))));
+            targetOld = "@p[nbt={SelectedItem:{id:\"" + ItemId.CROSSBOW + "\",count:1,components:{\"minecraft:enchantments\":{\"" + EnchantmentType.PIERCING + "\":" + (ii + 1) + "}}}}]";
+            fileCommands.add(Execute.If(targetOld) +
+                    new TellRaw(targetOld, warning).sendRaw());
+            fileCommands.add(Item.create(
+                            ItemAction.REPLACE_WITH,
+                            target)
+                    .slot(ItemSlot.MAINHAND)
+                    .replaceWith(SimpleItemStack.create(ItemId.CROSSBOW))
+                    .build());
 
             // Power enchantment
             warning.setText("POWER IS NOT ALLOWED, YOU NAUGHTY BUM!");
-            target = "@p[nbt={SelectedItem:{id:\"" + ItemId.BOW + "\",count:1,components:{\"minecraft:enchantments\":{\"" + EnchantmentType.POWER + "\":" + (ii + 1) + "}}}}]";
-            fileCommands.addAll(CommandBuilder.warnAndReplace(target, warning, ItemId.BOW));
+            target = ItemTargetEntity.create(Entity.ofSelector(
+                    TargetSelector.NEAREST_PLAYER,
+                    SelectorArgumentsBuilder.create()
+                            .nbt(CompoundTag.create()
+                                    .put(CompoundTag.create(ItemNbtKey.SELECTED_ITEM.toString())
+                                            .put(new StringTag(
+                                                    SelectedItemKey.ID.toString(),
+                                                    ItemId.BOW.getResourceLocation()))
+                                            .put(new ByteTag(
+                                                    SelectedItemKey.COUNT.toString(),
+                                                    (byte) 1))
+                                            .put(CompoundTag.create(SelectedItemKey.COMPONENTS.toString())
+                                                    .put(CompoundTag.create(ComponentsKey.ENCHANTMENTS.toString())
+                                                            .put(new IntTag(
+                                                                    EnchantmentType.POWER.toString(),
+                                                                    ii + 1))))))));
+            targetOld = "@p[nbt={SelectedItem:{id:\"" + ItemId.BOW + "\",count:1,components:{\"minecraft:enchantments\":{\"" + EnchantmentType.POWER + "\":" + (ii + 1) + "}}}}]";
+            fileCommands.add(Execute.If(targetOld) +
+                    new TellRaw(targetOld, warning).sendRaw());
+            fileCommands.add(Item.create(
+                            ItemAction.REPLACE_WITH,
+                            target)
+                    .slot(ItemSlot.MAINHAND)
+                    .replaceWith(SimpleItemStack.create(ItemId.BOW))
+                    .build());
         }
         // Wolf armor
         warning.setText("WOLF ARMOR IS NOT ALLOWED, YOU NAUGHTY BUM!");
-        target = "@p[nbt={SelectedItem:{id:\"" + ItemId.WOLF_ARMOR + "\",count:1}}]";
-        fileCommands.addAll(CommandBuilder.warnAndReplace(target, warning, ItemId.LEATHER_HORSE_ARMOR));
+        target = ItemTargetEntity.create(Entity.ofSelector(
+                TargetSelector.NEAREST_PLAYER,
+                SelectorArgumentsBuilder.create()
+                        .nbt(CompoundTag.create()
+                                .put(CompoundTag.create(ItemNbtKey.SELECTED_ITEM.toString())
+                                        .put(new StringTag(
+                                                SelectedItemKey.ID.toString(),
+                                                ItemId.WOLF_ARMOR.getResourceLocation()))
+                                        .put(new ByteTag(
+                                                SelectedItemKey.COUNT.toString(),
+                                                (byte) 1))))));
+        targetOld = "@p[nbt={SelectedItem:{id:\"" + ItemId.WOLF_ARMOR + "\",count:1}}]";
+        fileCommands.add(Execute.If(targetOld) +
+                new TellRaw(targetOld, warning).sendRaw());
+        fileCommands.add(Item.create(
+                        ItemAction.REPLACE_WITH,
+                        target)
+                .slot(ItemSlot.MAINHAND)
+                .replaceWith(SimpleItemStack.create(ItemId.LEATHER_HORSE_ARMOR))
+                .build());
 
         // Suspicious stew
         warning.setText("SUSPICIOUS STEW IS NOT ALLOWED, YOU NAUGHTY BUM!");
-        target = "@p[nbt={SelectedItem:{id:\"" + ItemId.SUSPICIOUS_STEW + "\",count:1}}]";
-        fileCommands.addAll(CommandBuilder.warnAndReplace(target, warning, ItemId.BOWL));
+        target = ItemTargetEntity.create(Entity.ofSelector(
+                TargetSelector.NEAREST_PLAYER,
+                SelectorArgumentsBuilder.create()
+                        .nbt(CompoundTag.create()
+                                .put(CompoundTag.create(ItemNbtKey.SELECTED_ITEM.toString())
+                                        .put(new StringTag(
+                                                SelectedItemKey.ID.toString(),
+                                                ItemId.SUSPICIOUS_STEW.getResourceLocation()))
+                                        .put(new ByteTag(
+                                                SelectedItemKey.COUNT.toString(),
+                                                (byte) 1))))));
+        targetOld = "@p[nbt={SelectedItem:{id:\"" + ItemId.SUSPICIOUS_STEW + "\",count:1}}]";
+        fileCommands.add(Execute.If(targetOld) +
+                new TellRaw(targetOld, warning).sendRaw());
+        fileCommands.add(Item.create(
+                        ItemAction.REPLACE_WITH,
+                        target)
+                .slot(ItemSlot.MAINHAND)
+                .replaceWith(SimpleItemStack.create(ItemId.BOWL))
+                .build());
 
         return new FileData(FileName.remove_banned_items, fileCommands);
     }
@@ -3015,7 +3305,7 @@ public class Main {
                                     BundleItemStack.create(
                                             team.getDyeColor(),
                                             EnchantmentsComponent.create(Map.of(EnchantmentId.VANISHING_CURSE, 1)),
-                                            CustomDataComponent.create(new CompoundTag()
+                                            CustomDataComponent.create(CompoundTag.create()
                                                     .put(new ByteTag("locateTeammate", (byte) 1)))))
                             .build());
         }
@@ -3403,7 +3693,7 @@ public class Main {
                                     BundleItemStack.create(
                                             team.getDyeColor(),
                                             EnchantmentsComponent.create(Map.of(EnchantmentId.VANISHING_CURSE, 1)),
-                                            CustomDataComponent.create(new CompoundTag()
+                                            CustomDataComponent.create(CompoundTag.create()
                                                     .put(new ByteTag("locateTeammate", (byte) 1)))))
                             .build());
         }

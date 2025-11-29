@@ -20,10 +20,18 @@ public enum EffectId {
     STRENGTH("strength"),
     WEAKNESS("weakness");
 
-    private final String symbol;
+    private final String id;
+    private final String namespace;
+    private static final String DEFAULT_NAMESPACE = "minecraft";
 
-    EffectId(String symbol) {
-        this.symbol = symbol;
+    EffectId(String id) {
+        this.id = id;
+        this.namespace = DEFAULT_NAMESPACE;
+    }
+
+    EffectId(String id, String namespace) {
+        this.id = id;
+        this.namespace = namespace;
     }
 
     /**
@@ -40,7 +48,7 @@ public enum EffectId {
         } else if (extended) {
             prefix += "long_";
         }
-        return "minecraft:" + prefix + symbol;
+        return namespace + ":" + prefix + id;
     }
 
     public String getPotionTag() {
@@ -49,6 +57,6 @@ public enum EffectId {
 
     @Override
     public String toString() {
-        return "minecraft:" + symbol;
+        return getPotionTag();
     }
 }
