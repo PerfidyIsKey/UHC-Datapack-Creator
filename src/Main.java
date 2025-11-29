@@ -58,10 +58,7 @@ import shared.attributes.AttributeTooltipDisplayType;
 import shared.block.ColorableBlockId;
 import shared.block.WoodBlockId;
 import shared.item.*;
-import shared.nbt.ComponentsKey;
-import shared.nbt.ItemNbtKey;
-import shared.nbt.PotionContentsKey;
-import shared.nbt.SelectedItemKey;
+import shared.nbt.*;
 import utils.TextComponent;
 import shared.*;
 
@@ -1341,20 +1338,228 @@ public class Main {
 
         // Give potions
         if (!OperationMode.teamCreationInGame) {
-            fileCommands.add(CommandBuilder.giveSplashPotion("@s", 0, EffectId.SPEED, "808080", "Developer Mode", "Set operational mode to Developer Mode."));
-            fileCommands.add(CommandBuilder.giveSplashPotion("@s", 1, EffectId.WEAKNESS, "FF9933", "Assign Teams", "Assign players to teams."));
-            fileCommands.add(CommandBuilder.giveSplashPotion("@s", 2, EffectId.SLOW_FALLING, "6633CC", "Predictions", "Who will win this season?."));
-            fileCommands.add(CommandBuilder.giveSplashPotion("@s", 3, EffectId.INVISIBILITY, "3399FF", "Into Calls", "Allow players to gather in their Discord channel."));
-            fileCommands.add(CommandBuilder.giveSplashPotion("@s", 4, EffectId.POISON, "00CC66", "Spread players", "Spread players across the map."));
-            fileCommands.add(CommandBuilder.giveSplashPotion("@s", 5, EffectId.STRENGTH, "CC3333", "Survival Mode", "Set operational mode to Ready to Play."));
-            fileCommands.add(CommandBuilder.giveSplashPotion("@s", 6, EffectId.SLOWNESS, "00FF7F", "Start Game", "Start the game. Good luck!"));
+            fileCommands.add(Item.create(
+                            ItemAction.REPLACE_WITH,
+                            ItemTargetEntity.create(Entity.ofSelector(TargetSelector.SENDER)))
+                    .slot(ItemSlot.HOTBAR.withSlotNumber(0))
+                    .replaceWith(ComponentItemStack.create(ItemId.SPLASH_POTION)
+                            .addComponent(PotionContentsComponent.create()
+                                    .customColor("808080")
+                                    .customEffects(CustomEffectsComponent.create()
+                                            .addEffect(CustomEffectEntry.create(EffectId.SPEED)
+                                                    .amplifier(0)
+                                                    .duration(200)
+                                                    .showParticles(false)
+                                                    .showIcon(false)
+                                                    .ambient(false))))
+                            .addComponent(LoreComponent.create("Set operational mode to Developer Mode."))
+                            .addComponent(CustomNameComponent.create(TextComponent.simple("Developer Mode"))))
+                            .build());
+            fileCommands.add(Item.create(
+                            ItemAction.REPLACE_WITH,
+                            ItemTargetEntity.create(Entity.ofSelector(TargetSelector.SENDER)))
+                    .slot(ItemSlot.HOTBAR.withSlotNumber(1))
+                    .replaceWith(ComponentItemStack.create(ItemId.SPLASH_POTION)
+                            .addComponent(PotionContentsComponent.create()
+                                    .customColor("FF9933")
+                                    .customEffects(CustomEffectsComponent.create()
+                                            .addEffect(CustomEffectEntry.create(EffectId.WEAKNESS)
+                                                    .amplifier(0)
+                                                    .duration(200)
+                                                    .showParticles(false)
+                                                    .showIcon(false)
+                                                    .ambient(false))))
+                            .addComponent(LoreComponent.create("Assign players to teams."))
+                            .addComponent(CustomNameComponent.create(TextComponent.simple("Assign Teams"))))
+                    .build());
+            fileCommands.add(Item.create(
+                            ItemAction.REPLACE_WITH,
+                            ItemTargetEntity.create(Entity.ofSelector(TargetSelector.SENDER)))
+                    .slot(ItemSlot.HOTBAR.withSlotNumber(2))
+                    .replaceWith(ComponentItemStack.create(ItemId.SPLASH_POTION)
+                            .addComponent(PotionContentsComponent.create()
+                                    .customColor("6633CC")
+                                    .customEffects(CustomEffectsComponent.create()
+                                            .addEffect(CustomEffectEntry.create(EffectId.SLOW_FALLING)
+                                                    .amplifier(0)
+                                                    .duration(200)
+                                                    .showParticles(false)
+                                                    .showIcon(false)
+                                                    .ambient(false))))
+                            .addComponent(LoreComponent.create("Who will win this season?."))
+                            .addComponent(CustomNameComponent.create(TextComponent.simple("Predictions"))))
+                    .build());
+            fileCommands.add(Item.create(
+                            ItemAction.REPLACE_WITH,
+                            ItemTargetEntity.create(Entity.ofSelector(TargetSelector.SENDER)))
+                    .slot(ItemSlot.HOTBAR.withSlotNumber(3))
+                    .replaceWith(ComponentItemStack.create(ItemId.SPLASH_POTION)
+                            .addComponent(PotionContentsComponent.create()
+                                    .customColor("3399FF")
+                                    .customEffects(CustomEffectsComponent.create()
+                                            .addEffect(CustomEffectEntry.create(EffectId.INVISIBILITY)
+                                                    .amplifier(0)
+                                                    .duration(200)
+                                                    .showParticles(false)
+                                                    .showIcon(false)
+                                                    .ambient(false))))
+                            .addComponent(LoreComponent.create("Allow players to gather in their Discord channel."))
+                            .addComponent(CustomNameComponent.create(TextComponent.simple("Into Calls"))))
+                    .build());
+            fileCommands.add(Item.create(
+                            ItemAction.REPLACE_WITH,
+                            ItemTargetEntity.create(Entity.ofSelector(TargetSelector.SENDER)))
+                    .slot(ItemSlot.HOTBAR.withSlotNumber(4))
+                    .replaceWith(ComponentItemStack.create(ItemId.SPLASH_POTION)
+                            .addComponent(PotionContentsComponent.create()
+                                    .customColor("00CC66")
+                                    .customEffects(CustomEffectsComponent.create()
+                                            .addEffect(CustomEffectEntry.create(EffectId.POISON)
+                                                    .amplifier(0)
+                                                    .duration(200)
+                                                    .showParticles(false)
+                                                    .showIcon(false)
+                                                    .ambient(false))))
+                            .addComponent(LoreComponent.create("Spread players across the map."))
+                            .addComponent(CustomNameComponent.create(TextComponent.simple("Spread players"))))
+                    .build());
+            fileCommands.add(Item.create(
+                            ItemAction.REPLACE_WITH,
+                            ItemTargetEntity.create(Entity.ofSelector(TargetSelector.SENDER)))
+                    .slot(ItemSlot.HOTBAR.withSlotNumber(5))
+                    .replaceWith(ComponentItemStack.create(ItemId.SPLASH_POTION)
+                            .addComponent(PotionContentsComponent.create()
+                                    .customColor("CC3333")
+                                    .customEffects(CustomEffectsComponent.create()
+                                            .addEffect(CustomEffectEntry.create(EffectId.STRENGTH)
+                                                    .amplifier(0)
+                                                    .duration(200)
+                                                    .showParticles(false)
+                                                    .showIcon(false)
+                                                    .ambient(false))))
+                            .addComponent(LoreComponent.create("Set operational mode to Ready to Play."))
+                            .addComponent(CustomNameComponent.create(TextComponent.simple("Survival Mode"))))
+                    .build());
+            fileCommands.add(Item.create(
+                            ItemAction.REPLACE_WITH,
+                            ItemTargetEntity.create(Entity.ofSelector(TargetSelector.SENDER)))
+                    .slot(ItemSlot.HOTBAR.withSlotNumber(6))
+                    .replaceWith(ComponentItemStack.create(ItemId.SPLASH_POTION)
+                            .addComponent(PotionContentsComponent.create()
+                                    .customColor("00FF7F")
+                                    .customEffects(CustomEffectsComponent.create()
+                                            .addEffect(CustomEffectEntry.create(EffectId.SLOWNESS)
+                                                    .amplifier(0)
+                                                    .duration(200)
+                                                    .showParticles(false)
+                                                    .showIcon(false)
+                                                    .ambient(false))))
+                            .addComponent(LoreComponent.create("Start the game. Good luck!"))
+                            .addComponent(CustomNameComponent.create(TextComponent.simple("Start Game"))))
+                    .build());
         } else {
-            fileCommands.add(CommandBuilder.giveSplashPotion("@s", 0, EffectId.SPEED, "808080", "Developer Mode", "Set operational mode to Developer Mode."));
-            fileCommands.add(CommandBuilder.giveSplashPotion("@s", 1, EffectId.SLOW_FALLING, "6633CC", "Predictions", "Who will win this season?."));
-            fileCommands.add(CommandBuilder.giveSplashPotion("@s", 2, EffectId.INVISIBILITY, "3399FF", "Into Calls", "Allow players to gather in their Discord channel."));
-            fileCommands.add(CommandBuilder.giveSplashPotion("@s", 3, EffectId.POISON, "00CC66", "Spread players", "Spread players across the map."));
-            fileCommands.add(CommandBuilder.giveSplashPotion("@s", 4, EffectId.STRENGTH, "CC3333", "Survival Mode", "Set operational mode to Ready to Play."));
-            fileCommands.add(CommandBuilder.giveSplashPotion("@s", 5, EffectId.SLOWNESS, "00FF7F", "Start Game", "Start the game. Good luck!"));
+            fileCommands.add(Item.create(
+                            ItemAction.REPLACE_WITH,
+                            ItemTargetEntity.create(Entity.ofSelector(TargetSelector.SENDER)))
+                    .slot(ItemSlot.HOTBAR.withSlotNumber(0))
+                    .replaceWith(ComponentItemStack.create(ItemId.SPLASH_POTION)
+                            .addComponent(PotionContentsComponent.create()
+                                    .customColor("808080")
+                                    .customEffects(CustomEffectsComponent.create()
+                                            .addEffect(CustomEffectEntry.create(EffectId.SPEED)
+                                                    .amplifier(0)
+                                                    .duration(200)
+                                                    .showParticles(false)
+                                                    .showIcon(false)
+                                                    .ambient(false))))
+                            .addComponent(LoreComponent.create("Set operational mode to Developer Mode."))
+                            .addComponent(CustomNameComponent.create(TextComponent.simple("Developer Mode"))))
+                    .build());
+            fileCommands.add(Item.create(
+                            ItemAction.REPLACE_WITH,
+                            ItemTargetEntity.create(Entity.ofSelector(TargetSelector.SENDER)))
+                    .slot(ItemSlot.HOTBAR.withSlotNumber(1))
+                    .replaceWith(ComponentItemStack.create(ItemId.SPLASH_POTION)
+                            .addComponent(PotionContentsComponent.create()
+                                    .customColor("6633CC")
+                                    .customEffects(CustomEffectsComponent.create()
+                                            .addEffect(CustomEffectEntry.create(EffectId.SLOW_FALLING)
+                                                    .amplifier(0)
+                                                    .duration(200)
+                                                    .showParticles(false)
+                                                    .showIcon(false)
+                                                    .ambient(false))))
+                            .addComponent(LoreComponent.create("Who will win this season?."))
+                            .addComponent(CustomNameComponent.create(TextComponent.simple("Predictions"))))
+                    .build());
+            fileCommands.add(Item.create(
+                            ItemAction.REPLACE_WITH,
+                            ItemTargetEntity.create(Entity.ofSelector(TargetSelector.SENDER)))
+                    .slot(ItemSlot.HOTBAR.withSlotNumber(2))
+                    .replaceWith(ComponentItemStack.create(ItemId.SPLASH_POTION)
+                            .addComponent(PotionContentsComponent.create()
+                                    .customColor("3399FF")
+                                    .customEffects(CustomEffectsComponent.create()
+                                            .addEffect(CustomEffectEntry.create(EffectId.INVISIBILITY)
+                                                    .amplifier(0)
+                                                    .duration(200)
+                                                    .showParticles(false)
+                                                    .showIcon(false)
+                                                    .ambient(false))))
+                            .addComponent(LoreComponent.create("Allow players to gather in their Discord channel."))
+                            .addComponent(CustomNameComponent.create(TextComponent.simple("Into Calls"))))
+                    .build());
+            fileCommands.add(Item.create(
+                            ItemAction.REPLACE_WITH,
+                            ItemTargetEntity.create(Entity.ofSelector(TargetSelector.SENDER)))
+                    .slot(ItemSlot.HOTBAR.withSlotNumber(3))
+                    .replaceWith(ComponentItemStack.create(ItemId.SPLASH_POTION)
+                            .addComponent(PotionContentsComponent.create()
+                                    .customColor("00CC66")
+                                    .customEffects(CustomEffectsComponent.create()
+                                            .addEffect(CustomEffectEntry.create(EffectId.POISON)
+                                                    .amplifier(0)
+                                                    .duration(200)
+                                                    .showParticles(false)
+                                                    .showIcon(false)
+                                                    .ambient(false))))
+                            .addComponent(LoreComponent.create("Spread players across the map."))
+                            .addComponent(CustomNameComponent.create(TextComponent.simple("Spread players"))))
+                    .build());
+            fileCommands.add(Item.create(
+                            ItemAction.REPLACE_WITH,
+                            ItemTargetEntity.create(Entity.ofSelector(TargetSelector.SENDER)))
+                    .slot(ItemSlot.HOTBAR.withSlotNumber(4))
+                    .replaceWith(ComponentItemStack.create(ItemId.SPLASH_POTION)
+                            .addComponent(PotionContentsComponent.create()
+                                    .customColor("CC3333")
+                                    .customEffects(CustomEffectsComponent.create()
+                                            .addEffect(CustomEffectEntry.create(EffectId.STRENGTH)
+                                                    .amplifier(0)
+                                                    .duration(200)
+                                                    .showParticles(false)
+                                                    .showIcon(false)
+                                                    .ambient(false))))
+                            .addComponent(LoreComponent.create("Set operational mode to Ready to Play."))
+                            .addComponent(CustomNameComponent.create(TextComponent.simple("Survival Mode"))))
+                    .build());
+            fileCommands.add(Item.create(
+                            ItemAction.REPLACE_WITH,
+                            ItemTargetEntity.create(Entity.ofSelector(TargetSelector.SENDER)))
+                    .slot(ItemSlot.HOTBAR.withSlotNumber(5))
+                    .replaceWith(ComponentItemStack.create(ItemId.SPLASH_POTION)
+                            .addComponent(PotionContentsComponent.create()
+                                    .customColor("00FF7F")
+                                    .customEffects(CustomEffectsComponent.create()
+                                            .addEffect(CustomEffectEntry.create(EffectId.SLOWNESS)
+                                                    .amplifier(0)
+                                                    .duration(200)
+                                                    .showParticles(false)
+                                                    .showIcon(false)
+                                                    .ambient(false))))
+                            .addComponent(LoreComponent.create("Start the game. Good luck!"))
+                            .addComponent(CustomNameComponent.create(TextComponent.simple("Start Game"))))
+                    .build());
         }
 
         return new FileData(FileName.start_potions, fileCommands);

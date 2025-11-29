@@ -13,13 +13,6 @@ import shared.item.ItemId;
 import java.util.ArrayList;
 
 public class CommandBuilder {
-    // Potions
-    public static String giveSplashPotion(String targets, int slotNumber, EffectId effect, String colorHex, String displayName, String lore) {
-        // Convert hex to decimal
-        int potionColor = Integer.parseInt(colorHex, 16);
-
-        return "item replace entity " + targets + " " + ItemSlot.HOTBAR.withSlotNumber(slotNumber).getCommandString() + " with " + ItemId.SPLASH_POTION + "[potion_contents={custom_color:" + potionColor + ",custom_effects:[{id:\"" + effect + "\",amplifier:0,duration:200,show_particles:0b,show_icon:0b,ambient:0b}]},lore=[\"" + lore + "\"],custom_name=\"" + displayName + "\"]";
-    }
 
     // Change title display time
     public static String changeTitleDisplayTime(String targets, int fadeIn, int stay, int fadeOut) {

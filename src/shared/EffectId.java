@@ -55,6 +55,13 @@ public enum EffectId {
         return getPotionTag(false, false);
     }
 
+    /**
+     * Returns the full resource location for the effect ID (e.g., "minecraft:speed").
+     */
+    public String getResourceLocation() {
+        return namespace + ":" + id;
+    }
+
     @Override
     public String toString() {
         return getPotionTag();
