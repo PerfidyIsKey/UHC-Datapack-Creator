@@ -1168,9 +1168,14 @@ public class Main {
             fileCommands.add(Execute.If(Constant.adminOld, Objective.ColorCP.extendName(i), team.getID()) +
                     getBossbarByName("cp" + i).setColor(team.getBossbarColor()));
 
-            // Update waypoiny color
+            // Update waypoint color
             fileCommands.add(Execute.If(Constant.adminOld, Objective.ColorCP.extendName(i), team.getID()) +
-                    CommandBuilder.modifyWaypointColor("@n[tag=" + TagTemp.CP.extendName(i) + "]", team.getColor()));
+                    Waypoint.create(Entity.ofSelector(
+                                    TargetSelector.NEAREST_ENTITY,
+                                    SelectorArgumentsBuilder.create()
+                                            .tag(controlPoints.get(i - 1).getName())))
+                            .color(team.getColor())
+                            .build());
 
             // Update glass color
             fileCommands.add(Execute.If(Constant.adminOld, Objective.ColorCP.extendName(i), team.getID(), false) +
@@ -2284,7 +2289,11 @@ public class Main {
                     .setBase(Main.world.getFullSize()));
 
             // Set color of waypoint to white
-            fileCommands.add(CommandBuilder.modifyWaypointColor("@n[tag=" + controlPoint.getName() + "]"));
+            fileCommands.add(Waypoint.create(Entity.ofSelector(
+                            TargetSelector.NEAREST_ENTITY,
+                            SelectorArgumentsBuilder.create()
+                                    .tag(controlPoint.getName())))
+                    .build());
         }
 
         // Schedule continuous functions
