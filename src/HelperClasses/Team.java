@@ -11,12 +11,12 @@ public class Team {
     private TextColor color;
     private BossBarColor bossbarColor;
     private DyeColor dyeColor;
-    private String collarColor;
+    private int collarColor;
     private String jsonColor;
     private String playerColor;
     private float[] dustColor;
 
-    public Team(int id, TextColor color, BossBarColor bossbarColor, DyeColor dyeColor, String collarColor, String jsonColor, String playerColor, float[] dustColor) {
+    public Team(int id, TextColor color, BossBarColor bossbarColor, DyeColor dyeColor, int collarColor, String jsonColor, String playerColor, float[] dustColor) {
         this.id = id;
         this.name = "Team" + id;
         this.color = color;
@@ -60,11 +60,11 @@ public class Team {
         this.dyeColor = color;
     }
 
-    public String getCollarColor() {
+    public int getCollarColor() {
         return collarColor;
     }
 
-    public void setCollarColor(String collarColor) {
+    public void setCollarColor(int collarColor) {
         this.collarColor = collarColor;
     }
 

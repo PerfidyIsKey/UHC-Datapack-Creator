@@ -26,6 +26,10 @@ import arguments.time.VariableGameTime;
 import commands.*;
 import commands.Random;
 import commands.advancement.AdvancementAction;
+import commands.data.DataPath;
+import commands.data.DataTargetEntity;
+import commands.data.DataValue;
+import commands.data.ModificationSetValue;
 import commands.effect.EffectAction;
 import commands.experience.ExperienceAction;
 import commands.forceload.ForceLoadAction;
@@ -293,7 +297,7 @@ public class Main {
         TextColor[] colors = {TextColor.YELLOW, TextColor.BLUE, TextColor.RED, TextColor.DARK_PURPLE, TextColor.DARK_GREEN, TextColor.LIGHT_PURPLE, TextColor.BLACK, TextColor.GOLD, TextColor.GRAY, TextColor.AQUA, TextColor.DARK_RED, TextColor.DARK_BLUE, TextColor.DARK_AQUA};
         BossBarColor[] bossbarColors = {BossBarColor.yellow, BossBarColor.blue, BossBarColor.red, BossBarColor.purple, BossBarColor.green, BossBarColor.pink, BossBarColor.white, BossBarColor.white, BossBarColor.white, BossBarColor.white, BossBarColor.white, BossBarColor.white, BossBarColor.white};
         DyeColor[] glassColors = {DyeColor.YELLOW, DyeColor.LIGHT_BLUE, DyeColor.RED, DyeColor.PURPLE, DyeColor.GREEN, DyeColor.PINK, DyeColor.BLACK, DyeColor.ORANGE, DyeColor.GRAY, DyeColor.CYAN, DyeColor.RED, DyeColor.BLUE, DyeColor.BLUE};
-        String[] collarColors = {"4", "3", "14", "10", "13", "6", "15", "1", "7", "9", "2", "11", "9"};
+        int[] collarColors = {4, 3, 14, 10, 13, 6, 15, 1, 7, 9, 2, 11, 9};
         String[] jsonColors = {"YELLOW", "BLUE", "RED", "PURPLE", "GREEN", "PINK", "BLACK", "ORANGE", "GRAY", "AQUA", "DARK RED", "DARK BLUE", "DARK AQUA"};
         String[] playerColors = {"Yellow", "Blue", "Red", "Purple", "Green", "Pink", "Black", "Orange", "Gray", "Aqua", "DarkRed", "DarkBlue", "DarkAqua"};
         float[][] dustColors = {
@@ -2794,7 +2798,6 @@ public class Main {
                                                                 EffectId.REGENERATION.getPotionTag()))))))));
         String targetOld = "@p[nbt={SelectedItem:{id:\"" + ItemId.SPLASH_POTION + "\",count:1,components:{\"minecraft:potion_contents\":{potion:\"" + EffectId.REGENERATION.getPotionTag() + "\"}}}}]";
         ItemStack replacement = SimpleItemStack.create(ItemId.GLASS_BOTTLE);
-        String replacementOld = ItemId.GLASS_BOTTLE.toString();
         fileCommands.add(Execute.If(targetOld) +
                 new TellRaw(targetOld, warning).sendRaw());
         fileCommands.add(Item.create(
@@ -2938,7 +2941,6 @@ public class Main {
                         .put(new StringTag(
                                         PotionContentsKey.POTION.toString(),
                                 EffectId.STRENGTH.getPotionTag(true, false))));
-        replacementOld = ItemId.SPLASH_POTION + "[potion_contents={potion:\"" + EffectId.STRENGTH.getPotionTag() + "\"}]";
 
         target = ItemTargetEntity.create(Entity.ofSelector(
                 TargetSelector.NEAREST_PLAYER,
@@ -2973,7 +2975,6 @@ public class Main {
                         .put(new StringTag(
                                 PotionContentsKey.POTION.toString(),
                                 EffectId.STRENGTH.getPotionTag(true, false))));
-        replacementOld = ItemId.POTION + "[potion_contents={potion:\"" + EffectId.STRENGTH.getPotionTag() + "\"}]";
 
         target = ItemTargetEntity.create(Entity.ofSelector(
                 TargetSelector.NEAREST_PLAYER,
@@ -3553,11 +3554,17 @@ public class Main {
         for (int i = 0; i < 2; i++) {
             fileCommands.add(Execute.As("@e[type=" + EntityType.WOLF + "]", false) +
                     Execute.StoreNext(ExecuteStore.result, "@s", getObjectiveByName(Objective.CollarCheck.extendName(i)), true) +
-                    CommandBuilder.getData("@s", "Owner[" + i + "]"));
+                    Data.createGet(
+                                    DataTargetEntity.create(Entity.ofSelector(TargetSelector.SENDER)),
+                                    DataPath.createWithIndex(DataPathId.OWNER, i))
+                            .build());
 
             fileCommands.add(Execute.As("@a", false) +
                     Execute.StoreNext(ExecuteStore.result, "@s", getObjectiveByName(Objective.CollarCheck.extendName(i)), true) +
-                    CommandBuilder.getData("@s", "UUID[" + i + "]"));
+                    Data.createGet(
+                                    DataTargetEntity.create(Entity.ofSelector(TargetSelector.SENDER)),
+                                    DataPath.createWithIndex(DataPathId.UUID, i))
+                            .build());
 
         }
         // Players in a team
@@ -3572,7 +3579,11 @@ public class Main {
             fileCommands.add(Execute.As("@e[type=" + EntityType.WOLF + "]", false) +
                     Execute.IfNext("@s", getObjectiveByName(Objective.CollarCheck.extendName(0)), ComparatorType.EQUAL, "@p[tag=" + TagTemp.CollarCheck + "]", getObjectiveByName(Objective.CollarCheck.extendName(0))) +
                     Execute.IfNext("@s", getObjectiveByName(Objective.CollarCheck.extendName(1)), ComparatorType.EQUAL, "@p[tag=" + TagTemp.CollarCheck + "]", getObjectiveByName(Objective.CollarCheck.extendName(1)), true) +
-                    CommandBuilder.modifyData("@s", "CollarColor", t.getCollarColor()));
+                    Data.createModify(
+                                    DataTargetEntity.create(Entity.ofSelector(TargetSelector.SENDER)),
+                                    DataPath.create(DataPathId.COLLAR_COLOR),
+                                    ModificationSetValue.create(DataValue.createByte((byte) t.getCollarColor())))
+                            .build());
             fileCommands.add(Tag.action(Entity.ofSelector(
                                     TargetSelector.ALL_PLAYERS,
                                     SelectorArgumentsBuilder.create()
@@ -3594,7 +3605,11 @@ public class Main {
             fileCommands.add(Execute.As("@e[type=" + EntityType.WOLF + "]", false) +
                     Execute.IfNext("@s", getObjectiveByName(Objective.CollarCheck.extendName(0)), ComparatorType.EQUAL, "@p[tag=" + TagTemp.CollarCheck + "]", getObjectiveByName(Objective.CollarCheck.extendName(0))) +
                     Execute.IfNext("@s", getObjectiveByName(Objective.CollarCheck.extendName(1)), ComparatorType.EQUAL, "@p[tag=" + TagTemp.CollarCheck + "]", getObjectiveByName(Objective.CollarCheck.extendName(1)), true) +
-                    CommandBuilder.modifyData("@s", "CollarColor", "0"));
+                    Data.createModify(
+                                    DataTargetEntity.create(Entity.ofSelector(TargetSelector.SENDER)),
+                                    DataPath.create(DataPathId.COLLAR_COLOR),
+                                    ModificationSetValue.create(DataValue.createByte((byte) 0)))
+                            .build());
             fileCommands.add(Tag.action(Entity.ofSelector(
                                     TargetSelector.ALL_PLAYERS,
                                     SelectorArgumentsBuilder.create()
@@ -3609,7 +3624,10 @@ public class Main {
 
         fileCommands.add(Execute.As("@e[limit=1,type=" + EntityType.WOLF + ",sort=random]", false) +
                 Execute.StoreNext(ExecuteStore.result, "@s", getObjectiveByName(Objective.WolfAge), true) +
-                CommandBuilder.getData("@s", "Age"));
+                Data.createGet(
+                                DataTargetEntity.create(Entity.ofSelector(TargetSelector.SENDER)),
+                                DataPath.create(DataPathId.AGE))
+                        .build());
         fileCommands.add(Execute.At(babyWolf) +
                 Summon.create(EntityType.DOLPHIN));
         fileCommands.add(Execute.As(babyWolf) +
@@ -3723,7 +3741,10 @@ public class Main {
             // Find positions of each player
             fileCommands.add(Execute.As("@a[team=]", false) +
                     Execute.StoreNext(ExecuteStore.result, "@s", getObjectiveByName(Objective.Pos + cartesian[i]), true) +
-                    CommandBuilder.getData("@s", "Pos[" + i + "]", 1));
+                    Data.createGet(
+                                    DataTargetEntity.create(Entity.ofSelector(TargetSelector.SENDER)),
+                                    DataPath.createWithIndex(DataPathId.POS, i))
+                            .build());
 
             // Subtract distance of nearest player in Cartesian coordinate
             fileCommands.add(Execute.As(oldCheckingPlayer, false) +
