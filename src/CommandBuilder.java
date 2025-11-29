@@ -13,20 +13,6 @@ import shared.item.ItemId;
 import java.util.ArrayList;
 
 public class CommandBuilder {
-
-    // Data
-    public static String getData(String target, String path) {
-        return "data get entity " + target + " " + path;
-    }
-
-    public static String getData(String target, String path, int scale) {
-        return "data get entity " + target + " " + path + " " + scale;
-    }
-
-    public static String modifyData(String target, String targetPath, String value) {
-        return "data modify entity " + target + " " + targetPath + " set value " + value + "b";
-    }
-
     // Potions
     public static String giveSplashPotion(String targets, int slotNumber, EffectId effect, String colorHex, String displayName, String lore) {
         // Convert hex to decimal
