@@ -6,8 +6,7 @@ import arguments.GameTime;
  * Represents a numerical time value argument for the Minecraft {@code /time} command
  * (used primarily with the {@code ADD} action).
  * <p>
- * The time value can be a raw number of ticks, or combined with a unit
- * suffix ('t' for ticks, 's' for seconds, 'd' for days).
+ * The time value is represented by a number and a unit suffix ('t' for ticks, 's' for seconds, 'd' for days).
  * This class implements the {@link GameTime} interface.
  */
 public class VariableGameTime implements GameTime {
@@ -22,11 +21,14 @@ public class VariableGameTime implements GameTime {
      *
      * @param time The numerical time value.
      * @param unit The unit of time to apply.
-     * @throws IllegalArgumentException if the provided {@code unit} is null.
+     * @throws IllegalArgumentException if the provided {@code unit} is null or {@code time} is negative.
      */
     private VariableGameTime(double time, TimeUnit unit) {
         if (unit == null) {
             throw new IllegalArgumentException("TimeUnit cannot be null for VariableGameTime.");
+        }
+        if (time < 0) {
+            throw new IllegalArgumentException("Time value cannot be negative.");
         }
         this.time = time;
         this.unit = unit;
@@ -54,36 +56,47 @@ public class VariableGameTime implements GameTime {
     }
 
     /**
-     * Creates a VariableGameTime instance with an integer value and a specified unit.
+     * Creates a VariableGameTime instance representing a number of seconds.
      *
-     * @param time The time value (e.g., 10).
-     * @param unit The unit (e.g., TimeUnit.DAY).
-     * @return A new VariableGameTime instance.
+     * @param time The time value in seconds (e.g., 10).
+     * @return A new VariableGameTime instance (e.g., "10.0s").
      */
-    public static VariableGameTime create(int time, TimeUnit unit) {
+    public static VariableGameTime second(int time) {
         // Cast int to double for storage
-        return new VariableGameTime((double)time, unit);
+        return new VariableGameTime((double)time, TimeUnit.SECOND);
     }
 
     /**
-     * Creates a VariableGameTime instance with an integer value, defaulting the unit to TICK.
+     * Creates a VariableGameTime instance representing a number of ticks.
      *
-     * @param time The time value (e.g., 24000).
-     * @return A new VariableGameTime instance (e.g., "24000t").
+     * @param time The time value in ticks (e.g., 24000).
+     * @return A new VariableGameTime instance (e.g., "24000.0t").
      */
-    public static VariableGameTime create(int time) {
+    public static VariableGameTime tick(int time) {
         // Cast int to double for storage
         return new VariableGameTime((double)time, TimeUnit.TICK);
     }
 
     /**
-     * Implements the {@link GameTime} contract. Constructs the final time string
-     * by concatenating the time value and the unit abbreviation.
+     * Creates a VariableGameTime instance representing a number of days.
      *
-     * @return The formatted time string (e.g., "10d", "24000t").
+     * @param time The time value in days (e.g., 1).
+     * @return A new VariableGameTime instance (e.g., "1.0d").
+     */
+    public static VariableGameTime day(int time) {
+        // Cast int to double for storage
+        return new VariableGameTime((double)time, TimeUnit.DAY);
+    }
+
+    /**
+     * Implements the {@link GameTime} contract. Constructs the final time string
+     * by concatenating the time value and the unit abbreviation (e.g., "10.0d", "24000.0t").
+     *
+     * @return The formatted time string.
      */
     @Override
     public String getTime() {
+        // Uses Double.toString() which will format "24000.0" and TimeUnit.toString() which returns the suffix.
         return time + unit.toString();
     }
 
