@@ -57,12 +57,11 @@ public class VariableGameTime implements GameTime {
      * Creates a VariableGameTime instance with an integer value and a specified unit.
      *
      * @param time The time value (e.g., 10).
-     * @param unit The unit (e.g., TimeUnit.DAY).
      * @return A new VariableGameTime instance.
      */
-    public static VariableGameTime create(int time, TimeUnit unit) {
+    public static VariableGameTime second(int time) {
         // Cast int to double for storage
-        return new VariableGameTime((double)time, unit);
+        return new VariableGameTime((double)time, TimeUnit.SECOND);
     }
 
     /**
@@ -71,9 +70,14 @@ public class VariableGameTime implements GameTime {
      * @param time The time value (e.g., 24000).
      * @return A new VariableGameTime instance (e.g., "24000t").
      */
-    public static VariableGameTime create(int time) {
+    public static VariableGameTime tick(int time) {
         // Cast int to double for storage
         return new VariableGameTime((double)time, TimeUnit.TICK);
+    }
+
+    public static VariableGameTime day(int time) {
+        // Cast int to double for storage
+        return new VariableGameTime((double)time, TimeUnit.DAY);
     }
 
     /**

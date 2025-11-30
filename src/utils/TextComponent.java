@@ -1,5 +1,6 @@
 package utils;
 
+import arguments.Entity;
 import shared.TextColor;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -92,6 +93,10 @@ public class TextComponent {
         return sb.toString();
     }
 
+    public static String complex(String text, TextColor color) {
+        return complex(text, color.getColor(), null, null, null);
+    }
+
     // Type-safe Overload
     /**
      * Overload: Creates a complex component using a type-safe TextColor enum.
@@ -106,5 +111,35 @@ public class TextComponent {
         // Calls the base method with the enum's Minecraft name string
         String colorString = (color != null) ? color.getColor() : null;
         return complex(text, colorString, bold, italic, obfuscated);
+    }
+
+    public static String selector(Entity target,
+                                  TextColor color,
+                                  Boolean bold,
+                                  Boolean italic,
+                                  Boolean obfuscated
+    ) {
+        StringBuilder sb = new StringBuilder("{");
+        sb.append("\"selector\":\"").append(target).append("\"");
+
+        if (color != null) {
+            sb.append(",\"color\":\"").append(color).append("\"");
+        }
+        if (bold != null) {
+            sb.append(",\"bold\":").append(bold);
+        }
+        if (italic != null) {
+            sb.append(",\"italic\":").append(italic);
+        }
+        if (obfuscated != null) {
+            sb.append(",\"obfuscated\":").append(obfuscated);
+        }
+
+        sb.append("}");
+        return sb.toString();
+    }
+
+    public static String selector(Entity target) {
+        return selector(target, null, null, null, null);
     }
 }
