@@ -1,12 +1,21 @@
-import Enums.EntityType;
 import Enums.WorldShape;
+import arguments.Entity;
+import arguments.coordinate.Vec2;
+import arguments.targetselector.SelectorArgumentsBuilder;
+import arguments.targetselector.TargetSelector;
+import shared.EntityType;
 
 public class Constant {
     // Unit conversion
     public static final int secPerMinute = 60;
 
     // Admin entity
-    public static final String admin = "@n[type=" + EntityType.MARKER +"]";
+    public static final String adminOld = "@n[type=" + EntityType.MARKER +"]";
+    public static final Entity admin = Entity.ofSelector(
+            TargetSelector.NEAREST_ENTITY,
+            SelectorArgumentsBuilder.create()
+                    .type(EntityType.MARKER)
+    );
 
     // Tick speed
     public static final int tickFrequencyShort = 20;
@@ -17,4 +26,5 @@ public class Constant {
     public static final int worldHeight = 257;
     public static final int worldBottom = -64;
     public static final WorldShape worldShape = WorldShape.square;
+    public static final Vec2 spawnCenter = Vec2.absolute(0, 0);
 }

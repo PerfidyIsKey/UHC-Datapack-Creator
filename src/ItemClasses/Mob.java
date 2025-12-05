@@ -1,7 +1,7 @@
 package ItemClasses;
 
 import EntityClasses.Attributes;
-import Enums.EntityType;
+import shared.EntityType;
 
 import java.util.ArrayList;
 

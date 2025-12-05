@@ -1,6 +1,7 @@
 package HelperClasses;
 
 import Enums.*;
+import shared.StaticBlockId;
 
 public class Execute {
 
@@ -27,22 +28,6 @@ public class Execute {
         execute as
      */
     // as entity
-    public static String As(Entity entity) {
-        return As(entity, true);
-    }
-
-    public static String As(Entity entity, Boolean run) {
-        return Standard(AsNext(entity), run);
-    }
-
-    public static String AsNext(Entity entity) {
-        return AsNext(entity, false);
-    }
-
-    public static String AsNext(Entity entity, Boolean run) {
-        return Next("as " + entity.getEntity() + " ", run);
-    }
-
     public static String As(String entity) {
         return As(entity, true);
     }
@@ -63,22 +48,6 @@ public class Execute {
         execute at
      */
     // at entity
-    public static String At(Entity entity) {
-        return At(entity, true);
-    }
-
-    public static String At(Entity entity, Boolean run) {
-        return Standard(AtNext(entity), run);
-    }
-
-    public static String AtNext(Entity entity) {
-        return AtNext(entity, false);
-    }
-
-    public static String AtNext(Entity entity, Boolean run) {
-        return Next("at " + entity.getEntity() + " ", run);
-    }
-
     public static String At(String entity) {
         return At(entity, true);
     }
@@ -99,22 +68,6 @@ public class Execute {
         execute facing
      */
     // facing entity
-    public static String Facing(Entity entity, EntityAnchor anchor) {
-        return Facing(entity, anchor, true);
-    }
-
-    public static String Facing(Entity entity, EntityAnchor anchor, Boolean run) {
-        return Standard(FacingNext(entity, anchor), run);
-    }
-
-    public static String FacingNext(Entity entity, EntityAnchor anchor) {
-        return FacingNext(entity, anchor, false);
-    }
-
-    public static String FacingNext(Entity entity, EntityAnchor anchor, Boolean run) {
-        return Next("facing entity " + entity.getEntity() + " " + anchor + " ", run);
-    }
-
     public static String Facing(String entity, EntityAnchor anchor) {
         return Facing(entity, anchor, true);
     }
@@ -144,22 +97,6 @@ public class Execute {
     public static String IfNext(DataClasses data, String command, Boolean run) { return Next("if data " + data + " " + command + " ", run); }
 
     // if entity
-    public static String If(Entity entity) {
-        return If(entity, true);
-    }
-
-    public static String If(Entity entity, Boolean run) {
-        return Standard(IfNext(entity), run);
-    }
-
-    public static String IfNext(Entity entity) {
-        return IfNext(entity, false);
-    }
-
-    public static String IfNext(Entity entity, Boolean run) {
-        return Next("if entity " + entity.getEntity() + " ", run);
-    }
-
     public static String If(String entity) {
         return If(entity, true);
     }
@@ -405,35 +342,35 @@ public class Execute {
         execute unless
      */
     // unless block
-    public static String Unless(Coordinate coordinate, Block blockType) {
+    public static String Unless(Coordinate coordinate, StaticBlockId blockType) {
         return Unless(coordinate, blockType, true);
     }
 
-    public static String Unless(Coordinate coordinate, Block blockType, Boolean run) {
+    public static String Unless(Coordinate coordinate, StaticBlockId blockType, Boolean run) {
         return Standard(UnlessNext(coordinate, blockType), run);
     }
 
-    public static String UnlessNext(Coordinate coordinate, Block blockType) {
+    public static String UnlessNext(Coordinate coordinate, StaticBlockId blockType) {
         return UnlessNext(coordinate, blockType, false);
     }
 
-    public static String UnlessNext(Coordinate coordinate, Block blockType, Boolean run) {
+    public static String UnlessNext(Coordinate coordinate, StaticBlockId blockType, Boolean run) {
         return Next("unless block " + coordinate.getCoordinateString() + " " + blockType + " ", run);
     }
 
-    public static String Unless(int x, int y, int z, Block blockType) {
+    public static String Unless(int x, int y, int z, StaticBlockId blockType) {
         return Unless(x, y, z, blockType, true);
     }
 
-    public static String Unless(int x, int y, int z, Block blockType, Boolean run) {
+    public static String Unless(int x, int y, int z, StaticBlockId blockType, Boolean run) {
         return Standard(UnlessNext(x, y, z, blockType), run);
     }
 
-    public static String UnlessNext(int x, int y, int z, Block blockType) {
+    public static String UnlessNext(int x, int y, int z, StaticBlockId blockType) {
         return UnlessNext(x, y, z, blockType, false);
     }
 
-    public static String UnlessNext(int x, int y, int z, Block blockType, Boolean run) {
+    public static String UnlessNext(int x, int y, int z, StaticBlockId blockType, Boolean run) {
         return Next("unless block " + x + " " + y + " " + z + " " + blockType + " ", run);
     }
 

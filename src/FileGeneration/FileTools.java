@@ -1,12 +1,9 @@
 package FileGeneration;
 
-import FileGeneration.FileData;
-import FileGeneration.Recipe;
 import HelperClasses.PlayerConnection;
 import TeamGeneration.Season;
 import HelperClasses.PaperPlugin;
 
-import javax.swing.*;
 import java.io.*;
 import java.nio.file.*;
 import java.util.ArrayList;
@@ -35,24 +32,24 @@ public class FileTools {
     }
 
     public ArrayList<FileData> makeRecipeFiles() {
-        ArrayList<Recipe> recipes = new ArrayList<>();
+        ArrayList<RecipeCreate> recipes = new ArrayList<>();
         ArrayList<FileData> files = new ArrayList<>();
 
         String[] grid = {" ", " ", " ", "1", "2", "1", " ", " ", " "};
         ArrayList<String> keys = new ArrayList<>();
         keys.add("ender_eye");
         keys.add("black_wool");
-        Recipe recipe = new Recipe("crafting_shaped", grid, keys, "dragon_head", 1);
+        RecipeCreate recipe = new RecipeCreate("crafting_shaped", grid, keys, "dragon_head", 1);
         recipes.add(recipe);
 
         String[] grid2 = {" ", "1", " ", "1", "2", "1", " ", "1", " "};
         ArrayList<String> keys2 = new ArrayList<>();
         keys2.add("gold_ingot");
         keys2.add("player_head");
-        FileGeneration.Recipe recipe2 = new FileGeneration.Recipe("crafting_shaped", grid2, keys2, "golden_apple", 1);
+        RecipeCreate recipe2 = new RecipeCreate("crafting_shaped", grid2, keys2, "golden_apple", 1);
         //recipes.add(recipe2);
 
-        for (Recipe r : recipes) {
+        for (RecipeCreate r : recipes) {
             ArrayList<String> fileCommands = new ArrayList<>();
             fileCommands.add("{");
             fileCommands.add("  \"type\": \"" + r.getType() + "\",");
