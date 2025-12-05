@@ -2368,7 +2368,7 @@ public class Main {
 
         fileCommands.add(new TellRaw("@a", texts).sendRaw());
         fileCommands.add(Title.create(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
-                .title(TextComponent.complex(i + "minute(s) remaining", TextColor.GOLD, true, true, false))
+                .title(TextComponent.complex(i + " minute(s) remaining", TextColor.GOLD, true, true, false))
                 .build());
         return new FileData("" + FileName.minute_ + i, fileCommands);
     }
