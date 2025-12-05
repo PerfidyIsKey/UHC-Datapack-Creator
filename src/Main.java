@@ -2305,6 +2305,7 @@ public class Main {
                             TargetSelector.NEAREST_ENTITY,
                             SelectorArgumentsBuilder.create()
                                     .tag(controlPoint.getName())))
+                            .color(TextColor.WHITE)
                     .build());
         }
 
