@@ -1,6 +1,6 @@
-uhcNumber:60
+uhcNumber:61
 teamMode:1
-startCoordinate:0,104,0
+startCoordinate:0,65,0
 minTraitorRank:25
 traitorWaitTime:2
 communityName:THE DIORITE EXPERTS
