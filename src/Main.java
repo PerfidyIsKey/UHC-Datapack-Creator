@@ -39,7 +39,6 @@ import commands.random.RandomAction;
 import commands.recipe.RecipeAction;
 import commands.tag.TagAction;
 import commands.time.TimeAction;
-import commands.title.TitleDisplayType;
 import commands.worldborder.WorldBorderAction;
 import controlpoints.ControlPoint;
 import controlpoints.ControlPointTag;
@@ -407,7 +406,6 @@ public class Main {
         scoreboardObjectives.add(new ScoreboardObjective(Objective.Rank, ObjectiveType.dummy));
         scoreboardObjectives.add(new ScoreboardObjective(Objective.MinHealth, ObjectiveType.dummy));
         scoreboardObjectives.add(new ScoreboardObjective(Objective.Victory, ObjectiveType.dummy));
-        scoreboardObjectives.add(new ScoreboardObjective(Objective.PerkReceived, ObjectiveType.dummy));
         scoreboardObjectives.add(new ScoreboardObjective(Objective.WolfAge, ObjectiveType.dummy));
         scoreboardObjectives.add(new ScoreboardObjective(Objective.RandomQuotes, ObjectiveType.dummy));
         scoreboardObjectives.add(new ScoreboardObjective(Objective.DamageTaken, "minecraft.custom:minecraft.damage_taken"));
@@ -418,6 +416,7 @@ public class Main {
         if (OperationMode.controlPoints) {
             scoreboardObjectives.add(new ScoreboardObjective(Objective.CPScore, ObjectiveType.dummy, "\"Control Point score\"", true));
             scoreboardObjectives.add(new ScoreboardObjective(Objective.CPHighscore, ObjectiveType.dummy));
+            scoreboardObjectives.add(new ScoreboardObjective(Objective.ReceivedPerk, ObjectiveType.dummy));
             for (int i = 0; i < 2; i++) {
                 scoreboardObjectives.add(new ScoreboardObjective(Objective.ControlPoint.extendName(i + 1), ObjectiveType.dummy));
                 scoreboardObjectives.add(new ScoreboardObjective(Objective.OnCP.extendName(i + 1), ObjectiveType.dummy));
@@ -1733,7 +1732,7 @@ public class Main {
                 }
                 fileCommands.add(scoreboard.Set(Constant.adminOld, Objective.DisplayCP.extendName(i), 0));
                 fileCommands.add(scoreboard.Set(Constant.adminOld, Objective.ColorCP.extendName(i), -1));
-                fileCommands.add(scoreboard.Set("@a", "ReceivedPerk", 0));
+                fileCommands.add(scoreboard.Set("@a", Objective.ReceivedPerk, 0));
             }
             fileCommands.add(scoreboard.Reset("Solo", getObjectiveByName(Objective.CPScore)));
             for (Team t : teams) {
@@ -3373,7 +3372,7 @@ public class Main {
             for (Perk perk : perks) {
                 i++;
                 fileCommands.add(Execute.If(team.getPlayerColor(), Objective.CPScore, perk.getActivationTime() + "..", false) +
-                        Execute.IfNext("@p[gamemode=!spectator,team=" + team.getName() + ",scores={ReceivedPerk=.." + i + "}]") +
+                        Execute.IfNext("@p[gamemode=!spectator,team=" + team.getName() + ",scores={ReceivedPerk=.." + (i - 1) + "}]") +
                         Execute.AsNext("@p[gamemode=!spectator,team=" + team.getName() + "]", true) +
                         Schedule.callFunction("" + FileName.perk_ + i));
             }
@@ -3400,7 +3399,7 @@ public class Main {
 
             // Add tag
             fileCommands.add(Execute.If("@s[team=" + team.getName() + "]") +
-                    scoreboard.Set("@a[team=" + team.getName() + "]", "ReceivedPerk", perks.get(i).getId()));
+                    scoreboard.Set("@a[team=" + team.getName() + "]", Objective.ReceivedPerk, perks.get(i).getId()));
 
             // Give rewards
             fileCommands.add(Execute.If("@s[team=" + team.getName() + "]") +
