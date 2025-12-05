@@ -1,9 +1,9 @@
-import Enums.Duration;
 import Enums.FileName;
 
-import Enums.Tag;
-
 import FileGeneration.FileData;
+import commands.Tag;
+import shared.StaticEntityTag;
+import commands.tag.TagAction;
 
 import java.util.ArrayList;
 
@@ -31,7 +31,9 @@ public class GameStart {
         // Disable automatic player respawn after 20 minutes
         fileCommands.add(Schedule.callFunction(FileName.disable_respawn, 20 * Constant.secPerMinute));
 
-        fileCommands.add(CommandBuilder.addTag(Constant.admin, Tag.GameStarted));
+        fileCommands.add(Tag.action(Constant.admin, TagAction.ADD)
+                        .name(StaticEntityTag.GAME_STARTED)
+                                .build());
 
         return new FileData(FileName.game_starter, fileCommands);
     }

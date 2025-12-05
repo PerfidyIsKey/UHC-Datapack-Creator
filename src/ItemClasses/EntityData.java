@@ -1,6 +1,6 @@
 package ItemClasses;
 
-import Enums.EntityType;
+import shared.EntityType;
 
 public class EntityData implements Components{
     // Fields

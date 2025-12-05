@@ -1,8 +1,6 @@
 import Enums.*;
 import FileGeneration.FileData;
-import HelperClasses.Entity;
 import HelperClasses.Execute;
-import  HelperClasses.Scoreboard;
 
 
 import java.util.ArrayList;
@@ -19,22 +17,22 @@ public class Update {
         ArrayList<String> fileCommands = new ArrayList<>();
 
         // Timer scoreboard
-        fileCommands.add(Main.scoreboard.Add(Constant.admin, Objective.Time2, 1));
+        fileCommands.add(Main.scoreboard.Add(Constant.adminOld, Objective.Time2, 1));
 
         // Scheduled events
         if (OperationMode.carePackages) {
             fileCommands.add(Execute.If("@e[scores={Time2=" + (20 * Constant.secPerMinute * Constant.tickFrequencyShort) + "..}]", false) +
-                    Execute.UnlessNext("@e[tag=" + Tag.CarePackagesDropped + "]", true) +
+                    Execute.UnlessNext("@e[tag=" + TagTemp.CarePackagesDropped + "]", true) +
                     Schedule.callFunction(FileName.drop_carepackages));
         }
         if (OperationMode.controlPoints) {
             fileCommands.add(Execute.If("@e[scores={Time2=" + (30 * Constant.secPerMinute * Constant.tickFrequencyShort) + "..}]", false) +
-                    Execute.UnlessNext("@e[tag=" + Tag.ControlPoint1Enabled + "]", true) +
+                    Execute.UnlessNext("@e[tag=" + TagTemp.ControlPoint1Enabled + "]", true) +
                     Schedule.callFunction(FileName.initialize_control_point));
         }
         if (OperationMode.traitorFaction) {
             fileCommands.add(Execute.If("@e[scores={Time2=" + (40 * Constant.secPerMinute * Constant.tickFrequencyShort) + "..}]", false) +
-                    Execute.UnlessNext("@e[tag=" + Tag.TraitorsAssigned + "]", true) +
+                    Execute.UnlessNext("@e[tag=" + TagTemp.TraitorsAssigned + "]", true) +
                     Schedule.callFunction(FileName.traitor_handout));
         }
 
@@ -80,14 +78,14 @@ public class Update {
         fileCommands.add(Schedule.callFunction(FileName.update_sidebar));
         fileCommands.add(Schedule.callFunction(FileName.wolf_updates));
         if (!OperationMode.traitorFaction) {
-            fileCommands.add(Execute.If(new Entity("@e[scores={Victory=1}]")) +
+            fileCommands.add(Execute.If("@e[scores={Victory=1}]") +
                     Schedule.callFunction(FileName.teams_alive_check));  // Check if teams have won
         }
 
         // Timer scoreboard
-        fileCommands.add(Main.scoreboard.Add(Constant.admin, Objective.TimeDum, 1));
+        fileCommands.add(Main.scoreboard.Add(Constant.adminOld, Objective.TimeDum, 1));
         fileCommands.add(Execute.Store(ExecuteStore.result, "CurrentTime", Objective.Time) +
-                Main.scoreboard.Get(Constant.admin,Objective.TimeDum));
+                Main.scoreboard.Get(Constant.adminOld,Objective.TimeDum));
 
         // Self-schedule timer
         fileCommands.add(Schedule.callFunction(FileName.timer_main_20, 20, Duration.TICKS));
@@ -103,13 +101,13 @@ public class Update {
         fileCommands.add(Schedule.callFunction("" + FileName.control_point_ + 1));
 
         // Schedule Control Point functionality for CP2, when enabled
-        fileCommands.add(Execute.If("@n[tag=" + Tag.ControlPoint2Enabled + "]", true) +
+        fileCommands.add(Execute.If("@n[tag=" + TagTemp.ControlPoint2Enabled + "]", true) +
                 Schedule.callFunction("" + FileName.control_point_ + 2));
 
         // Functionality based on CP score.
         // Check if Control Point is captured.
         fileCommands.add(Execute.If("@n[scores={" + Objective.CPHighscore + "=" + 20 * singleton.getMinToCPScore() + "..}]", false) +
-                Execute.UnlessNext("@n[tag=" + Tag.ControlPointCaptured + "]", true) +
+                Execute.UnlessNext("@n[tag=" + TagTemp.ControlPointCaptured + "]", true) +
                 Schedule.callFunction(FileName.control_point_captured));
 
         fileCommands.add(Schedule.callFunction(FileName.control_point_perks_check));
@@ -117,7 +115,7 @@ public class Update {
 
         // Enable second Control Point when necessary.
         fileCommands.add(Execute.If("@n[scores={" + Objective.CPHighscore + "=" + 6 * singleton.getMinToCPScore() + "..}]", false) +
-                Execute.UnlessNext("@n[tag=" + Tag.ControlPoint2Enabled + "]", true) +
+                Execute.UnlessNext("@n[tag=" + TagTemp.ControlPoint2Enabled + "]", true) +
                 Schedule.callFunction(FileName.second_control_point));
 
         // Self-schedule timer
@@ -131,7 +129,7 @@ public class Update {
         ArrayList<String> fileCommands = new ArrayList<>();
 
         // Schedule continuous functions
-        fileCommands.add(Execute.If(new Entity("@e[scores={Victory=1}]")) +
+        fileCommands.add(Execute.If("@e[scores={Victory=1}]") +
                 Schedule.callFunction(FileName.traitor_check));  // Check if traitors have won
 
         // Self-schedule timer
@@ -161,7 +159,7 @@ public class Update {
         fileCommands.add(Schedule.callFunction(FileName.developer_potion_control));
 
         // Self-schedule timer
-        fileCommands.add(Execute.Unless("@e[tag=" + Tag.GameStarted +"]") +
+        fileCommands.add(Execute.Unless("@e[tag=" + TagTemp.GameStarted +"]") +
                 Schedule.callFunction(FileName.timer_developer_20, 20, Duration.TICKS));
 
         return new FileData(FileName.timer_developer_20, fileCommands);

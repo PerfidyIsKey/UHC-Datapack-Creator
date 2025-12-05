@@ -1,25 +1,34 @@
 package Enums;
 
 public enum EnchantmentType {
-    EFFICIENCY("efficiency"),
-    FIRE_ASPECT("fire_aspect"),
-    IMPALING("impaling"),
-    LOYALTY("loyalty"),
-    LURE("lure"),
-    PIERCING("piercing"),
-    POWER("power"),
-    SHARPNESS("sharpness"),
-    VANISHING_CURSE("vanishing_curse");
+    EFFICIENCY,
+    FIRE_ASPECT,
+    IMPALING,
+    LOYALTY,
+    LURE,
+    PIERCING,
+    POWER,
+    SHARPNESS,
+    VANISHING_CURSE;
 
-    private final String symbol;
+    private final String namespace;
+    private static final String DEFAULT_NAMESPACE = "minecraft";
 
-    EnchantmentType(String symbol) {
-        this.symbol = symbol;
+    EnchantmentType(String namespace) {
+        this.namespace = namespace;
     }
 
+    EnchantmentType() {
+        this.namespace = DEFAULT_NAMESPACE;
+    }
+
+    /**
+     * Returns the full resource location string: {@code namespace:keyname}.
+     * e.g., "minecraft:power".
+     */
     @Override
     public String toString() {
-        return "minecraft:" + symbol;
+        return namespace + ":" + this.name().toLowerCase();
     }
 }
 

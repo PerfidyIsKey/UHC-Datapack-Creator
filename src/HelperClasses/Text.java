@@ -1,19 +1,19 @@
 package HelperClasses;
 
-import Enums.Color;
+import shared.TextColor;
 
 public class Text extends TextItem {
 
     private String text;
 
 
-    public Text(Color color, boolean isBold, boolean isItalic, String text) {
+    public Text(TextColor color, boolean isBold, boolean isItalic, String text) {
         super(color, isBold, isItalic);
         this.text = text;
 
     }
 
-    public Text(Color color, String text) {
+    public Text(TextColor color, String text) {
         super(color);
         this.text = text;
 
