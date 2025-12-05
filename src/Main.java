@@ -12,6 +12,8 @@ import arguments.block.BlockState;
 import arguments.block.DynamicBlock;
 import arguments.block.SimpleBlock;
 import arguments.block.SimpleBlockPredicate;
+import arguments.coordinate.AbsoluteCoordinate;
+import arguments.coordinate.RelativeCoordinate;
 import arguments.coordinate.Vec3;
 import arguments.itempredicate.SimpleItemPredicate;
 import arguments.itemstack.*;
@@ -896,6 +898,7 @@ public class Main {
                 files.add(ControlPointMessages(i));
                 files.add(ControlPointVisuals(i));
                 files.add(ControlPointUpdateRecords(i));
+                files.add(ProtectBeacon(i));
             }
             files.add(ControlPointPerksCheck());
             for (int i = 0; i < perks.size(); i++) {
@@ -1200,6 +1203,8 @@ public class Main {
                                 BlockPos.absolute(currentCP.getCoordinate().getX(), currentCP.getCoordinate().getY(), currentCP.getCoordinate().getZ()),
                                 SimpleBlock.create(StaticBlockId.BEACON))
                         .build());
+
+        fileCommands.add(Schedule.callFunction("" + FileName.protect_beacon_ + i));
 
         return new FileData(FileName.control_point_visuals_ + "" + i, fileCommands);
     }
@@ -4212,6 +4217,22 @@ public class Main {
                 .build());
 
         return new FileData(FileName.messages_eternal_day, fileCommands);
+    }
+
+    private FileData ProtectBeacon(int i) {
+        // This function replaces blocks that block a beacon beam with glass blocks
+        ArrayList<String> fileCommands = new ArrayList<>();
+
+        ControlPoint cp = controlPoints.get(i - 1);
+
+        fileCommands.add(Fill.create(
+                        BlockPos.absolute(cp.getCoordinate().getX(),  cp.getCoordinate().getY()+ 2, cp.getCoordinate().getZ()),
+                        BlockPos.absolute(cp.getCoordinate().getX(),  Constant.worldHeight, cp.getCoordinate().getZ()),
+                        SimpleBlock.create(StaticBlockId.GLASS))
+                .filter(SimpleBlockPredicate.create(BlockTagId.BLOCK_BEACON_LIGHT))
+                .build());
+
+        return new FileData(FileName.protect_beacon_ + "" + i, fileCommands);
     }
 
 }
