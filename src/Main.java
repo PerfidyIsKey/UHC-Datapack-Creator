@@ -3041,9 +3041,9 @@ public class Main {
                                         .put(new StringTag(
                                                 SelectedItemKey.ID.toString(),
                                                 ItemId.SPLASH_POTION.getResourceLocation()))
-                                        .put(new ByteTag(
+                                        .put(new IntTag(
                                                 SelectedItemKey.COUNT.toString(),
-                                                (byte) 1))
+                                                1))
                                         .put(CompoundTag.create(SelectedItemKey.COMPONENTS.toString())
                                                 .put(CompoundTag.create(ComponentsKey.POTION_CONTENTS.toString())
                                                         .put(new StringTag(
@@ -3067,9 +3067,9 @@ public class Main {
                                         .put(new StringTag(
                                                 SelectedItemKey.ID.toString(),
                                                 ItemId.SPLASH_POTION.getResourceLocation()))
-                                        .put(new ByteTag(
+                                        .put(new IntTag(
                                                 SelectedItemKey.COUNT.toString(),
-                                                (byte) 1))
+                                                1))
                                         .put(CompoundTag.create(SelectedItemKey.COMPONENTS.toString())
                                                 .put(CompoundTag.create(ComponentsKey.POTION_CONTENTS.toString())
                                                         .put(new StringTag(
@@ -3092,9 +3092,9 @@ public class Main {
                                         .put(new StringTag(
                                                 SelectedItemKey.ID.toString(),
                                                 ItemId.SPLASH_POTION.getResourceLocation()))
-                                        .put(new ByteTag(
+                                        .put(new IntTag(
                                                 SelectedItemKey.COUNT.toString(),
-                                                (byte) 1))
+                                                1))
                                         .put(CompoundTag.create(SelectedItemKey.COMPONENTS.toString())
                                                 .put(CompoundTag.create(ComponentsKey.POTION_CONTENTS.toString())
                                                         .put(new StringTag(
@@ -3118,9 +3118,9 @@ public class Main {
                                         .put(new StringTag(
                                                 SelectedItemKey.ID.toString(),
                                                 ItemId.POTION.getResourceLocation()))
-                                        .put(new ByteTag(
+                                        .put(new IntTag(
                                                 SelectedItemKey.COUNT.toString(),
-                                                (byte) 1))
+                                                1))
                                         .put(CompoundTag.create(SelectedItemKey.COMPONENTS.toString())
                                                 .put(CompoundTag.create(ComponentsKey.POTION_CONTENTS.toString())
                                                         .put(new StringTag(
@@ -3143,9 +3143,9 @@ public class Main {
                                         .put(new StringTag(
                                                 SelectedItemKey.ID.toString(),
                                                 ItemId.POTION.getResourceLocation()))
-                                        .put(new ByteTag(
+                                        .put(new IntTag(
                                                 SelectedItemKey.COUNT.toString(),
-                                                (byte) 1))
+                                                1))
                                         .put(CompoundTag.create(SelectedItemKey.COMPONENTS.toString())
                                                 .put(CompoundTag.create(ComponentsKey.POTION_CONTENTS.toString())
                                                         .put(new StringTag(
@@ -3168,9 +3168,9 @@ public class Main {
                                         .put(new StringTag(
                                                 SelectedItemKey.ID.toString(),
                                                 ItemId.POTION.getResourceLocation()))
-                                        .put(new ByteTag(
+                                        .put(new IntTag(
                                                 SelectedItemKey.COUNT.toString(),
-                                                (byte) 1))
+                                                1))
                                         .put(CompoundTag.create(SelectedItemKey.COMPONENTS.toString())
                                                 .put(CompoundTag.create(ComponentsKey.POTION_CONTENTS.toString())
                                                         .put(new StringTag(
@@ -3193,7 +3193,7 @@ public class Main {
                 CompoundTag.create(ComponentsKey.POTION_CONTENTS.toString())
                         .put(new StringTag(
                                         PotionContentsKey.POTION.toString(),
-                                EffectId.STRENGTH.getPotionTag(true, false))));
+                                EffectId.STRENGTH.getPotionTag(false, false))));
 
         target = ItemTargetEntity.create(Entity.ofSelector(
                 TargetSelector.NEAREST_PLAYER,
@@ -3203,9 +3203,9 @@ public class Main {
                                         .put(new StringTag(
                                                 SelectedItemKey.ID.toString(),
                                                 ItemId.SPLASH_POTION.getResourceLocation()))
-                                        .put(new ByteTag(
+                                        .put(new IntTag(
                                                 SelectedItemKey.COUNT.toString(),
-                                                (byte) 1))
+                                                1))
                                         .put(CompoundTag.create(SelectedItemKey.COMPONENTS.toString())
                                                 .put(CompoundTag.create(ComponentsKey.POTION_CONTENTS.toString())
                                                         .put(new StringTag(
@@ -3227,7 +3227,7 @@ public class Main {
                 CompoundTag.create(ComponentsKey.POTION_CONTENTS.toString())
                         .put(new StringTag(
                                 PotionContentsKey.POTION.toString(),
-                                EffectId.STRENGTH.getPotionTag(true, false))));
+                                EffectId.STRENGTH.getPotionTag(false, false))));
 
         target = ItemTargetEntity.create(Entity.ofSelector(
                 TargetSelector.NEAREST_PLAYER,
@@ -3237,9 +3237,9 @@ public class Main {
                                         .put(new StringTag(
                                                 SelectedItemKey.ID.toString(),
                                                 ItemId.POTION.getResourceLocation()))
-                                        .put(new ByteTag(
+                                        .put(new IntTag(
                                                 SelectedItemKey.COUNT.toString(),
-                                                (byte) 1))
+                                                1))
                                         .put(CompoundTag.create(SelectedItemKey.COMPONENTS.toString())
                                                 .put(CompoundTag.create(ComponentsKey.POTION_CONTENTS.toString())
                                                         .put(new StringTag(
@@ -3267,9 +3267,9 @@ public class Main {
                                             .put(new StringTag(
                                                     SelectedItemKey.ID.toString(),
                                                     ItemId.CROSSBOW.getResourceLocation()))
-                                            .put(new ByteTag(
+                                            .put(new IntTag(
                                                     SelectedItemKey.COUNT.toString(),
-                                                    (byte) 1))
+                                                    1))
                                             .put(CompoundTag.create(SelectedItemKey.COMPONENTS.toString())
                                                     .put(CompoundTag.create(ComponentsKey.ENCHANTMENTS.toString())
                                                             .put(new IntTag(
@@ -3295,9 +3295,9 @@ public class Main {
                                             .put(new StringTag(
                                                     SelectedItemKey.ID.toString(),
                                                     ItemId.BOW.getResourceLocation()))
-                                            .put(new ByteTag(
+                                            .put(new IntTag(
                                                     SelectedItemKey.COUNT.toString(),
-                                                    (byte) 1))
+                                                    1))
                                             .put(CompoundTag.create(SelectedItemKey.COMPONENTS.toString())
                                                     .put(CompoundTag.create(ComponentsKey.ENCHANTMENTS.toString())
                                                             .put(new IntTag(
@@ -3323,9 +3323,9 @@ public class Main {
                                         .put(new StringTag(
                                                 SelectedItemKey.ID.toString(),
                                                 ItemId.WOLF_ARMOR.getResourceLocation()))
-                                        .put(new ByteTag(
+                                        .put(new IntTag(
                                                 SelectedItemKey.COUNT.toString(),
-                                                (byte) 1))))));
+                                                1))))));
         targetOld = "@p[nbt={SelectedItem:{id:\"" + ItemId.WOLF_ARMOR + "\",count:1}}]";
         fileCommands.add(Execute.If(targetOld) +
                 new TellRaw(targetOld, warning).sendRaw());
@@ -3346,9 +3346,9 @@ public class Main {
                                         .put(new StringTag(
                                                 SelectedItemKey.ID.toString(),
                                                 ItemId.SUSPICIOUS_STEW.getResourceLocation()))
-                                        .put(new ByteTag(
+                                        .put(new IntTag(
                                                 SelectedItemKey.COUNT.toString(),
-                                                (byte) 1))))));
+                                                1))))));
         targetOld = "@p[nbt={SelectedItem:{id:\"" + ItemId.SUSPICIOUS_STEW + "\",count:1}}]";
         fileCommands.add(Execute.If(targetOld) +
                 new TellRaw(targetOld, warning).sendRaw());
