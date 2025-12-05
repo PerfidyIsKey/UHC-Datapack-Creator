@@ -3779,7 +3779,7 @@ public class Main {
 
         for (Team t : teams) {
             for (int i = 0; i < 3; i++) {
-                fileCommands.add(Execute.As("@a[team=" + t.getName() + ",nbt={SelectedItem:{id:\"" + t.getDyeColor() + "_" + ItemId.BUNDLE + "\",components:{\"minecraft:custom_data\":{locateTeammate:1b}}}}]", false) +
+                fileCommands.add(Execute.As("@a[team=" + t.getName() + ",nbt={SelectedItem:{id:\"minecraft:" + t.getDyeColor() + "_" + "bundle" + "\",components:{\"minecraft:custom_data\":{locateTeammate:1b}}}}]", false) +
                         Execute.AtNext("@s") +
                         Execute.IfNext("@a[team=" + t.getName() + ",distance=0.1..,gamemode=!spectator]") +
                         Execute.FacingNext("@a[team=" + t.getName() + ",distance=0.1..,gamemode=!spectator,limit=1,sort=random]", EntityAnchor.eyes) +
