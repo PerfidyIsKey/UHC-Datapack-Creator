@@ -1,7 +1,5 @@
 package Enums;
 
-import HelperClasses.ScoreboardObjective;
-
 public enum Objective {
         TimeDum("TimeDum"),
         Time("Time"),
@@ -39,7 +37,7 @@ public enum Objective {
         IsKiller("IsKiller"),
         TempKills("TempKills"),
         RandomQuotes("RandomQuotes"),
-        PerkReceived("PerkReceived");
+        ReceivedPerk("ReceivedPerk");
 
         private final String symbol;
 

@@ -39,7 +39,6 @@ import commands.random.RandomAction;
 import commands.recipe.RecipeAction;
 import commands.tag.TagAction;
 import commands.time.TimeAction;
-import commands.title.TitleDisplayType;
 import commands.worldborder.WorldBorderAction;
 import controlpoints.ControlPoint;
 import controlpoints.ControlPointTag;
@@ -407,7 +406,6 @@ public class Main {
         scoreboardObjectives.add(new ScoreboardObjective(Objective.Rank, ObjectiveType.dummy));
         scoreboardObjectives.add(new ScoreboardObjective(Objective.MinHealth, ObjectiveType.dummy));
         scoreboardObjectives.add(new ScoreboardObjective(Objective.Victory, ObjectiveType.dummy));
-        scoreboardObjectives.add(new ScoreboardObjective(Objective.PerkReceived, ObjectiveType.dummy));
         scoreboardObjectives.add(new ScoreboardObjective(Objective.WolfAge, ObjectiveType.dummy));
         scoreboardObjectives.add(new ScoreboardObjective(Objective.RandomQuotes, ObjectiveType.dummy));
         scoreboardObjectives.add(new ScoreboardObjective(Objective.DamageTaken, "minecraft.custom:minecraft.damage_taken"));
@@ -418,6 +416,7 @@ public class Main {
         if (OperationMode.controlPoints) {
             scoreboardObjectives.add(new ScoreboardObjective(Objective.CPScore, ObjectiveType.dummy, "\"Control Point score\"", true));
             scoreboardObjectives.add(new ScoreboardObjective(Objective.CPHighscore, ObjectiveType.dummy));
+            scoreboardObjectives.add(new ScoreboardObjective(Objective.ReceivedPerk, ObjectiveType.dummy));
             for (int i = 0; i < 2; i++) {
                 scoreboardObjectives.add(new ScoreboardObjective(Objective.ControlPoint.extendName(i + 1), ObjectiveType.dummy));
                 scoreboardObjectives.add(new ScoreboardObjective(Objective.OnCP.extendName(i + 1), ObjectiveType.dummy));
@@ -1727,13 +1726,13 @@ public class Main {
             // Reset scoreboard objectives
             for (int i = 1; i < controlPoints.size() + 1; i++) {
                 for (Team team : teams) {
-                    fileCommands.add(scoreboard.Reset(team.getName(), getObjectiveByName(Objective.OnCP.extendName(i))));
-                    fileCommands.add(scoreboard.Reset(team.getName(), getObjectiveByName(Objective.PrevCP.extendName(i))));
+                    fileCommands.add(scoreboard.Set(team.getName(), getObjectiveByName(Objective.OnCP.extendName(i)), 0));
+                    fileCommands.add(scoreboard.Set(team.getName(), getObjectiveByName(Objective.PrevCP.extendName(i)), 0));
                     fileCommands.add(scoreboard.Reset(team.getPlayerColor(), getObjectiveByName(Objective.ControlPoint.extendName(i))));
                 }
                 fileCommands.add(scoreboard.Set(Constant.adminOld, Objective.DisplayCP.extendName(i), 0));
                 fileCommands.add(scoreboard.Set(Constant.adminOld, Objective.ColorCP.extendName(i), -1));
-                fileCommands.add(scoreboard.Set("@a", "ReceivedPerk", 0));
+                fileCommands.add(scoreboard.Set("@a", Objective.ReceivedPerk, 0));
             }
             fileCommands.add(scoreboard.Reset("Solo", getObjectiveByName(Objective.CPScore)));
             for (Team t : teams) {
@@ -1785,12 +1784,12 @@ public class Main {
             fileCommands.add(bossBarCp1.setColor(BossBarColor.white));
             fileCommands.add(bossBarCp1.setVisible(false));
             fileCommands.add(bossBarCp1.setPlayers("@a"));
-            fileCommands.add(bossBarCp1.setTitle(controlPoints.get(0).getName() + ": " + controlPoints.get(0).getCoordinate().getX() + ", " + controlPoints.get(0).getCoordinate().getY() + ", " + controlPoints.get(0).getCoordinate().getZ() + " (" + controlPoints.get(0).getCoordinate().getDimensionName() + ")"));
+            fileCommands.add(bossBarCp1.setTitle(controlPoints.get(0).getName().toUpperCase() + ": " + controlPoints.get(0).getCoordinate().getX() + ", " + controlPoints.get(0).getCoordinate().getY() + ", " + controlPoints.get(0).getCoordinate().getZ() + " (" + controlPoints.get(0).getCoordinate().getDimensionName() + ")"));
             fileCommands.add(bossBarCp1.setValue(0));
             fileCommands.add(bossBarCp2.setColor(BossBarColor.white));
             fileCommands.add(bossBarCp2.setVisible(false));
             fileCommands.add(bossBarCp2.setPlayers("@a"));
-            fileCommands.add(bossBarCp2.setTitle(controlPoints.get(1).getName() + " soon: " + controlPoints.get(1).getCoordinate().getX() + ", " + controlPoints.get(1).getCoordinate().getY() + ", " + controlPoints.get(1).getCoordinate().getZ() + " (" + controlPoints.get(1).getCoordinate().getDimensionName() + ")"));
+            fileCommands.add(bossBarCp2.setTitle(controlPoints.get(1).getName().toUpperCase() + " soon: " + controlPoints.get(1).getCoordinate().getX() + ", " + controlPoints.get(1).getCoordinate().getY() + ", " + controlPoints.get(1).getCoordinate().getZ() + " (" + controlPoints.get(1).getCoordinate().getDimensionName() + ")"));
             fileCommands.add(bossBarCp2.setValue(0));
 
             // Kill waypoints
@@ -2192,7 +2191,7 @@ public class Main {
 
         // Change title display time
         fileCommands.add(Title.create(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
-                .reset()
+                .defaultDisplayTimes()
                 .build());
 
         // Destroy all ground items
@@ -2305,6 +2304,7 @@ public class Main {
                             TargetSelector.NEAREST_ENTITY,
                             SelectorArgumentsBuilder.create()
                                     .tag(controlPoint.getName())))
+                            .color(TextColor.WHITE)
                     .build());
         }
 
@@ -2368,7 +2368,7 @@ public class Main {
 
         fileCommands.add(new TellRaw("@a", texts).sendRaw());
         fileCommands.add(Title.create(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
-                .title(TextComponent.complex(i + "minute(s) remaining", TextColor.GOLD, true, true, false))
+                .title(TextComponent.complex(i + " minute(s) remaining", TextColor.GOLD, true, true, false))
                 .build());
         return new FileData("" + FileName.minute_ + i, fileCommands);
     }
@@ -2384,6 +2384,9 @@ public class Main {
                 Schedule.callFunction(FileName.initiate_deathmatch));
 
         // Announce iron man
+        fileCommands.add(Execute.Unless("@a[scores={DamageTaken=.." + minDamage + "}]", false) +
+                Execute.AsNext("@a[tag=" + StaticEntityTag.IRON_MAN + "]", true) +
+                Schedule.callFunction(FileName.announce_iron_man));
         fileCommands.add(Execute.As("@a[scores={DamageTaken=.." + minDamage + "}]") +
                 Schedule.callFunction(FileName.announce_iron_man));
 
@@ -2718,7 +2721,7 @@ public class Main {
 
         // Change title display time
         fileCommands.add(Title.create(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
-                .reset()
+                .defaultDisplayTimes()
                 .build());
 
         // Summon Care Package entities
@@ -3041,9 +3044,9 @@ public class Main {
                                         .put(new StringTag(
                                                 SelectedItemKey.ID.toString(),
                                                 ItemId.SPLASH_POTION.getResourceLocation()))
-                                        .put(new ByteTag(
+                                        .put(new IntTag(
                                                 SelectedItemKey.COUNT.toString(),
-                                                (byte) 1))
+                                                1))
                                         .put(CompoundTag.create(SelectedItemKey.COMPONENTS.toString())
                                                 .put(CompoundTag.create(ComponentsKey.POTION_CONTENTS.toString())
                                                         .put(new StringTag(
@@ -3067,9 +3070,9 @@ public class Main {
                                         .put(new StringTag(
                                                 SelectedItemKey.ID.toString(),
                                                 ItemId.SPLASH_POTION.getResourceLocation()))
-                                        .put(new ByteTag(
+                                        .put(new IntTag(
                                                 SelectedItemKey.COUNT.toString(),
-                                                (byte) 1))
+                                                1))
                                         .put(CompoundTag.create(SelectedItemKey.COMPONENTS.toString())
                                                 .put(CompoundTag.create(ComponentsKey.POTION_CONTENTS.toString())
                                                         .put(new StringTag(
@@ -3092,9 +3095,9 @@ public class Main {
                                         .put(new StringTag(
                                                 SelectedItemKey.ID.toString(),
                                                 ItemId.SPLASH_POTION.getResourceLocation()))
-                                        .put(new ByteTag(
+                                        .put(new IntTag(
                                                 SelectedItemKey.COUNT.toString(),
-                                                (byte) 1))
+                                                1))
                                         .put(CompoundTag.create(SelectedItemKey.COMPONENTS.toString())
                                                 .put(CompoundTag.create(ComponentsKey.POTION_CONTENTS.toString())
                                                         .put(new StringTag(
@@ -3118,9 +3121,9 @@ public class Main {
                                         .put(new StringTag(
                                                 SelectedItemKey.ID.toString(),
                                                 ItemId.POTION.getResourceLocation()))
-                                        .put(new ByteTag(
+                                        .put(new IntTag(
                                                 SelectedItemKey.COUNT.toString(),
-                                                (byte) 1))
+                                                1))
                                         .put(CompoundTag.create(SelectedItemKey.COMPONENTS.toString())
                                                 .put(CompoundTag.create(ComponentsKey.POTION_CONTENTS.toString())
                                                         .put(new StringTag(
@@ -3143,9 +3146,9 @@ public class Main {
                                         .put(new StringTag(
                                                 SelectedItemKey.ID.toString(),
                                                 ItemId.POTION.getResourceLocation()))
-                                        .put(new ByteTag(
+                                        .put(new IntTag(
                                                 SelectedItemKey.COUNT.toString(),
-                                                (byte) 1))
+                                                1))
                                         .put(CompoundTag.create(SelectedItemKey.COMPONENTS.toString())
                                                 .put(CompoundTag.create(ComponentsKey.POTION_CONTENTS.toString())
                                                         .put(new StringTag(
@@ -3168,9 +3171,9 @@ public class Main {
                                         .put(new StringTag(
                                                 SelectedItemKey.ID.toString(),
                                                 ItemId.POTION.getResourceLocation()))
-                                        .put(new ByteTag(
+                                        .put(new IntTag(
                                                 SelectedItemKey.COUNT.toString(),
-                                                (byte) 1))
+                                                1))
                                         .put(CompoundTag.create(SelectedItemKey.COMPONENTS.toString())
                                                 .put(CompoundTag.create(ComponentsKey.POTION_CONTENTS.toString())
                                                         .put(new StringTag(
@@ -3193,7 +3196,7 @@ public class Main {
                 CompoundTag.create(ComponentsKey.POTION_CONTENTS.toString())
                         .put(new StringTag(
                                         PotionContentsKey.POTION.toString(),
-                                EffectId.STRENGTH.getPotionTag(true, false))));
+                                EffectId.STRENGTH.getPotionTag(false, false))));
 
         target = ItemTargetEntity.create(Entity.ofSelector(
                 TargetSelector.NEAREST_PLAYER,
@@ -3203,9 +3206,9 @@ public class Main {
                                         .put(new StringTag(
                                                 SelectedItemKey.ID.toString(),
                                                 ItemId.SPLASH_POTION.getResourceLocation()))
-                                        .put(new ByteTag(
+                                        .put(new IntTag(
                                                 SelectedItemKey.COUNT.toString(),
-                                                (byte) 1))
+                                                1))
                                         .put(CompoundTag.create(SelectedItemKey.COMPONENTS.toString())
                                                 .put(CompoundTag.create(ComponentsKey.POTION_CONTENTS.toString())
                                                         .put(new StringTag(
@@ -3227,7 +3230,7 @@ public class Main {
                 CompoundTag.create(ComponentsKey.POTION_CONTENTS.toString())
                         .put(new StringTag(
                                 PotionContentsKey.POTION.toString(),
-                                EffectId.STRENGTH.getPotionTag(true, false))));
+                                EffectId.STRENGTH.getPotionTag(false, false))));
 
         target = ItemTargetEntity.create(Entity.ofSelector(
                 TargetSelector.NEAREST_PLAYER,
@@ -3237,9 +3240,9 @@ public class Main {
                                         .put(new StringTag(
                                                 SelectedItemKey.ID.toString(),
                                                 ItemId.POTION.getResourceLocation()))
-                                        .put(new ByteTag(
+                                        .put(new IntTag(
                                                 SelectedItemKey.COUNT.toString(),
-                                                (byte) 1))
+                                                1))
                                         .put(CompoundTag.create(SelectedItemKey.COMPONENTS.toString())
                                                 .put(CompoundTag.create(ComponentsKey.POTION_CONTENTS.toString())
                                                         .put(new StringTag(
@@ -3267,9 +3270,9 @@ public class Main {
                                             .put(new StringTag(
                                                     SelectedItemKey.ID.toString(),
                                                     ItemId.CROSSBOW.getResourceLocation()))
-                                            .put(new ByteTag(
+                                            .put(new IntTag(
                                                     SelectedItemKey.COUNT.toString(),
-                                                    (byte) 1))
+                                                    1))
                                             .put(CompoundTag.create(SelectedItemKey.COMPONENTS.toString())
                                                     .put(CompoundTag.create(ComponentsKey.ENCHANTMENTS.toString())
                                                             .put(new IntTag(
@@ -3295,9 +3298,9 @@ public class Main {
                                             .put(new StringTag(
                                                     SelectedItemKey.ID.toString(),
                                                     ItemId.BOW.getResourceLocation()))
-                                            .put(new ByteTag(
+                                            .put(new IntTag(
                                                     SelectedItemKey.COUNT.toString(),
-                                                    (byte) 1))
+                                                    1))
                                             .put(CompoundTag.create(SelectedItemKey.COMPONENTS.toString())
                                                     .put(CompoundTag.create(ComponentsKey.ENCHANTMENTS.toString())
                                                             .put(new IntTag(
@@ -3323,9 +3326,9 @@ public class Main {
                                         .put(new StringTag(
                                                 SelectedItemKey.ID.toString(),
                                                 ItemId.WOLF_ARMOR.getResourceLocation()))
-                                        .put(new ByteTag(
+                                        .put(new IntTag(
                                                 SelectedItemKey.COUNT.toString(),
-                                                (byte) 1))))));
+                                                1))))));
         targetOld = "@p[nbt={SelectedItem:{id:\"" + ItemId.WOLF_ARMOR + "\",count:1}}]";
         fileCommands.add(Execute.If(targetOld) +
                 new TellRaw(targetOld, warning).sendRaw());
@@ -3346,9 +3349,9 @@ public class Main {
                                         .put(new StringTag(
                                                 SelectedItemKey.ID.toString(),
                                                 ItemId.SUSPICIOUS_STEW.getResourceLocation()))
-                                        .put(new ByteTag(
+                                        .put(new IntTag(
                                                 SelectedItemKey.COUNT.toString(),
-                                                (byte) 1))))));
+                                                1))))));
         targetOld = "@p[nbt={SelectedItem:{id:\"" + ItemId.SUSPICIOUS_STEW + "\",count:1}}]";
         fileCommands.add(Execute.If(targetOld) +
                 new TellRaw(targetOld, warning).sendRaw());
@@ -3372,7 +3375,7 @@ public class Main {
             for (Perk perk : perks) {
                 i++;
                 fileCommands.add(Execute.If(team.getPlayerColor(), Objective.CPScore, perk.getActivationTime() + "..", false) +
-                        Execute.IfNext("@p[gamemode=!spectator,team=" + team.getName() + ",scores={ReceivedPerk=.." + i + "}]") +
+                        Execute.IfNext("@p[gamemode=!spectator,team=" + team.getName() + ",scores={ReceivedPerk=.." + (i - 1) + "}]") +
                         Execute.AsNext("@p[gamemode=!spectator,team=" + team.getName() + "]", true) +
                         Schedule.callFunction("" + FileName.perk_ + i));
             }
@@ -3399,7 +3402,7 @@ public class Main {
 
             // Add tag
             fileCommands.add(Execute.If("@s[team=" + team.getName() + "]") +
-                    scoreboard.Set("@a[team=" + team.getName() + "]", "ReceivedPerk", perks.get(i).getId()));
+                    scoreboard.Set("@a[team=" + team.getName() + "]", Objective.ReceivedPerk, perks.get(i).getId()));
 
             // Give rewards
             fileCommands.add(Execute.If("@s[team=" + team.getName() + "]") +
@@ -3779,7 +3782,7 @@ public class Main {
 
         for (Team t : teams) {
             for (int i = 0; i < 3; i++) {
-                fileCommands.add(Execute.As("@a[team=" + t.getName() + ",nbt={SelectedItem:{id:\"" + t.getDyeColor() + "_" + ItemId.BUNDLE + "\",components:{\"minecraft:custom_data\":{locateTeammate:1b}}}}]", false) +
+                fileCommands.add(Execute.As("@a[team=" + t.getName() + ",nbt={SelectedItem:{id:\"minecraft:" + t.getDyeColor() + "_" + "bundle" + "\",components:{\"minecraft:custom_data\":{locateTeammate:1b}}}}]", false) +
                         Execute.AtNext("@s") +
                         Execute.IfNext("@a[team=" + t.getName() + ",distance=0.1..,gamemode=!spectator]") +
                         Execute.FacingNext("@a[team=" + t.getName() + ",distance=0.1..,gamemode=!spectator,limit=1,sort=random]", EntityAnchor.eyes) +
