@@ -2191,7 +2191,7 @@ public class Main {
 
         // Change title display time
         fileCommands.add(Title.create(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
-                .reset()
+                .defaultDisplayTimes()
                 .build());
 
         // Destroy all ground items
@@ -2721,7 +2721,7 @@ public class Main {
 
         // Change title display time
         fileCommands.add(Title.create(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
-                .reset()
+                .defaultDisplayTimes()
                 .build());
 
         // Summon Care Package entities

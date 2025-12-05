@@ -3,26 +3,25 @@ package commands;
 import arguments.Entity;
 import arguments.time.VariableGameTime;
 import commands.title.TitleAction;
-// Removed the import for commands.title.TitleDisplayType
 
 /**
  * Represents the Minecraft {@code /title} command used to display on-screen messages,
  * set display times, or clear/reset existing titles for one or more targets.
  * <p>
- * The class uses the builder pattern to construct one of the mutually exclusive forms:
+ * This class uses the **Builder Pattern** to construct one of the mutually exclusive command forms:
  * <ul>
- * <li>{@code title <targets> title <text>}</li>
+ * <li>{@code title <targets> clear | reset}</li>
  * <li>{@code title <targets> times <fadeIn> <stay> <fadeOut>}</li>
- * <li>{@code title <targets> clear}</li>
+ * <li>{@code title <targets> title | subtitle | actionbar <text>}</li>
  * </ul>
  */
 public class Title {
     private final Entity targets;
-    private TitleAction action; // Holds CLEAR, RESET, TITLE, SUBTITLE, ACTIONBAR, or TIMES implicitly
-    private String textContent; // Stores the JSON/String content for TITLE/SUBTITLE/ACTIONBAR
-    private VariableGameTime fadeIn;
-    private VariableGameTime stay;
-    private VariableGameTime fadeOut;
+    private TitleAction action; // Holds the primary command type (e.g., CLEAR, TIMES, TITLE).
+    private String textContent; // Stores the JSON/String content used for TITLE, SUBTITLE, or ACTIONBAR commands.
+    private VariableGameTime fadeIn; // The fade-in duration for the TIMES command.
+    private VariableGameTime stay;   // The duration the title stays visible for the TIMES command.
+    private VariableGameTime fadeOut;  // The fade-out duration for the TIMES command.
 
     private Title(Entity targets) {
         if (targets == null) {
@@ -32,9 +31,9 @@ public class Title {
     }
 
     /**
-     * Creates a new builder instance for the /title command, specifying the targets.
+     * Creates a new builder instance for the Minecraft {@code /title} command.
      *
-     * @param targets The entity or group of entities to target (e.g., '@p', '@a').
+     * @param targets The entity or group of entities to target (e.g., '@p', '@a', 'PlayerName').
      * @return A new Title builder instance.
      */
     public static Title create(Entity targets) {
@@ -44,8 +43,11 @@ public class Title {
     // --- Mutually Exclusive Command Setters ---
 
     /**
-     * Sets the action to {@code CLEAR}, removing the currently displayed title and subtitle.
-     * This form is mutually exclusive with {@code times} and text display commands.
+     * Sets the command action to {@code CLEAR}.
+     * <p>
+     * Command form: {@code title <targets> clear}
+     *
+     * @return The current builder instance for chaining.
      */
     public Title clear() {
         this.action = TitleAction.CLEAR;
@@ -53,8 +55,12 @@ public class Title {
     }
 
     /**
-     * Sets the action to {@code RESET}, reverting display times to default (10/70/20 ticks).
-     * This form is mutually exclusive with {@code times} and text display commands.
+     * Sets the command action to {@code RESET}.
+     * <p>
+     * This reverts any previously set display times for the targets to the Minecraft defaults.
+     * Command form: {@code title <targets> reset}
+     *
+     * @return The current builder instance for chaining.
      */
     public Title reset() {
         this.action = TitleAction.RESET;
@@ -62,9 +68,12 @@ public class Title {
     }
 
     /**
-     * Sets the action to display text as a **main title** and sets the content.
+     * Sets the command to display text as a **main title** and defines the content.
+     * <p>
+     * Command form: {@code title <targets> title <content>}
      *
      * @param content The text (plain string or JSON text component) to display.
+     * @return The current builder instance for chaining.
      */
     public Title title(String content) {
         this.action = TitleAction.TITLE;
@@ -73,9 +82,12 @@ public class Title {
     }
 
     /**
-     * Sets the action to display text as a **subtitle** and sets the content.
+     * Sets the command to display text as a **subtitle** and defines the content.
+     * <p>
+     * Command form: {@code title <targets> subtitle <content>}
      *
      * @param content The text (plain string or JSON text component) to display.
+     * @return The current builder instance for chaining.
      */
     public Title subtitle(String content) {
         this.action = TitleAction.SUBTITLE;
@@ -84,9 +96,12 @@ public class Title {
     }
 
     /**
-     * Sets the action to display text on the **action bar** (above the hotbar).
+     * Sets the command to display text on the **action bar** (the area above the hotbar).
+     * <p>
+     * Command form: {@code title <targets> actionbar <content>}
      *
      * @param content The text (plain string or JSON text component) to display.
+     * @return The current builder instance for chaining.
      */
     public Title actionbar(String content) {
         this.action = TitleAction.ACTIONBAR;
@@ -95,12 +110,16 @@ public class Title {
     }
 
     /**
-     * Sets the action implicitly to {@code TIMES} and defines the custom display timings.
-     * All three parameters are mandatory when calling this method.
+     * Sets the command to customize the title display timings.
+     * <p>
+     * This implicitly sets the action to {@code TIMES}. All three parameters are mandatory.
+     * Command form: {@code title <targets> times <fadeIn> <stay> <fadeOut>}
      *
      * @param fadeIn The duration for the title to fade in.
      * @param stay The duration the title stays visible.
      * @param fadeOut The duration for the title to fade out.
+     * @return The current builder instance for chaining.
+     * @throws IllegalArgumentException if any timing argument is {@code null}.
      */
     public Title displayTimes(VariableGameTime fadeIn, VariableGameTime stay, VariableGameTime fadeOut) {
         if (fadeIn == null || stay == null || fadeOut == null) {
@@ -113,22 +132,39 @@ public class Title {
         return this;
     }
 
-    // Removed the redundant defaultDisplayTime() method as RESET action already handles the concept of defaults.
+    /**
+     * Sets the command to customize the title display timings using the Minecraft default values.
+     * <p>
+     * This implicitly sets the action to {@code TIMES} and uses the default values:
+     * **Fade In: 10 ticks, Stay: 70 ticks, Fade Out: 20 ticks**.
+     * Command form: {@code title <targets> times 10 70 20}
+     *
+     * @return The current builder instance for chaining.
+     */
+    public Title defaultDisplayTimes() {
+        this.action = TitleAction.TIMES;
+        this.fadeIn = VariableGameTime.tick(10);
+        this.stay = VariableGameTime.tick(70);
+        this.fadeOut = VariableGameTime.tick(20);
+        return this;
+    }
 
     // --- Build Method ---
 
     /**
-     * Builds the final {@code /title} command string based on the configured properties.
+     * Finalizes and builds the complete Minecraft {@code /title} command string.
+     * <p>
+     * Validation ensures that all required components for the selected command type are present.
      *
-     * @return The complete command string.
-     * @throws IllegalStateException if no action (text, times, clear/reset) was specified.
+     * @return The complete, runnable command string.
+     * @throws IllegalStateException if no action (text, times, clear/reset) was configured, or if mandatory text content is missing.
      */
     public String build() {
         StringBuilder sb = new StringBuilder("title ");
         sb.append(targets).append(" ");
 
         if (action == null) {
-            throw new IllegalStateException("Cannot build command. Must specify an action (e.g., clear(), title(), displayTimes()).");
+            throw new IllegalStateException("Cannot build command. Must specify a title action (e.g., clear(), title(), displayTimes()).");
         }
 
         switch (action) {
@@ -140,6 +176,10 @@ public class Title {
             case TIMES:
                 // Command form: title <targets> times <fadeIn> <stay> <fadeOut>
                 // Validation for nulls handled in displayTimes() method.
+                if (fadeIn == null) {
+                    // This handles cases where action was set to TIMES but no displayTimes method was called (should not happen if using the builder methods).
+                    throw new IllegalStateException("Display times must be configured when the TIMES action is selected.");
+                }
                 return sb.append(action) // 'times'
                         .append(" ").append(fadeIn.getTime())
                         .append(" ").append(stay.getTime())
