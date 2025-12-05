@@ -58,6 +58,7 @@ public enum FileName {
     perk_,
     control_point_messages_,
     control_point_team_score,
+    protect_beacon_,
 
     // Care Packages
     drop_carepackages,
