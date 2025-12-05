@@ -2384,6 +2384,9 @@ public class Main {
                 Schedule.callFunction(FileName.initiate_deathmatch));
 
         // Announce iron man
+        fileCommands.add(Execute.Unless("@a[scores={DamageTaken=.." + minDamage + "}]", false) +
+                Execute.AsNext("@a[tag=" + StaticEntityTag.IRON_MAN + "]", true) +
+                Schedule.callFunction(FileName.announce_iron_man));
         fileCommands.add(Execute.As("@a[scores={DamageTaken=.." + minDamage + "}]") +
                 Schedule.callFunction(FileName.announce_iron_man));
 
