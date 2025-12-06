@@ -4220,18 +4220,35 @@ public class Main {
     }
 
     private FileData ProtectBeacon(int i) {
-        // This function replaces blocks that block a beacon beam with glass blocks
+        /**
+         * Generates a Minecraft function file containing a single /fill command
+         * that ensures the beacon beam at the specified Control Point (CP) is clear.
+         * * The command replaces any solid block that obstructs the beacon beam
+         * (starting 2 blocks above the beacon) with a glass block, using a
+         * block tag predicate to target only opaque blocks.
+         *
+         * @param i The 1-based index of the Control Point (used for the file name and lookup).
+         * @return A FileData object containing the function file name and the generated /fill command.
+         */
         ArrayList<String> fileCommands = new ArrayList<>();
 
+        // Retrieve the ControlPoint data using the 0-based index (i - 1).
         ControlPoint cp = controlPoints.get(i - 1);
 
+        // --- Command Generation: /fill <from> <to> glass replace #minecraft:impermeable_blocks ---
         fileCommands.add(Fill.create(
-                        BlockPos.absolute(cp.getCoordinate().getX(),  cp.getCoordinate().getY()+ 2, cp.getCoordinate().getZ()),
-                        BlockPos.absolute(cp.getCoordinate().getX(),  Constant.worldHeight, cp.getCoordinate().getZ()),
+                        // 1. Define the 'from' corner: X, Y+2 (above the beacon block), Z
+                        BlockPos.absolute(cp.getCoordinate().getX(), cp.getCoordinate().getY() + 2, cp.getCoordinate().getZ()),
+                        // 2. Define the 'to' corner: X, World Height (sky limit), Z
+                        BlockPos.absolute(cp.getCoordinate().getX(), Constant.worldHeight, cp.getCoordinate().getZ()),
+                        // 3. Define the replacement block: glass
                         SimpleBlock.create(StaticBlockId.GLASS))
+                // 4. Set the filter/predicate: replace only blocks that obstruct light (e.g., stone, wood, dirt).
+                //    This is assumed to map to the Minecraft tag #minecraft:impermeable_blocks or similar tag.
                 .filter(SimpleBlockPredicate.create(BlockTagId.BLOCK_BEACON_LIGHT))
                 .build());
 
+        // Create the FileData object with a unique file name based on the index.
         return new FileData(FileName.protect_beacon_ + "" + i, fileCommands);
     }
 
