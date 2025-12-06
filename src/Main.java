@@ -950,6 +950,9 @@ public class Main {
         fileCommands.add(GameRule.create(GameRuleId.DO_WEATHER_CYCLE)
                 .booleanValue(false)
                 .build());
+        fileCommands.add(GameRule.create(GameRuleId.SPAWN_RADIUS)
+                .intValue(0)
+                .build());
 
         // Set difficulty
         fileCommands.add(Difficulty.create()
@@ -989,7 +992,7 @@ public class Main {
         fileCommands.add(Execute.In(Dimension.overworld) +
                 Fill.create(
                                 BlockPos.absolute(-5, 221, -5),
-                                BlockPos.absolute(6, 226, 5),
+                                BlockPos.absolute(5, 226, 5),
                                 SimpleBlock.create(StaticBlockId.AIR))
                         .build());
 
@@ -1011,7 +1014,7 @@ public class Main {
                                                 .done()
                                                 .getFrontSide()
                                                 .addMessage(TextComponent.withClickCommand(
-                                                        "In rememberance",
+                                                        "In remembrance",
                                                         "run_command",
                                                         Summon.create(EntityType.FIREWORK_ROCKET)
                                                                 .pos(Vec3.relative(0, 0, 0))
@@ -1057,8 +1060,7 @@ public class Main {
                 .targets(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
                 .pos(Vec3.relative(0, 50, 0))
                 .volume(100)
-                .build()
-        );
+                .build());
 
         // Set all dead players to spectator mode
         fileCommands.add(SetGameMode.create(GameMode.SPECTATOR)
@@ -1066,10 +1068,8 @@ public class Main {
                                 TargetSelector.ALL_PLAYERS,
                                 SelectorArgumentsBuilder.create()
                                         .scores(Map.of(ScoreObjective.DEATHS, 1))
-                                        .gamemode(GameMode.SPECTATOR, true)
-                        )
-                ).build()
-        );
+                                        .gamemode(GameMode.SPECTATOR, true)))
+                .build());
 
         // Reset player with lowest health
         fileCommands.add(scoreboard.Set(Constant.adminOld, getObjectiveByName(Objective.MinHealth), 20));
