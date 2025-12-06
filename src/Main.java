@@ -411,7 +411,7 @@ public class Main {
         scoreboardObjectives.add(new ScoreboardObjective(Objective.WolfAge, ObjectiveType.dummy));
         scoreboardObjectives.add(new ScoreboardObjective(Objective.RandomQuotes, ObjectiveType.dummy));
         scoreboardObjectives.add(new ScoreboardObjective(Objective.DamageTaken, "minecraft.custom:minecraft.damage_taken"));
-        for (int i = 0; i < 2; i++) {
+        for (int i = 0; i < 4; i++) {
             scoreboardObjectives.add(new ScoreboardObjective(Objective.CollarCheck.extendName(i), ObjectiveType.dummy));
         }
 
@@ -1637,6 +1637,16 @@ public class Main {
         fileCommands.add(scoreboard.Reset("@e"));
         fileCommands.add(scoreboard.Set(Constant.adminOld, Objective.MinHealth, 20));
         fileCommands.add(scoreboard.Set(Constant.adminOld, Objective.Victory, 1));
+
+        // Get all player UUIDs
+        for (int i = 0; i < 4; i++) {
+            fileCommands.add(Execute.As("@a", false) +
+                    Execute.StoreNext(ExecuteStore.result, "@s", getObjectiveByName(Objective.CollarCheck.extendName(i)), true) +
+                    Data.createGet(
+                                    DataTargetEntity.create(Entity.ofSelector(TargetSelector.SENDER)),
+                                    DataPath.createWithIndex(DataPathId.UUID, i))
+                            .build());
+        }
 
         // Create jukebox at 0,0
         fileCommands.add(Execute.In(Dimension.overworld) +
@@ -3816,46 +3826,27 @@ public class Main {
 
         // Set wolf collar color
         // Get data
-        for (int i = 0; i < 2; i++) {
+        for (int i = 0; i < 4; i++) {
             fileCommands.add(Execute.As("@e[type=" + EntityType.WOLF + "]", false) +
                     Execute.StoreNext(ExecuteStore.result, "@s", getObjectiveByName(Objective.CollarCheck.extendName(i)), true) +
                     Data.createGet(
                                     DataTargetEntity.create(Entity.ofSelector(TargetSelector.SENDER)),
                                     DataPath.createWithIndex(DataPathId.OWNER, i))
                             .build());
-
-            fileCommands.add(Execute.As("@a", false) +
-                    Execute.StoreNext(ExecuteStore.result, "@s", getObjectiveByName(Objective.CollarCheck.extendName(i)), true) +
-                    Data.createGet(
-                                    DataTargetEntity.create(Entity.ofSelector(TargetSelector.SENDER)),
-                                    DataPath.createWithIndex(DataPathId.UUID, i))
-                            .build());
-
         }
+
         // Players in a team
         for (Team t : teams) {
-            fileCommands.add(Tag.action(Entity.ofSelector(
-                    TargetSelector.ALL_PLAYERS,
-                    SelectorArgumentsBuilder.create()
-                            .team(t.getName())),
-                    TagAction.ADD)
-                            .name(StaticEntityTag.COLLAR_CHECK)
-                            .build());
             fileCommands.add(Execute.As("@e[type=" + EntityType.WOLF + "]", false) +
-                    Execute.IfNext("@s", getObjectiveByName(Objective.CollarCheck.extendName(0)), ComparatorType.EQUAL, "@p[tag=" + TagTemp.CollarCheck + "]", getObjectiveByName(Objective.CollarCheck.extendName(0))) +
-                    Execute.IfNext("@s", getObjectiveByName(Objective.CollarCheck.extendName(1)), ComparatorType.EQUAL, "@p[tag=" + TagTemp.CollarCheck + "]", getObjectiveByName(Objective.CollarCheck.extendName(1)), true) +
+                    Execute.IfNext("@s", getObjectiveByName(Objective.CollarCheck.extendName(0)), ComparatorType.EQUAL, "@r[team=" + t.getName() + "]", getObjectiveByName(Objective.CollarCheck.extendName(0))) +
+                    Execute.IfNext("@s", getObjectiveByName(Objective.CollarCheck.extendName(1)), ComparatorType.EQUAL, "@r[team=" + t.getName() + "]", getObjectiveByName(Objective.CollarCheck.extendName(1))) +
+                    Execute.IfNext("@s", getObjectiveByName(Objective.CollarCheck.extendName(2)), ComparatorType.EQUAL, "@r[team=" + t.getName() + "]", getObjectiveByName(Objective.CollarCheck.extendName(2))) +
+                    Execute.IfNext("@s", getObjectiveByName(Objective.CollarCheck.extendName(3)), ComparatorType.EQUAL, "@r[team=" + t.getName() + "]", getObjectiveByName(Objective.CollarCheck.extendName(3)), true) +
                     Data.createModify(
                                     DataTargetEntity.create(Entity.ofSelector(TargetSelector.SENDER)),
                                     DataPath.create(DataPathId.COLLAR_COLOR),
                                     ModificationSetValue.create(DataValue.createByte((byte) t.getCollarColor())))
                             .build());
-            fileCommands.add(Tag.action(Entity.ofSelector(
-                                    TargetSelector.ALL_PLAYERS,
-                                    SelectorArgumentsBuilder.create()
-                                            .team(t.getName())),
-                            TagAction.REMOVE)
-                    .name(StaticEntityTag.COLLAR_CHECK)
-                    .build());
         }
 
         if (OperationMode.teamCreationInGame) {
