@@ -12,8 +12,6 @@ import arguments.block.BlockState;
 import arguments.block.DynamicBlock;
 import arguments.block.SimpleBlock;
 import arguments.block.SimpleBlockPredicate;
-import arguments.coordinate.AbsoluteCoordinate;
-import arguments.coordinate.RelativeCoordinate;
 import arguments.coordinate.Vec3;
 import arguments.itempredicate.SimpleItemPredicate;
 import arguments.itemstack.*;
@@ -1578,6 +1576,14 @@ public class Main {
     private FileData DeveloperMode() {
         ArrayList<String> fileCommands = new ArrayList<>();
 
+        // Recreate forceload
+        fileCommands.add(ForceLoad.create(ForceLoadAction.REMOVE)
+                .from(Constant.spawnCenterInt)
+                .build());
+        fileCommands.add(ForceLoad.create(ForceLoadAction.ADD)
+                .from(Constant.spawnCenterInt)
+                .build());
+
         // Create marker entity
         fileCommands.add(Kill.create()
                         .targets(Constant.admin)
@@ -1775,23 +1781,7 @@ public class Main {
                     .build());
 
             // Spawn new Control Points
-            fileCommands.add(Execute.In(controlPoints.get(0).getCoordinate().getDimension()) +
-                    ForceLoad.create(ForceLoadAction.ADD)
-                            .from(ColumnPos.absolute(controlPoints.get(0).getCoordinate().getX(), controlPoints.get(0).getCoordinate().getZ()))
-                            .build());
-            fileCommands.add(Execute.In(controlPoints.get(1).getCoordinate().getDimension()) +
-                    ForceLoad.create(ForceLoadAction.ADD)
-                            .from(ColumnPos.absolute(controlPoints.get(1).getCoordinate().getX(), controlPoints.get(1).getCoordinate().getZ()))
-                            .build());
             fileCommands.add(Schedule.callFunction(FileName.spawn_control_points));
-            fileCommands.add(Execute.In(controlPoints.get(0).getCoordinate().getDimension()) +
-                    ForceLoad.create(ForceLoadAction.REMOVE)
-                            .from(ColumnPos.absolute(controlPoints.get(0).getCoordinate().getX(), controlPoints.get(0).getCoordinate().getZ()))
-                            .build());
-            fileCommands.add(Execute.In(controlPoints.get(1).getCoordinate().getDimension()) +
-                    ForceLoad.create(ForceLoadAction.REMOVE)
-                            .from(ColumnPos.absolute(controlPoints.get(1).getCoordinate().getX(), controlPoints.get(1).getCoordinate().getZ()))
-                            .build());
 
             // Reset bossbars
             BossBar bossBarCp1 = getBossbarByName("cp1");
@@ -1816,8 +1806,6 @@ public class Main {
                                                 .tag(controlPoint.getName())))
                                         .build());
             }
-            fileCommands.add(ForceLoad.create(ForceLoadAction.REMOVE)
-                    .build());
         }
 
         // Traitor Faction
@@ -2036,7 +2024,7 @@ public class Main {
 
         fileCommands.add(Execute.In(Dimension.overworld) +
                 SpreadPlayers.create(
-                                Constant.spawnCenter,
+                                Constant.spawnCenterDouble,
                                 0.3f * world.getSize(),
                                 0.9f * world.getSize(),
                                 respectTeams,
@@ -2242,7 +2230,7 @@ public class Main {
         fileCommands.add(Execute.In(Dimension.overworld, false) +
                 Execute.PositionedNext(new Coordinate(0, 151, 0), true) +
                 SpreadPlayers.create(
-                                Constant.spawnCenter,
+                                Constant.spawnCenterDouble,
                                 0.3f * world.getSize(),
                                 0.9f * world.getSize(),
                                 true,
@@ -2528,7 +2516,7 @@ public class Main {
         // Spread players in a team together
         fileCommands.add(Execute.In(Dimension.overworld) +
                 SpreadPlayers.create(
-                                Constant.spawnCenter,
+                                Constant.spawnCenterDouble,
                                 75,
                                 150,
                                 true,
@@ -2543,7 +2531,7 @@ public class Main {
             // Spread players without a team alone
             fileCommands.add(Execute.In(Dimension.overworld) +
                     SpreadPlayers.create(
-                                    Constant.spawnCenter,
+                                    Constant.spawnCenterDouble,
                                     75,
                                     150,
                                     false,
@@ -2762,7 +2750,7 @@ public class Main {
         // Spread Care Packages
         fileCommands.add(Execute.In(Dimension.overworld, true) +
                 SpreadPlayers.create(
-                                Constant.spawnCenter,
+                                Constant.spawnCenterDouble,
                                 10,
                                 carePackageSpread,
                                 false,
@@ -3519,7 +3507,7 @@ public class Main {
                     Execute.AsNext(respawnPlayerOld) +
                     Execute.UnlessNext("@p[team=" + t.getName() + ",tag=!Respawn]", true) +
                     SpreadPlayers.create(
-                                    Constant.spawnCenter,
+                                    Constant.spawnCenterDouble,
                                     0.3f * world.getSize(),
                                     0.7f * world.getSize(),
                                     false,
@@ -3534,7 +3522,7 @@ public class Main {
             // Teleport player if they are not in a team
             fileCommands.add(Execute.As(respawnPlayerOld) +
                     SpreadPlayers.create(
-                                    Constant.spawnCenter,
+                                    Constant.spawnCenterDouble,
                                     0.3f * world.getSize(),
                                     0.7f * world.getSize(),
                                     false,
