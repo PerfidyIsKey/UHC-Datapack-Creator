@@ -243,7 +243,7 @@ public class Main {
         properties.set("difficulty", DifficultyId.HARD);
         properties.set("enable-command-block", true);
         properties.set("gamemode", GameMode.ADVENTURE);
-        properties.set("level-seed", -2901703172L);
+        properties.set("level-seed", 1126908793L);
         properties.set("max-players", 50);
         properties.set("motd", communityName + " UHC S" + uhcNumber);
         properties.set("simulation-distance", 5);
@@ -409,7 +409,7 @@ public class Main {
         scoreboardObjectives.add(new ScoreboardObjective(Objective.WolfAge, ObjectiveType.dummy));
         scoreboardObjectives.add(new ScoreboardObjective(Objective.RandomQuotes, ObjectiveType.dummy));
         scoreboardObjectives.add(new ScoreboardObjective(Objective.DamageTaken, "minecraft.custom:minecraft.damage_taken"));
-        for (int i = 0; i < 2; i++) {
+        for (int i = 0; i < 4; i++) {
             scoreboardObjectives.add(new ScoreboardObjective(Objective.CollarCheck.extendName(i), ObjectiveType.dummy));
         }
 
@@ -527,7 +527,7 @@ public class Main {
         entries.add(new LootTableEntry(2, ItemId.DIAMOND, new SetCount(2, new RandomChance(0.3))));
 
         // Entry #26
-        entries.add(new LootTableEntry(7, Block.SADDLE));
+        entries.add(new LootTableEntry(7, ItemId.SADDLE));
 
         // Entry #27
         entries.add(new LootTableEntry(3, ItemId.SPECTRAL_ARROW, new SetCount(10)));
@@ -637,7 +637,7 @@ public class Main {
         functions.add(new SetComponents(horse));
         functions.add(name);
 
-        entries.add(new LootTableEntry(4, Block.HORSE_SPAWN_EGG, functions));
+        entries.add(new LootTableEntry(4, ItemId.HORSE_SPAWN_EGG, functions));
         functions = new ArrayList<>();
 
         // Entry #47
@@ -896,6 +896,7 @@ public class Main {
                 files.add(ControlPointMessages(i));
                 files.add(ControlPointVisuals(i));
                 files.add(ControlPointUpdateRecords(i));
+                files.add(ProtectBeacon(i));
             }
             files.add(ControlPointPerksCheck());
             for (int i = 0; i < perks.size(); i++) {
@@ -949,6 +950,9 @@ public class Main {
         fileCommands.add(GameRule.create(GameRuleId.DO_WEATHER_CYCLE)
                 .booleanValue(false)
                 .build());
+        fileCommands.add(GameRule.create(GameRuleId.SPAWN_RADIUS)
+                .intValue(0)
+                .build());
 
         // Set difficulty
         fileCommands.add(Difficulty.create()
@@ -988,7 +992,7 @@ public class Main {
         fileCommands.add(Execute.In(Dimension.overworld) +
                 Fill.create(
                                 BlockPos.absolute(-5, 221, -5),
-                                BlockPos.absolute(6, 226, 5),
+                                BlockPos.absolute(5, 226, 5),
                                 SimpleBlock.create(StaticBlockId.AIR))
                         .build());
 
@@ -1010,7 +1014,7 @@ public class Main {
                                                 .done()
                                                 .getFrontSide()
                                                 .addMessage(TextComponent.withClickCommand(
-                                                        "In rememberance",
+                                                        "In remembrance",
                                                         "run_command",
                                                         Summon.create(EntityType.FIREWORK_ROCKET)
                                                                 .pos(Vec3.relative(0, 0, 0))
@@ -1056,8 +1060,7 @@ public class Main {
                 .targets(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
                 .pos(Vec3.relative(0, 50, 0))
                 .volume(100)
-                .build()
-        );
+                .build());
 
         // Set all dead players to spectator mode
         fileCommands.add(SetGameMode.create(GameMode.SPECTATOR)
@@ -1065,10 +1068,8 @@ public class Main {
                                 TargetSelector.ALL_PLAYERS,
                                 SelectorArgumentsBuilder.create()
                                         .scores(Map.of(ScoreObjective.DEATHS, 1))
-                                        .gamemode(GameMode.SPECTATOR, true)
-                        )
-                ).build()
-        );
+                                        .gamemode(GameMode.SPECTATOR, true)))
+                .build());
 
         // Reset player with lowest health
         fileCommands.add(scoreboard.Set(Constant.adminOld, getObjectiveByName(Objective.MinHealth), 20));
@@ -1200,6 +1201,8 @@ public class Main {
                                 BlockPos.absolute(currentCP.getCoordinate().getX(), currentCP.getCoordinate().getY(), currentCP.getCoordinate().getZ()),
                                 SimpleBlock.create(StaticBlockId.BEACON))
                         .build());
+
+        fileCommands.add(Schedule.callFunction("" + FileName.protect_beacon_ + i));
 
         return new FileData(FileName.control_point_visuals_ + "" + i, fileCommands);
     }
@@ -1573,6 +1576,14 @@ public class Main {
     private FileData DeveloperMode() {
         ArrayList<String> fileCommands = new ArrayList<>();
 
+        // Recreate forceload
+        fileCommands.add(ForceLoad.create(ForceLoadAction.REMOVE)
+                .from(Constant.spawnCenterInt)
+                .build());
+        fileCommands.add(ForceLoad.create(ForceLoadAction.ADD)
+                .from(Constant.spawnCenterInt)
+                .build());
+
         // Create marker entity
         fileCommands.add(Kill.create()
                         .targets(Constant.admin)
@@ -1632,6 +1643,16 @@ public class Main {
         fileCommands.add(scoreboard.Reset("@e"));
         fileCommands.add(scoreboard.Set(Constant.adminOld, Objective.MinHealth, 20));
         fileCommands.add(scoreboard.Set(Constant.adminOld, Objective.Victory, 1));
+
+        // Get all player UUIDs
+        for (int i = 0; i < 4; i++) {
+            fileCommands.add(Execute.As("@a", false) +
+                    Execute.StoreNext(ExecuteStore.result, "@s", getObjectiveByName(Objective.CollarCheck.extendName(i)), true) +
+                    Data.createGet(
+                                    DataTargetEntity.create(Entity.ofSelector(TargetSelector.SENDER)),
+                                    DataPath.createWithIndex(DataPathId.UUID, i))
+                            .build());
+        }
 
         // Create jukebox at 0,0
         fileCommands.add(Execute.In(Dimension.overworld) +
@@ -1760,23 +1781,7 @@ public class Main {
                     .build());
 
             // Spawn new Control Points
-            fileCommands.add(Execute.In(controlPoints.get(0).getCoordinate().getDimension()) +
-                    ForceLoad.create(ForceLoadAction.ADD)
-                            .from(ColumnPos.absolute(controlPoints.get(0).getCoordinate().getX(), controlPoints.get(0).getCoordinate().getZ()))
-                            .build());
-            fileCommands.add(Execute.In(controlPoints.get(1).getCoordinate().getDimension()) +
-                    ForceLoad.create(ForceLoadAction.ADD)
-                            .from(ColumnPos.absolute(controlPoints.get(1).getCoordinate().getX(), controlPoints.get(1).getCoordinate().getZ()))
-                            .build());
             fileCommands.add(Schedule.callFunction(FileName.spawn_control_points));
-            fileCommands.add(Execute.In(controlPoints.get(0).getCoordinate().getDimension()) +
-                    ForceLoad.create(ForceLoadAction.REMOVE)
-                            .from(ColumnPos.absolute(controlPoints.get(0).getCoordinate().getX(), controlPoints.get(0).getCoordinate().getZ()))
-                            .build());
-            fileCommands.add(Execute.In(controlPoints.get(1).getCoordinate().getDimension()) +
-                    ForceLoad.create(ForceLoadAction.REMOVE)
-                            .from(ColumnPos.absolute(controlPoints.get(1).getCoordinate().getX(), controlPoints.get(1).getCoordinate().getZ()))
-                            .build());
 
             // Reset bossbars
             BossBar bossBarCp1 = getBossbarByName("cp1");
@@ -1801,8 +1806,6 @@ public class Main {
                                                 .tag(controlPoint.getName())))
                                         .build());
             }
-            fileCommands.add(ForceLoad.create(ForceLoadAction.REMOVE)
-                    .build());
         }
 
         // Traitor Faction
@@ -2021,7 +2024,7 @@ public class Main {
 
         fileCommands.add(Execute.In(Dimension.overworld) +
                 SpreadPlayers.create(
-                                Constant.spawnCenter,
+                                Constant.spawnCenterDouble,
                                 0.3f * world.getSize(),
                                 0.9f * world.getSize(),
                                 respectTeams,
@@ -2227,7 +2230,7 @@ public class Main {
         fileCommands.add(Execute.In(Dimension.overworld, false) +
                 Execute.PositionedNext(new Coordinate(0, 151, 0), true) +
                 SpreadPlayers.create(
-                                Constant.spawnCenter,
+                                Constant.spawnCenterDouble,
                                 0.3f * world.getSize(),
                                 0.9f * world.getSize(),
                                 true,
@@ -2513,7 +2516,7 @@ public class Main {
         // Spread players in a team together
         fileCommands.add(Execute.In(Dimension.overworld) +
                 SpreadPlayers.create(
-                                Constant.spawnCenter,
+                                Constant.spawnCenterDouble,
                                 75,
                                 150,
                                 true,
@@ -2528,7 +2531,7 @@ public class Main {
             // Spread players without a team alone
             fileCommands.add(Execute.In(Dimension.overworld) +
                     SpreadPlayers.create(
-                                    Constant.spawnCenter,
+                                    Constant.spawnCenterDouble,
                                     75,
                                     150,
                                     false,
@@ -2747,7 +2750,7 @@ public class Main {
         // Spread Care Packages
         fileCommands.add(Execute.In(Dimension.overworld, true) +
                 SpreadPlayers.create(
-                                Constant.spawnCenter,
+                                Constant.spawnCenterDouble,
                                 10,
                                 carePackageSpread,
                                 false,
@@ -3504,7 +3507,7 @@ public class Main {
                     Execute.AsNext(respawnPlayerOld) +
                     Execute.UnlessNext("@p[team=" + t.getName() + ",tag=!Respawn]", true) +
                     SpreadPlayers.create(
-                                    Constant.spawnCenter,
+                                    Constant.spawnCenterDouble,
                                     0.3f * world.getSize(),
                                     0.7f * world.getSize(),
                                     false,
@@ -3519,7 +3522,7 @@ public class Main {
             // Teleport player if they are not in a team
             fileCommands.add(Execute.As(respawnPlayerOld) +
                     SpreadPlayers.create(
-                                    Constant.spawnCenter,
+                                    Constant.spawnCenterDouble,
                                     0.3f * world.getSize(),
                                     0.7f * world.getSize(),
                                     false,
@@ -3811,46 +3814,27 @@ public class Main {
 
         // Set wolf collar color
         // Get data
-        for (int i = 0; i < 2; i++) {
+        for (int i = 0; i < 4; i++) {
             fileCommands.add(Execute.As("@e[type=" + EntityType.WOLF + "]", false) +
                     Execute.StoreNext(ExecuteStore.result, "@s", getObjectiveByName(Objective.CollarCheck.extendName(i)), true) +
                     Data.createGet(
                                     DataTargetEntity.create(Entity.ofSelector(TargetSelector.SENDER)),
                                     DataPath.createWithIndex(DataPathId.OWNER, i))
                             .build());
-
-            fileCommands.add(Execute.As("@a", false) +
-                    Execute.StoreNext(ExecuteStore.result, "@s", getObjectiveByName(Objective.CollarCheck.extendName(i)), true) +
-                    Data.createGet(
-                                    DataTargetEntity.create(Entity.ofSelector(TargetSelector.SENDER)),
-                                    DataPath.createWithIndex(DataPathId.UUID, i))
-                            .build());
-
         }
+
         // Players in a team
         for (Team t : teams) {
-            fileCommands.add(Tag.action(Entity.ofSelector(
-                    TargetSelector.ALL_PLAYERS,
-                    SelectorArgumentsBuilder.create()
-                            .team(t.getName())),
-                    TagAction.ADD)
-                            .name(StaticEntityTag.COLLAR_CHECK)
-                            .build());
             fileCommands.add(Execute.As("@e[type=" + EntityType.WOLF + "]", false) +
-                    Execute.IfNext("@s", getObjectiveByName(Objective.CollarCheck.extendName(0)), ComparatorType.EQUAL, "@p[tag=" + TagTemp.CollarCheck + "]", getObjectiveByName(Objective.CollarCheck.extendName(0))) +
-                    Execute.IfNext("@s", getObjectiveByName(Objective.CollarCheck.extendName(1)), ComparatorType.EQUAL, "@p[tag=" + TagTemp.CollarCheck + "]", getObjectiveByName(Objective.CollarCheck.extendName(1)), true) +
+                    Execute.IfNext("@s", getObjectiveByName(Objective.CollarCheck.extendName(0)), ComparatorType.EQUAL, "@r[team=" + t.getName() + "]", getObjectiveByName(Objective.CollarCheck.extendName(0))) +
+                    Execute.IfNext("@s", getObjectiveByName(Objective.CollarCheck.extendName(1)), ComparatorType.EQUAL, "@r[team=" + t.getName() + "]", getObjectiveByName(Objective.CollarCheck.extendName(1))) +
+                    Execute.IfNext("@s", getObjectiveByName(Objective.CollarCheck.extendName(2)), ComparatorType.EQUAL, "@r[team=" + t.getName() + "]", getObjectiveByName(Objective.CollarCheck.extendName(2))) +
+                    Execute.IfNext("@s", getObjectiveByName(Objective.CollarCheck.extendName(3)), ComparatorType.EQUAL, "@r[team=" + t.getName() + "]", getObjectiveByName(Objective.CollarCheck.extendName(3)), true) +
                     Data.createModify(
                                     DataTargetEntity.create(Entity.ofSelector(TargetSelector.SENDER)),
                                     DataPath.create(DataPathId.COLLAR_COLOR),
                                     ModificationSetValue.create(DataValue.createByte((byte) t.getCollarColor())))
                             .build());
-            fileCommands.add(Tag.action(Entity.ofSelector(
-                                    TargetSelector.ALL_PLAYERS,
-                                    SelectorArgumentsBuilder.create()
-                                            .team(t.getName())),
-                            TagAction.REMOVE)
-                    .name(StaticEntityTag.COLLAR_CHECK)
-                    .build());
         }
 
         if (OperationMode.teamCreationInGame) {
@@ -4212,6 +4196,39 @@ public class Main {
                 .build());
 
         return new FileData(FileName.messages_eternal_day, fileCommands);
+    }
+
+    private FileData ProtectBeacon(int i) {
+        /**
+         * Generates a Minecraft function file containing a single /fill command
+         * that ensures the beacon beam at the specified Control Point (CP) is clear.
+         * * The command replaces any solid block that obstructs the beacon beam
+         * (starting 2 blocks above the beacon) with a glass block, using a
+         * block tag predicate to target only opaque blocks.
+         *
+         * @param i The 1-based index of the Control Point (used for the file name and lookup).
+         * @return A FileData object containing the function file name and the generated /fill command.
+         */
+        ArrayList<String> fileCommands = new ArrayList<>();
+
+        // Retrieve the ControlPoint data using the 0-based index (i - 1).
+        ControlPoint cp = controlPoints.get(i - 1);
+
+        // --- Command Generation: /fill <from> <to> glass replace #minecraft:impermeable_blocks ---
+        fileCommands.add(Fill.create(
+                        // 1. Define the 'from' corner: X, Y+2 (above the beacon block), Z
+                        BlockPos.absolute(cp.getCoordinate().getX(), cp.getCoordinate().getY() + 2, cp.getCoordinate().getZ()),
+                        // 2. Define the 'to' corner: X, World Height (sky limit), Z
+                        BlockPos.absolute(cp.getCoordinate().getX(), Constant.worldHeight, cp.getCoordinate().getZ()),
+                        // 3. Define the replacement block: glass
+                        SimpleBlock.create(StaticBlockId.GLASS))
+                // 4. Set the filter/predicate: replace only blocks that obstruct light (e.g., stone, wood, dirt).
+                //    This is assumed to map to the Minecraft tag #minecraft:impermeable_blocks or similar tag.
+                .filter(SimpleBlockPredicate.create(BlockTagId.BLOCK_BEACON_LIGHT))
+                .build());
+
+        // Create the FileData object with a unique file name based on the index.
+        return new FileData(FileName.protect_beacon_ + "" + i, fileCommands);
     }
 
 }

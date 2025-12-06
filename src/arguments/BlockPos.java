@@ -1,48 +1,88 @@
 package arguments;
 
+import arguments.coordinate.AbsoluteCoordinate;
+import arguments.coordinate.Coordinate;
+import arguments.coordinate.LocalCoordinate;
+import arguments.coordinate.RelativeCoordinate;
+
 /**
  * Represents a block position argument used in Minecraft commands (e.g., /setblock).
- * This class supports three coordinate types: absolute (integers), relative (~) and local (^).
+ * This class ensures **type safety** by accepting explicit {@code Coordinate} objects (Absolute, Relative, Local) for X, Y, and Z.
  * <p>
- * The final output format is always "X Y Z" separated by spaces.
+ * It uses the Builder Pattern to allow mixing and matching coordinate types (e.g., Absolute X, Relative Y, Local Z).
+ * The final output format is always the space-separated string: "X Y Z".
  */
 public class BlockPos {
 
-    private final String x;
-    private final String y;
-    private final String z;
+    private Coordinate x;
+    private Coordinate y;
+    private Coordinate z;
 
     /**
-     * Private constructor that enforces coordinate validity and checks for null inputs.
-     *
-     * @param x The X-coordinate string (e.g., "100", "~5", "^-2").
-     * @param y The Y-coordinate string.
-     * @param z The Z-coordinate string.
-     * @throws IllegalArgumentException if any coordinate is null or fails validation.
+     * Private constructor initializes the BlockPos with default absolute zero coordinates.
+     * This ensures the object is always in a valid, absolute state upon creation.
      */
-    private BlockPos(String x, String y, String z) {
-        if (x == null || y == null || z == null) {
-            throw new IllegalArgumentException("BlockPos coordinates (x, y, z) cannot be null.");
-        }
-
-        // Validate each coordinate string immediately
-        if (!isValidCoordinate(x)) {
-            throw new IllegalArgumentException("Invalid coordinate format for X: " + x);
-        }
-        if (!isValidCoordinate(y)) {
-            throw new IllegalArgumentException("Invalid coordinate format for Y: " + y);
-        }
-        if (!isValidCoordinate(z)) {
-            throw new IllegalArgumentException("Invalid coordinate format for Z: " + z);
-        }
-
-        this.x = x;
-        this.y = y;
-        this.z = z;
+    private BlockPos() {
+        // Initialize to safe defaults (Absolute 0 0 0)
+        this.x = AbsoluteCoordinate.create(0);
+        this.y = AbsoluteCoordinate.create(0);
+        this.z = AbsoluteCoordinate.create(0);
     }
 
     /**
-     * Creates a BlockPos using absolute, integer coordinates.
+     * Creates a new BlockPos builder instance, defaulted to absolute coordinates 0 0 0.
+     *
+     * @return A new BlockPos instance, ready for method chaining.
+     */
+    public static BlockPos create() {
+        return new BlockPos();
+    }
+
+    // --- Type-Safe Builder Methods ---
+
+    /**
+     * Sets the X coordinate using a type-safe {@code Coordinate} object (Absolute, Relative, or Local).
+     *
+     * @param x The object representing the X coordinate type and value.
+     * @return The current builder instance for chaining.
+     * @throws IllegalArgumentException if the provided coordinate is {@code null}.
+     */
+    public BlockPos x(Coordinate x) {
+        if (x == null) throw new IllegalArgumentException("X coordinate cannot be null.");
+        this.x = x;
+        return this;
+    }
+
+    /**
+     * Sets the Y coordinate using a type-safe {@code Coordinate} object (Absolute, Relative, or Local).
+     *
+     * @param y The object representing the Y coordinate type and value.
+     * @return The current builder instance for chaining.
+     * @throws IllegalArgumentException if the provided coordinate is {@code null}.
+     */
+    public BlockPos y(Coordinate y) {
+        if (y == null) throw new IllegalArgumentException("Y coordinate cannot be null.");
+        this.y = y;
+        return this;
+    }
+
+    /**
+     * Sets the Z coordinate using a type-safe {@code Coordinate} object (Absolute, Relative, or Local).
+     *
+     * @param z The object representing the Z coordinate type and value.
+     * @return The current builder instance for chaining.
+     * @throws IllegalArgumentException if the provided coordinate is {@code null}.
+     */
+    public BlockPos z(Coordinate z) {
+        if (z == null) throw new IllegalArgumentException("Z coordinate cannot be null.");
+        this.z = z;
+        return this;
+    }
+
+    // --- Convenience Static Builders (for simple, single-type positions) ---
+
+    /**
+     * Creates a BlockPos where all coordinates are **absolute** integers (e.g., "100 64 200").
      *
      * @param x The absolute X-coordinate.
      * @param y The absolute Y-coordinate.
@@ -50,86 +90,72 @@ public class BlockPos {
      * @return A new BlockPos instance.
      */
     public static BlockPos absolute(int x, int y, int z)  {
-        return new BlockPos(String.valueOf(x), String.valueOf(y), String.valueOf(z));
+        return BlockPos.create()
+                .x(AbsoluteCoordinate.create(x))
+                .y(AbsoluteCoordinate.create(y))
+                .z(AbsoluteCoordinate.create(z));
     }
 
     /**
-     * Creates a BlockPos using absolute, integer coordinates from an array.
+     * Creates a BlockPos using **absolute** integer coordinates from an array.
      *
-     * @param pos An array containing [X, Y, Z] integer coordinates.
+     * @param pos An array containing exactly 3 integer coordinates [X, Y, Z].
      * @return A new BlockPos instance.
-     * @throws IllegalArgumentException if the array is null or does not contain exactly 3 elements.
+     * @throws IllegalArgumentException if the array is {@code null} or does not contain exactly 3 elements.
      */
-    public static BlockPos absolute(int[] pos)  {
+    public static BlockPos absolute(int[] pos) {
         if (pos == null || pos.length != 3) {
             throw new IllegalArgumentException("Absolute position array must be non-null and contain exactly 3 integers (X, Y, Z).");
         }
-        return new BlockPos(String.valueOf(pos[0]), String.valueOf(pos[1]), String.valueOf(pos[2]));
+        return BlockPos.create()
+                .x(AbsoluteCoordinate.create(pos[0]))
+                .y(AbsoluteCoordinate.create(pos[1]))
+                .z(AbsoluteCoordinate.create(pos[2]));
     }
 
     /**
-     * Creates a BlockPos using relative coordinates (relative to the command executor's position),
-     * prefixed with the tilde (~).
+     * Creates a BlockPos where all coordinates are **relative** offsets.
+     * <p>
+     * Output examples: {@code ~5 ~0 ~-2}. A zero offset renders as {@code ~} alone.
      *
      * @param x The relative X offset.
      * @param y The relative Y offset.
      * @param z The relative Z offset.
-     * @return A new BlockPos instance (e.g., "~5 ~0 ~-2").
+     * @return A new BlockPos instance.
      */
     public static BlockPos relative(int x, int y, int z)  {
-        // For relative coordinates, use "~" for the relative symbol, using "" for zero offset
-        String relX = x == 0 ? "~" : "~" + x;
-        String relY = y == 0 ? "~" : "~" + y;
-        String relZ = z == 0 ? "~" : "~" + z;
-        return new BlockPos(relX, relY, relZ);
+        return BlockPos.create()
+                .x(RelativeCoordinate.create(x))
+                .y(RelativeCoordinate.create(y))
+                .z(RelativeCoordinate.create(z));
     }
 
     /**
-     * Creates a BlockPos using local coordinates (relative to the command executor's look direction),
-     * prefixed with the caret (^).
+     * Creates a BlockPos where all coordinates are **local** offsets.
+     * <p>
+     * Output examples: {@code ^5 ^1 ^0}. Local coordinates always explicitly include the offset, even if zero.
      *
      * @param x The local forward/backward offset.
      * @param y The local up/down offset.
      * @param z The local left/right offset.
-     * @return A new BlockPos instance (e.g., "^5 ^1 ^0").
+     * @return A new BlockPos instance.
      */
     public static BlockPos local(int x, int y, int z)  {
-        // Local coordinates must always be explicitly marked with '^' even for zero offset,
-        // but since we rely on the input string validation, we can just prepend.
-        return new BlockPos("^" + x, "^" + y, "^" + z);
+        return BlockPos.create()
+                .x(LocalCoordinate.create(x))
+                .y(LocalCoordinate.create(y))
+                .z(LocalCoordinate.create(z));
     }
 
-    /**
-     * Validates a single coordinate string based on Minecraft command syntax rules.
-     * <p>
-     * Regex explanation:
-     * <ul>
-     * <li>^: Start of string.</li>
-     * <li>(?:[~^])?: Optional non-capturing group for either '~' (relative) OR '^' (local).</li>
-     * <li>-?: Optional minus sign for negative numbers.</li>
-     * <li>\d+: One or more digits (for absolute or offset values).</li>
-     * <li>|: OR</li>
-     * <li>[~^]: Either just '~' or just '^' (representing zero offset, e.g., "~ ~ ~").</li>
-     * <li>$: End of string.</li>
-     * </ul>
-     * This stricter regex prevents invalid combinations like `~^1` or empty strings.
-     *
-     * @param value The coordinate string to validate.
-     * @return true if the string is a valid Minecraft coordinate, false otherwise.
-     */
-    private boolean isValidCoordinate(String value) {
-        // Stricter regex: (optional ~ or ^, followed by optional -, followed by digits) OR (~ or ^ alone)
-        return value.matches("^(?:[~^]?-?\\d+)|[~^]$");
-    }
 
     /**
      * Returns the position arguments formatted for the Minecraft command,
-     * separated by spaces (e.g., "100 64 200").
+     * separated by spaces (e.g., "100 64 200" or "~5 64 ^1").
      *
-     * @return The space-separated coordinate string.
+     * @return The final space-separated coordinate string.
      */
     @Override
     public String toString() {
-        return x + " " + y + " " + z;
+        return x.format() + " " + y.format() + " " + z.format();
     }
 }
