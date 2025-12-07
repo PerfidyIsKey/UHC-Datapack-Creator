@@ -10,38 +10,32 @@ import java.util.stream.Collectors;
  */
 public class Function implements DatapackComponent {
 
-    // The relative path within the 'functions' folder (e.g., "startup")
-    private final String path;
-    private final List<FunctionCommand> commands = new ArrayList<>();
+    private final String path; // The path/name relative to the 'function' folder
+    private final List<String> commands = new ArrayList<>(); // Changed to String list for simplicity
 
-    /**
-     * @param path The path/name of the function (e.g., "init/on_load").
-     * The file extension is added automatically.
-     */
     public Function(String path) {
         this.path = path;
     }
 
-    /**
-     * Adds a command to the function.
-     * @param command The raw command string (e.g., "say Hello World!").
-     */
-    public void addCommand(String command) {
-        this.commands.add(new FunctionCommand(command));
+    @Override
+    public String getCategory() {
+        return "function"; // The root folder for .mcfunction files
     }
 
     @Override
     public String getPath() {
-        // Functions reside in <namespace>/functions/<path>.mcfunction
-        // We only return the relative part within the functions folder.
-        return "functions/" + path + ".mcfunction";
+        // E.g., "init/load.mcfunction" relative to the "function" folder
+        return path + ".mcfunction";
+    }
+
+    // ... (addCommand and generateContent methods remain the same)
+    public void addCommand(String command) {
+        this.commands.add(command);
     }
 
     @Override
     public String generateContent() {
-        // Joins all commands with a newline character for the file content.
         return commands.stream()
-                .map(FunctionCommand::toString)
                 .collect(Collectors.joining("\n"));
     }
 }

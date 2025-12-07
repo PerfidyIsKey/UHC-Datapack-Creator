@@ -1,26 +1,26 @@
 package uhc.core;
 
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.Map;
+import java.nio.charset.StandardCharsets;
 
 /**
  * Handles the actual creation of files and folders on the file system.
  */
 public class Generator {
 
-    /**
-     * Generates the datapack structure and content.
-     * @param datapack The Datapack object to generate.
-     * @param outputDirectory The root directory where the datapack folder will be created.
-     * @throws IOException If there is an error writing files or creating directories.
-     */
+    private String packFolderName = "default_datapack";
+
+    public void setPackFolderName(String name) {
+        this.packFolderName = name;
+    }
+
     public void generate(Datapack datapack, String outputDirectory) throws IOException {
-        // Use the namespace name as the folder name for simplicity, or a custom name:
-        String packFolderName = "uhc_datapack"; // <-- Use a fixed, unique name here
+        // ... (Path setup remains the same)
         Path rootPath = Paths.get(outputDirectory, packFolderName);
         File rootDir = rootPath.toFile();
 
@@ -33,13 +33,27 @@ public class Generator {
 
         // 2. Iterate through namespaces and components to write content
         Path dataPath = rootPath.resolve("data");
+
         for (Map.Entry<String, Namespace> entry : datapack.getNamespaces().entrySet()) {
             Namespace namespace = entry.getValue();
             Path namespacePath = dataPath.resolve(namespace.getName());
 
-            for (DatapackComponent component : namespace.getComponents()) {
-                Path fullPath = namespacePath.resolve(component.getPath());
-                writeFile(fullPath, component.generateContent());
+            // Iterate over the components grouped by their category (e.g., "function", "tags/function")
+            for (Map.Entry<String, List<DatapackComponent>> categoryEntry : namespace.getComponentsByCategory().entrySet()) {
+
+                String category = categoryEntry.getKey();
+                List<DatapackComponent> components = categoryEntry.getValue();
+
+                // Construct the full category path (e.g., ".../data/uhc_core_pack/function")
+                Path categoryPath = namespacePath.resolve(category);
+
+                for (DatapackComponent component : components) {
+                    // component.getPath() returns the relative filename (e.g., "init/load.mcfunction")
+                    Path componentRelativePath = Paths.get(component.getPath());
+                    Path fullPath = categoryPath.resolve(componentRelativePath);
+
+                    writeFile(fullPath, component.generateContent());
+                }
             }
         }
         System.out.println("Datapack generated successfully at: " + rootPath.toAbsolutePath());
@@ -60,13 +74,15 @@ public class Generator {
 
     private void writeFile(Path fullPath, String content) throws IOException {
         File file = fullPath.toFile();
-        // Ensure the parent directories exist before writing the file
         if (file.getParentFile() != null && !file.getParentFile().mkdirs() && !file.getParentFile().exists()) {
             throw new IOException("Failed to create parent directories for: " + fullPath);
         }
 
-        try (FileWriter writer = new FileWriter(file)) {
-            writer.write(content);
-        }
+        // Use Files.writeString for reliable, explicitly UTF-8 encoding
+        java.nio.file.Files.writeString(
+                fullPath,
+                content,
+                StandardCharsets.UTF_8
+        );
     }
 }
