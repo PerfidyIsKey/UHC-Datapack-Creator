@@ -18,11 +18,13 @@ public class Main {
     private static final String OUTPUT_DIR_ROOT = "Server/world/datapacks";
     private static final String DATAPACK_FOLDER_NAME = "uhc_datapack"; // The folder containing pack.mcmeta
     private static final String DATAPACK_NAMESPACE = "uhc_core_pack"; // The Minecraft namespace (e.g., "uhc_core_pack:load")
+    private static final String DEFAULT_NAMESPACE = "minecraft"; // The Minecraft namespace (e.g., "uhc_core_pack:load")
 
     public static void main(String[] args) {
 
         // 1. **Initialize Core Structures**
-        Datapack datapack = new Datapack("A custom UHC Datapack.");
+        // Pass the new description string to the constructor.
+        Datapack datapack = new Datapack("Example pack for Minecraft 1.21.9");
         Namespace uhcNamespace = datapack.getOrCreateNamespace(DATAPACK_NAMESPACE);
 
         // --- 2. Create and Populate Functions ---
@@ -47,12 +49,12 @@ public class Main {
         // Tag 1: 'load' tag (runs once on world load)
         FunctionTag loadTag = new FunctionTag("load");
         // The ID is constructed as "namespace:path/to/function"
-        loadTag.addFunction(DATAPACK_NAMESPACE + ":" + loadFunctionName);
+        loadTag.addFunction(DEFAULT_NAMESPACE + ":" + loadFunctionName);
         uhcNamespace.addComponent(loadTag);
 
         // Tag 2: 'tick' tag (runs every game tick)
         FunctionTag tickTag = new FunctionTag("tick");
-        tickTag.addFunction(DATAPACK_NAMESPACE + ":" + tickFunctionName);
+        tickTag.addFunction(DEFAULT_NAMESPACE + ":" + tickFunctionName);
         uhcNamespace.addComponent(tickTag);
 
         // --- 4. Generate the Files ---

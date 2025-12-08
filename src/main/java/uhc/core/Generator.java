@@ -60,15 +60,24 @@ public class Generator {
     }
 
     private void writePackMcmeta(Datapack datapack, Path rootPath) throws IOException {
-        String jsonContent = String.format("""
-            {
-                "pack": {
-                    "pack_format": %d,
-                    "description": "%s"
-                }
-            }
-            """, datapack.getPackFormat(), datapack.getDescription());
 
+        // New JSON structure: description string and single integer formats.
+        String jsonContent = String.format("""
+                        {
+                          "pack": {
+                            "description": "%s",
+                            "min_format": %d,
+                            "max_format": %d
+                          }
+                        }
+                        """,
+                // Arguments passed to String.format:
+                datapack.getDescription(), // String (%s)
+                datapack.getPackFormat(),  // int (%d)
+                datapack.getPackFormat()   // int (%d)
+        );
+
+        // This is the writeFile method that correctly handles UTF-8 encoding
         writeFile(rootPath.resolve("pack.mcmeta"), jsonContent);
     }
 
