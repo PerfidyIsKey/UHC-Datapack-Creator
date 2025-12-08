@@ -2,7 +2,6 @@ package uhc;
 
 import uhc.core.Datapack;
 import uhc.core.Generator;
-import uhc.core.Namespace;
 import uhc.modules.DatapackModule;
 import uhc.modules.GameLoopModule;
 import uhc.modules.InitializationModule;
@@ -16,34 +15,31 @@ public class Main {
 
     private static final String OUTPUT_DIR_ROOT = "Server/world/datapacks";
     private static final String DATAPACK_FOLDER_NAME = "uhc_datapack";
-    private static final String DATAPACK_NAMESPACE = "uhc_core_pack";
-    private static final String DEFAULT_NAMESPACE = "minecraft"; // The Minecraft namespace (e.g., "uhc_core_pack:load")
+
+    // Your custom namespace where functions reside
+    private static final String CUSTOM_NAMESPACE = "uhc_core_pack";
 
     public static void main(String[] args) {
 
-        // 1. Setup
+        // 1. Setup Datapack
         Datapack datapack = new Datapack("Example pack for Minecraft 1.21.9");
-        Namespace namespace = datapack.getOrCreateNamespace(DATAPACK_NAMESPACE);
 
-        // 2. Register Modules
-        // As your project grows, you just add new classes to this list.
+        // 2. Define Modules
         List<DatapackModule> modules = List.of(
                 new InitializationModule(),
                 new GameLoopModule()
-                // new CombatModule(),
-                // new ScenariosModule(),
         );
 
+        // 3. Register Modules
+        // We pass the whole datapack + the name of our custom namespace
         for (DatapackModule module : modules) {
-            module.register(namespace);
+            module.register(datapack, CUSTOM_NAMESPACE);
         }
 
-        // 3. Generate
+        // 4. Generate
         Generator generator = new Generator();
         generator.setPackFolderName(DATAPACK_FOLDER_NAME);
 
-        // OS-INDEPENDENT PATH HANDLING
-        // Paths.get() automatically uses '\' for Windows and '/' for Mac/Linux
         Path absolutePath = Paths.get(OUTPUT_DIR_ROOT).toAbsolutePath();
 
         System.out.println("Generating datapack to: " + absolutePath);

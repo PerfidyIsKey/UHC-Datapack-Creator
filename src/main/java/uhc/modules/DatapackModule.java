@@ -1,10 +1,12 @@
 package uhc.modules;
 
-import uhc.core.Namespace;
+import uhc.core.Datapack;
 
 public interface DatapackModule {
     /**
-     * Registers functions, tags, and other components to the provided namespace.
+     * Registers components to the datapack.
+     * @param datapack The main datapack object (to access 'minecraft' namespace).
+     * @param namespaceName Your custom namespace name (e.g. "uhc_core_pack") to put functions in.
      */
-    void register(Namespace namespace);
+    void register(Datapack datapack, String namespaceName);
 }
