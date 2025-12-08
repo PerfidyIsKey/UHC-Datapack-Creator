@@ -1,5 +1,7 @@
 package EntityClasses;
 
+import Enums.AttributeType;
+
 public class MovementSpeed implements Attributes{
     // Fields
     double base;
@@ -11,7 +13,7 @@ public class MovementSpeed implements Attributes{
 
     // Get attribute
     public String GetAttribute() {
-        return "\"id\":\"movement_speed\",\n" +
+        return "\"id\":\"" + AttributeType.MOVEMENT_SPEED + "\",\n" +
                 "\"base\":" + base;
     }
 }

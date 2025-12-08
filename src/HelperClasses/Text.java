@@ -1,19 +1,19 @@
 package HelperClasses;
 
-import Enums.Color;
+import shared.TextColor;
 
 public class Text extends TextItem {
 
     private String text;
 
 
-    public Text(Color color, boolean isBold, boolean isItalic, String text) {
+    public Text(TextColor color, boolean isBold, boolean isItalic, String text) {
         super(color, isBold, isItalic);
         this.text = text;
 
     }
 
-    public Text(Color color, String text) {
+    public Text(TextColor color, String text) {
         super(color);
         this.text = text;
 
@@ -23,6 +23,10 @@ public class Text extends TextItem {
         super(isBold, isItalic);
         this.text = text;
 
+    }
+
+    public Text(String text) {
+        this.text = text;
     }
 
     public String getText(Boolean technical) {
@@ -42,6 +46,10 @@ public class Text extends TextItem {
 
     public String getText() {
         return getText(false);
+    }
+
+    public void setText(String text) {
+        this.text = text;
     }
 
     private String convertSpecial(String content) {

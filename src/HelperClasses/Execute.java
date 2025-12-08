@@ -1,14 +1,11 @@
 package HelperClasses;
 
 import Enums.*;
+import shared.StaticBlockId;
 
 public class Execute {
 
-    public Execute() {
-
-    }
-
-    private String wrap(String content, boolean execute, boolean run) {
+    private static String wrap(String content, boolean execute, boolean run) {
         String result = content;
         if (execute) {
             result = "execute " + content;
@@ -19,11 +16,11 @@ public class Execute {
         return result;
     }
 
-    private String Standard(String content, boolean run) {
+    private static String Standard(String content, boolean run) {
         return wrap(content, true, run);
     }
 
-    private String Next(String content, boolean run) {
+    private static String Next(String content, boolean run) {
         return wrap(content, false, run);
     }
 
@@ -31,35 +28,19 @@ public class Execute {
         execute as
      */
     // as entity
-    public String As(Entity entity) {
+    public static String As(String entity) {
         return As(entity, true);
     }
 
-    public String As(Entity entity, Boolean run) {
+    public static String As(String entity, Boolean run) {
         return Standard(AsNext(entity), run);
     }
 
-    public String AsNext(Entity entity) {
+    public static String AsNext(String entity) {
         return AsNext(entity, false);
     }
 
-    public String AsNext(Entity entity, Boolean run) {
-        return Next("as " + entity.getEntity() + " ", run);
-    }
-
-    public String As(String entity) {
-        return As(entity, true);
-    }
-
-    public String As(String entity, Boolean run) {
-        return Standard(AsNext(entity), run);
-    }
-
-    public String AsNext(String entity) {
-        return AsNext(entity, false);
-    }
-
-    public String AsNext(String entity, Boolean run) {
+    public static String AsNext(String entity, Boolean run) {
         return Next("as " + entity + " ", run);
     }
 
@@ -67,35 +48,19 @@ public class Execute {
         execute at
      */
     // at entity
-    public String At(Entity entity) {
+    public static String At(String entity) {
         return At(entity, true);
     }
 
-    public String At(Entity entity, Boolean run) {
+    public static String At(String entity, Boolean run) {
         return Standard(AtNext(entity), run);
     }
 
-    public String AtNext(Entity entity) {
+    public static String AtNext(String entity) {
         return AtNext(entity, false);
     }
 
-    public String AtNext(Entity entity, Boolean run) {
-        return Next("at " + entity.getEntity() + " ", run);
-    }
-
-    public String At(String entity) {
-        return At(entity, true);
-    }
-
-    public String At(String entity, Boolean run) {
-        return Standard(AtNext(entity), run);
-    }
-
-    public String AtNext(String entity) {
-        return AtNext(entity, false);
-    }
-
-    public String AtNext(String entity, Boolean run) {
+    public static String AtNext(String entity, Boolean run) {
         return Next("at " + entity + " ", run);
     }
 
@@ -103,35 +68,19 @@ public class Execute {
         execute facing
      */
     // facing entity
-    public String Facing(Entity entity, EntityAnchor anchor) {
+    public static String Facing(String entity, EntityAnchor anchor) {
         return Facing(entity, anchor, true);
     }
 
-    public String Facing(Entity entity, EntityAnchor anchor, Boolean run) {
+    public static String Facing(String entity, EntityAnchor anchor, Boolean run) {
         return Standard(FacingNext(entity, anchor), run);
     }
 
-    public String FacingNext(Entity entity, EntityAnchor anchor) {
+    public static String FacingNext(String entity, EntityAnchor anchor) {
         return FacingNext(entity, anchor, false);
     }
 
-    public String FacingNext(Entity entity, EntityAnchor anchor, Boolean run) {
-        return Next("facing entity " + entity.getEntity() + " " + anchor + " ", run);
-    }
-
-    public String Facing(String entity, EntityAnchor anchor) {
-        return Facing(entity, anchor, true);
-    }
-
-    public String Facing(String entity, EntityAnchor anchor, Boolean run) {
-        return Standard(FacingNext(entity, anchor), run);
-    }
-
-    public String FacingNext(String entity, EntityAnchor anchor) {
-        return FacingNext(entity, anchor, false);
-    }
-
-    public String FacingNext(String entity, EntityAnchor anchor, Boolean run) {
+    public static String FacingNext(String entity, EntityAnchor anchor, Boolean run) {
         return Next("facing entity " + entity + " " + anchor + " ", run);
     }
 
@@ -139,77 +88,141 @@ public class Execute {
         execute if
      */
     // if data
-    public String If(DataClasses data, String command) { return If(data, command, true); }
+    public static String If(DataClasses data, String command) { return If(data, command, true); }
 
-    public String If(DataClasses data, String command, Boolean run) { return Standard(IfNext(data, command), run); }
+    public static String If(DataClasses data, String command, Boolean run) { return Standard(IfNext(data, command), run); }
 
-    public String IfNext(DataClasses data, String command) { return IfNext(data, command, false); }
+    public static String IfNext(DataClasses data, String command) { return IfNext(data, command, false); }
 
-    public String IfNext(DataClasses data, String command, Boolean run) { return Next("if data " + data + " " + command + " ", run); }
+    public static String IfNext(DataClasses data, String command, Boolean run) { return Next("if data " + data + " " + command + " ", run); }
 
     // if entity
-    public String If(Entity entity) {
+    public static String If(String entity) {
         return If(entity, true);
     }
 
-    public String If(Entity entity, Boolean run) {
+    public static String If(String entity, Boolean run) {
         return Standard(IfNext(entity), run);
     }
 
-    public String IfNext(Entity entity) {
+    public static String IfNext(String entity) {
         return IfNext(entity, false);
     }
 
-    public String IfNext(Entity entity, Boolean run) {
-        return Next("if entity " + entity.getEntity() + " ", run);
-    }
-
-    public String If(String entity) {
-        return If(entity, true);
-    }
-
-    public String If(String entity, Boolean run) {
-        return Standard(IfNext(entity), run);
-    }
-
-    public String IfNext(String entity) {
-        return IfNext(entity, false);
-    }
-
-    public String IfNext(String entity, Boolean run) {
+    public static String IfNext(String entity, Boolean run) {
         return Next("if entity " + entity + " ", run);
     }
 
     // if score
-    public String If(String entity1, ScoreboardObjective objective1, ComparatorType comp, String entity2, ScoreboardObjective objective2) {
+    public static String If(String entity1, ScoreboardObjective objective1, ComparatorType comp, String entity2, ScoreboardObjective objective2) {
         return If(entity1, objective1, comp, entity2, objective2, true);
     }
 
-    public String If(String entity1, ScoreboardObjective objective1, ComparatorType comp, String entity2, ScoreboardObjective objective2, Boolean run) {
+    public static String If(String entity1, ScoreboardObjective objective1, ComparatorType comp, String entity2, ScoreboardObjective objective2, Boolean run) {
         return Standard(IfNext(entity1, objective1, comp, entity2, objective2), run);
     }
 
-    public String IfNext(String entity1, ScoreboardObjective objective1, ComparatorType comp, String entity2, ScoreboardObjective objective2) {
+    public static String IfNext(String entity1, ScoreboardObjective objective1, ComparatorType comp, String entity2, ScoreboardObjective objective2) {
         return IfNext(entity1, objective1, comp, entity2, objective2, false);
     }
 
-    public String IfNext(String entity1, ScoreboardObjective objective1, ComparatorType comp, String entity2, ScoreboardObjective objective2, Boolean run) {
+    public static String IfNext(String entity1, ScoreboardObjective objective1, ComparatorType comp, String entity2, ScoreboardObjective objective2, Boolean run) {
         return Next("if score " + entity1 + " " + objective1.getName() + " " + comp + " " + entity2 + " " + objective2.getName() + " ", run);
     }
 
-    public String If(String target, Objective targetObjective, int value) {
+    public static String If(String entity1, Objective objective1, ComparatorType comp, String entity2, Objective objective2) {
+        return If(entity1, objective1, comp, entity2, objective2, true);
+    }
+
+    public static String If(String entity1, Objective objective1, ComparatorType comp, String entity2, Objective objective2, Boolean run) {
+        return Standard(IfNext(entity1, objective1, comp, entity2, objective2), run);
+    }
+
+    public static String IfNext(String entity1, Objective objective1, ComparatorType comp, String entity2, Objective objective2) {
+        return IfNext(entity1, objective1, comp, entity2, objective2, false);
+    }
+
+    public static String IfNext(String entity1, Objective objective1, ComparatorType comp, String entity2, Objective objective2, Boolean run) {
+        return Next("if score " + entity1 + " " + objective1 + " " + comp + " " + entity2 + " " + objective2 + " ", run);
+    }
+
+    public static String If(String entity1, Objective objective1, ComparatorType comp, String entity2, String objective2) {
+        return If(entity1, objective1, comp, entity2, objective2, true);
+    }
+
+    public static String If(String entity1, Objective objective1, ComparatorType comp, String entity2, String objective2, Boolean run) {
+        return Standard(IfNext(entity1, objective1, comp, entity2, objective2), run);
+    }
+
+    public static String IfNext(String entity1, Objective objective1, ComparatorType comp, String entity2, String objective2) {
+        return IfNext(entity1, objective1, comp, entity2, objective2, false);
+    }
+
+    public static String IfNext(String entity1, Objective objective1, ComparatorType comp, String entity2, String objective2, Boolean run) {
+        return Next("if score " + entity1 + " " + objective1 + " " + comp + " " + entity2 + " " + objective2 + " ", run);
+    }
+
+    public static String If(String target, Objective targetObjective, int value) {
         return If(target, targetObjective, value, true);
     }
 
-    public String If(String target, Objective targetObjective, int value, Boolean run) {
+    public static String If(String target, Objective targetObjective, int value, Boolean run) {
         return Standard(IfNext(target, targetObjective, value), run);
     }
 
-    public String IfNext(String target, Objective targetObjective, int value) {
+    public static String IfNext(String target, Objective targetObjective, int value) {
         return IfNext(target, targetObjective, value, false);
     }
 
-    public String IfNext(String target, Objective targetObjective, int value, Boolean run) {
+    public static String IfNext(String target, Objective targetObjective, int value, Boolean run) {
+        return Next("if score " + target + " " + targetObjective + " matches " + value + " ", run);
+    }
+
+    public static String If(String target, String targetObjective, int value) {
+        return If(target, targetObjective, value, true);
+    }
+
+    public static String If(String target, String targetObjective, int value, Boolean run) {
+        return Standard(IfNext(target, targetObjective, value), run);
+    }
+
+    public static String IfNext(String target, String targetObjective, int value) {
+        return IfNext(target, targetObjective, value, false);
+    }
+
+    public static String IfNext(String target, String targetObjective, int value, Boolean run) {
+        return Next("if score " + target + " " + targetObjective + " matches " + value + " ", run);
+    }
+
+    public static String If(String target, Objective targetObjective, String value) {
+        return If(target, targetObjective, value, true);
+    }
+
+    public static String If(String target, Objective targetObjective, String value, Boolean run) {
+        return Standard(IfNext(target, targetObjective, value), run);
+    }
+
+    public static String IfNext(String target, Objective targetObjective, String value) {
+        return IfNext(target, targetObjective, value, false);
+    }
+
+    public static String IfNext(String target, Objective targetObjective, String value, Boolean run) {
+        return Next("if score " + target + " " + targetObjective + " matches " + value + " ", run);
+    }
+
+    public static String If(String target, String targetObjective, String value) {
+        return If(target, targetObjective, value, true);
+    }
+
+    public static String If(String target, String targetObjective, String value, Boolean run) {
+        return Standard(IfNext(target, targetObjective, value), run);
+    }
+
+    public static String IfNext(String target, String targetObjective, String value) {
+        return IfNext(target, targetObjective, value, false);
+    }
+
+    public static String IfNext(String target, String targetObjective, String value, Boolean run) {
         return Next("if score " + target + " " + targetObjective + " matches " + value + " ", run);
     }
 
@@ -217,19 +230,19 @@ public class Execute {
         execute in
      */
     // in dimension
-    public String In(Dimension dimension) {
+    public static String In(Dimension dimension) {
         return In(dimension, true);
     }
 
-    public String In(Dimension dimension, boolean run) {
+    public static String In(Dimension dimension, boolean run) {
         return Standard(InNext(dimension), run);
     }
 
-    public String InNext(Dimension dimension) {
+    public static String InNext(Dimension dimension) {
         return InNext(dimension, false);
     }
 
-    public String InNext(Dimension dimension, boolean run) {
+    public static String InNext(Dimension dimension, boolean run) {
         return Next("in minecraft:" + dimension + " ", run);
     }
 
@@ -237,19 +250,19 @@ public class Execute {
         execute positioned
      */
     // positioned coordinate
-    public String Positioned(Coordinate coordinate) {
+    public static String Positioned(Coordinate coordinate) {
         return Positioned(coordinate, true);
     }
 
-    public String Positioned(Coordinate coordinate, Boolean run) {
+    public static String Positioned(Coordinate coordinate, Boolean run) {
         return Standard(PositionedNext(coordinate), run);
     }
 
-    public String PositionedNext(Coordinate coordinate) {
+    public static String PositionedNext(Coordinate coordinate) {
         return PositionedNext(coordinate, false);
     }
 
-    public String PositionedNext(Coordinate coordinate, Boolean run) {
+    public static String PositionedNext(Coordinate coordinate, Boolean run) {
         return Next("positioned " + coordinate.getCoordinateString() + " ", run);
     }
 
@@ -257,71 +270,71 @@ public class Execute {
        execute store
     */
     // store bossbar
-    public String Store(ExecuteStore storeType, BossBar bossbar, BossBarStore bossBarStoreType) {
+    public static String Store(ExecuteStore storeType, BossBar bossbar, BossBarStore bossBarStoreType) {
         return Store(storeType, bossbar, bossBarStoreType, true);
     }
 
-    public String Store(ExecuteStore storeType, BossBar bossbar, BossBarStore bossBarStoreType, Boolean run) {
+    public static String Store(ExecuteStore storeType, BossBar bossbar, BossBarStore bossBarStoreType, Boolean run) {
         return Standard(StoreNext(storeType, bossbar, bossBarStoreType), run);
     }
 
-    public String StoreNext(ExecuteStore storeType, BossBar bossbar, BossBarStore bossBarStoreType) {
+    public static String StoreNext(ExecuteStore storeType, BossBar bossbar, BossBarStore bossBarStoreType) {
         return StoreNext(storeType, bossbar, bossBarStoreType, false);
     }
 
-    public String StoreNext(ExecuteStore storeType, BossBar bossbar, BossBarStore bossBarStoreType, Boolean run) {
+    public static String StoreNext(ExecuteStore storeType, BossBar bossbar, BossBarStore bossBarStoreType, Boolean run) {
         return wrap("store " + storeType + " bossbar " + bossbar.getName() + " " + bossBarStoreType + " ", false, run);
     }
 
     // store score
-    public String Store(ExecuteStore storeType, String entity, ScoreboardObjective objective) {
+    public static String Store(ExecuteStore storeType, String entity, ScoreboardObjective objective) {
         return Store(storeType, entity, objective, true);
     }
 
-    public String Store(ExecuteStore storeType, String entity, ScoreboardObjective objective, Boolean run) {
+    public static String Store(ExecuteStore storeType, String entity, ScoreboardObjective objective, Boolean run) {
         return Standard(StoreNext(storeType, entity, objective), run);
     }
 
-    public String StoreNext(ExecuteStore storeType, String entity, ScoreboardObjective objective) {
+    public static String StoreNext(ExecuteStore storeType, String entity, ScoreboardObjective objective) {
         return StoreNext(storeType, entity, objective, false);
     }
 
 
-    public String StoreNext(ExecuteStore storeType, String entity, ScoreboardObjective objective, Boolean run) {
+    public static String StoreNext(ExecuteStore storeType, String entity, ScoreboardObjective objective, Boolean run) {
         return wrap("store " + storeType + " score " + entity + " " + objective.getName() + " ", false, run);
     }
 
-    public String Store(ExecuteStore storeType, String entity, Objective objective) {
+    public static String Store(ExecuteStore storeType, String entity, Objective objective) {
         return Store(storeType, entity, objective, true);
     }
 
-    public String Store(ExecuteStore storeType, String entity, Objective objective, Boolean run) {
+    public static String Store(ExecuteStore storeType, String entity, Objective objective, Boolean run) {
         return Standard(StoreNext(storeType, entity, objective), run);
     }
 
-    public String StoreNext(ExecuteStore storeType, String entity, Objective objective) {
+    public static String StoreNext(ExecuteStore storeType, String entity, Objective objective) {
         return StoreNext(storeType, entity, objective, false);
     }
 
 
-    public String StoreNext(ExecuteStore storeType, String entity, Objective objective, Boolean run) {
+    public static String StoreNext(ExecuteStore storeType, String entity, Objective objective, Boolean run) {
         return wrap("store " + storeType + " score " + entity + " " + objective + " ", false, run);
     }
 
-    public String Store(ExecuteStore storeType, String entity, String objective) {
+    public static String Store(ExecuteStore storeType, String entity, String objective) {
         return Store(storeType, entity, objective, true);
     }
 
-    public String Store(ExecuteStore storeType, String entity, String objective, Boolean run) {
+    public static String Store(ExecuteStore storeType, String entity, String objective, Boolean run) {
         return Standard(StoreNext(storeType, entity, objective), run);
     }
 
-    public String StoreNext(ExecuteStore storeType, String entity, String objective) {
+    public static String StoreNext(ExecuteStore storeType, String entity, String objective) {
         return StoreNext(storeType, entity, objective, false);
     }
 
 
-    public String StoreNext(ExecuteStore storeType, String entity, String objective, Boolean run) {
+    public static String StoreNext(ExecuteStore storeType, String entity, String objective, Boolean run) {
         return wrap("store " + storeType + " score " + entity + " " + objective + " ", false, run);
     }
 
@@ -329,53 +342,69 @@ public class Execute {
         execute unless
      */
     // unless block
-    public String Unless(Coordinate coordinate, BlockType blockType) {
+    public static String Unless(Coordinate coordinate, StaticBlockId blockType) {
         return Unless(coordinate, blockType, true);
     }
 
-    public String Unless(Coordinate coordinate, BlockType blockType, Boolean run) {
+    public static String Unless(Coordinate coordinate, StaticBlockId blockType, Boolean run) {
         return Standard(UnlessNext(coordinate, blockType), run);
     }
 
-    public String UnlessNext(Coordinate coordinate, BlockType blockType) {
+    public static String UnlessNext(Coordinate coordinate, StaticBlockId blockType) {
         return UnlessNext(coordinate, blockType, false);
     }
 
-    public String UnlessNext(Coordinate coordinate, BlockType blockType, Boolean run) {
-        return Next("unless block " + coordinate.getCoordinateString() + " minecraft:" + blockType + " ", run);
+    public static String UnlessNext(Coordinate coordinate, StaticBlockId blockType, Boolean run) {
+        return Next("unless block " + coordinate.getCoordinateString() + " " + blockType + " ", run);
+    }
+
+    public static String Unless(int x, int y, int z, StaticBlockId blockType) {
+        return Unless(x, y, z, blockType, true);
+    }
+
+    public static String Unless(int x, int y, int z, StaticBlockId blockType, Boolean run) {
+        return Standard(UnlessNext(x, y, z, blockType), run);
+    }
+
+    public static String UnlessNext(int x, int y, int z, StaticBlockId blockType) {
+        return UnlessNext(x, y, z, blockType, false);
+    }
+
+    public static String UnlessNext(int x, int y, int z, StaticBlockId blockType, Boolean run) {
+        return Next("unless block " + x + " " + y + " " + z + " " + blockType + " ", run);
     }
 
     // unless entity
-    public String Unless(String entity) {
+    public static String Unless(String entity) {
         return Unless(entity, true);
     }
 
-    public String Unless(String entity, Boolean run) {
+    public static String Unless(String entity, Boolean run) {
         return Standard(UnlessNext(entity), run);
     }
 
-    public String UnlessNext(String entity) {
+    public static String UnlessNext(String entity) {
         return UnlessNext(entity, false);
     }
 
-    public String UnlessNext(String entity, Boolean run) {
+    public static String UnlessNext(String entity, Boolean run) {
         return Next("unless entity " + entity + " ", run);
     }
 
     // unless score
-    public String Unless(String target, Objective targetObjective, int value) {
+    public static String Unless(String target, Objective targetObjective, int value) {
         return Unless(target, targetObjective, value, true);
     }
 
-    public String Unless(String target, Objective targetObjective, int value, Boolean run) {
+    public static String Unless(String target, Objective targetObjective, int value, Boolean run) {
         return Standard(UnlessNext(target, targetObjective, value), run);
     }
 
-    public String UnlessNext(String target, Objective targetObjective, int value) {
+    public static String UnlessNext(String target, Objective targetObjective, int value) {
         return UnlessNext(target, targetObjective, value, false);
     }
 
-    public String UnlessNext(String target, Objective targetObjective, int value, Boolean run) {
+    public static String UnlessNext(String target, Objective targetObjective, int value, Boolean run) {
         return Next("unless score " + target + " " + targetObjective + " matches " + value + " ", run);
     }
 

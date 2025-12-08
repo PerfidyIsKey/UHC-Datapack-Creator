@@ -1,15 +1,17 @@
 package Enums;
 
-import HelperClasses.ScoreboardObjective;
-
 public enum Objective {
-        TimDum("TimDum"),
         TimeDum("TimeDum"),
         Time("Time"),
+        Time2("Time2"),
         SideDum("SideDum"),
         ControlPoint("ControlPoint"),
+        CPHighscore("CPHighscore"),
         CPScore("CPScore"),
-        MSGDum("MSGDum"),
+        OnCP("OnCP"),
+        PrevCP("PrevCP"),
+        DisplayCP("DisplayCP"),
+        ColorCP("ColorCP"),
         Highscore("Highscore"),
         Hearts("Hearts"),
         Apples("Apples"),
@@ -22,12 +24,10 @@ public enum Objective {
         Deaths("Deaths"),
         Kills("Kills"),
         Rank("Rank"),
-        WorldLoad("WorldLoad"),
         CollarCheck("CollarCheck"),
         MinHealth("MinHealth"),
         Victory("Victory"),
         WolfAge("WolfAge"),
-        CP("CP"),
         FoundTeam("FoundTeam"),
         TimesCalled("TimesCalled"),
         Distance("Distance"),
@@ -36,7 +36,8 @@ public enum Objective {
         DamageTaken("DamageTaken"),
         IsKiller("IsKiller"),
         TempKills("TempKills"),
-        RandomQuotes("RandomQuotes");
+        RandomQuotes("RandomQuotes"),
+        ReceivedPerk("ReceivedPerk");
 
         private final String symbol;
 

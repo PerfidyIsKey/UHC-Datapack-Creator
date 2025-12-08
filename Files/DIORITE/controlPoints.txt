@@ -1,6 +1,6 @@
-33,84,89,forest
--40,63,-49,river
-182,80,-347,forest
--107,65,-187,cave
-1,64,-438,plains
--409,112,201,cherry_grove
+207,64,-191,swamp
+-70,92,-408,windswept_gravelly_hills
+-190,72,-134,taiga
+344,63,280,river
+-255,93,-107,old_growth_pine_taiga
+-185,72,296,old_growth_spruce_taiga

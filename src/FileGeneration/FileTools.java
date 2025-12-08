@@ -1,16 +1,11 @@
 package FileGeneration;
 
-import FileGeneration.FileData;
-import FileGeneration.Recipe;
 import HelperClasses.PlayerConnection;
 import TeamGeneration.Season;
+import HelperClasses.PaperPlugin;
 
-import javax.swing.*;
 import java.io.*;
-import java.nio.file.FileAlreadyExistsException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.nio.file.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -21,36 +16,40 @@ public class FileTools {
     private String dataPackLocation;
     private String dataPackName;
     private String worldLocation;
+    private String pluginLocation;
+    private String namespace;
 
     public FileTools() {
     }
 
-    public FileTools(String version, String dataPackLocation, String dataPackName, String worldLocation) {
+    public FileTools(String version, String dataPackLocation, String dataPackName, String worldLocation, String pluginLocation, String namespace) {
         this.version = version;
         this.dataPackLocation = dataPackLocation;
         this.dataPackName = dataPackName;
         this.worldLocation = worldLocation;
+        this.pluginLocation = pluginLocation;
+        this.namespace = namespace;
     }
 
     public ArrayList<FileData> makeRecipeFiles() {
-        ArrayList<Recipe> recipes = new ArrayList<>();
+        ArrayList<RecipeCreate> recipes = new ArrayList<>();
         ArrayList<FileData> files = new ArrayList<>();
 
         String[] grid = {" ", " ", " ", "1", "2", "1", " ", " ", " "};
         ArrayList<String> keys = new ArrayList<>();
         keys.add("ender_eye");
         keys.add("black_wool");
-        Recipe recipe = new Recipe("crafting_shaped", grid, keys, "dragon_head", 1);
+        RecipeCreate recipe = new RecipeCreate("crafting_shaped", grid, keys, "dragon_head", 1);
         recipes.add(recipe);
 
         String[] grid2 = {" ", "1", " ", "1", "2", "1", " ", "1", " "};
         ArrayList<String> keys2 = new ArrayList<>();
         keys2.add("gold_ingot");
         keys2.add("player_head");
-        FileGeneration.Recipe recipe2 = new FileGeneration.Recipe("crafting_shaped", grid2, keys2, "golden_apple", 1);
+        RecipeCreate recipe2 = new RecipeCreate("crafting_shaped", grid2, keys2, "golden_apple", 1);
         //recipes.add(recipe2);
 
-        for (Recipe r : recipes) {
+        for (RecipeCreate r : recipes) {
             ArrayList<String> fileCommands = new ArrayList<>();
             fileCommands.add("{");
             fileCommands.add("  \"type\": \"" + r.getType() + "\",");
@@ -142,31 +141,113 @@ public class FileTools {
 
             File data = new File(dataPackLocation + dataPackName + "\\data");
             if (data.mkdir()) {
-                File uhc = new File(dataPackLocation + dataPackName + "\\data\\uhc");
+                File uhc = new File(dataPackLocation + dataPackName + "\\data\\" + namespace);
                 if (uhc.mkdir()) {
-                    File functions = new File(dataPackLocation + dataPackName + "\\data\\uhc\\function");
+                    File functions = new File(dataPackLocation + dataPackName + "\\data\\" + namespace + "\\function");
                     if (!functions.mkdir()) {
                         System.out.println("No functions dir");
                     }
-                    File recipes = new File(dataPackLocation + dataPackName + "\\data\\uhc\\recipe");
+                    File recipes = new File(dataPackLocation + dataPackName + "\\data\\" + namespace + "\\recipe");
                     if (!recipes.mkdir()) {
                         System.out.println("No recipes dir");
                     }
-                    File lootTables = new File(dataPackLocation + dataPackName + "\\data\\uhc\\loot_table");
+                    File lootTables = new File(dataPackLocation + dataPackName + "\\data\\" + namespace + "\\loot_table");
                     if (lootTables.mkdir()) {
                         updateAllFiles(files, fileLocation);
                     } else {
                         System.out.println("No lootTables dir");
                     }
                 }
+                File minecraft = new File(dataPackLocation + dataPackName + "\\data\\minecraft");
+                if (minecraft.mkdir()) {
+                    // Will later be filled with custom code
+                }
             }
+            // generated folder
             String from = "generated";
             String to = worldLocation + "\\generated";
+            copyDirectory(from, to);
+
+            // worldgen folder
+            from = "worldgen";
+            to = dataPackLocation + dataPackName + "\\data\\minecraft\\worldgen";
+            copyDirectory(from, to);
+
+            // tags folder
+            from = "tags";
+            to = dataPackLocation + dataPackName + "\\data\\" + namespace + "\\tags";
             copyDirectory(from, to);
         } else {
             System.out.println("Datapack already exists: Updating files now...");
             updateAllFiles(files, fileLocation);
         }
+    }
+
+    public void copyPlugins(ArrayList<PaperPlugin> plugins) throws IOException {
+        // Clear plugins folder
+        clearDirectory(pluginLocation);
+
+        String from;
+        for (PaperPlugin plugin : plugins) {
+            if (plugin.getActive()) {
+                from = "plugins\\" + plugin.getMainFileName();
+                copyFile(from, pluginLocation);
+                if (plugin.getExtraFileNames() != null) {
+                    String[] extra = plugin.getExtraFileNames();
+                    for (String s : extra) {
+                        from = "plugins\\" + s;
+                        copyFile(from, pluginLocation);
+                    }
+                }
+            }
+        }
+    }
+
+    public static void copyFile(String sourcePath, String destinationDir) throws IOException {
+        Path source = Paths.get(sourcePath);
+        Path destination = Paths.get(destinationDir);
+
+        if (!Files.exists(source)) {
+            throw new FileNotFoundException("Source does not exist: " + source);
+        }
+
+        if (!Files.exists(destination)) {
+            Files.createDirectories(destination);
+        }
+
+        Path destinationPath = destination.resolve(source.getFileName());
+
+        if (Files.isDirectory(source)) {
+            copyDirectory(source, destinationPath);
+        } else {
+            try {
+                Files.copy(source, destinationPath, StandardCopyOption.REPLACE_EXISTING);
+            } catch (FileSystemException e) {
+                // Check if the exception is about the file being used by another process
+                if (e.getMessage() != null && e.getMessage().contains("being used by another process")) {
+                    // Silently ignore this error and do nothing
+                } else {
+                    throw e;  // rethrow if different reason
+                }
+            }
+        }
+    }
+
+    private static void copyDirectory(Path sourceDir, Path destinationDir) throws IOException {
+        Files.walk(sourceDir).forEach(source -> {
+            try {
+                Path target = destinationDir.resolve(sourceDir.relativize(source));
+                if (Files.isDirectory(source)) {
+                    if (!Files.exists(target)) {
+                        Files.createDirectories(target);
+                    }
+                } else {
+                    Files.copy(source, target, StandardCopyOption.REPLACE_EXISTING);
+                }
+            } catch (IOException e) {
+                throw new UncheckedIOException(e);
+            }
+        });
     }
 
     private static void copyDirectory(String sourceDirectoryLocation, String destinationDirectoryLocation)
@@ -203,11 +284,11 @@ public class FileTools {
         ArrayList<String> fileText = fileData.getFileText();
         File file;
         if (fileData.getType().equals("recipe")) {
-            file = new File(fileLocation + "recipe\\" + fileData.getName() + ".json");
+            file = new File(fileLocation + "\\" + namespace + "\\recipe\\" + fileData.getName() + ".json");
         } else if (fileData.getType().equals("loot_table")) {
-            file = new File(fileLocation + "loot_table\\" + fileData.getName() + ".json");
+            file = new File(fileLocation + "\\" + namespace + "\\loot_table\\" + fileData.getName() + ".json");
         } else {
-            file = new File(fileLocation + "function\\" + fileData.getName() + ".mcfunction");
+            file = new File(fileLocation + "\\" + namespace + "\\function\\" + fileData.getName() + ".mcfunction");
         }
         BufferedWriter writer = new BufferedWriter(new FileWriter(file));
         for (String s : fileText) {
@@ -225,6 +306,39 @@ public class FileTools {
         }
         writer.close();
         System.out.println("File \"" + fileData.getName() + "\" Updated.");
+    }
+
+    public static void clearDirectory(String directoryLocation) throws IOException {
+        File dir = new File(directoryLocation);
+
+        if (!dir.exists() || !dir.isDirectory()) {
+            throw new IllegalArgumentException("The provided location is not a valid directory: " + directoryLocation);
+        }
+
+        File[] files = dir.listFiles();
+        if (files == null) {
+            throw new IOException("Failed to list contents of directory: " + directoryLocation);
+        }
+
+        for (File file : files) {
+            deleteRecursively(file);
+        }
+    }
+
+    private static void deleteRecursively(File file) throws IOException {
+        if (file.isDirectory()) {
+            File[] children = file.listFiles();
+            if (children == null) {
+                throw new IOException("Failed to list contents of directory: " + file);
+            }
+            for (File child : children) {
+                deleteRecursively(child);
+            }
+        }
+
+        if (!file.delete()) {
+            System.out.println("Failed to delete file or directory: " + file);
+        }
     }
 
     public void createPlayerConnection(String fileLocation, String fileName, PlayerConnection playerConnection) throws IOException {

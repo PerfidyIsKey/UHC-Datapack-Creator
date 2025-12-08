@@ -5,7 +5,7 @@ addpath("Functions", "Documents", "Data")
 
 % Load data
 Players = struct;
-load("DataS57.mat")
+load("DataS61.mat")
 
 %% Create data
 seasonNumber = length(Seasons);                 % Amount of played seasons

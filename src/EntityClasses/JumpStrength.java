@@ -1,5 +1,7 @@
 package EntityClasses;
 
+import Enums.AttributeType;
+
 public class JumpStrength implements Attributes{
     // Fields
     double base;
@@ -11,7 +13,7 @@ public class JumpStrength implements Attributes{
 
     // Get attribute
     public String GetAttribute() {
-        return "\"id\":\"jump_strength\",\n" +
+        return "\"id\":\"" + AttributeType.JUMP_STRENGTH +"\",\n" +
                 "\"base\":" + base;
     }
 }

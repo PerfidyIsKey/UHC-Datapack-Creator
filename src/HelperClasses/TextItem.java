@@ -1,10 +1,10 @@
 package HelperClasses;
 
-import Enums.Color;
+import shared.TextColor;
 
 public class TextItem {
 
-    protected Color color;
+    protected TextColor color;
     protected boolean isBold;
     protected boolean isItalic;
     public String getText() {
@@ -12,15 +12,17 @@ public class TextItem {
     }
     public String getText(Boolean technical) {return ""; }
 
-    public TextItem(Color color, boolean isBold, boolean isItalic) {
+    public TextItem(TextColor color, boolean isBold, boolean isItalic) {
         this.color = color;
         this.isBold = isBold;
         this.isItalic = isItalic;
     }
 
-    public TextItem(Color color) {
+    public TextItem(TextColor color) {
         this.color = color;
     }
+
+    public TextItem() {}
 
     public TextItem(boolean isBold, boolean isItalic) {
         this.isBold = isBold;

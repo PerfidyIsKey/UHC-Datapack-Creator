@@ -1,24 +1,27 @@
 package HelperClasses;
 
 import Enums.BossBarColor;
-import Enums.Color;
+import shared.TextColor;
+import shared.DyeColor;
 
 public class Team {
 
+    private int id;
     private String name;
-    private Color color;
+    private TextColor color;
     private BossBarColor bossbarColor;
-    private String glassColor;
-    private String collarColor;
+    private DyeColor dyeColor;
+    private int collarColor;
     private String jsonColor;
     private String playerColor;
-    private String dustColor;
+    private float[] dustColor;
 
-    public Team(String name, Color color, BossBarColor bossbarColor, String glassColor, String collarColor, String jsonColor, String playerColor, String dustColor) {
-        this.name = name;
+    public Team(int id, TextColor color, BossBarColor bossbarColor, DyeColor dyeColor, int collarColor, String jsonColor, String playerColor, float[] dustColor) {
+        this.id = id;
+        this.name = "Team" + id;
         this.color = color;
         this.bossbarColor = bossbarColor;
-        this.glassColor = glassColor;
+        this.dyeColor = dyeColor;
         this.collarColor = collarColor;
         this.jsonColor = jsonColor;
         this.playerColor = playerColor;
@@ -33,11 +36,11 @@ public class Team {
         this.name = name;
     }
 
-    public Color getColor() {
+    public TextColor getColor() {
         return color;
     }
 
-    public void setColor(Color color) {
+    public void setColor(TextColor color) {
         this.color = color;
     }
 
@@ -49,19 +52,19 @@ public class Team {
         this.bossbarColor = color2;
     }
 
-    public String getGlassColor() {
-        return glassColor;
+    public DyeColor getDyeColor() {
+        return dyeColor;
     }
 
-    public void setGlassColor(String color2) {
-        this.glassColor = color2;
+    public void setDyeColor(DyeColor color) {
+        this.dyeColor = color;
     }
 
-    public String getCollarColor() {
+    public int getCollarColor() {
         return collarColor;
     }
 
-    public void setCollarColor(String collarColor) {
+    public void setCollarColor(int collarColor) {
         this.collarColor = collarColor;
     }
 
@@ -77,9 +80,9 @@ public class Team {
 
     public void setPlayerColor(String playerColor) { this.playerColor = playerColor; }
 
-    public String getDustColor() { return dustColor; }
+    public float[] getDustColor() { return dustColor; }
 
-    public void setDustColor(String dustColor) { this.dustColor = dustColor; }
+    public void setDustColor(float[] dustColor) { this.dustColor = dustColor; }
 
     public String add(){
         return "team add " + this.name;
@@ -92,4 +95,12 @@ public class Team {
     public String joinTeam(String entity) { return "team join " + this.name + " " + entity; }
 
     public String emptyTeam() { return "team empty " + this.name; }
+
+    public int getID() {
+        return id;
+    }
+
+    public void setID(int id) {
+        this.id = id;
+    }
 }

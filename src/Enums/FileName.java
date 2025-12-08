@@ -8,22 +8,37 @@ public enum FileName {
     developer_mode,
     random_teams,
     predictions,
+    predictions_loop,
     into_calls,
     spread_players,
     survival_mode,
     start_game,
     start_potions,
+    developer_potion_control,
+    game_starter,
+
+    // Timer functions
+    timer_main_1,
+    timer_main_5,
+    timer_main_20,
+    timer_control_point_20,
+    timer_traitor_5,
+    timer_traitor_20,
+    timer_developer_20,
 
     // Timer
     horse_frost_walker,
-    wolf_collar_execute,
+    wolf_updates,
     update_sidebar,
-    timer,
     display_quotes,
     update_mine_count,
     update_min_health,
-    eliminate_baby_wolf,
     remove_banned_items,
+
+    // Messages
+    messages_schedule_single,
+    messages_pvp,
+    messages_eternal_day,
 
     // Death
     handle_player_death,
@@ -32,19 +47,21 @@ public enum FileName {
     disable_respawn,
 
     // Control Point
-    spawn_controlpoints,
-    initialize_controlpoint,
-    controlpoint_,
-    team_score,
-    second_controlpoint,
-    bbvalue,
-    controlpoint_perks,
-    controlpoint_messages_,
-    update_public_cp_score,
+    spawn_control_points,
+    initialize_control_point,
+    control_point_,
+    control_point_score_,
+    second_control_point,
+    control_point_visuals_,
+    control_point_update_records_,
+    control_point_perks_check,
+    perk_,
+    control_point_messages_,
+    control_point_team_score,
+    protect_beacon_,
 
     // Care Packages
     drop_carepackages,
-    carepackage_distributor,
 
     // Traitor Faction
     traitor_handout,
@@ -63,10 +80,6 @@ public enum FileName {
     initiate_deathmatch,
     death_match,
 
-    // World loading
-    world_pre_load,
-    world_pre_load_activation,
-
     // Misc (gameplay critical)
     clear_enderchest,
     display_rank,
@@ -77,7 +90,6 @@ public enum FileName {
     announce_iron_man,
     check_iron_man,
     update_player_distance,
-    title_default_timing,
 
     // Misc (for fun)
     equip_gear,
