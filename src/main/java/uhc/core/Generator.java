@@ -10,17 +10,30 @@ import java.nio.charset.StandardCharsets;
 
 /**
  * Handles the actual creation of files and folders on the file system.
+ * This class translates the object-oriented structure (Datapack, Namespace, Component)
+ * into the required Minecraft file hierarchy using robust, cross-platform NIO Path logic.
  */
 public class Generator {
 
     private String packFolderName = "default_datapack";
 
+    /**
+     * Sets the top-level folder name for the datapack (e.g., "uhc_datapack").
+     * @param name The desired folder name.
+     */
     public void setPackFolderName(String name) {
         this.packFolderName = name;
     }
 
+    /**
+     * Executes the file generation process based on the contents of the Datapack object.
+     * @param datapack The complete object representation of the datapack.
+     * @param outputDirectory The root directory where the pack folder should be created (e.g., "Server/world/datapacks").
+     * @throws IOException If directory creation or file writing fails.
+     */
     public void generate(Datapack datapack, String outputDirectory) throws IOException {
-        // ... (Path setup remains the same)
+
+        // Use NIO Path for cross-platform compatibility.
         Path rootPath = Paths.get(outputDirectory, packFolderName);
         File rootDir = rootPath.toFile();
 
@@ -34,11 +47,12 @@ public class Generator {
         // 2. Iterate through namespaces and components to write content
         Path dataPath = rootPath.resolve("data");
 
+        // Loop 1: Iterate Namespaces (e.g., "minecraft" and "uhc_core_pack")
         for (Map.Entry<String, Namespace> entry : datapack.getNamespaces().entrySet()) {
             Namespace namespace = entry.getValue();
             Path namespacePath = dataPath.resolve(namespace.getName());
 
-            // Iterate over the components grouped by their category (e.g., "function", "tags/function")
+            // Loop 2: Iterate Categories (e.g., "function", "tags/function")
             for (Map.Entry<String, List<DatapackComponent>> categoryEntry : namespace.getComponentsByCategory().entrySet()) {
 
                 String category = categoryEntry.getKey();
@@ -47,11 +61,14 @@ public class Generator {
                 // Construct the full category path (e.g., ".../data/uhc_core_pack/function")
                 Path categoryPath = namespacePath.resolve(category);
 
+                // Loop 3: Iterate Components (actual files, e.g., load.mcfunction)
                 for (DatapackComponent component : components) {
-                    // component.getPath() returns the relative filename (e.g., "init/load.mcfunction")
-                    Path componentRelativePath = Paths.get(component.getPath());
-                    Path fullPath = categoryPath.resolve(componentRelativePath);
 
+                    // Use resolve(String) directly for resource IDs.
+                    // This is safer than converting the resource ID to an intermediate Path object first.
+                    Path fullPath = categoryPath.resolve(component.getPath());
+
+                    // Write file content and create any necessary subdirectories (e.g., 'init/')
                     writeFile(fullPath, component.generateContent());
                 }
             }
@@ -59,9 +76,15 @@ public class Generator {
         System.out.println("Datapack generated successfully at: " + rootPath.toAbsolutePath());
     }
 
+    /**
+     * Generates and writes the pack.mcmeta file with the required version format.
+     * @param datapack The source of metadata (description, format).
+     * @param rootPath The root directory of the datapack.
+     * @throws IOException If file writing fails.
+     */
     private void writePackMcmeta(Datapack datapack, Path rootPath) throws IOException {
 
-        // New JSON structure: description string and single integer formats.
+        // JSON structure uses simple String and Integer values for metadata.
         String jsonContent = String.format("""
                         {
                           "pack": {
@@ -71,18 +94,25 @@ public class Generator {
                           }
                         }
                         """,
-                // Arguments passed to String.format:
-                datapack.getDescription(), // String (%s)
-                datapack.getPackFormat(),  // int (%d)
-                datapack.getPackFormat()   // int (%d)
+                datapack.getDescription(),
+                datapack.getPackFormat(),
+                datapack.getPackFormat()
         );
 
-        // This is the writeFile method that correctly handles UTF-8 encoding
         writeFile(rootPath.resolve("pack.mcmeta"), jsonContent);
     }
 
+    /**
+     * Writes content to a specified file path, creating parent directories as necessary.
+     * Uses explicit UTF-8 encoding for reliable file writing, as required by Minecraft.
+     * @param fullPath The complete, absolute file path to write to.
+     * @param content The string content to be written.
+     * @throws IOException If directory creation or file writing fails.
+     */
     private void writeFile(Path fullPath, String content) throws IOException {
         File file = fullPath.toFile();
+
+        // Create necessary parent directories (e.g., init/ or loop/)
         if (file.getParentFile() != null && !file.getParentFile().mkdirs() && !file.getParentFile().exists()) {
             throw new IOException("Failed to create parent directories for: " + fullPath);
         }
