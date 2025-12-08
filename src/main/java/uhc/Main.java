@@ -17,6 +17,7 @@ public class Main {
     private static final String OUTPUT_DIR_ROOT = "Server/world/datapacks";
     private static final String DATAPACK_FOLDER_NAME = "uhc_datapack";
     private static final String DATAPACK_NAMESPACE = "uhc_core_pack";
+    private static final String DEFAULT_NAMESPACE = "minecraft"; // The Minecraft namespace (e.g., "uhc_core_pack:load")
 
     public static void main(String[] args) {
 

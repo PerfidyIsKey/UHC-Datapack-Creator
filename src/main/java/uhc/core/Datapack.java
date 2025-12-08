@@ -7,13 +7,14 @@ import java.util.Map;
  * Represents the complete Datapack, holding all namespaces and metadata.
  */
 public class Datapack {
-    // Current pack format for Minecraft 1.21.10 is 48.
-    // This makes it easy to update for newer versions.
-    private static final int PACK_FORMAT = 48;
+
+    // Use a single integer for the format number (88)
+    private static final int PACK_FORMAT = 88;
 
     private final String description;
     private final Map<String, Namespace> namespaces = new HashMap<>();
 
+    // Constructor now takes the description string again
     public Datapack(String description) {
         this.description = description;
     }
@@ -26,11 +27,6 @@ public class Datapack {
         return description;
     }
 
-    /**
-     * Adds or retrieves a Namespace.
-     * @param name The name of the namespace (e.g., "uhc").
-     * @return The existing or newly created Namespace object.
-     */
     public Namespace getOrCreateNamespace(String name) {
         return namespaces.computeIfAbsent(name, Namespace::new);
     }
