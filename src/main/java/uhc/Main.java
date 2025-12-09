@@ -17,9 +17,11 @@ import java.util.logging.Logger;
 import java.util.logging.ConsoleHandler;
 
 /**
- * The main entry point for the Datapack generation application.
- * This class orchestrates the setup, registers all feature modules,
- * and initiates the file generation process.
+ * 🚀 **Main Application Entry Point**
+ * * This class orchestrates the entire datapack generation process.
+ * It is responsible for initializing the custom logging system, defining the
+ * feature modules, building the {@code Datapack} structure, and calling the
+ * {@code Generator} to write the files to the disk.
  */
 public class Main {
 
@@ -27,55 +29,79 @@ public class Main {
 
     public static void main(String[] args) {
 
-        // --- Custom Logging Setup (Enables colorized output) ---
-        try {
-            // Disable default parent handler to control formatting
-            LOGGER.setUseParentHandlers(false);
+        // --- Logging Initialization ---
 
-            ConsoleHandler handler = new ConsoleHandler();
-            // Apply the custom color formatter
-            handler.setFormatter(new CustomConsoleFormatter());
-            LOGGER.addHandler(handler);
+        // 1. Get the Root Logger
+        Logger rootLogger = Logger.getLogger("");
+
+        // CRITICAL: Prevent Java's default, messy console output by removing all default handlers
+        // from the root logger before adding our custom one.
+        for (java.util.logging.Handler handler : rootLogger.getHandlers()) {
+            rootLogger.removeHandler(handler);
+        }
+
+        // 2. Setup Custom Handler
+        try {
+            ConsoleHandler customHandler = new ConsoleHandler();
+
+            // Set the handler level to ALL so it passes all messages (CONFIG, INFO, WARNING, etc.)
+            customHandler.setLevel(Level.ALL);
+            customHandler.setFormatter(new CustomConsoleFormatter());
+
+            // Add the custom handler to the Root Logger. All messages flow through this formatter.
+            rootLogger.addHandler(customHandler);
+
+            // 3. Set Specific Logger Levels
+            // The Main logger uses INFO for general start/complete messages (Green).
+            LOGGER.setLevel(Level.INFO);
+
+            // The Generator logger uses CONFIG for file status messages (Yellow).
+            Logger.getLogger(Generator.class.getName()).setLevel(Level.CONFIG);
+
         } catch (Exception e) {
-            // Robust fallback if custom logging setup fails (e.g., CustomConsoleFormatter error)
-            LOGGER.log(Level.WARNING, "Failed to set up custom logger formatter. Using default console output.", e);
-            // Re-enable parent handler so logs still appear
-            LOGGER.setUseParentHandlers(true);
+            // Error Catching Improvement: If custom logging setup fails, print an error
+            // and exit gracefully to prevent unpredictable console behavior.
+            System.err.println("FATAL LOGGING ERROR: Failed to configure custom console formatter.");
+            e.printStackTrace();
+            // Exit immediately, as the logging system is compromised.
+            System.exit(1);
         }
         // -------------------------------------------------------------
 
-        // --- 1. Setup Datapack Core ---
-        // Datapack constructor is parameterless, pulling metadata from DatapackConfig.
+        // --- Datapack Orchestration ---
+
+        // 1. Setup Datapack Core: Creates the empty structure based on DatapackConfig metadata.
         Datapack datapack = new Datapack();
 
-        // --- 2. Define Modules (Feature Registration) ---
-        // List all the active features/modules to be included.
+        // 2. Define Modules: List all feature sets to be included in the final datapack.
         List<DatapackModule> modules = List.of(
                 new InitializationModule(),
                 new GameLoopModule()
         );
 
-        // --- 3. Register Modules ---
-        // Pass the Datapack object and the custom namespace defined in the Config.
+        // 3. Register Modules: Instruct each module to build its components (functions, tags, etc.)
+        // and register them within the Datapack object structure.
         for (DatapackModule module : modules) {
             module.register(datapack, DatapackConfig.CUSTOM_NAMESPACE);
         }
 
-        // --- 4. Generate Files ---
+        // 4. Generate Files: Call the Generator to translate the object structure into files on disk.
         Generator generator = new Generator();
 
-        // Use the static path from DatapackConfig for OS-independent path construction.
+        // Determine the final, absolute output path using the configurable root directory.
         Path absolutePath = Paths.get(DatapackConfig.OUTPUT_DIR_ROOT).toAbsolutePath();
 
-        LOGGER.info("Starting Datapack generation process.");
+        // Log the final target path before starting I/O operations.
+        LOGGER.info("Starting Datapack generation process in: " + absolutePath.resolve(DatapackConfig.DATAPACK_FOLDER_NAME));
 
         try {
-            // Execute file generation.
             generator.generate(datapack, absolutePath.toString());
-            LOGGER.info("Generation complete. Datapack written to: " + absolutePath);
+            LOGGER.info("Generation and synchronization complete.");
         } catch (IOException e) {
-            // Logging at SEVERE level ensures the full trace is included via the custom formatter.
+            // Catch and log fatal I/O errors during file writing (e.g., permission issues).
             LOGGER.log(Level.SEVERE, "FATAL ERROR: Failed to write datapack files. Check file permissions or path.", e);
+            // Optional: Exit with a non-zero code to indicate failure to external scripts/tools.
+            // System.exit(1);
         }
     }
 }
