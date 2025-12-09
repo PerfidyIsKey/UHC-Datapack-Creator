@@ -1,22 +1,31 @@
 package uhc.modules;
 
+import uhc.command.commands.Comment;
+import uhc.command.commands.SayCommand;
 import uhc.core.Datapack;
 import uhc.core.Namespace;
 import uhc.components.functions.Function;
 import uhc.components.tags.FunctionTag;
 
 /**
- * Defines and registers the components necessary for world initialization.
+ * ⚙️ **Initialization Module**
+ * * Defines and registers the components necessary for world initialization, specifically
+ * the load sequence that runs once when the world is first loaded or the pack is reloaded.
  * <p>
- * This module creates the {@code init/load} function and ensures it runs once
- * when the world is loaded by placing the corresponding tag in the required {@code minecraft} namespace.
+ * This module creates the {@code init/load} function and ensures it runs automatically
+ * by placing the corresponding function tag in the required {@code minecraft} namespace.
  */
 public class InitializationModule implements DatapackModule {
 
     /**
      * Registers the load function and its corresponding tag to the appropriate namespaces.
-     * * @param datapack The main {@code Datapack} object for accessing namespaces.
-     * @param namespaceName The name of the custom namespace (e.g., "uhc_core_pack") where functions reside.
+     * * The method performs the essential wiring:
+     * 1. Creates the executable function in the custom namespace.
+     * 2. Creates the {@code load} function tag in the {@code minecraft} namespace.
+     * 3. References the executable function from the load tag.
+     * * @param datapack The main {@code Datapack} object used to retrieve or create namespaces.
+     * @param namespaceName The name of the custom namespace (e.g., "uhc_core_pack") where custom functions are stored.
+     * @throws IllegalStateException If the necessary namespaces cannot be obtained.
      */
     @Override
     public void register(Datapack datapack, String namespaceName) {
@@ -25,27 +34,36 @@ public class InitializationModule implements DatapackModule {
         Namespace customNamespace = datapack.getOrCreateNamespace(namespaceName);
         Namespace minecraftNamespace = datapack.getOrCreateNamespace("minecraft");
 
+        // Safety Check: Ensure namespaces were successfully retrieved/created
+        if (customNamespace == null || minecraftNamespace == null) {
+            throw new IllegalStateException("Failed to obtain the custom namespace ('" + namespaceName + "') or the 'minecraft' namespace. Cannot register load components.");
+        }
+
+
         // --- 2. Create the Function in the CUSTOM namespace (The executable content) ---
-        // Location: data/uhc_core_pack/function/init/load.mcfunction
-        String path = "init/load";
-        Function loadFunction = new Function(path);
+        // Final location on disk: data/{namespaceName}/function/init/load.mcfunction
+        String functionPath = "init/load";
+        Function loadFunction = new Function(functionPath);
 
-        loadFunction.addCommand("say [UHC] Datapack initializing! Version: 88.0");
-        loadFunction.addCommand("scoreboard objectives add uhc_status dummy");
-        loadFunction.addCommand("# Add other world setup commands here (e.g., setting gamerules)");
+        // Add the commands/lines to the function in sequence
+        loadFunction.addLine(SayCommand.create("[UHC] Datapack initializing! Version: 88.0"));
+        loadFunction.addLine(Comment.create("Add other world setup commands here (e.g., setting gamerules)"));
 
+        // Register the function component with the custom namespace
         customNamespace.addComponent(loadFunction);
 
+
         // --- 3. Create the Tag in the MINECRAFT namespace (The automatic trigger) ---
-        // Location: data/minecraft/tags/function/load.json
-        // This tag is automatically executed by the game on world load.
+        // Final location on disk: data/minecraft/tags/function/load.json
+        // This tag is automatically executed by the game when the world loads.
         FunctionTag loadTag = new FunctionTag("load");
 
-        // The tag content must reference the function using its full ID.
-        // Example: "uhc_core_pack:init/load"
-        String functionId = namespaceName + ":" + path;
+        // Construct the full function ID (namespace:path) required for the tag content.
+        // Example ID: "uhc_core_pack:init/load"
+        String functionId = namespaceName + ":" + functionPath;
         loadTag.addFunction(functionId);
 
+        // Register the tag component with the minecraft namespace
         minecraftNamespace.addComponent(loadTag);
     }
 }
