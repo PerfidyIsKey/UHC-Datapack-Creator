@@ -1,75 +1,81 @@
 package uhc;
 
 import uhc.core.Datapack;
+import uhc.core.DatapackConfig;
 import uhc.core.Generator;
-import uhc.core.Namespace;
-import uhc.components.functions.Function;
-import uhc.components.tags.FunctionTag; // New import
+import uhc.modules.DatapackModule;
+import uhc.modules.GameLoopModule;
+import uhc.modules.InitializationModule;
+import uhc.logging.CustomConsoleFormatter;
 
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.logging.ConsoleHandler;
 
+/**
+ * The main entry point for the Datapack generation application.
+ * This class orchestrates the setup, registers all feature modules,
+ * and initiates the file generation process.
+ */
 public class Main {
 
-    /**
-     * The target output directory where the final datapack folder will be placed.
-     */
-    private static final String OUTPUT_DIR_ROOT = "Server/world/datapacks";
-    private static final String DATAPACK_FOLDER_NAME = "uhc_datapack"; // The folder containing pack.mcmeta
-    private static final String DATAPACK_NAMESPACE = "uhc_core_pack"; // The Minecraft namespace (e.g., "uhc_core_pack:load")
+    private static final Logger LOGGER = Logger.getLogger(Main.class.getName());
 
     public static void main(String[] args) {
 
-        // 1. **Initialize Core Structures**
-        Datapack datapack = new Datapack("A custom UHC Datapack.");
-        Namespace uhcNamespace = datapack.getOrCreateNamespace(DATAPACK_NAMESPACE);
+        // --- Custom Logging Setup (Enables colorized output) ---
+        try {
+            // Disable default parent handler to control formatting
+            LOGGER.setUseParentHandlers(false);
 
-        // --- 2. Create and Populate Functions ---
+            ConsoleHandler handler = new ConsoleHandler();
+            // Apply the custom color formatter
+            handler.setFormatter(new CustomConsoleFormatter());
+            LOGGER.addHandler(handler);
+        } catch (Exception e) {
+            // Robust fallback if custom logging setup fails (e.g., CustomConsoleFormatter error)
+            LOGGER.log(Level.WARNING, "Failed to set up custom logger formatter. Using default console output.", e);
+            // Re-enable parent handler so logs still appear
+            LOGGER.setUseParentHandlers(true);
+        }
+        // -------------------------------------------------------------
 
-        // Function 1: Load (runs once)
-        String loadFunctionName = "init/load";
-        Function loadFunction = new Function(loadFunctionName);
-        loadFunction.addCommand("say [UHC] Datapack initializing! Version: 1.0");
-        loadFunction.addCommand("scoreboard objectives add uhc_status dummy");
-        loadFunction.addCommand("function " + DATAPACK_NAMESPACE + ":loop/tick"); // Schedule first tick
-        uhcNamespace.addComponent(loadFunction);
+        // --- 1. Setup Datapack Core ---
+        // Datapack constructor is parameterless, pulling metadata from DatapackConfig.
+        Datapack datapack = new Datapack();
 
-        // Function 2: Tick (runs continuously)
-        String tickFunctionName = "loop/tick";
-        Function tickFunction = new Function(tickFunctionName);
-        tickFunction.addCommand("# Place all repeating, time-based commands here");
-        tickFunction.addCommand("execute as @a at @s run particle minecraft:cloud ~ ~ ~ 0.1 0.1 0.1 0 1 normal");
-        uhcNamespace.addComponent(tickFunction);
+        // --- 2. Define Modules (Feature Registration) ---
+        // List all the active features/modules to be included.
+        List<DatapackModule> modules = List.of(
+                new InitializationModule(),
+                new GameLoopModule()
+        );
 
-        // --- 3. Create Function Tags (Auto-Execution) ---
+        // --- 3. Register Modules ---
+        // Pass the Datapack object and the custom namespace defined in the Config.
+        for (DatapackModule module : modules) {
+            module.register(datapack, DatapackConfig.CUSTOM_NAMESPACE);
+        }
 
-        // Tag 1: 'load' tag (runs once on world load)
-        FunctionTag loadTag = new FunctionTag("load");
-        // The ID is constructed as "namespace:path/to/function"
-        loadTag.addFunction(DATAPACK_NAMESPACE + ":" + loadFunctionName);
-        uhcNamespace.addComponent(loadTag);
-
-        // Tag 2: 'tick' tag (runs every game tick)
-        FunctionTag tickTag = new FunctionTag("tick");
-        tickTag.addFunction(DATAPACK_NAMESPACE + ":" + tickFunctionName);
-        uhcNamespace.addComponent(tickTag);
-
-        // --- 4. Generate the Files ---
+        // --- 4. Generate Files ---
         Generator generator = new Generator();
-        generator.setPackFolderName(DATAPACK_FOLDER_NAME);
 
-        // Use a Path object to handle OS-specific path separators correctly for the root output
-        Path absolutePath = Paths.get(OUTPUT_DIR_ROOT).toAbsolutePath();
+        // Use the static path from DatapackConfig for OS-independent path construction.
+        Path absolutePath = Paths.get(DatapackConfig.OUTPUT_DIR_ROOT).toAbsolutePath();
 
-        System.out.println("Starting Datapack generation...");
-        System.out.println("Target Directory: " + absolutePath);
+        LOGGER.info("Starting Datapack generation process.");
 
         try {
+            // Execute file generation.
             generator.generate(datapack, absolutePath.toString());
+            LOGGER.info("Generation complete. Datapack written to: " + absolutePath);
         } catch (IOException e) {
-            System.err.println("FATAL ERROR: Could not generate datapack.");
-            e.printStackTrace();
+            // Logging at SEVERE level ensures the full trace is included via the custom formatter.
+            LOGGER.log(Level.SEVERE, "FATAL ERROR: Failed to write datapack files. Check file permissions or path.", e);
         }
     }
 }
