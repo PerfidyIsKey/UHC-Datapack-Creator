@@ -2,22 +2,19 @@ package uhc.core;
 
 import java.util.HashMap;
 import java.util.Map;
+// No need to import DatapackConfig if it's in the same package, but good practice if structure changes
 
 /**
  * Represents the complete Minecraft Datapack object.
- * This class holds the top-level metadata (pack format, description)
- * and acts as a container for all {@code Namespace} objects within the pack.
+ * This class holds the top-level metadata and acts as a container for all {@code Namespace} objects.
  */
 public class Datapack {
 
-    /**
-     * The resource pack format version number required by Minecraft.
-     * This value is used for the "min_format" and "max_format" fields in pack.mcmeta.
-     * Current value: 88 (for specific 1.21.9+ versions).
-     */
-    private static final int PACK_FORMAT = 88;
+    // PACK_FORMAT is now sourced from DatapackConfig
+    // private static final int PACK_FORMAT = 88; // REMOVED
 
-    private final String description;
+    // description is now sourced from DatapackConfig
+    // private final String description; // REMOVED
 
     /**
      * Map storing all namespaces (e.g., "minecraft", "uhc_core_pack")
@@ -26,32 +23,30 @@ public class Datapack {
     private final Map<String, Namespace> namespaces = new HashMap<>();
 
     /**
-     * Constructs the main Datapack configuration.
-     * @param description A brief, user-friendly description displayed in the Minecraft resource list.
+     * Constructs the main Datapack configuration. No arguments needed as metadata is static.
      */
-    public Datapack(String description) {
-        this.description = description;
+    public Datapack() {
+        // Constructor is now parameterless
     }
 
     /**
-     * Retrieves the static pack format version number.
+     * Retrieves the static pack format version number from DatapackConfig.
      * @return The format version (e.g., 88).
      */
     public int getPackFormat() {
-        return PACK_FORMAT;
+        return DatapackConfig.PACK_FORMAT;
     }
 
     /**
-     * Gets the description string for the pack.
+     * Gets the description string from DatapackConfig.
      * @return The description.
      */
     public String getDescription() {
-        return description;
+        return DatapackConfig.PACK_DESCRIPTION;
     }
 
     /**
      * Retrieves an existing namespace by name, or creates a new one if it does not exist.
-     * This is the primary way to interact with the datapack structure.
      * @param name The name of the namespace (e.g., "minecraft" or "uhc_core_pack").
      * @return The existing or newly created Namespace object.
      */
@@ -64,6 +59,7 @@ public class Datapack {
      * @return The map of namespaces.
      */
     public Map<String, Namespace> getNamespaces() {
-        return namespaces;
+        // ... (implementation remains the same)
+        return java.util.Collections.unmodifiableMap(namespaces);
     }
 }

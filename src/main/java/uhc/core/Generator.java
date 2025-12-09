@@ -15,28 +15,20 @@ import java.nio.charset.StandardCharsets;
  */
 public class Generator {
 
-    private String packFolderName = "default_datapack";
-
-    /**
-     * Sets the top-level folder name for the datapack (e.g., "uhc_datapack").
-     * @param name The desired folder name.
-     */
-    public void setPackFolderName(String name) {
-        this.packFolderName = name;
-    }
-
     /**
      * Executes the file generation process based on the contents of the Datapack object.
      * @param datapack The complete object representation of the datapack.
-     * @param outputDirectory The root directory where the pack folder should be created (e.g., "Server/world/datapacks").
+     * @param outputDirectory The root directory where the pack folder should be created
+     * (sourced from DatapackConfig.OUTPUT_DIR_ROOT).
      * @throws IOException If directory creation or file writing fails.
      */
     public void generate(Datapack datapack, String outputDirectory) throws IOException {
 
-        // Use NIO Path for cross-platform compatibility.
-        Path rootPath = Paths.get(outputDirectory, packFolderName);
+        // Use NIO Path for cross-platform compatibility and static config value for the folder name.
+        Path rootPath = Paths.get(outputDirectory, DatapackConfig.DATAPACK_FOLDER_NAME);
         File rootDir = rootPath.toFile();
 
+        // Create the top-level datapack folder
         if (!rootDir.exists() && !rootDir.mkdirs()) {
             throw new IOException("Failed to create root directory: " + rootPath);
         }
@@ -64,8 +56,7 @@ public class Generator {
                 // Loop 3: Iterate Components (actual files, e.g., load.mcfunction)
                 for (DatapackComponent component : components) {
 
-                    // Use resolve(String) directly for resource IDs.
-                    // This is safer than converting the resource ID to an intermediate Path object first.
+                    // Use resolve(String) for resource IDs to safely handle subdirectories (e.g., "init/load.mcfunction")
                     Path fullPath = categoryPath.resolve(component.getPath());
 
                     // Write file content and create any necessary subdirectories (e.g., 'init/')
@@ -73,7 +64,6 @@ public class Generator {
                 }
             }
         }
-        System.out.println("Datapack generated successfully at: " + rootPath.toAbsolutePath());
     }
 
     /**
@@ -84,7 +74,6 @@ public class Generator {
      */
     private void writePackMcmeta(Datapack datapack, Path rootPath) throws IOException {
 
-        // JSON structure uses simple String and Integer values for metadata.
         String jsonContent = String.format("""
                         {
                           "pack": {
@@ -105,7 +94,7 @@ public class Generator {
     /**
      * Writes content to a specified file path, creating parent directories as necessary.
      * Uses explicit UTF-8 encoding for reliable file writing, as required by Minecraft.
-     * @param fullPath The complete, absolute file path to write to.
+     * @param fullPath The complete file path to write to.
      * @param content The string content to be written.
      * @throws IOException If directory creation or file writing fails.
      */
