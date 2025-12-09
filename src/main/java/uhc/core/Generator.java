@@ -2,6 +2,7 @@ package uhc.core;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -11,7 +12,7 @@ import java.util.Map;
 import java.nio.charset.StandardCharsets;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.stream.Stream; // Required for Files.walk() stream management
+import java.util.stream.Stream;
 
 /**
  * 🗃️ **Datapack File Generator and Synchronizer**
@@ -25,11 +26,13 @@ public class Generator {
     private static final Logger LOGGER = Logger.getLogger(Generator.class.getName());
 
     /**
-     * Executes the file generation and synchronization process.
-     * * The process involves:
-     * 1. Collecting all intended file paths and content from the Datapack object.
-     * 2. Checking for and deleting obsolete files in the output directory.
-     * 3. Creating or updating all intended files.
+     * Executes the comprehensive datapack generation and synchronization process.
+     * * The high-level process steps are:
+     * 1. Collect all intended file paths and content from the Datapack object.
+     * 2. Ensure the output directory structure is created.
+     * 3. Copy static resources (like {@code pack.png}) from the classpath.
+     * 4. Delete obsolete files from previous runs (synchronization cleanup).
+     * 5. Create or update all current files based on content comparison.
      * * @param datapack The complete object representation of the datapack, containing all namespaces and components.
      * @param outputDirectory The physical root path (e.g., 'Server/world/datapacks') where the pack folder should be created.
      * @throws IOException If a critical file system operation (like directory creation or file writing) fails.
@@ -46,11 +49,14 @@ public class Generator {
         // 2. Add the mandatory pack.mcmeta file content to the intended map
         writePackMcmetaContent(datapack, rootPath, intendedFiles);
 
-        // --- Directory Setup ---
+        // --- Directory Setup & Static Resources ---
         // Ensure the root datapack folder exists before proceeding.
         if (!rootDir.exists() && !rootDir.mkdirs()) {
             throw new IOException("Failed to create root directory: " + rootPath);
         }
+
+        // Copy the required static image resource.
+        copyPackImage(rootPath);
 
         // --- Comparison and Synchronization ---
         // The path to the 'data' directory where all Minecraft-specific content resides.
@@ -68,12 +74,8 @@ public class Generator {
             String content = entry.getValue();
 
             // Calculate the readable, relative path for logging: [namespace]/category/...
-            // This path is used in log messages (e.g., "uhc_core_pack\function\load.mcfunction")
-            // CRITICAL NOTE: Pack.mcmeta is handled specially, using rootPath.relativize(fullPath) might be better
-            // but we'll stick to dataPath.relativize(fullPath) for datapack items and log pack.mcmeta with full path
-            Path relativeLogPath = fullPath.startsWith(dataPath)
-                    ? dataPath.relativize(fullPath)
-                    : rootPath.relativize(fullPath);
+            // The logic differentiates between root files (pack.mcmeta) and internal data files.
+            Path relativeLogPath = rootPath.relativize(fullPath);
 
 
             // Check if file exists and content is the same to avoid unnecessary file writes
@@ -132,8 +134,8 @@ public class Generator {
     }
 
     /**
-     * Generates the content for {@code pack.mcmeta} and adds it to the map of intended files.
-     * * @param datapack The source of metadata (description, format).
+     * Generates the JSON content for {@code pack.mcmeta} and adds it to the map of intended files.
+     * * @param datapack The source of metadata (description, format) used for the file content.
      * @param rootPath The root directory of the datapack.
      * @param intendedFiles The map to which the file path and content are added.
      */
@@ -149,6 +151,7 @@ public class Generator {
                           }
                         }
                         """,
+                // Ensure description is sanitized if necessary, though it's typically safe here.
                 datapack.getDescription(),
                 datapack.getPackFormat(),
                 datapack.getPackFormat()
@@ -159,7 +162,7 @@ public class Generator {
 
     /**
      * Compares files on disk within the {@code 'data'} directory against the map of intended files
-     * and deletes any that are obsolete (no longer present in the {@code Datapack} object).
+     * and deletes any that are obsolete (no longer present in the current {@code Datapack} object structure).
      * * @param directory The 'data' directory path to start the recursive check from.
      * @param intendedFiles The map of files that *should* exist.
      * @throws IOException If the directory walking process fails.
@@ -167,7 +170,7 @@ public class Generator {
     private void deleteObsoleteFiles(Path directory, Map<Path, String> intendedFiles) throws IOException {
 
         // Recursively walk through all files and directories starting at 'data'
-        try (Stream<Path> stream = Files.walk(directory)) { // Use explicit Stream type for clarity
+        try (Stream<Path> stream = Files.walk(directory)) {
             stream.filter(Files::isRegularFile)
                     .forEach(existingPath -> {
                         // Check if the existing file on disk is NOT in our intended map
@@ -177,7 +180,7 @@ public class Generator {
                                 // Log deletion as a WARNING (yellow color)
                                 LOGGER.warning("DELETE: " + directory.relativize(existingPath));
                             } catch (IOException e) {
-                                // Log failure to delete as SEVERE error
+                                // Log failure to delete as SEVERE error, but continue cleanup
                                 LOGGER.log(Level.SEVERE, "Failed to delete obsolete file: " + existingPath, e);
                             }
                         }
@@ -212,7 +215,6 @@ public class Generator {
      * @throws IOException If directory creation or file writing fails.
      */
     private void writeFile(Path fullPath, String content) throws IOException {
-        File file = fullPath.toFile();
 
         // Safety improvement: Use Files.createDirectories for atomic and safer directory creation
         Path parentDir = fullPath.getParent();
@@ -226,5 +228,38 @@ public class Generator {
                 content,
                 StandardCharsets.UTF_8
         );
+    }
+
+    /**
+     * Copies the mandatory {@code pack.png} image resource from the classpath to the root of the output datapack folder.
+     * * This relies on the build system placing {@code pack.png} in the root of the compiled output (classpath).
+     * @param rootPath The path to the root of the final datapack folder (e.g., {@code .../uhc_datapack}).
+     * @throws IOException If the resource is missing from the classpath or file writing fails.
+     */
+    private void copyPackImage(Path rootPath) throws IOException {
+        final String resourceName = "pack.png";
+        Path destinationPath = rootPath.resolve(resourceName);
+
+        // Access the resource using the application's ClassLoader.
+        try (InputStream inputStream = getClass().getClassLoader().getResourceAsStream(resourceName)) {
+
+            if (inputStream == null) {
+                // Critical Error: The build failed to include the asset or it was not placed in src/main/resources.
+                final String errorMessage = "Required resource '" + resourceName + "' not found in the application resources (classpath). Ensure it is in 'src/main/resources'.";
+                LOGGER.log(Level.SEVERE, "FATAL ERROR: " + errorMessage);
+                throw new IOException(errorMessage);
+            }
+
+            // Copy the stream data to the destination file path, overwriting any existing file.
+            Files.copy(inputStream, destinationPath, java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+
+            // Log the action (using CONFIG level for detailed status)
+            LOGGER.config("COPIED: " + destinationPath.getFileName());
+
+        } catch (IOException e) {
+            // Catch I/O errors during copy (e.g., file permissions)
+            LOGGER.log(Level.SEVERE, "Failed to copy pack.png to: " + destinationPath, e);
+            throw e; // Re-throw to halt generation if a critical file is missing.
+        }
     }
 }
