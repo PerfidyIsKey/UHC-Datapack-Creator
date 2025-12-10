@@ -1,22 +1,21 @@
 package commands;
 
 import uhc.arguments.entity.Entity;
-import commands.effect.EffectAction;
 import uhc.resource.EffectId;
 
 public class Effect {
-    private final EffectAction action;
+    private final uhc.command.commands.EffectCommand.EffectAction action;
     private Entity targets;
     private EffectId effect;
     private int seconds;
     private int amplifier;
     private boolean hideParticles;
 
-    private Effect(EffectAction action) {
+    private Effect(uhc.command.commands.EffectCommand.EffectAction action) {
         this.action = action;
     }
 
-    public static Effect create(EffectAction action) {
+    public static Effect create(uhc.command.commands.EffectCommand.EffectAction action) {
         return new Effect(action);
     }
 
@@ -49,7 +48,7 @@ public class Effect {
         StringBuilder sb = new StringBuilder("effect ");
         switch (action) {
             case CLEAR:
-                sb.append(EffectAction.CLEAR);
+                sb.append(uhc.command.commands.EffectCommand.EffectAction.CLEAR);
                 if (targets != null) {
                     sb.append(" ").append(targets);
                     if (effect != null) {
@@ -59,7 +58,7 @@ public class Effect {
                 break;
 
             case GIVE:
-                sb.append(EffectAction.GIVE).append(" ").append(targets).append(" ").append(effect);
+                sb.append(uhc.command.commands.EffectCommand.EffectAction.GIVE).append(" ").append(targets).append(" ").append(effect);
                 if (seconds != 0) {
                     sb.append(" ").append(seconds);
                 }
