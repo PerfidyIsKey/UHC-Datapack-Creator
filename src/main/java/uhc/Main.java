@@ -3,9 +3,10 @@ package uhc;
 import uhc.core.Datapack;
 import uhc.core.DatapackConfig;
 import uhc.core.Generator;
-import uhc.modules.ClearEnderChestModule;
-import uhc.modules.DatapackModule;
-import uhc.modules.InitializationModule;
+import uhc.functions.ClearEnderChestFunction;
+import uhc.functions.DatapackFunction;
+import uhc.functions.GodModeFunction;
+import uhc.functions.InitializationFunction;
 import uhc.logging.CustomConsoleFormatter;
 
 import java.io.IOException;
@@ -74,14 +75,15 @@ public class Main {
         Datapack datapack = new Datapack();
 
         // 2. Define Modules: List all feature sets to be included in the final datapack.
-        List<DatapackModule> modules = List.of(
-                new InitializationModule(),
-                new ClearEnderChestModule()
+        List<DatapackFunction> modules = List.of(
+                new InitializationFunction(),
+                new ClearEnderChestFunction(),
+                new GodModeFunction()
         );
 
         // 3. Register Modules: Instruct each module to build its components (functions, tags, etc.)
         // and register them within the Datapack object structure.
-        for (DatapackModule module : modules) {
+        for (DatapackFunction module : modules) {
             module.register(datapack, DatapackConfig.CUSTOM_NAMESPACE);
         }
 

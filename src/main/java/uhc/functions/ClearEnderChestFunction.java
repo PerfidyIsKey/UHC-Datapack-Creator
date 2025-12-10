@@ -1,4 +1,4 @@
-package uhc.modules;
+package uhc.functions;
 
 import uhc.arguments.entity.Entity;
 import uhc.arguments.itemstack.SimpleItemStack;
@@ -12,23 +12,25 @@ import uhc.core.Namespace;
 import uhc.command.util.ItemSlot;
 import uhc.resource.ItemId;
 import uhc.core.MinecraftConstants;
-import uhc.command.commands.Comment; // Import the Comment class
+import uhc.command.commands.Comment;
 
 /**
- * 🗑️ **Clear Ender Chest Module**
+ * 🗑️ **Clear Ender Chest Function**
  * <p>
  * Defines and registers the function necessary to forcefully clear the contents
  * of every player's Ender Chest, typically used at the start or end of a game
  * to ensure a clean slate.
  * </p>
+ * This function utilizes a loop to replace every storage slot with air.
  */
-public class ClearEnderChestModule implements DatapackModule {
+public class ClearEnderChestFunction implements DatapackFunction { // Refactored class name
 
     /**
      * Creates and registers the {@code clear_enderchest} function to the custom namespace.
      * <p>
-     * This function iterates through all 27 slots of the Ender Chest and replaces their
-     * contents with air, effectively clearing them for all players.
+     * This function uses the {@code /item replace} command in a loop to iterate through
+     * all 27 slots of the Ender Chest for all players ({@code @a}) and replaces their
+     * contents with air, effectively clearing them.
      * </p>
      * @param datapack The main {@code Datapack} object used to retrieve or create namespaces.
      * @param customNamespaceName The name of the custom namespace (e.g., "uhc_core_pack") where the function is stored.
@@ -40,7 +42,7 @@ public class ClearEnderChestModule implements DatapackModule {
 
         // --- 1. Parameter Validation ---
         if (datapack == null) {
-            throw new IllegalArgumentException("The Datapack object cannot be null during module registration.");
+            throw new IllegalArgumentException("The Datapack object cannot be null during function registration.");
         }
         if (customNamespaceName == null || customNamespaceName.isBlank()) {
             throw new IllegalArgumentException("The custom namespace name cannot be null or blank.");
@@ -51,27 +53,33 @@ public class ClearEnderChestModule implements DatapackModule {
 
         // Safety Check: Verify successful creation/retrieval of required namespace
         if (customNamespace == null) {
-            throw new IllegalStateException("Failed to obtain the necessary custom namespace ('" + customNamespaceName + "'). Cannot register ClearEnderChest components.");
+            // Updated error message to reflect the class name
+            throw new IllegalStateException("Failed to obtain the necessary custom namespace ('" + customNamespaceName + "'). Cannot register ClearEnderChestFunction components.");
         }
 
 
         // --- 3. Create the Function component ---
-        // Function path: data/{customNamespaceName}/function/util/clear_enderchest.mcfunction
+        // Function path example: data/{customNamespaceName}/function/util/clear_enderchest.mcfunction
         FunctionPath functionPath = FunctionPath.CLEAR_ENDERCHEST;
         Function currentFunction = new Function(functionPath);
 
-        // Add the commands/lines to the function in sequence, using the Comment class for documentation.
-        currentFunction.addLine(Comment.create("Clears all 27 slots of every player's Ender Chest."));
-        currentFunction.addLine(Comment.create("Uses /item replace to substitute item stacks with air."));
+        // Add header comments to the generated function file.
+        currentFunction.addLine(Comment.create("--- Clear Ender Chest Function ---"));
+        currentFunction.addLine(Comment.create("Target: All online players (@a)"));
+        currentFunction.addLine(Comment.create("Action: Replace contents of all 27 Ender Chest slots with minecraft:air."));
 
-        // Loop through all slots (0 to 26) defined by MinecraftConstants.CHEST_SLOTS (27)
+        // Loop through all 27 slots (0 to 26) of the Ender Chest.
         for (int i = 0; i < MinecraftConstants.CHEST_SLOTS; i++) {
             // Generates command: /item replace entity @a enderchest.<slot_number> with minecraft:air 1
             currentFunction.addLine(ItemCommand.create(ItemCommand.ItemAction.REPLACE_WITH,
                             ItemTargetEntity.create(Entity.ofSelector(TargetSelector.ALL_PLAYERS)))
+                    // Slot is set to "enderchest.i"
                     .slot(ItemSlot.ENDERCHEST.withSlotNumber(i))
+                    // Item is replaced with 1 count of minecraft:air
                     .replaceWith(SimpleItemStack.create(ItemId.AIR), 1));
         }
+
+        currentFunction.addLine(Comment.create("--- Ender Chest clearing complete ---"));
 
         // Register the function component with the custom namespace
         customNamespace.addComponent(currentFunction);

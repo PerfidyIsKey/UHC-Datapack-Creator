@@ -27,7 +27,6 @@ import commands.data.DataPath;
 import commands.data.DataTargetEntity;
 import commands.data.DataValue;
 import commands.data.ModificationSetValue;
-import commands.effect.EffectAction;
 import commands.experience.ExperienceAction;
 import commands.forceload.ForceLoadAction;
 import uhc.arguments.itemstack.*;
@@ -39,6 +38,7 @@ import commands.time.TimeAction;
 import commands.worldborder.WorldBorderAction;
 import controlpoints.ControlPoint;
 import controlpoints.ControlPointTag;
+import uhc.command.commands.EffectCommand;
 import uhc.command.commands.ItemCommand;
 import uhc.command.util.ItemSlot;
 import uhc.command.util.SetMode;
@@ -1283,7 +1283,7 @@ public class Main {
                 .replaceWith(DynamicItemStack.create(ItemId.getToolResourceLocation(ToolMaterial.IRON, ToolPiece.SWORD)))
                 .build());
 
-        fileCommands.add(Effect.create(EffectAction.GIVE)
+        fileCommands.add(Effect.create(EffectCommand.EffectAction.GIVE)
                 .targets(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
                 .effect(EffectId.REGENERATION)
                 .seconds(1)
@@ -1296,7 +1296,7 @@ public class Main {
 
     private FileData GodMode() {
         ArrayList<String> fileCommands = new ArrayList<>();
-        fileCommands.add(Effect.create(EffectAction.GIVE)
+        fileCommands.add(Effect.create(EffectCommand.EffectAction.GIVE)
                 .targets(Entity.ofSelector(TargetSelector.SENDER))
                 .effect(EffectId.RESISTANCE)
                 .seconds(99999)
@@ -1728,7 +1728,7 @@ public class Main {
         fileCommands.add(Schedule.callFunction(FileName.clear_schedule));
 
         // Clear all player effects
-        fileCommands.add(Effect.create(EffectAction.CLEAR)
+        fileCommands.add(Effect.create(EffectCommand.EffectAction.CLEAR)
                 .targets(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
                 .build());
 
@@ -1854,10 +1854,10 @@ public class Main {
         ArrayList<String> fileCommands = new ArrayList<>();
 
         // Remove resistance and give regeneration
-        fileCommands.add(Effect.create(EffectAction.CLEAR)
+        fileCommands.add(Effect.create(EffectCommand.EffectAction.CLEAR)
                 .targets(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
                 .build());
-        fileCommands.add(Effect.create(EffectAction.GIVE)
+        fileCommands.add(Effect.create(EffectCommand.EffectAction.GIVE)
                 .targets(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
                 .effect(EffectId.REGENERATION)
                 .seconds(1)
@@ -2012,7 +2012,7 @@ public class Main {
         fileCommands.add(scoreboard.Set("@a", getObjectiveByName(Objective.Kills), 0));
 
         // Make players invulnerable
-        fileCommands.add(Effect.create(EffectAction.GIVE)
+        fileCommands.add(Effect.create(EffectCommand.EffectAction.GIVE)
                 .targets(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
                 .effect(EffectId.RESISTANCE)
                 .seconds(99999)
@@ -2081,7 +2081,7 @@ public class Main {
                 .build());
 
         // Remove resistance
-        fileCommands.add(Effect.create(EffectAction.CLEAR)
+        fileCommands.add(Effect.create(EffectCommand.EffectAction.CLEAR)
                 .targets(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
                 .effect(EffectId.RESISTANCE)
                 .build());
@@ -2104,19 +2104,19 @@ public class Main {
                 .build());
 
         // Give potion effect
-        fileCommands.add(Effect.create(EffectAction.GIVE)
+        fileCommands.add(Effect.create(EffectCommand.EffectAction.GIVE)
                 .targets(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
                 .effect(EffectId.REGENERATION)
                 .seconds(1)
                 .amplifier(255)
                 .build());
-        fileCommands.add(Effect.create(EffectAction.GIVE)
+        fileCommands.add(Effect.create(EffectCommand.EffectAction.GIVE)
                 .targets(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
                 .effect(EffectId.SATURATION)
                 .seconds(1)
                 .amplifier(255)
                 .build());
-        fileCommands.add(Effect.create(EffectAction.GIVE)
+        fileCommands.add(Effect.create(EffectCommand.EffectAction.GIVE)
                 .targets(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
                 .effect(EffectId.RESISTANCE)
                 .seconds(20 * 60)
@@ -3589,13 +3589,13 @@ public class Main {
                                     AttributeId.MAX_HEALTH)
                             .setBase(i + 1));
         }
-        fileCommands.add(Effect.create(EffectAction.GIVE)
+        fileCommands.add(Effect.create(EffectCommand.EffectAction.GIVE)
                 .targets(respawnPlayer)
                 .effect(EffectId.HEALTH_BOOST)
                 .seconds(1)
                 .amplifier(0)
                 .build());
-        fileCommands.add(Effect.create(EffectAction.CLEAR)
+        fileCommands.add(Effect.create(EffectCommand.EffectAction.CLEAR)
                 .targets(respawnPlayer)
                 .effect(EffectId.HEALTH_BOOST)
                 .build());
@@ -4152,7 +4152,7 @@ public class Main {
                     Schedule.callFunction(functions[i]));
 
             fileCommands.add(Execute.If("@a[nbt={active_effects:[{id:\"" + effects[i] + "\"}]}]") +
-                    Effect.create(EffectAction.CLEAR)
+                    Effect.create(EffectCommand.EffectAction.CLEAR)
                             .targets(Entity.ofSelector(TargetSelector.ALL_ENTITIES))
                             .effect(effects[i])
                             .build());

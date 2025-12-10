@@ -1,23 +1,23 @@
-package uhc.modules;
+package uhc.functions;
 
 import uhc.core.Datapack;
 
 /**
- * 🧱 **Datapack Module Contract**
+ * 🧱 **Datapack Function Contract**
  * <p>
- * Defines the contract for all functional units or feature sets within the datapack
- * generation project (e.g., an Initialization Module, a Scoreboard Module, etc.).
+ * Defines the contract for all functional units or **top-level features** within the datapack
+ * generation project (e.g., an Initialization Function, a Game Logic Function, etc.).
  * </p>
  * Implementing classes must contain the encapsulated logic necessary to create and register
  * all associated {@code DatapackComponent}s (functions, tags, advancements, etc.)
  * into the correct {@code Namespace} objects provided by the {@code Datapack} container.
  */
-public interface DatapackModule {
+public interface DatapackFunction {
 
     /**
-     * Executes the module's component registration logic.
+     * Executes the **datapack function's** component registration logic.
      * <p>
-     * This is the entry point for the module to instantiate its defined {@code DatapackComponent}s
+     * This is the entry point for the function to instantiate its defined {@code DatapackComponent}s
      * and add them to the appropriate namespaces (custom or 'minecraft').
      * </p>
      * @param datapack The main {@code Datapack} container. Used to retrieve or create

@@ -1,4 +1,4 @@
-package uhc.modules;
+package uhc.functions;
 
 import uhc.command.commands.Comment;
 import uhc.command.commands.SayCommand;
@@ -11,23 +11,24 @@ import uhc.components.tags.FunctionTag;
 import uhc.core.DatapackConfig;
 
 /**
- * ⚙️ **Initialization Module**
+ * ⚙️ **Initialization Function (World Load Hook)**
  * <p>
  * Defines and registers the components necessary for world initialization, specifically
- * the load sequence that runs once when the world is first loaded or the pack is reloaded.
+ * the load sequence that runs once when the world is first loaded or the pack is reloaded
+ * (via {@code /reload}).
  * </p>
- * This module creates the executable function in the custom namespace and links it to the
+ * This function creates the executable function in the custom namespace and links it to the
  * automatic {@code minecraft:load} function tag, ensuring guaranteed execution on pack load.
  */
-public class InitializationModule implements DatapackModule {
+public class InitializationFunction implements DatapackFunction {
 
     /**
      * Registers the {@code load} function and its corresponding tag to the appropriate namespaces.
      * <p>
-     * The method performs the essential wiring:
-     * 1. Creates the executable function component in the **custom namespace** (e.g., {@code uhc_core_pack:init/load}).
-     * 2. Creates the **load function tag** in the required **{@code minecraft} namespace** ({@code data/minecraft/tags/function/load.json}).
-     * 3. References the custom executable function from the load tag, setting up the auto-trigger for the Minecraft engine.
+     * The method performs the essential wiring, following the structure:
+     * 1. **Executable Function**: Creates the primary executable content (the `.mcfunction` file) in the **custom namespace**.
+     * 2. **Auto-Trigger Tag**: Creates the {@code minecraft:load} **function tag** in the **{@code minecraft} namespace**.
+     * 3. **Wiring**: References the custom executable function from the load tag, setting up the auto-trigger for the Minecraft engine.
      * </p>
      * @param datapack The main {@code Datapack} object used to retrieve or create namespaces.
      * @param customNamespaceName The name of the custom namespace (e.g., "uhc_core_pack") where custom functions are stored.
@@ -39,7 +40,7 @@ public class InitializationModule implements DatapackModule {
 
         // --- 1. Parameter Validation ---
         if (datapack == null) {
-            throw new IllegalArgumentException("The Datapack object cannot be null during module registration.");
+            throw new IllegalArgumentException("The Datapack object cannot be null during function registration.");
         }
         if (customNamespaceName == null || customNamespaceName.isBlank()) {
             throw new IllegalArgumentException("The custom namespace name cannot be null or blank.");
@@ -51,34 +52,41 @@ public class InitializationModule implements DatapackModule {
 
         // Safety Check: Verify successful creation/retrieval of required namespaces
         if (customNamespace == null || minecraftNamespace == null) {
-            // CRITICAL FIX: Use the constant in the error message to be robust against a null return from getOrCreateNamespace.
+            // Error message is robust, using the constant name for the system namespace.
             throw new IllegalStateException("Failed to obtain the necessary namespaces ('" + customNamespaceName + "' and '" + DatapackConfig.MINECRAFT_NAMESPACE + "'). Cannot register load components.");
         }
 
 
         // --- 3. Create the Function in the CUSTOM namespace (The executable content) ---
-        // Defines the function's path: data/{customNamespaceName}/function/init/load.mcfunction
+        // Resource ID example: uhc_core_pack:init/load
+        // File path: data/{customNamespaceName}/function/init/load.mcfunction
         FunctionPath functionPath = FunctionPath.LOAD;
         Function loadFunction = new Function(functionPath);
 
-        // Add the commands/lines to the function in sequence
-        // Uses the centralized PACK_FORMAT constant for robust version logging.
+        // Add comments and commands to the function in sequence
+        loadFunction.addLine(Comment.create("--- Datapack Load Function (Triggered by minecraft:load tag) ---"));
+        loadFunction.addLine(Comment.create(""));
+
+        // Command 1: Announce pack activation and version.
         loadFunction.addLine(SayCommand.create("[UHC] Datapack initializing! Version: " + DatapackConfig.PACK_FORMAT + ".0"));
+
+        // Command 2: Placeholder for essential setup.
         loadFunction.addLine(Comment.create("Add other world setup commands here (e.g., setting gamerules, scoreboard setup, etc.)"));
+        loadFunction.addLine(Comment.create(""));
 
         // Register the function component with the custom namespace
         customNamespace.addComponent(loadFunction);
 
 
         // --- 4. Create the Tag in the MINECRAFT namespace (The automatic trigger) ---
-        // Defines the tag's path: data/minecraft/tags/function/load.json
-        // This tag is automatically executed by the game engine.
+        // Resource ID: minecraft:load
+        // File path: data/minecraft/tags/function/load.json
+        // This tag is automatically executed by the game engine upon world load or /reload.
 
         // Instantiates the FunctionTag component using the type-safe enum.
         FunctionTag loadTag = new FunctionTag(FunctionTagPath.LOAD);
 
-        // WIRING: Add the custom function's resource ID (e.g., "uhc_core_pack:init/load") to the load tag's content.
-        // The FunctionTag class handles the conversion from FunctionPath to the full resource ID.
+        // WIRING: Add the custom function's resource ID (uhc_core_pack:init/load) to the load tag's content list.
         loadTag.addFunction(functionPath);
 
         // Register the tag component with the target namespace (minecraft)
