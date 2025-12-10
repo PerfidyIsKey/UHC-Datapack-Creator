@@ -3,6 +3,7 @@ package uhc.modules;
 import uhc.command.commands.Comment;
 import uhc.command.commands.SayCommand;
 import uhc.components.functions.FunctionPath;
+import uhc.components.tags.FunctionTagPath;
 import uhc.core.Datapack;
 import uhc.core.Namespace;
 import uhc.components.functions.Function;
@@ -75,7 +76,7 @@ public class InitializationModule implements DatapackModule {
 
         // FunctionTag constructor takes the tag name "load". It pulls the custom namespace name
         // internally via DatapackConfig to construct the function ID inside the JSON.
-        FunctionTag loadTag = new FunctionTag("load");
+        FunctionTag loadTag = new FunctionTag(FunctionTagPath.LOAD);
 
         // WIRING: Add the custom function ID (e.g., "uhc_core_pack:init/load") to the load tag's content.
         loadTag.addFunction(functionPath);

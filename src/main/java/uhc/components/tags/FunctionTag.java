@@ -19,28 +19,26 @@ import java.util.stream.Collectors;
  */
 public class FunctionTag implements DatapackComponent {
 
-    // The name of the tag file (e.g., "tick" or "load"), excluding the extension.
-    private final String name;
+    // The type has been changed to the type-safe enum, which stores the tag name and target namespace.
+    private final FunctionTagPath tagPath;
+
     // The list of functions (represented by type-safe enums) that this tag will execute.
     private final List<FunctionPath> functions = new ArrayList<>();
 
     /**
      * Creates a new Function Tag instance.
-     * * @param name The name of the tag (e.g., "tick" or "load"). The {@code .json} extension is handled automatically.
-     * @throws IllegalArgumentException if the provided name is null, empty, or only whitespace.
+     * * @param tagPath The {@code FunctionTagPath} enum constant defining the name of the tag (e.g., LOAD, TICK).
+     * @throws IllegalArgumentException if the provided {@code FunctionTagPath} is null.
      */
-    public FunctionTag(String name) {
+    public FunctionTag(FunctionTagPath tagPath) {
         // --- Input Validation ---
-        if (name == null || name.isBlank()) {
-            throw new IllegalArgumentException("Function tag name cannot be null or blank.");
+        if (tagPath == null) {
+            throw new IllegalArgumentException("Function tag path enum cannot be null.");
         }
 
-        // Safety check: remove .json if the user accidentally added it to the constructor.
-        if (name.endsWith(".json")) {
-            this.name = name.substring(0, name.length() - 5);
-        } else {
-            this.name = name;
-        }
+        // Assign the enum directly. We rely on the enum's internal logic (getPath())
+        // to handle lowercase and formatting. No string manipulation needed here.
+        this.tagPath = tagPath;
     }
 
     /**
@@ -55,11 +53,13 @@ public class FunctionTag implements DatapackComponent {
 
     /**
      * Returns the complete file name for this component.
+     * The file name is derived from the enum's path.
      * * @return The file name including the {@code .json} extension (e.g., {@code "load.json"}).
      */
     @Override
     public String getPath() {
-        return name + ".json";
+        // We use the enum's getPath() method which returns the lowercase name.
+        return tagPath.getPath() + ".json";
     }
 
     /**
