@@ -1,8 +1,8 @@
 package commands;
 
-import arguments.Block;
-import shared.SetMode;
-import arguments.BlockPos;
+import uhc.arguments.block.Block;
+import uhc.command.util.SetMode;
+import uhc.arguments.block.BlockPos;
 
 /**
  * Represents the Minecraft 'setblock' command structure in Java Edition.

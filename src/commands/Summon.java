@@ -1,9 +1,9 @@
 package commands;
 
-import arguments.coordinate.Vec3;
-import nbt.tags.CompoundTag;
-import nbt.util.TagConverter;
-import shared.EntityType;
+import uhc.arguments.coordinate.Vec3;
+import uhc.data.nbt.tags.CompoundTag;
+import uhc.data.nbt.util.TagConverter;
+import uhc.resource.EntityType;
 
 /**
  * Represents the Minecraft 'summon' command structure.

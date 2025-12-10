@@ -1,9 +1,9 @@
 package commands;
 
-import shared.SoundSource;
-import arguments.Entity;
-import arguments.coordinate.Vec3;
-import shared.SoundId;
+import uhc.game.SoundSource;
+import uhc.arguments.entity.Entity;
+import uhc.arguments.coordinate.Vec3;
+import uhc.resource.SoundId;
 
 public class PlaySound {
     private final SoundId sound;

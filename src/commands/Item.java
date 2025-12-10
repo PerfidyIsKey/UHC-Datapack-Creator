@@ -1,9 +1,10 @@
 package commands;
 
-import arguments.itemstack.ItemStack;
-import commands.item.*;
-import shared.ItemSlot;
-import shared.SpecificItemSlot;
+import uhc.arguments.itemstack.ItemStack;
+import uhc.command.commands.ItemCommand;
+import uhc.command.util.ItemSlot;
+import uhc.command.util.SpecificItemSlot;
+import uhc.arguments.item.ItemTarget;
 
 /**
  * Fluent builder for the Minecraft /item command.
@@ -13,7 +14,7 @@ import shared.SpecificItemSlot;
 public class Item {
     // Mandatory shared arguments
     private final ItemTarget target;
-    private final ItemAction action;
+    private final ItemCommand.ItemAction action;
     private SpecificItemSlot targetSlot;
 
     // Fields for MODIFY
@@ -29,7 +30,7 @@ public class Item {
     private String replaceFromModifier;
 
     // Private constructor enforces starting with the static factory method.
-    private Item(ItemAction action, ItemTarget target) {
+    private Item(ItemCommand.ItemAction action, ItemTarget target) {
         if (target == null) {
             throw new IllegalArgumentException("Target cannot be null.");
         }
@@ -43,7 +44,7 @@ public class Item {
      * Starts the item command chain by specifying the destination target (block or entity).
      * @param target The destination target.
      */
-    public static Item create(ItemAction action, ItemTarget target) {
+    public static Item create(ItemCommand.ItemAction action, ItemTarget target) {
         return new Item(action, target);
     }
 
@@ -70,7 +71,7 @@ public class Item {
      * @param modifier The item modifier (resource location or SNBT).
      */
     public Item modify(String modifier) {
-        if (this.action != ItemAction.MODIFY) {
+        if (this.action != ItemCommand.ItemAction.MODIFY) {
             throw new IllegalStateException("Cannot call modify() if the command was not initialized with action ItemAction.MODIFY.");
         }
 
@@ -87,7 +88,7 @@ public class Item {
      * @param count The optional count (1-99). Null to omit.
      */
     public Item replaceWith(ItemStack item, Integer count) {
-        if (this.action != ItemAction.REPLACE_WITH) {
+        if (this.action != ItemCommand.ItemAction.REPLACE_WITH) {
             throw new IllegalStateException("Cannot call replaceWith() if the command was not initialized with action ItemAction.REPLACE_WITH.");
         }
 
@@ -117,7 +118,7 @@ public class Item {
      * @param modifier The optional item modifier (resource location or SNBT). Null to omit.
      */
     public Item replaceFrom(ItemTarget source, ItemSlot sourceSlot, String modifier) {
-        if (this.action != ItemAction.REPLACE_FROM) {
+        if (this.action != ItemCommand.ItemAction.REPLACE_FROM) {
             throw new IllegalStateException("Cannot call replaceFrom() if the command was not initialized with action ItemAction.REPLACE_FROM.");
         }
 

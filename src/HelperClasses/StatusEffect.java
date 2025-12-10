@@ -1,6 +1,6 @@
 package HelperClasses;
 
-import shared.EffectId;
+import uhc.resource.EffectId;
 
 public class StatusEffect {
 

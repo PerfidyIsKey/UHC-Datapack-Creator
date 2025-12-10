@@ -1,7 +1,7 @@
 package ItemClasses;
 
 import EntityClasses.Attributes;
-import shared.EntityType;
+import uhc.resource.EntityType;
 
 import java.util.ArrayList;
 

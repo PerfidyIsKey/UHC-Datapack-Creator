@@ -1,7 +1,7 @@
 package commands;
 
-import arguments.Entity;
-import arguments.coordinate.Vec3;
+import uhc.arguments.entity.Entity;
+import uhc.arguments.coordinate.Vec3;
 
 public class Teleport {
     // We use objects to track which argument is set. Only one of 'destination' or 'location' can be set.

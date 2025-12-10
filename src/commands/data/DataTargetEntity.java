@@ -1,6 +1,6 @@
 package commands.data;
 
-import arguments.Entity;
+import uhc.arguments.entity.Entity;
 
 /**
  * Implements the DataTarget interface for entities.

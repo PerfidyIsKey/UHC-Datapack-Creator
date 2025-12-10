@@ -1,6 +1,6 @@
 package commands;
 
-import arguments.Entity;
+import uhc.arguments.entity.Entity;
 
 public class Kill {
     private Entity targets;

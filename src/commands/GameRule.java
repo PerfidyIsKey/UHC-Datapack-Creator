@@ -1,6 +1,6 @@
 package commands;
 
-import shared.GameRuleId;
+import uhc.game.GameRuleId;
 
 /**
  * Builds the Minecraft /gamerule command.

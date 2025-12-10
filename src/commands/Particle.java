@@ -1,10 +1,10 @@
 package commands;
 
-import arguments.Entity;
-import arguments.particle.ParticleArgument;
-import arguments.coordinate.Vec3;
-import shared.DisplayType;
-import shared.ParticleId;
+import uhc.arguments.entity.Entity;
+import uhc.arguments.particle.ParticleArgument;
+import uhc.arguments.coordinate.Vec3;
+import uhc.game.DisplayType;
+import uhc.resource.ParticleId;
 
 /**
  * Fluent builder for the Minecraft /particle command.

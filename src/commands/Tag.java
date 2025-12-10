@@ -1,7 +1,7 @@
 package commands;
 
-import arguments.Entity;
-import shared.StaticEntityTag;
+import uhc.arguments.entity.Entity;
+import uhc.resource.StaticEntityTag;
 import commands.tag.TagAction;
 
 /**

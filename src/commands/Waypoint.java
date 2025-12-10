@@ -1,9 +1,9 @@
 package commands;
 
-import arguments.Entity;
-import shared.ColorType;
-import shared.HexColor;
-import shared.TextColor;
+import uhc.arguments.entity.Entity;
+import uhc.text.ColorType;
+import uhc.text.HexColor;
+import uhc.text.TextColor;
 
 /**
  * Represents a command to modify the color of a waypoint associated with a specific entity.

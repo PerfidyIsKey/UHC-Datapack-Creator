@@ -1,6 +1,6 @@
 package ItemClasses;
 
-import shared.EntityType;
+import uhc.resource.EntityType;
 
 public class EntityData implements Components{
     // Fields

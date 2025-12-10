@@ -1,8 +1,8 @@
 package commands;
 
-import arguments.Entity;
-import arguments.AdvancementResourceLocation;
-import arguments.targetselector.TargetSelector;
+import uhc.arguments.entity.Entity;
+import uhc.resource.advancement.AdvancementResourceLocation;
+import uhc.arguments.targetselector.TargetSelector;
 import commands.advancement.AdvancementAction;
 import commands.advancement.AdvancementMode;
 

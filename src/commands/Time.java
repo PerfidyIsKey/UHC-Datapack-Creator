@@ -1,6 +1,6 @@
 package commands;
 
-import arguments.GameTime;
+import uhc.arguments.time.GameTime;
 import commands.time.TimeAction;
 
 /**

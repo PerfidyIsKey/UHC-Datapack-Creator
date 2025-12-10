@@ -1,9 +1,9 @@
 package commands;
 
-import arguments.Entity;
+import uhc.arguments.entity.Entity;
 import commands.attribute.ModifierOperation;
-import shared.attributes.AttributeId;
-import shared.attributes.ModifierId;
+import uhc.attribute.AttributeId;
+import uhc.attribute.ModifierId;
 
 public class Attribute {
     private final Entity target;

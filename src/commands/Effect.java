@@ -1,8 +1,8 @@
 package commands;
 
-import arguments.Entity;
+import uhc.arguments.entity.Entity;
 import commands.effect.EffectAction;
-import shared.EffectId;
+import uhc.resource.EffectId;
 
 public class Effect {
     private final EffectAction action;

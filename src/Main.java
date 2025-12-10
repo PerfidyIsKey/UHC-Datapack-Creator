@@ -1,4 +1,3 @@
-import arguments.*;
 import EntityClasses.*;
 import Enums.*;
 import FileGeneration.*;
@@ -7,22 +6,20 @@ import ItemClasses.*;
 import ItemModifiers.*;
 import Predicates.*;
 import TeamGeneration.*;
-import arguments.Entity;
-import arguments.block.BlockState;
-import arguments.block.DynamicBlock;
-import arguments.block.SimpleBlock;
-import arguments.block.SimpleBlockPredicate;
-import arguments.coordinate.Vec3;
-import arguments.itempredicate.SimpleItemPredicate;
-import arguments.itemstack.*;
-import arguments.itemstack.components.*;
-import arguments.itemstack.components.attributes.AttributeDisplayTag;
-import arguments.itemstack.components.attributes.AttributeModifierEntry;
-import arguments.particle.ParticleArgument;
-import arguments.particle.ParticleArgumentBuilder;
-import arguments.targetselector.SelectorArgumentsBuilder;
-import arguments.targetselector.TargetSelector;
-import arguments.time.VariableGameTime;
+import uhc.arguments.block.BlockPos;
+import uhc.arguments.block.ColumnPos;
+import uhc.arguments.entity.Entity;
+import uhc.arguments.block.*;
+import uhc.arguments.coordinate.Vec3;
+import uhc.arguments.itempredicate.SimpleItemPredicate;
+import uhc.arguments.itemstack.components.*;
+import uhc.arguments.itemstack.components.attributes.AttributeDisplayTag;
+import uhc.arguments.itemstack.components.attributes.AttributeModifierEntry;
+import uhc.arguments.particle.ParticleArgument;
+import uhc.arguments.particle.ParticleArgumentBuilder;
+import uhc.arguments.targetselector.SelectorArgumentsBuilder;
+import uhc.arguments.targetselector.TargetSelector;
+import uhc.arguments.time.VariableGameTime;
 import commands.*;
 import commands.Random;
 import commands.advancement.AdvancementAction;
@@ -33,8 +30,8 @@ import commands.data.ModificationSetValue;
 import commands.effect.EffectAction;
 import commands.experience.ExperienceAction;
 import commands.forceload.ForceLoadAction;
-import commands.item.ItemAction;
-import commands.item.ItemTargetEntity;
+import uhc.arguments.itemstack.*;
+import uhc.arguments.item.ItemTargetEntity;
 import commands.random.RandomAction;
 import commands.recipe.RecipeAction;
 import commands.tag.TagAction;
@@ -42,25 +39,35 @@ import commands.time.TimeAction;
 import commands.worldborder.WorldBorderAction;
 import controlpoints.ControlPoint;
 import controlpoints.ControlPointTag;
-import nbt.blockentity.*;
-import nbt.blockentity.StructureBlockEntity.StructureDataKey;
-import nbt.entity.*;
-import nbt.entity.data.*;
-import nbt.item.PlayerProfileComponentBuilder;
-import nbt.tags.ByteTag;
-import nbt.tags.CompoundTag;
-import nbt.tags.IntTag;
-import nbt.tags.StringTag;
-import shared.attributes.AttributeId;
-import shared.attributes.AttributeOperation;
-import shared.attributes.AttributeSlot;
-import shared.attributes.AttributeTooltipDisplayType;
-import shared.block.ColorableBlockId;
-import shared.block.WoodBlockId;
-import shared.item.*;
-import shared.nbt.*;
-import utils.TextComponent;
-import shared.*;
+import uhc.command.commands.ItemCommand;
+import uhc.command.util.ItemSlot;
+import uhc.command.util.SetMode;
+import uhc.data.nbt.blockentity.*;
+import uhc.data.nbt.entity.*;
+import uhc.data.nbt.entity.data.*;
+import uhc.data.resource.*;
+import uhc.game.*;
+import uhc.data.nbt.blockentity.StructureBlockEntity.StructureDataKey;
+import uhc.arguments.itemstack.components.builder.PlayerProfileComponentBuilder;
+import uhc.data.nbt.tags.ByteTag;
+import uhc.data.nbt.tags.CompoundTag;
+import uhc.data.nbt.tags.IntTag;
+import uhc.data.nbt.tags.StringTag;
+import uhc.resource.*;
+import uhc.resource.block.WoodType;
+import uhc.resource.item.ArmorMaterial;
+import uhc.resource.item.ArmorPiece;
+import uhc.resource.item.ToolMaterial;
+import uhc.resource.item.ToolPiece;
+import uhc.attribute.AttributeId;
+import uhc.attribute.AttributeOperation;
+import uhc.attribute.AttributeSlot;
+import uhc.attribute.AttributeTooltipDisplayType;
+import uhc.resource.block.ColorableBlockId;
+import uhc.resource.block.WoodBlockId;
+import uhc.text.DyeColor;
+import uhc.text.TextColor;
+import uhc.text.TextComponent;
 
 import java.io.IOException;
 import java.nio.file.*;
@@ -1225,7 +1232,7 @@ public class Main {
     private FileData ClearEnderChest() {
         ArrayList<String> fileCommands = new ArrayList<>();
         for (int i = 0; i < chestSize; i++) {
-            fileCommands.add(Item.create(ItemAction.REPLACE_WITH,
+            fileCommands.add(Item.create(ItemCommand.ItemAction.REPLACE_WITH,
                             ItemTargetEntity.create(Entity.ofSelector(TargetSelector.ALL_PLAYERS)))
                     .slot(ItemSlot.ENDERCHEST.withSlotNumber(i))
                     .replaceWith(SimpleItemStack.create(ItemId.AIR), 1)
@@ -1240,37 +1247,37 @@ public class Main {
 
         ItemTargetEntity targets = ItemTargetEntity.create(Entity.ofSelector(TargetSelector.ALL_PLAYERS));
 
-        fileCommands.add(Item.create(ItemAction.REPLACE_WITH,
+        fileCommands.add(Item.create(ItemCommand.ItemAction.REPLACE_WITH,
                         targets)
                 .slot(ItemSlot.CHEST)
                 .replaceWith(DynamicItemStack.create(ItemId.getArmorResourceLocation(ArmorMaterial.IRON, ArmorPiece.CHESTPLATE)))
                 .build());
-        fileCommands.add(Item.create(ItemAction.REPLACE_WITH,
+        fileCommands.add(Item.create(ItemCommand.ItemAction.REPLACE_WITH,
                         targets)
                 .slot(ItemSlot.FEET)
                 .replaceWith(DynamicItemStack.create(ItemId.getArmorResourceLocation(ArmorMaterial.IRON, ArmorPiece.BOOTS)))
                 .build());
-        fileCommands.add(Item.create(ItemAction.REPLACE_WITH,
+        fileCommands.add(Item.create(ItemCommand.ItemAction.REPLACE_WITH,
                         targets)
                 .slot(ItemSlot.HEAD)
                 .replaceWith(DynamicItemStack.create(ItemId.getArmorResourceLocation(ArmorMaterial.IRON, ArmorPiece.HELMET)))
                 .build());
-        fileCommands.add(Item.create(ItemAction.REPLACE_WITH,
+        fileCommands.add(Item.create(ItemCommand.ItemAction.REPLACE_WITH,
                         targets)
                 .slot(ItemSlot.LEGS)
                 .replaceWith(DynamicItemStack.create(ItemId.getArmorResourceLocation(ArmorMaterial.IRON, ArmorPiece.LEGGINGS)))
                 .build());
-        fileCommands.add(Item.create(ItemAction.REPLACE_WITH,
+        fileCommands.add(Item.create(ItemCommand.ItemAction.REPLACE_WITH,
                         targets)
                 .slot(ItemSlot.OFFHAND)
                 .replaceWith(SimpleItemStack.create(ItemId.SHIELD))
                 .build());
-        fileCommands.add(Item.create(ItemAction.REPLACE_WITH,
+        fileCommands.add(Item.create(ItemCommand.ItemAction.REPLACE_WITH,
                         targets)
                 .slot(ItemSlot.MAINHAND)
                 .replaceWith(DynamicItemStack.create(ItemId.getToolResourceLocation(ToolMaterial.IRON, ToolPiece.AXE)))
                 .build());
-        fileCommands.add(Item.create(ItemAction.REPLACE_WITH,
+        fileCommands.add(Item.create(ItemCommand.ItemAction.REPLACE_WITH,
                         targets)
                 .slot(ItemSlot.INVENTORY.withSlotNumber(0))
                 .replaceWith(DynamicItemStack.create(ItemId.getToolResourceLocation(ToolMaterial.IRON, ToolPiece.SWORD)))
@@ -1296,7 +1303,7 @@ public class Main {
                 .amplifier(4)
                 .hideParticles(true)
                 .build());
-        fileCommands.add(Item.create(ItemAction.REPLACE_WITH,
+        fileCommands.add(Item.create(ItemCommand.ItemAction.REPLACE_WITH,
                         ItemTargetEntity.create(Entity.ofSelector(TargetSelector.SENDER)))
                 .slot(ItemSlot.MAINHAND)
                 .replaceWith(
@@ -1347,7 +1354,7 @@ public class Main {
         // Give potions
         if (!OperationMode.teamCreationInGame) {
             fileCommands.add(Item.create(
-                            ItemAction.REPLACE_WITH,
+                            ItemCommand.ItemAction.REPLACE_WITH,
                             ItemTargetEntity.create(Entity.ofSelector(TargetSelector.SENDER)))
                     .slot(ItemSlot.HOTBAR.withSlotNumber(0))
                     .replaceWith(ComponentItemStack.create(ItemId.SPLASH_POTION)
@@ -1364,7 +1371,7 @@ public class Main {
                             .addComponent(CustomNameComponent.create(TextComponent.simple("Developer Mode"))))
                             .build());
             fileCommands.add(Item.create(
-                            ItemAction.REPLACE_WITH,
+                            ItemCommand.ItemAction.REPLACE_WITH,
                             ItemTargetEntity.create(Entity.ofSelector(TargetSelector.SENDER)))
                     .slot(ItemSlot.HOTBAR.withSlotNumber(1))
                     .replaceWith(ComponentItemStack.create(ItemId.SPLASH_POTION)
@@ -1381,7 +1388,7 @@ public class Main {
                             .addComponent(CustomNameComponent.create(TextComponent.simple("Assign Teams"))))
                     .build());
             fileCommands.add(Item.create(
-                            ItemAction.REPLACE_WITH,
+                            ItemCommand.ItemAction.REPLACE_WITH,
                             ItemTargetEntity.create(Entity.ofSelector(TargetSelector.SENDER)))
                     .slot(ItemSlot.HOTBAR.withSlotNumber(2))
                     .replaceWith(ComponentItemStack.create(ItemId.SPLASH_POTION)
@@ -1398,7 +1405,7 @@ public class Main {
                             .addComponent(CustomNameComponent.create(TextComponent.simple("Predictions"))))
                     .build());
             fileCommands.add(Item.create(
-                            ItemAction.REPLACE_WITH,
+                            ItemCommand.ItemAction.REPLACE_WITH,
                             ItemTargetEntity.create(Entity.ofSelector(TargetSelector.SENDER)))
                     .slot(ItemSlot.HOTBAR.withSlotNumber(3))
                     .replaceWith(ComponentItemStack.create(ItemId.SPLASH_POTION)
@@ -1415,7 +1422,7 @@ public class Main {
                             .addComponent(CustomNameComponent.create(TextComponent.simple("Into Calls"))))
                     .build());
             fileCommands.add(Item.create(
-                            ItemAction.REPLACE_WITH,
+                            ItemCommand.ItemAction.REPLACE_WITH,
                             ItemTargetEntity.create(Entity.ofSelector(TargetSelector.SENDER)))
                     .slot(ItemSlot.HOTBAR.withSlotNumber(4))
                     .replaceWith(ComponentItemStack.create(ItemId.SPLASH_POTION)
@@ -1432,7 +1439,7 @@ public class Main {
                             .addComponent(CustomNameComponent.create(TextComponent.simple("Spread players"))))
                     .build());
             fileCommands.add(Item.create(
-                            ItemAction.REPLACE_WITH,
+                            ItemCommand.ItemAction.REPLACE_WITH,
                             ItemTargetEntity.create(Entity.ofSelector(TargetSelector.SENDER)))
                     .slot(ItemSlot.HOTBAR.withSlotNumber(5))
                     .replaceWith(ComponentItemStack.create(ItemId.SPLASH_POTION)
@@ -1449,7 +1456,7 @@ public class Main {
                             .addComponent(CustomNameComponent.create(TextComponent.simple("Survival Mode"))))
                     .build());
             fileCommands.add(Item.create(
-                            ItemAction.REPLACE_WITH,
+                            ItemCommand.ItemAction.REPLACE_WITH,
                             ItemTargetEntity.create(Entity.ofSelector(TargetSelector.SENDER)))
                     .slot(ItemSlot.HOTBAR.withSlotNumber(6))
                     .replaceWith(ComponentItemStack.create(ItemId.SPLASH_POTION)
@@ -1467,7 +1474,7 @@ public class Main {
                     .build());
         } else {
             fileCommands.add(Item.create(
-                            ItemAction.REPLACE_WITH,
+                            ItemCommand.ItemAction.REPLACE_WITH,
                             ItemTargetEntity.create(Entity.ofSelector(TargetSelector.SENDER)))
                     .slot(ItemSlot.HOTBAR.withSlotNumber(0))
                     .replaceWith(ComponentItemStack.create(ItemId.SPLASH_POTION)
@@ -1484,7 +1491,7 @@ public class Main {
                             .addComponent(CustomNameComponent.create(TextComponent.simple("Developer Mode"))))
                     .build());
             fileCommands.add(Item.create(
-                            ItemAction.REPLACE_WITH,
+                            ItemCommand.ItemAction.REPLACE_WITH,
                             ItemTargetEntity.create(Entity.ofSelector(TargetSelector.SENDER)))
                     .slot(ItemSlot.HOTBAR.withSlotNumber(1))
                     .replaceWith(ComponentItemStack.create(ItemId.SPLASH_POTION)
@@ -1501,7 +1508,7 @@ public class Main {
                             .addComponent(CustomNameComponent.create(TextComponent.simple("Predictions"))))
                     .build());
             fileCommands.add(Item.create(
-                            ItemAction.REPLACE_WITH,
+                            ItemCommand.ItemAction.REPLACE_WITH,
                             ItemTargetEntity.create(Entity.ofSelector(TargetSelector.SENDER)))
                     .slot(ItemSlot.HOTBAR.withSlotNumber(2))
                     .replaceWith(ComponentItemStack.create(ItemId.SPLASH_POTION)
@@ -1518,7 +1525,7 @@ public class Main {
                             .addComponent(CustomNameComponent.create(TextComponent.simple("Into Calls"))))
                     .build());
             fileCommands.add(Item.create(
-                            ItemAction.REPLACE_WITH,
+                            ItemCommand.ItemAction.REPLACE_WITH,
                             ItemTargetEntity.create(Entity.ofSelector(TargetSelector.SENDER)))
                     .slot(ItemSlot.HOTBAR.withSlotNumber(3))
                     .replaceWith(ComponentItemStack.create(ItemId.SPLASH_POTION)
@@ -1535,7 +1542,7 @@ public class Main {
                             .addComponent(CustomNameComponent.create(TextComponent.simple("Spread players"))))
                     .build());
             fileCommands.add(Item.create(
-                            ItemAction.REPLACE_WITH,
+                            ItemCommand.ItemAction.REPLACE_WITH,
                             ItemTargetEntity.create(Entity.ofSelector(TargetSelector.SENDER)))
                     .slot(ItemSlot.HOTBAR.withSlotNumber(4))
                     .replaceWith(ComponentItemStack.create(ItemId.SPLASH_POTION)
@@ -1552,7 +1559,7 @@ public class Main {
                             .addComponent(CustomNameComponent.create(TextComponent.simple("Survival Mode"))))
                     .build());
             fileCommands.add(Item.create(
-                            ItemAction.REPLACE_WITH,
+                            ItemCommand.ItemAction.REPLACE_WITH,
                             ItemTargetEntity.create(Entity.ofSelector(TargetSelector.SENDER)))
                     .slot(ItemSlot.HOTBAR.withSlotNumber(5))
                     .replaceWith(ComponentItemStack.create(ItemId.SPLASH_POTION)
@@ -3060,7 +3067,7 @@ public class Main {
         fileCommands.add(Execute.If(targetOld) +
                 new TellRaw(targetOld, warning).sendRaw());
         fileCommands.add(Item.create(
-                        ItemAction.REPLACE_WITH,
+                        ItemCommand.ItemAction.REPLACE_WITH,
                         target)
                 .slot(ItemSlot.MAINHAND)
                 .replaceWith(replacement)
@@ -3085,7 +3092,7 @@ public class Main {
         fileCommands.add(Execute.If(targetOld) +
                 new TellRaw(targetOld, warning).sendRaw());
         fileCommands.add(Item.create(
-                        ItemAction.REPLACE_WITH,
+                        ItemCommand.ItemAction.REPLACE_WITH,
                         target)
                 .slot(ItemSlot.MAINHAND)
                 .replaceWith(replacement)
@@ -3110,7 +3117,7 @@ public class Main {
         fileCommands.add(Execute.If(targetOld) +
                 new TellRaw(targetOld, warning).sendRaw());
         fileCommands.add(Item.create(
-                        ItemAction.REPLACE_WITH,
+                        ItemCommand.ItemAction.REPLACE_WITH,
                         target)
                 .slot(ItemSlot.MAINHAND)
                 .replaceWith(replacement)
@@ -3136,7 +3143,7 @@ public class Main {
         fileCommands.add(Execute.If(targetOld) +
                 new TellRaw(targetOld, warning).sendRaw());
         fileCommands.add(Item.create(
-                        ItemAction.REPLACE_WITH,
+                        ItemCommand.ItemAction.REPLACE_WITH,
                         target)
                 .slot(ItemSlot.MAINHAND)
                 .replaceWith(replacement)
@@ -3161,7 +3168,7 @@ public class Main {
         fileCommands.add(Execute.If(targetOld) +
                 new TellRaw(targetOld, warning).sendRaw());
         fileCommands.add(Item.create(
-                        ItemAction.REPLACE_WITH,
+                        ItemCommand.ItemAction.REPLACE_WITH,
                         target)
                 .slot(ItemSlot.MAINHAND)
                 .replaceWith(replacement)
@@ -3186,7 +3193,7 @@ public class Main {
         fileCommands.add(Execute.If(targetOld) +
                 new TellRaw(targetOld, warning).sendRaw());
         fileCommands.add(Item.create(
-                        ItemAction.REPLACE_WITH,
+                        ItemCommand.ItemAction.REPLACE_WITH,
                         target)
                 .slot(ItemSlot.MAINHAND)
                 .replaceWith(replacement)
@@ -3222,7 +3229,7 @@ public class Main {
         fileCommands.add(Execute.If(targetOld) +
                 new TellRaw(targetOld, warning).sendRaw());
         fileCommands.add(Item.create(
-                        ItemAction.REPLACE_WITH,
+                        ItemCommand.ItemAction.REPLACE_WITH,
                         target)
                 .slot(ItemSlot.MAINHAND)
                 .replaceWith(replacement)
@@ -3256,7 +3263,7 @@ public class Main {
         fileCommands.add(Execute.If(targetOld) +
                 new TellRaw(targetOld, warning).sendRaw());
         fileCommands.add(Item.create(
-                        ItemAction.REPLACE_WITH,
+                        ItemCommand.ItemAction.REPLACE_WITH,
                         target)
                 .slot(ItemSlot.MAINHAND)
                 .replaceWith(replacement)
@@ -3285,7 +3292,7 @@ public class Main {
             fileCommands.add(Execute.If(targetOld) +
                     new TellRaw(targetOld, warning).sendRaw());
             fileCommands.add(Item.create(
-                            ItemAction.REPLACE_WITH,
+                            ItemCommand.ItemAction.REPLACE_WITH,
                             target)
                     .slot(ItemSlot.MAINHAND)
                     .replaceWith(SimpleItemStack.create(ItemId.CROSSBOW))
@@ -3313,7 +3320,7 @@ public class Main {
             fileCommands.add(Execute.If(targetOld) +
                     new TellRaw(targetOld, warning).sendRaw());
             fileCommands.add(Item.create(
-                            ItemAction.REPLACE_WITH,
+                            ItemCommand.ItemAction.REPLACE_WITH,
                             target)
                     .slot(ItemSlot.MAINHAND)
                     .replaceWith(SimpleItemStack.create(ItemId.BOW))
@@ -3336,7 +3343,7 @@ public class Main {
         fileCommands.add(Execute.If(targetOld) +
                 new TellRaw(targetOld, warning).sendRaw());
         fileCommands.add(Item.create(
-                        ItemAction.REPLACE_WITH,
+                        ItemCommand.ItemAction.REPLACE_WITH,
                         target)
                 .slot(ItemSlot.MAINHAND)
                 .replaceWith(SimpleItemStack.create(ItemId.LEATHER_HORSE_ARMOR))
@@ -3359,7 +3366,7 @@ public class Main {
         fileCommands.add(Execute.If(targetOld) +
                 new TellRaw(targetOld, warning).sendRaw());
         fileCommands.add(Item.create(
-                        ItemAction.REPLACE_WITH,
+                        ItemCommand.ItemAction.REPLACE_WITH,
                         target)
                 .slot(ItemSlot.MAINHAND)
                 .replaceWith(SimpleItemStack.create(ItemId.BOWL))

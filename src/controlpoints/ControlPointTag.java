@@ -1,6 +1,6 @@
 package controlpoints;
 
-import shared.EntityTag;
+import uhc.resource.EntityTag;
 
 /**
  * Represents a dynamic **Control Point identifier** used to uniquely tag entities

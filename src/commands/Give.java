@@ -1,7 +1,7 @@
 package commands;
 
-import arguments.Entity;
-import arguments.itemstack.ItemStack;
+import uhc.arguments.entity.Entity;
+import uhc.arguments.itemstack.ItemStack;
 
 public class Give {
     private final Entity targets;

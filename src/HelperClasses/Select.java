@@ -1,6 +1,6 @@
 package HelperClasses;
 
-import shared.TextColor;
+import uhc.text.TextColor;
 
 public class Select extends TextItem {
     private String selector;

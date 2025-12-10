@@ -1,7 +1,7 @@
 package commands;
 
-import arguments.Entity;
-import arguments.time.VariableGameTime;
+import uhc.arguments.entity.Entity;
+import uhc.arguments.time.VariableGameTime;
 import commands.title.TitleAction;
 
 /**

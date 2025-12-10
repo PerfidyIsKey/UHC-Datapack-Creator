@@ -1,7 +1,7 @@
 package HelperClasses;
 
 import Enums.*;
-import shared.StaticBlockId;
+import uhc.resource.StaticBlockId;
 
 public class Execute {
 

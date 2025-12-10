@@ -1,8 +1,8 @@
 package commands;
 
-import arguments.Entity;
+import uhc.arguments.entity.Entity;
 import commands.recipe.RecipeAction;
-import shared.RecipeId;
+import uhc.resource.RecipeId;
 
 /**
  * Represents the Minecraft 'recipe' command structure.

@@ -1,7 +1,7 @@
 package commands;
 
-import arguments.Entity;
-import arguments.itempredicate.ItemPredicate;
+import uhc.arguments.entity.Entity;
+import uhc.arguments.itempredicate.ItemPredicate;
 
 public class Clear {
     private Entity targets;

@@ -1,6 +1,6 @@
 package commands;
 
-import arguments.coordinate.Vec2;
+import uhc.arguments.coordinate.Vec2;
 import commands.worldborder.WorldBorderAction;
 
 /**

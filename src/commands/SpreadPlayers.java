@@ -1,7 +1,7 @@
 package commands;
 
-import arguments.Entity;
-import arguments.coordinate.Vec2;
+import uhc.arguments.entity.Entity;
+import uhc.arguments.coordinate.Vec2;
 
 public class SpreadPlayers {
     private final Vec2 center;

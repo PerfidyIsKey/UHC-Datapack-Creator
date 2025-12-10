@@ -1,7 +1,7 @@
 package commands;
 
-import arguments.BlockPos;
-import arguments.Angle;
+import uhc.arguments.block.BlockPos;
+import uhc.arguments.number.Angle;
 
 /**
  * Builds the Minecraft /setworldspawn command.

@@ -1,10 +1,10 @@
 import Enums.WorldShape;
-import arguments.ColumnPos;
-import arguments.Entity;
-import arguments.coordinate.Vec2;
-import arguments.targetselector.SelectorArgumentsBuilder;
-import arguments.targetselector.TargetSelector;
-import shared.EntityType;
+import uhc.arguments.block.ColumnPos;
+import uhc.arguments.entity.Entity;
+import uhc.arguments.coordinate.Vec2;
+import uhc.arguments.targetselector.SelectorArgumentsBuilder;
+import uhc.arguments.targetselector.TargetSelector;
+import uhc.resource.EntityType;
 
 public class Constant {
     // Unit conversion

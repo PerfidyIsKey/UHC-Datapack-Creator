@@ -1,7 +1,7 @@
 package commands;
 
-import shared.ExperienceType;
-import arguments.Entity;
+import uhc.game.ExperienceType;
+import uhc.arguments.entity.Entity;
 import commands.experience.ExperienceAction;
 
 public class Experience {

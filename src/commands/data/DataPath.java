@@ -1,6 +1,6 @@
 package commands.data;
 
-import shared.DataPathId;
+import uhc.data.resource.DataPathId;
 
 /**
  * Represents the NBT path used in a Minecraft data command.

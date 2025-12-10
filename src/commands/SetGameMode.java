@@ -1,7 +1,7 @@
 package commands;
 
-import arguments.Entity;
-import shared.GameMode;
+import uhc.arguments.entity.Entity;
+import uhc.game.GameMode;
 
 public class SetGameMode {
     private final GameMode gamemode;

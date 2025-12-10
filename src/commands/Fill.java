@@ -1,9 +1,9 @@
 package commands;
 
-import arguments.Block;
-import arguments.BlockPos;
-import arguments.BlockPredicate;
-import shared.FillMode;
+import uhc.arguments.block.Block;
+import uhc.arguments.block.BlockPos;
+import uhc.arguments.block.BlockPredicate;
+import uhc.command.util.FillMode;
 
 /**
  * Represents the Minecraft 'fill' command structure.

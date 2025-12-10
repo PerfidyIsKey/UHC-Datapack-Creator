@@ -1,6 +1,6 @@
 package commands;
 
-import shared.DifficultyId;
+import uhc.game.DifficultyId;
 
 /**
  * Fluent builder for the Minecraft /difficulty command.

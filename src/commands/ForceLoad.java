@@ -1,6 +1,6 @@
 package commands;
 
-import arguments.ColumnPos;
+import uhc.arguments.block.ColumnPos;
 import commands.forceload.ForceLoadAction;
 
 /**

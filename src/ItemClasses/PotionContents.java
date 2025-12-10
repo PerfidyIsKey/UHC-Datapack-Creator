@@ -1,7 +1,7 @@
 package ItemClasses;
 
 import Enums.Duration;
-import shared.EffectId;
+import uhc.resource.EffectId;
 
 public class PotionContents implements Components {
     // Fields

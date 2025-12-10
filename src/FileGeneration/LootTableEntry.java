@@ -1,8 +1,7 @@
 package FileGeneration;
 
-import shared.StaticBlockId;
 import ItemModifiers.ItemModifier;
-import shared.item.ItemId;
+import uhc.resource.ItemId;
 
 import java.util.ArrayList;
 
