@@ -3,6 +3,7 @@ package uhc;
 import uhc.core.Datapack;
 import uhc.core.DatapackConfig;
 import uhc.core.Generator;
+import uhc.modules.ClearEnderChestModule;
 import uhc.modules.DatapackModule;
 import uhc.modules.InitializationModule;
 import uhc.logging.CustomConsoleFormatter;
@@ -74,7 +75,8 @@ public class Main {
 
         // 2. Define Modules: List all feature sets to be included in the final datapack.
         List<DatapackModule> modules = List.of(
-                new InitializationModule()
+                new InitializationModule(),
+                new ClearEnderChestModule()
         );
 
         // 3. Register Modules: Instruct each module to build its components (functions, tags, etc.)
