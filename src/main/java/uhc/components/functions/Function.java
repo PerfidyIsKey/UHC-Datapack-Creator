@@ -8,47 +8,54 @@ import java.util.stream.Collectors;
 
 /**
  * 📜 **Minecraft Function Component**
- * * Represents a single Minecraft function file ({@code .mcfunction}).
- * It stores a sequential list of {@code MinecraftCommand} objects, which
- * includes both executable commands and comments, and is responsible for
- * generating the final file content.
+ * <p>
+ * Represents a single Minecraft function file ({@code .mcfunction}).
+ * This component is responsible for storing a sequential list of commands and
+ * generating the final text content of the file.
+ * </p>
+ * File location structure: {@code data/<namespace>/function/path/to/name.mcfunction}
  */
 public class Function implements DatapackComponent {
 
-    // The path/name relative to the 'function' folder (e.g., "init/load").
+    private static final String FILE_EXTENSION = ".mcfunction";
+    private static final String CATEGORY_FOLDER = "function";
+
+    // The path/name relative to the 'function' folder (e.g., "init/load"), derived from FunctionPath.
     private final String path;
 
     // The sequential list of commands and command-like objects (comments) that form the function's content.
     private final List<MinecraftCommand> commands = new ArrayList<>();
 
     /**
-     * Constructs a new function component.
-     * * @param path The path and name of the function, relative to the {@code function} folder
-     * (e.g., "init/load" or "loop/tick").
-     * @throws IllegalArgumentException if the provided path is null or blank, which would result in an invalid file name.
+     * Constructs a new function component using a type-safe {@code FunctionPath} enum.
+     * * @param functionPath The enum constant defining the path and name of the function.
+     * @throws IllegalArgumentException if the provided {@code FunctionPath} object is null.
      */
-    public Function(String path) {
-        // Error Catching: Validate that the function path is a valid identifier fragment.
-        if (path == null || path.isBlank()) {
-            throw new IllegalArgumentException("Function path cannot be null or empty.");
+    public Function(FunctionPath functionPath) {
+        // --- Input Validation ---
+        if (functionPath == null) {
+            throw new IllegalArgumentException("The FunctionPath enum constant cannot be null when constructing a Function component.");
         }
-        this.path = path;
+        // Functionality maintained: extract the lower-cased, normalized path.
+        this.path = functionPath.getPath();
     }
 
     /**
-     * @return The constant category folder name for functions: {@code "function"}.
+     * Returns the category folder name for functions.
+     * * @return The constant category folder name: {@code "function"}.
      */
     @Override
     public String getCategory() {
-        return "function";
+        return CATEGORY_FOLDER;
     }
 
     /**
-     * @return The complete file path relative to the category folder, including the required {@code .mcfunction} extension.
+     * Returns the complete file path relative to the category folder.
+     * * @return The complete path including the required {@code .mcfunction} extension (e.g., {@code "init/load.mcfunction"}).
      */
     @Override
     public String getPath() {
-        return path + ".mcfunction";
+        return path + FILE_EXTENSION;
     }
 
     /**
@@ -57,17 +64,21 @@ public class Function implements DatapackComponent {
      * @throws IllegalArgumentException if the provided command object is null.
      */
     public void addLine(MinecraftCommand command) {
-        // Error Catching: Ensure we don't accidentally store a null reference, which would cause an NPE later.
+        // --- Error Catching ---
         if (command == null) {
-            throw new IllegalArgumentException("Cannot add a null command (or function line) to the function.");
+            // Refined message: clarifies that the command object itself is invalid.
+            throw new IllegalArgumentException("Cannot add a null reference to the command sequence of function: " + this.path);
         }
         this.commands.add(command);
     }
 
     /**
      * Generates the final content of the {@code .mcfunction} file.
-     * It calls the {@code generate()} method on every stored {@code MinecraftCommand} object
-     * and joins the results with a newline character, ensuring the correct file format.
+     * <p>
+     * This method iterates through all stored commands, calls their {@code generate()}
+     * method to retrieve their string representation, and joins them using the newline
+     * character (required file format).
+     * </p>
      * * @return A string containing all generated commands and comments, one per line.
      */
     @Override
