@@ -4,93 +4,93 @@ import Enums.ObjectiveType;
 import Enums.ScoreboardLocation;
 import Enums.Objective;
 
-public class ScoreboardObjective {
+public class ScoreboardObjectiveOld {
     private String name;
     private String type;
     private String customName = "";
     private boolean displaySideBar = false;
 
-    public ScoreboardObjective() {
+    public ScoreboardObjectiveOld() {
 
     }
 
-    public ScoreboardObjective(String name, String type) {
+    public ScoreboardObjectiveOld(String name, String type) {
         this.name = name;
         this.type = type;
     }
 
-    public ScoreboardObjective(String name, ObjectiveType type) {
+    public ScoreboardObjectiveOld(String name, ObjectiveType type) {
         this.name = name;
         this.type = type.toString();
     }
 
-    public ScoreboardObjective(String name, String type, String customName) {
+    public ScoreboardObjectiveOld(String name, String type, String customName) {
         this.name = name;
         this.type = type;
         this.customName = customName;
     }
 
-    public ScoreboardObjective(String name, String type, boolean displaySideBar) {
+    public ScoreboardObjectiveOld(String name, String type, boolean displaySideBar) {
         this.name = name;
         this.type = type;
         this.displaySideBar = displaySideBar;
     }
 
-    public ScoreboardObjective(String name, String type, String customName, boolean displaySideBar) {
+    public ScoreboardObjectiveOld(String name, String type, String customName, boolean displaySideBar) {
         this.name = name;
         this.type = type;
         this.customName = customName;
         this.displaySideBar = displaySideBar;
     }
 
-    public ScoreboardObjective(Objective name, String type) {
+    public ScoreboardObjectiveOld(Objective name, String type) {
         this.name = name.toString();
         this.type = type;
     }
 
-    public ScoreboardObjective(Objective name, String type, String customName) {
+    public ScoreboardObjectiveOld(Objective name, String type, String customName) {
         this.name = name.toString();
         this.type = type;
         this.customName = customName;
     }
 
-    public ScoreboardObjective(String name, ObjectiveType type, String customName) {
+    public ScoreboardObjectiveOld(String name, ObjectiveType type, String customName) {
         this.name = name;
         this.type = type.toString();
         this.customName = customName;
     }
 
-    public ScoreboardObjective(Objective name, String type, boolean displaySideBar) {
+    public ScoreboardObjectiveOld(Objective name, String type, boolean displaySideBar) {
         this.name = name.toString();
         this.type = type;
         this.displaySideBar = displaySideBar;
     }
 
-    public ScoreboardObjective(Objective name, String type, String customName, boolean displaySideBar) {
+    public ScoreboardObjectiveOld(Objective name, String type, String customName, boolean displaySideBar) {
         this.name = name.toString();
         this.type = type;
         this.customName = customName;
         this.displaySideBar = displaySideBar;
     }
 
-    public ScoreboardObjective(Objective name, ObjectiveType type) {
+    public ScoreboardObjectiveOld(Objective name, ObjectiveType type) {
         this.name = name.toString();
         this.type = type.toString();
     }
 
-    public ScoreboardObjective(Objective name, ObjectiveType type, String customName) {
+    public ScoreboardObjectiveOld(Objective name, ObjectiveType type, String customName) {
         this.name = name.toString();
         this.type = type.toString();
         this.customName = customName;
     }
 
-    public ScoreboardObjective(Objective name, ObjectiveType type, boolean displaySideBar) {
+    public ScoreboardObjectiveOld(Objective name, ObjectiveType type, boolean displaySideBar) {
         this.name = name.toString();
         this.type = type.toString();
         this.displaySideBar = displaySideBar;
     }
 
-    public ScoreboardObjective(Objective name, ObjectiveType type, String customName, boolean displaySideBar) {
+    public ScoreboardObjectiveOld(Objective name, ObjectiveType type, String customName, boolean displaySideBar) {
         this.name = name.toString();
         this.type = type.toString();
         this.customName = customName;

@@ -10,7 +10,7 @@ public class Scoreboard {
      scoreboard players
     */
     // players add
-    public String Add(String targets, ScoreboardObjective objective, int score) {
+    public String Add(String targets, ScoreboardObjectiveOld objective, int score) {
         return "scoreboard players add " + targets + " " + objective.getName() + " " + score;
     }
     public String Add(String targets, Objective objective, int score) {
@@ -22,7 +22,7 @@ public class Scoreboard {
     }
 
     // players get
-    public String Get(String target, ScoreboardObjective objective) {
+    public String Get(String target, ScoreboardObjectiveOld objective) {
         return "scoreboard players get " + target + " " + objective.getName();
     }
     public String Get(String target, Objective objective) {
@@ -34,7 +34,7 @@ public class Scoreboard {
     }
 
     // players operation
-    public String Operation(String targets, ScoreboardObjective targetObjective, ComparatorType operation, String source, ScoreboardObjective sourceObjective) {
+    public String Operation(String targets, ScoreboardObjectiveOld targetObjective, ComparatorType operation, String source, ScoreboardObjectiveOld sourceObjective) {
         return "scoreboard players operation " + targets + " " + targetObjective.getName() + " " + operation + " " + source + " " + sourceObjective.getName();
     }
 
@@ -55,7 +55,7 @@ public class Scoreboard {
     }
 
     // players remove
-    public String Remove(String targets, ScoreboardObjective objective, int score) {
+    public String Remove(String targets, ScoreboardObjectiveOld objective, int score) {
         return "scoreboard players remove " + targets + " " + objective.getName() + " " + score;
     }
     public String Remove(String targets, Objective objective, int score) {
@@ -67,7 +67,7 @@ public class Scoreboard {
         return "scoreboard players reset " + targets;
     }
 
-    public String Reset(String targets, ScoreboardObjective objective) {
+    public String Reset(String targets, ScoreboardObjectiveOld objective) {
         return "scoreboard players reset " + targets + " " + objective.getName();
     }
 
@@ -76,7 +76,7 @@ public class Scoreboard {
     }
 
     // players set
-    public String Set(String targets, ScoreboardObjective objective, int score) {
+    public String Set(String targets, ScoreboardObjectiveOld objective, int score) {
         return "scoreboard players set " + targets + " " + objective.getName() + " " + score;
     }
 

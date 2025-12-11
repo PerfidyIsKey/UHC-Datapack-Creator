@@ -108,7 +108,7 @@ public class Main {
     private ArrayList<ControlPoint> cpList = new ArrayList<>();
     private ArrayList<ControlPoint> controlPoints = new ArrayList<>();
     private ArrayList<Perk> perks = new ArrayList<>();
-    private ArrayList<ScoreboardObjective> scoreboardObjectives = new ArrayList<>();
+    private ArrayList<ScoreboardObjectiveOld> scoreboardObjectives = new ArrayList<>();
     private ArrayList<Player> players = new ArrayList<>();
     private ArrayList<Season> seasons = new ArrayList<>();
     private ArrayList<String> quotes = new ArrayList<>();
@@ -396,52 +396,52 @@ public class Main {
         }
 
         // Scoreboard objectives
-        scoreboardObjectives.add(new ScoreboardObjective(Objective.TimeDum, ObjectiveType.dummy, "\"Elapsed Time\""));
-        scoreboardObjectives.add(new ScoreboardObjective(Objective.Time, ObjectiveType.dummy, "\"Elapsed Time\"", true));
-        scoreboardObjectives.add(new ScoreboardObjective(Objective.Time.extendName(2), ObjectiveType.dummy, "\"Elapsed Time\""));
-        scoreboardObjectives.add(new ScoreboardObjective(Objective.SideDum, ObjectiveType.dummy));
-        scoreboardObjectives.add(new ScoreboardObjective(Objective.Hearts, ObjectiveType.health));
-        scoreboardObjectives.add(new ScoreboardObjective(Objective.Apples, "minecraft.used:minecraft.golden_apple", "\"Golden Apple\"", true));
-        scoreboardObjectives.add(new ScoreboardObjective(Objective.Stone, "minecraft.mined:minecraft.stone"));
-        scoreboardObjectives.add(new ScoreboardObjective(Objective.Diorite, "minecraft.mined:minecraft.diorite"));
-        scoreboardObjectives.add(new ScoreboardObjective(Objective.Andesite, "minecraft.mined:minecraft.andesite"));
-        scoreboardObjectives.add(new ScoreboardObjective(Objective.Granite, "minecraft.mined:minecraft.granite"));
-        scoreboardObjectives.add(new ScoreboardObjective(Objective.Deepslate, "minecraft.mined:minecraft.deepslate"));
-        scoreboardObjectives.add(new ScoreboardObjective(Objective.Mining, ObjectiveType.dummy, "\"I like mining-leaderboard\"", true));
-        scoreboardObjectives.add(new ScoreboardObjective(Objective.Deaths, ObjectiveType.deathCount));
-        scoreboardObjectives.add(new ScoreboardObjective(Objective.Kills, ObjectiveType.playerKillCount, true));
-        scoreboardObjectives.add(new ScoreboardObjective(Objective.Rank, ObjectiveType.dummy));
-        scoreboardObjectives.add(new ScoreboardObjective(Objective.MinHealth, ObjectiveType.dummy));
-        scoreboardObjectives.add(new ScoreboardObjective(Objective.Victory, ObjectiveType.dummy));
-        scoreboardObjectives.add(new ScoreboardObjective(Objective.WolfAge, ObjectiveType.dummy));
-        scoreboardObjectives.add(new ScoreboardObjective(Objective.RandomQuotes, ObjectiveType.dummy));
-        scoreboardObjectives.add(new ScoreboardObjective(Objective.DamageTaken, "minecraft.custom:minecraft.damage_taken"));
+        scoreboardObjectives.add(new ScoreboardObjectiveOld(Objective.TimeDum, ObjectiveType.dummy, "\"Elapsed Time\""));
+        scoreboardObjectives.add(new ScoreboardObjectiveOld(Objective.Time, ObjectiveType.dummy, "\"Elapsed Time\"", true));
+        scoreboardObjectives.add(new ScoreboardObjectiveOld(Objective.Time.extendName(2), ObjectiveType.dummy, "\"Elapsed Time\""));
+        scoreboardObjectives.add(new ScoreboardObjectiveOld(Objective.SideDum, ObjectiveType.dummy));
+        scoreboardObjectives.add(new ScoreboardObjectiveOld(Objective.Hearts, ObjectiveType.health));
+        scoreboardObjectives.add(new ScoreboardObjectiveOld(Objective.Apples, "minecraft.used:minecraft.golden_apple", "\"Golden Apple\"", true));
+        scoreboardObjectives.add(new ScoreboardObjectiveOld(Objective.Stone, "minecraft.mined:minecraft.stone"));
+        scoreboardObjectives.add(new ScoreboardObjectiveOld(Objective.Diorite, "minecraft.mined:minecraft.diorite"));
+        scoreboardObjectives.add(new ScoreboardObjectiveOld(Objective.Andesite, "minecraft.mined:minecraft.andesite"));
+        scoreboardObjectives.add(new ScoreboardObjectiveOld(Objective.Granite, "minecraft.mined:minecraft.granite"));
+        scoreboardObjectives.add(new ScoreboardObjectiveOld(Objective.Deepslate, "minecraft.mined:minecraft.deepslate"));
+        scoreboardObjectives.add(new ScoreboardObjectiveOld(Objective.Mining, ObjectiveType.dummy, "\"I like mining-leaderboard\"", true));
+        scoreboardObjectives.add(new ScoreboardObjectiveOld(Objective.Deaths, ObjectiveType.deathCount));
+        scoreboardObjectives.add(new ScoreboardObjectiveOld(Objective.Kills, ObjectiveType.playerKillCount, true));
+        scoreboardObjectives.add(new ScoreboardObjectiveOld(Objective.Rank, ObjectiveType.dummy));
+        scoreboardObjectives.add(new ScoreboardObjectiveOld(Objective.MinHealth, ObjectiveType.dummy));
+        scoreboardObjectives.add(new ScoreboardObjectiveOld(Objective.Victory, ObjectiveType.dummy));
+        scoreboardObjectives.add(new ScoreboardObjectiveOld(Objective.WolfAge, ObjectiveType.dummy));
+        scoreboardObjectives.add(new ScoreboardObjectiveOld(Objective.RandomQuotes, ObjectiveType.dummy));
+        scoreboardObjectives.add(new ScoreboardObjectiveOld(Objective.DamageTaken, "minecraft.custom:minecraft.damage_taken"));
         for (int i = 0; i < 4; i++) {
-            scoreboardObjectives.add(new ScoreboardObjective(Objective.CollarCheck.extendName(i), ObjectiveType.dummy));
+            scoreboardObjectives.add(new ScoreboardObjectiveOld(Objective.CollarCheck.extendName(i), ObjectiveType.dummy));
         }
 
         if (OperationMode.controlPoints) {
-            scoreboardObjectives.add(new ScoreboardObjective(Objective.CPScore, ObjectiveType.dummy, "\"Control Point score\"", true));
-            scoreboardObjectives.add(new ScoreboardObjective(Objective.CPHighscore, ObjectiveType.dummy));
-            scoreboardObjectives.add(new ScoreboardObjective(Objective.ReceivedPerk, ObjectiveType.dummy));
+            scoreboardObjectives.add(new ScoreboardObjectiveOld(Objective.CPScore, ObjectiveType.dummy, "\"Control Point score\"", true));
+            scoreboardObjectives.add(new ScoreboardObjectiveOld(Objective.CPHighscore, ObjectiveType.dummy));
+            scoreboardObjectives.add(new ScoreboardObjectiveOld(Objective.ReceivedPerk, ObjectiveType.dummy));
             for (int i = 0; i < 2; i++) {
-                scoreboardObjectives.add(new ScoreboardObjective(Objective.ControlPoint.extendName(i + 1), ObjectiveType.dummy));
-                scoreboardObjectives.add(new ScoreboardObjective(Objective.OnCP.extendName(i + 1), ObjectiveType.dummy));
-                scoreboardObjectives.add(new ScoreboardObjective(Objective.PrevCP.extendName(i + 1), ObjectiveType.dummy));
-                scoreboardObjectives.add(new ScoreboardObjective(Objective.DisplayCP.extendName(i + 1), ObjectiveType.dummy));
-                scoreboardObjectives.add(new ScoreboardObjective(Objective.ColorCP.extendName(i + 1), ObjectiveType.dummy));
+                scoreboardObjectives.add(new ScoreboardObjectiveOld(Objective.ControlPoint.extendName(i + 1), ObjectiveType.dummy));
+                scoreboardObjectives.add(new ScoreboardObjectiveOld(Objective.OnCP.extendName(i + 1), ObjectiveType.dummy));
+                scoreboardObjectives.add(new ScoreboardObjectiveOld(Objective.PrevCP.extendName(i + 1), ObjectiveType.dummy));
+                scoreboardObjectives.add(new ScoreboardObjectiveOld(Objective.DisplayCP.extendName(i + 1), ObjectiveType.dummy));
+                scoreboardObjectives.add(new ScoreboardObjectiveOld(Objective.ColorCP.extendName(i + 1), ObjectiveType.dummy));
             }
         }
 
         if (OperationMode.teamCreationInGame) {
-            scoreboardObjectives.add(new ScoreboardObjective(Objective.TempKills, ObjectiveType.playerKillCount));
-            scoreboardObjectives.add(new ScoreboardObjective(Objective.IsKiller, ObjectiveType.dummy));
-            scoreboardObjectives.add(new ScoreboardObjective(Objective.FoundTeam, ObjectiveType.dummy));
-            scoreboardObjectives.add(new ScoreboardObjective(Objective.Distance, ObjectiveType.dummy));
-            scoreboardObjectives.add(new ScoreboardObjective(Objective.TimesCalled, "minecraft.used:minecraft.goat_horn"));
+            scoreboardObjectives.add(new ScoreboardObjectiveOld(Objective.TempKills, ObjectiveType.playerKillCount));
+            scoreboardObjectives.add(new ScoreboardObjectiveOld(Objective.IsKiller, ObjectiveType.dummy));
+            scoreboardObjectives.add(new ScoreboardObjectiveOld(Objective.FoundTeam, ObjectiveType.dummy));
+            scoreboardObjectives.add(new ScoreboardObjectiveOld(Objective.Distance, ObjectiveType.dummy));
+            scoreboardObjectives.add(new ScoreboardObjectiveOld(Objective.TimesCalled, "minecraft.used:minecraft.goat_horn"));
             for (String s : cartesian) {
-                scoreboardObjectives.add(new ScoreboardObjective(Objective.Pos + s, ObjectiveType.dummy));
-                scoreboardObjectives.add(new ScoreboardObjective(Objective.Square + s, ObjectiveType.dummy));
+                scoreboardObjectives.add(new ScoreboardObjectiveOld(Objective.Pos + s, ObjectiveType.dummy));
+                scoreboardObjectives.add(new ScoreboardObjectiveOld(Objective.Square + s, ObjectiveType.dummy));
             }
         }
     }
@@ -806,11 +806,11 @@ public class Main {
         return bossBars.stream().filter(bossBar -> name.equals(bossBar.getName())).findAny().orElse(null);
     }
 
-    public ScoreboardObjective getObjectiveByName(String name) {
+    public ScoreboardObjectiveOld getObjectiveByName(String name) {
         return scoreboardObjectives.stream().filter(objective -> name.equals(objective.getName())).findAny().orElse(null);
     }
 
-    public ScoreboardObjective getObjectiveByName(Objective name) {
+    public ScoreboardObjectiveOld getObjectiveByName(Objective name) {
         return scoreboardObjectives.stream().filter(objective -> name.toString().equals(objective.getName())).findAny().orElse(null);
     }
 
@@ -977,11 +977,11 @@ public class Main {
                 .build());
 
         // Create scoreboard objectives
-        for (ScoreboardObjective objective : scoreboardObjectives) {
+        for (ScoreboardObjectiveOld objective : scoreboardObjectives) {
             fileCommands.add(objective.add());
         }
-        fileCommands.add(new ScoreboardObjective().setDisplay(ScoreboardLocation.below_name, Objective.Hearts));
-        fileCommands.add(new ScoreboardObjective().setDisplay(ScoreboardLocation.list, Objective.Hearts));
+        fileCommands.add(new ScoreboardObjectiveOld().setDisplay(ScoreboardLocation.below_name, Objective.Hearts));
+        fileCommands.add(new ScoreboardObjectiveOld().setDisplay(ScoreboardLocation.list, Objective.Hearts));
 
         // Create teams
         for (Team t : teams) {
@@ -3003,7 +3003,7 @@ public class Main {
         for (Player p : players) {
             fileCommands.add(scoreboard.Set(p.getPlayerName(), getObjectiveByName(Objective.Rank), p.getRank()));
         }
-        fileCommands.add(new ScoreboardObjective().setDisplay(ScoreboardLocation.sidebar, Objective.Rank));
+        fileCommands.add(new ScoreboardObjectiveOld().setDisplay(ScoreboardLocation.sidebar, Objective.Rank));
 
         return new FileData(FileName.display_rank, fileCommands);
     }
@@ -3027,7 +3027,7 @@ public class Main {
 
         fileCommands.add(scoreboard.Add(Constant.adminOld, getObjectiveByName(Objective.SideDum), 1));
         int i = 0;
-        for (ScoreboardObjective s : scoreboardObjectives) {
+        for (ScoreboardObjectiveOld s : scoreboardObjectives) {
             if (s.getDisplaySideBar()) {
                 i++;
                 fileCommands.add(Execute.If("@e[scores={SideDum=" + (10 * Constant.tickFrequencyLong * i) + "}]") +
