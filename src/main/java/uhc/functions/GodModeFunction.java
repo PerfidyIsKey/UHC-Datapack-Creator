@@ -22,6 +22,7 @@ import uhc.command.util.ItemSlot;
 import uhc.resource.EffectId;
 import uhc.resource.EnchantmentId;
 import uhc.resource.ItemId;
+import uhc.text.HexColor;
 import uhc.text.TextColor;
 import uhc.text.TextComponent;
 
@@ -107,10 +108,10 @@ public class GodModeFunction implements DatapackFunction {
                                 // Item Component: Custom Name (Decorative Text Formatting)
                                 .addComponent(CustomNameComponent.create(
                                         TextComponent.array(List.of(
-                                                TextComponent.complex("aA", TextColor.WHITE, false, false, true),
-                                                TextComponent.complex("The", "#8C3CC1", true, false, false),
-                                                TextComponent.complex(" Impaler ", "#E280FF", true, false, false),
-                                                TextComponent.complex("Aa", TextColor.WHITE, null, null, true)))))
+                                                TextComponent.simple("aA").color(TextColor.WHITE).obfuscated(true),
+                                                TextComponent.simple("The").color(HexColor.create("#8C3CC1")).bold(true),
+                                                TextComponent.simple(" Impaler ").color(HexColor.create("#E280FF")).bold(true),
+                                                TextComponent.simple("Aa").color(TextColor.WHITE).obfuscated(true)))))
                                 // Item Component: Lore/Description
                                 .addComponent(LoreComponent.create("This holy weapon impales anything it touches"))
                                 // Item Component: Damage (0 = Unbreakable/Max Durability)

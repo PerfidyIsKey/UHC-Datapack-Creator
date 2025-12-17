@@ -1,278 +1,201 @@
 package uhc.text;
 
 import uhc.arguments.entity.Entity;
-
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
  * 💬 **Minecraft Text Component Builder**
  * <p>
- * Utility class for creating Minecraft Text Component strings (JSON format), used in commands
- * like {@code /title}, {@code /tellraw}, and for item names/lore.
+ * Represents a structured Minecraft text component (JSON).
+ * Supports single objects, selectors, click events, and composite arrays.
  * </p>
- * This class handles:
- * <ul>
- * <li>Simple raw strings.</li>
- * <li>Complex components with formatting, colors (named or hex), and boolean styles.</li>
- * <li>Click/Hover event integration.</li>
- * <li>Entity selector components.</li>
- * <li>Combining multiple components into a JSON array.</li>
- * </ul>
  */
 public class TextComponent {
 
-    // --- Core Methods ---
+    private String text;
+    private String selector;
+    private String color;
+    private Boolean bold;
+    private Boolean italic;
+    private Boolean obfuscated;
+    private ClickEvent clickEvent;
+    private final List<TextComponent> extra = new ArrayList<>();
 
-    /**
-     * Creates a simple, unformatted Minecraft text component string.
-     * <p>
-     * Note: This method currently returns the plain string itself, as commands like {@code /say}
-     * or {@code /title} often accept raw text without JSON wrapping.
-     * </p>
-     * @param text The plain string to display.
-     * @return The plain string itself.
-     * @throws IllegalArgumentException if text content is null.
-     */
-    public static String simple(String text) {
-        if (text == null) {
-            throw new IllegalArgumentException("Text content cannot be null.");
-        }
-        return text;
+    // --- Constructors ---
+
+    private TextComponent() {}
+
+    private TextComponent(String text) {
+        this.text = text;
+    }
+
+    // --- Static Factory Methods ---
+
+    /** Factory for a simple text component. */
+    public static TextComponent simple(String text) {
+        if (text == null) throw new IllegalArgumentException("Text cannot be null.");
+        return new TextComponent(text);
+    }
+
+    /** Factory for a selector-based component (e.g., displays a player's name). */
+    public static TextComponent selector(Entity target) {
+        if (target == null) throw new IllegalArgumentException("Target cannot be null.");
+        TextComponent component = new TextComponent();
+        component.selector = target.toString();
+        return component;
     }
 
     /**
-     * Creates a single JSON component string with a click event.
-     * <p>
-     * Example generated JSON: {@code {"text":"Click Me","click_event":{"action":"run_command","command":"/say Hi"}}}
-     * </p>
-     * @param text The display text.
-     * @param action The click event action (e.g., "run_command", "suggest_command").
-     * @param command The value for the action (e.g., the command string to run).
-     * @return A raw JSON string for a single component.
-     * @throws IllegalArgumentException if any argument is null.
+     * Factory for a component with a click event.
+     * Often used for signs or chat messages that trigger commands.
      */
-    public static String withClickCommand(String text, String action, String command) {
+    public static TextComponent withClickCommand(String text, String action, String command) {
         if (text == null || action == null || command == null) {
             throw new IllegalArgumentException("Text, action, and command must be non-null.");
         }
-        // Properly escape quotes for inclusion within the JSON strings
-        String escapedText = text.replace("\"", "\\\"");
-        String escapedCommand = command.replace("\"", "\\\"");
-
-        return String.format(
-                "{\"text\":\"%s\",\"click_event\":{\"action\":\"%s\",\"command\":\"%s\"}}",
-                escapedText, action, escapedCommand
-        );
+        return TextComponent.simple(text).click(action, command);
     }
 
-    // --- Array Utility ---
-
-    /**
-     * Combines multiple raw JSON text component strings into a single JSON array string.
-     * This format is mandatory for item names, lore, and often used in complex title commands.
-     * <p>
-     * Note: Input strings are assumed to be valid component JSON (e.g., from {@code complex()} or {@code selector()}).
-     * </p>
-     * @param components A list of individual raw JSON component strings.
-     * @return A raw JSON array string (e.g., "[{...}, {...}]").
+    /** * Factory for a composite array component.
+     * Allows multiple components to be treated as a single type-safe TextComponent.
      */
-    public static String array(List<String> components) {
-        if (components == null || components.isEmpty()) {
-            return "[]";
-        }
-        // Collect the raw strings and join them with a comma, wrapping the whole thing in array brackets.
-        return "[" + components.stream().collect(Collectors.joining(",")) + "]";
+    public static TextComponent array(List<TextComponent> parts) {
+        TextComponent composite = new TextComponent();
+        composite.extra.addAll(parts);
+        return composite;
+    }
+
+    /** Varargs overload for the array factory. */
+    public static TextComponent array(TextComponent... parts) {
+        return array(List.of(parts));
+    }
+
+    // --- Builder Style Methods ---
+
+    public TextComponent color(TextColor color) {
+        this.color = (color != null) ? color.toString() : null;
+        return this;
+    }
+
+    public TextComponent color(HexColor color) {
+        this.color = (color != null) ? color.getColor() : null;
+        return this;
+    }
+
+    public TextComponent bold(Boolean bold) {
+        this.bold = bold;
+        return this;
+    }
+
+    public TextComponent italic(Boolean italic) {
+        this.italic = italic;
+        return this;
+    }
+
+    public TextComponent obfuscated(Boolean obfuscated) {
+        this.obfuscated = obfuscated;
+        return this;
     }
 
     /**
-     * Overload: Combines a mix of simple strings and raw JSON components into a single JSON array string.
-     * <p>
-     * Simple strings are automatically wrapped in minimal {@code {"text":"..."}} JSON components.
-     * </p>
-     * @param components A list of objects that are either raw JSON strings (complex components) or plain strings.
-     * @return A raw JSON array string.
+     * Internal click event setter.
+     * @param action The action (e.g., "run_command", "open_url").
+     * @param value The value (e.g., "/say Hi").
      */
-    public static String arrayFromMixed(List<Object> components) {
-        if (components == null || components.isEmpty()) {
-            return "[]";
-        }
-
-        // Convert the list of mixed objects into a list of raw JSON strings
-        List<String> rawJsonStrings = components.stream()
-                .map(obj -> {
-                    if (obj == null) return null;
-                    String str = obj.toString();
-
-                    // Heuristic check: if it doesn't look like JSON (doesn't start with '{'), wrap it.
-                    if (str.startsWith("{")) {
-                        return str; // Already looks like raw JSON component
-                    } else {
-                        // Wrap plain string in a minimal JSON component
-                        String escapedText = str.replace("\"", "\\\"");
-                        return String.format("{\"text\":\"%s\"}", escapedText);
-                    }
-                })
-                .filter(Objects::nonNull)
-                .collect(Collectors.toList());
-
-        return "[" + String.join(",", rawJsonStrings) + "]";
+    public TextComponent click(String action, String value) {
+        this.clickEvent = new ClickEvent(action, value);
+        return this;
     }
 
-
-    // --- Complex Component Methods ---
-
-    // Base Method
     /**
-     * Creates a single JSON text component string with full formatting options using a raw color string.
-     * <p>
-     * This method is the base for all complex text components, handling named colors, hex codes,
-     * and all boolean formatting arguments (null indicates the property is omitted from the JSON).
-     * </p>
-     * @param text The display text.
-     * @param colorString The color string (e.g., "red", or hex code "#RRGGBB"). Null to omit color.
-     * @param bold True/False to set bold, null to omit.
-     * @param italic True/False to set italic, null to omit.
-     * @param obfuscated True/False to set obfuscated, null to omit.
-     * @return A raw JSON string for a single component.
-     * @throws IllegalArgumentException if text content is null.
+     * Appends a child component to the "extra" list.
      */
-    public static String complex(
-            String text,
-            String colorString,
-            Boolean bold,
-            Boolean italic,
-            Boolean obfuscated
-    ) {
-        if (text == null) {
-            throw new IllegalArgumentException("Text content cannot be null.");
+    public TextComponent append(TextComponent other) {
+        if (other != null) {
+            this.extra.add(other);
         }
-        String escapedText = text.replace("\"", "\\\"");
+        return this;
+    }
 
+    // --- Generation Logic ---
+
+    /**
+     * Builds the final JSON string suitable for Minecraft commands.
+     */
+    public String build() {
+        // Handle Case: Composite Array (Container for children only)
+        if (text == null && selector == null && !extra.isEmpty()) {
+            return "[" + extra.stream()
+                    .map(TextComponent::build)
+                    .collect(Collectors.joining(",")) + "]";
+        }
+
+        // Handle Case: Minimal Raw String (No styles, no children)
+        if (color == null && bold == null && italic == null &&
+                obfuscated == null && clickEvent == null && extra.isEmpty() && selector == null) {
+            return "\"" + escape(text) + "\"";
+        }
+
+        // Handle Case: JSON Object {}
         StringBuilder sb = new StringBuilder("{");
-        sb.append("\"text\":\"").append(escapedText).append("\"");
+        boolean firstField = true;
 
-        if (colorString != null) {
-            sb.append(",\"color\":\"").append(colorString).append("\"");
+        if (text != null) {
+            sb.append("\"text\":\"").append(escape(text)).append("\"");
+            firstField = false;
+        } else if (selector != null) {
+            sb.append("\"selector\":\"").append(escape(selector)).append("\"");
+            firstField = false;
         }
-        if (bold != null) {
-            sb.append(",\"bold\":").append(bold);
+
+        if (color != null) appendField(sb, "color", color, firstField);
+        if (bold != null) appendField(sb, "bold", bold.toString(), false);
+        if (italic != null) appendField(sb, "italic", italic.toString(), false);
+        if (obfuscated != null) appendField(sb, "obfuscated", obfuscated.toString(), false);
+
+        if (clickEvent != null) {
+            sb.append(",\"click_event\":{\"action\":\"")
+                    .append(escape(clickEvent.action))
+                    .append("\",\"value\":\"")
+                    .append(escape(clickEvent.value))
+                    .append("\"}");
         }
-        if (italic != null) {
-            sb.append(",\"italic\":").append(italic);
-        }
-        if (obfuscated != null) {
-            sb.append(",\"obfuscated\":").append(obfuscated);
+
+        if (!extra.isEmpty()) {
+            sb.append(",\"extra\":[");
+            sb.append(extra.stream().map(TextComponent::build).collect(Collectors.joining(",")));
+            sb.append("]");
         }
 
         sb.append("}");
         return sb.toString();
     }
 
-    // Convenience Overloads
-
-    /**
-     * Overload: Creates a complex component using a type-safe TextColor enum and no formatting options.
-     */
-    public static String complex(String text, TextColor color) {
-        // Calls the base method with the enum's Minecraft name string
-        String colorString = (color != null) ? color.toString() : null; // Use toString() for safety
-        return complex(text, colorString, null, null, null);
-    }
-
-    /**
-     * Overload: Creates a complex component using a type-safe HexColor and no formatting options.
-     */
-    public static String complex(String text, HexColor color) {
-        // Calls the base method with the HexColor string
-        String colorString = (color != null) ? color.getColor() : null;
-        return complex(text, colorString, null, null, null);
-    }
-
-    /**
-     * Overload: Creates a complex component using a type-safe TextColor enum and full formatting options.
-     */
-    public static String complex(
-            String text,
-            TextColor color,
-            Boolean bold,
-            Boolean italic,
-            Boolean obfuscated
-    ) {
-        // Calls the base method with the enum's Minecraft name string
-        String colorString = (color != null) ? color.toString() : null; // Use toString() for safety
-        return complex(text, colorString, bold, italic, obfuscated);
-    }
-
-    /**
-     * Overload: Creates a complex component using a type-safe HexColor and full formatting options.
-     */
-    public static String complex(
-            String text,
-            HexColor color,
-            Boolean bold,
-            Boolean italic,
-            Boolean obfuscated
-    ) {
-        // Calls the base method with the HexColor string
-        String colorString = (color != null) ? color.getColor() : null;
-        return complex(text, colorString, bold, italic, obfuscated);
-    }
-
-
-    // --- Selector Component Methods ---
-
-    /**
-     * Creates a text component that displays the name of the entity specified by the target selector.
-     * <p>
-     * This component uses the {@code "selector"} key in the JSON.
-     * All formatting arguments are optional (can be null).
-     * </p>
-     * @param target The target selector entity argument.
-     * @param color The type-safe color enum.
-     * @param bold True/False to set bold, null to omit.
-     * @param italic True/False to set italic, null to omit.
-     * @param obfuscated True/False to set obfuscated, null to omit.
-     * @return A raw JSON string for a single component.
-     * @throws IllegalArgumentException if entity target is null.
-     */
-    public static String selector(Entity target,
-                                  TextColor color,
-                                  Boolean bold,
-                                  Boolean italic,
-                                  Boolean obfuscated
-    ) {
-        if (target == null) {
-            throw new IllegalArgumentException("Entity target for selector cannot be null.");
+    /** Helper to handle comma placement and value quoting in JSON fields. */
+    private void appendField(StringBuilder sb, String key, String value, boolean isFirst) {
+        if (!isFirst) sb.append(",");
+        sb.append("\"").append(key).append("\":");
+        // JSON booleans are not quoted
+        if (value.equals("true") || value.equals("false")) {
+            sb.append(value);
+        } else {
+            sb.append("\"").append(escape(value)).append("\"");
         }
-
-        StringBuilder sb = new StringBuilder("{");
-        // "selector" field uses the raw entity selector string
-        sb.append("\"selector\":\"").append(target).append("\"");
-
-        // The toString() method of TextColor should provide the Minecraft color name (e.g., "red")
-        if (color != null) {
-            sb.append(",\"color\":\"").append(color).append("\"");
-        }
-        if (bold != null) {
-            sb.append(",\"bold\":").append(bold);
-        }
-        if (italic != null) {
-            sb.append(",\"italic\":").append(italic);
-        }
-        if (obfuscated != null) {
-            sb.append(",\"obfuscated\":").append(obfuscated);
-        }
-
-        sb.append("}");
-        return sb.toString();
     }
 
-    /**
-     * Convenience overload for a simple, unformatted selector component.
-     */
-    public static String selector(Entity target) {
-        return selector(target, null, null, null, null);
+    /** Escapes backslashes and quotes to maintain valid JSON syntax. */
+    private String escape(String input) {
+        if (input == null) return "";
+        return input.replace("\\", "\\\\").replace("\"", "\\\"");
     }
+
+    @Override
+    public String toString() {
+        return build();
+    }
+
+    // --- Internal Record ---
+    private record ClickEvent(String action, String value) {}
 }

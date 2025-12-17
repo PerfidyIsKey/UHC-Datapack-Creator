@@ -69,6 +69,7 @@ import uhc.score.ScoreObjective;
 import uhc.text.DyeColor;
 import uhc.text.TextColor;
 import uhc.text.TextComponent;
+import uhc.text.HexColor;
 
 import java.io.IOException;
 import java.nio.file.*;
@@ -1310,11 +1311,11 @@ public class Main {
                 .replaceWith(
                         ComponentItemStack.create(ItemId.TRIDENT)
                                 .addComponent(CustomNameComponent.create(
-                                        TextComponent.array(List.of(
-                                                TextComponent.complex("aA", TextColor.WHITE, false, false, true),
-                                                TextComponent.complex("The", "#8C3CC1", true, false, false),
-                                                TextComponent.complex(" Impaler ", "#E280FF", true, false, false),
-                                                TextComponent.complex("Aa", TextColor.WHITE, null, null, true)))))
+                                                TextComponent.array(List.of(
+                                                                TextComponent.simple("aA").color(TextColor.WHITE).obfuscated(true),
+                                                                TextComponent.simple("The").color(HexColor.create("#8C3CC1")).bold(true),
+                                                                TextComponent.simple(" Impaler ").color(HexColor.create("#E280FF")).bold(true),
+                                                                TextComponent.simple("Aa").color(TextColor.WHITE).obfuscated(true)))))
                                 .addComponent(LoreComponent.create("This holy weapon impales anything it touches"))
                                 .addComponent(DamageComponent.create(0))
                                 .addComponent(EnchantmentsComponent.create(Map.of(
@@ -2192,12 +2193,14 @@ public class Main {
 
         // Display world size
         fileCommands.add(Title.create(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
-                .subtitle(TextComponent.complex("World size: ±" + world.getSize() + " blocks", TextColor.LIGHT_PURPLE))
+                .subtitle(TextComponent.simple("World size: ").color(TextColor.GRAY)
+                        .append(TextComponent.simple("±" + world.getSize()).color(TextColor.LIGHT_PURPLE).bold(true))
+                        .append(TextComponent.simple(" blocks").color(TextColor.GRAY)))
                 .build());
 
         // Display game start
         fileCommands.add(Title.create(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
-                .title(TextComponent.complex("Game Starting Now!", TextColor.GOLD, true, true, false))
+                .title(TextComponent.simple("Game Starting Now!").color(TextColor.GOLD).bold(true).italic(true))
                 .build());
 
         // Change title display time
@@ -2257,10 +2260,10 @@ public class Main {
 
         // Display Control Point 1 enabled
         fileCommands.add(Title.create(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
-                .subtitle(TextComponent.complex("is now enabled!", TextColor.LIGHT_PURPLE, true, true, false))
+                .subtitle(TextComponent.simple("is now enabled!").color(TextColor.LIGHT_PURPLE).bold(true).italic(true))
                 .build());
         fileCommands.add(Title.create(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
-                .title(TextComponent.complex("Control Point 1", TextColor.GOLD, true, true, false))
+                .title(TextComponent.simple("Control Point 1").color(TextColor.GOLD).bold(true).italic(true))
                 .build());
 
         // Make bossbars visible
@@ -2379,7 +2382,7 @@ public class Main {
 
         fileCommands.add(new TellRaw("@a", texts).sendRaw());
         fileCommands.add(Title.create(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
-                .title(TextComponent.complex(i + " minute(s) remaining", TextColor.GOLD, true, true, false))
+                .title(TextComponent.simple(i + " minute(s) remaining").color(TextColor.GOLD).bold(true).italic(true))
                 .build());
         return new FileData("" + FileName.minute_ + i, fileCommands);
     }
@@ -2430,10 +2433,10 @@ public class Main {
 
         // Title
         fileCommands.add(Title.create(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
-                .subtitle(TextComponent.complex("has been achieved!", TextColor.LIGHT_PURPLE, true, true, false))
+                .subtitle(TextComponent.simple("has been achieved!").color(TextColor.LIGHT_PURPLE).bold(true).italic(true))
                 .build());
         fileCommands.add(Title.create(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
-                .title(TextComponent.complex(team.getJSONColor() + " team victory", TextColor.GOLD, true, true, false))
+                .title(TextComponent.simple(team.getJSONColor() + " team victory").color(TextColor.GOLD).bold(true).italic(true))
                 .build());
 
         // Proceed to victory mode
@@ -2457,12 +2460,12 @@ public class Main {
         // Title
         fileCommands.add(new TellRaw("@a", texts).sendRaw());
         fileCommands.add(Title.create(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
-                .subtitle(TextComponent.complex("Absolute chad.", TextColor.LIGHT_PURPLE, true, true, false))
+                .subtitle(TextComponent.simple("Absolute chad.").color(TextColor.LIGHT_PURPLE).bold(true).italic(true))
                 .build());
         fileCommands.add(Title.create(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
                 .title(TextComponent.array(List.of(
-                        TextComponent.selector(Entity.ofSelector(TargetSelector.SENDER), TextColor.WHITE, false, true, false),
-                        TextComponent.complex(" victorious", TextColor.GOLD, true, false, false))))
+                        TextComponent.selector(Entity.ofSelector(TargetSelector.SENDER)).color(TextColor.WHITE).italic(true),
+                        TextComponent.simple(" victorious").color(TextColor.GOLD).bold(true))))
                 .build());
 
         // Proceed to victory mode
@@ -2485,10 +2488,10 @@ public class Main {
 
         // Title
         fileCommands.add(Title.create(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
-                .subtitle(TextComponent.complex("ggez", TextColor.LIGHT_PURPLE, true, true, false))
+                .subtitle(TextComponent.simple("ggez").color(TextColor.LIGHT_PURPLE).bold(true).italic(true))
                 .build());
         fileCommands.add(Title.create(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
-                .title(TextComponent.complex("Traitors Win", TextColor.GOLD, true, true, false))
+                .title(TextComponent.simple("Traitors Win").color(TextColor.GOLD).bold(true).italic(true))
                 .build());
 
         // Proceed to victory mode
@@ -2722,12 +2725,12 @@ public class Main {
 
         // Display spread size
         fileCommands.add(Title.create(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
-                .subtitle(TextComponent.complex("To be found at ±" + carePackageSpread + " blocks", TextColor.LIGHT_PURPLE, false, false, false))
+                .subtitle(TextComponent.simple("To be found at ±" + carePackageSpread + " blocks").color(TextColor.LIGHT_PURPLE))
                 .build());
 
         // Announce Care Packages
         fileCommands.add(Title.create(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
-                .title(TextComponent.complex(carePackageAmount + " Care Packages!", TextColor.GOLD, true, true, false))
+                .title(TextComponent.simple(carePackageAmount + " Care Packages!").color(TextColor.GOLD).bold(true).italic(true))
                 .build());
 
         // Change title display time
@@ -2885,10 +2888,10 @@ public class Main {
 
         // Announce Traitor Faction
         fileCommands.add(Title.create(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
-                .title(TextComponent.complex("A Traitor Faction", TextColor.RED, true, false, false))
+                .title(TextComponent.simple("A Traitor Faction").color(TextColor.RED).bold(true))
                 .build());
         fileCommands.add(Title.create(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
-                .subtitle(TextComponent.complex("has been founded!", TextColor.DARK_RED, true, false, false))
+                .subtitle(TextComponent.simple("has been founded!").color(TextColor.DARK_RED).bold(true))
                 .build());
 
         // Enable timers
@@ -2910,13 +2913,13 @@ public class Main {
         fileCommands.add(Execute.As("@a[tag=" + TagTemp.Traitor + "]") +
                 Title.create(Entity.ofSelector(TargetSelector.SENDER))
                         .actionbar(TextComponent.array(List.of(
-                                TextComponent.complex(">>> ", TextColor.GOLD),
-                                TextComponent.complex("Traitor Faction: ", TextColor.LIGHT_PURPLE),
+                                TextComponent.simple(">>> ").color(TextColor.GOLD),
+                                TextComponent.simple("Traitor Faction: ").color(TextColor.LIGHT_PURPLE),
                                 TextComponent.selector(Entity.ofSelector(
                                         TargetSelector.ALL_PLAYERS,
                                         SelectorArgumentsBuilder.create()
                                                 .tag(StaticEntityTag.TRAITOR))),
-                                TextComponent.complex(" <<<", TextColor.GOLD))))
+                                TextComponent.simple(" <<<").color(TextColor.GOLD))))
                         .build());
 
         return new FileData(FileName.traitor_actionbar, fileCommands);
@@ -3634,10 +3637,10 @@ public class Main {
         fileCommands.add(new TellRaw("@a", texts).sendRaw());
         texts.clear();
         fileCommands.add(Title.create(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
-                .subtitle(TextComponent.complex("has been captured!", TextColor.LIGHT_PURPLE, true, true, false))
+                .subtitle(TextComponent.simple("has been captured!").color(TextColor.LIGHT_PURPLE).bold(true).italic(true))
                 .build());
         fileCommands.add(Title.create(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
-                .title(TextComponent.complex("The Control Point", TextColor.GOLD, true, true, false))
+                .title(TextComponent.simple("The Control Point").color(TextColor.GOLD).bold(true).italic(true))
                 .build());
 
         // Check which team has captured the Control Point
