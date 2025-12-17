@@ -65,6 +65,7 @@ import uhc.attribute.AttributeSlot;
 import uhc.attribute.AttributeTooltipDisplayType;
 import uhc.resource.block.ColorableBlockId;
 import uhc.resource.block.WoodBlockId;
+import uhc.score.ScoreObjective;
 import uhc.text.DyeColor;
 import uhc.text.TextColor;
 import uhc.text.TextComponent;

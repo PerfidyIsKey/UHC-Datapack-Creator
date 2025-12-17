@@ -5,7 +5,7 @@ import uhc.data.nbt.util.TagConverter;
 import uhc.resource.EntityTag;
 import uhc.resource.EntityType;
 import uhc.game.GameMode;
-import uhc.game.ScoreObjective;
+import uhc.score.ScoreObjective;
 
 import java.util.ArrayList;
 import java.util.List;
