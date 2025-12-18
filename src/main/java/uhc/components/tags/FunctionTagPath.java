@@ -1,110 +1,71 @@
 package uhc.components.tags;
 
+import uhc.components.FunctionName;
 import uhc.core.DatapackConfig;
 
 /**
  * 🏷️ **Type-Safe Minecraft Function Tag Paths**
  * <p>
- * This enum defines all available function tag files, their path names, and their **recommended
- * namespace location**. By using this enum, we ensure tags are referenced correctly
- * and placed in the appropriate {@code tags/function/} folder.
+ * Defines references to function tags located in {@code tags/functions/}.
+ * Unlike standard functions, these are prefixed with '#' and can trigger multiple
+ * .mcfunction files at once.
  * </p>
  */
-public enum FunctionTagPath {
+public enum FunctionTagPath implements FunctionName {
 
-    // --- Critical Vanilla Tags (Explicitly DEFAULTING to 'minecraft' namespace) ---
-
-    /**
-     * Represents the mandatory {@code load.json} tag.
-     * Runs once when the world is loaded/reloaded (e.g., via {@code /reload}).
-     * Recommended namespace location: {@code minecraft}.
-     */
+    /** Mandatory vanilla load tag. Location: {@code minecraft:tags/functions/load.json} */
     LOAD,
 
-    /**
-     * Represents the mandatory {@code tick.json} tag.
-     * Runs every single game tick (20 times per second).
-     * Recommended namespace location: {@code minecraft}.
-     */
+    /** Mandatory vanilla tick tag. Location: {@code minecraft:tags/functions/tick.json} */
     TICK,
 
-    // --- Custom Tags ---
+    /** Custom loop tag, defaults to minecraft namespace. */
+    CUSTOM_LOOP,
 
-    /**
-     * Represents a custom sequence tag (e.g., {@code custom_loop.json}).
-     * If no namespace is specified, it uses the default {@code minecraft} namespace.
-     * Useful for user-triggered tags that don't need a specific location.
+    /** * Initial setup tag for the custom pack.
+     * Uses the namespace defined in {@link DatapackConfig#CUSTOM_NAMESPACE}.
      */
-    CUSTOM_LOOP, // No arguments provided. Delegates to the parameterless constructor.
+    UHC_INIT(DatapackConfig.CUSTOM_NAMESPACE);
 
-    /**
-     * Represents another custom tag explicitly designed for the custom namespace (e.g., {@code uhc_init.json}).
-     * Requires the custom namespace, defined in {@code DatapackConfig}.
-     */
-    UHC_INIT(DatapackConfig.CUSTOM_NAMESPACE), // Uses the custom namespace constant
-
-    ; // Semicolon required to separate enum constants from fields/methods
-
-    // The suggested namespace where this tag file component should be placed.
+    /** The namespace where the tag JSON file is physically stored. */
     private final String targetNamespace;
 
     /**
-     * Private constructor for tags whose target namespace is explicitly defined.
-     *
-     * @param targetNamespace The namespace where the tag file should reside (e.g., "minecraft" or "uhc_core_pack").
-     * @throws IllegalArgumentException if the provided namespace is null or empty (caught during initialization).
+     * Constructor for tags in a specific namespace.
+     * @param targetNamespace The namespace (e.g., "minecraft" or "uhc_core").
      */
     FunctionTagPath(String targetNamespace) {
-        if (targetNamespace == null || targetNamespace.isBlank()) {
-            // This is primarily a compile-time check for constant usage.
-            throw new IllegalArgumentException("Tag target namespace cannot be null or empty.");
-        }
         this.targetNamespace = targetNamespace;
     }
 
     /**
-     * Private parameterless constructor for tags that do not specify a namespace.
-     * This constructor defaults the tag location to the standard {@code "minecraft"} namespace,
-     * pulling the value from the centralized {@code DatapackConfig}.
+     * Default constructor.
+     * Defaults to {@link DatapackConfig#MINECRAFT_NAMESPACE}.
      */
     FunctionTagPath() {
-        // Delegates to the primary constructor, using the static constant for the default value.
         this(DatapackConfig.MINECRAFT_NAMESPACE);
     }
 
     /**
-     * Generates the final, complete Minecraft function tag name.
-     * <p>
-     * The method ensures the enum constant name is converted to **lowercase** for strict
-     * compliance with Minecraft's resource location rules.
-     * </p>
-     * Example: For {@code LOAD}, returns {@code "load"}.
-     *
-     * @return The complete tag name string (excluding the {@code .json} extension).
+     * @return The lowercase name of the tag file (e.g., "load").
      */
     public String getPath() {
-        // Ensures the output is lowercase, as required by Minecraft.
         return this.name().toLowerCase();
     }
 
     /**
-     * Retrieves the suggested namespace where this tag file component should be physically located.
-     * This value is essential for modules to correctly place the tag file on the disk.
-     *
-     * @return The target namespace string (e.g., "minecraft" or "uhc_core_pack").
-     */
-    public String getTargetNamespace() {
-        return targetNamespace;
-    }
-
-    /**
-     * Returns the string representation of the tag name.
-     * Delegates to {@code getPath()} to ensure consistent, lowercase formatting everywhere the object is used as a string.
-     *
-     * @return The lowercase tag name.
+     * Generates the full Minecraft identifier for use in commands.
+     * <p>Example: {@code #minecraft:load} or {@code #uhc:uhc_init}</p>
+     * @return The formatted tag identifier starting with '#'.
      */
     @Override
+    public String getIdentifier() {
+        // Prefixes with # for command syntax compliance
+        return "#" + targetNamespace + ":" + getPath();
+    }
+
+    @Override
     public String toString() {
-        return getPath();
+        return getIdentifier();
     }
 }

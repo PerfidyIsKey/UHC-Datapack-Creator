@@ -3,7 +3,7 @@ package commands;
 import uhc.arguments.coordinate.Vec3;
 import uhc.data.nbt.tags.CompoundTag;
 import uhc.data.nbt.util.TagConverter;
-import uhc.resource.EntityType;
+import uhc.resource.entity.EntityId;
 
 /**
  * Represents the Minecraft 'summon' command structure.
@@ -14,7 +14,7 @@ import uhc.resource.EntityType;
 public class Summon {
 
     // The required type of entity to be summoned.
-    private final EntityType entity;
+    private final EntityId entity;
     // The optional position to summon the entity. Defaults to executor's position if null.
     private Vec3 pos;
     // The optional NBT data tag for the entity.
@@ -25,18 +25,18 @@ public class Summon {
      *
      * @param entity The required entity type.
      */
-    private Summon(EntityType entity) {
+    private Summon(EntityId entity) {
         this.entity = entity;
     }
 
     /**
      * Static factory method to create a new Summon command instance.
      *
-     * @param entity The required {@link EntityType} to summon.
+     * @param entity The required {@link EntityId} to summon.
      * @return A new Summon instance ready for optional configuration.
      * @throws IllegalArgumentException if the provided {@code entity} is null.
      */
-    public static Summon create(EntityType entity) {
+    public static Summon create(EntityId entity) {
         if (entity == null) {
             throw new IllegalArgumentException("EntityType cannot be null for the summon command.");
         }

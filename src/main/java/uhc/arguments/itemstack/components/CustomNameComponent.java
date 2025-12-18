@@ -1,69 +1,50 @@
 package uhc.arguments.itemstack.components;
 
 import uhc.arguments.itemstack.ItemComponentTag;
+import uhc.text.TextComponent;
 
 /**
- * Represents the 'minecraft:custom_name' component.
- * This component's value is expected to be a raw JSON Text Component string,
- * which can be a simple quoted string (e.g., "My Name") or a complex JSON array/object
- * (e.g., [{"text":"Hi", "color":"gold"}]).
- * * Format: custom_name="My Name" OR custom_name=[{"text":"My Name"}]
+ * Represents the 'minecraft:custom_name' component for item stacks.
+ * <p>
+ * This class ensures that a {@link TextComponent} (whether a single object
+ * or an array) is correctly formatted for Minecraft's Item SNBT.
+ * </p>
  */
 public class CustomNameComponent implements ItemComponentTag {
-    private final String rawJsonText;
+    private final TextComponent textComponent;
 
-    /**
-     * Private constructor that processes the input string to ensure it is correctly
-     * quoted for simple text or left alone if it's already complex JSON.
-     * * @param rawJsonText The full JSON array/object string (e.g., "[{...}]")
-     * or a simple, unquoted text string (e.g., "My Name").
-     * @throws IllegalArgumentException if the input string is null or empty after trimming.
-     */
-    private CustomNameComponent(String rawJsonText) {
-        if (rawJsonText == null) {
-            throw new IllegalArgumentException("Raw JSON text for custom_name cannot be null.");
+    private CustomNameComponent(TextComponent textComponent) {
+        if (textComponent == null) {
+            throw new IllegalArgumentException("TextComponent for custom_name cannot be null.");
         }
-
-        String trimmedText = rawJsonText.trim();
-        if (trimmedText.isEmpty()) {
-            throw new IllegalArgumentException("Raw JSON text for custom_name cannot be empty.");
-        }
-
-        // --- Logic to ensure correct SNBT quoting ---
-
-        // 1. Check if the input is already a complex JSON object or array.
-        if (trimmedText.startsWith("{") || trimmedText.startsWith("[")) {
-            // Complex JSON (e.g., {"text":"..."}, [{"text":"..."}]). Use as is.
-            this.rawJsonText = rawJsonText;
-        }
-        // 2. Check if the input is already a simple quoted string.
-        else if (trimmedText.startsWith("\"") && trimmedText.endsWith("\"")) {
-            // Simple quoted string (e.g., "The Name"). Use as is.
-            this.rawJsonText = rawJsonText;
-        }
-        // 3. Otherwise, it's a plain, unquoted string from TextComponent.simple().
-        else {
-            // Wrap the plain string in quotes for valid SNBT output: custom_name="Value"
-            this.rawJsonText = "\"" + rawJsonText + "\"";
-        }
+        this.textComponent = textComponent;
     }
 
     /**
-     * Static factory method to create the component.
-     * @param rawJsonText The JSON text string.
-     * @return A new CustomNameComponent instance.
+     * Factory method using the type-safe TextComponent object.
+     * Supports single components, selectors, and composite arrays.
      */
-    public static CustomNameComponent create(String rawJsonText) {
-        return new CustomNameComponent(rawJsonText);
+    public static CustomNameComponent create(TextComponent textComponent) {
+        return new CustomNameComponent(textComponent);
     }
 
     /**
-     * Builds the SNBT representation of the component tag.
-     * @return The formatted component string, e.g., 'custom_name="Developer Mode"'.
+     * Convenience factory for plain text.
+     */
+    public static CustomNameComponent create(String plainText) {
+        return new CustomNameComponent(TextComponent.simple(plainText));
+    }
+
+    /**
+     * Builds the SNBT representation.
+     * <p>
+     * Uses single quotes around the build result to prevent JSON double-quote conflicts.
+     * Result: {@code custom_name='{"text":"...","color":"..."}'}
+     * OR {@code custom_name='[{"text":"..."},{...}]'}
+     * </p>
      */
     @Override
     public String buildComponentString() {
-        // The rawJsonText field now holds the final, correctly quoted/formatted value.
-        return "custom_name=" + rawJsonText;
+        return "custom_name='" + textComponent.build() + "'";
     }
 }

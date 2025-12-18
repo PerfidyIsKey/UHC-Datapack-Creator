@@ -3,7 +3,7 @@ package uhc.data.nbt.entity;
 import uhc.data.nbt.tags.CompoundTag;
 import uhc.data.nbt.tags.StringTag;
 import uhc.data.nbt.tags.ByteTag;
-import uhc.resource.EntityType;
+import uhc.resource.entity.EntityId;
 import uhc.data.resource.BooleanNbtProperty;
 
 /**
@@ -12,18 +12,18 @@ import uhc.data.resource.BooleanNbtProperty;
  */
 public class BaseEntityNbt {
 
-    private final EntityType id;
+    private final EntityId id;
     private String customName;
     private final CompoundTag nbt = CompoundTag.create("");
 
-    private BaseEntityNbt(EntityType id, String customName) {
+    private BaseEntityNbt(EntityId id, String customName) {
         this.id = id;
         this.customName = customName;
         // The explicit addition of the "id" tag has been removed here to match the
         // minimal output requirements requested for the /summon command.
     }
 
-    public static BaseEntityNbt create(EntityType id, String customName) {
+    public static BaseEntityNbt create(EntityId id, String customName) {
         return new BaseEntityNbt(id, customName);
     }
 

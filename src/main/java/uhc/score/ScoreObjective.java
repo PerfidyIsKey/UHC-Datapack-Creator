@@ -1,4 +1,4 @@
-package uhc.game;
+package uhc.score;
 
 /**
  * Defines type-safe keys for common score objectives.

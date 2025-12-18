@@ -1,7 +1,7 @@
 package ItemClasses;
 
 import EntityClasses.Attributes;
-import uhc.resource.EntityType;
+import uhc.resource.entity.EntityId;
 
 import java.util.ArrayList;
 
@@ -12,13 +12,13 @@ public class Horse extends Mob{
 
     // Constructors
     public Horse(float health, Boolean tame, int variant, String name, ArrayList<Attributes> attributes) {
-        super(EntityType.HORSE, health, name, attributes);
+        super(EntityId.HORSE, health, name, attributes);
         this.Tame = tame ? 1 : 0;
         this.Variant = variant;
     }
 
     public Horse(float health, Boolean tame, int variant, String name, Attributes attribute) {
-        super(EntityType.HORSE, health, name, attribute);
+        super(EntityId.HORSE, health, name, attribute);
         this.Tame = tame ? 1 : 0;
         this.Variant = variant;
     }

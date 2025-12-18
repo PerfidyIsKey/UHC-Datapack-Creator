@@ -5,7 +5,7 @@ import uhc.arguments.itemstack.ComponentItemStack;
 import uhc.arguments.itemstack.components.*;
 import uhc.arguments.itemstack.components.attributes.AttributeDisplayTag;
 import uhc.arguments.itemstack.components.attributes.AttributeModifierEntry;
-import uhc.arguments.targetselector.TargetSelector;
+import uhc.arguments.entity.TargetSelector;
 import uhc.attribute.AttributeId;
 import uhc.attribute.AttributeOperation;
 import uhc.attribute.AttributeSlot;
@@ -22,6 +22,7 @@ import uhc.command.util.ItemSlot;
 import uhc.resource.EffectId;
 import uhc.resource.EnchantmentId;
 import uhc.resource.ItemId;
+import uhc.text.HexColor;
 import uhc.text.TextColor;
 import uhc.text.TextComponent;
 
@@ -48,10 +49,11 @@ public class GodModeFunction implements DatapackFunction {
      * that has max-level enchantments and massive attribute modifiers.</li>
      * </ul>
      * </p>
-     * @param datapack The main {@code Datapack} object used to retrieve or create namespaces.
+     *
+     * @param datapack            The main {@code Datapack} object used to retrieve or create namespaces.
      * @param customNamespaceName The name of the custom namespace (e.g., "uhc_core_pack") where the function is stored.
      * @throws IllegalArgumentException If {@code datapack} is null or {@code customNamespaceName} is invalid.
-     * @throws IllegalStateException If the required {@code Namespace} cannot be obtained from the {@code Datapack} container.
+     * @throws IllegalStateException    If the required {@code Namespace} cannot be obtained from the {@code Datapack} container.
      */
     @Override
     public void register(Datapack datapack, String customNamespaceName) {
@@ -99,31 +101,27 @@ public class GodModeFunction implements DatapackFunction {
         // SECTION 2: Equip Custom Weapon
         currentFunction.addLine(Comment.create("SECTION 2: Equip Custom Weapon (The Impaler Trident)"));
         currentFunction.addLine(Comment.create("Replaces the item in the main hand with a custom, unbreakable Trident."));
-        currentFunction.addLine(ItemCommand.create(ItemCommand.ItemAction.REPLACE_WITH,
+        currentFunction.addLine(ItemCommand.create(
+                        ItemCommand.ItemAction.REPLACE_WITH,
                         ItemTargetEntity.create(Entity.ofSelector(TargetSelector.SENDER)))
                 .slot(ItemSlot.MAINHAND)
                 .replaceWith(
                         ComponentItemStack.create(ItemId.TRIDENT)
-                                // Item Component: Custom Name (Decorative Text Formatting)
-                                .addComponent(CustomNameComponent.create(
+                                .addComponent(CustomNameComponent.create(   // Item Component: Custom Name (Decorative Text Formatting)
                                         TextComponent.array(List.of(
-                                                TextComponent.complex("aA", TextColor.WHITE, false, false, true),
-                                                TextComponent.complex("The", "#8C3CC1", true, false, false),
-                                                TextComponent.complex(" Impaler ", "#E280FF", true, false, false),
-                                                TextComponent.complex("Aa", TextColor.WHITE, null, null, true)))))
-                                // Item Component: Lore/Description
-                                .addComponent(LoreComponent.create("This holy weapon impales anything it touches"))
-                                // Item Component: Damage (0 = Unbreakable/Max Durability)
-                                .addComponent(DamageComponent.create(0))
-                                // Item Component: Max-Level Enchantments (255)
-                                .addComponent(EnchantmentsComponent.create(Map.of(
+                                                TextComponent.simple("aA").color(TextColor.WHITE).obfuscated(true),
+                                                TextComponent.simple("The").color(HexColor.create("#8C3CC1")).bold(true),
+                                                TextComponent.simple(" Impaler ").color(HexColor.create("#E280FF")).bold(true),
+                                                TextComponent.simple("Aa").color(TextColor.WHITE).obfuscated(true)))))
+                                .addComponent(LoreComponent.create("This holy weapon impales anything it touches")) // Item Component: Lore/Description
+                                .addComponent(DamageComponent.create(0))    // Item Component: Damage (0 = Unbreakable/Max Durability)
+                                .addComponent(EnchantmentsComponent.create(Map.of(  // Item Component: Max-Level Enchantments (255)
                                         EnchantmentId.FIRE_ASPECT, 255,
                                         EnchantmentId.SHARPNESS, 255,
                                         EnchantmentId.IMPALING, 255,
                                         EnchantmentId.LOYALTY, 255,
                                         EnchantmentId.EFFICIENCY, 255)))
-                                // Item Component: Attribute Modifiers (1000.0 added to Armor and Attack Damage)
-                                .addComponent(AttributeModifiersComponent.create(List.of(
+                                .addComponent(AttributeModifiersComponent.create(List.of(   // Item Component: Attribute Modifiers (1000.0 added to Armor and Attack Damage)
                                         AttributeModifierEntry.create(
                                                 AttributeId.ARMOR,
                                                 AttributeId.ARMOR,
@@ -138,8 +136,7 @@ public class GodModeFunction implements DatapackFunction {
                                                 AttributeOperation.ADD_VALUE,
                                                 AttributeSlot.MAINHAND,
                                                 AttributeDisplayTag.create(AttributeTooltipDisplayType.HIDDEN)))))
-                                // Item Component: Unbreakable Flag
-                                .addComponent(UnbreakableComponent.create())));
+                                .addComponent(UnbreakableComponent.create()))); // Item Component: Unbreakable Flag
 
 
         // --- 4. Register Component ---

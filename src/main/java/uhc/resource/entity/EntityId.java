@@ -1,10 +1,10 @@
-package uhc.resource;
+package uhc.resource.entity;
 
 /**
  * Defines the valid resource locations for Minecraft entities,
  * automatically applying the 'minecraft:' namespace by default.
  */
-public enum EntityType {
+public enum EntityId {
     AREA_EFFECT_CLOUD("area_effect_cloud"),
     ARMOR_STAND("armor_stand"),
     DOLPHIN("dolphin"),
@@ -22,11 +22,11 @@ public enum EntityType {
      * Constructor. Prefixes with "minecraft:" unless a namespace is already present.
      */
 
-    EntityType(String path, String namespace) {
+    EntityId(String path, String namespace) {
         this.resourceLocation = namespace + ":" + path;
     }
 
-    EntityType(String path) {
+    EntityId(String path) {
         this.resourceLocation = DEFAULT_NAMESPACE + ":" + path;
     }
 

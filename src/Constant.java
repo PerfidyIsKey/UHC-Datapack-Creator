@@ -2,20 +2,20 @@ import Enums.WorldShape;
 import uhc.arguments.block.ColumnPos;
 import uhc.arguments.entity.Entity;
 import uhc.arguments.coordinate.Vec2;
-import uhc.arguments.targetselector.SelectorArgumentsBuilder;
-import uhc.arguments.targetselector.TargetSelector;
-import uhc.resource.EntityType;
+import uhc.arguments.entity.SelectorArgumentsBuilder;
+import uhc.arguments.entity.TargetSelector;
+import uhc.resource.entity.EntityId;
 
 public class Constant {
     // Unit conversion
     public static final int secPerMinute = 60;
 
     // Admin entity
-    public static final String adminOld = "@n[type=" + EntityType.MARKER +"]";
+    public static final String adminOld = "@n[type=" + EntityId.MARKER +"]";
     public static final Entity admin = Entity.ofSelector(
             TargetSelector.NEAREST_ENTITY,
             SelectorArgumentsBuilder.create()
-                    .type(EntityType.MARKER)
+                    .type(EntityId.MARKER)
     );
 
     // Tick speed

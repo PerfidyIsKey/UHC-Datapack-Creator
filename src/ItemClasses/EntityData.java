@@ -1,14 +1,14 @@
 package ItemClasses;
 
-import uhc.resource.EntityType;
+import uhc.resource.entity.EntityId;
 
 public class EntityData implements Components{
     // Fields
-    EntityType id;  // String representation of the entity's ID. Does not exist for the Player entity.
+    EntityId id;  // String representation of the entity's ID. Does not exist for the Player entity.
     String CustomName;    // The custom name JSON text component of this entity. Appears in player death messages and villager trading interfaces, as well as above the entity when the player's cursor is over it. May be empty or not exist.
 
     // Constructor
-    public EntityData(EntityType id, String name) {
+    public EntityData(EntityId id, String name) {
         this.id = id;
         this.CustomName = name;
     }

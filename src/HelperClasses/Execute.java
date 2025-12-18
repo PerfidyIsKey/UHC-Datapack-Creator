@@ -2,6 +2,7 @@ package HelperClasses;
 
 import Enums.*;
 import uhc.resource.StaticBlockId;
+import uhc.score.ComparatorType;
 
 public class Execute {
 
@@ -114,19 +115,19 @@ public class Execute {
     }
 
     // if score
-    public static String If(String entity1, ScoreboardObjective objective1, ComparatorType comp, String entity2, ScoreboardObjective objective2) {
+    public static String If(String entity1, ScoreboardObjectiveOld objective1, ComparatorType comp, String entity2, ScoreboardObjectiveOld objective2) {
         return If(entity1, objective1, comp, entity2, objective2, true);
     }
 
-    public static String If(String entity1, ScoreboardObjective objective1, ComparatorType comp, String entity2, ScoreboardObjective objective2, Boolean run) {
+    public static String If(String entity1, ScoreboardObjectiveOld objective1, ComparatorType comp, String entity2, ScoreboardObjectiveOld objective2, Boolean run) {
         return Standard(IfNext(entity1, objective1, comp, entity2, objective2), run);
     }
 
-    public static String IfNext(String entity1, ScoreboardObjective objective1, ComparatorType comp, String entity2, ScoreboardObjective objective2) {
+    public static String IfNext(String entity1, ScoreboardObjectiveOld objective1, ComparatorType comp, String entity2, ScoreboardObjectiveOld objective2) {
         return IfNext(entity1, objective1, comp, entity2, objective2, false);
     }
 
-    public static String IfNext(String entity1, ScoreboardObjective objective1, ComparatorType comp, String entity2, ScoreboardObjective objective2, Boolean run) {
+    public static String IfNext(String entity1, ScoreboardObjectiveOld objective1, ComparatorType comp, String entity2, ScoreboardObjectiveOld objective2, Boolean run) {
         return Next("if score " + entity1 + " " + objective1.getName() + " " + comp + " " + entity2 + " " + objective2.getName() + " ", run);
     }
 
@@ -287,20 +288,20 @@ public class Execute {
     }
 
     // store score
-    public static String Store(ExecuteStore storeType, String entity, ScoreboardObjective objective) {
+    public static String Store(ExecuteStore storeType, String entity, ScoreboardObjectiveOld objective) {
         return Store(storeType, entity, objective, true);
     }
 
-    public static String Store(ExecuteStore storeType, String entity, ScoreboardObjective objective, Boolean run) {
+    public static String Store(ExecuteStore storeType, String entity, ScoreboardObjectiveOld objective, Boolean run) {
         return Standard(StoreNext(storeType, entity, objective), run);
     }
 
-    public static String StoreNext(ExecuteStore storeType, String entity, ScoreboardObjective objective) {
+    public static String StoreNext(ExecuteStore storeType, String entity, ScoreboardObjectiveOld objective) {
         return StoreNext(storeType, entity, objective, false);
     }
 
 
-    public static String StoreNext(ExecuteStore storeType, String entity, ScoreboardObjective objective, Boolean run) {
+    public static String StoreNext(ExecuteStore storeType, String entity, ScoreboardObjectiveOld objective, Boolean run) {
         return wrap("store " + storeType + " score " + entity + " " + objective.getName() + " ", false, run);
     }
 
