@@ -1,8 +1,5 @@
 package uhc.arguments.entity;
 
-import uhc.arguments.targetselector.SelectorArgumentsBuilder;
-import uhc.arguments.targetselector.TargetSelector;
-
 /**
  * Represents the {@code <targets>} argument in Minecraft commands.
  * <p>

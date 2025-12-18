@@ -2,8 +2,8 @@ import Enums.WorldShape;
 import uhc.arguments.block.ColumnPos;
 import uhc.arguments.entity.Entity;
 import uhc.arguments.coordinate.Vec2;
-import uhc.arguments.targetselector.SelectorArgumentsBuilder;
-import uhc.arguments.targetselector.TargetSelector;
+import uhc.arguments.entity.SelectorArgumentsBuilder;
+import uhc.arguments.entity.TargetSelector;
 import uhc.resource.EntityType;
 
 public class Constant {

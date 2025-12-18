@@ -1,4 +1,4 @@
-package uhc.arguments.targetselector;
+package uhc.arguments.entity;
 
 import uhc.data.nbt.tags.CompoundTag;
 import uhc.data.nbt.util.TagConverter;

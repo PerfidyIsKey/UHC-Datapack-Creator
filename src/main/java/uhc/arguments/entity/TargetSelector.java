@@ -1,4 +1,4 @@
-package uhc.arguments.targetselector;
+package uhc.arguments.entity;
 
 /**
  * Defines the base target selector variables used in Minecraft commands.
