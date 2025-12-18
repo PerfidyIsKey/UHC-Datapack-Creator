@@ -4,7 +4,7 @@ import uhc.data.nbt.entity.data.ItemData;
 import uhc.data.nbt.tags.CompoundTag;
 import uhc.data.nbt.tags.IntTag;
 import uhc.data.nbt.tags.StringTag;
-import uhc.resource.EntityType;
+import uhc.resource.entity.EntityId;
 import java.util.Map;
 import uhc.data.nbt.NBTTag;
 import uhc.data.resource.ItemComponentType;
@@ -21,7 +21,7 @@ public class ItemNbtBuilder implements EntityNbtBuilder {
     private ItemNbtBuilder(ItemData data) {
         this.data = data;
         // Use ITEM entity type for the base NBT (though no common properties are expected)
-        this.baseNbt = BaseEntityNbt.create(EntityType.ITEM, null);
+        this.baseNbt = BaseEntityNbt.create(EntityId.ITEM, null);
     }
 
     public static ItemNbtBuilder create(ItemData data) {

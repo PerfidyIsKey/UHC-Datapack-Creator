@@ -3,7 +3,7 @@ package uhc.arguments.entity;
 import uhc.data.nbt.tags.CompoundTag;
 import uhc.data.nbt.util.TagConverter;
 import uhc.resource.EntityTag;
-import uhc.resource.EntityType;
+import uhc.resource.entity.EntityId;
 import uhc.game.GameMode;
 import uhc.score.ScoreObjective;
 
@@ -179,7 +179,7 @@ public class SelectorArgumentsBuilder {
      * Includes a specific entity type in the selection.
      * @param type The required EntityType.
      */
-    public SelectorArgumentsBuilder type(EntityType type) {
+    public SelectorArgumentsBuilder type(EntityId type) {
         return type(type, false);
     }
 
@@ -188,7 +188,7 @@ public class SelectorArgumentsBuilder {
      * @param type The required EntityType.
      * @param not If true, excludes the type (e.g., {@code type=!cow}).
      */
-    public SelectorArgumentsBuilder type(EntityType type, Boolean not) {
+    public SelectorArgumentsBuilder type(EntityId type, Boolean not) {
         Objects.requireNonNull(type, "EntityType cannot be null.");
         String prefix = not ? "!" : "";
         this.arguments.add("type=" + prefix + type.getResourceLocation());

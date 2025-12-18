@@ -2,6 +2,7 @@ package uhc.command.commands;
 
 import uhc.arguments.entity.Entity;
 import uhc.command.MinecraftCommand;
+import uhc.resource.bossbar.BossbarId;
 import uhc.resource.bossbar.BossbarStyle;
 import uhc.text.BossbarColor;
 import uhc.text.TextComponent;
@@ -10,7 +11,7 @@ import uhc.text.TextComponent;
  * 🚧 **Bossbar Command Builder**
  */
 public class BossbarCommand implements MinecraftCommand {
-    private String id;
+    private BossbarId id;
     private TextComponent name;
     private BossbarAction action;
     private BossbarGetProperty getProperty;
@@ -54,7 +55,7 @@ public class BossbarCommand implements MinecraftCommand {
         return this;
     }
 
-    public BossbarCommand id(String id) {
+    public BossbarCommand id(BossbarId id) {
         this.id = id;
         return this;
     }

@@ -1,19 +1,34 @@
 package uhc.command.commands;
 
 import uhc.arguments.block.BlockPos;
+import uhc.arguments.coordinate.Rotation;
+import uhc.arguments.coordinate.Swizzle;
 import uhc.arguments.coordinate.Vec3;
 import uhc.arguments.entity.Entity;
+import uhc.arguments.entity.EntityAnchor;
 import uhc.command.MinecraftCommand;
 import uhc.arguments.block.BlockPredicate;
 import uhc.data.nbt.DataPath;
 import uhc.data.storage.StoragePath;
+import uhc.resource.bossbar.BossbarId;
+import uhc.resource.coordinate.HeightMap;
+import uhc.resource.data.DataType;
+import uhc.resource.dimension.DimensionId;
+import uhc.resource.entity.EntityId;
+import uhc.resource.entity.RelationId;
+import uhc.resource.predicate.PredicateId;
+import uhc.score.ComparatorType;
+import uhc.score.Range;
 import uhc.score.ScoreboardObjective;
+
+import java.util.Objects;
 
 /**
  * 🛠️ **Execute Command Builder**
  * <p>
- * Provides a fluent API to construct complex {@code /execute} commands.
- * This class supports chaining multiple modifiers before executing a final command.
+ * Constructs the complex {@code /execute} command. This class follows a fluent builder pattern,
+ * allowing you to chain modifiers like {@code as}, {@code at}, and {@code if} before
+ * finishing with a {@code run} action.
  * </p>
  */
 public class ExecuteCommand implements MinecraftCommand {
@@ -32,164 +47,222 @@ public class ExecuteCommand implements MinecraftCommand {
 
     // --- Basic Modifiers ---
 
-    public ExecuteCommand align(String axes) {
-        command.append(" align ").append(axes);
-        return this;
+    /** Aligns execution to the specified axes. */
+    public ExecuteCommand align(Swizzle axes) {
+        return appendModifier("align", axes);
     }
 
-    public ExecuteCommand anchored(String anchor) {
-        command.append(" anchored ").append(anchor);
-        return this;
+    /** Sets the anchor point (eyes/feet) for further relative offsets. */
+    public ExecuteCommand anchored(EntityAnchor anchor) {
+        return appendModifier("anchored", anchor);
     }
 
+    /** Changes the execution entity (the context of '@s'). */
     public ExecuteCommand as(Entity targets) {
-        command.append(" as ").append(targets);
-        return this;
+        return appendModifier("as", targets);
     }
 
+    /** Changes the execution position and rotation to match the target. */
     public ExecuteCommand at(Entity targets) {
-        command.append(" at ").append(targets);
-        return this;
+        return appendModifier("at", targets);
     }
 
+    /** Rotates the execution context to face a specific coordinate. */
     public ExecuteCommand facing(Vec3 pos) {
-        command.append(" facing ").append(pos);
-        return this;
+        return appendModifier("facing", pos);
     }
 
-    public ExecuteCommand facingEntity(Entity targets, String anchor) {
+    /** Rotates the execution context to face a specific entity's anchor. */
+    public ExecuteCommand facingEntity(Entity targets, EntityAnchor anchor) {
+        Objects.requireNonNull(targets);
+        Objects.requireNonNull(anchor);
         command.append(" facing entity ").append(targets).append(" ").append(anchor);
         return this;
     }
 
-    public ExecuteCommand in(String dimension) {
-        command.append(" in ").append(dimension);
-        return this;
+    /** Changes the dimension (world) of execution. */
+    public ExecuteCommand in(DimensionId dimension) {
+        return appendModifier("in", dimension);
     }
 
-    public ExecuteCommand on(String relation) {
-        command.append(" on ").append(relation);
-        return this;
+    /** Changes execution context to an entity related to the current one (e.g., owner). */
+    public ExecuteCommand on(RelationId relation) {
+        return appendModifier("on", relation);
     }
 
+    /** Shifts the execution position to specific coordinates. */
     public ExecuteCommand positioned(Vec3 pos) {
-        command.append(" positioned ").append(pos);
-        return this;
+        return appendModifier("positioned", pos);
     }
 
+    /** Shifts the execution position to match the target's position. */
     public ExecuteCommand positionedAs(Entity targets) {
-        command.append(" positioned as ").append(targets);
-        return this;
+        return appendModifier("positioned as", targets);
     }
 
-    public ExecuteCommand positionedOver(String heightmap) {
-        command.append(" positioned over ").append(heightmap);
-        return this;
+    /** Shifts the execution position to the top of a specific heightmap. */
+    public ExecuteCommand positionedOver(HeightMap heightmap) {
+        return appendModifier("positioned over", heightmap);
     }
 
-    public ExecuteCommand rotated(String rot) {
-        command.append(" rotated ").append(rot);
-        return this;
+    /** Sets the execution rotation. */
+    public ExecuteCommand rotated(Rotation rot) {
+        return appendModifier("rotated", rot);
     }
 
+    /** Matches the rotation of the target entity. */
     public ExecuteCommand rotatedAs(Entity targets) {
-        command.append(" rotated as ").append(targets);
-        return this;
+        return appendModifier("rotated as", targets);
     }
 
-    public ExecuteCommand summon(String entity) {
-        command.append(" summon ").append(entity);
-        return this;
+    /** Temporary summoned entity context for the command. */
+    public ExecuteCommand summon(EntityId entity) {
+        return appendModifier("summon", entity);
     }
 
     // --- Store Modifiers ---
 
-    public ExecuteCommand storeResultBlock(BlockPos targetPos, DataPath path, String type, double scale) {
-        command.append(" store result block ").append(targetPos).append(" ").append(path).append(" ").append(type).append(" ").append(scale);
+    /** Stores the result of the command into a block's NBT data. */
+    public ExecuteCommand storeResultBlock(BlockPos targetPos, DataPath path, DataType type, double scale) {
+        Objects.requireNonNull(targetPos);
+        Objects.requireNonNull(path);
+        Objects.requireNonNull(type);
+        command.append(" store result block ").append(targetPos).append(" ").append(path)
+                .append(" ").append(type).append(" ").append(scale);
         return this;
     }
 
-    public ExecuteCommand storeSuccessBossbar(String id, String property) {
+    /** Stores the success (0 or 1) of the command into a bossbar. */
+    public ExecuteCommand storeSuccessBossbar(BossbarId id, BossbarStoreProperty property) {
+        Objects.requireNonNull(id);
+        Objects.requireNonNull(property);
         command.append(" store success bossbar ").append(id).append(" ").append(property);
         return this;
     }
 
-    public ExecuteCommand storeResultEntity(Entity target, DataPath path, String type, double scale) {
-        command.append(" store result entity ").append(target).append(" ").append(path).append(" ").append(type).append(" ").append(scale);
+    /** Stores the result of the command into an entity's NBT data. */
+    public ExecuteCommand storeResultEntity(Entity target, DataPath path, DataType type, double scale) {
+        Objects.requireNonNull(target);
+        Objects.requireNonNull(path);
+        Objects.requireNonNull(type);
+        command.append(" store result entity ").append(target).append(" ").append(path)
+                .append(" ").append(type).append(" ").append(scale);
         return this;
     }
 
+    /** Stores the result of the command into a scoreboard objective. */
     public ExecuteCommand storeResultScore(Entity targets, ScoreboardObjective objective) {
+        Objects.requireNonNull(targets);
+        Objects.requireNonNull(objective);
         command.append(" store result score ").append(targets).append(" ").append(objective);
         return this;
     }
 
     // --- Conditional (If/Unless) Modifiers ---
 
+    /** Proceeds only if the target entity exists. */
     public ExecuteCommand ifEntity(Entity entities) {
-        command.append(" if entity ").append(entities);
-        return this;
+        return appendModifier("if entity", entities);
     }
 
+    /** Proceeds only if the target entity does not exist. */
     public ExecuteCommand unlessEntity(Entity entities) {
-        command.append(" unless entity ").append(entities);
-        return this;
+        return appendModifier("unless entity", entities);
     }
 
+    /** Proceeds only if the block at the position matches the predicate. */
     public ExecuteCommand ifBlock(BlockPos pos, BlockPredicate block) {
+        Objects.requireNonNull(pos);
+        Objects.requireNonNull(block);
         command.append(" if block ").append(pos).append(" ").append(block);
         return this;
     }
 
-    public ExecuteCommand ifScoreMatches(Entity target, ScoreboardObjective objective, String range) {
+    /** Proceeds only if the score matches a certain range. */
+    public ExecuteCommand ifScoreMatches(Entity target, ScoreboardObjective objective, Range range) {
+        Objects.requireNonNull(target);
+        Objects.requireNonNull(objective);
+        Objects.requireNonNull(range);
         command.append(" if score ").append(target).append(" ").append(objective).append(" matches ").append(range);
         return this;
     }
 
-    public ExecuteCommand ifScoreCompare(Entity target, ScoreboardObjective targetObj, String operator, Entity source, ScoreboardObjective sourceObj) {
+    /** Compares two scores using a mathematical operator. */
+    public ExecuteCommand ifScoreCompare(Entity target, ScoreboardObjective targetObj, ComparatorType operator, Entity source, ScoreboardObjective sourceObj) {
+        Objects.requireNonNull(target);
+        Objects.requireNonNull(targetObj);
+        Objects.requireNonNull(operator);
+        Objects.requireNonNull(source);
+        Objects.requireNonNull(sourceObj);
         command.append(" if score ").append(target).append(" ").append(targetObj)
                 .append(" ").append(operator).append(" ")
                 .append(source).append(" ").append(sourceObj);
         return this;
     }
 
+    /** Checks NBT data in storage. */
     public ExecuteCommand ifDataStorage(StoragePath source, DataPath path) {
+        Objects.requireNonNull(source);
+        Objects.requireNonNull(path);
         command.append(" if data storage ").append(source).append(" ").append(path);
         return this;
     }
 
-    public ExecuteCommand ifPredicate(String predicate) {
-        command.append(" if predicate ").append(predicate);
-        return this;
+    /** Checks a custom datapack predicate. */
+    public ExecuteCommand ifPredicate(PredicateId predicate) {
+        return appendModifier("if predicate", predicate);
     }
 
+    /** Proceeds only if the chunk at the position is loaded. */
     public ExecuteCommand ifLoaded(BlockPos pos) {
-        command.append(" if loaded ").append(pos);
+        return appendModifier("if loaded", pos);
+    }
+
+    // --- Helper Logic ---
+
+    private ExecuteCommand appendModifier(String sub, Object argument) {
+        Objects.requireNonNull(argument, "Argument for sub-command '" + sub + "' cannot be null.");
+        command.append(" ").append(sub).append(" ").append(argument);
         return this;
     }
 
     // --- Terminal Action ---
 
     /**
-     * Completes the execution chain by defining the command to run.
-     * @param command The command to execute after all modifiers are applied.
-     * @return The full generated command string.
+     * Ends the chain and adds the command to be executed.
+     * @param command The {@link MinecraftCommand} to run.
+     * @return The final command string.
      */
     public String run(MinecraftCommand command) {
+        Objects.requireNonNull(command, "The command to run cannot be null.");
         this.command.append(" run ").append(command.generate());
         return this.generate();
     }
 
-    /**
-     * Generates the command string built so far.
-     */
     @Override
     public String generate() {
-        return command.toString().trim();
+        String result = command.toString().trim();
+        if (result.endsWith("execute")) {
+            throw new IllegalStateException("ExecuteCommand must have modifiers or a run action.");
+        }
+        return result;
     }
 
     @Override
     public String toString() {
         return generate();
+    }
+
+    /**
+     * Defines which property of a bossbar is being targeted in a store command.
+     */
+    public enum BossbarStoreProperty {
+        VALUE,
+        MAX;
+
+        @Override
+        public String toString() {
+            return name().toLowerCase();
+        }
     }
 }

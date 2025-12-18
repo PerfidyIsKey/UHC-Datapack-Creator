@@ -1,6 +1,8 @@
 package HelperClasses;
 
 import Enums.*;
+import uhc.score.ComparatorType;
+import uhc.score.OperationType;
 
 public class Scoreboard {
     // Constructor
@@ -34,23 +36,23 @@ public class Scoreboard {
     }
 
     // players operation
-    public String Operation(String targets, ScoreboardObjectiveOld targetObjective, ComparatorType operation, String source, ScoreboardObjectiveOld sourceObjective) {
+    public String Operation(String targets, ScoreboardObjectiveOld targetObjective, OperationType operation, String source, ScoreboardObjectiveOld sourceObjective) {
         return "scoreboard players operation " + targets + " " + targetObjective.getName() + " " + operation + " " + source + " " + sourceObjective.getName();
     }
 
-    public String Operation(String targets, Objective targetObjective, ComparatorType operation, String source, Objective sourceObjective) {
+    public String Operation(String targets, Objective targetObjective, OperationType operation, String source, Objective sourceObjective) {
         return "scoreboard players operation " + targets + " " + targetObjective + " " + operation + " " + source + " " + sourceObjective;
     }
 
-    public String Operation(String targets, Objective targetObjective, ComparatorType operation, String source, String sourceObjective) {
+    public String Operation(String targets, Objective targetObjective, OperationType operation, String source, String sourceObjective) {
         return "scoreboard players operation " + targets + " " + targetObjective + " " + operation + " " + source + " " + sourceObjective;
     }
 
-    public String Operation(String targets, String targetObjective, ComparatorType operation, String source, String sourceObjective) {
+    public String Operation(String targets, String targetObjective, OperationType operation, String source, String sourceObjective) {
         return "scoreboard players operation " + targets + " " + targetObjective + " " + operation + " " + source + " " + sourceObjective;
     }
 
-    public String Operation(String targets, String targetObjective, ComparatorType operation, String source, Objective sourceObjective) {
+    public String Operation(String targets, String targetObjective, OperationType operation, String source, Objective sourceObjective) {
         return "scoreboard players operation " + targets + " " + targetObjective + " " + operation + " " + source + " " + sourceObjective;
     }
 

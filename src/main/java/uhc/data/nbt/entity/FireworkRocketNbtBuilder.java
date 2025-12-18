@@ -5,7 +5,7 @@ import uhc.arguments.itemstack.components.builder.FireworksComponentBuilder;
 import uhc.data.nbt.tags.CompoundTag;
 import uhc.data.nbt.tags.IntTag;
 import uhc.data.nbt.tags.StringTag;
-import uhc.resource.EntityType;
+import uhc.resource.entity.EntityId;
 import uhc.data.resource.BooleanNbtProperty;
 import java.util.Map;
 
@@ -22,7 +22,7 @@ public class FireworkRocketNbtBuilder implements EntityNbtBuilder {
 
     private FireworkRocketNbtBuilder(FireworkRocketData data) {
         this.data = data;
-        this.baseNbt = BaseEntityNbt.create(EntityType.FIREWORK_ROCKET, null);
+        this.baseNbt = BaseEntityNbt.create(EntityId.FIREWORK_ROCKET, null);
     }
 
     public static FireworkRocketNbtBuilder create(FireworkRocketData data) {
@@ -59,7 +59,7 @@ public class FireworkRocketNbtBuilder implements EntityNbtBuilder {
         // This CompoundTag is named "FireworksItem"
         CompoundTag fireworksItem = CompoundTag.create("FireworksItem");
 
-        fireworksItem.put(new StringTag("id", EntityType.FIREWORK_ROCKET.getResourceLocation()));
+        fireworksItem.put(new StringTag("id", EntityId.FIREWORK_ROCKET.getResourceLocation()));
         fireworksItem.put(new IntTag("count", 1));
         fireworksItem.put(componentsMap); // Attach the components map
 

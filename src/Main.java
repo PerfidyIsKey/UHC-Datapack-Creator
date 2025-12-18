@@ -6,6 +6,7 @@ import ItemClasses.*;
 import ItemModifiers.*;
 import Predicates.*;
 import TeamGeneration.*;
+import jdk.dynalink.Operation;
 import uhc.arguments.block.BlockPos;
 import uhc.arguments.block.ColumnPos;
 import uhc.arguments.entity.Entity;
@@ -55,6 +56,7 @@ import uhc.data.nbt.tags.IntTag;
 import uhc.data.nbt.tags.StringTag;
 import uhc.resource.*;
 import uhc.resource.block.WoodType;
+import uhc.resource.entity.EntityId;
 import uhc.resource.item.ArmorMaterial;
 import uhc.resource.item.ArmorPiece;
 import uhc.resource.item.ToolMaterial;
@@ -65,6 +67,8 @@ import uhc.attribute.AttributeSlot;
 import uhc.attribute.AttributeTooltipDisplayType;
 import uhc.resource.block.ColorableBlockId;
 import uhc.resource.block.WoodBlockId;
+import uhc.score.ComparatorType;
+import uhc.score.OperationType;
 import uhc.score.ScoreObjective;
 import uhc.text.DyeColor;
 import uhc.text.TextColor;
@@ -1025,7 +1029,7 @@ public class Main {
                                                 .addMessage(TextComponent.withClickCommand(
                                                         "In remembrance",
                                                         "run_command",
-                                                        Summon.create(EntityType.FIREWORK_ROCKET)
+                                                        Summon.create(EntityId.FIREWORK_ROCKET)
                                                                 .pos(Vec3.relative(0, 0, 0))
                                                                 .nbt(
                                                                         FireworkRocketNbtBuilder.create(
@@ -1146,7 +1150,7 @@ public class Main {
         // Summon a player head upon dying
         for (Player p : players) {
             fileCommands.add(Execute.At("@p[name=" + p.getPlayerName() + ",scores={Deaths=1}]") +
-                    Summon.create(EntityType.ITEM)
+                    Summon.create(EntityId.ITEM)
                             .pos(Vec3.relative(0, 0, 0))
                             .nbt(
                                     ItemNbtBuilder.create(
@@ -1225,7 +1229,7 @@ public class Main {
                     scoreboard.Set(Constant.adminOld, Objective.ColorCP.extendName(i), team.getID()));
             fileCommands.add(Execute.If(team.getName(), Objective.OnCP.extendName(i), "1..", false) +
                     Execute.IfNext(team.getPlayerColor(), Objective.CPScore, ComparatorType.GREATER, Constant.adminOld, Objective.DisplayCP.extendName(i), true) +
-                    scoreboard.Operation(Constant.adminOld, Objective.DisplayCP.extendName(i), ComparatorType.EQUAL, team.getPlayerColor(), Objective.CPScore));
+                    scoreboard.Operation(Constant.adminOld, Objective.DisplayCP.extendName(i), OperationType.ASSIGNMENT, team.getPlayerColor(), Objective.CPScore));
         }
 
         return new FileData(FileName.control_point_update_records_ + "" + i, fileCommands);
@@ -1598,9 +1602,9 @@ public class Main {
                         .targets(Constant.admin)
                                 .build());
         fileCommands.add(
-                Summon.create(EntityType.MARKER)
+                Summon.create(EntityId.MARKER)
                         .pos(Vec3.absolute(0, Constant.worldBottom, 0))
-                        .nbt(BaseEntityNbt.create(EntityType.MARKER, "Admin").buildNbt())
+                        .nbt(BaseEntityNbt.create(EntityId.MARKER, "Admin").buildNbt())
                         .build()
         );
 
@@ -2213,7 +2217,7 @@ public class Main {
                         .targets(Entity.ofSelector(
                                 TargetSelector.ALL_ENTITIES,
                                 SelectorArgumentsBuilder.create()
-                                        .type(EntityType.ITEM)))
+                                        .type(EntityId.ITEM)))
                         .build());
 
         // Schedule continuous functions
@@ -2293,7 +2297,7 @@ public class Main {
                     .build());
 
             // Summon armor stand to be tracked
-            fileCommands.add(Summon.create(EntityType.ARMOR_STAND)
+            fileCommands.add(Summon.create(EntityId.ARMOR_STAND)
                     .pos(Vec3.absolute(controlPoint.getCoordinate().getX(), controlPoint.getCoordinate().getY(), controlPoint.getCoordinate().getZ()))
                     .nbt(ArmorStandNbtBuilder.create(
                                     ArmorStandData.create(
@@ -2568,7 +2572,7 @@ public class Main {
             // Update CP glass color solo
             /*
             fileCommands.add(Execute.In(currentCP.getCoordinate().getDimension(), false) +
-                    Execute.IfNext("@r[limit=1,gamemode=!spectator,team=]", getObjectiveByName(Objective.ControlPoint.extendName(i)), ComparatorType.GREATER, Constant.adminOld, getObjectiveByName(Objective.Highscore.extendName(i)), true) +
+                    Execute.IfNext("@r[limit=1,gamemode=!spectator,team=]", getObjectiveByName(Objective.ControlPoint.extendName(i)), OperationType.CHOOSING_MAXIMUM, Constant.adminOld, getObjectiveByName(Objective.Highscore.extendName(i)), true) +
                     CommandBuilder.setBlock(currentCP.getCoordinate().getX(), currentCP.getCoordinate().getY() + 1, currentCP.getCoordinate().getZ(), Block.STAINED_GLASS.extendColor("white"), SetBlockType.replace));*/
         }
 
@@ -2603,7 +2607,7 @@ public class Main {
         // Update CP state
         for (Team team : teams) {
             // Update state
-            fileCommands.add(scoreboard.Operation(team.getName(), Objective.PrevCP.extendName(i), ComparatorType.EQUAL, team.getName(), Objective.OnCP.extendName(i)));
+            fileCommands.add(scoreboard.Operation(team.getName(), Objective.PrevCP.extendName(i), OperationType.ASSIGNMENT, team.getName(), Objective.OnCP.extendName(i)));
         }
 
         // TODO: Behavior for solo players
@@ -2640,11 +2644,11 @@ public class Main {
         // Update team score
         for (Team team : teams) {
             // Update team display scores
-            fileCommands.add(scoreboard.Operation(team.getPlayerColor(), Objective.CPScore, ComparatorType.EQUAL, team.getPlayerColor(), Objective.ControlPoint.extendName(1)));
-            fileCommands.add(scoreboard.Operation(team.getPlayerColor(), Objective.CPScore, ComparatorType.ADD, team.getPlayerColor(), Objective.ControlPoint.extendName(2)));
+            fileCommands.add(scoreboard.Operation(team.getPlayerColor(), Objective.CPScore, OperationType.ASSIGNMENT, team.getPlayerColor(), Objective.ControlPoint.extendName(1)));
+            fileCommands.add(scoreboard.Operation(team.getPlayerColor(), Objective.CPScore, OperationType.ADDITION, team.getPlayerColor(), Objective.ControlPoint.extendName(2)));
 
             // Update global highscore
-            fileCommands.add(scoreboard.Operation(Constant.adminOld, Objective.CPHighscore, ComparatorType.GREATER, team.getPlayerColor(), Objective.CPScore));
+            fileCommands.add(scoreboard.Operation(Constant.adminOld, Objective.CPHighscore, OperationType.CHOOSING_MAXIMUM, team.getPlayerColor(), Objective.CPScore));
         }
 
         return new FileData(FileName.control_point_team_score, fileCommands);
@@ -2704,7 +2708,7 @@ public class Main {
                     new TellRaw("@a", texts).sendRaw());
 
             // Update state
-            fileCommands.add(scoreboard.Operation("Solo", Objective.PrevCP.extendName(i), ComparatorType.EQUAL, "Solo", Objective.OnCP.extendName(i)));
+            fileCommands.add(scoreboard.Operation("Solo", Objective.PrevCP.extendName(i), OperationType.ASSIGNMENT, "Solo", Objective.OnCP.extendName(i)));
         }
 
         return new FileData("" + FileName.control_point_messages_ + i, fileCommands);
@@ -2741,7 +2745,7 @@ public class Main {
         // Summon Care Package entities
         for (int i = 0; i < carePackageAmount; i++) {
             fileCommands.add(Execute.In(Dimension.overworld) +
-                    Summon.create(EntityType.FALLING_BLOCK)
+                    Summon.create(EntityId.FALLING_BLOCK)
                             .pos(Vec3.absolute(0, 300, 0))
                             .nbt(
                                     FallingBlockNbtBuilder.create(
@@ -2768,7 +2772,7 @@ public class Main {
                                 Entity.ofSelector(
                                         TargetSelector.ALL_ENTITIES,
                                         SelectorArgumentsBuilder.create()
-                                                .type(EntityType.FALLING_BLOCK)
+                                                .type(EntityId.FALLING_BLOCK)
                                                 .nbt(FallingBlockNbtBuilder.create(
                                                                 FallingBlockData.create(
                                                                         new StaticEntityTag[]{StaticEntityTag.CARE_PACKAGE}))
@@ -2990,7 +2994,7 @@ public class Main {
                 .targets(Entity.ofSelector(
                         TargetSelector.ALL_ENTITIES,
                         SelectorArgumentsBuilder.create()
-                                .type(EntityType.ITEM)
+                                .type(EntityId.ITEM)
                                 .nbt(ItemNbtBuilder.create(
                                                         ItemData.create(
                                                                 ItemId.MUSIC_DISC_STAL,
@@ -3015,7 +3019,7 @@ public class Main {
     private FileData HorseFrostWalker() {
         ArrayList<String> fileCommands = new ArrayList<>();
 
-        fileCommands.add(Execute.At("@a[nbt={RootVehicle:{Entity:{id:\"" + EntityType.HORSE + "\"}}}]") +
+        fileCommands.add(Execute.At("@a[nbt={RootVehicle:{Entity:{id:\"" + EntityId.HORSE + "\"}}}]") +
                 Fill.create(
                                 BlockPos.relative(-2, -2, -2),
                                 BlockPos.relative(2, 0, 2),
@@ -3472,7 +3476,7 @@ public class Main {
         blocks.add("Granite");
 
         for (String block : blocks) {
-            fileCommands.add(scoreboard.Operation("@s", getObjectiveByName(Objective.Mining), ComparatorType.ADD, "@s", getObjectiveByName(block)));
+            fileCommands.add(scoreboard.Operation("@s", getObjectiveByName(Objective.Mining), OperationType.ADDITION, "@s", getObjectiveByName(block)));
         }
 
         return new FileData(FileName.update_mine_count, fileCommands);
@@ -3483,7 +3487,7 @@ public class Main {
         ArrayList<String> fileCommands = new ArrayList<>();
 
         // Find player with lowest health
-        fileCommands.add(scoreboard.Operation(Constant.adminOld, Objective.MinHealth, ComparatorType.LESS, "@a[gamemode=!spectator]", Objective.Hearts));
+        fileCommands.add(scoreboard.Operation(Constant.adminOld, Objective.MinHealth, OperationType.CHOOSING_MINIMUM, "@a[gamemode=!spectator]", Objective.Hearts));
 
         return new FileData(FileName.update_min_health, fileCommands);
     }
@@ -3563,7 +3567,7 @@ public class Main {
                         .targets(Entity.ofSelector(TargetSelector.SENDER))
                         .item(SimpleItemPredicate.create(ItemId.PLAYER_HEAD))
                         .build());  // Remove from inventory
-        fileCommands.add(Execute.As("@e[type=" + EntityType.ITEM + ",nbt={Item:{id:\"" + ItemId.PLAYER_HEAD + "\"}}]") +
+        fileCommands.add(Execute.As("@e[type=" + EntityId.ITEM + ",nbt={Item:{id:\"" + ItemId.PLAYER_HEAD + "\"}}]") +
                 Kill.create().targets(Entity.ofSelector(TargetSelector.SENDER)).build());   // Remove item
 
         // Teammate tracker
@@ -3826,7 +3830,7 @@ public class Main {
         // Set wolf collar color
         // Get data
         for (int i = 0; i < 4; i++) {
-            fileCommands.add(Execute.As("@e[type=" + EntityType.WOLF + "]", false) +
+            fileCommands.add(Execute.As("@e[type=" + EntityId.WOLF + "]", false) +
                     Execute.StoreNext(ExecuteStore.result, "@s", getObjectiveByName(Objective.CollarCheck.extendName(i)), true) +
                     Data.createGet(
                                     DataTargetEntity.create(Entity.ofSelector(TargetSelector.SENDER)),
@@ -3836,7 +3840,7 @@ public class Main {
 
         // Players in a team
         for (Team t : teams) {
-            fileCommands.add(Execute.As("@e[type=" + EntityType.WOLF + "]", false) +
+            fileCommands.add(Execute.As("@e[type=" + EntityId.WOLF + "]", false) +
                     Execute.IfNext("@s", getObjectiveByName(Objective.CollarCheck.extendName(0)), ComparatorType.EQUAL, "@r[team=" + t.getName() + "]", getObjectiveByName(Objective.CollarCheck.extendName(0))) +
                     Execute.IfNext("@s", getObjectiveByName(Objective.CollarCheck.extendName(1)), ComparatorType.EQUAL, "@r[team=" + t.getName() + "]", getObjectiveByName(Objective.CollarCheck.extendName(1))) +
                     Execute.IfNext("@s", getObjectiveByName(Objective.CollarCheck.extendName(2)), ComparatorType.EQUAL, "@r[team=" + t.getName() + "]", getObjectiveByName(Objective.CollarCheck.extendName(2))) +
@@ -3857,7 +3861,7 @@ public class Main {
                     TagAction.ADD)
                             .name(StaticEntityTag.COLLAR_CHECK)
                             .build());
-            fileCommands.add(Execute.As("@e[type=" + EntityType.WOLF + "]", false) +
+            fileCommands.add(Execute.As("@e[type=" + EntityId.WOLF + "]", false) +
                     Execute.IfNext("@s", getObjectiveByName(Objective.CollarCheck.extendName(0)), ComparatorType.EQUAL, "@p[tag=" + TagTemp.CollarCheck + "]", getObjectiveByName(Objective.CollarCheck.extendName(0))) +
                     Execute.IfNext("@s", getObjectiveByName(Objective.CollarCheck.extendName(1)), ComparatorType.EQUAL, "@p[tag=" + TagTemp.CollarCheck + "]", getObjectiveByName(Objective.CollarCheck.extendName(1)), true) +
                     Data.createModify(
@@ -3875,21 +3879,21 @@ public class Main {
         }
 
         // Eliminate baby wolves
-        String babyWolf = "@e[type=" + EntityType.WOLF + ",scores={WolfAge=..-1}]";
+        String babyWolf = "@e[type=" + EntityId.WOLF + ",scores={WolfAge=..-1}]";
 
-        fileCommands.add(Execute.As("@e[limit=1,type=" + EntityType.WOLF + ",sort=random]", false) +
+        fileCommands.add(Execute.As("@e[limit=1,type=" + EntityId.WOLF + ",sort=random]", false) +
                 Execute.StoreNext(ExecuteStore.result, "@s", getObjectiveByName(Objective.WolfAge), true) +
                 Data.createGet(
                                 DataTargetEntity.create(Entity.ofSelector(TargetSelector.SENDER)),
                                 DataPath.create(DataPathId.AGE))
                         .build());
         fileCommands.add(Execute.At(babyWolf) +
-                Summon.create(EntityType.DOLPHIN));
+                Summon.create(EntityId.DOLPHIN));
         fileCommands.add(Execute.As(babyWolf) +
                 Kill.create().targets(Entity.ofSelector(TargetSelector.SENDER)).build());
 
         // Set tamed wolf base health
-        fileCommands.add(Execute.As("@e[type=" + EntityType.WOLF + "]", false) +
+        fileCommands.add(Execute.As("@e[type=" + EntityId.WOLF + "]", false) +
                 Execute.IfNext(DataClasses.entity, "@s Owner", true) +
                 Attribute.create(
                         Entity.ofSelector(TargetSelector.SENDER),
@@ -3984,7 +3988,7 @@ public class Main {
                 SelectorArgumentsBuilder.create()
                         .team()
                         .scores(Map.of(ScoreObjective.TIMES_CALLED, "1..")));
-        ComparatorType comparator;
+        OperationType comparator;
 
         // Give player playing the horn a tag
         fileCommands.add(Tag.action(checkingPlayer, TagAction.ADD)
@@ -4004,18 +4008,18 @@ public class Main {
             // Subtract distance of nearest player in Cartesian coordinate
             fileCommands.add(Execute.As(oldCheckingPlayer, false) +
                     Execute.AtNext(oldCheckingPlayer, true) +
-                    scoreboard.Operation("@s", getObjectiveByName(Objective.Pos + cartesian[i]), ComparatorType.SUBTRACT, "@p[tag=!LookingForTeamMate,team=,gamemode=!spectator]", getObjectiveByName(Objective.Pos + cartesian[i])));
+                    scoreboard.Operation("@s", getObjectiveByName(Objective.Pos + cartesian[i]), OperationType.SUBTRACTION, "@p[tag=!LookingForTeamMate,team=,gamemode=!spectator]", getObjectiveByName(Objective.Pos + cartesian[i])));
 
             // Square the difference in Cartesian coordinates
             fileCommands.add(Execute.As(oldCheckingPlayer) +
-                    scoreboard.Operation("@s", getObjectiveByName(Objective.Square + cartesian[i]), ComparatorType.EQUAL, "@s", getObjectiveByName(Objective.Pos + cartesian[i])));
+                    scoreboard.Operation("@s", getObjectiveByName(Objective.Square + cartesian[i]), OperationType.ASSIGNMENT, "@s", getObjectiveByName(Objective.Pos + cartesian[i])));
             fileCommands.add(Execute.As(oldCheckingPlayer) +
-                    scoreboard.Operation("@s", getObjectiveByName(Objective.Square + cartesian[i]), ComparatorType.MULTIPLY, "@s", getObjectiveByName(Objective.Pos + cartesian[i])));
+                    scoreboard.Operation("@s", getObjectiveByName(Objective.Square + cartesian[i]), OperationType.MULTIPLICATION, "@s", getObjectiveByName(Objective.Pos + cartesian[i])));
 
             if (i == 0) {
-                comparator = ComparatorType.EQUAL;
+                comparator = OperationType.ASSIGNMENT;
             } else {
-                comparator = ComparatorType.ADD;
+                comparator = OperationType.ADDITION;
             }
 
             // Calculate distance to nearest player
