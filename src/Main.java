@@ -1063,12 +1063,12 @@ public class Main {
         ArrayList<TextItem> texts = new ArrayList<>();
 
         // Play thunder sound
-        fileCommands.add(PlaySound.create(SoundId.THUNDER)
+        fileCommands.add(PlaySoundCommand.create(SoundId.THUNDER)
                 .source(SoundSource.MASTER)
                 .targets(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
                 .pos(Vec3.relative(0, 50, 0))
                 .volume(100)
-                .build());
+                .generate());
 
         // Set all dead players to spectator mode
         fileCommands.add(SetGameMode.create(GameMode.SPECTATOR)
@@ -3423,12 +3423,12 @@ public class Main {
         }
 
         // Play sound
-        fileCommands.add(PlaySound.create(perks.get(i).getSound())
+        fileCommands.add(PlaySoundCommand.create(perks.get(i).getSound())
                 .source(SoundSource.MASTER)
                 .targets(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
                 .pos(Vec3.relative(0, 50, 0))
                 .volume(100)
-                .build()
+                .generate()
         );
 
         return new FileData("" + FileName.perk_ + (i + 1), fileCommands);
