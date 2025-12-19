@@ -21,14 +21,13 @@ import uhc.arguments.entity.SelectorArgumentsBuilder;
 import uhc.arguments.entity.TargetSelector;
 import uhc.arguments.time.VariableGameTime;
 import commands.*;
-import commands.Random;
+import uhc.command.commands.RandomCommand;
 import uhc.arguments.data.DataPath;
 import uhc.data.target.DataTargetEntity;
 import uhc.arguments.data.DataValue;
 import uhc.data.nbt.ModificationSetValue;
 import uhc.arguments.itemstack.*;
 import uhc.arguments.item.ItemTargetEntity;
-import commands.random.RandomAction;
 import commands.recipe.RecipeAction;
 import commands.tag.TagAction;
 import commands.time.TimeAction;
@@ -3440,9 +3439,9 @@ public class Main {
 
         // Roll a random number to pick a quote
         fileCommands.add(Execute.Store(ExecuteStore.result, Constant.adminOld, Objective.RandomQuotes) +
-                Random.create(RandomAction.VALUE)
+                RandomCommand.create(RandomCommand.RandomAction.VALUE)
                         .range(0, quotes.size() - 1)
-                                .build());
+                                .generate());
 
         // Pick a quote from the listAdd commentMore actions
         for (int i = 0; i < quotes.size(); i++) {
