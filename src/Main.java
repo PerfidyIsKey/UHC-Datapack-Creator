@@ -35,7 +35,6 @@ import controlpoints.ControlPoint;
 import controlpoints.ControlPointTag;
 import uhc.command.commands.*;
 import uhc.command.util.ItemSlot;
-import uhc.command.util.SetMode;
 import uhc.data.nbt.blockentity.*;
 import uhc.data.nbt.entity.*;
 import uhc.data.nbt.entity.data.*;
@@ -1003,7 +1002,7 @@ public class Main {
                         .generate());
 
         fileCommands.add(Execute.In(Dimension.overworld) +
-                SetBlock.create(
+                SetBlockCommand.create(
                                 BlockPos.absolute(0, 222, -5),
                                 DynamicBlock.create(
                                         WoodBlockId.WALL_SIGN.withWoodType(WoodType.CHERRY),
@@ -1039,7 +1038,7 @@ public class Main {
                                                 .addMessage(TextComponent.simple("Command Center"))
                                                 .addMessage(TextComponent.simple("2014-2025"))
                                                 .done()))
-                        .build());
+                        .generate());
 
         // Control Point
         if (OperationMode.controlPoints) {
@@ -1187,11 +1186,11 @@ public class Main {
             // Update glass color
             fileCommands.add(Execute.If(Constant.adminOld, Objective.ColorCP.extendName(i), team.getID(), false) +
                     Execute.InNext(currentCP.getCoordinate().getDimension(), true) +
-                    SetBlock.create(
+                    SetBlockCommand.create(
                                     BlockPos.absolute(currentCP.getCoordinate().getX(), currentCP.getCoordinate().getY() + 1, currentCP.getCoordinate().getZ()),
                                     DynamicBlock.create(ColorableBlockId.STAINED_GLASS.withColor(team.getDyeColor())))
-                            .mode(SetMode.REPLACE)
-                            .build());
+                            .mode(SetBlockCommand.SetMode.REPLACE)
+                            .generate());
         }
 
         // Keep beacon active
@@ -1203,10 +1202,10 @@ public class Main {
                         .generate());
 
         fileCommands.add(Execute.In(currentCP.getCoordinate().getDimension()) +
-                SetBlock.create(
+                SetBlockCommand.create(
                                 BlockPos.absolute(currentCP.getCoordinate().getX(), currentCP.getCoordinate().getY(), currentCP.getCoordinate().getZ()),
                                 SimpleBlock.create(StaticBlockId.BEACON))
-                        .build());
+                        .generate());
 
         fileCommands.add(Schedule.callFunction("" + FileName.protect_beacon_ + i));
 
@@ -1662,7 +1661,7 @@ public class Main {
 
         // Create jukebox at 0,0
         fileCommands.add(Execute.In(Dimension.overworld) +
-                SetBlock.create(
+                SetBlockCommand.create(
                                 BlockPos.absolute(startCoordinate),
                                 DynamicBlock.create(
                                         StaticBlockId.JUKEBOX,
@@ -1670,7 +1669,7 @@ public class Main {
                                                 .hasRecord(true),
                                         JukeboxEntity.create()
                                                 .setRecord(ItemId.MUSIC_DISC_STAL, (byte) 1)))
-                        .build());
+                        .generate());
 
         // Remove tags
         fileCommands.add(Tag.action(Entity.ofSelector(TargetSelector.ALL_PLAYERS), TagAction.REMOVE)
@@ -2273,10 +2272,10 @@ public class Main {
                         .from(ColumnPos.absolute(controlPoints.get(0).getCoordinate().getX(), controlPoints.get(0).getCoordinate().getZ()))
                         .generate());
         fileCommands.add(Execute.In(controlPoints.get(0).getCoordinate().getDimension()) +
-                SetBlock.create(
+                SetBlockCommand.create(
                                 BlockPos.absolute(controlPoints.get(0).getCoordinate().getX(), controlPoints.get(0).getCoordinate().getY() + 3, controlPoints.get(0).getCoordinate().getZ()),
                                 SimpleBlock.create(StaticBlockId.AIR))
-                        .build());
+                        .generate());
         fileCommands.add(Execute.In(controlPoints.get(0).getCoordinate().getDimension()) +
                 ForceLoadCommand.create(ForceLoadCommand.ForceLoadAction.REMOVE)
                         .from(ColumnPos.absolute(controlPoints.get(0).getCoordinate().getX(), controlPoints.get(0).getCoordinate().getZ()))
@@ -2348,10 +2347,10 @@ public class Main {
                         .from(ColumnPos.absolute(controlPoints.get(1).getCoordinate().getX(), controlPoints.get(1).getCoordinate().getZ()))
                         .generate());
         fileCommands.add(Execute.In(controlPoints.get(1).getCoordinate().getDimension()) +
-                SetBlock.create(
+                SetBlockCommand.create(
                                 BlockPos.absolute(controlPoints.get(1).getCoordinate().getX(), controlPoints.get(1).getCoordinate().getY() + 3, controlPoints.get(1).getCoordinate().getZ()),
                                 SimpleBlock.create(StaticBlockId.AIR))
-                        .build());
+                        .generate());
         fileCommands.add(Execute.In(controlPoints.get(1).getCoordinate().getDimension()) +
                 ForceLoadCommand.create(ForceLoadCommand.ForceLoadAction.REMOVE)
                         .from(ColumnPos.absolute(controlPoints.get(1).getCoordinate().getX(), controlPoints.get(1).getCoordinate().getZ()))
@@ -2933,7 +2932,7 @@ public class Main {
                             .generate());
 
             fileCommands.add(Execute.In(c.getDimension()) +
-                    SetBlock.create(
+                    SetBlockCommand.create(
                                     BlockPos.absolute(c.getX(), c.getY() + 11, c.getZ()),
                                     DynamicBlock.create(
                                             StaticBlockId.STRUCTURE_BLOCK,
@@ -2957,15 +2956,15 @@ public class Main {
                                                     .setInt(StructureDataKey.SIZE_Y, 14)
                                                     .setInt(StructureDataKey.SIZE_Z, 13)
                                                     .setByte(StructureDataKey.SHOW_BOUNDING_BOX, (byte) 1)))
-                            .build());
+                            .generate());
 
             // Activate structure block
             fileCommands.add(Execute.In(c.getDimension()) +
-                    SetBlock.create(
+                    SetBlockCommand.create(
                                     BlockPos.absolute(c.getX(), c.getY() + 10, c.getZ()),
                                     SimpleBlock.create(StaticBlockId.REDSTONE_BLOCK))
-                            .mode(SetMode.DESTROY)
-                            .build());
+                            .mode(SetBlockCommand.SetMode.DESTROY)
+                            .generate());
 
             // Replace blocks that do not emit light
             fileCommands.add(Execute.In(c.getDimension()) +
