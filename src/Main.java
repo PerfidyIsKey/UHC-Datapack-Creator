@@ -993,17 +993,17 @@ public class Main {
 
         // Create staging area
         fileCommands.add(Execute.In(Dimension.overworld) +
-                Fill.create(
+                FillCommand.create(
                                 BlockPos.absolute(-6, 220, -6),
                                 BlockPos.absolute(6, 226, 6),
                                 SimpleBlock.create(StaticBlockId.BARRIER))
-                        .build());
+                        .generate());
         fileCommands.add(Execute.In(Dimension.overworld) +
-                Fill.create(
+                FillCommand.create(
                                 BlockPos.absolute(-5, 221, -5),
                                 BlockPos.absolute(5, 226, 5),
                                 SimpleBlock.create(StaticBlockId.AIR))
-                        .build());
+                        .generate());
 
         fileCommands.add(Execute.In(Dimension.overworld) +
                 SetBlock.create(
@@ -1199,11 +1199,11 @@ public class Main {
 
         // Keep beacon active
         fileCommands.add(Execute.In(currentCP.getCoordinate().getDimension()) +
-                Fill.create(
+                FillCommand.create(
                                 BlockPos.absolute(currentCP.getCoordinate().getX() - 1, currentCP.getCoordinate().getY() - 1, currentCP.getCoordinate().getZ() - 1),
                                 BlockPos.absolute(currentCP.getCoordinate().getX() + 1, currentCP.getCoordinate().getY() - 1, currentCP.getCoordinate().getZ() + 1),
                                 SimpleBlock.create(StaticBlockId.EMERALD_BLOCK))
-                        .build());
+                        .generate());
 
         fileCommands.add(Execute.In(currentCP.getCoordinate().getDimension()) +
                 SetBlock.create(
@@ -2972,12 +2972,12 @@ public class Main {
 
             // Replace blocks that do not emit light
             fileCommands.add(Execute.In(c.getDimension()) +
-                    Fill.create(
+                    FillCommand.create(
                                     BlockPos.absolute(c.getX(), c.getY() + 12, c.getZ()),
                                     BlockPos.absolute(c.getX(), Constant.worldHeight - 1, c.getZ()),
                                     SimpleBlock.create(StaticBlockId.GLASS))
                             .filter(SimpleBlockPredicate.create(BlockTagId.BLOCK_BEACON_LIGHT))
-                            .build());
+                            .generate());
 
             fileCommands.add(Execute.In(c.getDimension()) +
                     ForceLoad.create(ForceLoadAction.REMOVE)
@@ -3016,12 +3016,12 @@ public class Main {
         ArrayList<String> fileCommands = new ArrayList<>();
 
         fileCommands.add(Execute.At("@a[nbt={RootVehicle:{Entity:{id:\"" + EntityId.HORSE + "\"}}}]") +
-                Fill.create(
+                FillCommand.create(
                                 BlockPos.relative(-2, -2, -2),
                                 BlockPos.relative(2, 0, 2),
                                 SimpleBlock.create(StaticBlockId.ICE))
                         .filter(SimpleBlockPredicate.create(StaticBlockId.WATER))
-                        .build());
+                        .generate());
 
         return new FileData(FileName.horse_frost_walker, fileCommands);
     }
@@ -4226,7 +4226,7 @@ public class Main {
         ControlPoint cp = controlPoints.get(i - 1);
 
         // --- Command Generation: /fill <from> <to> glass replace #minecraft:impermeable_blocks ---
-        fileCommands.add(Fill.create(
+        fileCommands.add(FillCommand.create(
                         // 1. Define the 'from' corner: X, Y+2 (above the beacon block), Z
                         BlockPos.absolute(cp.getCoordinate().getX(), cp.getCoordinate().getY() + 2, cp.getCoordinate().getZ()),
                         // 2. Define the 'to' corner: X, World Height (sky limit), Z
@@ -4236,7 +4236,7 @@ public class Main {
                 // 4. Set the filter/predicate: replace only blocks that obstruct light (e.g., stone, wood, dirt).
                 //    This is assumed to map to the Minecraft tag #minecraft:impermeable_blocks or similar tag.
                 .filter(SimpleBlockPredicate.create(BlockTagId.BLOCK_BEACON_LIGHT))
-                .build());
+                .generate());
 
         // Create the FileData object with a unique file name based on the index.
         return new FileData(FileName.protect_beacon_ + "" + i, fileCommands);
