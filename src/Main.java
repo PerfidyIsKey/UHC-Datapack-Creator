@@ -26,7 +26,6 @@ import uhc.arguments.data.DataPath;
 import uhc.data.target.DataTargetEntity;
 import uhc.arguments.data.DataValue;
 import uhc.data.nbt.ModificationSetValue;
-import commands.experience.ExperienceAction;
 import commands.forceload.ForceLoadAction;
 import uhc.arguments.itemstack.*;
 import uhc.arguments.item.ItemTargetEntity;
@@ -2146,18 +2145,18 @@ public class Main {
                         .generate());
 
         // Experience
-        fileCommands.add(Experience.create(
-                        ExperienceAction.SET,
+        fileCommands.add(ExperienceCommand.create(
+                        ExperienceCommand.ExperienceAction.SET,
                         Entity.ofSelector(TargetSelector.ALL_PLAYERS))
                 .amount(0)
                 .type(ExperienceType.LEVELS)
-                .build());
-        fileCommands.add(Experience.create(
-                        ExperienceAction.SET,
+                .generate());
+        fileCommands.add(ExperienceCommand.create(
+                        ExperienceCommand.ExperienceAction.SET,
                         Entity.ofSelector(TargetSelector.ALL_PLAYERS))
                 .amount(0)
                 .type(ExperienceType.POINTS)
-                .build());
+                .generate());
 
         // Give players teammate tools
         if (!OperationMode.teamCreationInGame) {
