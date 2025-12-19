@@ -2180,29 +2180,29 @@ public class Main {
         }
 
         // Change title display time
-        fileCommands.add(Title.create(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
+        fileCommands.add(TitleCommand.create(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
                 .displayTimes(
                         VariableGameTime.second(1),
                         VariableGameTime.second(5),
                         VariableGameTime.second(2))
-                .build());
+                .generate());
 
         // Display world size
-        fileCommands.add(Title.create(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
+        fileCommands.add(TitleCommand.create(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
                 .subtitle(TextComponent.simple("World size: ").color(TextColor.GRAY)
                         .append(TextComponent.simple("±" + world.getSize()).color(TextColor.LIGHT_PURPLE).bold(true))
                         .append(TextComponent.simple(" blocks").color(TextColor.GRAY)))
-                .build());
+                .generate());
 
         // Display game start
-        fileCommands.add(Title.create(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
+        fileCommands.add(TitleCommand.create(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
                 .title(TextComponent.simple("Game Starting Now!").color(TextColor.GOLD).bold(true).italic(true))
-                .build());
+                .generate());
 
         // Change title display time
-        fileCommands.add(Title.create(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
+        fileCommands.add(TitleCommand.create(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
                 .defaultDisplayTimes()
-                .build());
+                .generate());
 
         // Destroy all ground items
         fileCommands.add(KillCommand.create()
@@ -2255,12 +2255,12 @@ public class Main {
         ArrayList<String> fileCommands = new ArrayList<>();
 
         // Display Control Point 1 enabled
-        fileCommands.add(Title.create(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
+        fileCommands.add(TitleCommand.create(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
                 .subtitle(TextComponent.simple("is now enabled!").color(TextColor.LIGHT_PURPLE).bold(true).italic(true))
-                .build());
-        fileCommands.add(Title.create(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
+                .generate());
+        fileCommands.add(TitleCommand.create(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
                 .title(TextComponent.simple("Control Point 1").color(TextColor.GOLD).bold(true).italic(true))
-                .build());
+                .generate());
 
         // Make bossbars visible
         fileCommands.add(getBossbarByName("cp1").setVisible(true));
@@ -2377,9 +2377,9 @@ public class Main {
         texts.add(bannerText);
 
         fileCommands.add(new TellRaw("@a", texts).sendRaw());
-        fileCommands.add(Title.create(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
+        fileCommands.add(TitleCommand.create(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
                 .title(TextComponent.simple(i + " minute(s) remaining").color(TextColor.GOLD).bold(true).italic(true))
-                .build());
+                .generate());
         return new FileData("" + FileName.minute_ + i, fileCommands);
     }
 
@@ -2428,12 +2428,12 @@ public class Main {
         fileCommands.add(new TellRaw("@a", texts).sendRaw());
 
         // Title
-        fileCommands.add(Title.create(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
+        fileCommands.add(TitleCommand.create(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
                 .subtitle(TextComponent.simple("has been achieved!").color(TextColor.LIGHT_PURPLE).bold(true).italic(true))
-                .build());
-        fileCommands.add(Title.create(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
+                .generate());
+        fileCommands.add(TitleCommand.create(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
                 .title(TextComponent.simple(team.getJSONColor() + " team victory").color(TextColor.GOLD).bold(true).italic(true))
-                .build());
+                .generate());
 
         // Proceed to victory mode
         fileCommands.add(Schedule.callFunction(FileName.victory));
@@ -2455,14 +2455,14 @@ public class Main {
 
         // Title
         fileCommands.add(new TellRaw("@a", texts).sendRaw());
-        fileCommands.add(Title.create(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
+        fileCommands.add(TitleCommand.create(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
                 .subtitle(TextComponent.simple("Absolute chad.").color(TextColor.LIGHT_PURPLE).bold(true).italic(true))
-                .build());
-        fileCommands.add(Title.create(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
+                .generate());
+        fileCommands.add(TitleCommand.create(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
                 .title(TextComponent.array(List.of(
                         TextComponent.selector(Entity.ofSelector(TargetSelector.SENDER)).color(TextColor.WHITE).italic(true),
                         TextComponent.simple(" victorious").color(TextColor.GOLD).bold(true))))
-                .build());
+                .generate());
 
         // Proceed to victory mode
         fileCommands.add(Schedule.callFunction(FileName.victory));
@@ -2483,12 +2483,12 @@ public class Main {
         fileCommands.add(new TellRaw("@a", texts).sendRaw());
 
         // Title
-        fileCommands.add(Title.create(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
+        fileCommands.add(TitleCommand.create(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
                 .subtitle(TextComponent.simple("ggez").color(TextColor.LIGHT_PURPLE).bold(true).italic(true))
-                .build());
-        fileCommands.add(Title.create(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
+                .generate());
+        fileCommands.add(TitleCommand.create(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
                 .title(TextComponent.simple("Traitors Win").color(TextColor.GOLD).bold(true).italic(true))
-                .build());
+                .generate());
 
         // Proceed to victory mode
         fileCommands.add(Schedule.callFunction(FileName.victory));
@@ -2712,27 +2712,27 @@ public class Main {
         Boolean debug = false;
 
         // Change title display time
-        fileCommands.add(Title.create(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
+        fileCommands.add(TitleCommand.create(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
                 .displayTimes(
                         VariableGameTime.second(1),
                         VariableGameTime.second(5),
                         VariableGameTime.second(2))
-                .build());
+                .generate());
 
         // Display spread size
-        fileCommands.add(Title.create(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
+        fileCommands.add(TitleCommand.create(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
                 .subtitle(TextComponent.simple("To be found at ±" + carePackageSpread + " blocks").color(TextColor.LIGHT_PURPLE))
-                .build());
+                .generate());
 
         // Announce Care Packages
-        fileCommands.add(Title.create(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
+        fileCommands.add(TitleCommand.create(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
                 .title(TextComponent.simple(carePackageAmount + " Care Packages!").color(TextColor.GOLD).bold(true).italic(true))
-                .build());
+                .generate());
 
         // Change title display time
-        fileCommands.add(Title.create(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
+        fileCommands.add(TitleCommand.create(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
                 .defaultDisplayTimes()
-                .build());
+                .generate());
 
         // Summon Care Package entities
         for (int i = 0; i < carePackageAmount; i++) {
@@ -2883,12 +2883,12 @@ public class Main {
                 new TellRaw("@s", texts).sendRaw());
 
         // Announce Traitor Faction
-        fileCommands.add(Title.create(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
+        fileCommands.add(TitleCommand.create(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
                 .title(TextComponent.simple("A Traitor Faction").color(TextColor.RED).bold(true))
-                .build());
-        fileCommands.add(Title.create(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
+                .generate());
+        fileCommands.add(TitleCommand.create(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
                 .subtitle(TextComponent.simple("has been founded!").color(TextColor.DARK_RED).bold(true))
-                .build());
+                .generate());
 
         // Enable timers
         fileCommands.add(Schedule.callFunction(FileName.timer_traitor_5));
@@ -2907,7 +2907,7 @@ public class Main {
 
         // Show all traitors in actionbar
         fileCommands.add(Execute.As("@a[tag=" + TagTemp.Traitor + "]") +
-                Title.create(Entity.ofSelector(TargetSelector.SENDER))
+                TitleCommand.create(Entity.ofSelector(TargetSelector.SENDER))
                         .actionbar(TextComponent.array(List.of(
                                 TextComponent.simple(">>> ").color(TextColor.GOLD),
                                 TextComponent.simple("Traitor Faction: ").color(TextColor.LIGHT_PURPLE),
@@ -2916,7 +2916,7 @@ public class Main {
                                         SelectorArgumentsBuilder.create()
                                                 .tag(StaticEntityTag.TRAITOR))),
                                 TextComponent.simple(" <<<").color(TextColor.GOLD))))
-                        .build());
+                        .generate());
 
         return new FileData(FileName.traitor_actionbar, fileCommands);
     }
@@ -3632,12 +3632,12 @@ public class Main {
         texts.add(bannerText);
         fileCommands.add(new TellRaw("@a", texts).sendRaw());
         texts.clear();
-        fileCommands.add(Title.create(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
+        fileCommands.add(TitleCommand.create(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
                 .subtitle(TextComponent.simple("has been captured!").color(TextColor.LIGHT_PURPLE).bold(true).italic(true))
-                .build());
-        fileCommands.add(Title.create(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
+                .generate());
+        fileCommands.add(TitleCommand.create(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
                 .title(TextComponent.simple("The Control Point").color(TextColor.GOLD).bold(true).italic(true))
-                .build());
+                .generate());
 
         // Check which team has captured the Control Point
         fileCommands.add(Schedule.callFunction(FileName.teams_highscore_alive_check));
