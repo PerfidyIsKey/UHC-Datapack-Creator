@@ -942,25 +942,25 @@ public class Main {
         // Set gamerules
         for (Dimension dimension : Dimension.values()) {
             fileCommands.add(Execute.In(dimension) +
-                    GameRule.create(GameRuleId.NATURAL_REGENERATION)
+                    GameRuleCommand.create(GameRuleId.NATURAL_REGENERATION)
                                     .booleanValue(false)
-                                            .build());
+                                            .generate());
         }
-        fileCommands.add(GameRule.create(GameRuleId.DO_IMMEDIATE_RESPAWN)
+        fileCommands.add(GameRuleCommand.create(GameRuleId.DO_IMMEDIATE_RESPAWN)
                         .booleanValue(true)
-                        .build());
-        fileCommands.add(GameRule.create(GameRuleId.DO_PATROL_SPAWNING)
+                        .generate());
+        fileCommands.add(GameRuleCommand.create(GameRuleId.DO_PATROL_SPAWNING)
                 .booleanValue(false)
-                .build());
-        fileCommands.add(GameRule.create(GameRuleId.DO_MOB_SPAWNING)
+                .generate());
+        fileCommands.add(GameRuleCommand.create(GameRuleId.DO_MOB_SPAWNING)
                 .booleanValue(false)
-                .build());
-        fileCommands.add(GameRule.create(GameRuleId.DO_WEATHER_CYCLE)
+                .generate());
+        fileCommands.add(GameRuleCommand.create(GameRuleId.DO_WEATHER_CYCLE)
                 .booleanValue(false)
-                .build());
-        fileCommands.add(GameRule.create(GameRuleId.SPAWN_RADIUS)
+                .generate());
+        fileCommands.add(GameRuleCommand.create(GameRuleId.SPAWN_RADIUS)
                 .intValue(0)
-                .build());
+                .generate());
 
         // Set difficulty
         fileCommands.add(DifficultyCommand.create()
@@ -1610,42 +1610,42 @@ public class Main {
                 .build());
 
         // Set gamerules
-        fileCommands.add(GameRule.create(GameRuleId.COMMAND_BLOCK_OUTPUT)
+        fileCommands.add(GameRuleCommand.create(GameRuleId.COMMAND_BLOCK_OUTPUT)
                 .booleanValue(true)
-                .build());
-        fileCommands.add(GameRule.create(GameRuleId.DO_DAYLIGHT_CYCLE)
+                .generate());
+        fileCommands.add(GameRuleCommand.create(GameRuleId.DO_DAYLIGHT_CYCLE)
                 .booleanValue(false)
-                .build());
-        fileCommands.add(GameRule.create(GameRuleId.KEEP_INVENTORY)
+                .generate());
+        fileCommands.add(GameRuleCommand.create(GameRuleId.KEEP_INVENTORY)
                 .booleanValue(true)
-                .build());
-        fileCommands.add(GameRule.create(GameRuleId.DO_MOB_SPAWNING)
+                .generate());
+        fileCommands.add(GameRuleCommand.create(GameRuleId.DO_MOB_SPAWNING)
                 .booleanValue(false)
-                .build());
-        fileCommands.add(GameRule.create(GameRuleId.DO_TILE_DROPS)
+                .generate());
+        fileCommands.add(GameRuleCommand.create(GameRuleId.DO_TILE_DROPS)
                 .booleanValue(false)
-                .build());
-        fileCommands.add(GameRule.create(GameRuleId.DROWNING_DAMAGE)
+                .generate());
+        fileCommands.add(GameRuleCommand.create(GameRuleId.DROWNING_DAMAGE)
                 .booleanValue(false)
-                .build());
-        fileCommands.add(GameRule.create(GameRuleId.FALL_DAMAGE)
+                .generate());
+        fileCommands.add(GameRuleCommand.create(GameRuleId.FALL_DAMAGE)
                 .booleanValue(false)
-                .build());
-        fileCommands.add(GameRule.create(GameRuleId.FIRE_DAMAGE)
+                .generate());
+        fileCommands.add(GameRuleCommand.create(GameRuleId.FIRE_DAMAGE)
                 .booleanValue(false)
-                .build());
-        fileCommands.add(GameRule.create(GameRuleId.SEND_COMMAND_FEEDBACK)
+                .generate());
+        fileCommands.add(GameRuleCommand.create(GameRuleId.SEND_COMMAND_FEEDBACK)
                 .booleanValue(true)
-                .build());
-        fileCommands.add(GameRule.create(GameRuleId.DO_IMMEDIATE_RESPAWN)
+                .generate());
+        fileCommands.add(GameRuleCommand.create(GameRuleId.DO_IMMEDIATE_RESPAWN)
                 .booleanValue(true)
-                .build());
-        fileCommands.add(GameRule.create(GameRuleId.DISABLE_RAIDS)
+                .generate());
+        fileCommands.add(GameRuleCommand.create(GameRuleId.DISABLE_RAIDS)
                 .booleanValue(true)
-                .build());
-        fileCommands.add(GameRule.create(GameRuleId.DO_INSOMNIA)
+                .generate());
+        fileCommands.add(GameRuleCommand.create(GameRuleId.DO_INSOMNIA)
                 .booleanValue(false)
-                .build());
+                .generate());
 
         // Reset scores of all entities
         fileCommands.add(scoreboard.Reset("@e"));
@@ -2044,33 +2044,33 @@ public class Main {
 
     private FileData SurvivalMode() {
         ArrayList<String> fileCommands = new ArrayList<>();
-        fileCommands.add(GameRule.create(GameRuleId.COMMAND_BLOCK_OUTPUT)
+        fileCommands.add(GameRuleCommand.create(GameRuleId.COMMAND_BLOCK_OUTPUT)
                 .booleanValue(false)
-                .build());
-        fileCommands.add(GameRule.create(GameRuleId.DO_DAYLIGHT_CYCLE)
+                .generate());
+        fileCommands.add(GameRuleCommand.create(GameRuleId.DO_DAYLIGHT_CYCLE)
                 .booleanValue(true)
-                .build());
-        fileCommands.add(GameRule.create(GameRuleId.KEEP_INVENTORY)
+                .generate());
+        fileCommands.add(GameRuleCommand.create(GameRuleId.KEEP_INVENTORY)
                 .booleanValue(false)
-                .build());
-        fileCommands.add(GameRule.create(GameRuleId.DO_MOB_SPAWNING)
+                .generate());
+        fileCommands.add(GameRuleCommand.create(GameRuleId.DO_MOB_SPAWNING)
                 .booleanValue(true)
-                .build());
-        fileCommands.add(GameRule.create(GameRuleId.DO_TILE_DROPS)
+                .generate());
+        fileCommands.add(GameRuleCommand.create(GameRuleId.DO_TILE_DROPS)
                 .booleanValue(true)
-                .build());
-        fileCommands.add(GameRule.create(GameRuleId.DROWNING_DAMAGE)
+                .generate());
+        fileCommands.add(GameRuleCommand.create(GameRuleId.DROWNING_DAMAGE)
                 .booleanValue(true)
-                .build());
-        fileCommands.add(GameRule.create(GameRuleId.FALL_DAMAGE)
+                .generate());
+        fileCommands.add(GameRuleCommand.create(GameRuleId.FALL_DAMAGE)
                 .booleanValue(true)
-                .build());
-        fileCommands.add(GameRule.create(GameRuleId.FIRE_DAMAGE)
+                .generate());
+        fileCommands.add(GameRuleCommand.create(GameRuleId.FIRE_DAMAGE)
                 .booleanValue(true)
-                .build());
-        fileCommands.add(GameRule.create(GameRuleId.DO_IMMEDIATE_RESPAWN)
+                .generate());
+        fileCommands.add(GameRuleCommand.create(GameRuleId.DO_IMMEDIATE_RESPAWN)
                 .booleanValue(true)
-                .build());
+                .generate());
         fileCommands.add(Schedule.callFunction(FileName.clear_enderchest));
 
         // Recipes
@@ -3907,9 +3907,9 @@ public class Main {
                                 .build());
 
         // Update immediate respawn
-        fileCommands.add(GameRule.create(GameRuleId.DO_IMMEDIATE_RESPAWN)
+        fileCommands.add(GameRuleCommand.create(GameRuleId.DO_IMMEDIATE_RESPAWN)
                 .booleanValue(false)
-                .build());
+                .generate());
 
         return new FileData(FileName.disable_respawn, fileCommands);
     }
@@ -4201,9 +4201,9 @@ public class Main {
         texts.clear();
 
         // Set gamerule
-        fileCommands.add(GameRule.create(GameRuleId.DO_DAYLIGHT_CYCLE)
+        fileCommands.add(GameRuleCommand.create(GameRuleId.DO_DAYLIGHT_CYCLE)
                 .booleanValue(false)
-                .build());
+                .generate());
 
         return new FileData(FileName.messages_eternal_day, fileCommands);
     }
