@@ -1903,10 +1903,10 @@ public class Main {
 
         // Teleport everyone underneath the world
         fileCommands.add(Execute.In(Dimension.overworld) +
-                Teleport.create()
+                TeleportCommand.create()
                                 .targets(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
                                         .location(Vec3.absolute(0, -100, 0))
-                                                .build());
+                                                .generate());
 
         // Announcement message
         ArrayList<TextItem> texts = new ArrayList<>();
@@ -2001,10 +2001,10 @@ public class Main {
 
         // Teleport to starting coordinates
         fileCommands.add(Execute.In(Dimension.overworld) +
-                Teleport.create()
+                TeleportCommand.create()
                                 .targets(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
                                         .location(Vec3.absolute(startCoordinate))
-                                                .build());
+                                                .generate());
 
         // Reset scores
         fileCommands.add(scoreboard.Set("@a", getObjectiveByName(Objective.Deaths), 0));
@@ -2513,13 +2513,13 @@ public class Main {
 
         // Teleport all living players
         fileCommands.add(Execute.In(Dimension.overworld) +
-                Teleport.create()
+                TeleportCommand.create()
                         .targets(Entity.ofSelector(
                                 TargetSelector.ALL_PLAYERS,
                                 SelectorArgumentsBuilder.create()
                                         .gamemode(GameMode.SPECTATOR, true)))
                         .location(Vec3.absolute(3, 153, 3))
-                        .build());
+                        .generate());
 
         // Spread players in a team together
         fileCommands.add(Execute.In(Dimension.overworld) +
@@ -3499,7 +3499,7 @@ public class Main {
         // Teleport player to their team
         for (Team t : teams) {
             fileCommands.add(Execute.As(respawnPlayerOld) +
-                    Teleport.create()
+                    TeleportCommand.create()
                             .targets(Entity.ofSelector(
                                     TargetSelector.SENDER,
                                     SelectorArgumentsBuilder.create()
@@ -3509,7 +3509,7 @@ public class Main {
                                     SelectorArgumentsBuilder.create()
                                             .gamemode(GameMode.SPECTATOR, true)
                                             .team(t.getName())))
-                            .build());
+                            .generate());
 
             fileCommands.add(Execute.At(respawnPlayerOld, false) +
                     Execute.AsNext(respawnPlayerOld) +
