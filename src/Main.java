@@ -965,9 +965,9 @@ public class Main {
                 .build());
 
         // Set difficulty
-        fileCommands.add(Difficulty.create()
+        fileCommands.add(DifficultyCommand.create()
                 .difficulty(DifficultyId.HARD)
-                .build());
+                .generate());
 
         // Set default gamemode
         fileCommands.add(SetGameMode.create(GameMode.ADVENTURE)
