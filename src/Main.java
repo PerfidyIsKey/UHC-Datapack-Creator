@@ -6,7 +6,6 @@ import ItemClasses.*;
 import ItemModifiers.*;
 import Predicates.*;
 import TeamGeneration.*;
-import jdk.dynalink.Operation;
 import uhc.arguments.block.BlockPos;
 import uhc.arguments.block.ColumnPos;
 import uhc.arguments.entity.Entity;
@@ -23,7 +22,6 @@ import uhc.arguments.entity.TargetSelector;
 import uhc.arguments.time.VariableGameTime;
 import commands.*;
 import commands.Random;
-import commands.advancement.AdvancementAction;
 import commands.data.DataPath;
 import commands.data.DataTargetEntity;
 import commands.data.DataValue;
@@ -39,6 +37,7 @@ import commands.time.TimeAction;
 import commands.worldborder.WorldBorderAction;
 import controlpoints.ControlPoint;
 import controlpoints.ControlPointTag;
+import uhc.command.commands.AdvancementCommand;
 import uhc.command.commands.EffectCommand;
 import uhc.command.commands.ItemCommand;
 import uhc.command.util.ItemSlot;
@@ -2142,11 +2141,11 @@ public class Main {
         );
 
         // Revoke all advancements
-        fileCommands.add(Advancement.create(
-                AdvancementAction.REVOKE,
+        fileCommands.add(AdvancementCommand.create(
+                AdvancementCommand.AdvancementAction.REVOKE,
                         Entity.ofSelector(TargetSelector.ALL_PLAYERS))
                         .everything()
-                        .build());
+                        .generate());
 
         // Experience
         fileCommands.add(Experience.create(
