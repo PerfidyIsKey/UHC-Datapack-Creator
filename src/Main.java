@@ -2161,7 +2161,7 @@ public class Main {
         if (!OperationMode.teamCreationInGame) {
             // Teammate tracker
             for (Team team : teams) {
-                fileCommands.add(Give.create(Entity.ofSelector(
+                fileCommands.add(GiveCommand.create(Entity.ofSelector(
                                         TargetSelector.ALL_PLAYERS,
                                         SelectorArgumentsBuilder.create()
                                                 .team(team.getName())),
@@ -2170,16 +2170,16 @@ public class Main {
                                         EnchantmentsComponent.create(Map.of(EnchantmentId.VANISHING_CURSE, 1)),
                                         CustomDataComponent.create(CompoundTag.create()
                                                 .put(new ByteTag("locateTeammate", (byte) 1)))))
-                        .build());
+                        .generate());
             }
         } else {
             // Team caller
-            fileCommands.add(Give.create(Entity.ofSelector(TargetSelector.ALL_PLAYERS),
+            fileCommands.add(GiveCommand.create(Entity.ofSelector(TargetSelector.ALL_PLAYERS),
                             GoatHornItemStack.create(
                                     InstrumentComponent.create(GoatHornInstrumentId.PONDER_GOAT_HORN),
                                     UseCooldownComponent.create(30),
                                     EnchantmentsComponent.create(Map.of(EnchantmentId.VANISHING_CURSE, 1))))
-                    .build());
+                    .generate());
         }
 
         // Change title display time
@@ -3544,7 +3544,7 @@ public class Main {
 
             // Team caller
             fileCommands.add(Execute.As(respawnPlayerOld) +
-                    Give.create(Entity.ofSelector(
+                    GiveCommand.create(Entity.ofSelector(
                                             TargetSelector.SENDER,
                                             SelectorArgumentsBuilder.create()
                                                     .team()),
@@ -3553,7 +3553,7 @@ public class Main {
                                             UseCooldownComponent.create(30),
                                             EnchantmentsComponent.create(
                                                     Map.of(EnchantmentId.VANISHING_CURSE, 1))))
-                            .build());
+                            .generate());
         }
 
         // Remove player heads
@@ -3568,7 +3568,7 @@ public class Main {
         // Teammate tracker
         for (Team team : teams) {
             fileCommands.add(Execute.As(respawnPlayerOld) +
-                    Give.create(Entity.ofSelector(
+                    GiveCommand.create(Entity.ofSelector(
                                             TargetSelector.SENDER,
                                             SelectorArgumentsBuilder.create()
                                                     .team(team.getName())),
@@ -3577,7 +3577,7 @@ public class Main {
                                             EnchantmentsComponent.create(Map.of(EnchantmentId.VANISHING_CURSE, 1)),
                                             CustomDataComponent.create(CompoundTag.create()
                                                     .put(new ByteTag("locateTeammate", (byte) 1)))))
-                            .build());
+                            .generate());
         }
 
         // Set respawn health
@@ -3957,7 +3957,7 @@ public class Main {
         for (Team team : teams) {
             fileCommands.add(Execute.At(lookingPlayer, false) +
                     Execute.IfNext("@p[tag=LookingForTeamMate,team=" + team.getName() + "]", true) +
-                    Give.create(Entity.ofSelector(
+                    GiveCommand.create(Entity.ofSelector(
                                             TargetSelector.NEAREST_PLAYER,
                                             SelectorArgumentsBuilder.create()
                                                     .limit(2)
@@ -3967,7 +3967,7 @@ public class Main {
                                             EnchantmentsComponent.create(Map.of(EnchantmentId.VANISHING_CURSE, 1)),
                                             CustomDataComponent.create(CompoundTag.create()
                                                     .put(new ByteTag("locateTeammate", (byte) 1)))))
-                            .build());
+                            .generate());
         }
 
         return new FileData(FileName.join_team, fileCommands);
