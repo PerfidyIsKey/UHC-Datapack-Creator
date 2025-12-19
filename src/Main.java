@@ -1023,7 +1023,7 @@ public class Main {
                                                 .addMessage(TextComponent.withClickCommand(
                                                         "In remembrance",
                                                         "run_command",
-                                                        Summon.create(EntityId.FIREWORK_ROCKET)
+                                                        SummonCommand.create(EntityId.FIREWORK_ROCKET)
                                                                 .pos(Vec3.relative(0, 0, 0))
                                                                 .nbt(
                                                                         FireworkRocketNbtBuilder.create(
@@ -1035,7 +1035,7 @@ public class Main {
                                                                                                         .buildData())
                                                                                         .buildData())
                                                                                 .buildNbt())
-                                                                .build()))
+                                                                .generate()))
                                                 .addMessage(TextComponent.simple("of our"))
                                                 .addMessage(TextComponent.simple("Command Center"))
                                                 .addMessage(TextComponent.simple("2014-2025"))
@@ -1144,7 +1144,7 @@ public class Main {
         // Summon a player head upon dying
         for (Player p : players) {
             fileCommands.add(Execute.At("@p[name=" + p.getPlayerName() + ",scores={Deaths=1}]") +
-                    Summon.create(EntityId.ITEM)
+                    SummonCommand.create(EntityId.ITEM)
                             .pos(Vec3.relative(0, 0, 0))
                             .nbt(
                                     ItemNbtBuilder.create(
@@ -1156,7 +1156,7 @@ public class Main {
                                                                     PlayerProfileComponentBuilder.build(
                                                                             PlayerProfileComponentData.create(p.getPlayerName())))))
                                             .buildNbt())
-                            .build());
+                            .generate());
         }
 
         return new FileData(FileName.drop_player_heads, fileCommands);
@@ -1596,10 +1596,10 @@ public class Main {
                         .targets(Constant.admin)
                                 .generate());
         fileCommands.add(
-                Summon.create(EntityId.MARKER)
+                SummonCommand.create(EntityId.MARKER)
                         .pos(Vec3.absolute(0, Constant.worldBottom, 0))
                         .nbt(BaseEntityNbt.create(EntityId.MARKER, "Admin").buildNbt())
-                        .build()
+                        .generate()
         );
 
         // Set time
@@ -2291,7 +2291,7 @@ public class Main {
                     .generate());
 
             // Summon armor stand to be tracked
-            fileCommands.add(Summon.create(EntityId.ARMOR_STAND)
+            fileCommands.add(SummonCommand.create(EntityId.ARMOR_STAND)
                     .pos(Vec3.absolute(controlPoint.getCoordinate().getX(), controlPoint.getCoordinate().getY(), controlPoint.getCoordinate().getZ()))
                     .nbt(ArmorStandNbtBuilder.create(
                                     ArmorStandData.create(
@@ -2300,7 +2300,7 @@ public class Main {
                                             true,
                                             new EntityTag[]{controlPoint.getName()}))
                             .buildNbt())
-                    .build());
+                    .generate());
 
             // Set transmit range of waypoint
             fileCommands.add(AttributeCommand.create(
@@ -2739,7 +2739,7 @@ public class Main {
         // Summon Care Package entities
         for (int i = 0; i < carePackageAmount; i++) {
             fileCommands.add(Execute.In(Dimension.overworld) +
-                    Summon.create(EntityId.FALLING_BLOCK)
+                    SummonCommand.create(EntityId.FALLING_BLOCK)
                             .pos(Vec3.absolute(0, 300, 0))
                             .nbt(
                                     FallingBlockNbtBuilder.create(
@@ -3882,7 +3882,7 @@ public class Main {
                                 DataPath.create(DataPathId.AGE))
                         .generate());
         fileCommands.add(Execute.At(babyWolf) +
-                Summon.create(EntityId.DOLPHIN));
+                SummonCommand.create(EntityId.DOLPHIN));
         fileCommands.add(Execute.As(babyWolf) +
                 KillCommand.create().targets(Entity.ofSelector(TargetSelector.SENDER)).generate());
 
