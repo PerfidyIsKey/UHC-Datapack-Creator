@@ -32,7 +32,7 @@ import uhc.arguments.item.ItemTargetEntity;
 import controlpoints.ControlPoint;
 import controlpoints.ControlPointTag;
 import uhc.command.commands.*;
-import uhc.command.util.ItemSlot;
+import uhc.arguments.slot.ItemSlot;
 import uhc.data.nbt.blockentity.*;
 import uhc.data.nbt.entity.*;
 import uhc.data.nbt.entity.data.*;

@@ -1,4 +1,4 @@
-package uhc.command.util;
+package uhc.arguments.slot;
 
 /**
  * 📦 **Specific Item Slot Interface**

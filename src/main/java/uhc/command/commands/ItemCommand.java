@@ -2,8 +2,8 @@ package uhc.command.commands;
 
 import uhc.arguments.item.ItemTarget;
 import uhc.arguments.itemstack.ItemStack;
-import uhc.command.util.ItemSlot; // Note: Used for sourceSlot argument in replaceFrom
-import uhc.command.util.SpecificItemSlot; // Note: Used for targetSlot argument
+import uhc.arguments.slot.ItemSlot; // Note: Used for sourceSlot argument in replaceFrom
+import uhc.arguments.slot.SpecificItemSlot; // Note: Used for targetSlot argument
 import uhc.command.MinecraftCommand;
 
 /**

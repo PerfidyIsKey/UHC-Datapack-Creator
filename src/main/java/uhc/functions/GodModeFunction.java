@@ -18,7 +18,7 @@ import uhc.components.functions.Function;
 import uhc.components.functions.FunctionPath;
 import uhc.core.Datapack;
 import uhc.core.Namespace;
-import uhc.command.util.ItemSlot;
+import uhc.arguments.slot.ItemSlot;
 import uhc.resource.EffectId;
 import uhc.resource.EnchantmentId;
 import uhc.resource.ItemId;
