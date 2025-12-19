@@ -29,7 +29,6 @@ import uhc.arguments.data.DataValue;
 import uhc.data.nbt.ModificationSetValue;
 import uhc.arguments.itemstack.*;
 import uhc.arguments.item.ItemTargetEntity;
-import commands.time.TimeAction;
 import commands.worldborder.WorldBorderAction;
 import controlpoints.ControlPoint;
 import controlpoints.ControlPointTag;
@@ -1602,10 +1601,10 @@ public class Main {
         );
 
         // Set time
-        fileCommands.add(Time.create(
-                        TimeAction.SET,
+        fileCommands.add(TimeCommand.create(
+                        TimeCommand.TimeAction.SET,
                         VariableGameTime.create(0))
-                .build());
+                .generate());
 
         // Set gamerules
         fileCommands.add(GameRuleCommand.create(GameRuleId.COMMAND_BLOCK_OUTPUT)
@@ -2097,10 +2096,10 @@ public class Main {
         ArrayList<TextItem> texts = new ArrayList<>();
 
         // Set world time
-        fileCommands.add(Time.create(
-                        TimeAction.SET,
+        fileCommands.add(TimeCommand.create(
+                        TimeCommand.TimeAction.SET,
                         VariableGameTime.create(0))
-                .build());
+                .generate());
 
         // Give potion effect
         fileCommands.add(Effect.create(EffectCommand.EffectAction.GIVE)
