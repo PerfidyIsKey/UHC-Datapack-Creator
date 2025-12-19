@@ -1,4 +1,4 @@
-package commands.data;
+package uhc.data.target;
 
 import uhc.arguments.entity.Entity;
 

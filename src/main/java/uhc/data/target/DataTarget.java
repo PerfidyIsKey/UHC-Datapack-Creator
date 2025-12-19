@@ -1,4 +1,4 @@
-package commands.data;
+package uhc.data.target;
 
 /**
  * Interface defining the contract for the target of a Minecraft '/data' command.

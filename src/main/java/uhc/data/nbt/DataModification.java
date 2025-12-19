@@ -1,4 +1,4 @@
-package commands.data;
+package uhc.data.nbt;
 
 /**
  * Interface defining the contract for all data modification operations in the

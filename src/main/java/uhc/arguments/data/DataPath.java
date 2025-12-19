@@ -1,4 +1,4 @@
-package commands.data;
+package uhc.arguments.data;
 
 import uhc.data.resource.DataPathId;
 

@@ -1,4 +1,4 @@
-package commands.data;
+package uhc.arguments.data;
 
 /**
  * Represents a type-safe NBT literal value in a data command.

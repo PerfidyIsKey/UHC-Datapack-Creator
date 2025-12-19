@@ -1,4 +1,6 @@
-package commands.data;
+package uhc.data.nbt;
+
+import uhc.arguments.data.DataValue;
 
 /**
  * Represents the "set value <value>" modification.
