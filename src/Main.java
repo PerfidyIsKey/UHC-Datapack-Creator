@@ -29,7 +29,6 @@ import uhc.arguments.data.DataValue;
 import uhc.data.nbt.ModificationSetValue;
 import uhc.arguments.itemstack.*;
 import uhc.arguments.item.ItemTargetEntity;
-import commands.tag.TagAction;
 import commands.time.TimeAction;
 import commands.worldborder.WorldBorderAction;
 import controlpoints.ControlPoint;
@@ -1083,13 +1082,13 @@ public class Main {
 
         // Add respawn tag to players who die in the first 20 minutes
         fileCommands.add(Execute.Unless("@e[tag=" + TagTemp.RespawnDisabled + "]") +
-                Tag.action(Entity.ofSelector(
+                TagCommand.action(Entity.ofSelector(
                                         TargetSelector.NEAREST_PLAYER,
                                         SelectorArgumentsBuilder.create()
                                                 .scores(Map.of(ScoreObjective.DEATHS, 1))),
-                                TagAction.ADD)
+                                TagCommand.TagAction.ADD)
                         .name(StaticEntityTag.RESPAWN)
-                        .build());
+                        .generate());
 
         // Drop player head
         fileCommands.add(Schedule.callFunction(FileName.drop_player_heads));
@@ -1674,21 +1673,21 @@ public class Main {
                         .generate());
 
         // Remove tags
-        fileCommands.add(Tag.action(Entity.ofSelector(TargetSelector.ALL_PLAYERS), TagAction.REMOVE)
+        fileCommands.add(TagCommand.action(Entity.ofSelector(TargetSelector.ALL_PLAYERS), TagCommand.TagAction.REMOVE)
                 .name(StaticEntityTag.RESPAWN_DISABLED)
-                .build());
-        fileCommands.add(Tag.action(Entity.ofSelector(TargetSelector.ALL_PLAYERS), TagAction.REMOVE)
+                .generate());
+        fileCommands.add(TagCommand.action(Entity.ofSelector(TargetSelector.ALL_PLAYERS), TagCommand.TagAction.REMOVE)
                 .name(StaticEntityTag.IRON_MAN_CANDIDATE)
-                .build());
-        fileCommands.add(Tag.action(Entity.ofSelector(TargetSelector.ALL_PLAYERS), TagAction.REMOVE)
+                .generate());
+        fileCommands.add(TagCommand.action(Entity.ofSelector(TargetSelector.ALL_PLAYERS), TagCommand.TagAction.REMOVE)
                 .name(StaticEntityTag.IRON_MAN)
-                .build());
-        fileCommands.add(Tag.action(Entity.ofSelector(TargetSelector.ALL_PLAYERS), TagAction.REMOVE)
+                .generate());
+        fileCommands.add(TagCommand.action(Entity.ofSelector(TargetSelector.ALL_PLAYERS), TagCommand.TagAction.REMOVE)
                 .name(StaticEntityTag.RESPAWN)
-                .build());
-        fileCommands.add(Tag.action(Constant.admin, TagAction.REMOVE)
+                .generate());
+        fileCommands.add(TagCommand.action(Constant.admin, TagCommand.TagAction.REMOVE)
                 .name(StaticEntityTag.GAME_STARTED)
-                .build());
+                .generate());
 
         // Set world border
         fileCommands.add(WorldBorder.create(WorldBorderAction.SET)
@@ -1744,9 +1743,9 @@ public class Main {
             fileCommands.add(scoreboard.Set("CarePackages", getObjectiveByName(Objective.Time), 1200));
 
             // Remove tags
-            fileCommands.add(Tag.action(Constant.admin, TagAction.REMOVE)
+            fileCommands.add(TagCommand.action(Constant.admin, TagCommand.TagAction.REMOVE)
                     .name(StaticEntityTag.CARE_PACKAGES_DROPPED)
-                    .build());
+                    .generate());
         }
 
         // Control Point
@@ -1777,15 +1776,15 @@ public class Main {
             fileCommands.add(scoreboard.Set("ControlPoints", getObjectiveByName(Objective.Time), 1800));
 
             // Remove tags
-            fileCommands.add(Tag.action(Constant.admin, TagAction.REMOVE)
+            fileCommands.add(TagCommand.action(Constant.admin, TagCommand.TagAction.REMOVE)
                     .name(StaticEntityTag.CONTROL_POINT_1_ENABLED)
-                    .build());
-            fileCommands.add(Tag.action(Constant.admin, TagAction.REMOVE)
+                    .generate());
+            fileCommands.add(TagCommand.action(Constant.admin, TagCommand.TagAction.REMOVE)
                     .name(StaticEntityTag.CONTROL_POINT_2_ENABLED)
-                    .build());
-            fileCommands.add(Tag.action(Constant.admin, TagAction.REMOVE)
+                    .generate());
+            fileCommands.add(TagCommand.action(Constant.admin, TagCommand.TagAction.REMOVE)
                     .name(StaticEntityTag.CONTROL_POINT_CAPTURED)
-                    .build());
+                    .generate());
 
             // Spawn new Control Points
             fileCommands.add(Schedule.callFunction(FileName.spawn_control_points));
@@ -1821,15 +1820,15 @@ public class Main {
             fileCommands.add(scoreboard.Set("TraitorFaction", getObjectiveByName(Objective.Time), 2400));
 
             // Remove tags
-            fileCommands.add(Tag.action(Entity.ofSelector(TargetSelector.ALL_PLAYERS), TagAction.REMOVE)
+            fileCommands.add(TagCommand.action(Entity.ofSelector(TargetSelector.ALL_PLAYERS), TagCommand.TagAction.REMOVE)
                     .name(StaticEntityTag.TRAITOR)
-                    .build());
-            fileCommands.add(Tag.action(Entity.ofSelector(TargetSelector.ALL_PLAYERS), TagAction.REMOVE)
+                    .generate());
+            fileCommands.add(TagCommand.action(Entity.ofSelector(TargetSelector.ALL_PLAYERS), TagCommand.TagAction.REMOVE)
                     .name(StaticEntityTag.DONT_MAKE_TRAITOR)
-                    .build());
-            fileCommands.add(Tag.action(Constant.admin, TagAction.REMOVE)
+                    .generate());
+            fileCommands.add(TagCommand.action(Constant.admin, TagCommand.TagAction.REMOVE)
                     .name(StaticEntityTag.TRAITORS_ASSIGNED)
-                    .build());
+                    .generate());
         }
 
         // In-game team creation
@@ -1865,13 +1864,13 @@ public class Main {
                 .build());
 
         // Make players fall
-        fileCommands.add(Tag.action(Entity.ofSelector(
+        fileCommands.add(TagCommand.action(Entity.ofSelector(
                 TargetSelector.ALL_PLAYERS,
                 SelectorArgumentsBuilder.create()
                         .gamemode(GameMode.ADVENTURE, true)),
-                TagAction.ADD)
+                TagCommand.TagAction.ADD)
                         .name(StaticEntityTag.IS_FLYING)
-                        .build());
+                        .generate());
 
         fileCommands.add(GameModeCommand.create(GameMode.ADVENTURE)
                 .target(Entity.ofSelector(
@@ -1891,13 +1890,13 @@ public class Main {
                 )
                 .generate()
         );
-        fileCommands.add(Tag.action(Entity.ofSelector(
+        fileCommands.add(TagCommand.action(Entity.ofSelector(
                                 TargetSelector.ALL_PLAYERS,
                                 SelectorArgumentsBuilder.create()
                                         .tag(StaticEntityTag.IS_FLYING)),
-                        TagAction.REMOVE)
+                        TagCommand.TagAction.REMOVE)
                 .name(StaticEntityTag.IS_FLYING)
-                .build());
+                .generate());
 
         // Set death count for comparison
         fileCommands.add(scoreboard.Set("@a", Objective.Deaths, 0));
@@ -1934,9 +1933,9 @@ public class Main {
                 // Get tag that predictions have been completed
                 fileCommands.add(Execute.If("@p[team=" + t.getName() + ",scores={Deaths=0}]", false) +
                         Execute.UnlessNext("@p[team=!" + t.getName() + ",scores={Deaths=0}]", true) +
-                        Tag.action(Constant.admin, TagAction.ADD)
+                        TagCommand.action(Constant.admin, TagCommand.TagAction.ADD)
                                 .name(StaticEntityTag.PREDICTIONS_COMPLETED)
-                                .build());
+                                .generate());
 
                 // Chat message
                 texts.add(bannerText);
@@ -1953,20 +1952,20 @@ public class Main {
             }
         } else {
             // Choose player as candidate for having won
-            fileCommands.add(Tag.action(Entity.ofSelector(
+            fileCommands.add(TagCommand.action(Entity.ofSelector(
                     TargetSelector.RANDOM_PLAYER,
                     SelectorArgumentsBuilder.create()
                             .team()
                             .scores(Map.of(ScoreObjective.DEATHS, 0))),
-                    TagAction.ADD)
+                    TagCommand.TagAction.ADD)
                             .name(StaticEntityTag.PREDICTION_CANDIDATE)
-                            .build());
+                            .generate());
 
             // Get tag that predictions have been completed
             fileCommands.add(Execute.Unless("@p[tag=!" + TagTemp.PredictionCandidate + ",scores={Deaths=0}]") +
-                    Tag.action(Constant.admin, TagAction.ADD)
+                    TagCommand.action(Constant.admin, TagCommand.TagAction.ADD)
                                     .name(StaticEntityTag.PREDICTIONS_COMPLETED)
-                                            .build());
+                                            .generate());
 
             // Chat message
             texts.add(bannerText);
@@ -1981,13 +1980,13 @@ public class Main {
             texts.clear();
 
             // Clear candidate tag
-            fileCommands.add(Tag.action(Entity.ofSelector(
+            fileCommands.add(TagCommand.action(Entity.ofSelector(
                                     TargetSelector.NEAREST_PLAYER,
                                     SelectorArgumentsBuilder.create()
                                             .tag(StaticEntityTag.PREDICTION_CANDIDATE)),
-                            TagAction.REMOVE)
+                            TagCommand.TagAction.REMOVE)
                     .name(StaticEntityTag.PREDICTION_CANDIDATE)
-                    .build());
+                    .generate());
         }
 
         // Self-schedule function
@@ -2324,9 +2323,9 @@ public class Main {
         fileCommands.add(Schedule.callFunction(FileName.timer_control_point_20));
 
         // Give admin tag for disabling self-rescheduling
-        fileCommands.add(Tag.action(Constant.admin, TagAction.ADD)
+        fileCommands.add(TagCommand.action(Constant.admin, TagCommand.TagAction.ADD)
                         .name(StaticEntityTag.CONTROL_POINT_1_ENABLED)
-                                .build());
+                                .generate());
 
         return new FileData(FileName.initialize_control_point, fileCommands);
     }
@@ -2362,9 +2361,9 @@ public class Main {
         fileCommands.add(getBossbarByName("cp2").setTitle("CP2: " + controlPoints.get(1).getCoordinate().getX() + ", " + controlPoints.get(1).getCoordinate().getY() + ", " + controlPoints.get(1).getCoordinate().getZ() + " (" + controlPoints.get(1).getCoordinate().getDimensionName() + ") - FASTER!!"));
 
         // Give admin tag for disabling self-rescheduling
-        fileCommands.add(Tag.action(Constant.admin, TagAction.ADD)
+        fileCommands.add(TagCommand.action(Constant.admin, TagCommand.TagAction.ADD)
                         .name(StaticEntityTag.CONTROL_POINT_2_ENABLED)
-                                .build());
+                                .generate());
 
         return new FileData(FileName.second_control_point, fileCommands);
     }
@@ -2774,9 +2773,9 @@ public class Main {
                         .generate());
 
         // Give admin tag for disabling self-rescheduling
-        fileCommands.add(Tag.action(Constant.admin, TagAction.ADD)
+        fileCommands.add(TagCommand.action(Constant.admin, TagCommand.TagAction.ADD)
                 .name(StaticEntityTag.CARE_PACKAGES_DROPPED)
-                .build());
+                .generate());
 
         return new FileData(FileName.drop_carepackages, fileCommands);
     }
@@ -2791,89 +2790,89 @@ public class Main {
             for (Player p : players) {
                 if (p.getLastTraitorSeason() >= seasons.get(seasons.size() - traitorWaitTime).getID()) {
                     // Exclude players who cannot become traitor
-                    fileCommands.add(Tag.action(Entity.ofName(p.getPlayerName()), TagAction.ADD)
+                    fileCommands.add(TagCommand.action(Entity.ofName(p.getPlayerName()), TagCommand.TagAction.ADD)
                                     .name(StaticEntityTag.DONT_MAKE_TRAITOR)
-                                            .build());
+                                            .generate());
                 }
             }
         }
 
         // Assign first traitor
-        fileCommands.add(Tag.action(Entity.ofSelector(
+        fileCommands.add(TagCommand.action(Entity.ofSelector(
                 TargetSelector.RANDOM_PLAYER,
                 SelectorArgumentsBuilder.create()
                         .limit(1)
                         .tag(StaticEntityTag.DONT_MAKE_TRAITOR, true)
                         .scores(Map.of(ScoreObjective.RANK, minTraitorRank + ".."))
                         .gamemode(GameMode.SPECTATOR, true)),
-                TagAction.ADD)
+                TagCommand.TagAction.ADD)
                         .name(StaticEntityTag.TRAITOR)
-                        .build());
+                        .generate());
 
         // Make traitor teammates ineligible for becoming traitor
         for (Team t : teams) {
             fileCommands.add(Execute.If("@p[tag=" + TagTemp.Traitor + ",team=" + t.getName() + "]") +
-                    Tag.action(Entity.ofSelector(
+                    TagCommand.action(Entity.ofSelector(
                                             TargetSelector.ALL_PLAYERS,
                                             SelectorArgumentsBuilder.create()
                                                     .team(t.getName())),
-                                    TagAction.ADD)
+                                    TagCommand.TagAction.ADD)
                             .name(StaticEntityTag.DONT_MAKE_TRAITOR)
-                            .build());
+                            .generate());
         }
 
         // Make solo traitors ineligible to become traitor again
-        fileCommands.add(Tag.action(Entity.ofSelector(
+        fileCommands.add(TagCommand.action(Entity.ofSelector(
                 TargetSelector.ALL_PLAYERS,
                 SelectorArgumentsBuilder.create()
                         .tag(StaticEntityTag.TRAITOR)
                         .team()),
-                TagAction.ADD)
+                TagCommand.TagAction.ADD)
                         .name(StaticEntityTag.DONT_MAKE_TRAITOR)
-                        .build());
+                        .generate());
 
         // Assign second traitor
-        fileCommands.add(Tag.action(Entity.ofSelector(
+        fileCommands.add(TagCommand.action(Entity.ofSelector(
                 TargetSelector.RANDOM_PLAYER,
                 SelectorArgumentsBuilder.create()
                         .limit(1)
                         .tag(StaticEntityTag.DONT_MAKE_TRAITOR, true)
                         .scores(Map.of(ScoreObjective.RANK, minTraitorRank + ".."))
                         .gamemode(GameMode.SPECTATOR, true)),
-                TagAction.ADD)
+                TagCommand.TagAction.ADD)
                         .name(StaticEntityTag.TRAITOR)
-                        .build());
+                        .generate());
 
         // Add additional traitor
         if (traitorMode == 2) {
-            fileCommands.add(Tag.action(Entity.ofSelector(TargetSelector.ALL_PLAYERS), TagAction.REMOVE)
+            fileCommands.add(TagCommand.action(Entity.ofSelector(TargetSelector.ALL_PLAYERS), TagCommand.TagAction.REMOVE)
                     .name(StaticEntityTag.DONT_MAKE_TRAITOR)
-                    .build());
+                    .generate());
             if (traitorWaitTime > 0) {
                 for (Player p : players) {
                     if (p.getLastTraitorSeason() >= seasons.get(seasons.size() - traitorWaitTime).getID()) {
-                        fileCommands.add(Tag.action(Entity.ofName(p.getPlayerName()), TagAction.ADD)
+                        fileCommands.add(TagCommand.action(Entity.ofName(p.getPlayerName()), TagCommand.TagAction.ADD)
                                         .name(StaticEntityTag.DONT_MAKE_TRAITOR)
-                                                .build());
+                                                .generate());
                     }
                 }
             }
-            fileCommands.add(Tag.action(Entity.ofSelector(
+            fileCommands.add(TagCommand.action(Entity.ofSelector(
                                     TargetSelector.ALL_PLAYERS,
                                     SelectorArgumentsBuilder.create()
                                             .tag(StaticEntityTag.TRAITOR)),
-                            TagAction.ADD)
+                            TagCommand.TagAction.ADD)
                     .name(StaticEntityTag.DONT_MAKE_TRAITOR)
-                    .build());
-            fileCommands.add(Tag.action(Entity.ofSelector(
+                    .generate());
+            fileCommands.add(TagCommand.action(Entity.ofSelector(
                     TargetSelector.RANDOM_PLAYER,
                     SelectorArgumentsBuilder.create()
                             .limit(1)
                             .tag(StaticEntityTag.DONT_MAKE_TRAITOR, true)
                             .gamemode(GameMode.SPECTATOR, true)),
-                    TagAction.ADD)
+                    TagCommand.TagAction.ADD)
                             .name(StaticEntityTag.TRAITOR)
-                            .build());
+                            .generate());
         }
 
         // Inform traitors
@@ -2897,9 +2896,9 @@ public class Main {
         fileCommands.add(Schedule.callFunction(FileName.timer_traitor_20));
 
         // Give admin tag for disabling self-rescheduling
-        fileCommands.add(Tag.action(Constant.admin, TagAction.ADD)
+        fileCommands.add(TagCommand.action(Constant.admin, TagCommand.TagAction.ADD)
                         .name(StaticEntityTag.TRAITORS_ASSIGNED)
-                                .build());
+                                .generate());
 
         return new FileData(FileName.traitor_handout, fileCommands);
     }
@@ -3615,9 +3614,9 @@ public class Main {
         );
 
         // Remove respawn tag
-        fileCommands.add(Tag.action(respawnPlayer, TagAction.REMOVE)
+        fileCommands.add(TagCommand.action(respawnPlayer, TagCommand.TagAction.REMOVE)
                         .name(StaticEntityTag.RESPAWN)
-                        .build());
+                        .generate());
 
         return new FileData(FileName.respawn_player, fileCommands);
     }
@@ -3645,9 +3644,9 @@ public class Main {
         fileCommands.add(Schedule.callFunction(FileName.teams_highscore_alive_check));
 
         // Give admin tag for disabling self-rescheduling
-        fileCommands.add(Tag.action(Constant.admin, TagAction.ADD)
+        fileCommands.add(TagCommand.action(Constant.admin, TagCommand.TagAction.ADD)
                         .name(StaticEntityTag.CONTROL_POINT_CAPTURED)
-                                .build());
+                                .generate());
 
         return new FileData(FileName.control_point_captured, fileCommands);
     }
@@ -3677,24 +3676,24 @@ public class Main {
 
         if (OperationMode.teamCreationInGame) {
             // Players without a team
-            fileCommands.add(Tag.action(Entity.ofSelector(
+            fileCommands.add(TagCommand.action(Entity.ofSelector(
                     TargetSelector.RANDOM_PLAYER,
                     SelectorArgumentsBuilder.create()
                             .team()
                             .gamemode(GameMode.SPECTATOR, true)),
-                    TagAction.ADD)
+                    TagCommand.TagAction.ADD)
                             .name(StaticEntityTag.AM_I_WINNING)
-                            .build());
+                            .generate());
             fileCommands.add(Execute.Unless("@p[tag=!AmIWinning,gamemode=!spectator]", false) +
                     Execute.AsNext("@p[tag=AmIWinning]", true) +
                     Schedule.callFunction(FileName.victory_message_solo));
-            fileCommands.add(Tag.action(Entity.ofSelector(
+            fileCommands.add(TagCommand.action(Entity.ofSelector(
                                     TargetSelector.NEAREST_PLAYER,
                                     SelectorArgumentsBuilder.create()
                                             .tag(StaticEntityTag.AM_I_WINNING)),
-                            TagAction.REMOVE)
+                            TagCommand.TagAction.REMOVE)
                     .name(StaticEntityTag.AM_I_WINNING)
-                    .build());
+                    .generate());
         }
 
         return new FileData(FileName.teams_alive_check, fileCommands);
@@ -3848,13 +3847,13 @@ public class Main {
 
         if (OperationMode.teamCreationInGame) {
             // Individual players
-            fileCommands.add(Tag.action(Entity.ofSelector(
+            fileCommands.add(TagCommand.action(Entity.ofSelector(
                     TargetSelector.ALL_PLAYERS,
                     SelectorArgumentsBuilder.create()
                             .team()),
-                    TagAction.ADD)
+                    TagCommand.TagAction.ADD)
                             .name(StaticEntityTag.COLLAR_CHECK)
-                            .build());
+                            .generate());
             fileCommands.add(Execute.As("@e[type=" + EntityId.WOLF + "]", false) +
                     Execute.IfNext("@s", getObjectiveByName(Objective.CollarCheck.extendName(0)), ComparatorType.EQUAL, "@p[tag=" + TagTemp.CollarCheck + "]", getObjectiveByName(Objective.CollarCheck.extendName(0))) +
                     Execute.IfNext("@s", getObjectiveByName(Objective.CollarCheck.extendName(1)), ComparatorType.EQUAL, "@p[tag=" + TagTemp.CollarCheck + "]", getObjectiveByName(Objective.CollarCheck.extendName(1)), true) +
@@ -3863,13 +3862,13 @@ public class Main {
                                     DataPath.create(DataPathId.COLLAR_COLOR),
                                     ModificationSetValue.create(DataValue.createByte((byte) 0)))
                             .generate());
-            fileCommands.add(Tag.action(Entity.ofSelector(
+            fileCommands.add(TagCommand.action(Entity.ofSelector(
                                     TargetSelector.ALL_PLAYERS,
                                     SelectorArgumentsBuilder.create()
                                             .team()),
-                            TagAction.REMOVE)
+                            TagCommand.TagAction.REMOVE)
                     .name(StaticEntityTag.COLLAR_CHECK)
-                    .build());
+                    .generate());
         }
 
         // Eliminate baby wolves
@@ -3901,9 +3900,9 @@ public class Main {
         ArrayList<String> fileCommands = new ArrayList<>();
 
         // Add first blood tag
-        fileCommands.add(Tag.action(Constant.admin, TagAction.ADD)
+        fileCommands.add(TagCommand.action(Constant.admin, TagCommand.TagAction.ADD)
                         .name(StaticEntityTag.RESPAWN_DISABLED)
-                                .build());
+                                .generate());
 
         // Update immediate respawn
         fileCommands.add(GameRuleCommand.create(GameRuleId.DO_IMMEDIATE_RESPAWN)
@@ -3985,9 +3984,9 @@ public class Main {
         OperationType comparator;
 
         // Give player playing the horn a tag
-        fileCommands.add(Tag.action(checkingPlayer, TagAction.ADD)
+        fileCommands.add(TagCommand.action(checkingPlayer, TagCommand.TagAction.ADD)
                         .name(StaticEntityTag.LOOKING_FOR_TEAM_MATE)
-                                .build());
+                                .generate());
 
         // Loop through Cartesian coordinates
         for (int i = 0; i < cartesian.length; i++) {
@@ -4062,13 +4061,13 @@ public class Main {
         texts.clear();
 
         // Reset tag and call scoreboard objective
-        fileCommands.add(Tag.action(Entity.ofSelector(
+        fileCommands.add(TagCommand.action(Entity.ofSelector(
                                 TargetSelector.NEAREST_PLAYER,
                                 SelectorArgumentsBuilder.create()
                                         .scores(Map.of(ScoreObjective.TIMES_CALLED, "1.."))),
-                        TagAction.REMOVE)
+                        TagCommand.TagAction.REMOVE)
                 .name(StaticEntityTag.LOOKING_FOR_TEAM_MATE)
-                .build());
+                .generate());
         fileCommands.add(scoreboard.Reset("@p[scores={TimesCalled=1..}]", getObjectiveByName(Objective.TimesCalled)));
 
         return new FileData(FileName.update_player_distance, fileCommands);
@@ -4078,13 +4077,13 @@ public class Main {
         ArrayList<String> fileCommands = new ArrayList<>();
 
         // Give random player with no damage taken iron man candidate
-        fileCommands.add(Tag.action(Entity.ofSelector(
+        fileCommands.add(TagCommand.action(Entity.ofSelector(
                                 TargetSelector.RANDOM_PLAYER,
                                 SelectorArgumentsBuilder.create()
                                         .scores(Map.of(ScoreObjective.DAMAGE_TAKEN, ".." + minDamage))),
-                        TagAction.ADD)
+                        TagCommand.TagAction.ADD)
                 .name(StaticEntityTag.IRON_MAN_CANDIDATE)
-                .build());
+                .generate());
 
         // Check if there are other potential iron man candidates
         fileCommands.add(Execute.Unless("@a[tag=!IronManCandidate,scores={DamageTaken=.." + minDamage + "}]", false) +
@@ -4092,13 +4091,13 @@ public class Main {
                 Schedule.callFunction(FileName.announce_iron_man));
 
         // Remove iron man candidate tag
-        fileCommands.add(Tag.action(Entity.ofSelector(
+        fileCommands.add(TagCommand.action(Entity.ofSelector(
                                 TargetSelector.NEAREST_PLAYER,
                                 SelectorArgumentsBuilder.create()
                                         .tag(StaticEntityTag.IRON_MAN_CANDIDATE)),
-                        TagAction.REMOVE)
+                        TagCommand.TagAction.REMOVE)
                 .name(StaticEntityTag.IRON_MAN_CANDIDATE)
-                .build());
+                .generate());
 
         return new FileData(FileName.check_iron_man, fileCommands);
     }
@@ -4113,9 +4112,9 @@ public class Main {
         fileCommands.add(new TellRaw("@a", texts).sendRaw());
 
         // Award the iron man with their crown
-        fileCommands.add(Tag.action(Entity.ofSelector(TargetSelector.SENDER), TagAction.ADD)
+        fileCommands.add(TagCommand.action(Entity.ofSelector(TargetSelector.SENDER), TagCommand.TagAction.ADD)
                 .name(StaticEntityTag.IRON_MAN)
-                .build());
+                .generate());
 
         return new FileData(FileName.announce_iron_man, fileCommands);
     }
@@ -4124,9 +4123,9 @@ public class Main {
         ArrayList<String> fileCommands = new ArrayList<>();
 
         // Give player Debug tag
-        fileCommands.add(Tag.action(Entity.ofSelector(TargetSelector.SENDER), TagAction.ADD)
+        fileCommands.add(TagCommand.action(Entity.ofSelector(TargetSelector.SENDER), TagCommand.TagAction.ADD)
                 .name(StaticEntityTag.DEBUG)
-                .build());
+                .generate());
 
         return new FileData(FileName.debug_give, fileCommands);
     }
@@ -4135,9 +4134,9 @@ public class Main {
         ArrayList<String> fileCommands = new ArrayList<>();
 
         // Remove Debug tag from player
-        fileCommands.add(Tag.action(Entity.ofSelector(TargetSelector.SENDER), TagAction.REMOVE)
+        fileCommands.add(TagCommand.action(Entity.ofSelector(TargetSelector.SENDER), TagCommand.TagAction.REMOVE)
                 .name(StaticEntityTag.DEBUG)
-                .build());
+                .generate());
 
         return new FileData(FileName.debug_remove, fileCommands);
     }
