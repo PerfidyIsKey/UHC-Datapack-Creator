@@ -3801,7 +3801,7 @@ public class Main {
                         Execute.FacingNext("@a[team=" + t.getName() + ",distance=0.1..,gamemode=!spectator,limit=1,sort=random]", EntityAnchor.eyes) +
                         Execute.PositionedNext(new Coordinate(0, 1, 0, ReferenceFrame.relative)) +
                         Execute.PositionedNext(new Coordinate(0, 0, i + 1, ReferenceFrame.relative_facing), true) +
-                        Particle.create(ParticleArgument.create(
+                        ParticleCommand.create(ParticleArgument.create(
                                         ParticleId.DUST,
                                         ParticleArgumentBuilder.create()
                                                 .color(t.getDustColor())
@@ -3812,7 +3812,7 @@ public class Main {
                                 .count(1)
                                 .display(DisplayType.NORMAL)
                                 .viewers(Entity.ofSelector(TargetSelector.SENDER))
-                                .build());
+                                .generate());
             }
         }
 
