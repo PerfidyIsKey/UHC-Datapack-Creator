@@ -37,10 +37,7 @@ import commands.time.TimeAction;
 import commands.worldborder.WorldBorderAction;
 import controlpoints.ControlPoint;
 import controlpoints.ControlPointTag;
-import uhc.command.commands.AdvancementCommand;
-import uhc.command.commands.AttributeCommand;
-import uhc.command.commands.EffectCommand;
-import uhc.command.commands.ItemCommand;
+import uhc.command.commands.*;
 import uhc.command.util.ItemSlot;
 import uhc.command.util.SetMode;
 import uhc.data.nbt.blockentity.*;
@@ -1353,9 +1350,9 @@ public class Main {
         ArrayList<String> fileCommands = new ArrayList<>();
 
         // Clear inventory
-        fileCommands.add(Clear.create()
+        fileCommands.add(ClearCommand.create()
                         .targets(Entity.ofSelector(TargetSelector.SENDER))
-                                .build());
+                                .generate());
 
         // Give potions
         if (!OperationMode.teamCreationInGame) {
@@ -2131,9 +2128,9 @@ public class Main {
                 .build());
 
         // Clear player inventories
-        fileCommands.add(Clear.create()
+        fileCommands.add(ClearCommand.create()
                 .targets(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
-                .build());
+                .generate());
 
         // Set all players to survival mode
         fileCommands.add(SetGameMode.create(GameMode.SURVIVAL)
@@ -3563,10 +3560,10 @@ public class Main {
 
         // Remove player heads
         fileCommands.add(Execute.As("@a[nbt={Inventory:[{id:\"" + ItemId.PLAYER_HEAD + "\"}]}]") +
-                Clear.create()
+                ClearCommand.create()
                         .targets(Entity.ofSelector(TargetSelector.SENDER))
                         .item(SimpleItemPredicate.create(ItemId.PLAYER_HEAD))
-                        .build());  // Remove from inventory
+                        .generate());  // Remove from inventory
         fileCommands.add(Execute.As("@e[type=" + EntityId.ITEM + ",nbt={Item:{id:\"" + ItemId.PLAYER_HEAD + "\"}}]") +
                 Kill.create().targets(Entity.ofSelector(TargetSelector.SENDER)).build());   // Remove item
 
@@ -3949,14 +3946,14 @@ public class Main {
         }
 
         fileCommands.add(Execute.At(lookingPlayer) +
-                Clear.create()
+                ClearCommand.create()
                         .targets(Entity.ofSelector(
                                 TargetSelector.NEAREST_PLAYER,
                                 SelectorArgumentsBuilder.create()
                                         .limit(2)
                                         .gamemode(GameMode.SPECTATOR, true)))
                         .item(SimpleItemPredicate.create(ItemId.GOAT_HORN))
-                        .build());
+                        .generate());
 
 
         for (Team team : teams) {
