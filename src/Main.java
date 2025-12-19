@@ -23,6 +23,7 @@ import uhc.arguments.time.VariableGameTime;
 import commands.*;
 import uhc.command.commands.RandomCommand;
 import uhc.arguments.data.DataPath;
+import uhc.command.commands.SetWorldSpawnCommand;
 import uhc.data.target.DataTargetEntity;
 import uhc.arguments.data.DataValue;
 import uhc.data.nbt.ModificationSetValue;
@@ -971,9 +972,9 @@ public class Main {
         );
 
         // Set world spawn
-        fileCommands.add(SetWorldSpawn.create()
+        fileCommands.add(SetWorldSpawnCommand.create()
                 .pos(BlockPos.absolute(0, 221, 0))
-                .build());
+                .generate());
 
         // Create scoreboard objectives
         for (ScoreboardObjectiveOld objective : scoreboardObjectives) {
