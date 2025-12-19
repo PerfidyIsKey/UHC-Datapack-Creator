@@ -28,7 +28,6 @@ import uhc.arguments.data.DataValue;
 import uhc.data.nbt.ModificationSetValue;
 import uhc.arguments.itemstack.*;
 import uhc.arguments.item.ItemTargetEntity;
-import commands.recipe.RecipeAction;
 import commands.tag.TagAction;
 import commands.time.TimeAction;
 import commands.worldborder.WorldBorderAction;
@@ -2074,11 +2073,11 @@ public class Main {
 
         // Recipes
         // fileCommands.add(giveRecipe("@a", Block.GOLDEN_APPLE.setNamespace(Namespace.uhc)));
-        fileCommands.add(Recipe.create(
-                        RecipeAction.TAKE,
+        fileCommands.add(RecipeCommand.create(
+                        RecipeCommand.RecipeAction.TAKE,
                         Entity.ofSelector(TargetSelector.ALL_PLAYERS))
                 .recipe(RecipeId.DRAGON_HEAD)
-                .build());
+                .generate());
 
         // Remove resistance
         fileCommands.add(Effect.create(EffectCommand.EffectAction.CLEAR)
