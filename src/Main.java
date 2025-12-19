@@ -38,6 +38,7 @@ import commands.worldborder.WorldBorderAction;
 import controlpoints.ControlPoint;
 import controlpoints.ControlPointTag;
 import uhc.command.commands.AdvancementCommand;
+import uhc.command.commands.AttributeCommand;
 import uhc.command.commands.EffectCommand;
 import uhc.command.commands.ItemCommand;
 import uhc.command.util.ItemSlot;
@@ -395,7 +396,7 @@ public class Main {
 
             // Perks
             perks.add(new Perk(1, new StatusEffect(EffectId.SPEED, 999999, 0, false), SoundId.BASALT, 3 * singleton.getMinToCPScore()));
-            perks.add(new Perk(2, Attribute.create(Entity.ofSelector(TargetSelector.SENDER), AttributeId.SCALE).value(0.8), SoundId.CRIMSON, 6 * singleton.getMinToCPScore()));
+            perks.add(new Perk(2, AttributeCommand.create(Entity.ofSelector(TargetSelector.SENDER), AttributeId.SCALE).value(0.8), SoundId.CRIMSON, 6 * singleton.getMinToCPScore()));
             perks.add(new Perk(3, new StatusEffect(EffectId.HASTE, 999999, 2, false), SoundId.WARPED, 12 * singleton.getMinToCPScore()));
             perks.add(new Perk(4, new StatusEffect(EffectId.ABSORPTION, 999999, 1, false), SoundId.WITHER, 15 * singleton.getMinToCPScore()));
         }
@@ -1713,12 +1714,12 @@ public class Main {
 
         // Reset player attributes
         fileCommands.add(Execute.As("@a") +
-                Attribute.create(
+                AttributeCommand.create(
                         Entity.ofSelector(TargetSelector.SENDER),
                         AttributeId.SCALE)
                                 .setBase(1));
         fileCommands.add(Execute.As("@a") +
-                Attribute.create(
+                AttributeCommand.create(
                                 Entity.ofSelector(TargetSelector.SENDER),
                                 AttributeId.WAYPOINT_TRANSMIT_RANGE)
                         .setBase(0));
@@ -2308,7 +2309,7 @@ public class Main {
                     .build());
 
             // Set transmit range of waypoint
-            fileCommands.add(Attribute.create(
+            fileCommands.add(AttributeCommand.create(
                             Entity.ofSelector(
                                     TargetSelector.NEAREST_ENTITY,
                                     SelectorArgumentsBuilder.create()
@@ -3591,7 +3592,7 @@ public class Main {
 
             fileCommands.add(Execute.As(respawnPlayerOld, false) +
                     Execute.IfNext("@e[scores={MinHealth=" + indexFront + ".." + indexRear + "}]", true) +
-                    Attribute.create(
+                    AttributeCommand.create(
                                     Entity.ofSelector(TargetSelector.SENDER),
                                     AttributeId.MAX_HEALTH)
                             .setBase(i + 1));
@@ -3607,7 +3608,7 @@ public class Main {
                 .effect(EffectId.HEALTH_BOOST)
                 .build());
         fileCommands.add(Execute.As(respawnPlayerOld) +
-                Attribute.create(
+                AttributeCommand.create(
                                 Entity.ofSelector(TargetSelector.SENDER),
                                 AttributeId.MAX_HEALTH)
                         .setBase(20));
@@ -3894,7 +3895,7 @@ public class Main {
         // Set tamed wolf base health
         fileCommands.add(Execute.As("@e[type=" + EntityId.WOLF + "]", false) +
                 Execute.IfNext(DataClasses.entity, "@s Owner", true) +
-                Attribute.create(
+                AttributeCommand.create(
                         Entity.ofSelector(TargetSelector.SENDER),
                         AttributeId.MAX_HEALTH)
                         .setBase(20));

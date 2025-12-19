@@ -1,13 +1,13 @@
 package HelperClasses;
 
-import commands.Attribute;
+import uhc.command.commands.AttributeCommand;
 import uhc.resource.SoundId;
 
 public class Perk {
 
     private int id;
     private StatusEffect effect;
-    private Attribute attribute;
+    private AttributeCommand attribute;
     private SoundId sound;
     private int activationTime;
 
@@ -18,7 +18,7 @@ public class Perk {
         this.activationTime = activationTime;
     }
 
-    public Perk(int id, Attribute reward, SoundId sound, int activationTime) {
+    public Perk(int id, AttributeCommand reward, SoundId sound, int activationTime) {
         this.id = id;
         this.attribute = reward;
         this.sound = sound;
