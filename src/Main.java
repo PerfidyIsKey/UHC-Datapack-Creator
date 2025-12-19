@@ -29,7 +29,6 @@ import uhc.arguments.data.DataValue;
 import uhc.data.nbt.ModificationSetValue;
 import uhc.arguments.itemstack.*;
 import uhc.arguments.item.ItemTargetEntity;
-import commands.worldborder.WorldBorderAction;
 import controlpoints.ControlPoint;
 import controlpoints.ControlPointTag;
 import uhc.command.commands.*;
@@ -1689,9 +1688,9 @@ public class Main {
                 .generate());
 
         // Set world border
-        fileCommands.add(WorldBorder.create(WorldBorderAction.SET)
+        fileCommands.add(WorldBorderCommand.create(WorldBorderCommand.WorldBorderAction.SET)
                 .distance(2 * world.getSize())
-                .build());
+                .generate());
 
         // Display ranks
         fileCommands.add(Schedule.callFunction(FileName.display_rank));
@@ -2500,15 +2499,15 @@ public class Main {
         ArrayList<String> fileCommands = new ArrayList<>();
 
         // Set start worldborder size
-        fileCommands.add(WorldBorder.create(WorldBorderAction.SET)
+        fileCommands.add(WorldBorderCommand.create(WorldBorderCommand.WorldBorderAction.SET)
                 .distance(400)
-                .build());
+                .generate());
 
         // Set destination worldborder size
-        fileCommands.add(WorldBorder.create(WorldBorderAction.SET)
+        fileCommands.add(WorldBorderCommand.create(WorldBorderCommand.WorldBorderAction.SET)
                 .distance(20)
                 .time(180)
-                .build());
+                .generate());
 
         // Teleport all living players
         fileCommands.add(Execute.In(Dimension.overworld) +
