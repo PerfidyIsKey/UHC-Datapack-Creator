@@ -16,7 +16,8 @@ public enum ComponentId {
     LORE,
     ENCHANTMENTS,
     UNBREAKABLE,
-    PROFILE;
+    PROFILE,
+    DAMAGE;
 
     private final String path;
     private final String namespace;
