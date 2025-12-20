@@ -6,30 +6,47 @@ import java.util.Objects;
 /**
  * 🏷️ **Component ID Registry**
  * <p>
- * Defines the resource locations for Minecraft Data Components.
- * These IDs are used as keys in the 'components' NBT map of an item stack.
+ * Defines the resource locations for Minecraft Data Components (1.20.5+).
+ * These IDs serve as keys within the 'components' NBT compound.
  * </p>
  */
 public enum ComponentId {
-    // --- 🛠️ Standard Components ---
+
+    // --- ✨ Visual & Identity ---
+    /** Changes the display name of the item. */
     CUSTOM_NAME,
+    /** Adds additional text lines to the item tooltip. */
     LORE,
-    ENCHANTMENTS,
-    UNBREAKABLE,
+    /** Stores the player profile for Player Heads. */
     PROFILE,
+
+    // --- ⚔️ Combat & Mechanics ---
+    /** Stores the item's current damage/durability. */
     DAMAGE,
+    /** Makes the item immune to durability loss. */
+    UNBREAKABLE,
+    /** List of enchantments and their levels. */
+    ENCHANTMENTS,
+    /** Modifiers for player stats (Attack Speed, Health, etc.). */
     ATTRIBUTE_MODIFIERS,
+
+    // --- 🧪 Consumables & Utility ---
+    /** Defines potion types and custom status effects. */
     POTION_CONTENTS,
+    /** Data for instruments like Goat Horns. */
     INSTRUMENT,
+    /** Controls item cooldowns (e.g. Ender Pearls). */
     USE_COOLDOWN,
+
+    // --- 💾 Data & Meta ---
+    /** Container for arbitrary, non-vanilla NBT data. */
     CUSTOM_DATA;
 
     private final String path;
     private final String namespace;
 
     /**
-     * Default constructor using the Enum name as the path.
-     * Converts SCREAMING_SNAKE_CASE to snake_case.
+     * Default constructor. Converts Enum name to snake_case.
      */
     ComponentId() {
         this.path = name().toLowerCase();
@@ -37,8 +54,7 @@ public enum ComponentId {
     }
 
     /**
-     * Constructor allowing a custom path override.
-     * @param path The specific snake_case path for the component.
+     * Constructor allowing a custom path override within the Minecraft namespace.
      */
     ComponentId(String path) {
         this.path = Objects.requireNonNull(path);
@@ -46,7 +62,7 @@ public enum ComponentId {
     }
 
     /**
-     * Full constructor for cross-namespace components (e.g., from mods or datapacks).
+     * Full constructor for custom namespaces.
      */
     ComponentId(String namespace, String path) {
         this.namespace = Objects.requireNonNull(namespace);
@@ -54,8 +70,7 @@ public enum ComponentId {
     }
 
     /**
-     * Returns the full namespaced key (e.g., "minecraft:custom_name").
-     * @return The resource location string.
+     * Returns the full namespaced key (e.g., "minecraft:custom_data").
      */
     public String getResourceLocation() {
         return namespace + ":" + path;
