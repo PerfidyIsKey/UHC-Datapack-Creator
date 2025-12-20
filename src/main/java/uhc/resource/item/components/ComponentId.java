@@ -18,7 +18,8 @@ public enum ComponentId {
     UNBREAKABLE,
     PROFILE,
     DAMAGE,
-    ATTRIBUTE_MODIFIERS;
+    ATTRIBUTE_MODIFIERS,
+    POTION_CONTENTS;
 
     private final String path;
     private final String namespace;
