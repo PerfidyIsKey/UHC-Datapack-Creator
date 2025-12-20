@@ -21,7 +21,8 @@ public enum ComponentId {
     ATTRIBUTE_MODIFIERS,
     POTION_CONTENTS,
     INSTRUMENT,
-    USE_COOLDOWN;
+    USE_COOLDOWN,
+    CUSTOM_DATA;
 
     private final String path;
     private final String namespace;
