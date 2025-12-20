@@ -1,7 +1,7 @@
 package uhc.arguments.block;
 
 import Enums.Direction;
-import uhc.game.StructureBlockMode;
+import uhc.resource.block.structure_block.StructureBlockMode;
 
 import java.util.ArrayList;
 import java.util.List;

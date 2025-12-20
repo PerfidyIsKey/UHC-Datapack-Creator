@@ -2,7 +2,9 @@ package uhc.data.nbt.blockentity;
 
 import uhc.data.nbt.NBTTag;
 import uhc.data.nbt.tags.*;
-import uhc.game.StructureBlockMode;
+import uhc.resource.block.structure_block.StructureBlockMode;
+import uhc.resource.block.structure_block.StructureMirror;
+import uhc.resource.block.structure_block.StructureRotation;
 
 public class StructureBlockEntity extends CompoundTag implements BlockEntity {
 

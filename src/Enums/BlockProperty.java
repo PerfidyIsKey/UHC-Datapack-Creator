@@ -1,6 +1,6 @@
 package Enums;
 
-import uhc.game.StructureBlockMode;
+import uhc.resource.block.structure_block.StructureBlockMode;
 
 public enum BlockProperty {
     FACING("facing", Direction.class),
