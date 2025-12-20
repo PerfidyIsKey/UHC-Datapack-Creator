@@ -3,24 +3,39 @@ package uhc.resource.item;
 /**
  * 🛡️ **Equipment Slot Registry**
  * <p>
- * Defines the valid slots where attribute modifiers and equippable components
- * can be applied.
+ * Defines the valid slots used by "minecraft:attribute_modifiers" and
+ * the "minecraft:equippable" component.
  * </p>
  */
 public enum EquipmentSlot {
-    /** The modifier applies regardless of which slot the item is in. */
+
+    /** * The modifier applies regardless of which slot the item is in.
+     * Primarily used in Attribute Modifiers.
+     */
     ANY,
 
-    /** Main hand only. */
+    // --- 📦 Group Slots (Commonly used in 'equippable' component) ---
+
+    /** Represents both MAINHAND and OFFHAND. */
+    HAND,
+
+    /** Represents HEAD, CHEST, LEGS, and FEET. */
+    ARMOR,
+
+    // --- ✋ Hand Slots ---
+
+    /** The item must be in the player's primary hand. */
     MAINHAND,
 
-    /** Off hand only. */
+    /** The item must be in the player's secondary hand. */
     OFFHAND,
 
-    /** Helmet slot. */
+    // --- 👕 Armor Slots ---
+
+    /** Helmet / Headwear slot. */
     HEAD,
 
-    /** Chestplate slot. */
+    /** Chestplate / Elytra slot. */
     CHEST,
 
     /** Leggings slot. */
@@ -29,12 +44,16 @@ public enum EquipmentSlot {
     /** Boots slot. */
     FEET,
 
-    /** Body slot (used for Horse Armor or Wolf Armor). */
-    BODY;
+    // --- 🐎 Mount & Animal Slots (1.20.5+) ---
 
+    /** Used for Wolf Armor or Horse Armor. */
+    BODY,
+
+    /** Used specifically for the saddle slot on ridable entities. */
+    SADDLE;
 
     /**
-     * @return The raw string value expected by Minecraft NBT.
+     * @return The raw string value expected by Minecraft NBT (snake_case).
      */
     public String getNbtName() {
         return name().toLowerCase();
@@ -43,5 +62,14 @@ public enum EquipmentSlot {
     @Override
     public String toString() {
         return getNbtName();
+    }
+
+    /**
+     * Validation check to see if the slot is a specific physical slot.
+     * Group slots (HAND, ARMOR) may cause errors if used in certain NBT attributes.
+     * * @return true if the slot represents a single specific equipment location.
+     */
+    public boolean isSpecific() {
+        return this != ANY && this != HAND && this != ARMOR;
     }
 }
