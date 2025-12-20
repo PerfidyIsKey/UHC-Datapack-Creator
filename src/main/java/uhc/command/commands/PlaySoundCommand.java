@@ -4,7 +4,7 @@ import uhc.command.MinecraftCommand;
 import uhc.game.SoundSource;
 import uhc.arguments.entity.Entity;
 import uhc.arguments.coordinate.Vec3;
-import uhc.resource.SoundId;
+import uhc.resource.sound.SoundId;
 
 import java.util.Objects;
 

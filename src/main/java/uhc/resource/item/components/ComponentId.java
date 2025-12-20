@@ -19,7 +19,8 @@ public enum ComponentId {
     PROFILE,
     DAMAGE,
     ATTRIBUTE_MODIFIERS,
-    POTION_CONTENTS;
+    POTION_CONTENTS,
+    INSTRUMENT;
 
     private final String path;
     private final String namespace;

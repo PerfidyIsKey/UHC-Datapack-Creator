@@ -57,6 +57,7 @@ import uhc.attribute.AttributeSlot;
 import uhc.attribute.AttributeTooltipDisplayType;
 import uhc.resource.block.ColorableBlockId;
 import uhc.resource.block.WoodBlockId;
+import uhc.resource.sound.SoundId;
 import uhc.score.ComparatorType;
 import uhc.score.OperationType;
 import uhc.score.ScoreObjective;
