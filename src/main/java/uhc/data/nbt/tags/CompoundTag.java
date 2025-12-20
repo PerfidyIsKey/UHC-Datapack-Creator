@@ -109,6 +109,25 @@ public class CompoundTag implements NBTTag {
         return value.get(name);
     }
 
+    /**
+     * Removes an NBT tag from the compound by its name.
+     * @param name The name of the tag to remove.
+     * @return The CompoundTag instance for method chaining.
+     */
+    public CompoundTag remove(String name) {
+        value.remove(name);
+        return this;
+    }
+
+    /**
+     * Checks if a tag with the specified name exists in this compound.
+     * @param name The name to look for.
+     * @return true if the tag exists, false otherwise.
+     */
+    public boolean contains(String name) {
+        return value.containsKey(name);
+    }
+
     // --- Serialization and Deserialization (Standard NBT Format) ---
 
     /**
