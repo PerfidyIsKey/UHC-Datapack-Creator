@@ -12,9 +12,9 @@ import java.util.UUID;
  * Manages despawn timers, health, pickup restrictions, and attribution.
  * </p>
  */
-public class ItemNBT extends EntityNBT<ItemNBT> {
+public class ItemEntityNBT extends EntityNBT<ItemEntityNBT> {
 
-    private ItemNBT(CompoundTag root) {
+    private ItemEntityNBT(CompoundTag root) {
         super(root);
     }
 
@@ -22,8 +22,8 @@ public class ItemNBT extends EntityNBT<ItemNBT> {
      * Initializes a new Item NBT builder.
      * @return A new instance of ItemNBT.
      */
-    public static ItemNBT create() {
-        return new ItemNBT(CompoundTag.create());
+    public static ItemEntityNBT create() {
+        return new ItemEntityNBT(CompoundTag.create());
     }
 
     @Override
@@ -42,7 +42,7 @@ public class ItemNBT extends EntityNBT<ItemNBT> {
      * @param ticks Ticks since the item was dropped (default despawn is 6000).
      * @return This builder instance.
      */
-    public ItemNBT age(short ticks) {
+    public ItemEntityNBT age(short ticks) {
         root().put(new ShortTag("Age", ticks));
         return this;
     }
@@ -52,7 +52,7 @@ public class ItemNBT extends EntityNBT<ItemNBT> {
      * @param health The health value (default is 5). Item is destroyed at 0.
      * @return This builder instance.
      */
-    public ItemNBT health(short health) {
+    public ItemEntityNBT health(short health) {
         root().put(new ShortTag("Health", health));
         return this;
     }
@@ -66,7 +66,7 @@ public class ItemNBT extends EntityNBT<ItemNBT> {
      * @param ticks Ticks until the item can be collected.
      * @return This builder instance.
      */
-    public ItemNBT pickupDelay(short ticks) {
+    public ItemEntityNBT pickupDelay(short ticks) {
         root().put(new ShortTag("PickupDelay", ticks));
         return this;
     }
@@ -79,7 +79,7 @@ public class ItemNBT extends EntityNBT<ItemNBT> {
      * @throws NullPointerException if itemData is null.
      * @return This builder instance.
      */
-    public ItemNBT item(CompoundTag itemData) {
+    public ItemEntityNBT item(CompoundTag itemData) {
         Objects.requireNonNull(itemData, "Item compound cannot be null.");
         itemData.setName("Item");
         root().put(itemData);
@@ -93,7 +93,7 @@ public class ItemNBT extends EntityNBT<ItemNBT> {
      * @param uuid The UUID of the only player allowed to pick this up.
      * @return This builder instance.
      */
-    public ItemNBT owner(UUID uuid) {
+    public ItemEntityNBT owner(UUID uuid) {
         return setUuidArray("Owner", uuid);
     }
 
@@ -102,14 +102,14 @@ public class ItemNBT extends EntityNBT<ItemNBT> {
      * @param uuid The UUID of the thrower.
      * @return This builder instance.
      */
-    public ItemNBT thrower(UUID uuid) {
+    public ItemEntityNBT thrower(UUID uuid) {
         return setUuidArray("Thrower", uuid);
     }
 
     /**
      * Internal helper to handle UUID to IntArray conversion.
      */
-    private ItemNBT setUuidArray(String key, UUID uuid) {
+    private ItemEntityNBT setUuidArray(String key, UUID uuid) {
         if (uuid == null) {
             root().remove(key);
             return this;
