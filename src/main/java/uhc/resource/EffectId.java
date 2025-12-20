@@ -1,54 +1,69 @@
 package uhc.resource;
 
+import uhc.core.DatapackConfig;
+
+/**
+ * 🧪 **Effect and Potion Registry ID Mapper**
+ * <p>
+ * This enum maps status effects to their respective resource locations
+ * and provides logic to generate valid Potion Registry IDs.
+ * </p>
+ */
 public enum EffectId {
-    ABSORPTION("absorption"),
-    BLINDNESS("blindness"),
-    FIRE_RESISTANCE("fire_resistance"),
-    GLOWING("glowing"),
-    HASTE("haste"),
-    HEALTH_BOOST("health_boost"),
-    INVISIBILITY("invisibility"),
-    LUCK("luck"),
-    NAUSEA("nausea"),
-    POISON("poison"),
-    REGENERATION("regeneration"),
-    RESISTANCE("resistance"),
-    SATURATION("saturation"),
-    SLOW_FALLING("slow_falling"),
-    SLOWNESS("slowness"),
-    SPEED("speed"),
-    STRENGTH("strength"),
-    WEAKNESS("weakness");
+    ABSORPTION,
+    BLINDNESS,
+    FIRE_RESISTANCE,
+    GLOWING,
+    HASTE, // Note: No vanilla potion for Haste
+    HEALTH_BOOST,
+    INVISIBILITY,
+    LUCK,
+    NAUSEA,
+    POISON,
+    REGENERATION,
+    RESISTANCE,
+    SATURATION,
+    SLOW_FALLING,
+    SLOWNESS,
+    SPEED("swiftness"), // Fix: Potion ID is 'swiftness', Effect ID is 'speed'
+    STRENGTH,
+    WEAKNESS;
 
-    private final String id;
+    private final String path;
     private final String namespace;
-    private static final String DEFAULT_NAMESPACE = "minecraft";
 
-    EffectId(String id) {
-        this.id = id;
-        this.namespace = DEFAULT_NAMESPACE;
-    }
-
-    EffectId(String id, String namespace) {
-        this.id = id;
-        this.namespace = namespace;
+    EffectId() {
+        this.path = name().toLowerCase();
+        this.namespace = DatapackConfig.MINECRAFT_NAMESPACE;
     }
 
     /**
-     * Returns the potion tag string for the potion_contents component.
-     *
-     * @param strong   whether the effect is strong
-     * @param extended whether the effect is long
-     * @return potion tag string like "strong_speed" or "long_regeneration"
+     * @param override Use this if the Potion Registry ID differs from the Effect name.
+     */
+    EffectId(String override) {
+        this.path = override;
+        this.namespace = DatapackConfig.MINECRAFT_NAMESPACE;
+    }
+
+    /**
+     * Generates a Potion Registry ID.
+     * <p>
+     * <b>Example:</b> SPEED.getPotionTag(true, false) -> "minecraft:strong_swiftness"
+     * </p>
+     * @param strong   Increases amplifier (e.g., Strength II)
+     * @param extended Increases duration (e.g., 8:00 vs 3:00)
+     * @return Valid Minecraft potion resource location.
      */
     public String getPotionTag(boolean strong, boolean extended) {
-        String prefix = "";
+        StringBuilder sb = new StringBuilder(namespace).append(":");
+
         if (strong) {
-            prefix += "strong_";
+            sb.append("strong_");
         } else if (extended) {
-            prefix += "long_";
+            sb.append("long_");
         }
-        return namespace + ":" + prefix + id;
+
+        return sb.append(path).toString();
     }
 
     public String getPotionTag() {
@@ -56,14 +71,19 @@ public enum EffectId {
     }
 
     /**
-     * Returns the full resource location for the effect ID (e.g., "minecraft:speed").
+     * Returns the Status Effect ID (for custom_effects).
+     * <p>
+     * <b>Warning:</b> This assumes the Effect ID matches the Enum name.
+     * Speed is 'speed', not 'swiftness'.
+     * </p>
      */
     public String getResourceLocation() {
-        return namespace + ":" + id;
+        String effectPath = name().toLowerCase();
+        return namespace + ":" + effectPath;
     }
 
     @Override
     public String toString() {
-        return getPotionTag();
+        return getResourceLocation();
     }
 }
