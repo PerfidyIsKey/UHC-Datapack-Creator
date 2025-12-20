@@ -12,7 +12,9 @@ import java.util.Objects;
 /**
  * 🧪 **Potion Contents Component Implementation**
  * <p>
- * Manages the "minecraft:potion_contents" component.
+ * Manages the "minecraft:potion_contents" data component (1.20.5+).
+ * Handles vanilla potion types, custom RGB liquid colors, and specific
+ * status effect overrides.
  * </p>
  */
 public class PotionContentsComponent implements ItemComponent {
@@ -22,10 +24,23 @@ public class PotionContentsComponent implements ItemComponent {
     private String customName;
     private final List<CustomEffect> customEffects = new ArrayList<>();
 
-    public PotionContentsComponent() {}
-
-    public PotionContentsComponent(EffectId potionId) {
+    private PotionContentsComponent(EffectId potionId) {
         this.potion = potionId;
+    }
+
+    /**
+     * Creates an empty potion component.
+     */
+    public static PotionContentsComponent create() {
+        return new PotionContentsComponent(null);
+    }
+
+    /**
+     * Creates a potion component based on a vanilla potion type.
+     * @param potionId The type-safe ID (e.g., PotionId.HEALING).
+     */
+    public static PotionContentsComponent create(EffectId potionId) {
+        return new PotionContentsComponent(potionId);
     }
 
     public PotionContentsComponent potion(EffectId potionId) {
@@ -33,19 +48,27 @@ public class PotionContentsComponent implements ItemComponent {
         return this;
     }
 
+    /**
+     * Sets a custom RGB color for the potion liquid and particles.
+     * @param color Integer RGB value (e.g., 0xFF0000 for Red).
+     */
     public PotionContentsComponent customColor(int color) {
         this.customColor = color;
         return this;
     }
 
     /**
-     * @param customName Plain string suffix for the translation key.
+     * Sets a custom name suffix used in translation keys.
+     * Note: This is not the display name; use CustomNameComponent for that.
      */
     public PotionContentsComponent customName(String customName) {
         this.customName = customName;
         return this;
     }
 
+    /**
+     * Adds a unique status effect to the potion.
+     */
     public PotionContentsComponent addEffect(CustomEffect effect) {
         this.customEffects.add(Objects.requireNonNull(effect));
         return this;
@@ -60,12 +83,12 @@ public class PotionContentsComponent implements ItemComponent {
     public NBTTag toNbt() {
         String res = getId().getResourceLocation();
 
-        // 1. Simple Mode
+        // Mode A: Simple (Only a base potion type, no custom data)
         if (potion != null && customColor == null && customName == null && customEffects.isEmpty()) {
             return new StringTag(res, potion.getResourceLocation());
         }
 
-        // 2. Detailed Mode
+        // Mode B: Detailed (Compound tag for custom brews)
         CompoundTag root = CompoundTag.create(res);
         if (potion != null) root.put(new StringTag("potion", potion.getResourceLocation()));
         if (customColor != null) root.put(new IntTag("custom_color", customColor));
@@ -81,6 +104,9 @@ public class PotionContentsComponent implements ItemComponent {
         return root;
     }
 
+    /**
+     * Represents a specific status effect with duration and potency.
+     */
     public static class CustomEffect {
         private final EffectId id;
         private byte amplifier;
@@ -89,11 +115,14 @@ public class PotionContentsComponent implements ItemComponent {
         private boolean showParticles = true;
         private boolean showIcon = true;
 
+        /**
+         * @param id The status effect (e.g., EffectId.STRENGTH).
+         * @param duration Duration in ticks (20 ticks = 1s). Use -1 for infinite.
+         * @param amplifier Potency level (0 = Level I, 1 = Level II).
+         */
         public CustomEffect(EffectId id, int duration, int amplifier) {
             this.id = Objects.requireNonNull(id);
-            // Minecraft logic: amplifier 0 is level 1.
             this.amplifier = (byte) Math.max(0, amplifier);
-            // duration -1 is infinite, 0/lesser is 1 tick.
             this.duration = duration;
         }
 
@@ -102,7 +131,7 @@ public class PotionContentsComponent implements ItemComponent {
         public CustomEffect icon(boolean show) { this.showIcon = show; return this; }
 
         protected CompoundTag toNbt() {
-            CompoundTag tag = CompoundTag.create("");
+            CompoundTag tag = CompoundTag.create(""); // Unnamed in list
             tag.put(new StringTag("id", id.getResourceLocation()));
             tag.put(new ByteTag("amplifier", amplifier));
             tag.put(new IntTag("duration", duration));

@@ -8,26 +8,38 @@ import uhc.resource.item.components.ComponentId;
 /**
  * 🛡️ **Unbreakable Component Implementation**
  * <p>
- * Manages the "minecraft:unbreakable" data component.
- * When applied, the item will not lose durability when used.
+ * Manages the "minecraft:unbreakable" data component (1.20.5+).
+ * When applied to an item, it prevents durability loss from use, attacks, or breaking blocks.
  * </p>
  */
 public class UnbreakableComponent implements ItemComponent {
+
     private final boolean showInTooltip;
 
     /**
-     * Creates an Unbreakable component.
-     * @param showInTooltip If true, "Unbreakable" will appear in the item's tooltip.
+     * Private constructor for the unbreakable component.
+     * @param showInTooltip Whether the "Unbreakable" line appears in the item's tooltip.
      */
-    public UnbreakableComponent(boolean showInTooltip) {
+    private UnbreakableComponent(boolean showInTooltip) {
         this.showInTooltip = showInTooltip;
     }
 
     /**
-     * Creates an Unbreakable component that shows in the tooltip by default.
+     * Creates an Unbreakable component that displays in the tooltip.
+     * @return A new instance of UnbreakableComponent.
      */
-    public UnbreakableComponent() {
-        this(true);
+    public static UnbreakableComponent create() {
+        return new UnbreakableComponent(true);
+    }
+
+    /**
+     * Creates an Unbreakable component with custom tooltip visibility.
+     * @param showInTooltip If true, displays "Unbreakable"; if false, the effect is hidden.
+     * @return A new instance of UnbreakableComponent.
+     */
+    public static UnbreakableComponent create(Boolean showInTooltip) {
+        // Error Catch: Handle potential null from wrapper Boolean
+        return new UnbreakableComponent(showInTooltip != null ? showInTooltip : true);
     }
 
     @Override
@@ -36,23 +48,31 @@ public class UnbreakableComponent implements ItemComponent {
     }
 
     /**
-     * Converts the component into the required NBT structure.
+     * Converts the component into the modern Compound NBT structure.
      * <p>
-     * <b>Format:</b> {@code "minecraft:unbreakable": {show_in_tooltip: 1b}}
+     * <b>NBT Representation:</b>
+     * <pre>
+     * "minecraft:unbreakable": {
+     * "show_in_tooltip": 1b
+     * }
+     * </pre>
      * </p>
-     * @return A named {@link CompoundTag} representing the component.
+     * @return A {@link CompoundTag} named with the component's resource location.
      */
     @Override
     public NBTTag toNbt() {
-        // The root of the component must be named with the full resource location.
+        // Root is named "minecraft:unbreakable"
         CompoundTag tag = CompoundTag.create(getId().getResourceLocation());
 
-        // Minecraft 1.20.5+ expects a byte tag for the tooltip toggle.
+        // Value is a byte (1 for true, 0 for false)
         tag.put(new ByteTag("show_in_tooltip", (byte) (showInTooltip ? 1 : 0)));
 
         return tag;
     }
 
+    /**
+     * @return The current visibility state of the unbreakable tooltip.
+     */
     public boolean isShowInTooltip() {
         return showInTooltip;
     }

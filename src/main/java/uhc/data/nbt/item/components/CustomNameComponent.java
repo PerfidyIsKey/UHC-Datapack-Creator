@@ -11,7 +11,8 @@ import java.util.Objects;
  * 🏷️ **Custom Name Component Implementation**
  * <p>
  * Manages the "minecraft:custom_name" data component.
- * This sets the display name of the item using a JSON text component.
+ * This component overrides the display name of an item using a JSON-formatted
+ * text component string.
  * </p>
  */
 public class CustomNameComponent implements ItemComponent {
@@ -19,11 +20,20 @@ public class CustomNameComponent implements ItemComponent {
     private final TextComponent name;
 
     /**
-     * Creates a new Custom Name component.
+     * Private constructor to enforce use of static factory.
      * @param name The TextComponent representing the name. Must not be null.
      */
-    public CustomNameComponent(TextComponent name) {
+    private CustomNameComponent(TextComponent name) {
         this.name = Objects.requireNonNull(name, "Custom name cannot be null.");
+    }
+
+    /**
+     * Creates a new CustomNameComponent.
+     * @param name The TextComponent to display as the item's name.
+     * @return A new instance of CustomNameComponent.
+     */
+    public static CustomNameComponent create(TextComponent name) {
+        return new CustomNameComponent(name);
     }
 
     @Override
@@ -34,17 +44,21 @@ public class CustomNameComponent implements ItemComponent {
     /**
      * Converts the component into the required NBT structure.
      * <p>
-     * <b>Format:</b> {@code "minecraft:custom_name": '{"text":"My Item","color":"gold"}'}
+     * <b>NBT Format:</b> StringTag("minecraft:custom_name", "{\"text\":\"My Item\"}")
      * </p>
-     * @return A named {@link StringTag} containing the JSON text.
+     * @return A {@link StringTag} containing the serialized JSON name.
      */
     @Override
     public NBTTag toNbt() {
-        // In 1.20.5+, custom_name is a StringTag containing the JSON text component.
-        // The tag name must be the namespaced ID (minecraft:custom_name).
+        // In modern Minecraft, custom_name is a StringTag containing a JSON string.
+        // We use the ID's ResourceLocation as the tag name for serialization.
         return new StringTag(getId().getResourceLocation(), name.toString());
     }
 
+    /**
+     * Retrieves the underlying TextComponent.
+     * @return The name component.
+     */
     public TextComponent getName() {
         return name;
     }
