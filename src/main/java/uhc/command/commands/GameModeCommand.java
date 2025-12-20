@@ -2,7 +2,7 @@ package uhc.command.commands;
 
 import uhc.arguments.entity.Entity;
 import uhc.command.MinecraftCommand;
-import uhc.game.GameMode;
+import uhc.game.GameModeId;
 
 import java.util.Objects;
 
@@ -13,18 +13,18 @@ import java.util.Objects;
  * </p>
  */
 public class GameModeCommand implements MinecraftCommand {
-    private final GameMode gamemode;
+    private final GameModeId gamemode;
     private Entity target;
     private boolean useDefaultRoot = false;
 
-    private GameModeCommand(GameMode gameMode) {
+    private GameModeCommand(GameModeId gameMode) {
         this.gamemode = Objects.requireNonNull(gameMode, "GameMode cannot be null.");
     }
 
     /**
      * Initializes a new GameMode builder.
      */
-    public static GameModeCommand create(GameMode gameMode) {
+    public static GameModeCommand create(GameModeId gameMode) {
         return new GameModeCommand(gameMode);
     }
 
