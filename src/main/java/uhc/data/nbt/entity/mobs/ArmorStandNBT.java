@@ -1,6 +1,5 @@
 package uhc.data.nbt.entity.mobs;
 
-import uhc.data.nbt.entity.MobNBT;
 import uhc.data.nbt.tags.*;
 import uhc.resource.entity.mobs.armor_stand.DisabledSlots;
 

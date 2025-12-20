@@ -1,5 +1,6 @@
-package uhc.data.nbt.entity;
+package uhc.data.nbt.entity.mobs;
 
+import uhc.data.nbt.entity.EntityNBT;
 import uhc.data.nbt.tags.*;
 import java.util.List;
 import java.util.Objects;
