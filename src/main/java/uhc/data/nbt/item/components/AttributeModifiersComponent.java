@@ -2,7 +2,12 @@ package uhc.data.nbt.item.components;
 
 import uhc.data.nbt.NBTTag;
 import uhc.data.nbt.tags.*;
+import uhc.resource.attribute.AttributeDisplayType;
+import uhc.resource.attribute.AttributeOperation;
+import uhc.resource.attribute.AttributeType;
+import uhc.resource.item.EquipmentSlot;
 import uhc.resource.item.components.ComponentId;
+import uhc.resource.attribute.AttributeModifierId;
 import uhc.text.TextComponent;
 
 import java.util.ArrayList;
@@ -13,7 +18,8 @@ import java.util.Objects;
  * ⚔️ **Attribute Modifiers Component Implementation**
  * <p>
  * Manages the "minecraft:attribute_modifiers" component.
- * Allows items to grant stats like Attack Damage, Movement Speed, or Max Health when equipped.
+ * Allows items to grant stats like Attack Damage, Movement Speed, or Max Health
+ * when equipped in specific slots.
  * </p>
  */
 public class AttributeModifiersComponent implements ItemComponent {
@@ -21,7 +27,18 @@ public class AttributeModifiersComponent implements ItemComponent {
     private final List<Entry> modifiers = new ArrayList<>();
     private boolean showInTooltip = true;
 
-    public AttributeModifiersComponent() {}
+    /**
+     * Private constructor to enforce static factory usage.
+     */
+    private AttributeModifiersComponent() {}
+
+    /**
+     * Static factory method to create a new AttributeModifiersComponent.
+     * @return A new instance for fluent building.
+     */
+    public static AttributeModifiersComponent create() {
+        return new AttributeModifiersComponent();
+    }
 
     /**
      * Adds a modifier to the list.
@@ -33,8 +50,8 @@ public class AttributeModifiersComponent implements ItemComponent {
     }
 
     /**
-     * Toggles the global visibility of these modifiers.
-     * Setting this to false is the modern equivalent of the "Hide Modifiers" flag.
+     * Toggles the global visibility of these modifiers in the item tooltip.
+     * @param show True to show (default), false to hide.
      */
     public AttributeModifiersComponent showInTooltip(boolean show) {
         this.showInTooltip = show;
@@ -48,7 +65,6 @@ public class AttributeModifiersComponent implements ItemComponent {
 
     @Override
     public NBTTag toNbt() {
-        // In 1.20.5+, this can be a list of modifiers OR a compound containing 'modifiers' and 'show_in_tooltip'
         CompoundTag root = CompoundTag.create(getId().getResourceLocation());
 
         ListTag modifiersList = new ListTag("modifiers");
@@ -63,53 +79,59 @@ public class AttributeModifiersComponent implements ItemComponent {
     }
 
     /**
-     * Represents a single Attribute Modifier entry.
+     * Represents a single Attribute Modifier entry within the list.
      */
     public static class Entry {
-        private final String type;
-        private final String id;
+        private final AttributeType type;
+        private final AttributeModifierId id;
         private final double amount;
-        private final String operation;
-        private String slot = "any";
+        private final AttributeOperation operation;
+        private EquipmentSlot slot = EquipmentSlot.ANY;
 
         // Display fields
-        private String displayType = "default";
+        private AttributeDisplayType displayType = AttributeDisplayType.DEFAULT;
         private TextComponent overrideValue;
 
-        public Entry(String type, String id, double amount, String operation) {
-            this.type = type;
-            this.id = id;
+        /**
+         * @param type The attribute ID (e.g. "minecraft:generic.attack_damage")
+         * @param id A unique namespaced ID for this modifier.
+         * @param amount The value of the modifier.
+         * @param operation The math type: "add_value", "add_multiplied_base", "add_multiplied_total".
+         */
+        public Entry(AttributeType type, AttributeModifierId id, double amount, AttributeOperation operation) {
+            this.type = Objects.requireNonNull(type);
+            this.id = Objects.requireNonNull(id);
             this.amount = amount;
-            this.operation = operation;
+            this.operation = Objects.requireNonNull(operation);
         }
 
-        public Entry slot(String slot) {
+        public Entry slot(EquipmentSlot slot) {
             this.slot = slot;
             return this;
         }
 
-        public Entry display(String type) {
+        public Entry display(AttributeDisplayType type) {
             this.displayType = type;
             return this;
         }
 
         public Entry overrideDisplay(TextComponent text) {
-            this.displayType = "override";
+            this.displayType = AttributeDisplayType.OVERRIDE;
             this.overrideValue = text;
             return this;
         }
 
         protected CompoundTag toNbt() {
-            CompoundTag tag = CompoundTag.create(""); // Entries in a list are usually unnamed
-            tag.put(new StringTag("type", type));
-            tag.put(new StringTag("id", id));
+            CompoundTag tag = CompoundTag.create(""); // Unnamed compound for List entry
+            tag.put(new StringTag("type", type.getResourceLocation()));
+            tag.put(new StringTag("id", id.getId()));
             tag.put(new DoubleTag("amount", amount));
-            tag.put(new StringTag("operation", operation));
-            tag.put(new StringTag("slot", slot));
+            tag.put(new StringTag("operation", operation.getNbtName()));
+            tag.put(new StringTag("slot", slot.getNbtName()));
 
             CompoundTag display = CompoundTag.create("display");
-            display.put(new StringTag("type", displayType));
-            if (displayType.equals("override") && overrideValue != null) {
+            display.put(new StringTag("type", displayType.getNbtName()));
+            if (displayType == AttributeDisplayType.OVERRIDE && overrideValue != null) {
                 display.put(new StringTag("value", overrideValue.toString()));
             }
             tag.put(display);
