@@ -15,7 +15,7 @@ import java.util.UUID;
  */
 public class ProjectileNBT extends EntityNBT<ProjectileNBT> {
 
-    private ProjectileNBT(CompoundTag root) {
+    ProjectileNBT(CompoundTag root) {
         super(root);
     }
 
