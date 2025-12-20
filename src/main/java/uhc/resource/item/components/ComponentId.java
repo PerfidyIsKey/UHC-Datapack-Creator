@@ -20,7 +20,8 @@ public enum ComponentId {
     DAMAGE,
     ATTRIBUTE_MODIFIERS,
     POTION_CONTENTS,
-    INSTRUMENT;
+    INSTRUMENT,
+    USE_COOLDOWN;
 
     private final String path;
     private final String namespace;
