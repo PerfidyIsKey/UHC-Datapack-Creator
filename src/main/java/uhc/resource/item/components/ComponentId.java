@@ -17,7 +17,8 @@ public enum ComponentId {
     ENCHANTMENTS,
     UNBREAKABLE,
     PROFILE,
-    DAMAGE;
+    DAMAGE,
+    ATTRIBUTE_MODIFIERS;
 
     private final String path;
     private final String namespace;
