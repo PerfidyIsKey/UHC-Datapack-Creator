@@ -245,7 +245,7 @@ public class Main {
         // Override fields
         properties.set("difficulty", DifficultyId.HARD);
         properties.set("enable-command-block", true);
-        properties.set("gamemode", GameMode.ADVENTURE);
+        properties.set("gamemode", GameModeId.ADVENTURE);
         properties.set("level-seed", 1126908793L);
         properties.set("max-players", 50);
         properties.set("motd", communityName + " UHC S" + uhcNumber);
@@ -963,7 +963,7 @@ public class Main {
                 .generate());
 
         // Set default gamemode
-        fileCommands.add(GameModeCommand.create(GameMode.ADVENTURE)
+        fileCommands.add(GameModeCommand.create(GameModeId.ADVENTURE)
                 .setDefault()
                 .generate()
         );
@@ -1067,12 +1067,12 @@ public class Main {
                 .generate());
 
         // Set all dead players to spectator mode
-        fileCommands.add(GameModeCommand.create(GameMode.SPECTATOR)
+        fileCommands.add(GameModeCommand.create(GameModeId.SPECTATOR)
                 .target(Entity.ofSelector(
                                 TargetSelector.ALL_PLAYERS,
                                 SelectorArgumentsBuilder.create()
                                         .scores(Map.of(ScoreObjective.DEATHS, 1))
-                                        .gamemode(GameMode.SPECTATOR, true)))
+                                        .gamemode(GameModeId.SPECTATOR, true)))
                 .generate());
 
         // Reset player with lowest health
@@ -1716,7 +1716,7 @@ public class Main {
                         .setBase(0));
 
         // Set gamemode of player executing the command to creative
-        fileCommands.add(GameModeCommand.create(GameMode.CREATIVE)
+        fileCommands.add(GameModeCommand.create(GameModeId.CREATIVE)
                 .target(Entity.ofSelector(TargetSelector.SENDER))
                 .generate()
         );
@@ -1865,12 +1865,12 @@ public class Main {
         fileCommands.add(TagCommand.action(Entity.ofSelector(
                 TargetSelector.ALL_PLAYERS,
                 SelectorArgumentsBuilder.create()
-                        .gamemode(GameMode.ADVENTURE, true)),
+                        .gamemode(GameModeId.ADVENTURE, true)),
                 TagCommand.TagAction.ADD)
                         .name(StaticEntityTag.IS_FLYING)
                         .generate());
 
-        fileCommands.add(GameModeCommand.create(GameMode.ADVENTURE)
+        fileCommands.add(GameModeCommand.create(GameModeId.ADVENTURE)
                 .target(Entity.ofSelector(
                                 TargetSelector.ALL_PLAYERS,
                                 SelectorArgumentsBuilder.create()
@@ -1879,7 +1879,7 @@ public class Main {
                 )
                 .generate()
         );
-        fileCommands.add(GameModeCommand.create(GameMode.CREATIVE)
+        fileCommands.add(GameModeCommand.create(GameModeId.CREATIVE)
                 .target(Entity.ofSelector(
                                 TargetSelector.ALL_PLAYERS,
                                 SelectorArgumentsBuilder.create()
@@ -2127,7 +2127,7 @@ public class Main {
                 .generate());
 
         // Set all players to survival mode
-        fileCommands.add(GameModeCommand.create(GameMode.SURVIVAL)
+        fileCommands.add(GameModeCommand.create(GameModeId.SURVIVAL)
                 .target(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
                 .generate()
         );
@@ -2222,13 +2222,13 @@ public class Main {
 
         fileCommands.add(Execute.In(Dimension.overworld, false) +
                 Execute.PositionedNext(new Coordinate(0, 151, 0), true) +
-                GameModeCommand.create(GameMode.SURVIVAL)
+                GameModeCommand.create(GameModeId.SURVIVAL)
                         .target(
                                 Entity.ofSelector(
                                         TargetSelector.ALL_PLAYERS,
                                         SelectorArgumentsBuilder.create()
                                                 .distance("..20")
-                                                .gamemode(GameMode.CREATIVE, true)
+                                                .gamemode(GameModeId.CREATIVE, true)
                                 )
                         )
                         .generate()
@@ -2244,7 +2244,7 @@ public class Main {
                                         TargetSelector.ALL_PLAYERS,
                                         SelectorArgumentsBuilder.create()
                                                 .distance("..20")
-                                                .gamemode(GameMode.SURVIVAL)))
+                                                .gamemode(GameModeId.SURVIVAL)))
                         .generate());
 
         return new FileData(FileName.battle_royale, fileCommands);
@@ -2515,7 +2515,7 @@ public class Main {
                         .targets(Entity.ofSelector(
                                 TargetSelector.ALL_PLAYERS,
                                 SelectorArgumentsBuilder.create()
-                                        .gamemode(GameMode.SPECTATOR, true)))
+                                        .gamemode(GameModeId.SPECTATOR, true)))
                         .location(Vec3.absolute(3, 153, 3))
                         .generate());
 
@@ -2529,7 +2529,7 @@ public class Main {
                                 Entity.ofSelector(
                                         TargetSelector.ALL_PLAYERS,
                                         SelectorArgumentsBuilder.create()
-                                                .gamemode(GameMode.SPECTATOR, true)
+                                                .gamemode(GameModeId.SPECTATOR, true)
                                                 .team()))
                         .generate());
 
@@ -2544,7 +2544,7 @@ public class Main {
                                     Entity.ofSelector(
                                             TargetSelector.ALL_PLAYERS,
                                             SelectorArgumentsBuilder.create()
-                                                    .gamemode(GameMode.SPECTATOR, true)
+                                                    .gamemode(GameModeId.SPECTATOR, true)
                                                     .team()))
                             .generate());
         }
@@ -2802,7 +2802,7 @@ public class Main {
                         .limit(1)
                         .tag(StaticEntityTag.DONT_MAKE_TRAITOR, true)
                         .scores(Map.of(ScoreObjective.RANK, minTraitorRank + ".."))
-                        .gamemode(GameMode.SPECTATOR, true)),
+                        .gamemode(GameModeId.SPECTATOR, true)),
                 TagCommand.TagAction.ADD)
                         .name(StaticEntityTag.TRAITOR)
                         .generate());
@@ -2836,7 +2836,7 @@ public class Main {
                         .limit(1)
                         .tag(StaticEntityTag.DONT_MAKE_TRAITOR, true)
                         .scores(Map.of(ScoreObjective.RANK, minTraitorRank + ".."))
-                        .gamemode(GameMode.SPECTATOR, true)),
+                        .gamemode(GameModeId.SPECTATOR, true)),
                 TagCommand.TagAction.ADD)
                         .name(StaticEntityTag.TRAITOR)
                         .generate());
@@ -2867,7 +2867,7 @@ public class Main {
                     SelectorArgumentsBuilder.create()
                             .limit(1)
                             .tag(StaticEntityTag.DONT_MAKE_TRAITOR, true)
-                            .gamemode(GameMode.SPECTATOR, true)),
+                            .gamemode(GameModeId.SPECTATOR, true)),
                     TagCommand.TagAction.ADD)
                             .name(StaticEntityTag.TRAITOR)
                             .generate());
@@ -3505,7 +3505,7 @@ public class Main {
                             .destination(Entity.ofSelector(
                                     TargetSelector.RANDOM_PLAYER,
                                     SelectorArgumentsBuilder.create()
-                                            .gamemode(GameMode.SPECTATOR, true)
+                                            .gamemode(GameModeId.SPECTATOR, true)
                                             .team(t.getName())))
                             .generate());
 
@@ -3606,7 +3606,7 @@ public class Main {
 
         // Set player's gamemode to survival
         fileCommands.add(Execute.As(respawnPlayerOld) +
-                GameModeCommand.create(GameMode.SURVIVAL)
+                GameModeCommand.create(GameModeId.SURVIVAL)
                         .target(Entity.ofSelector(TargetSelector.SENDER))
                         .generate()
         );
@@ -3678,7 +3678,7 @@ public class Main {
                     TargetSelector.RANDOM_PLAYER,
                     SelectorArgumentsBuilder.create()
                             .team()
-                            .gamemode(GameMode.SPECTATOR, true)),
+                            .gamemode(GameModeId.SPECTATOR, true)),
                     TagCommand.TagAction.ADD)
                             .name(StaticEntityTag.AM_I_WINNING)
                             .generate());
@@ -3945,7 +3945,7 @@ public class Main {
                                 TargetSelector.NEAREST_PLAYER,
                                 SelectorArgumentsBuilder.create()
                                         .limit(2)
-                                        .gamemode(GameMode.SPECTATOR, true)))
+                                        .gamemode(GameModeId.SPECTATOR, true)))
                         .item(SimpleItemPredicate.create(ItemId.GOAT_HORN))
                         .generate());
 
@@ -3957,7 +3957,7 @@ public class Main {
                                             TargetSelector.NEAREST_PLAYER,
                                             SelectorArgumentsBuilder.create()
                                                     .limit(2)
-                                                    .gamemode(GameMode.SPECTATOR, true)),
+                                                    .gamemode(GameModeId.SPECTATOR, true)),
                                     BundleItemStack.create(
                                             team.getDyeColor(),
                                             EnchantmentsComponent.create(Map.of(EnchantmentId.VANISHING_CURSE, 1)),

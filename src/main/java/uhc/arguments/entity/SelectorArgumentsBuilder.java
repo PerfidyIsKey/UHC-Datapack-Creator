@@ -4,7 +4,7 @@ import uhc.data.nbt.tags.CompoundTag;
 import uhc.data.nbt.util.TagConverter;
 import uhc.resource.EntityTag;
 import uhc.resource.entity.EntityId;
-import uhc.game.GameMode;
+import uhc.game.GameModeId;
 import uhc.score.ScoreObjective;
 
 import java.util.ArrayList;
@@ -254,7 +254,7 @@ public class SelectorArgumentsBuilder {
      * Filters players by a specific game mode.
      * @param gamemode The required GameMode.
      */
-    public SelectorArgumentsBuilder gamemode(GameMode gamemode) {
+    public SelectorArgumentsBuilder gamemode(GameModeId gamemode) {
         return gamemode(gamemode, false);
     }
 
@@ -263,7 +263,7 @@ public class SelectorArgumentsBuilder {
      * @param gamemode The required GameMode.
      * @param not If true, excludes players in this game mode (e.g., {@code gamemode=!creative}).
      */
-    public SelectorArgumentsBuilder gamemode(GameMode gamemode, boolean not) {
+    public SelectorArgumentsBuilder gamemode(GameModeId gamemode, boolean not) {
         Objects.requireNonNull(gamemode, "Gamemode cannot be null.");
 
         String prefix = not ? "!" : "";
