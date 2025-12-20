@@ -16,12 +16,7 @@ public enum ComponentId {
     LORE,
     ENCHANTMENTS,
     UNBREAKABLE,
-    REPAIR_COST,
-    ATTRIBUTE_MODIFIERS,
-    RARITY,
-
-    // Example of a custom or specialized path
-    MAX_STACK_SIZE("max_stack_size");
+    PROFILE;
 
     private final String path;
     private final String namespace;
