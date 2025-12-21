@@ -37,6 +37,7 @@ public enum ComponentId {
     INSTRUMENT,
     /** Controls item cooldowns (e.g. Ender Pearls). */
     USE_COOLDOWN,
+    FIREWORKS,
 
     // --- 💾 Data & Meta ---
     /** Container for arbitrary, non-vanilla NBT data. */
