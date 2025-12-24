@@ -1,6 +1,8 @@
 package uhc.arguments.itemstack;
 
+import uhc.data.nbt.util.TagConverter;
 import uhc.resource.ItemId;
+import uhc.data.nbt.item.components.ItemComponent;
 
 import java.util.Arrays;
 import java.util.List;
@@ -10,17 +12,17 @@ import java.util.StringJoiner;
  * Concrete implementation for the Goat Horn item stack.
  */
 public class GoatHornItemStack implements ItemStack {
-    private final List<ItemComponentTag> components;
+    private final List<ItemComponent> components;
     private static final ItemId ITEM_ID = ItemId.GOAT_HORN;
 
     /**
      * Creates a Goat Horn ItemStack with a variable number of components.
      */
-    private GoatHornItemStack(ItemComponentTag... components) {
+    private GoatHornItemStack(ItemComponent... components) {
         this.components = Arrays.asList(components);
     }
 
-    public static GoatHornItemStack create(ItemComponentTag... components) {
+    public static GoatHornItemStack create(ItemComponent... components) {
         return new GoatHornItemStack(components);
     }
 
@@ -40,8 +42,8 @@ public class GoatHornItemStack implements ItemStack {
         if (!components.isEmpty()) {
             StringJoiner componentsJoiner = new StringJoiner(",", "[", "]");
 
-            for (ItemComponentTag component : components) {
-                String componentString = component.buildComponentString();
+            for (ItemComponent component : components) {
+                String componentString = TagConverter.toJson(component.toNbt());
                 // Ensure we don't add empty strings if a component builder returns one
                 if (!componentString.isEmpty()) {
                     componentsJoiner.add(componentString);

@@ -1,7 +1,9 @@
 package uhc.arguments.itemstack;
 
-import uhc.arguments.itemstack.components.DamageComponent; // New required import
-import uhc.arguments.itemstack.components.UnbreakableComponent; // New required import
+import uhc.data.nbt.item.components.DamageComponent;
+import uhc.data.nbt.item.components.ItemComponent;
+import uhc.data.nbt.item.components.UnbreakableComponent;
+import uhc.data.nbt.util.TagConverter;
 import uhc.resource.ItemId;
 
 import java.util.LinkedHashMap;
@@ -19,7 +21,7 @@ public class ComponentItemStack implements ItemStack {
 
     private final ItemId itemId;
     // Stores components. Key is the component name (e.g., "damage"), Value is the component object.
-    private final Map<String, ItemComponentTag> components;
+    private final Map<String, ItemComponent> components;
 
     /**
      * Private constructor to enforce starting the chain with the static factory method.
@@ -55,13 +57,13 @@ public class ComponentItemStack implements ItemStack {
      * @throws IllegalArgumentException if the component is null.
      * @throws IllegalStateException if the component's {@code buildComponentString()} does not follow the "name=value" format.
      */
-    public ComponentItemStack addComponent(ItemComponentTag component) {
+    public ComponentItemStack addComponent(ItemComponent component) {
         if (component == null) {
             throw new IllegalArgumentException("Component cannot be null.");
         }
 
         // We rely on the convention that buildComponentString() returns 'component_name=value'
-        String fullString = component.buildComponentString();
+        String fullString = TagConverter.toJson(component.toNbt());
         int equalsIndex = fullString.indexOf('=');
 
         String componentName;
@@ -126,8 +128,8 @@ public class ComponentItemStack implements ItemStack {
         StringJoiner componentJoiner = new StringJoiner(",", "[", "]");
 
         // Add the SNBT string for each component (e.g., "damage=10") to the joiner.
-        for (ItemComponentTag component : components.values()) {
-            componentJoiner.add(component.buildComponentString());
+        for (ItemComponent component : components.values()) {
+            componentJoiner.add(TagConverter.toJson(component.toNbt()));
         }
 
         return itemId.getResourceLocation() + componentJoiner.toString();
