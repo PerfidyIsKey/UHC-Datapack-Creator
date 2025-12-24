@@ -26,7 +26,6 @@ public interface TamableNBT<T extends TamableNBT<T>> {
      * </p>
      * @param uuid The UUID of the player who owns this mob.
      */
-    @SuppressWarnings("unchecked")
     default T owner(UUID uuid) {
         Objects.requireNonNull(uuid, "Owner UUID cannot be null.");
 
@@ -45,7 +44,6 @@ public interface TamableNBT<T extends TamableNBT<T>> {
      * Sets whether the tamed animal is currently sitting.
      * @param sitting True to force the animal to sit.
      */
-    @SuppressWarnings("unchecked")
     default T sitting(boolean sitting) {
         root().put(new ByteTag("Sitting", (byte) (sitting ? 1 : 0)));
         return (T) this;
