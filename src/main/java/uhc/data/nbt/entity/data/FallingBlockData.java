@@ -1,7 +1,7 @@
 package uhc.data.nbt.entity.data;
 
 import uhc.resource.StaticEntityTag;
-import uhc.resource.LootTableId;
+import uhc.resource.loot_table.LootTableId;
 import uhc.resource.ItemId;
 
 /**

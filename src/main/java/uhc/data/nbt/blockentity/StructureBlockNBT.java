@@ -1,7 +1,7 @@
 package uhc.data.nbt.blockentity;
 
 import uhc.data.nbt.tags.*;
-import uhc.resource.StaticBlockId;
+import uhc.resource.block.StaticBlockId;
 import uhc.resource.block.structure_block.StructureBlockMode;
 import uhc.resource.block.structure_block.StructureMirror;
 import uhc.resource.block.structure_block.StructureRotation;

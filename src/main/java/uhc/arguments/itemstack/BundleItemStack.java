@@ -1,5 +1,7 @@
 package uhc.arguments.itemstack;
 
+import uhc.data.nbt.item.components.ItemComponent;
+import uhc.data.nbt.util.TagConverter;
 import uhc.text.DyeColor;
 import uhc.resource.ItemId;
 
@@ -9,15 +11,15 @@ import java.util.StringJoiner;
 
 public class BundleItemStack implements ItemStack {
     private final DyeColor color;
-    private final List<ItemComponentTag> components;
+    private final List<ItemComponent> components;
     private static final String BASE_NAME = "bundle"; // Base item name is 'bundle'
 
-    private BundleItemStack(DyeColor color, ItemComponentTag... components) {
+    private BundleItemStack(DyeColor color, ItemComponent... components) {
         this.color = color;
         this.components = Arrays.asList(components);
     }
 
-    public static BundleItemStack create(DyeColor color, ItemComponentTag... components) {
+    public static BundleItemStack create(DyeColor color, ItemComponent... components) {
         return new BundleItemStack(color, components);
     }
 
@@ -40,8 +42,8 @@ public class BundleItemStack implements ItemStack {
         if (!components.isEmpty()) {
             StringJoiner componentsJoiner = new StringJoiner(",", "[", "]");
 
-            for (ItemComponentTag component : components) {
-                String componentString = component.buildComponentString();
+            for (ItemComponent component : components) {
+                String componentString = TagConverter.toJson(component.toNbt());
                 if (!componentString.isEmpty()) {
                     componentsJoiner.add(componentString);
                 }

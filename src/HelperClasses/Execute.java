@@ -1,7 +1,7 @@
 package HelperClasses;
 
 import Enums.*;
-import uhc.resource.StaticBlockId;
+import uhc.resource.block.StaticBlockId;
 import uhc.score.ComparatorType;
 
 public class Execute {
