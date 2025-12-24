@@ -1,6 +1,5 @@
 package uhc.resource.block;
 
-import uhc.resource.BlockId;
 import uhc.text.DyeColor;
 
 /**

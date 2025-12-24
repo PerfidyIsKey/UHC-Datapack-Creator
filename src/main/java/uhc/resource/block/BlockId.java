@@ -1,4 +1,4 @@
-package uhc.resource;
+package uhc.resource.block;
 
 import uhc.resource.block.BlockIdentifier;
 

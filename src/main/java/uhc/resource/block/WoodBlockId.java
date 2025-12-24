@@ -1,7 +1,5 @@
 package uhc.resource.block;
 
-import uhc.resource.BlockId;
-
 /**
  * Defines a set of Minecraft blocks whose final resource location (ID) is dynamically
  * determined by prefixing the block name with a {@link WoodType}.

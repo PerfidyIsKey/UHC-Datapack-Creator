@@ -1,4 +1,4 @@
-package uhc.resource;
+package uhc.resource.block;
 
 /**
  * An enumeration representing a fixed list of common Minecraft block IDs
