@@ -128,6 +128,21 @@ public class CompoundTag implements NBTTag {
         return value.containsKey(name);
     }
 
+    /**
+     * Merges the contents of another CompoundTag into this one.
+     * If keys overlap, the tags from the provided compound will overwrite existing ones.
+     * * @param other The CompoundTag to merge into this instance.
+     */
+    public void merge(CompoundTag other) {
+        if (other == null || other.getValue() == null) return;
+
+        // Assuming your CompoundTag stores data in a Map<String, NBTTag>
+        // Adjust the getter (getValue()) to match your internal map name.
+        other.getValue().forEach((key, tag) -> {
+            this.put(tag);
+        });
+    }
+
     // --- Serialization and Deserialization (Standard NBT Format) ---
 
     /**
