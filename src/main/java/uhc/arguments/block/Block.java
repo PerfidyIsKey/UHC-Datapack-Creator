@@ -1,38 +1,75 @@
 package uhc.arguments.block;
 
+import uhc.data.nbt.blockentity.state.BlockState;
+import uhc.data.nbt.blockentity.BlockEntityNBT;
+import uhc.resource.block.BlockId;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
+
 /**
- * Defines the contract for any object representing a Minecraft block argument
- * in a command, such as the 'setblock' command.
+ * 🧱 **Block Representation**
  * <p>
- * This interface mandates the ability to return a fully qualified block string
- * in the format: {@code block_id[block_states]{data_tags}}.
- * <p>
- * In Java Edition, this format must include the block's required namespace (e.g., {@code minecraft:stone}).
+ * Combines a BlockId, BlockStates, and BlockEntityNBT into a single
+ * string-serializable format compatible with Minecraft commands.
+ * </p>
  */
-public interface Block {
+public class Block {
+    private final BlockId id;
+    private final List<BlockState> states = new ArrayList<>();
+    private BlockEntityNBT<?> data;
+
+    private Block(BlockId id) {
+        this.id = Objects.requireNonNull(id, "Block ID cannot be null.");
+    }
+
+    public static Block create(BlockId id) {
+        return new Block(id);
+    }
+
+    public Block withState(BlockState state) {
+        if (state != null) {
+            this.states.add(state);
+        }
+        return this;
+    }
+
+    public Block withData(BlockEntityNBT<?> data) {
+        this.data = data;
+        return this;
+    }
 
     /**
-     * Returns the raw string representation of the block, including its ID,
-     * optional block states, and optional NBT data tags, in the exact format
-     * required by the Minecraft command parser.
-     * <p>
-     * Example outputs:
-     * <ul>
-     * <li>{@code minecraft:stone}</li>
-     * <li>{@code minecraft:oak_log[axis=y]}</li>
-     * <li>{@code minecraft:chest{Items:[{id:"minecraft:diamond",Count:1b}]}}</li>
-     * </ul>
-     *
-     * @return The fully formatted block argument string.
+     * Serializes the block into the format: id[states]{nbt}
+     * @return A formatted Minecraft block string.
      */
-    String getBlock();
+    public String getAsCommandString() {
+        StringBuilder builder = new StringBuilder(id.getResourceLocation());
 
-    /**
-     * Overrides the default {@code toString()} method to simply return the
-     * result of {@code getBlock()}. This ensures that when a {@code Block} object
-     * is concatenated into the command string, it produces the correct command argument.
-     * * @return The fully formatted block argument string, identical to {@code getBlock()}.
-     */
+        // 1. Process Block States: [key=value,key=value]
+        if (!states.isEmpty()) {
+            String stateString = states.stream()
+                    .map(s -> s.getKey() + "=" + s.getValue())
+                    .collect(Collectors.joining(","));
+            builder.append("[").append(stateString).append("]");
+        }
+
+        // 2. Process NBT Data: {key:value}
+        if (data != null) {
+            // build() returns the CompoundTag; we use its SNBT (Stringified NBT) form
+            String nbtString = data.build().toString();
+            if (!nbtString.equals("{}")) { // Avoid adding empty brackets
+                builder.append(nbtString);
+            }
+        }
+
+        return builder.toString();
+    }
+
     @Override
-    String toString();
+    public String toString() {
+        return getAsCommandString();
+    }
 }
