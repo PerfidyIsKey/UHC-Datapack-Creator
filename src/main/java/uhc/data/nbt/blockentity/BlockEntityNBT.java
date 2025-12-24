@@ -1,6 +1,8 @@
 package uhc.data.nbt.blockentity;
 
 import uhc.data.nbt.tags.*;
+import uhc.resource.block.StaticBlockId;
+
 import java.util.Objects;
 
 /**
@@ -32,7 +34,7 @@ public abstract class BlockEntityNBT<T extends BlockEntityNBT<T>> {
     }
 
     // Support your StaticBlockId if applicable
-    public T id(uhc.resource.StaticBlockId id) {
+    public T id(StaticBlockId id) {
         return id(id.toString());
     }
 

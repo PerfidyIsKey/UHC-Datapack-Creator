@@ -1,13 +1,16 @@
 package uhc.data.nbt.entity.projectiles;
 
+import uhc.data.nbt.item.components.ItemComponent;
 import uhc.data.nbt.tags.*;
+import uhc.resource.ItemId;
+
 import java.util.Objects;
 
 /**
  * 🎆 **Firework Rocket NBT Builder**
  * <p>
  * Specialized builder for Firework Rocket entities.
- * Manages flight duration, explosion timing, and item data.
+ * Manages flight duration, explosion timing, and item-based components.
  * </p>
  */
 public class FireworkRocketNBT extends ProjectileNBT {
@@ -16,44 +19,22 @@ public class FireworkRocketNBT extends ProjectileNBT {
         super(root);
     }
 
-    /**
-     * Initializes a new Firework Rocket NBT builder.
-     * @return A new instance of FireworkRocketNBT.
-     */
     public static FireworkRocketNBT create() {
         return new FireworkRocketNBT(CompoundTag.create());
     }
 
     // --- 🚀 Flight Logic ---
 
-    /**
-     * Sets the number of ticks this rocket has currently been flying.
-     * @param ticks Ticks elapsed.
-     * @return This builder instance.
-     */
     public FireworkRocketNBT life(int ticks) {
         root().put(new IntTag("Life", Math.max(0, ticks)));
         return this;
     }
 
-    /**
-     * Sets the total duration (in ticks) before the rocket explodes.
-     * <p>
-     * <b>Formula:</b> ((FlightLevel + 1) * 10 + rand(0..5) + rand(0..6))
-     * </p>
-     * @param ticks Total ticks until detonation.
-     * @return This builder instance.
-     */
     public FireworkRocketNBT lifeTime(int ticks) {
         root().put(new IntTag("LifeTime", Math.max(0, ticks)));
         return this;
     }
 
-    /**
-     * Defines if the firework was launched at an angle (e.g., from a Crossbow or Dispenser).
-     * @param shotAtAngle true if shot at an angle.
-     * @return This builder instance.
-     */
     public FireworkRocketNBT shotAtAngle(boolean shotAtAngle) {
         root().put(new ByteTag("ShotAtAngle", (byte) (shotAtAngle ? 1 : 0)));
         return this;
@@ -62,18 +43,59 @@ public class FireworkRocketNBT extends ProjectileNBT {
     // --- 📦 Item Data ---
 
     /**
-     * Sets the Fireworks Item compound representing the rocket item itself.
+     * Sets the FireworksItem data using one or more components.
      * <p>
-     * This compound contains the 'Fireworks' tag which defines explosions and flight duration.
+     * This automatically builds an internal Item Stack (minecraft:firework_rocket)
+     * and attaches the provided components to its 'components' map.
      * </p>
-     * @param itemData The CompoundTag representing the Item Stack.
-     * @throws NullPointerException if itemData is null.
+     * @param components One or more {@link ItemComponent} (e.g., FireworksComponent).
      * @return This builder instance.
      */
-    public FireworkRocketNBT fireworksItem(CompoundTag itemData) {
-        Objects.requireNonNull(itemData, "FireworksItem compound cannot be null.");
-        itemData.setName("FireworksItem");
-        root().put(itemData);
+    public FireworkRocketNBT fireworksItem(ItemComponent... components) {
+        Objects.requireNonNull(components, "Components cannot be null.");
+
+        // 1. Create the root 'FireworksItem' compound
+        CompoundTag itemStack = CompoundTag.create("FireworksItem");
+
+        // 2. Mandatory Item Stack fields
+        itemStack.put(new StringTag("id", ItemId.FIREWORK_ROCKET.getResourceLocation()));
+        itemStack.put(new IntTag("count", 1));
+
+        // 3. Create the 'components' compound
+        CompoundTag componentsMap = CompoundTag.create("components");
+        for (ItemComponent component : components) {
+            if (component != null) {
+                // Each component's toNbt() provides the key-value pair
+                componentsMap.put(component.toNbt());
+            }
+        }
+
+        // 4. Attach components to the item stack, then stack to entity root
+        if (!componentsMap.getValue().isEmpty()) {
+            itemStack.put(componentsMap);
+        }
+
+        root().put(itemStack);
+        return this;
+    }
+
+    // --- 🚀 Fix: Overriding base methods for chaining ---
+
+    @Override
+    public FireworkRocketNBT glowing(boolean glowing) {
+        super.glowing(glowing);
+        return this;
+    }
+
+    @Override
+    public FireworkRocketNBT invulnerable(boolean invulnerable) {
+        super.invulnerable(invulnerable);
+        return this;
+    }
+
+    @Override
+    public FireworkRocketNBT silent(boolean silent) {
+        super.silent(silent);
         return this;
     }
 }

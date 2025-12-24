@@ -1,6 +1,7 @@
 package uhc.data.nbt.entity.items;
 
 import uhc.data.nbt.entity.EntityNBT;
+import uhc.data.nbt.item.ItemNBT;
 import uhc.data.nbt.tags.*;
 import java.util.Objects;
 import java.util.UUID;
@@ -75,14 +76,25 @@ public class ItemEntityNBT extends EntityNBT<ItemEntityNBT> {
 
     /**
      * Sets the actual item data for this entity.
-     * @param itemData The CompoundTag representing the item stack (excluding 'Slot').
+     * <p>
+     * This method takes the high-level {@link ItemNBT} builder, finalizes its
+     * internal structure, and injects it into the "Item" tag of the entity.
+     * </p>
+     * @param itemData The Item builder (e.g., Diamond Sword with Enchantments).
+     * @return This builder instance for fluent chaining.
      * @throws NullPointerException if itemData is null.
-     * @return This builder instance.
      */
-    public ItemEntityNBT item(CompoundTag itemData) {
-        Objects.requireNonNull(itemData, "Item compound cannot be null.");
-        itemData.setName("Item");
-        root().put(itemData);
+    public ItemEntityNBT item(ItemNBT itemData) {
+        Objects.requireNonNull(itemData, "ItemNBT builder cannot be null.");
+
+        // Finalize the item stack NBT (id, count, and components)
+        CompoundTag finalizedItem = itemData.build();
+
+        // Ensure the tag is named "Item" so the entity recognizes it
+        finalizedItem.setName("Item");
+
+        // Inject into the entity root
+        root().put(finalizedItem);
         return this;
     }
 

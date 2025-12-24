@@ -46,6 +46,7 @@ public enum ItemId {
     EMERALD_BLOCK("emerald_block"),
     ENDER_PEARL("ender_pearl"),
     EXPERIENCE_BOTTLE("experience_bottle"),
+    FIREWORK_ROCKET("firework_rocket"),
     FISHING_ROD("fishing_rod"),
     GLASS("glass"),
     GLASS_BOTTLE("glass_bottle"),

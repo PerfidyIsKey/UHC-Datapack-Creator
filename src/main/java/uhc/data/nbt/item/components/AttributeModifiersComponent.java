@@ -98,11 +98,15 @@ public class AttributeModifiersComponent implements ItemComponent {
          * @param amount The value of the modifier.
          * @param operation The math type: "add_value", "add_multiplied_base", "add_multiplied_total".
          */
-        public Entry(AttributeType type, AttributeModifierId id, double amount, AttributeOperation operation) {
+        private Entry(AttributeType type, AttributeModifierId id, double amount, AttributeOperation operation) {
             this.type = Objects.requireNonNull(type);
             this.id = Objects.requireNonNull(id);
             this.amount = amount;
             this.operation = Objects.requireNonNull(operation);
+        }
+
+        public static Entry create(AttributeType type, AttributeModifierId id, double amount, AttributeOperation operation) {
+            return new Entry(type, id, amount, operation);
         }
 
         public Entry slot(EquipmentSlot slot) {

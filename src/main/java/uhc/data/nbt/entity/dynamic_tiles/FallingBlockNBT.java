@@ -1,14 +1,18 @@
 package uhc.data.nbt.entity.dynamic_tiles;
 
+import uhc.data.nbt.blockentity.state.BlockState;
+import uhc.data.nbt.blockentity.BlockEntityNBT;
 import uhc.data.nbt.entity.EntityNBT;
 import uhc.data.nbt.tags.*;
+import uhc.resource.block.BlockId;
+
 import java.util.Objects;
 
 /**
  * 🧱 **Falling Block NBT Builder**
  * <p>
  * Specialized builder for Falling Block entities. Manages block states,
- * landing behavior, and entity damage (e.g., falling anvils).
+ * landing behavior, and entity data (e.g., contents of a falling chest).
  * </p>
  */
 public class FallingBlockNBT extends EntityNBT<FallingBlockNBT> {
@@ -33,34 +37,60 @@ public class FallingBlockNBT extends EntityNBT<FallingBlockNBT> {
     // --- 🧊 Block Definition ---
 
     /**
-     * Sets the block state this entity represents.
-     * @param blockId The resource location (e.g., "minecraft:anvil").
-     * @param properties Optional properties compound (e.g., { "facing": "north" }).
+     * Sets the block identity. State properties are optional.
+     * <p>
+     * <b>Usage:</b><br>
+     * {@code blockState(BlockId.SAND)} // Simple block<br>
+     * {@code blockState(BlockId.OAK_STAIRS, FacingBlockState.NORTH)} // With state
+     * </p>
+     * @param blockId The block type.
+     * @param states  Optional property descriptors (e.g., facing, lit, powered).
      * @return This builder instance.
      */
-    public FallingBlockNBT blockState(String blockId, CompoundTag properties) {
+    public FallingBlockNBT blockState(BlockId blockId, BlockState... states) {
         Objects.requireNonNull(blockId, "Block ID cannot be null.");
-        CompoundTag state = CompoundTag.create("BlockState");
-        state.put(new StringTag("Name", blockId));
 
-        if (properties != null) {
-            properties.setName("Properties");
-            state.put(properties);
+        CompoundTag blockStateTag = CompoundTag.create("BlockState");
+        blockStateTag.put(new StringTag("Name", blockId.getResourceLocation()));
+
+        // Only create the Properties compound if states are actually provided
+        if (states != null && states.length > 0) {
+            CompoundTag properties = CompoundTag.create("Properties");
+            boolean added = false;
+
+            for (BlockState state : states) {
+                if (state != null) {
+                    properties.put(new StringTag(state.getKey(), state.getValue()));
+                    added = true;
+                }
+            }
+
+            // Avoid adding an empty "Properties: {}" tag if all varargs were null
+            if (added) {
+                blockStateTag.put(properties);
+            }
         }
 
-        root().put(state);
+        root().put(blockStateTag);
         return this;
     }
 
     /**
      * Sets the Tile Entity (Block Entity) data for the block.
-     * @param nbt The NBT data to apply to the block once it lands.
+     * <p>
+     * <b>Catch:</b> This data is applied to the block when it lands.
+     * Useful for falling chests, spawners, or banners.
+     * </p>
+     * @param blockEntity The builder containing the block's internal NBT data.
      * @return This builder instance.
      */
-    public FallingBlockNBT tileEntityData(CompoundTag nbt) {
-        if (nbt == null) {
+    public FallingBlockNBT tileEntityData(BlockEntityNBT<?> blockEntity) {
+        if (blockEntity == null) {
             root().remove("TileEntityData");
         } else {
+            // Retrieve the built CompoundTag from the BlockEntityNBT builder
+            CompoundTag nbt = blockEntity.build();
+            // Ensure the tag is named correctly for the Falling Block NBT structure
             nbt.setName("TileEntityData");
             root().put(nbt);
         }
