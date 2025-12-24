@@ -46,7 +46,7 @@ public class TellrawCommand implements MinecraftCommand {
      * @return A validated TellrawCommand instance.
      */
     public static TellrawCommand create(Entity targets, String message) {
-        return new TellrawCommand(targets, TextComponent.simple(message));
+        return new TellrawCommand(targets, TextComponent.text(message));
     }
 
     /**

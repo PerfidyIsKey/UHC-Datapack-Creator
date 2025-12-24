@@ -64,7 +64,7 @@ public class BossbarCommand implements MinecraftCommand {
      * Sets the display name using a raw String.
      */
     public BossbarCommand name(String name) {
-        this.name = TextComponent.simple(name);
+        this.name = TextComponent.text(name);
         return this;
     }
 

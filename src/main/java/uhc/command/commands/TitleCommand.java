@@ -65,7 +65,7 @@ public class TitleCommand implements MinecraftCommand {
     }
 
     public TitleCommand title(String content) {
-        return title(TextComponent.simple(content));
+        return title(TextComponent.text(content));
     }
 
     /** Sets the smaller subtitle text (appears only if a title is also shown). */
@@ -76,7 +76,7 @@ public class TitleCommand implements MinecraftCommand {
     }
 
     public TitleCommand subtitle(String content) {
-        return subtitle(TextComponent.simple(content));
+        return subtitle(TextComponent.text(content));
     }
 
     /** Sets the text displayed above the player's hotbar. */
@@ -87,7 +87,7 @@ public class TitleCommand implements MinecraftCommand {
     }
 
     public TitleCommand actionbar(String content) {
-        return actionbar(TextComponent.simple(content));
+        return actionbar(TextComponent.text(content));
     }
 
     /**
