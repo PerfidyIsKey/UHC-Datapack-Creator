@@ -2,7 +2,7 @@ package uhc.command.commands;
 
 import uhc.arguments.entity.Entity;
 import uhc.command.MinecraftCommand;
-import uhc.resource.StaticEntityTag;
+import uhc.resource.tag.StaticEntityTag;
 
 import java.util.Objects;
 

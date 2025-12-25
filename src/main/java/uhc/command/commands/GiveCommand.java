@@ -1,7 +1,7 @@
 package uhc.command.commands;
 
 import uhc.arguments.entity.Entity;
-import uhc.arguments.itemstack.ItemStack;
+import uhc.arguments.item.ItemStack;
 import uhc.command.MinecraftCommand;
 
 import java.util.Objects;

@@ -2,7 +2,7 @@ package uhc.command.commands;
 
 import uhc.arguments.entity.Entity;
 import uhc.command.MinecraftCommand;
-import uhc.resource.RecipeId;
+import uhc.resource.recipe.RecipeId;
 
 import java.util.Objects;
 

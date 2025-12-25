@@ -1,8 +1,7 @@
 package uhc.data.nbt.blockentity;
 
 import uhc.data.nbt.tags.*;
-import uhc.resource.BlockId;
-import uhc.text.DyeColor;
+import uhc.resource.color.DyeColor;
 import uhc.text.TextComponent;
 import java.util.Objects;
 
@@ -21,16 +20,10 @@ public class SignNBT extends BlockEntityNBT<SignNBT> {
 
     /**
      * Initializes a new Sign NBT builder.
-     * @param id The specific sign ID (e.g., StaticBlockId.OAK_SIGN).
-     * @param x  X coordinate.
-     * @param y  Y coordinate.
-     * @param z  Z coordinate.
      * @return A new instance of SignNBT.
      */
-    public static SignNBT create(BlockId id, int x, int y, int z) {
-        return new SignNBT(CompoundTag.create())
-                .id(id.getResourceLocation())
-                .pos(x, y, z);
+    public static SignNBT create() {
+        return new SignNBT(CompoundTag.create());
     }
 
     /**

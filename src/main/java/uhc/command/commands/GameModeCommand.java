@@ -2,7 +2,7 @@ package uhc.command.commands;
 
 import uhc.arguments.entity.Entity;
 import uhc.command.MinecraftCommand;
-import uhc.game.GameModeId;
+import uhc.resource.gameplay.GameModeId;
 
 import java.util.Objects;
 

@@ -1,8 +1,8 @@
 package HelperClasses;
 
 import Enums.BossBarColor;
-import uhc.text.TextColor;
-import uhc.text.DyeColor;
+import uhc.resource.color.TextColor;
+import uhc.resource.color.DyeColor;
 
 public class Team {
 

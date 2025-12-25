@@ -1,9 +1,9 @@
 package uhc.command.commands;
 
 import uhc.arguments.entity.Entity;
-import uhc.attribute.AttributeId;
-import uhc.attribute.ModifierId;
 import uhc.command.MinecraftCommand;
+import uhc.resource.attribute.AttributeId;
+import uhc.resource.attribute.AttributeModifierId;
 
 import java.util.Objects;
 
@@ -23,7 +23,7 @@ public class AttributeCommand implements MinecraftCommand {
     private String actionPath;
     private Double scale;
     private Double value;
-    private ModifierId id;
+    private AttributeModifierId id;
     private ModifierOperation operation;
 
     // Internal state to handle the logic flow of sub-commands.
@@ -120,7 +120,7 @@ public class AttributeCommand implements MinecraftCommand {
      * Adds a persistent modifier. Fails if the ID already exists on the entity.
      * <p>Syntax: {@code attribute <target> <attribute> modifier add <id> <value> <operation>}</p>
      */
-    public String addModifier(ModifierId id, double value, ModifierOperation operation) {
+    public String addModifier(AttributeModifierId id, double value, ModifierOperation operation) {
         this.actionPath = "modifier add";
         this.isBaseAction = false;
         this.isModifierValueGet = false;
@@ -137,7 +137,7 @@ public class AttributeCommand implements MinecraftCommand {
      * Removes the specified modifier from the entity.
      * <p>Syntax: {@code attribute <target> <attribute> modifier remove <id>}</p>
      */
-    public String removeModifier(ModifierId id) {
+    public String removeModifier(AttributeModifierId id) {
         this.actionPath = "modifier remove";
         this.isBaseAction = false;
         this.isModifierValueGet = false;
@@ -152,7 +152,7 @@ public class AttributeCommand implements MinecraftCommand {
 
     /**
      * Prepares a query for the value of a specific modifier.
-     * <p>Must call {@link #id(ModifierId)} before building.</p>
+     * <p>Must call {@link #id(AttributeModifierId)} before building.</p>
      */
     public AttributeCommand getModifierValue() {
         this.actionPath = "modifier value get";
@@ -164,7 +164,7 @@ public class AttributeCommand implements MinecraftCommand {
     }
 
     /** Sets the Modifier ID for actions requiring it. */
-    public AttributeCommand id(ModifierId id) {
+    public AttributeCommand id(AttributeModifierId id) {
         this.id = id;
         return this;
     }

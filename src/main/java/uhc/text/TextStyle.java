@@ -1,147 +1,143 @@
 package uhc.text;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import uhc.resource.color.*;
+
+import java.util.Objects;
 
 /**
  * 🎨 **TextStyle Builder**
  * <p>
- * A utility class to fluently construct the JSON string required by the Minecraft
- * {@code /scoreboard players display numberformat ... styled <json>} command.
+ * A utility class to fluently construct the JSON structure required by Minecraft
+ * commands, specifically for {@code /scoreboard players display numberformat}.
  * </p>
- * This ensures the generated string is correctly formatted and quoted for use
- * directly within an MCFunction file.
+ * <p>
+ * This builder uses Jackson to ensure that the resulting JSON is syntactically
+ * perfect and properly escaped for use in MCFunction files.
+ * </p>
  */
 public class TextStyle {
 
-    // Using LinkedHashMap to maintain the order of insertion, though not strictly required by JSON.
-    private final Map<String, Object> properties = new LinkedHashMap<>();
+    // --- ⚙️ Static Configuration ---
+
+    /** * Shared Jackson ObjectMapper for JSON generation. */
+    private static final ObjectMapper MAPPER = new ObjectMapper();
+
+    // --- ⚙️ Internal State ---
+
+    /** * Jackson ObjectNode to store style properties (color, bold, etc.). */
+    private final ObjectNode root;
+
+    // --- 🏗️ Constructors ---
 
     /**
-     * Private constructor to enforce the use of the static factory method.
+     * **Private Constructor**
+     * <p>Initializes a new ObjectNode. Use {@link #create()} to instantiate.</p>
      */
     private TextStyle() {
-        // Initializes with default properties if necessary, but here we start empty.
+        this.root = MAPPER.createObjectNode();
     }
 
     /**
-     * Factory method to start building a new TextStyle instance.
-     * @return A new TextStyle builder instance.
+     * **Static Factory Method**
+     * <p>The entry point for the fluent Builder API.</p>
+     * @return A new {@link TextStyle} instance.
      */
     public static TextStyle create() {
         return new TextStyle();
     }
 
-    // --- Formatting Methods (Fluent API) ---
+    // --- 🖌️ Formatting Methods (Fluent API) ---
 
     /**
-     * Sets the primary text color, which can be a standard Minecraft color name or a hex code (e.g., "#FF00AA").
-     * @param color The color name (e.g., "red", "gold") or a hex code string.
+     * Sets the primary text color using a type-safe {@link ColorType}.
+     * <p><b>Error Catching:</b> Validates the color via {@link ColorType#validate()}
+     * before adding it to the JSON node.</p>
+     * @param color Implementation of {@link ColorType} (e.g., {@link TextColor} or {@link HexColor}).
      * @return The builder instance for chaining.
+     * @throws NullPointerException if color is null.
      */
-    public TextStyle color(String color) {
-        this.properties.put("color", color);
+    public TextStyle color(ColorType color) {
+        Objects.requireNonNull(color, "Color cannot be null.");
+        color.validate();
+        this.root.put("color", color.getColor());
         return this;
     }
 
     /**
-     * Sets the text to bold.
-     * @param bold True to enable bold, false to disable.
+     * Sets the text weight to bold.
+     * @param bold {@code true} to enable bold.
      * @return The builder instance for chaining.
      */
     public TextStyle bold(boolean bold) {
-        this.properties.put("bold", bold);
+        this.root.put("bold", bold);
         return this;
     }
 
     /**
-     * Sets the text to italic.
-     * @param italic True to enable italic, false to disable.
+     * Sets the text style to italic.
+     * @param italic {@code true} to enable italics.
      * @return The builder instance for chaining.
      */
     public TextStyle italic(boolean italic) {
-        this.properties.put("italic", italic);
+        this.root.put("italic", italic);
         return this;
     }
 
     /**
-     * Sets the text to be underlined.
-     * @param underlined True to enable underline, false to disable.
+     * Sets whether the text is underlined.
+     * @param underlined {@code true} to enable underline.
      * @return The builder instance for chaining.
      */
     public TextStyle underlined(boolean underlined) {
-        this.properties.put("underlined", underlined);
+        this.root.put("underlined", underlined);
         return this;
     }
 
     /**
-     * Sets the text to be strikethrough.
-     * @param strikethrough True to enable strikethrough, false to disable.
+     * Sets whether the text has a strikethrough.
+     * @param strikethrough {@code true} to enable strikethrough.
      * @return The builder instance for chaining.
      */
     public TextStyle strikethrough(boolean strikethrough) {
-        this.properties.put("strikethrough", strikethrough);
+        this.root.put("strikethrough", strikethrough);
         return this;
     }
 
     /**
      * Sets the text to be obfuscated (randomly shifting characters).
-     * @param obfuscated True to enable obfuscation, false to disable.
+     * @param obfuscated {@code true} to enable "magic" text.
      * @return The builder instance for chaining.
      */
     public TextStyle obfuscated(boolean obfuscated) {
-        this.properties.put("obfuscated", obfuscated);
+        this.root.put("obfuscated", obfuscated);
         return this;
     }
 
-    // --- Generation Method ---
+    // --- 🛰️ Generation Methods ---
 
     /**
-     * Generates the final, quoted JSON string required by the Minecraft command.
-     * @return The JSON string, enclosed in single quotes. Example: '{"color":"red","bold":true}'
+     * Generates the final JSON string enclosed in single quotes for Minecraft commands.
+     * <p><b>Example Output:</b> {@code '{"color":"red","bold":true}'}</p>
+     * <p><b>Error Catching:</b> Catches {@link JsonProcessingException} and wraps it
+     * in a {@link RuntimeException} to avoid checked exception pollution.</p>
+     * @return A single-quoted JSON string.
      */
     public String generate() {
-        if (properties.isEmpty()) {
-            // Return an empty JSON object if no properties were set.
-            return "'{}'";
+        try {
+            String json = MAPPER.writeValueAsString(this.root);
+            return "'" + json + "'";
+        } catch (JsonProcessingException e) {
+            // This should logically never occur with a simple ObjectNode
+            throw new RuntimeException("Failed to generate TextStyle JSON", e);
         }
-
-        StringBuilder sb = new StringBuilder();
-        sb.append("'"); // Start with a single quote for the MC command argument
-
-        // Manually build the JSON structure to avoid external JSON libraries
-        sb.append("{");
-        boolean first = true;
-        for (Map.Entry<String, Object> entry : properties.entrySet()) {
-            if (!first) {
-                sb.append(",");
-            }
-            // Append key: "key"
-            sb.append("\"").append(entry.getKey()).append("\":");
-
-            // Append value: Handle string and boolean types
-            Object value = entry.getValue();
-            if (value instanceof String) {
-                // Append string value: "value"
-                sb.append("\"").append(value).append("\"");
-            } else if (value instanceof Boolean) {
-                // Append boolean value: true or false
-                sb.append(value);
-            } else {
-                // Future-proofing for numbers/other types if needed
-                sb.append(value.toString());
-            }
-            first = false;
-        }
-        sb.append("}");
-
-        sb.append("'"); // End with a single quote
-
-        return sb.toString();
     }
 
     /**
-     * Returns the generated JSON string.
+     * Returns the single-quoted JSON representation of the style.
+     * @return The result of {@link #generate()}.
      */
     @Override
     public String toString() {

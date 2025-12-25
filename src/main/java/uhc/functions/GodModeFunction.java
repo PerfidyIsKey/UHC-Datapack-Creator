@@ -1,33 +1,28 @@
 package uhc.functions;
 
 import uhc.arguments.entity.Entity;
-import uhc.arguments.itemstack.ComponentItemStack;
-import uhc.arguments.itemstack.components.*;
-import uhc.arguments.itemstack.components.attributes.AttributeDisplayTag;
-import uhc.arguments.itemstack.components.attributes.AttributeModifierEntry;
 import uhc.arguments.entity.TargetSelector;
-import uhc.attribute.AttributeId;
-import uhc.attribute.AttributeOperation;
-import uhc.attribute.AttributeSlot;
-import uhc.attribute.AttributeTooltipDisplayType;
+import uhc.arguments.item.ItemStack;
 import uhc.command.commands.EffectCommand;
 import uhc.command.commands.ItemCommand;
 import uhc.command.commands.Comment; // <-- NEW: Import the Comment command class
-import uhc.arguments.item.ItemTargetEntity;
+import uhc.command.commands.item.ItemTargetEntity;
 import uhc.components.functions.Function;
 import uhc.components.functions.FunctionPath;
 import uhc.core.Datapack;
 import uhc.core.Namespace;
-import uhc.arguments.slot.ItemSlot;
-import uhc.resource.EffectId;
-import uhc.resource.EnchantmentId;
-import uhc.resource.ItemId;
-import uhc.text.HexColor;
-import uhc.text.TextColor;
+import uhc.arguments.item.slot.ItemSlot;
+import uhc.data.nbt.item.components.*;
+import uhc.resource.effect.EffectId;
+import uhc.resource.enchantment.EnchantmentId;
+import uhc.resource.item.ItemId;
+import uhc.resource.attribute.AttributeDisplayType;
+import uhc.resource.attribute.AttributeModifierId;
+import uhc.resource.attribute.AttributeId;
+import uhc.resource.item.EquipmentSlot;
+import uhc.resource.color.HexColor;
+import uhc.resource.color.TextColor;
 import uhc.text.TextComponent;
-
-import java.util.List;
-import java.util.Map;
 
 /**
  * 🛡️ **God Mode Module**
@@ -101,42 +96,32 @@ public class GodModeFunction implements DatapackFunction {
         // SECTION 2: Equip Custom Weapon
         currentFunction.addLine(Comment.create("SECTION 2: Equip Custom Weapon (The Impaler Trident)"));
         currentFunction.addLine(Comment.create("Replaces the item in the main hand with a custom, unbreakable Trident."));
-        currentFunction.addLine(ItemCommand.create(
-                        ItemCommand.ItemAction.REPLACE_WITH,
+        currentFunction.addLine(ItemCommand.create(ItemCommand.ItemAction.REPLACE_WITH,
                         ItemTargetEntity.create(Entity.ofSelector(TargetSelector.SENDER)))
                 .slot(ItemSlot.MAINHAND)
                 .replaceWith(
-                        ComponentItemStack.create(ItemId.TRIDENT)
-                                .addComponent(CustomNameComponent.create(   // Item Component: Custom Name (Decorative Text Formatting)
-                                        TextComponent.array(List.of(
-                                                TextComponent.simple("aA").color(TextColor.WHITE).obfuscated(true),
-                                                TextComponent.simple("The").color(HexColor.create("#8C3CC1")).bold(true),
-                                                TextComponent.simple(" Impaler ").color(HexColor.create("#E280FF")).bold(true),
-                                                TextComponent.simple("Aa").color(TextColor.WHITE).obfuscated(true)))))
-                                .addComponent(LoreComponent.create("This holy weapon impales anything it touches")) // Item Component: Lore/Description
-                                .addComponent(DamageComponent.create(0))    // Item Component: Damage (0 = Unbreakable/Max Durability)
-                                .addComponent(EnchantmentsComponent.create(Map.of(  // Item Component: Max-Level Enchantments (255)
-                                        EnchantmentId.FIRE_ASPECT, 255,
-                                        EnchantmentId.SHARPNESS, 255,
-                                        EnchantmentId.IMPALING, 255,
-                                        EnchantmentId.LOYALTY, 255,
-                                        EnchantmentId.EFFICIENCY, 255)))
-                                .addComponent(AttributeModifiersComponent.create(List.of(   // Item Component: Attribute Modifiers (1000.0 added to Armor and Attack Damage)
-                                        AttributeModifierEntry.create(
-                                                AttributeId.ARMOR,
-                                                AttributeId.ARMOR,
-                                                1000.0,
-                                                AttributeOperation.ADD_VALUE,
-                                                AttributeSlot.ARMOR,
-                                                AttributeDisplayTag.create(AttributeTooltipDisplayType.HIDDEN)),
-                                        AttributeModifierEntry.create(
-                                                AttributeId.ATTACK_DAMAGE,
-                                                AttributeId.ATTACK_DAMAGE,
-                                                1000.0,
-                                                AttributeOperation.ADD_VALUE,
-                                                AttributeSlot.MAINHAND,
-                                                AttributeDisplayTag.create(AttributeTooltipDisplayType.HIDDEN)))))
-                                .addComponent(UnbreakableComponent.create()))); // Item Component: Unbreakable Flag
+                        ItemStack.create(ItemId.TRIDENT)
+                                .with(CustomNameComponent.create(
+                                        TextComponent.text("aA").color(TextColor.WHITE).obfuscated(true)
+                                                .append(TextComponent.text("The").color(HexColor.create("#8C3CC1")).bold(true))
+                                                .append(TextComponent.text(" Impaler ").color(HexColor.create("#E280FF")).bold(true))
+                                                .append(TextComponent.text("Aa").color(TextColor.WHITE).obfuscated(true))))
+                                .with(LoreComponent.create(TextComponent.text("This holy weapon impales anything it touches")))
+                                .with(DamageComponent.create(0))
+                                .with(EnchantmentsComponent.create()
+                                        .add(EnchantmentId.FIRE_ASPECT, 255)
+                                        .add(EnchantmentId.SHARPNESS, 255)
+                                        .add(EnchantmentId.IMPALING, 255)
+                                        .add(EnchantmentId.LOYALTY, 255)
+                                        .add(EnchantmentId.EFFICIENCY, 255))
+                                .with(AttributeModifiersComponent.create()
+                                        .add(AttributeModifiersComponent.Entry.create(
+                                                        AttributeId.ARMOR,
+                                                        AttributeModifierId.BASE_ARMOR,
+                                                        1000.0,
+                                                        uhc.resource.attribute.AttributeOperation.ADD_VALUE)
+                                                .slot(EquipmentSlot.ARMOR)
+                                                .display(AttributeDisplayType.HIDDEN))))); // Item Component: Unbreakable Flag
 
 
         // --- 4. Register Component ---

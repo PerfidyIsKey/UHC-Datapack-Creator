@@ -1,201 +1,267 @@
 package uhc.text;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
 import uhc.arguments.entity.Entity;
+import uhc.resource.color.ColorType;
+
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Objects;
 
 /**
- * 💬 **Minecraft Text Component Builder**
+ * 💬 **Universal Minecraft Text Component Builder**
  * <p>
- * Represents a structured Minecraft text component (JSON).
- * Supports single objects, selectors, click events, and composite arrays.
+ * This class provides a fluent API for creating complex Minecraft JSON text components.
+ * It leverages Jackson for high-performance, safe serialization, supporting all modern
+ * Minecraft features including translations, selectors, and interactive events.
  * </p>
  */
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class TextComponent {
 
+    /** Centralized Jackson Mapper configured to handle Java 18 record parameter names. */
+    private static final ObjectMapper MAPPER = new ObjectMapper()
+            .registerModule(new ParameterNamesModule());
+
+    /** The type of component (e.g., "translatable"). Usually inferred by fields present. */
+    @JsonProperty("type")
+    private String type;
+
+    /** Raw literal text content. Used for standard messages. */
+    @JsonProperty("text")
     private String text;
+
+    /** Target selector string (e.g., "@a", "@p"). Displays the names of targeted entities. */
+    @JsonProperty("selector")
     private String selector;
+
+    /** A keybind identifier (e.g., "key.jump"). Displays the player's bound key. */
+    @JsonProperty("keybind")
+    private String keybind;
+
+    /** The translation key identifier (e.g., "item.minecraft.diamond_sword"). */
+    @JsonProperty("translate")
+    private String translate;
+
+    /** Text to display if the translation key is missing on the client side. */
+    @JsonProperty("fallback")
+    private String fallback;
+
+    /** Arguments used to fill placeholders (%s) in a translatable component. */
+    @JsonProperty("with")
+    private List<TextComponent> with;
+
+    /** The color of the text. Can be a named color or a hex code (#RRGGBB). */
+    @JsonProperty("color")
     private String color;
+
+    /** Whether the text should be rendered in **bold**. */
+    @JsonProperty("bold")
     private Boolean bold;
+
+    /** Whether the text should be rendered in *italics*. */
+    @JsonProperty("italic")
     private Boolean italic;
+
+    /** Whether the text should be obfuscated (magic scrambled characters). */
+    @JsonProperty("obfuscated")
     private Boolean obfuscated;
+
+    /** Text inserted into the player's chat bar when they shift-click this component. */
+    @JsonProperty("insertion")
+    private String insertion;
+
+    /** Defines an action (like running a command) when the component is clicked. */
+    @JsonProperty("click_event")
     private ClickEvent clickEvent;
-    private final List<TextComponent> extra = new ArrayList<>();
 
-    // --- Constructors ---
+    /** Defines a tooltip or information to show when the component is hovered over. */
+    @JsonProperty("hover_event")
+    private HoverEvent hoverEvent;
 
+    /** A list of child components that follow this one and inherit its formatting. */
+    @JsonProperty("extra")
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    private List<TextComponent> extra;
+
+    /** Private constructor to enforce the use of static factory methods. */
     private TextComponent() {}
-
-    private TextComponent(String text) {
-        this.text = text;
-    }
 
     // --- Static Factory Methods ---
 
-    /** Factory for a simple text component. */
-    public static TextComponent simple(String text) {
-        if (text == null) throw new IllegalArgumentException("Text cannot be null.");
-        return new TextComponent(text);
-    }
-
-    /** Factory for a selector-based component (e.g., displays a player's name). */
-    public static TextComponent selector(Entity target) {
-        if (target == null) throw new IllegalArgumentException("Target cannot be null.");
-        TextComponent component = new TextComponent();
-        component.selector = target.toString();
-        return component;
+    /**
+     * Creates a literal text component.
+     * @param text The raw text to display.
+     * @return A new TextComponent instance.
+     */
+    public static TextComponent text(String text) {
+        TextComponent tc = new TextComponent();
+        tc.text = text;
+        return tc;
     }
 
     /**
-     * Factory for a component with a click event.
-     * Often used for signs or chat messages that trigger commands.
+     * Creates a translatable component based on a language key.
+     * @param key The translation identifier (e.g., "chat.type.text").
+     * @param fallback Optional text to show if the key is missing on the client.
+     * @param with Optional components to fill the placeholders in the translation.
+     * @return A new translatable TextComponent.
+     * @throws NullPointerException if the key is null.
      */
-    public static TextComponent withClickCommand(String text, String action, String command) {
-        if (text == null || action == null || command == null) {
-            throw new IllegalArgumentException("Text, action, and command must be non-null.");
+    public static TextComponent translatable(String key, String fallback, TextComponent... with) {
+        TextComponent tc = new TextComponent();
+        tc.type = "translatable";
+        tc.translate = Objects.requireNonNull(key, "Translation key cannot be null.");
+        tc.fallback = fallback;
+        if (with != null && with.length > 0) {
+            tc.with = List.of(with);
         }
-        return TextComponent.simple(text).click(action, command);
+        return tc;
     }
 
-    /** * Factory for a composite array component.
-     * Allows multiple components to be treated as a single type-safe TextComponent.
+    /**
+     * Creates a component that displays an entity's name based on a selector.
+     * @param target The {@link Entity} selector object.
+     * @return A new selector TextComponent.
+     * @throws NullPointerException if target is null.
      */
-    public static TextComponent array(List<TextComponent> parts) {
-        TextComponent composite = new TextComponent();
-        composite.extra.addAll(parts);
-        return composite;
+    public static TextComponent selector(Entity target) {
+        Objects.requireNonNull(target, "Selector target cannot be null.");
+        TextComponent tc = new TextComponent();
+        tc.selector = target.toString();
+        return tc;
     }
 
-    /** Varargs overload for the array factory. */
-    public static TextComponent array(TextComponent... parts) {
-        return array(List.of(parts));
-    }
+    // --- Styling Methods ---
 
-    // --- Builder Style Methods ---
-
-    public TextComponent color(TextColor color) {
-        this.color = (color != null) ? color.toString() : null;
+    /**
+     * Sets the color of the text using a type-safe {@link ColorType}.
+     * Supports named colors (TextColor) and hex codes (HexColor).
+     * @param color The color implementation. If null, formatting is removed.
+     * @return This TextComponent for chaining.
+     * @throws IllegalArgumentException if the provided ColorType returns a blank string.
+     */
+    public TextComponent color(ColorType color) {
+        if (color == null) {
+            this.color = null;
+            return this;
+        }
+        String colorValue = color.getColor();
+        if (colorValue == null || colorValue.isBlank()) {
+            throw new IllegalArgumentException("The provided ColorType returned an invalid color string.");
+        }
+        this.color = colorValue;
         return this;
     }
 
-    public TextComponent color(HexColor color) {
-        this.color = (color != null) ? color.getColor() : null;
-        return this;
-    }
-
+    /** Toggles bold formatting. */
     public TextComponent bold(Boolean bold) {
         this.bold = bold;
         return this;
     }
 
+    /** Toggles italic formatting. */
     public TextComponent italic(Boolean italic) {
         this.italic = italic;
         return this;
     }
 
+    /** Toggles obfuscated (magic) formatting. */
     public TextComponent obfuscated(Boolean obfuscated) {
         this.obfuscated = obfuscated;
         return this;
     }
 
     /**
-     * Internal click event setter.
-     * @param action The action (e.g., "run_command", "open_url").
-     * @param value The value (e.g., "/say Hi").
+     * Appends a child component to this component's 'extra' list.
+     * @param other The component to be added.
+     * @param keepFormat If true, the child inherits parent styles. If false, styles are reset.
+     * @return This parent component for chaining.
      */
-    public TextComponent click(String action, String value) {
-        this.clickEvent = new ClickEvent(action, value);
-        return this;
-    }
-
-    /**
-     * Appends a child component to the "extra" list.
-     */
-    public TextComponent append(TextComponent other) {
+    public TextComponent append(TextComponent other, boolean keepFormat) {
         if (other != null) {
+            if (!keepFormat) {
+                other.resetFormatting();
+            }
+            if (this.extra == null) this.extra = new ArrayList<>();
             this.extra.add(other);
         }
         return this;
     }
 
-    // --- Generation Logic ---
+    /**
+     * Appends a child component, defaulting keepFormat to false (starts plain).
+     * @param other The component to be added.
+     * @return This parent component for chaining.
+     */
+    public TextComponent append(TextComponent other) {
+        return append(other, false);
+    }
+
+    /** Clears all formatting and interactivity to ensure a "plain" start for child components. */
+    private void resetFormatting() {
+        this.color = null;
+        this.bold = null;
+        this.italic = null;
+        this.obfuscated = null;
+        this.insertion = null;
+        this.clickEvent = null;
+        this.hoverEvent = null;
+    }
+
+    // --- Interactivity Methods ---
+
+    /** Sets the text to be pasted into the chat bar when shift-clicked. */
+    public TextComponent insertion(String text) {
+        this.insertion = text;
+        return this;
+    }
+
+    /** Assigns a type-safe {@link ClickEvent} to the component. */
+    public TextComponent click(ClickEvent event) {
+        this.clickEvent = event;
+        return this;
+    }
+
+    /** Assigns a type-safe {@link HoverEvent} to the component. */
+    public TextComponent hover(HoverEvent event) {
+        this.hoverEvent = event;
+        return this;
+    }
+
+    // --- Build Logic ---
 
     /**
-     * Builds the final JSON string suitable for Minecraft commands.
+     * Serializes this component into a Minecraft-compatible JSON string.
+     * Optimizes simple text into a raw string to reduce JSON overhead.
+     * @return Valid JSON string.
+     * @throws RuntimeException if Jackson fails to serialize.
      */
     public String build() {
-        // Handle Case: Composite Array (Container for children only)
-        if (text == null && selector == null && !extra.isEmpty()) {
-            return "[" + extra.stream()
-                    .map(TextComponent::build)
-                    .collect(Collectors.joining(",")) + "]";
-        }
-
-        // Handle Case: Minimal Raw String (No styles, no children)
-        if (color == null && bold == null && italic == null &&
-                obfuscated == null && clickEvent == null && extra.isEmpty() && selector == null) {
-            return "\"" + escape(text) + "\"";
-        }
-
-        // Handle Case: JSON Object {}
-        StringBuilder sb = new StringBuilder("{");
-        boolean firstField = true;
-
-        if (text != null) {
-            sb.append("\"text\":\"").append(escape(text)).append("\"");
-            firstField = false;
-        } else if (selector != null) {
-            sb.append("\"selector\":\"").append(escape(selector)).append("\"");
-            firstField = false;
-        }
-
-        if (color != null) appendField(sb, "color", color, firstField);
-        if (bold != null) appendField(sb, "bold", bold.toString(), false);
-        if (italic != null) appendField(sb, "italic", italic.toString(), false);
-        if (obfuscated != null) appendField(sb, "obfuscated", obfuscated.toString(), false);
-
-        if (clickEvent != null) {
-            sb.append(",\"click_event\":{\"action\":\"")
-                    .append(escape(clickEvent.action))
-                    .append("\",\"value\":\"")
-                    .append(escape(clickEvent.value))
-                    .append("\"}");
-        }
-
-        if (!extra.isEmpty()) {
-            sb.append(",\"extra\":[");
-            sb.append(extra.stream().map(TextComponent::build).collect(Collectors.joining(",")));
-            sb.append("]");
-        }
-
-        sb.append("}");
-        return sb.toString();
-    }
-
-    /** Helper to handle comma placement and value quoting in JSON fields. */
-    private void appendField(StringBuilder sb, String key, String value, boolean isFirst) {
-        if (!isFirst) sb.append(",");
-        sb.append("\"").append(key).append("\":");
-        // JSON booleans are not quoted
-        if (value.equals("true") || value.equals("false")) {
-            sb.append(value);
-        } else {
-            sb.append("\"").append(escape(value)).append("\"");
+        try {
+            if (isPlainLiteral()) {
+                return MAPPER.writeValueAsString(text != null ? text : "");
+            }
+            return MAPPER.writeValueAsString(this);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException("Critical failure during TextComponent serialization", e);
         }
     }
 
-    /** Escapes backslashes and quotes to maintain valid JSON syntax. */
-    private String escape(String input) {
-        if (input == null) return "";
-        return input.replace("\\", "\\\\").replace("\"", "\\\"");
+    /** Checks if the component is a literal string with no styles or extra metadata. */
+    private boolean isPlainLiteral() {
+        return text != null && type == null && translate == null && selector == null &&
+                keybind == null && color == null && bold == null && italic == null &&
+                obfuscated == null && insertion == null && clickEvent == null &&
+                hoverEvent == null && (extra == null || extra.isEmpty());
     }
 
     @Override
     public String toString() {
         return build();
     }
-
-    // --- Internal Record ---
-    private record ClickEvent(String action, String value) {}
 }

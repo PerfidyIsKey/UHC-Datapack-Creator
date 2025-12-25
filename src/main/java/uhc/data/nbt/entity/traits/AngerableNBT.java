@@ -25,7 +25,6 @@ public interface AngerableNBT<T extends AngerableNBT<T>> {
      * </p>
      * @param ticks Duration of anger in game ticks.
      */
-    @SuppressWarnings("unchecked")
     default T angerEndTime(int ticks) {
         // Minecraft typically uses "AngerTime" (Int) for most neutral mobs
         root().put(new IntTag("AngerTime", ticks));
@@ -36,7 +35,6 @@ public interface AngerableNBT<T extends AngerableNBT<T>> {
      * Sets the specific entity the mob is currently angry at using its UUID.
      * @param uuid The UUID of the target.
      */
-    @SuppressWarnings("unchecked")
     default T angryAt(UUID uuid) {
         Objects.requireNonNull(uuid, "Target UUID cannot be null for angryAt.");
 

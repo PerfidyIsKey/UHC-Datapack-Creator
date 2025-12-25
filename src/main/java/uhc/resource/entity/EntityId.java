@@ -1,44 +1,77 @@
 package uhc.resource.entity;
 
+import uhc.core.DatapackConfig;
+import java.util.Objects;
+
 /**
- * Defines the valid resource locations for Minecraft entities,
- * automatically applying the 'minecraft:' namespace by default.
+ * 🐾 **Entity Identifier Registry**
+ * <p>
+ * Defines a fixed list of Minecraft entity types.
+ * </p>
  */
-public enum EntityId {
-    AREA_EFFECT_CLOUD("area_effect_cloud"),
-    ARMOR_STAND("armor_stand"),
-    DOLPHIN("dolphin"),
-    FALLING_BLOCK("falling_block"),
-    FIREWORK_ROCKET("firework_rocket"),
-    HORSE("horse"),
-    ITEM("item"),
-    MARKER("marker"),
-    WOLF("wolf");
+public enum EntityId implements EntityResource {
 
-    private final String resourceLocation;
-    private static final String DEFAULT_NAMESPACE = "minecraft";
+    // --- 🏗️ Technical & Utility Entities ---
+    AREA_EFFECT_CLOUD,
+    ARMOR_STAND,
+    ITEM,
+    MARKER,
+    FALLING_BLOCK,
+    FIREWORK_ROCKET,
 
-    /**
-     * Constructor. Prefixes with "minecraft:" unless a namespace is already present.
-     */
+    // --- 🐎 Passive & Tameable Mobs ---
+    DOLPHIN,
+    HORSE,
+    WOLF;
 
-    EntityId(String path, String namespace) {
-        this.resourceLocation = namespace + ":" + path;
+    // --- ⚙️ State & Fields ---
+
+    private final String namespace;
+    private final String path;
+
+    // --- 🏗️ Constructors ---
+
+    EntityId() {
+        this.namespace = DatapackConfig.MINECRAFT_NAMESPACE;
+        this.path = this.name().toLowerCase();
     }
 
     EntityId(String path) {
-        this.resourceLocation = DEFAULT_NAMESPACE + ":" + path;
+        this.namespace = DatapackConfig.MINECRAFT_NAMESPACE;
+        this.path = Objects.requireNonNull(path, "Path cannot be null").toLowerCase().trim();
+        this.validate();
     }
 
+    EntityId(String path, String namespace) {
+        this.namespace = Objects.requireNonNull(namespace, "Namespace cannot be null").toLowerCase().trim();
+        this.path = Objects.requireNonNull(path, "Path cannot be null").toLowerCase().trim();
+        this.validate();
+    }
+
+    // --- 🛰️ ResourceLocation Implementation ---
+
+    @Override
+    public String getNamespace() { return namespace; }
+
+    @Override
+    public String getPath() { return path; }
+
+    @Override
+    public String getResourceLocation() { return namespace + ":" + path; }
+
+    // --- 🛡️ Validation & Overrides ---
+
     /**
-     * Returns the full NBT-compliant resource location, e.g., "minecraft:zombie".
+     * Validates character compliance and entity-specific syntax.
+     * <p><b>Error Catching:</b> Invokes the validation logic from {@link EntityResource}
+     * to prevent NBT or selector characters in registry constants.</p>
      */
-    public String getResourceLocation() {
-        return resourceLocation;
+    @Override
+    public void validate() throws IllegalStateException {
+        // Corrected reference to the immediate parent interface
+        EntityResource.super.validate();
     }
 
     @Override
-    public String toString() {
-        return getResourceLocation();
-    }
+    public String toString() { return getResourceLocation(); }
 }

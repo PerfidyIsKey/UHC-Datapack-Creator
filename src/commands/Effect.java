@@ -1,7 +1,7 @@
 package commands;
 
 import uhc.arguments.entity.Entity;
-import uhc.resource.EffectId;
+import uhc.resource.effect.EffectId;
 
 public class Effect {
     private final uhc.command.commands.EffectCommand.EffectAction action;

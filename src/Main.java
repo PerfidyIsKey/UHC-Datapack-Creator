@@ -11,10 +11,8 @@ import uhc.arguments.block.ColumnPos;
 import uhc.arguments.entity.Entity;
 import uhc.arguments.block.*;
 import uhc.arguments.coordinate.Vec3;
-import uhc.arguments.itempredicate.SimpleItemPredicate;
-import uhc.arguments.itemstack.components.*;
-import uhc.arguments.itemstack.components.attributes.AttributeDisplayTag;
-import uhc.arguments.itemstack.components.attributes.AttributeModifierEntry;
+import uhc.arguments.item.ItemPredicate;
+import uhc.arguments.item.ItemStack;
 import uhc.arguments.particle.ParticleArgument;
 import uhc.arguments.particle.ParticleArgumentBuilder;
 import uhc.arguments.entity.SelectorArgumentsBuilder;
@@ -24,49 +22,62 @@ import commands.*;
 import uhc.command.commands.RandomCommand;
 import uhc.arguments.data.DataPath;
 import uhc.command.commands.SetWorldSpawnCommand;
-import uhc.data.target.DataTargetEntity;
+import uhc.command.commands.data.DataTargetEntity;
+import uhc.command.commands.data.ModificationSetValue;
+import uhc.data.nbt.blockentity.ChestNBT;
+import uhc.data.nbt.blockentity.JukeboxNBT;
+import uhc.data.nbt.blockentity.SignNBT;
+import uhc.data.nbt.blockentity.StructureBlockNBT;
+import uhc.data.nbt.blockentity.state.FacingBlockState;
+import uhc.data.nbt.blockentity.state.HasRecordState;
+import uhc.data.nbt.blockentity.state.ModeState;
+import uhc.data.nbt.blockentity.state.WaterloggedState;
+import uhc.data.nbt.entity.dynamic_tiles.FallingBlockNBT;
+import uhc.data.nbt.entity.items.ItemEntityNBT;
+import uhc.data.nbt.entity.mobs.ArmorStandNBT;
+import uhc.data.nbt.entity.mobs.PlayerNBT;
+import uhc.data.nbt.entity.other.MarkerNBT;
+import uhc.data.nbt.entity.projectiles.FireworkRocketNBT;
+import uhc.data.nbt.item.ItemNBT;
+import uhc.arguments.item.SingleItemStack;
 import uhc.arguments.data.DataValue;
-import uhc.data.nbt.ModificationSetValue;
-import uhc.arguments.itemstack.*;
-import uhc.arguments.item.ItemTargetEntity;
+import uhc.data.nbt.item.components.*;
+import uhc.command.commands.item.ItemTargetEntity;
 import controlpoints.ControlPoint;
 import controlpoints.ControlPointTag;
 import uhc.command.commands.*;
-import uhc.arguments.slot.ItemSlot;
-import uhc.data.nbt.blockentity.*;
-import uhc.data.nbt.entity.*;
-import uhc.data.nbt.entity.data.*;
-import uhc.data.resource.*;
-import uhc.game.*;
-import uhc.data.nbt.blockentity.StructureBlockEntity.StructureDataKey;
-import uhc.arguments.itemstack.components.builder.PlayerProfileComponentBuilder;
+import uhc.arguments.item.slot.ItemSlot;
 import uhc.data.nbt.tags.ByteTag;
-import uhc.data.nbt.tags.CompoundTag;
-import uhc.data.nbt.tags.IntTag;
-import uhc.data.nbt.tags.StringTag;
-import uhc.resource.*;
-import uhc.resource.block.WoodType;
+import uhc.resource.attribute.AttributeDisplayType;
+import uhc.resource.attribute.AttributeModifierId;
+import uhc.resource.attribute.AttributeId;
+import uhc.resource.block.*;
 import uhc.resource.block.structure_block.StructureBlockMode;
 import uhc.resource.block.structure_block.StructureMirror;
 import uhc.resource.block.structure_block.StructureRotation;
+import uhc.resource.color.DyeColor;
+import uhc.resource.color.HexColor;
+import uhc.resource.color.TextColor;
+import uhc.resource.data.DataPathId;
+import uhc.resource.effect.EffectId;
+import uhc.resource.enchantment.EnchantmentId;
 import uhc.resource.entity.EntityId;
-import uhc.resource.item.ArmorMaterial;
-import uhc.resource.item.ArmorPiece;
-import uhc.resource.item.ToolMaterial;
-import uhc.resource.item.ToolPiece;
-import uhc.attribute.AttributeId;
-import uhc.attribute.AttributeOperation;
-import uhc.attribute.AttributeSlot;
-import uhc.attribute.AttributeTooltipDisplayType;
-import uhc.resource.block.ColorableBlockId;
-import uhc.resource.block.WoodBlockId;
+import uhc.resource.gameplay.DifficultyId;
+import uhc.resource.gameplay.GameModeId;
+import uhc.resource.gameplay.GameRuleId;
+import uhc.resource.item.*;
+import uhc.resource.loot_table.LootTableId;
+import uhc.resource.particle.ParticleId;
+import uhc.resource.potion.PotionId;
+import uhc.resource.recipe.RecipeId;
+import uhc.resource.sound.InstrumentId;
+import uhc.resource.sound.SoundId;
+import uhc.resource.sound.SoundSource;
+import uhc.resource.tag.StaticEntityTag;
 import uhc.score.ComparatorType;
 import uhc.score.OperationType;
 import uhc.score.ScoreObjective;
-import uhc.text.DyeColor;
-import uhc.text.TextColor;
-import uhc.text.TextComponent;
-import uhc.text.HexColor;
+import uhc.text.*;
 
 import java.io.IOException;
 import java.nio.file.*;
@@ -460,16 +471,16 @@ public class Main {
         entries.add(new LootTableEntry(17, ItemId.EGG));
 
         // Entry #2
-        entries.add(new LootTableEntry(17, ItemId.LADDER, new SetCount(10)));
+        entries.add(new LootTableEntry(17, BlockId.LADDER, new SetCount(10)));
 
         // Entry #3
         entries.add(new LootTableEntry(15, ItemId.STICK, new SetCount(8)));
 
         // Entry #4
-        entries.add(new LootTableEntry(15, ItemId.DIORITE, new SetCount(16)));
+        entries.add(new LootTableEntry(15, BlockId.DIORITE, new SetCount(16)));
 
         // Entry #5
-        entries.add(new LootTableEntry(15, ItemId.AMETHYST_BLOCK, new SetCount(16)));
+        entries.add(new LootTableEntry(15, BlockId.AMETHYST_BLOCK, new SetCount(16)));
 
         // Entry #6
         entries.add(new LootTableEntry(15, ItemId.IRON_INGOT, new SetCount(8)));
@@ -481,29 +492,29 @@ public class Main {
         entries.add(new LootTableEntry(11, ItemId.BONE, new SetCount(3, new RandomChance(0.4))));
 
         // Entry #9
-        entries.add(new LootTableEntry(10, ItemId.COPPER_BLOCK, new SetCount(16)));
+        entries.add(new LootTableEntry(10, BlockId.COPPER_BLOCK, new SetCount(16)));
 
         // Entry #10
         entries.add(new LootTableEntry(10, ItemId.BREAD, new SetCount(5)));
 
         // Entry #11
-        entries.add(new LootTableEntry(10, ItemId.COBWEB, new SetCount(2, new RandomChance(0.4))));
+        entries.add(new LootTableEntry(10, BlockId.COBWEB, new SetCount(2, new RandomChance(0.4))));
 
         // Entry #12
         Enchantments enchantment = new Enchantments(EnchantmentType.LURE, 3);
         entries.add(new LootTableEntry(8, ItemId.FISHING_ROD, new SetComponents(enchantment)));
 
         // Entry #13
-        entries.add(new LootTableEntry(8, ItemId.OBSIDIAN, new SetCount(4)));
+        entries.add(new LootTableEntry(8, BlockId.OBSIDIAN, new SetCount(4)));
 
         // Entry #14
-        entries.add(new LootTableEntry(7, ItemId.GLASS, new SetCount(3)));
+        entries.add(new LootTableEntry(7, BlockId.GLASS, new SetCount(3)));
 
         // Entry #15
         entries.add(new LootTableEntry(7, ItemId.MELON_SLICE, new SetCount(3, new RandomChance(0.4))));
 
         // Entry #16
-        entries.add(new LootTableEntry(5, ItemId.TNT, new SetCount(4)));
+        entries.add(new LootTableEntry(5, BlockId.TNT, new SetCount(4)));
 
         // Entry #17
         entries.add(new LootTableEntry(5, ItemId.EXPERIENCE_BOTTLE, new SetCount(3, new RandomChance(0.2))));
@@ -569,7 +580,7 @@ public class Main {
         entries.add(new LootTableEntry(2, ItemId.GOLDEN_APPLE));
 
         // Entry #34
-        entries.add(new LootTableEntry(2, ItemId.ANVIL));
+        entries.add(new LootTableEntry(2, BlockId.ANVIL));
 
         // Entry #35
         entries.add(new LootTableEntry(4, ItemId.SPYGLASS));
@@ -578,10 +589,10 @@ public class Main {
         entries.add(new LootTableEntry(2, ItemId.WOLF_SPAWN_EGG, new SetCount(2, new RandomChance(0.01))));
 
         // Entry #37
-        entries.add(new LootTableEntry(1, ItemId.DIAMOND_HORSE_ARMOR));
+        entries.add(new LootTableEntry(1, DynamicItem.armor(ArmorMaterial.DIAMOND, ArmorPiece.HORSE_ARMOR)));
 
         // Entry #38
-        entries.add(new LootTableEntry(1, ItemId.NETHERITE_HOE));
+        entries.add(new LootTableEntry(1, DynamicItem.tool(ToolMaterial.NETHERITE, ToolPiece.HOE)));
 
         // Entry #39
         enchantment = new Enchantments(EnchantmentType.LOYALTY, 3);
@@ -994,53 +1005,39 @@ public class Main {
                 FillCommand.create(
                                 BlockPos.absolute(-6, 220, -6),
                                 BlockPos.absolute(6, 226, 6),
-                                SimpleBlock.create(StaticBlockId.BARRIER))
+                                Block.create(BlockId.BARRIER))
                         .generate());
         fileCommands.add(Execute.In(Dimension.overworld) +
                 FillCommand.create(
                                 BlockPos.absolute(-5, 221, -5),
                                 BlockPos.absolute(5, 226, 5),
-                                SimpleBlock.create(StaticBlockId.AIR))
+                                Block.create(BlockId.AIR))
                         .generate());
 
         fileCommands.add(Execute.In(Dimension.overworld) +
                 SetBlockCommand.create(
-                                BlockPos.absolute(0, 222, -5),
-                                DynamicBlock.create(
-                                        WoodBlockId.WALL_SIGN.withWoodType(WoodType.CHERRY),
-                                        BlockState.create()
-                                                .facing(Direction.SOUTH)
-                                                .waterlogged(false),
-                                        SignEntity.create()
-                                                .setWaxed(false)
-                                                .getBackSide()
-                                                .addMessage(TextComponent.simple("You have"))
-                                                .addMessage(TextComponent.simple("angered"))
-                                                .addMessage(TextComponent.simple("the Gods!"))
-                                                .addMessage(TextComponent.simple(""))
-                                                .done()
-                                                .getFrontSide()
-                                                .addMessage(TextComponent.withClickCommand(
-                                                        "In remembrance",
-                                                        "run_command",
-                                                        SummonCommand.create(EntityId.FIREWORK_ROCKET)
-                                                                .pos(Vec3.relative(0, 0, 0))
-                                                                .nbt(
-                                                                        FireworkRocketNbtBuilder.create(
-                                                                                FireworkRocketDataBuilder.create()
-                                                                                        .setProperty(BooleanNbtProperty.GLOWING, true)
-                                                                                        .addStar(
-                                                                                                FireworkStarDataBuilder.create()
-                                                                                                        .setShape(FireworkShape.STAR)
-                                                                                                        .buildData())
-                                                                                        .buildData())
-                                                                                .buildNbt())
-                                                                .generate()))
-                                                .addMessage(TextComponent.simple("of our"))
-                                                .addMessage(TextComponent.simple("Command Center"))
-                                                .addMessage(TextComponent.simple("2014-2025"))
-                                                .done()))
-                        .generate());
+                        BlockPos.absolute(0, 222, -5),
+                        Block.create(DynamicBlock.wood(WoodType.CHERRY, WoodBlock.WALL_SIGN))
+                                .withState(FacingBlockState.SOUTH)
+                                .withState(WaterloggedState.of(false))
+                                .withData(SignNBT.create()
+                                        .waxed(false)
+                                        .backText(SignNBT.SignSideNBT.create()
+                                                .messages(TextComponent.text("You have"),
+                                                        TextComponent.text("angered"),
+                                                        TextComponent.text("the Gods!")))
+                                        .frontText(SignNBT.SignSideNBT.create()
+                                                .messages(TextComponent.text("In Rememberance")
+                                                                .click(ClickEvent.runCommand(SummonCommand.create(EntityId.FIREWORK_ROCKET)
+                                                                        .pos(Vec3.relative(0, 0, 0))
+                                                                        .nbt(FireworkRocketNBT.create()
+                                                                                .glowing(true)
+                                                                                .fireworksItem(FireworksComponent.create()
+                                                                                        .addExplosion(FireworksComponent.Explosion.create()
+                                                                                                .shape(FireworksComponent.FireworkShape.STAR)))))),
+                                                        TextComponent.text("of our"),
+                                                        TextComponent.text("Command Center"),
+                                                        TextComponent.text("2014-2025"))))));
 
         // Control Point
         if (OperationMode.controlPoints) {
@@ -1146,16 +1143,10 @@ public class Main {
             fileCommands.add(Execute.At("@p[name=" + p.getPlayerName() + ",scores={Deaths=1}]") +
                     SummonCommand.create(EntityId.ITEM)
                             .pos(Vec3.relative(0, 0, 0))
-                            .nbt(
-                                    ItemNbtBuilder.create(
-                                                    ItemData.create(
-                                                            ItemId.PLAYER_HEAD,
-                                                            1,
-                                                            Map.of(
-                                                                    ItemComponentType.PROFILE,
-                                                                    PlayerProfileComponentBuilder.build(
-                                                                            PlayerProfileComponentData.create(p.getPlayerName())))))
-                                            .buildNbt())
+                            .nbt(ItemEntityNBT.create()
+                                    .item(ItemNBT.create(BlockId.PLAYER_HEAD)
+                                            .count(1)
+                                            .add(ProfileComponent.create(p.getPlayerName()))))
                             .generate());
         }
 
@@ -1190,7 +1181,7 @@ public class Main {
                     Execute.InNext(currentCP.getCoordinate().getDimension(), true) +
                     SetBlockCommand.create(
                                     BlockPos.absolute(currentCP.getCoordinate().getX(), currentCP.getCoordinate().getY() + 1, currentCP.getCoordinate().getZ()),
-                                    DynamicBlock.create(ColorableBlockId.STAINED_GLASS.withColor(team.getDyeColor())))
+                                    Block.create(DynamicBlock.color(team.getDyeColor(), ColorableBlock.STAINED_GLASS)))
                             .mode(SetBlockCommand.SetMode.REPLACE)
                             .generate());
         }
@@ -1200,13 +1191,13 @@ public class Main {
                 FillCommand.create(
                                 BlockPos.absolute(currentCP.getCoordinate().getX() - 1, currentCP.getCoordinate().getY() - 1, currentCP.getCoordinate().getZ() - 1),
                                 BlockPos.absolute(currentCP.getCoordinate().getX() + 1, currentCP.getCoordinate().getY() - 1, currentCP.getCoordinate().getZ() + 1),
-                                SimpleBlock.create(StaticBlockId.EMERALD_BLOCK))
+                                Block.create(BlockId.EMERALD_BLOCK))
                         .generate());
 
         fileCommands.add(Execute.In(currentCP.getCoordinate().getDimension()) +
                 SetBlockCommand.create(
                                 BlockPos.absolute(currentCP.getCoordinate().getX(), currentCP.getCoordinate().getY(), currentCP.getCoordinate().getZ()),
-                                SimpleBlock.create(StaticBlockId.BEACON))
+                                Block.create(BlockId.BEACON))
                         .generate());
 
         fileCommands.add(Schedule.callFunction("" + FileName.protect_beacon_ + i));
@@ -1235,7 +1226,7 @@ public class Main {
             fileCommands.add(Item.create(ItemCommand.ItemAction.REPLACE_WITH,
                             ItemTargetEntity.create(Entity.ofSelector(TargetSelector.ALL_PLAYERS)))
                     .slot(ItemSlot.ENDERCHEST.withSlotNumber(i))
-                    .replaceWith(SimpleItemStack.create(ItemId.AIR), 1)
+                    .replaceWith(ItemStack.create(ItemId.AIR), 1)
                     .build());
         }
 
@@ -1250,37 +1241,37 @@ public class Main {
         fileCommands.add(Item.create(ItemCommand.ItemAction.REPLACE_WITH,
                         targets)
                 .slot(ItemSlot.CHEST)
-                .replaceWith(DynamicItemStack.create(ItemId.getArmorResourceLocation(ArmorMaterial.IRON, ArmorPiece.CHESTPLATE)))
+                .replaceWith(ItemStack.create(DynamicItem.armor(ArmorMaterial.IRON, ArmorPiece.CHESTPLATE)))
                 .build());
         fileCommands.add(Item.create(ItemCommand.ItemAction.REPLACE_WITH,
                         targets)
                 .slot(ItemSlot.FEET)
-                .replaceWith(DynamicItemStack.create(ItemId.getArmorResourceLocation(ArmorMaterial.IRON, ArmorPiece.BOOTS)))
+                .replaceWith(ItemStack.create(DynamicItem.armor(ArmorMaterial.IRON, ArmorPiece.BOOTS)))
                 .build());
         fileCommands.add(Item.create(ItemCommand.ItemAction.REPLACE_WITH,
                         targets)
                 .slot(ItemSlot.HEAD)
-                .replaceWith(DynamicItemStack.create(ItemId.getArmorResourceLocation(ArmorMaterial.IRON, ArmorPiece.HELMET)))
+                .replaceWith(ItemStack.create(DynamicItem.armor(ArmorMaterial.IRON, ArmorPiece.HELMET)))
                 .build());
         fileCommands.add(Item.create(ItemCommand.ItemAction.REPLACE_WITH,
                         targets)
                 .slot(ItemSlot.LEGS)
-                .replaceWith(DynamicItemStack.create(ItemId.getArmorResourceLocation(ArmorMaterial.IRON, ArmorPiece.LEGGINGS)))
+                .replaceWith(ItemStack.create(DynamicItem.armor(ArmorMaterial.IRON, ArmorPiece.LEGGINGS)))
                 .build());
         fileCommands.add(Item.create(ItemCommand.ItemAction.REPLACE_WITH,
                         targets)
                 .slot(ItemSlot.OFFHAND)
-                .replaceWith(SimpleItemStack.create(ItemId.SHIELD))
+                .replaceWith(ItemStack.create(ItemId.SHIELD))
                 .build());
         fileCommands.add(Item.create(ItemCommand.ItemAction.REPLACE_WITH,
                         targets)
                 .slot(ItemSlot.MAINHAND)
-                .replaceWith(DynamicItemStack.create(ItemId.getToolResourceLocation(ToolMaterial.IRON, ToolPiece.AXE)))
+                .replaceWith(ItemStack.create(DynamicItem.tool(ToolMaterial.IRON, ToolPiece.AXE)))
                 .build());
         fileCommands.add(Item.create(ItemCommand.ItemAction.REPLACE_WITH,
                         targets)
                 .slot(ItemSlot.INVENTORY.withSlotNumber(0))
-                .replaceWith(DynamicItemStack.create(ItemId.getToolResourceLocation(ToolMaterial.IRON, ToolPiece.SWORD)))
+                .replaceWith(ItemStack.create(DynamicItem.tool(ToolMaterial.IRON, ToolPiece.SWORD)))
                 .build());
 
         fileCommands.add(Effect.create(EffectCommand.EffectAction.GIVE)
@@ -1303,42 +1294,33 @@ public class Main {
                 .amplifier(4)
                 .hideParticles(true)
                 .build());
-        fileCommands.add(Item.create(ItemCommand.ItemAction.REPLACE_WITH,
+        fileCommands.add(ItemCommand.create(ItemCommand.ItemAction.REPLACE_WITH,
                         ItemTargetEntity.create(Entity.ofSelector(TargetSelector.SENDER)))
                 .slot(ItemSlot.MAINHAND)
                 .replaceWith(
-                        ComponentItemStack.create(ItemId.TRIDENT)
-                                .addComponent(CustomNameComponent.create(
-                                                TextComponent.array(List.of(
-                                                                TextComponent.simple("aA").color(TextColor.WHITE).obfuscated(true),
-                                                                TextComponent.simple("The").color(HexColor.create("#8C3CC1")).bold(true),
-                                                                TextComponent.simple(" Impaler ").color(HexColor.create("#E280FF")).bold(true),
-                                                                TextComponent.simple("Aa").color(TextColor.WHITE).obfuscated(true)))))
-                                .addComponent(LoreComponent.create("This holy weapon impales anything it touches"))
-                                .addComponent(DamageComponent.create(0))
-                                .addComponent(EnchantmentsComponent.create(Map.of(
-                                        EnchantmentId.FIRE_ASPECT, 255,
-                                        EnchantmentId.SHARPNESS, 255,
-                                        EnchantmentId.IMPALING, 255,
-                                        EnchantmentId.LOYALTY, 255,
-                                        EnchantmentId.EFFICIENCY, 255)))
-                                .addComponent(AttributeModifiersComponent.create(List.of(
-                                        AttributeModifierEntry.create(
-                                                AttributeId.ARMOR,
-                                                AttributeId.ARMOR,
-                                                1000.0,
-                                                AttributeOperation.ADD_VALUE,
-                                                AttributeSlot.ARMOR,
-                                                AttributeDisplayTag.create(AttributeTooltipDisplayType.HIDDEN)),
-                                        AttributeModifierEntry.create(
-                                                AttributeId.ATTACK_DAMAGE,
-                                                AttributeId.ATTACK_DAMAGE,
-                                                1000.0,
-                                                AttributeOperation.ADD_VALUE,
-                                                AttributeSlot.MAINHAND,
-                                                AttributeDisplayTag.create(AttributeTooltipDisplayType.HIDDEN)))))
-                                .addComponent(UnbreakableComponent.create()))
-                .build());
+                        ItemStack.create(ItemId.TRIDENT)
+                                .with(CustomNameComponent.create(
+                                        TextComponent.text("aA").color(TextColor.WHITE).obfuscated(true)
+                                                .append(TextComponent.text("The").color(HexColor.create("#8C3CC1")).bold(true))
+                                                .append(TextComponent.text(" Impaler ").color(HexColor.create("#E280FF")).bold(true))
+                                                .append(TextComponent.text("Aa").color(TextColor.WHITE).obfuscated(true))))
+                                .with(LoreComponent.create(TextComponent.text("This holy weapon impales anything it touches")))
+                                .with(DamageComponent.create(0))
+                                .with(EnchantmentsComponent.create()
+                                        .add(EnchantmentId.FIRE_ASPECT, 255)
+                                        .add(EnchantmentId.SHARPNESS, 255)
+                                        .add(EnchantmentId.IMPALING, 255)
+                                        .add(EnchantmentId.LOYALTY, 255)
+                                        .add(EnchantmentId.EFFICIENCY, 255))
+                                .with(AttributeModifiersComponent.create()
+                                        .add(AttributeModifiersComponent.Entry.create(
+                                                        AttributeId.ARMOR,
+                                                        AttributeModifierId.BASE_ARMOR,
+                                                        1000.0,
+                                                        uhc.resource.attribute.AttributeOperation.ADD_VALUE)
+                                                .slot(EquipmentSlot.ARMOR)
+                                                .display(AttributeDisplayType.HIDDEN))))
+                .generate());
 
         return new FileData(FileName.god_mode, fileCommands);
     }
@@ -1357,223 +1339,223 @@ public class Main {
                             ItemCommand.ItemAction.REPLACE_WITH,
                             ItemTargetEntity.create(Entity.ofSelector(TargetSelector.SENDER)))
                     .slot(ItemSlot.HOTBAR.withSlotNumber(0))
-                    .replaceWith(ComponentItemStack.create(ItemId.SPLASH_POTION)
-                            .addComponent(PotionContentsComponent.create()
+                    .replaceWith(ItemStack.create(ItemId.SPLASH_POTION)
+                            .with(PotionContentsComponent.create()
                                     .customColor("808080")
-                                    .customEffects(CustomEffectsComponent.create()
-                                            .addEffect(CustomEffectEntry.create(EffectId.SPEED)
-                                                    .amplifier(0)
-                                                    .duration(200)
-                                                    .showParticles(false)
-                                                    .showIcon(false)
-                                                    .ambient(false))))
-                            .addComponent(LoreComponent.create("Set operational mode to Developer Mode."))
-                            .addComponent(CustomNameComponent.create(TextComponent.simple("Developer Mode"))))
+                                    .addEffect(PotionContentsComponent.CustomEffect.create(
+                                        EffectId.SPEED,
+                                            200,
+                                            0)
+                                            .particles(false)
+                                            .icon(false)
+                                            .ambient(false)))
+                            .with(LoreComponent.create(TextComponent.text("Set operational mode to Developer Mode.")))
+                            .with(CustomNameComponent.create(TextComponent.text("Developer Mode"))))
                             .build());
             fileCommands.add(Item.create(
                             ItemCommand.ItemAction.REPLACE_WITH,
                             ItemTargetEntity.create(Entity.ofSelector(TargetSelector.SENDER)))
                     .slot(ItemSlot.HOTBAR.withSlotNumber(1))
-                    .replaceWith(ComponentItemStack.create(ItemId.SPLASH_POTION)
-                            .addComponent(PotionContentsComponent.create()
+                    .replaceWith(ItemStack.create(ItemId.SPLASH_POTION)
+                            .with(PotionContentsComponent.create()
                                     .customColor("FF9933")
-                                    .customEffects(CustomEffectsComponent.create()
-                                            .addEffect(CustomEffectEntry.create(EffectId.WEAKNESS)
-                                                    .amplifier(0)
-                                                    .duration(200)
-                                                    .showParticles(false)
-                                                    .showIcon(false)
-                                                    .ambient(false))))
-                            .addComponent(LoreComponent.create("Assign players to teams."))
-                            .addComponent(CustomNameComponent.create(TextComponent.simple("Assign Teams"))))
+                                    .addEffect(PotionContentsComponent.CustomEffect.create(
+                                                    EffectId.WEAKNESS,
+                                                    200,
+                                                    0)
+                                            .particles(false)
+                                            .icon(false)
+                                            .ambient(false)))
+                            .with(LoreComponent.create(TextComponent.text("Assign players to teams.")))
+                            .with(CustomNameComponent.create(TextComponent.text("Assign Teams"))))
                     .build());
             fileCommands.add(Item.create(
                             ItemCommand.ItemAction.REPLACE_WITH,
                             ItemTargetEntity.create(Entity.ofSelector(TargetSelector.SENDER)))
                     .slot(ItemSlot.HOTBAR.withSlotNumber(2))
-                    .replaceWith(ComponentItemStack.create(ItemId.SPLASH_POTION)
-                            .addComponent(PotionContentsComponent.create()
+                    .replaceWith(ItemStack.create(ItemId.SPLASH_POTION)
+                            .with(PotionContentsComponent.create()
                                     .customColor("6633CC")
-                                    .customEffects(CustomEffectsComponent.create()
-                                            .addEffect(CustomEffectEntry.create(EffectId.SLOW_FALLING)
-                                                    .amplifier(0)
-                                                    .duration(200)
-                                                    .showParticles(false)
-                                                    .showIcon(false)
-                                                    .ambient(false))))
-                            .addComponent(LoreComponent.create("Who will win this season?."))
-                            .addComponent(CustomNameComponent.create(TextComponent.simple("Predictions"))))
+                                    .addEffect(PotionContentsComponent.CustomEffect.create(
+                                                    EffectId.SLOW_FALLING,
+                                                    200,
+                                                    0)
+                                            .particles(false)
+                                            .icon(false)
+                                            .ambient(false)))
+                            .with(LoreComponent.create(TextComponent.text("Who will win this season?.")))
+                            .with(CustomNameComponent.create(TextComponent.text("Predictions"))))
                     .build());
             fileCommands.add(Item.create(
                             ItemCommand.ItemAction.REPLACE_WITH,
                             ItemTargetEntity.create(Entity.ofSelector(TargetSelector.SENDER)))
                     .slot(ItemSlot.HOTBAR.withSlotNumber(3))
-                    .replaceWith(ComponentItemStack.create(ItemId.SPLASH_POTION)
-                            .addComponent(PotionContentsComponent.create()
+                    .replaceWith(ItemStack.create(ItemId.SPLASH_POTION)
+                            .with(PotionContentsComponent.create()
                                     .customColor("3399FF")
-                                    .customEffects(CustomEffectsComponent.create()
-                                            .addEffect(CustomEffectEntry.create(EffectId.INVISIBILITY)
-                                                    .amplifier(0)
-                                                    .duration(200)
-                                                    .showParticles(false)
-                                                    .showIcon(false)
-                                                    .ambient(false))))
-                            .addComponent(LoreComponent.create("Allow players to gather in their Discord channel."))
-                            .addComponent(CustomNameComponent.create(TextComponent.simple("Into Calls"))))
+                                    .addEffect(PotionContentsComponent.CustomEffect.create(
+                                                    EffectId.INVISIBILITY,
+                                                    200,
+                                                    0)
+                                            .particles(false)
+                                            .icon(false)
+                                            .ambient(false)))
+                            .with(LoreComponent.create(TextComponent.text("Allow players to gather in their Discord channel.")))
+                            .with(CustomNameComponent.create(TextComponent.text("Into Calls"))))
                     .build());
             fileCommands.add(Item.create(
                             ItemCommand.ItemAction.REPLACE_WITH,
                             ItemTargetEntity.create(Entity.ofSelector(TargetSelector.SENDER)))
                     .slot(ItemSlot.HOTBAR.withSlotNumber(4))
-                    .replaceWith(ComponentItemStack.create(ItemId.SPLASH_POTION)
-                            .addComponent(PotionContentsComponent.create()
+                    .replaceWith(ItemStack.create(ItemId.SPLASH_POTION)
+                            .with(PotionContentsComponent.create()
                                     .customColor("00CC66")
-                                    .customEffects(CustomEffectsComponent.create()
-                                            .addEffect(CustomEffectEntry.create(EffectId.POISON)
-                                                    .amplifier(0)
-                                                    .duration(200)
-                                                    .showParticles(false)
-                                                    .showIcon(false)
-                                                    .ambient(false))))
-                            .addComponent(LoreComponent.create("Spread players across the map."))
-                            .addComponent(CustomNameComponent.create(TextComponent.simple("Spread players"))))
+                                    .addEffect(PotionContentsComponent.CustomEffect.create(
+                                                    EffectId.POISON,
+                                                    200,
+                                                    0)
+                                            .particles(false)
+                                            .icon(false)
+                                            .ambient(false)))
+                            .with(LoreComponent.create(TextComponent.text("Spread players across the map.")))
+                            .with(CustomNameComponent.create(TextComponent.text("Spread players"))))
                     .build());
             fileCommands.add(Item.create(
                             ItemCommand.ItemAction.REPLACE_WITH,
                             ItemTargetEntity.create(Entity.ofSelector(TargetSelector.SENDER)))
                     .slot(ItemSlot.HOTBAR.withSlotNumber(5))
-                    .replaceWith(ComponentItemStack.create(ItemId.SPLASH_POTION)
-                            .addComponent(PotionContentsComponent.create()
+                    .replaceWith(ItemStack.create(ItemId.SPLASH_POTION)
+                            .with(PotionContentsComponent.create()
                                     .customColor("CC3333")
-                                    .customEffects(CustomEffectsComponent.create()
-                                            .addEffect(CustomEffectEntry.create(EffectId.STRENGTH)
-                                                    .amplifier(0)
-                                                    .duration(200)
-                                                    .showParticles(false)
-                                                    .showIcon(false)
-                                                    .ambient(false))))
-                            .addComponent(LoreComponent.create("Set operational mode to Ready to Play."))
-                            .addComponent(CustomNameComponent.create(TextComponent.simple("Survival Mode"))))
+                                    .addEffect(PotionContentsComponent.CustomEffect.create(
+                                                    EffectId.STRENGTH,
+                                                    200,
+                                                    0)
+                                            .particles(false)
+                                            .icon(false)
+                                            .ambient(false)))
+                            .with(LoreComponent.create(TextComponent.text("Set operational mode to Ready to Play.")))
+                            .with(CustomNameComponent.create(TextComponent.text("Survival Mode"))))
                     .build());
             fileCommands.add(Item.create(
                             ItemCommand.ItemAction.REPLACE_WITH,
                             ItemTargetEntity.create(Entity.ofSelector(TargetSelector.SENDER)))
                     .slot(ItemSlot.HOTBAR.withSlotNumber(6))
-                    .replaceWith(ComponentItemStack.create(ItemId.SPLASH_POTION)
-                            .addComponent(PotionContentsComponent.create()
+                    .replaceWith(ItemStack.create(ItemId.SPLASH_POTION)
+                            .with(PotionContentsComponent.create()
                                     .customColor("00FF7F")
-                                    .customEffects(CustomEffectsComponent.create()
-                                            .addEffect(CustomEffectEntry.create(EffectId.SLOWNESS)
-                                                    .amplifier(0)
-                                                    .duration(200)
-                                                    .showParticles(false)
-                                                    .showIcon(false)
-                                                    .ambient(false))))
-                            .addComponent(LoreComponent.create("Start the game. Good luck!"))
-                            .addComponent(CustomNameComponent.create(TextComponent.simple("Start Game"))))
+                                    .addEffect(PotionContentsComponent.CustomEffect.create(
+                                                    EffectId.SLOWNESS,
+                                                    200,
+                                                    0)
+                                            .particles(false)
+                                            .icon(false)
+                                            .ambient(false)))
+                            .with(LoreComponent.create(TextComponent.text("Start the game. Good luck!")))
+                            .with(CustomNameComponent.create(TextComponent.text("Start Game"))))
                     .build());
         } else {
             fileCommands.add(Item.create(
                             ItemCommand.ItemAction.REPLACE_WITH,
                             ItemTargetEntity.create(Entity.ofSelector(TargetSelector.SENDER)))
                     .slot(ItemSlot.HOTBAR.withSlotNumber(0))
-                    .replaceWith(ComponentItemStack.create(ItemId.SPLASH_POTION)
-                            .addComponent(PotionContentsComponent.create()
+                    .replaceWith(ItemStack.create(ItemId.SPLASH_POTION)
+                            .with(PotionContentsComponent.create()
                                     .customColor("808080")
-                                    .customEffects(CustomEffectsComponent.create()
-                                            .addEffect(CustomEffectEntry.create(EffectId.SPEED)
-                                                    .amplifier(0)
-                                                    .duration(200)
-                                                    .showParticles(false)
-                                                    .showIcon(false)
-                                                    .ambient(false))))
-                            .addComponent(LoreComponent.create("Set operational mode to Developer Mode."))
-                            .addComponent(CustomNameComponent.create(TextComponent.simple("Developer Mode"))))
+                                    .addEffect(PotionContentsComponent.CustomEffect.create(
+                                                    EffectId.SPEED,
+                                                    200,
+                                                    0)
+                                            .particles(false)
+                                            .icon(false)
+                                            .ambient(false)))
+                            .with(LoreComponent.create(TextComponent.text("Set operational mode to Developer Mode.")))
+                            .with(CustomNameComponent.create(TextComponent.text("Developer Mode"))))
                     .build());
             fileCommands.add(Item.create(
                             ItemCommand.ItemAction.REPLACE_WITH,
                             ItemTargetEntity.create(Entity.ofSelector(TargetSelector.SENDER)))
                     .slot(ItemSlot.HOTBAR.withSlotNumber(1))
-                    .replaceWith(ComponentItemStack.create(ItemId.SPLASH_POTION)
-                            .addComponent(PotionContentsComponent.create()
+                    .replaceWith(ItemStack.create(ItemId.SPLASH_POTION)
+                            .with(PotionContentsComponent.create()
                                     .customColor("6633CC")
-                                    .customEffects(CustomEffectsComponent.create()
-                                            .addEffect(CustomEffectEntry.create(EffectId.SLOW_FALLING)
-                                                    .amplifier(0)
-                                                    .duration(200)
-                                                    .showParticles(false)
-                                                    .showIcon(false)
-                                                    .ambient(false))))
-                            .addComponent(LoreComponent.create("Who will win this season?."))
-                            .addComponent(CustomNameComponent.create(TextComponent.simple("Predictions"))))
+                                    .addEffect(PotionContentsComponent.CustomEffect.create(
+                                                    EffectId.SLOW_FALLING,
+                                                    200,
+                                                    0)
+                                            .particles(false)
+                                            .icon(false)
+                                            .ambient(false)))
+                            .with(LoreComponent.create(TextComponent.text("Who will win this season?.")))
+                            .with(CustomNameComponent.create(TextComponent.text("Predictions"))))
                     .build());
             fileCommands.add(Item.create(
                             ItemCommand.ItemAction.REPLACE_WITH,
                             ItemTargetEntity.create(Entity.ofSelector(TargetSelector.SENDER)))
                     .slot(ItemSlot.HOTBAR.withSlotNumber(2))
-                    .replaceWith(ComponentItemStack.create(ItemId.SPLASH_POTION)
-                            .addComponent(PotionContentsComponent.create()
+                    .replaceWith(ItemStack.create(ItemId.SPLASH_POTION)
+                            .with(PotionContentsComponent.create()
                                     .customColor("3399FF")
-                                    .customEffects(CustomEffectsComponent.create()
-                                            .addEffect(CustomEffectEntry.create(EffectId.INVISIBILITY)
-                                                    .amplifier(0)
-                                                    .duration(200)
-                                                    .showParticles(false)
-                                                    .showIcon(false)
-                                                    .ambient(false))))
-                            .addComponent(LoreComponent.create("Allow players to gather in their Discord channel."))
-                            .addComponent(CustomNameComponent.create(TextComponent.simple("Into Calls"))))
+                                    .addEffect(PotionContentsComponent.CustomEffect.create(
+                                                    EffectId.INVISIBILITY,
+                                                    200,
+                                                    0)
+                                            .particles(false)
+                                            .icon(false)
+                                            .ambient(false)))
+                            .with(LoreComponent.create(TextComponent.text("Allow players to gather in their Discord channel.")))
+                            .with(CustomNameComponent.create(TextComponent.text("Into Calls"))))
                     .build());
             fileCommands.add(Item.create(
                             ItemCommand.ItemAction.REPLACE_WITH,
                             ItemTargetEntity.create(Entity.ofSelector(TargetSelector.SENDER)))
                     .slot(ItemSlot.HOTBAR.withSlotNumber(3))
-                    .replaceWith(ComponentItemStack.create(ItemId.SPLASH_POTION)
-                            .addComponent(PotionContentsComponent.create()
+                    .replaceWith(ItemStack.create(ItemId.SPLASH_POTION)
+                            .with(PotionContentsComponent.create()
                                     .customColor("00CC66")
-                                    .customEffects(CustomEffectsComponent.create()
-                                            .addEffect(CustomEffectEntry.create(EffectId.POISON)
-                                                    .amplifier(0)
-                                                    .duration(200)
-                                                    .showParticles(false)
-                                                    .showIcon(false)
-                                                    .ambient(false))))
-                            .addComponent(LoreComponent.create("Spread players across the map."))
-                            .addComponent(CustomNameComponent.create(TextComponent.simple("Spread players"))))
+                                    .addEffect(PotionContentsComponent.CustomEffect.create(
+                                                    EffectId.POISON,
+                                                    200,
+                                                    0)
+                                            .particles(false)
+                                            .icon(false)
+                                            .ambient(false)))
+                            .with(LoreComponent.create(TextComponent.text("Spread players across the map.")))
+                            .with(CustomNameComponent.create(TextComponent.text("Spread players"))))
                     .build());
             fileCommands.add(Item.create(
                             ItemCommand.ItemAction.REPLACE_WITH,
                             ItemTargetEntity.create(Entity.ofSelector(TargetSelector.SENDER)))
                     .slot(ItemSlot.HOTBAR.withSlotNumber(4))
-                    .replaceWith(ComponentItemStack.create(ItemId.SPLASH_POTION)
-                            .addComponent(PotionContentsComponent.create()
+                    .replaceWith(ItemStack.create(ItemId.SPLASH_POTION)
+                            .with(PotionContentsComponent.create()
                                     .customColor("CC3333")
-                                    .customEffects(CustomEffectsComponent.create()
-                                            .addEffect(CustomEffectEntry.create(EffectId.STRENGTH)
-                                                    .amplifier(0)
-                                                    .duration(200)
-                                                    .showParticles(false)
-                                                    .showIcon(false)
-                                                    .ambient(false))))
-                            .addComponent(LoreComponent.create("Set operational mode to Ready to Play."))
-                            .addComponent(CustomNameComponent.create(TextComponent.simple("Survival Mode"))))
+                                    .addEffect(PotionContentsComponent.CustomEffect.create(
+                                                    EffectId.STRENGTH,
+                                                    200,
+                                                    0)
+                                            .particles(false)
+                                            .icon(false)
+                                            .ambient(false)))
+                            .with(LoreComponent.create(TextComponent.text("Set operational mode to Ready to Play.")))
+                            .with(CustomNameComponent.create(TextComponent.text("Survival Mode"))))
                     .build());
             fileCommands.add(Item.create(
                             ItemCommand.ItemAction.REPLACE_WITH,
                             ItemTargetEntity.create(Entity.ofSelector(TargetSelector.SENDER)))
                     .slot(ItemSlot.HOTBAR.withSlotNumber(5))
-                    .replaceWith(ComponentItemStack.create(ItemId.SPLASH_POTION)
-                            .addComponent(PotionContentsComponent.create()
+                    .replaceWith(ItemStack.create(ItemId.SPLASH_POTION)
+                            .with(PotionContentsComponent.create()
                                     .customColor("00FF7F")
-                                    .customEffects(CustomEffectsComponent.create()
-                                            .addEffect(CustomEffectEntry.create(EffectId.SLOWNESS)
-                                                    .amplifier(0)
-                                                    .duration(200)
-                                                    .showParticles(false)
-                                                    .showIcon(false)
-                                                    .ambient(false))))
-                            .addComponent(LoreComponent.create("Start the game. Good luck!"))
-                            .addComponent(CustomNameComponent.create(TextComponent.simple("Start Game"))))
+                                    .addEffect(PotionContentsComponent.CustomEffect.create(
+                                                    EffectId.SLOWNESS,
+                                                    200,
+                                                    0)
+                                            .particles(false)
+                                            .icon(false)
+                                            .ambient(false)))
+                            .with(LoreComponent.create(TextComponent.text("Start the game. Good luck!")))
+                            .with(CustomNameComponent.create(TextComponent.text("Start Game"))))
                     .build());
         }
 
@@ -1595,12 +1577,11 @@ public class Main {
         fileCommands.add(KillCommand.create()
                         .targets(Constant.admin)
                                 .generate());
-        fileCommands.add(
-                SummonCommand.create(EntityId.MARKER)
-                        .pos(Vec3.absolute(0, Constant.worldBottom, 0))
-                        .nbt(BaseEntityNbt.create(EntityId.MARKER, "Admin").buildNbt())
-                        .generate()
-        );
+        fileCommands.add(SummonCommand.create(EntityId.MARKER)
+                .pos(Vec3.absolute(0, Constant.worldBottom, 0))
+                .nbt(MarkerNBT.create()
+                        .customName(TextComponent.text("Admin")))
+                .generate());
 
         // Set time
         fileCommands.add(TimeCommand.create(
@@ -1664,14 +1645,11 @@ public class Main {
         // Create jukebox at 0,0
         fileCommands.add(Execute.In(Dimension.overworld) +
                 SetBlockCommand.create(
-                                BlockPos.absolute(startCoordinate),
-                                DynamicBlock.create(
-                                        StaticBlockId.JUKEBOX,
-                                        BlockState.create()
-                                                .hasRecord(true),
-                                        JukeboxEntity.create()
-                                                .setRecord(ItemId.MUSIC_DISC_STAL, (byte) 1)))
-                        .generate());
+                        BlockPos.absolute(startCoordinate),
+                        Block.create(BlockId.JUKEBOX)
+                                .withState(HasRecordState.of(true))
+                                .withData(JukeboxNBT.create()
+                                        .recordItem(SingleItemStack.create(ItemId.MUSIC_DISC_STAL, 1)))));
 
         // Remove tags
         fileCommands.add(TagCommand.action(Entity.ofSelector(TargetSelector.ALL_PLAYERS), TagCommand.TagAction.REMOVE)
@@ -1956,7 +1934,7 @@ public class Main {
             fileCommands.add(TagCommand.action(Entity.ofSelector(
                     TargetSelector.RANDOM_PLAYER,
                     SelectorArgumentsBuilder.create()
-                            .team()
+                            .team(true)
                             .scores(Map.of(ScoreObjective.DEATHS, 0))),
                     TagCommand.TagAction.ADD)
                             .name(StaticEntityTag.PREDICTION_CANDIDATE)
@@ -2147,13 +2125,13 @@ public class Main {
                         ExperienceCommand.ExperienceAction.SET,
                         Entity.ofSelector(TargetSelector.ALL_PLAYERS))
                 .amount(0)
-                .type(ExperienceType.LEVELS)
+                .type(ExperienceCommand.ExperienceType.LEVELS)
                 .generate());
         fileCommands.add(ExperienceCommand.create(
                         ExperienceCommand.ExperienceAction.SET,
                         Entity.ofSelector(TargetSelector.ALL_PLAYERS))
                 .amount(0)
-                .type(ExperienceType.POINTS)
+                .type(ExperienceCommand.ExperienceType.POINTS)
                 .generate());
 
         // Give players teammate tools
@@ -2164,20 +2142,23 @@ public class Main {
                                         TargetSelector.ALL_PLAYERS,
                                         SelectorArgumentsBuilder.create()
                                                 .team(team.getName())),
-                                BundleItemStack.create(
-                                        team.getDyeColor(),
-                                        EnchantmentsComponent.create(Map.of(EnchantmentId.VANISHING_CURSE, 1)),
-                                        CustomDataComponent.create(CompoundTag.create()
-                                                .put(new ByteTag("locateTeammate", (byte) 1)))))
+                                ItemStack.create(DynamicItem.color(team.getDyeColor(), ColorableItem.BUNDLE))
+                                        .with(EnchantmentsComponent.create()
+                                                .add(EnchantmentId.VANISHING_CURSE, 1))
+                                        .with(CustomDataComponent.create()
+                                                .put(new ByteTag("locateTeammate", (byte) 1))))
                         .generate());
             }
         } else {
             // Team caller
             fileCommands.add(GiveCommand.create(Entity.ofSelector(TargetSelector.ALL_PLAYERS),
-                            GoatHornItemStack.create(
-                                    InstrumentComponent.create(GoatHornInstrumentId.PONDER_GOAT_HORN),
-                                    UseCooldownComponent.create(30),
-                                    EnchantmentsComponent.create(Map.of(EnchantmentId.VANISHING_CURSE, 1))))
+                            ItemStack.create(ItemId.GOAT_HORN)
+                                    .with(InstrumentComponent.create()
+                                            .registryId(InstrumentId.PONDER_GOAT_HORN))
+                                    .with(UseCooldownComponent.create()
+                                            .seconds(30))
+                                    .with(EnchantmentsComponent.create()
+                                            .add(EnchantmentId.VANISHING_CURSE, 1)))
                     .generate());
         }
 
@@ -2191,14 +2172,14 @@ public class Main {
 
         // Display world size
         fileCommands.add(TitleCommand.create(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
-                .subtitle(TextComponent.simple("World size: ").color(TextColor.GRAY)
-                        .append(TextComponent.simple("±" + world.getSize()).color(TextColor.LIGHT_PURPLE).bold(true))
-                        .append(TextComponent.simple(" blocks").color(TextColor.GRAY)))
+                .subtitle(TextComponent.text("World size: ").color(TextColor.GRAY)
+                        .append(TextComponent.text("±" + world.getSize()).color(TextColor.LIGHT_PURPLE).bold(true))
+                        .append(TextComponent.text(" blocks").color(TextColor.GRAY)))
                 .generate());
 
         // Display game start
         fileCommands.add(TitleCommand.create(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
-                .title(TextComponent.simple("Game Starting Now!").color(TextColor.GOLD).bold(true).italic(true))
+                .title(TextComponent.text("Game Starting Now!").color(TextColor.GOLD).bold(true).italic(true))
                 .generate());
 
         // Change title display time
@@ -2258,10 +2239,10 @@ public class Main {
 
         // Display Control Point 1 enabled
         fileCommands.add(TitleCommand.create(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
-                .subtitle(TextComponent.simple("is now enabled!").color(TextColor.LIGHT_PURPLE).bold(true).italic(true))
+                .subtitle(TextComponent.text("is now enabled!").color(TextColor.LIGHT_PURPLE).bold(true).italic(true))
                 .generate());
         fileCommands.add(TitleCommand.create(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
-                .title(TextComponent.simple("Control Point 1").color(TextColor.GOLD).bold(true).italic(true))
+                .title(TextComponent.text("Control Point 1").color(TextColor.GOLD).bold(true).italic(true))
                 .generate());
 
         // Make bossbars visible
@@ -2276,7 +2257,7 @@ public class Main {
         fileCommands.add(Execute.In(controlPoints.get(0).getCoordinate().getDimension()) +
                 SetBlockCommand.create(
                                 BlockPos.absolute(controlPoints.get(0).getCoordinate().getX(), controlPoints.get(0).getCoordinate().getY() + 3, controlPoints.get(0).getCoordinate().getZ()),
-                                SimpleBlock.create(StaticBlockId.AIR))
+                                Block.create(BlockId.AIR))
                         .generate());
         fileCommands.add(Execute.In(controlPoints.get(0).getCoordinate().getDimension()) +
                 ForceLoadCommand.create(ForceLoadCommand.ForceLoadAction.REMOVE)
@@ -2293,13 +2274,11 @@ public class Main {
             // Summon armor stand to be tracked
             fileCommands.add(SummonCommand.create(EntityId.ARMOR_STAND)
                     .pos(Vec3.absolute(controlPoint.getCoordinate().getX(), controlPoint.getCoordinate().getY(), controlPoint.getCoordinate().getZ()))
-                    .nbt(ArmorStandNbtBuilder.create(
-                                    ArmorStandData.create(
-                                            true,
-                                            true,
-                                            true,
-                                            new EntityTag[]{controlPoint.getName()}))
-                            .buildNbt())
+                    .nbt(ArmorStandNBT.create()
+                            .invulnerable(true)
+                            .marker(true)
+                            .invisible(true)
+                            .tags(List.of(controlPoint.getName().getTagName())))
                     .generate());
 
             // Set transmit range of waypoint
@@ -2351,7 +2330,7 @@ public class Main {
         fileCommands.add(Execute.In(controlPoints.get(1).getCoordinate().getDimension()) +
                 SetBlockCommand.create(
                                 BlockPos.absolute(controlPoints.get(1).getCoordinate().getX(), controlPoints.get(1).getCoordinate().getY() + 3, controlPoints.get(1).getCoordinate().getZ()),
-                                SimpleBlock.create(StaticBlockId.AIR))
+                                Block.create(BlockId.AIR))
                         .generate());
         fileCommands.add(Execute.In(controlPoints.get(1).getCoordinate().getDimension()) +
                 ForceLoadCommand.create(ForceLoadCommand.ForceLoadAction.REMOVE)
@@ -2380,7 +2359,7 @@ public class Main {
 
         fileCommands.add(new TellRaw("@a", texts).sendRaw());
         fileCommands.add(TitleCommand.create(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
-                .title(TextComponent.simple(i + " minute(s) remaining").color(TextColor.GOLD).bold(true).italic(true))
+                .title(TextComponent.text(i + " minute(s) remaining").color(TextColor.GOLD).bold(true).italic(true))
                 .generate());
         return new FileData("" + FileName.minute_ + i, fileCommands);
     }
@@ -2431,10 +2410,10 @@ public class Main {
 
         // Title
         fileCommands.add(TitleCommand.create(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
-                .subtitle(TextComponent.simple("has been achieved!").color(TextColor.LIGHT_PURPLE).bold(true).italic(true))
+                .subtitle(TextComponent.text("has been achieved!").color(TextColor.LIGHT_PURPLE).bold(true).italic(true))
                 .generate());
         fileCommands.add(TitleCommand.create(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
-                .title(TextComponent.simple(team.getJSONColor() + " team victory").color(TextColor.GOLD).bold(true).italic(true))
+                .title(TextComponent.text(team.getJSONColor() + " team victory").color(TextColor.GOLD).bold(true).italic(true))
                 .generate());
 
         // Proceed to victory mode
@@ -2458,12 +2437,11 @@ public class Main {
         // Title
         fileCommands.add(new TellRaw("@a", texts).sendRaw());
         fileCommands.add(TitleCommand.create(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
-                .subtitle(TextComponent.simple("Absolute chad.").color(TextColor.LIGHT_PURPLE).bold(true).italic(true))
+                .subtitle(TextComponent.text("Absolute chad.").color(TextColor.LIGHT_PURPLE).bold(true).italic(true))
                 .generate());
         fileCommands.add(TitleCommand.create(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
-                .title(TextComponent.array(List.of(
-                        TextComponent.selector(Entity.ofSelector(TargetSelector.SENDER)).color(TextColor.WHITE).italic(true),
-                        TextComponent.simple(" victorious").color(TextColor.GOLD).bold(true))))
+                .title(TextComponent.selector(Entity.ofSelector(TargetSelector.SENDER)).color(TextColor.WHITE).italic(true)
+                        .append(TextComponent.text(" victorious").color(TextColor.GOLD).bold(true)))
                 .generate());
 
         // Proceed to victory mode
@@ -2486,10 +2464,10 @@ public class Main {
 
         // Title
         fileCommands.add(TitleCommand.create(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
-                .subtitle(TextComponent.simple("ggez").color(TextColor.LIGHT_PURPLE).bold(true).italic(true))
+                .subtitle(TextComponent.text("ggez").color(TextColor.LIGHT_PURPLE).bold(true).italic(true))
                 .generate());
         fileCommands.add(TitleCommand.create(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
-                .title(TextComponent.simple("Traitors Win").color(TextColor.GOLD).bold(true).italic(true))
+                .title(TextComponent.text("Traitors Win").color(TextColor.GOLD).bold(true).italic(true))
                 .generate());
 
         // Proceed to victory mode
@@ -2533,7 +2511,7 @@ public class Main {
                                         TargetSelector.ALL_PLAYERS,
                                         SelectorArgumentsBuilder.create()
                                                 .gamemode(GameModeId.SPECTATOR, true)
-                                                .team()))
+                                                .team(true)))
                         .generate());
 
         if (OperationMode.teamCreationInGame) {
@@ -2548,7 +2526,7 @@ public class Main {
                                             TargetSelector.ALL_PLAYERS,
                                             SelectorArgumentsBuilder.create()
                                                     .gamemode(GameModeId.SPECTATOR, true)
-                                                    .team()))
+                                                    .team(true)))
                             .generate());
         }
 
@@ -2723,12 +2701,12 @@ public class Main {
 
         // Display spread size
         fileCommands.add(TitleCommand.create(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
-                .subtitle(TextComponent.simple("To be found at ±" + carePackageSpread + " blocks").color(TextColor.LIGHT_PURPLE))
+                .subtitle(TextComponent.text("To be found at ±" + carePackageSpread + " blocks").color(TextColor.LIGHT_PURPLE))
                 .generate());
 
         // Announce Care Packages
         fileCommands.add(TitleCommand.create(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
-                .title(TextComponent.simple(carePackageAmount + " Care Packages!").color(TextColor.GOLD).bold(true).italic(true))
+                .title(TextComponent.text(carePackageAmount + " Care Packages!").color(TextColor.GOLD).bold(true).italic(true))
                 .generate());
 
         // Change title display time
@@ -2741,19 +2719,14 @@ public class Main {
             fileCommands.add(Execute.In(Dimension.overworld) +
                     SummonCommand.create(EntityId.FALLING_BLOCK)
                             .pos(Vec3.absolute(0, 300, 0))
-                            .nbt(
-                                    FallingBlockNbtBuilder.create(
-                                            FallingBlockData.create(
-                                                    ItemId.CHEST,
-                                                    LootTableId.SUPPLY_DROP,
-                                                    "Care Package",
-                                                    1,
-                                                    false,
-                                                    new StaticEntityTag[]{StaticEntityTag.CARE_PACKAGE}
-                                            )
-                                    ).buildNbt()
-                            )
-            );
+                            .nbt(FallingBlockNBT.create()
+                                    .blockState(BlockId.CHEST)
+                                    .tileEntityData(ChestNBT.create()
+                                            .lootTable(LootTableId.SUPPLY_DROP)
+                                            .customName(TextComponent.text("Care Package")))
+                                    .time(1)
+                                    .dropItem(false)
+                                    .tags(List.of("CarePackage"))));
         }
 
         // Spread Care Packages
@@ -2767,10 +2740,8 @@ public class Main {
                                         TargetSelector.ALL_ENTITIES,
                                         SelectorArgumentsBuilder.create()
                                                 .type(EntityId.FALLING_BLOCK)
-                                                .nbt(FallingBlockNbtBuilder.create(
-                                                                FallingBlockData.create(
-                                                                        new StaticEntityTag[]{StaticEntityTag.CARE_PACKAGE}))
-                                                        .buildNbt())))
+                                                .nbt(FallingBlockNBT.create()
+                                                        .tags(List.of("CarePackage")))))
                         .generate());
 
         // Give admin tag for disabling self-rescheduling
@@ -2827,7 +2798,7 @@ public class Main {
                 TargetSelector.ALL_PLAYERS,
                 SelectorArgumentsBuilder.create()
                         .tag(StaticEntityTag.TRAITOR)
-                        .team()),
+                        .team(true)),
                 TagCommand.TagAction.ADD)
                         .name(StaticEntityTag.DONT_MAKE_TRAITOR)
                         .generate());
@@ -2886,10 +2857,10 @@ public class Main {
 
         // Announce Traitor Faction
         fileCommands.add(TitleCommand.create(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
-                .title(TextComponent.simple("A Traitor Faction").color(TextColor.RED).bold(true))
+                .title(TextComponent.text("A Traitor Faction").color(TextColor.RED).bold(true))
                 .generate());
         fileCommands.add(TitleCommand.create(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
-                .subtitle(TextComponent.simple("has been founded!").color(TextColor.DARK_RED).bold(true))
+                .subtitle(TextComponent.text("has been founded!").color(TextColor.DARK_RED).bold(true))
                 .generate());
 
         // Enable timers
@@ -2910,14 +2881,13 @@ public class Main {
         // Show all traitors in actionbar
         fileCommands.add(Execute.As("@a[tag=" + TagTemp.Traitor + "]") +
                 TitleCommand.create(Entity.ofSelector(TargetSelector.SENDER))
-                        .actionbar(TextComponent.array(List.of(
-                                TextComponent.simple(">>> ").color(TextColor.GOLD),
-                                TextComponent.simple("Traitor Faction: ").color(TextColor.LIGHT_PURPLE),
-                                TextComponent.selector(Entity.ofSelector(
+                        .actionbar(TextComponent.text(">>> ").color(TextColor.GOLD)
+                                .append(TextComponent.text("Traitor Faction: ").color(TextColor.LIGHT_PURPLE))
+                                .append(TextComponent.selector(Entity.ofSelector(
                                         TargetSelector.ALL_PLAYERS,
                                         SelectorArgumentsBuilder.create()
-                                                .tag(StaticEntityTag.TRAITOR))),
-                                TextComponent.simple(" <<<").color(TextColor.GOLD))))
+                                                .tag(StaticEntityTag.TRAITOR))))
+                                .append(TextComponent.text(" <<<").color(TextColor.GOLD)))
                         .generate());
 
         return new FileData(FileName.traitor_actionbar, fileCommands);
@@ -2936,35 +2906,29 @@ public class Main {
             fileCommands.add(Execute.In(c.getDimension()) +
                     SetBlockCommand.create(
                                     BlockPos.absolute(c.getX(), c.getY() + 11, c.getZ()),
-                                    DynamicBlock.create(
-                                            StaticBlockId.STRUCTURE_BLOCK,
-                                            BlockState.create()
-                                                    .mode(StructureBlockMode.LOAD),
-                                            StructureBlockEntity.create()
-                                                    .setString(StructureBlockEntity.StructureDataKey.METADATA, "")
-                                                    .setMirror(StructureMirror.NONE)
-                                                    .setByte(StructureDataKey.IGNORE_ENTITIES, (byte) 1)
-                                                    .setByte(StructureDataKey.POWERED, (byte) 0)
-                                                    .setLong(StructureDataKey.SEED, 0L)
-                                                    .setString(StructureDataKey.AUTHOR, "?")
-                                                    .setRotation(StructureRotation.NONE)
-                                                    .setInt(StructureDataKey.POS_X, -6)
-                                                    .setMode(StructureBlockMode.LOAD)
-                                                    .setInt(StructureDataKey.POS_Y, -13)
-                                                    .setInt(StructureDataKey.SIZE_X, 13)
-                                                    .setInt(StructureDataKey.POS_Z, -6)
-                                                    .setFloat(StructureDataKey.INTEGRITY, 1.0f)
-                                                    .setString(StructureDataKey.NAME, cp.getStructureName())
-                                                    .setInt(StructureDataKey.SIZE_Y, 14)
-                                                    .setInt(StructureDataKey.SIZE_Z, 13)
-                                                    .setByte(StructureDataKey.SHOW_BOUNDING_BOX, (byte) 1)))
+                                    Block.create(BlockId.STRUCTURE_BLOCK)
+                                            .withState(ModeState.LOAD)
+                                            .withData(StructureBlockNBT.create()
+                                                    .metadata("")
+                                                    .mirror(StructureMirror.NONE)
+                                                    .ignoreEntities(true)
+                                                    .powered(false)
+                                                    .seed(0L)
+                                                    .author("?")
+                                                    .rotation(StructureRotation.NONE)
+                                                    .pos(-6, -13, -6)
+                                                    .mode(StructureBlockMode.LOAD)
+                                                    .size(13, 14, 13)
+                                                    .showBoundingBox(true)
+                                                    .integrity(1.0f)
+                                                    .name(cp.getStructureName())))
                             .generate());
 
             // Activate structure block
             fileCommands.add(Execute.In(c.getDimension()) +
                     SetBlockCommand.create(
                                     BlockPos.absolute(c.getX(), c.getY() + 10, c.getZ()),
-                                    SimpleBlock.create(StaticBlockId.REDSTONE_BLOCK))
+                                    Block.create(BlockId.REDSTONE_BLOCK))
                             .mode(SetBlockCommand.SetMode.DESTROY)
                             .generate());
 
@@ -2973,8 +2937,8 @@ public class Main {
                     FillCommand.create(
                                     BlockPos.absolute(c.getX(), c.getY() + 12, c.getZ()),
                                     BlockPos.absolute(c.getX(), Constant.worldHeight - 1, c.getZ()),
-                                    SimpleBlock.create(StaticBlockId.GLASS))
-                            .filter(SimpleBlockPredicate.create(BlockTagId.BLOCK_BEACON_LIGHT))
+                                    Block.create(BlockId.GLASS))
+                            .filter(BlockPredicate.create(BlockTagId.BLOCK_BEACON_LIGHT))
                             .generate());
 
             fileCommands.add(Execute.In(c.getDimension()) +
@@ -2989,12 +2953,9 @@ public class Main {
                         TargetSelector.ALL_ENTITIES,
                         SelectorArgumentsBuilder.create()
                                 .type(EntityId.ITEM)
-                                .nbt(ItemNbtBuilder.create(
-                                                        ItemData.create(
-                                                                ItemId.MUSIC_DISC_STAL,
-                                                                1))
-                                                .buildNbt())))
-                .generate());
+                                .nbt(ItemNBT.create(ItemId.MUSIC_DISC_STAL)
+                                                .count(1))))
+                        .generate());
 
         return new FileData(FileName.spawn_control_points, fileCommands);
     }
@@ -3017,8 +2978,8 @@ public class Main {
                 FillCommand.create(
                                 BlockPos.relative(-2, -2, -2),
                                 BlockPos.relative(2, 0, 2),
-                                SimpleBlock.create(StaticBlockId.ICE))
-                        .filter(SimpleBlockPredicate.create(StaticBlockId.WATER))
+                                Block.create(BlockId.ICE))
+                        .filter(BlockPredicate.create(BlockId.WATER))
                         .generate());
 
         return new FileData(FileName.horse_frost_walker, fileCommands);
@@ -3051,21 +3012,11 @@ public class Main {
         ItemTargetEntity target = ItemTargetEntity.create(Entity.ofSelector(
                 TargetSelector.NEAREST_PLAYER,
                 SelectorArgumentsBuilder.create()
-                        .nbt(CompoundTag.create()
-                                .put(CompoundTag.create(ItemNbtKey.SELECTED_ITEM.toString())
-                                        .put(new StringTag(
-                                                SelectedItemKey.ID.toString(),
-                                                ItemId.SPLASH_POTION.getResourceLocation()))
-                                        .put(new IntTag(
-                                                SelectedItemKey.COUNT.toString(),
-                                                1))
-                                        .put(CompoundTag.create(SelectedItemKey.COMPONENTS.toString())
-                                                .put(CompoundTag.create(ComponentsKey.POTION_CONTENTS.toString())
-                                                        .put(new StringTag(
-                                                                PotionContentsKey.POTION.toString(),
-                                                                EffectId.REGENERATION.getPotionTag()))))))));
-        String targetOld = "@p[nbt={SelectedItem:{id:\"" + ItemId.SPLASH_POTION + "\",count:1,components:{\"minecraft:potion_contents\":{potion:\"" + EffectId.REGENERATION.getPotionTag() + "\"}}}}]";
-        ItemStack replacement = SimpleItemStack.create(ItemId.GLASS_BOTTLE);
+                        .nbt(PlayerNBT.create()
+                                .selectedItem(SingleItemStack.create(ItemId.SPLASH_POTION)
+                                        .addComponent(PotionContentsComponent.create(PotionId.normal(EffectId.REGENERATION)))))));
+        String targetOld = "@p[nbt={SelectedItem:{id:\"" + ItemId.SPLASH_POTION + "\",count:1,components:{\"minecraft:potion_contents\":{potion:\"" + PotionId.normal(EffectId.REGENERATION) + "\"}}}}]";
+        ItemStack replacement = ItemStack.create(ItemId.GLASS_BOTTLE);
         fileCommands.add(Execute.If(targetOld) +
                 new TellRaw(targetOld, warning).sendRaw());
         fileCommands.add(Item.create(
@@ -3077,20 +3028,10 @@ public class Main {
         target = ItemTargetEntity.create(Entity.ofSelector(
                 TargetSelector.NEAREST_PLAYER,
                 SelectorArgumentsBuilder.create()
-                        .nbt(CompoundTag.create()
-                                .put(CompoundTag.create(ItemNbtKey.SELECTED_ITEM.toString())
-                                        .put(new StringTag(
-                                                SelectedItemKey.ID.toString(),
-                                                ItemId.SPLASH_POTION.getResourceLocation()))
-                                        .put(new IntTag(
-                                                SelectedItemKey.COUNT.toString(),
-                                                1))
-                                        .put(CompoundTag.create(SelectedItemKey.COMPONENTS.toString())
-                                                .put(CompoundTag.create(ComponentsKey.POTION_CONTENTS.toString())
-                                                        .put(new StringTag(
-                                                                PotionContentsKey.POTION.toString(),
-                                                                EffectId.REGENERATION.getPotionTag(true, false)))))))));
-        targetOld = "@p[nbt={SelectedItem:{id:\"" + ItemId.SPLASH_POTION + "\",count:1,components:{\"minecraft:potion_contents\":{potion:\"" + EffectId.REGENERATION.getPotionTag(true, false) + "\"}}}}]";
+                        .nbt(PlayerNBT.create()
+                                .selectedItem(SingleItemStack.create(ItemId.SPLASH_POTION)
+                                        .addComponent(PotionContentsComponent.create(PotionId.longDuration(EffectId.REGENERATION)))))));
+        targetOld = "@p[nbt={SelectedItem:{id:\"" + ItemId.SPLASH_POTION + "\",count:1,components:{\"minecraft:potion_contents\":{potion:\"" + PotionId.longDuration(EffectId.REGENERATION) + "\"}}}}]";
         fileCommands.add(Execute.If(targetOld) +
                 new TellRaw(targetOld, warning).sendRaw());
         fileCommands.add(Item.create(
@@ -3102,20 +3043,10 @@ public class Main {
         target = ItemTargetEntity.create(Entity.ofSelector(
                 TargetSelector.NEAREST_PLAYER,
                 SelectorArgumentsBuilder.create()
-                        .nbt(CompoundTag.create()
-                                .put(CompoundTag.create(ItemNbtKey.SELECTED_ITEM.toString())
-                                        .put(new StringTag(
-                                                SelectedItemKey.ID.toString(),
-                                                ItemId.SPLASH_POTION.getResourceLocation()))
-                                        .put(new IntTag(
-                                                SelectedItemKey.COUNT.toString(),
-                                                1))
-                                        .put(CompoundTag.create(SelectedItemKey.COMPONENTS.toString())
-                                                .put(CompoundTag.create(ComponentsKey.POTION_CONTENTS.toString())
-                                                        .put(new StringTag(
-                                                                PotionContentsKey.POTION.toString(),
-                                                                EffectId.REGENERATION.getPotionTag(false, true)))))))));
-        targetOld = "@p[nbt={SelectedItem:{id:\"" + ItemId.SPLASH_POTION + "\",count:1,components:{\"minecraft:potion_contents\":{potion:\"" + EffectId.REGENERATION.getPotionTag(false, true) + "\"}}}}]";
+                        .nbt(PlayerNBT.create()
+                                .selectedItem(SingleItemStack.create(ItemId.SPLASH_POTION)
+                                        .addComponent(PotionContentsComponent.create(PotionId.strong(EffectId.REGENERATION)))))));
+        targetOld = "@p[nbt={SelectedItem:{id:\"" + ItemId.SPLASH_POTION + "\",count:1,components:{\"minecraft:potion_contents\":{potion:\"" + PotionId.strong(EffectId.REGENERATION) + "\"}}}}]";
         fileCommands.add(Execute.If(targetOld) +
                 new TellRaw(targetOld, warning).sendRaw());
         fileCommands.add(Item.create(
@@ -3128,20 +3059,10 @@ public class Main {
         target = ItemTargetEntity.create(Entity.ofSelector(
                 TargetSelector.NEAREST_PLAYER,
                 SelectorArgumentsBuilder.create()
-                        .nbt(CompoundTag.create()
-                                .put(CompoundTag.create(ItemNbtKey.SELECTED_ITEM.toString())
-                                        .put(new StringTag(
-                                                SelectedItemKey.ID.toString(),
-                                                ItemId.POTION.getResourceLocation()))
-                                        .put(new IntTag(
-                                                SelectedItemKey.COUNT.toString(),
-                                                1))
-                                        .put(CompoundTag.create(SelectedItemKey.COMPONENTS.toString())
-                                                .put(CompoundTag.create(ComponentsKey.POTION_CONTENTS.toString())
-                                                        .put(new StringTag(
-                                                                PotionContentsKey.POTION.toString(),
-                                                                EffectId.REGENERATION.getPotionTag()))))))));
-        targetOld = "@p[nbt={SelectedItem:{id:\"" + ItemId.POTION + "\",count:1,components:{\"minecraft:potion_contents\":{potion:\"" + EffectId.REGENERATION.getPotionTag() + "\"}}}}]";
+                        .nbt(PlayerNBT.create()
+                                .selectedItem(SingleItemStack.create(ItemId.POTION)
+                                        .addComponent(PotionContentsComponent.create(PotionId.normal(EffectId.REGENERATION)))))));
+        targetOld = "@p[nbt={SelectedItem:{id:\"" + ItemId.POTION + "\",count:1,components:{\"minecraft:potion_contents\":{potion:\"" + PotionId.normal(EffectId.REGENERATION) + "\"}}}}]";
         fileCommands.add(Execute.If(targetOld) +
                 new TellRaw(targetOld, warning).sendRaw());
         fileCommands.add(Item.create(
@@ -3153,20 +3074,10 @@ public class Main {
         target = ItemTargetEntity.create(Entity.ofSelector(
                 TargetSelector.NEAREST_PLAYER,
                 SelectorArgumentsBuilder.create()
-                        .nbt(CompoundTag.create()
-                                .put(CompoundTag.create(ItemNbtKey.SELECTED_ITEM.toString())
-                                        .put(new StringTag(
-                                                SelectedItemKey.ID.toString(),
-                                                ItemId.POTION.getResourceLocation()))
-                                        .put(new IntTag(
-                                                SelectedItemKey.COUNT.toString(),
-                                                1))
-                                        .put(CompoundTag.create(SelectedItemKey.COMPONENTS.toString())
-                                                .put(CompoundTag.create(ComponentsKey.POTION_CONTENTS.toString())
-                                                        .put(new StringTag(
-                                                                PotionContentsKey.POTION.toString(),
-                                                                EffectId.REGENERATION.getPotionTag(true, false)))))))));
-        targetOld = "@p[nbt={SelectedItem:{id:\"" + ItemId.POTION + "\",count:1,components:{\"minecraft:potion_contents\":{potion:\"" + EffectId.REGENERATION.getPotionTag(true, false) + "\"}}}}]";
+                        .nbt(PlayerNBT.create()
+                                .selectedItem(SingleItemStack.create(ItemId.POTION)
+                                        .addComponent(PotionContentsComponent.create(PotionId.longDuration(EffectId.REGENERATION)))))));
+        targetOld = "@p[nbt={SelectedItem:{id:\"" + ItemId.POTION + "\",count:1,components:{\"minecraft:potion_contents\":{potion:\"" + PotionId.longDuration(EffectId.REGENERATION) + "\"}}}}]";
         fileCommands.add(Execute.If(targetOld) +
                 new TellRaw(targetOld, warning).sendRaw());
         fileCommands.add(Item.create(
@@ -3178,20 +3089,10 @@ public class Main {
         target = ItemTargetEntity.create(Entity.ofSelector(
                 TargetSelector.NEAREST_PLAYER,
                 SelectorArgumentsBuilder.create()
-                        .nbt(CompoundTag.create()
-                                .put(CompoundTag.create(ItemNbtKey.SELECTED_ITEM.toString())
-                                        .put(new StringTag(
-                                                SelectedItemKey.ID.toString(),
-                                                ItemId.POTION.getResourceLocation()))
-                                        .put(new IntTag(
-                                                SelectedItemKey.COUNT.toString(),
-                                                1))
-                                        .put(CompoundTag.create(SelectedItemKey.COMPONENTS.toString())
-                                                .put(CompoundTag.create(ComponentsKey.POTION_CONTENTS.toString())
-                                                        .put(new StringTag(
-                                                                PotionContentsKey.POTION.toString(),
-                                                                EffectId.REGENERATION.getPotionTag(false, true)))))))));
-        targetOld = "@p[nbt={SelectedItem:{id:\"" + ItemId.POTION + "\",count:1,components:{\"minecraft:potion_contents\":{potion:\"" + EffectId.REGENERATION.getPotionTag(false, true) + "\"}}}}]";
+                        .nbt(PlayerNBT.create()
+                                .selectedItem(SingleItemStack.create(ItemId.POTION)
+                                        .addComponent(PotionContentsComponent.create(PotionId.strong(EffectId.REGENERATION)))))));
+        targetOld = "@p[nbt={SelectedItem:{id:\"" + ItemId.POTION + "\",count:1,components:{\"minecraft:potion_contents\":{potion:\"" + PotionId.strong(EffectId.REGENERATION) + "\"}}}}]";
         fileCommands.add(Execute.If(targetOld) +
                 new TellRaw(targetOld, warning).sendRaw());
         fileCommands.add(Item.create(
@@ -3203,30 +3104,16 @@ public class Main {
 
         // Strength II potions
         warning.setText("STRENGTH II POTIONS ARE NOT ALLOWED, YOU NAUGHTY BUM!");
-        replacement = DynamicItemStack.create(
-                ItemId.SPLASH_POTION.getResourceLocation(),
-                CompoundTag.create(ComponentsKey.POTION_CONTENTS.toString())
-                        .put(new StringTag(
-                                        PotionContentsKey.POTION.toString(),
-                                EffectId.STRENGTH.getPotionTag(false, false))));
+        replacement = ItemStack.create(ItemId.SPLASH_POTION)
+                .with(PotionContentsComponent.create(PotionId.normal(EffectId.STRENGTH)));
 
         target = ItemTargetEntity.create(Entity.ofSelector(
                 TargetSelector.NEAREST_PLAYER,
                 SelectorArgumentsBuilder.create()
-                        .nbt(CompoundTag.create()
-                                .put(CompoundTag.create(ItemNbtKey.SELECTED_ITEM.toString())
-                                        .put(new StringTag(
-                                                SelectedItemKey.ID.toString(),
-                                                ItemId.SPLASH_POTION.getResourceLocation()))
-                                        .put(new IntTag(
-                                                SelectedItemKey.COUNT.toString(),
-                                                1))
-                                        .put(CompoundTag.create(SelectedItemKey.COMPONENTS.toString())
-                                                .put(CompoundTag.create(ComponentsKey.POTION_CONTENTS.toString())
-                                                        .put(new StringTag(
-                                                                PotionContentsKey.POTION.toString(),
-                                                                EffectId.STRENGTH.getPotionTag(true, false)))))))));
-        targetOld = "@p[nbt={SelectedItem:{id:\"" + ItemId.SPLASH_POTION + "\",count:1,components:{\"minecraft:potion_contents\":{potion:\"" + EffectId.STRENGTH.getPotionTag(true, false) + "\"}}}}]";
+                        .nbt(PlayerNBT.create()
+                                .selectedItem(SingleItemStack.create(ItemId.SPLASH_POTION)
+                                        .addComponent(PotionContentsComponent.create(PotionId.strong(EffectId.STRENGTH)))))));
+        targetOld = "@p[nbt={SelectedItem:{id:\"" + ItemId.SPLASH_POTION + "\",count:1,components:{\"minecraft:potion_contents\":{potion:\"" + PotionId.strong(EffectId.STRENGTH) + "\"}}}}]";
 
         fileCommands.add(Execute.If(targetOld) +
                 new TellRaw(targetOld, warning).sendRaw());
@@ -3237,30 +3124,16 @@ public class Main {
                 .replaceWith(replacement)
                 .build());
 
-        replacement = DynamicItemStack.create(
-                ItemId.POTION.getResourceLocation(),
-                CompoundTag.create(ComponentsKey.POTION_CONTENTS.toString())
-                        .put(new StringTag(
-                                PotionContentsKey.POTION.toString(),
-                                EffectId.STRENGTH.getPotionTag(false, false))));
+        replacement = ItemStack.create(ItemId.POTION)
+                .with(PotionContentsComponent.create(PotionId.normal(EffectId.STRENGTH)));
 
         target = ItemTargetEntity.create(Entity.ofSelector(
                 TargetSelector.NEAREST_PLAYER,
                 SelectorArgumentsBuilder.create()
-                        .nbt(CompoundTag.create()
-                                .put(CompoundTag.create(ItemNbtKey.SELECTED_ITEM.toString())
-                                        .put(new StringTag(
-                                                SelectedItemKey.ID.toString(),
-                                                ItemId.POTION.getResourceLocation()))
-                                        .put(new IntTag(
-                                                SelectedItemKey.COUNT.toString(),
-                                                1))
-                                        .put(CompoundTag.create(SelectedItemKey.COMPONENTS.toString())
-                                                .put(CompoundTag.create(ComponentsKey.POTION_CONTENTS.toString())
-                                                        .put(new StringTag(
-                                                                PotionContentsKey.POTION.toString(),
-                                                                EffectId.STRENGTH.getPotionTag(true, false)))))))));
-        targetOld = "@p[nbt={SelectedItem:{id:\"" + ItemId.POTION + "\",count:1,components:{\"minecraft:potion_contents\":{potion:\"" + EffectId.STRENGTH.getPotionTag(true, false) + "\"}}}}]";
+                        .nbt(PlayerNBT.create()
+                                .selectedItem(SingleItemStack.create(ItemId.POTION)
+                                        .addComponent(PotionContentsComponent.create(PotionId.strong(EffectId.STRENGTH)))))));
+        targetOld = "@p[nbt={SelectedItem:{id:\"" + ItemId.POTION + "\",count:1,components:{\"minecraft:potion_contents\":{potion:\"" + PotionId.strong(EffectId.STRENGTH) + "\"}}}}]";
 
         fileCommands.add(Execute.If(targetOld) +
                 new TellRaw(targetOld, warning).sendRaw());
@@ -3277,19 +3150,10 @@ public class Main {
             target = ItemTargetEntity.create(Entity.ofSelector(
                     TargetSelector.NEAREST_PLAYER,
                     SelectorArgumentsBuilder.create()
-                            .nbt(CompoundTag.create()
-                                    .put(CompoundTag.create(ItemNbtKey.SELECTED_ITEM.toString())
-                                            .put(new StringTag(
-                                                    SelectedItemKey.ID.toString(),
-                                                    ItemId.CROSSBOW.getResourceLocation()))
-                                            .put(new IntTag(
-                                                    SelectedItemKey.COUNT.toString(),
-                                                    1))
-                                            .put(CompoundTag.create(SelectedItemKey.COMPONENTS.toString())
-                                                    .put(CompoundTag.create(ComponentsKey.ENCHANTMENTS.toString())
-                                                            .put(new IntTag(
-                                                                    EnchantmentType.PIERCING.toString(),
-                                                                    ii + 1))))))));
+                            .nbt(PlayerNBT.create()
+                                    .selectedItem(SingleItemStack.create(ItemId.CROSSBOW)
+                                            .addComponent(EnchantmentsComponent.create()
+                                                    .add(EnchantmentId.PIERCING, ii + 1))))));
             targetOld = "@p[nbt={SelectedItem:{id:\"" + ItemId.CROSSBOW + "\",count:1,components:{\"minecraft:enchantments\":{\"" + EnchantmentType.PIERCING + "\":" + (ii + 1) + "}}}}]";
             fileCommands.add(Execute.If(targetOld) +
                     new TellRaw(targetOld, warning).sendRaw());
@@ -3297,7 +3161,7 @@ public class Main {
                             ItemCommand.ItemAction.REPLACE_WITH,
                             target)
                     .slot(ItemSlot.MAINHAND)
-                    .replaceWith(SimpleItemStack.create(ItemId.CROSSBOW))
+                    .replaceWith(ItemStack.create(ItemId.CROSSBOW))
                     .build());
 
             // Power enchantment
@@ -3305,19 +3169,10 @@ public class Main {
             target = ItemTargetEntity.create(Entity.ofSelector(
                     TargetSelector.NEAREST_PLAYER,
                     SelectorArgumentsBuilder.create()
-                            .nbt(CompoundTag.create()
-                                    .put(CompoundTag.create(ItemNbtKey.SELECTED_ITEM.toString())
-                                            .put(new StringTag(
-                                                    SelectedItemKey.ID.toString(),
-                                                    ItemId.BOW.getResourceLocation()))
-                                            .put(new IntTag(
-                                                    SelectedItemKey.COUNT.toString(),
-                                                    1))
-                                            .put(CompoundTag.create(SelectedItemKey.COMPONENTS.toString())
-                                                    .put(CompoundTag.create(ComponentsKey.ENCHANTMENTS.toString())
-                                                            .put(new IntTag(
-                                                                    EnchantmentType.POWER.toString(),
-                                                                    ii + 1))))))));
+                            .nbt(PlayerNBT.create()
+                                    .selectedItem(SingleItemStack.create(ItemId.BOW)
+                                            .addComponent(EnchantmentsComponent.create()
+                                                    .add(EnchantmentId.POWER, ii + 1))))));
             targetOld = "@p[nbt={SelectedItem:{id:\"" + ItemId.BOW + "\",count:1,components:{\"minecraft:enchantments\":{\"" + EnchantmentType.POWER + "\":" + (ii + 1) + "}}}}]";
             fileCommands.add(Execute.If(targetOld) +
                     new TellRaw(targetOld, warning).sendRaw());
@@ -3325,7 +3180,7 @@ public class Main {
                             ItemCommand.ItemAction.REPLACE_WITH,
                             target)
                     .slot(ItemSlot.MAINHAND)
-                    .replaceWith(SimpleItemStack.create(ItemId.BOW))
+                    .replaceWith(ItemStack.create(ItemId.BOW))
                     .build());
         }
         // Wolf armor
@@ -3333,14 +3188,8 @@ public class Main {
         target = ItemTargetEntity.create(Entity.ofSelector(
                 TargetSelector.NEAREST_PLAYER,
                 SelectorArgumentsBuilder.create()
-                        .nbt(CompoundTag.create()
-                                .put(CompoundTag.create(ItemNbtKey.SELECTED_ITEM.toString())
-                                        .put(new StringTag(
-                                                SelectedItemKey.ID.toString(),
-                                                ItemId.WOLF_ARMOR.getResourceLocation()))
-                                        .put(new IntTag(
-                                                SelectedItemKey.COUNT.toString(),
-                                                1))))));
+                        .nbt(PlayerNBT.create()
+                                .selectedItem(SingleItemStack.create(ItemId.WOLF_ARMOR)))));
         targetOld = "@p[nbt={SelectedItem:{id:\"" + ItemId.WOLF_ARMOR + "\",count:1}}]";
         fileCommands.add(Execute.If(targetOld) +
                 new TellRaw(targetOld, warning).sendRaw());
@@ -3348,7 +3197,7 @@ public class Main {
                         ItemCommand.ItemAction.REPLACE_WITH,
                         target)
                 .slot(ItemSlot.MAINHAND)
-                .replaceWith(SimpleItemStack.create(ItemId.LEATHER_HORSE_ARMOR))
+                .replaceWith(ItemStack.create(DynamicItem.armor(ArmorMaterial.LEATHER, ArmorPiece.HORSE_ARMOR)))
                 .build());
 
         // Suspicious stew
@@ -3356,14 +3205,8 @@ public class Main {
         target = ItemTargetEntity.create(Entity.ofSelector(
                 TargetSelector.NEAREST_PLAYER,
                 SelectorArgumentsBuilder.create()
-                        .nbt(CompoundTag.create()
-                                .put(CompoundTag.create(ItemNbtKey.SELECTED_ITEM.toString())
-                                        .put(new StringTag(
-                                                SelectedItemKey.ID.toString(),
-                                                ItemId.SUSPICIOUS_STEW.getResourceLocation()))
-                                        .put(new IntTag(
-                                                SelectedItemKey.COUNT.toString(),
-                                                1))))));
+                        .nbt(PlayerNBT.create()
+                                .selectedItem(SingleItemStack.create(ItemId.SUSPICIOUS_STEW)))));
         targetOld = "@p[nbt={SelectedItem:{id:\"" + ItemId.SUSPICIOUS_STEW + "\",count:1}}]";
         fileCommands.add(Execute.If(targetOld) +
                 new TellRaw(targetOld, warning).sendRaw());
@@ -3371,7 +3214,7 @@ public class Main {
                         ItemCommand.ItemAction.REPLACE_WITH,
                         target)
                 .slot(ItemSlot.MAINHAND)
-                .replaceWith(SimpleItemStack.create(ItemId.BOWL))
+                .replaceWith(ItemStack.create(ItemId.BOWL))
                 .build());
 
         return new FileData(FileName.remove_banned_items, fileCommands);
@@ -3538,7 +3381,7 @@ public class Main {
                                     Entity.ofSelector(
                                             TargetSelector.SENDER,
                                             SelectorArgumentsBuilder.create()
-                                                    .team()))
+                                                    .team(true)))
                             .generate());
 
             // Team caller
@@ -3546,22 +3389,24 @@ public class Main {
                     GiveCommand.create(Entity.ofSelector(
                                             TargetSelector.SENDER,
                                             SelectorArgumentsBuilder.create()
-                                                    .team()),
-                                    GoatHornItemStack.create(
-                                            InstrumentComponent.create(GoatHornInstrumentId.PONDER_GOAT_HORN),
-                                            UseCooldownComponent.create(30),
-                                            EnchantmentsComponent.create(
-                                                    Map.of(EnchantmentId.VANISHING_CURSE, 1))))
+                                                    .team(true)),
+                                    ItemStack.create(ItemId.GOAT_HORN)
+                                            .with(InstrumentComponent.create()
+                                                    .registryId(InstrumentId.PONDER_GOAT_HORN))
+                                            .with(UseCooldownComponent.create()
+                                                    .seconds(30))
+                                            .with(EnchantmentsComponent.create()
+                                                    .add(EnchantmentId.VANISHING_CURSE, 1)))
                             .generate());
         }
 
         // Remove player heads
-        fileCommands.add(Execute.As("@a[nbt={Inventory:[{id:\"" + ItemId.PLAYER_HEAD + "\"}]}]") +
+        fileCommands.add(Execute.As("@a[nbt={Inventory:[{id:\"" + BlockId.PLAYER_HEAD + "\"}]}]") +
                 ClearCommand.create()
                         .targets(Entity.ofSelector(TargetSelector.SENDER))
-                        .item(SimpleItemPredicate.create(ItemId.PLAYER_HEAD))
+                        .item(ItemPredicate.create(BlockId.PLAYER_HEAD))
                         .generate());  // Remove from inventory
-        fileCommands.add(Execute.As("@e[type=" + EntityId.ITEM + ",nbt={Item:{id:\"" + ItemId.PLAYER_HEAD + "\"}}]") +
+        fileCommands.add(Execute.As("@e[type=" + EntityId.ITEM + ",nbt={Item:{id:\"" + BlockId.PLAYER_HEAD + "\"}}]") +
                 KillCommand.create().targets(Entity.ofSelector(TargetSelector.SENDER)).generate());   // Remove item
 
         // Teammate tracker
@@ -3571,11 +3416,11 @@ public class Main {
                                             TargetSelector.SENDER,
                                             SelectorArgumentsBuilder.create()
                                                     .team(team.getName())),
-                                    BundleItemStack.create(
-                                            team.getDyeColor(),
-                                            EnchantmentsComponent.create(Map.of(EnchantmentId.VANISHING_CURSE, 1)),
-                                            CustomDataComponent.create(CompoundTag.create()
-                                                    .put(new ByteTag("locateTeammate", (byte) 1)))))
+                                    ItemStack.create(DynamicItem.color(team.getDyeColor(), ColorableItem.BUNDLE))
+                                            .with(EnchantmentsComponent.create()
+                                                    .add(EnchantmentId.VANISHING_CURSE, 1))
+                                            .with(CustomDataComponent.create()
+                                                    .put(new ByteTag("locateTeammate", (byte) 1))))
                             .generate());
         }
 
@@ -3635,10 +3480,10 @@ public class Main {
         fileCommands.add(new TellRaw("@a", texts).sendRaw());
         texts.clear();
         fileCommands.add(TitleCommand.create(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
-                .subtitle(TextComponent.simple("has been captured!").color(TextColor.LIGHT_PURPLE).bold(true).italic(true))
+                .subtitle(TextComponent.text("has been captured!").color(TextColor.LIGHT_PURPLE).bold(true).italic(true))
                 .generate());
         fileCommands.add(TitleCommand.create(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
-                .title(TextComponent.simple("The Control Point").color(TextColor.GOLD).bold(true).italic(true))
+                .title(TextComponent.text("The Control Point").color(TextColor.GOLD).bold(true).italic(true))
                 .generate());
 
         // Check which team has captured the Control Point
@@ -3680,7 +3525,7 @@ public class Main {
             fileCommands.add(TagCommand.action(Entity.ofSelector(
                     TargetSelector.RANDOM_PLAYER,
                     SelectorArgumentsBuilder.create()
-                            .team()
+                            .team(true)
                             .gamemode(GameModeId.SPECTATOR, true)),
                     TagCommand.TagAction.ADD)
                             .name(StaticEntityTag.AM_I_WINNING)
@@ -3809,7 +3654,7 @@ public class Main {
                                 .delta(Vec3.absolute(0, 0, 0))
                                 .speed(0.0f)
                                 .count(1)
-                                .display(DisplayType.NORMAL)
+                                .display(ParticleCommand.DisplayType.NORMAL)
                                 .viewers(Entity.ofSelector(TargetSelector.SENDER))
                                 .generate());
             }
@@ -3851,7 +3696,7 @@ public class Main {
             fileCommands.add(TagCommand.action(Entity.ofSelector(
                     TargetSelector.ALL_PLAYERS,
                     SelectorArgumentsBuilder.create()
-                            .team()),
+                            .team(true)),
                     TagCommand.TagAction.ADD)
                             .name(StaticEntityTag.COLLAR_CHECK)
                             .generate());
@@ -3866,7 +3711,7 @@ public class Main {
             fileCommands.add(TagCommand.action(Entity.ofSelector(
                                     TargetSelector.ALL_PLAYERS,
                                     SelectorArgumentsBuilder.create()
-                                            .team()),
+                                            .team(true)),
                             TagCommand.TagAction.REMOVE)
                     .name(StaticEntityTag.COLLAR_CHECK)
                     .generate());
@@ -3949,7 +3794,7 @@ public class Main {
                                 SelectorArgumentsBuilder.create()
                                         .limit(2)
                                         .gamemode(GameModeId.SPECTATOR, true)))
-                        .item(SimpleItemPredicate.create(ItemId.GOAT_HORN))
+                        .item(ItemPredicate.create(ItemId.GOAT_HORN))
                         .generate());
 
 
@@ -3957,16 +3802,15 @@ public class Main {
             fileCommands.add(Execute.At(lookingPlayer, false) +
                     Execute.IfNext("@p[tag=LookingForTeamMate,team=" + team.getName() + "]", true) +
                     GiveCommand.create(Entity.ofSelector(
-                                            TargetSelector.NEAREST_PLAYER,
-                                            SelectorArgumentsBuilder.create()
-                                                    .limit(2)
-                                                    .gamemode(GameModeId.SPECTATOR, true)),
-                                    BundleItemStack.create(
-                                            team.getDyeColor(),
-                                            EnchantmentsComponent.create(Map.of(EnchantmentId.VANISHING_CURSE, 1)),
-                                            CustomDataComponent.create(CompoundTag.create()
-                                                    .put(new ByteTag("locateTeammate", (byte) 1)))))
-                            .generate());
+                                    TargetSelector.NEAREST_PLAYER,
+                                    SelectorArgumentsBuilder.create()
+                                            .limit(2)
+                                            .gamemode(GameModeId.SPECTATOR, true)),
+                            ItemStack.create(DynamicItem.color(team.getDyeColor(), ColorableItem.BUNDLE))
+                                    .with(EnchantmentsComponent.create()
+                                            .add(EnchantmentId.VANISHING_CURSE, 1))
+                                    .with(CustomDataComponent.create()
+                                            .put(new ByteTag("locateTeammate", (byte) 1)))));
         }
 
         return new FileData(FileName.join_team, fileCommands);
@@ -3980,7 +3824,7 @@ public class Main {
         Entity checkingPlayer = Entity.ofSelector(
                 TargetSelector.NEAREST_PLAYER,
                 SelectorArgumentsBuilder.create()
-                        .team()
+                        .team(true)
                         .scores(Map.of(ScoreObjective.TIMES_CALLED, "1..")));
         OperationType comparator;
 
@@ -4154,10 +3998,10 @@ public class Main {
                     Schedule.callFunction(functions[i]));
 
             fileCommands.add(Execute.If("@a[nbt={active_effects:[{id:\"" + effects[i] + "\"}]}]") +
-                    Effect.create(EffectCommand.EffectAction.CLEAR)
+                    EffectCommand.create(EffectCommand.EffectAction.CLEAR)
                             .targets(Entity.ofSelector(TargetSelector.ALL_ENTITIES))
                             .effect(effects[i])
-                            .build());
+                            .generate());
         }
 
         return new FileData(FileName.developer_potion_control, fileCommands);
@@ -4230,10 +4074,10 @@ public class Main {
                         // 2. Define the 'to' corner: X, World Height (sky limit), Z
                         BlockPos.absolute(cp.getCoordinate().getX(), Constant.worldHeight, cp.getCoordinate().getZ()),
                         // 3. Define the replacement block: glass
-                        SimpleBlock.create(StaticBlockId.GLASS))
+                        Block.create(BlockId.GLASS))
                 // 4. Set the filter/predicate: replace only blocks that obstruct light (e.g., stone, wood, dirt).
                 //    This is assumed to map to the Minecraft tag #minecraft:impermeable_blocks or similar tag.
-                .filter(SimpleBlockPredicate.create(BlockTagId.BLOCK_BEACON_LIGHT))
+                .filter(BlockPredicate.create(BlockTagId.BLOCK_BEACON_LIGHT))
                 .generate());
 
         // Create the FileData object with a unique file name based on the index.

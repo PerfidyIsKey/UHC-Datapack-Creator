@@ -2,7 +2,7 @@ package uhc.command.commands;
 
 import uhc.arguments.entity.Entity;
 import uhc.command.MinecraftCommand;
-import uhc.resource.EffectId;
+import uhc.resource.effect.EffectId;
 
 /**
  * Represents the Minecraft {@code /effect} command.

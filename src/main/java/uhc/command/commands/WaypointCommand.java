@@ -2,9 +2,9 @@ package uhc.command.commands;
 
 import uhc.arguments.entity.Entity;
 import uhc.command.MinecraftCommand;
-import uhc.text.ColorType;
-import uhc.text.HexColor;
-import uhc.text.TextColor;
+import uhc.resource.color.ColorType;
+import uhc.resource.color.HexColor;
+import uhc.resource.color.TextColor;
 
 import java.util.Objects;
 

@@ -1,7 +1,7 @@
 package HelperClasses;
 
 import uhc.command.commands.AttributeCommand;
-import uhc.resource.SoundId;
+import uhc.resource.sound.SoundId;
 
 public class Perk {
 

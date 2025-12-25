@@ -26,7 +26,6 @@ public interface BreedableNBT<T extends BreedableNBT<T>> {
      * </p>
      * @param ticks Age in game ticks.
      */
-    @SuppressWarnings("unchecked")
     default T age(int ticks) {
         root().put(new IntTag("Age", ticks));
         return (T) this;
@@ -36,7 +35,6 @@ public interface BreedableNBT<T extends BreedableNBT<T>> {
      * Sets the ForcedAge tag, used to prevent babies from growing or to
      * force a specific growth progress.
      */
-    @SuppressWarnings("unchecked")
     default T forcedAge(int ticks) {
         root().put(new IntTag("ForcedAge", ticks));
         return (T) this;
@@ -46,7 +44,6 @@ public interface BreedableNBT<T extends BreedableNBT<T>> {
      * Sets the time the mob remains in "Love Mode" (showing hearts).
      * @param ticks Remaining love ticks. Usually 600 (30 seconds) is default.
      */
-    @SuppressWarnings("unchecked")
     default T inLove(int ticks) {
         // Clamped to 0 because negative InLove can cause glitches
         root().put(new IntTag("InLove", Math.max(0, ticks)));
@@ -58,7 +55,6 @@ public interface BreedableNBT<T extends BreedableNBT<T>> {
      * Required for experience or achievement tracking when a baby is born.
      * @param uuid The player's UUID.
      */
-    @SuppressWarnings("unchecked")
     default T loveCause(UUID uuid) {
         Objects.requireNonNull(uuid, "LoveCause UUID cannot be null.");
 

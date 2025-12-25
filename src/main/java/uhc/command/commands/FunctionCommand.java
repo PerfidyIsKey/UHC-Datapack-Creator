@@ -4,8 +4,9 @@ import uhc.arguments.block.BlockPos;
 import uhc.arguments.entity.Entity;
 import uhc.command.MinecraftCommand;
 import uhc.components.FunctionName;
-import uhc.data.nbt.DataPath;
+import uhc.resource.data.DataPath;
 import uhc.data.nbt.tags.CompoundTag;
+import uhc.resource.data.StoragePath;
 
 /**
  * 🛠️ **Function Command Builder**
@@ -140,7 +141,7 @@ public class FunctionCommand implements MinecraftCommand {
     /** * Represents a global storage source.
      * <p>Result: {@code storage namespace:path}</p>
      */
-    public record StorageSource(uhc.data.storage.StoragePath storagePath) implements FunctionSource {
+    public record StorageSource(StoragePath storagePath) implements FunctionSource {
         @Override
         public String getType() {
             return "storage";

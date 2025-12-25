@@ -4,7 +4,7 @@ import uhc.arguments.entity.Entity;
 import uhc.command.MinecraftCommand;
 import uhc.resource.bossbar.BossbarId;
 import uhc.resource.bossbar.BossbarStyle;
-import uhc.text.BossbarColor;
+import uhc.resource.color.BossbarColor;
 import uhc.text.TextComponent;
 
 /**
@@ -64,7 +64,7 @@ public class BossbarCommand implements MinecraftCommand {
      * Sets the display name using a raw String.
      */
     public BossbarCommand name(String name) {
-        this.name = TextComponent.simple(name);
+        this.name = TextComponent.text(name);
         return this;
     }
 
