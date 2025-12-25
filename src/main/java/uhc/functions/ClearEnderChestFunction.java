@@ -1,7 +1,6 @@
 package uhc.functions;
 
 import uhc.arguments.entity.Entity;
-import uhc.arguments.itemstack.SimpleItemStack;
 import uhc.arguments.entity.TargetSelector;
 import uhc.command.commands.ItemCommand;
 import uhc.arguments.item.ItemTargetEntity;

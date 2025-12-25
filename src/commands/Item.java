@@ -1,6 +1,6 @@
 package commands;
 
-import uhc.arguments.itemstack.ItemStack;
+import uhc.arguments.item.ItemStack;
 import uhc.command.commands.ItemCommand;
 import uhc.arguments.slot.ItemSlot;
 import uhc.arguments.slot.SpecificItemSlot;
