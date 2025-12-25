@@ -2136,23 +2136,22 @@ public class Main {
                                         TargetSelector.ALL_PLAYERS,
                                         SelectorArgumentsBuilder.create()
                                                 .team(team.getName())),
-                                BundleItemStack.create(
-                                        team.getDyeColor(),
-                                        EnchantmentsComponent.create()
-                                                .add(EnchantmentId.VANISHING_CURSE, 1),
-                                        CustomDataComponent.create()
+                                ItemStack.create(DynamicItem.color(team.getDyeColor(), ColorableItem.BUNDLE))
+                                        .with(EnchantmentsComponent.create()
+                                                .add(EnchantmentId.VANISHING_CURSE, 1))
+                                        .with(CustomDataComponent.create()
                                                 .put(new ByteTag("locateTeammate", (byte) 1))))
                         .generate());
             }
         } else {
             // Team caller
             fileCommands.add(GiveCommand.create(Entity.ofSelector(TargetSelector.ALL_PLAYERS),
-                            ItemStack.create(
-                                    InstrumentComponent.create()
-                                            .registryId(InstrumentId.PONDER_GOAT_HORN),
-                                    UseCooldownComponent.create()
-                                            .seconds(30),
-                                    EnchantmentsComponent.create()
+                            ItemStack.create(ItemId.GOAT_HORN)
+                                    .with(InstrumentComponent.create()
+                                            .registryId(InstrumentId.PONDER_GOAT_HORN))
+                                    .with(UseCooldownComponent.create()
+                                            .seconds(30))
+                                    .with(EnchantmentsComponent.create()
                                             .add(EnchantmentId.VANISHING_CURSE, 1)))
                     .generate());
         }
