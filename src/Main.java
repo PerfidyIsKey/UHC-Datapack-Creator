@@ -3098,12 +3098,8 @@ public class Main {
 
         // Strength II potions
         warning.setText("STRENGTH II POTIONS ARE NOT ALLOWED, YOU NAUGHTY BUM!");
-        replacement = ItemStack.create(
-                ItemId.SPLASH_POTION.getResourceLocation(),
-                ItemNBT.create(ComponentsKey.POTION_CONTENTS.toString())
-                        .put(new StringTag(
-                                        PotionContentsKey.POTION.toString(),
-                                EffectId.STRENGTH.getPotionTag(false, false))));
+        replacement = ItemStack.create(ItemId.SPLASH_POTION)
+                .with(PotionContentsComponent.create(PotionId.normal(EffectId.STRENGTH)));
 
         target = ItemTargetEntity.create(Entity.ofSelector(
                 TargetSelector.NEAREST_PLAYER,
@@ -3132,12 +3128,8 @@ public class Main {
                 .replaceWith(replacement)
                 .build());
 
-        replacement = ItemStack.create(
-                ItemId.POTION.getResourceLocation(),
-                ItemNBT.create(ComponentsKey.POTION_CONTENTS.toString())
-                        .put(new StringTag(
-                                PotionContentsKey.POTION.toString(),
-                                EffectId.STRENGTH.getPotionTag(false, false))));
+        replacement = ItemStack.create(ItemId.POTION)
+                .with(PotionContentsComponent.create(PotionId.normal(EffectId.STRENGTH)));
 
         target = ItemTargetEntity.create(Entity.ofSelector(
                 TargetSelector.NEAREST_PLAYER,
@@ -3243,7 +3235,7 @@ public class Main {
                         ItemCommand.ItemAction.REPLACE_WITH,
                         target)
                 .slot(ItemSlot.MAINHAND)
-                .replaceWith(ItemStack.create(ItemId.LEATHER_HORSE_ARMOR))
+                .replaceWith(ItemStack.create(DynamicItem.armor(ArmorMaterial.LEATHER, ArmorPiece.HORSE_ARMOR)))
                 .build());
 
         // Suspicious stew
@@ -3442,12 +3434,12 @@ public class Main {
                                             TargetSelector.SENDER,
                                             SelectorArgumentsBuilder.create()
                                                     .team(true)),
-                                    ItemStack.create(
-                                            InstrumentComponent.create()
-                                                    .registryId(InstrumentId.PONDER_GOAT_HORN),
-                                            UseCooldownComponent.create()
-                                                    .seconds(30),
-                                            EnchantmentsComponent.create()
+                                    ItemStack.create(ItemId.GOAT_HORN)
+                                            .with(InstrumentComponent.create()
+                                                    .registryId(InstrumentId.PONDER_GOAT_HORN))
+                                            .with(UseCooldownComponent.create()
+                                                    .seconds(30))
+                                            .with(EnchantmentsComponent.create()
                                                     .add(EnchantmentId.VANISHING_CURSE, 1)))
                             .generate());
         }
@@ -3468,11 +3460,10 @@ public class Main {
                                             TargetSelector.SENDER,
                                             SelectorArgumentsBuilder.create()
                                                     .team(team.getName())),
-                                    ItemStack.create(
-                                            team.getDyeColor(),
-                                            EnchantmentsComponent.create()
-                                                    .add(EnchantmentId.VANISHING_CURSE, 1),
-                                            CustomDataComponent.create()
+                                    ItemStack.create(DynamicItem.color(team.getDyeColor(), ColorableItem.BUNDLE))
+                                            .with(EnchantmentsComponent.create()
+                                                    .add(EnchantmentId.VANISHING_CURSE, 1))
+                                            .with(CustomDataComponent.create()
                                                     .put(new ByteTag("locateTeammate", (byte) 1))))
                             .generate());
         }
