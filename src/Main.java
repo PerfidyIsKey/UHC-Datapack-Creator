@@ -999,19 +999,19 @@ public class Main {
                 FillCommand.create(
                                 BlockPos.absolute(-6, 220, -6),
                                 BlockPos.absolute(6, 226, 6),
-                                Block.create(StaticBlockId.BARRIER))
+                                Block.create(BlockId.BARRIER))
                         .generate());
         fileCommands.add(Execute.In(Dimension.overworld) +
                 FillCommand.create(
                                 BlockPos.absolute(-5, 221, -5),
                                 BlockPos.absolute(5, 226, 5),
-                                Block.create(StaticBlockId.AIR))
+                                Block.create(BlockId.AIR))
                         .generate());
 
         fileCommands.add(Execute.In(Dimension.overworld) +
                 SetBlockCommand.create(
                         BlockPos.absolute(0, 222, -5),
-                        Block.create(WoodBlockId.WALL_SIGN.withWoodType(WoodType.CHERRY))
+                        Block.create(WoodBlock.WALL_SIGN.withWoodType(WoodType.CHERRY))
                                 .withState(FacingBlockState.SOUTH)
                                 .withState(WaterloggedState.of(false))
                                 .withData(SignNBT.create()
@@ -1175,7 +1175,7 @@ public class Main {
                     Execute.InNext(currentCP.getCoordinate().getDimension(), true) +
                     SetBlockCommand.create(
                                     BlockPos.absolute(currentCP.getCoordinate().getX(), currentCP.getCoordinate().getY() + 1, currentCP.getCoordinate().getZ()),
-                                    Block.create(ColorableBlockId.STAINED_GLASS.withColor(team.getDyeColor())))
+                                    Block.create(ColorableBlock.STAINED_GLASS.withColor(team.getDyeColor())))
                             .mode(SetBlockCommand.SetMode.REPLACE)
                             .generate());
         }
@@ -1185,13 +1185,13 @@ public class Main {
                 FillCommand.create(
                                 BlockPos.absolute(currentCP.getCoordinate().getX() - 1, currentCP.getCoordinate().getY() - 1, currentCP.getCoordinate().getZ() - 1),
                                 BlockPos.absolute(currentCP.getCoordinate().getX() + 1, currentCP.getCoordinate().getY() - 1, currentCP.getCoordinate().getZ() + 1),
-                                Block.create(StaticBlockId.EMERALD_BLOCK))
+                                Block.create(BlockId.EMERALD_BLOCK))
                         .generate());
 
         fileCommands.add(Execute.In(currentCP.getCoordinate().getDimension()) +
                 SetBlockCommand.create(
                                 BlockPos.absolute(currentCP.getCoordinate().getX(), currentCP.getCoordinate().getY(), currentCP.getCoordinate().getZ()),
-                                Block.create(StaticBlockId.BEACON))
+                                Block.create(BlockId.BEACON))
                         .generate());
 
         fileCommands.add(Schedule.callFunction("" + FileName.protect_beacon_ + i));
@@ -1640,7 +1640,7 @@ public class Main {
         fileCommands.add(Execute.In(Dimension.overworld) +
                 SetBlockCommand.create(
                         BlockPos.absolute(startCoordinate),
-                        Block.create(StaticBlockId.JUKEBOX)
+                        Block.create(BlockId.JUKEBOX)
                                 .withState(HasRecordState.of(true))
                                 .withData(JukeboxNBT.create()
                                         .recordItem(SingleItemStack.create(ItemId.MUSIC_DISC_STAL, 1)))));
@@ -2252,7 +2252,7 @@ public class Main {
         fileCommands.add(Execute.In(controlPoints.get(0).getCoordinate().getDimension()) +
                 SetBlockCommand.create(
                                 BlockPos.absolute(controlPoints.get(0).getCoordinate().getX(), controlPoints.get(0).getCoordinate().getY() + 3, controlPoints.get(0).getCoordinate().getZ()),
-                                Block.create(StaticBlockId.AIR))
+                                Block.create(BlockId.AIR))
                         .generate());
         fileCommands.add(Execute.In(controlPoints.get(0).getCoordinate().getDimension()) +
                 ForceLoadCommand.create(ForceLoadCommand.ForceLoadAction.REMOVE)
@@ -2325,7 +2325,7 @@ public class Main {
         fileCommands.add(Execute.In(controlPoints.get(1).getCoordinate().getDimension()) +
                 SetBlockCommand.create(
                                 BlockPos.absolute(controlPoints.get(1).getCoordinate().getX(), controlPoints.get(1).getCoordinate().getY() + 3, controlPoints.get(1).getCoordinate().getZ()),
-                                Block.create(StaticBlockId.AIR))
+                                Block.create(BlockId.AIR))
                         .generate());
         fileCommands.add(Execute.In(controlPoints.get(1).getCoordinate().getDimension()) +
                 ForceLoadCommand.create(ForceLoadCommand.ForceLoadAction.REMOVE)
@@ -2715,7 +2715,7 @@ public class Main {
                     SummonCommand.create(EntityId.FALLING_BLOCK)
                             .pos(Vec3.absolute(0, 300, 0))
                             .nbt(FallingBlockNBT.create()
-                                    .blockState(StaticBlockId.CHEST)
+                                    .blockState(BlockId.CHEST)
                                     .tileEntityData(ChestNBT.create()
                                             .lootTable(LootTableId.SUPPLY_DROP)
                                             .customName(TextComponent.text("Care Package")))
@@ -2901,7 +2901,7 @@ public class Main {
             fileCommands.add(Execute.In(c.getDimension()) +
                     SetBlockCommand.create(
                                     BlockPos.absolute(c.getX(), c.getY() + 11, c.getZ()),
-                                    Block.create(StaticBlockId.STRUCTURE_BLOCK)
+                                    Block.create(BlockId.STRUCTURE_BLOCK)
                                             .withState(ModeState.LOAD)
                                             .withData(StructureBlockNBT.create()
                                                     .metadata("")
@@ -2923,7 +2923,7 @@ public class Main {
             fileCommands.add(Execute.In(c.getDimension()) +
                     SetBlockCommand.create(
                                     BlockPos.absolute(c.getX(), c.getY() + 10, c.getZ()),
-                                    Block.create(StaticBlockId.REDSTONE_BLOCK))
+                                    Block.create(BlockId.REDSTONE_BLOCK))
                             .mode(SetBlockCommand.SetMode.DESTROY)
                             .generate());
 
@@ -2932,7 +2932,7 @@ public class Main {
                     FillCommand.create(
                                     BlockPos.absolute(c.getX(), c.getY() + 12, c.getZ()),
                                     BlockPos.absolute(c.getX(), Constant.worldHeight - 1, c.getZ()),
-                                    Block.create(StaticBlockId.GLASS))
+                                    Block.create(BlockId.GLASS))
                             .filter(SimpleBlockPredicate.create(BlockTagId.BLOCK_BEACON_LIGHT))
                             .generate());
 
@@ -2973,8 +2973,8 @@ public class Main {
                 FillCommand.create(
                                 BlockPos.relative(-2, -2, -2),
                                 BlockPos.relative(2, 0, 2),
-                                Block.create(StaticBlockId.ICE))
-                        .filter(SimpleBlockPredicate.create(StaticBlockId.WATER))
+                                Block.create(BlockId.ICE))
+                        .filter(SimpleBlockPredicate.create(BlockId.WATER))
                         .generate());
 
         return new FileData(FileName.horse_frost_walker, fileCommands);
@@ -4129,7 +4129,7 @@ public class Main {
                         // 2. Define the 'to' corner: X, World Height (sky limit), Z
                         BlockPos.absolute(cp.getCoordinate().getX(), Constant.worldHeight, cp.getCoordinate().getZ()),
                         // 3. Define the replacement block: glass
-                        Block.create(StaticBlockId.GLASS))
+                        Block.create(BlockId.GLASS))
                 // 4. Set the filter/predicate: replace only blocks that obstruct light (e.g., stone, wood, dirt).
                 //    This is assumed to map to the Minecraft tag #minecraft:impermeable_blocks or similar tag.
                 .filter(SimpleBlockPredicate.create(BlockTagId.BLOCK_BEACON_LIGHT))

@@ -4,7 +4,6 @@ import uhc.data.nbt.blockentity.state.BlockState;
 import uhc.data.nbt.blockentity.BlockEntityNBT;
 import uhc.data.nbt.entity.EntityNBT;
 import uhc.data.nbt.tags.*;
-import uhc.resource.block.BlockId;
 
 import java.util.Objects;
 

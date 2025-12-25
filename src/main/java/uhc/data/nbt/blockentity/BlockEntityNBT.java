@@ -2,7 +2,7 @@ package uhc.data.nbt.blockentity;
 
 import uhc.data.nbt.BuildableNBT;
 import uhc.data.nbt.tags.*;
-import uhc.resource.block.StaticBlockId;
+import uhc.resource.block.BlockId;
 
 import java.util.Objects;
 
@@ -67,13 +67,13 @@ public abstract class BlockEntityNBT<T extends BlockEntityNBT<T>> implements Bui
     }
 
     /**
-     * Sets the Block Entity registry ID using a {@link StaticBlockId}.
+     * Sets the Block Entity registry ID using a {@link BlockId}.
      *
      * @param id The type-safe block identifier.
      * @return This builder instance for chaining.
      * @throws NullPointerException if the StaticBlockId is null.
      */
-    public T id(StaticBlockId id) {
+    public T id(BlockId id) {
         Objects.requireNonNull(id, "StaticBlockId cannot be null.");
         return id(id.toString());
     }

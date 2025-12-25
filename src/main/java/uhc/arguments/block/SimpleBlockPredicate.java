@@ -1,7 +1,5 @@
 package uhc.arguments.block;
 
-import uhc.resource.block.BlockIdentifier;
-
 /**
  * A concrete, immutable implementation of the {@link BlockPredicate} interface
  * that represents the simplest form of a block predicate: an identifier only.

@@ -2,7 +2,6 @@ package uhc.arguments.block;
 
 import uhc.data.nbt.tags.CompoundTag;
 import uhc.data.nbt.util.TagConverter;
-import uhc.resource.block.BlockIdentifier;
 
 /**
  * A concrete implementation of the {@link BlockPredicate} interface that dynamically

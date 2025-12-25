@@ -2,7 +2,6 @@ package uhc.arguments.block;
 
 import uhc.data.nbt.blockentity.state.BlockState;
 import uhc.data.nbt.blockentity.BlockEntityNBT;
-import uhc.resource.block.BlockId;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,7 +1,6 @@
 package uhc.data.nbt.blockentity;
 
 import uhc.data.nbt.tags.*;
-import uhc.resource.block.BlockId;
 import uhc.text.DyeColor;
 import uhc.text.TextComponent;
 import java.util.Objects;

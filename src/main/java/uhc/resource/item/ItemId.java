@@ -6,302 +6,207 @@ import java.util.Objects;
 /**
  * 📦 **Item Identifier Registry**
  * <p>
- * This enum acts as a central registry for Minecraft item identifiers. It implements
- * {@link ItemResource}, allowing it to be used in any method requiring a type-safe
- * item reference.
+ * This enum serves as the central source of truth for pure Minecraft item identifiers.
+ * It maps Java constants to their corresponding Minecraft resource locations.
  * </p>
  * <p>
- * Constant names are automatically converted to lowercase paths (e.g., {@code IRON_AXE}
- * becomes {@code "iron_axe"}).
+ * <b>Note:</b> Placeable blocks (like {@code CHEST} or {@code TNT}) are excluded from
+ * this registry and reside in {@link uhc.resource.block.BlockId}.
  * </p>
  */
 public enum ItemId implements ItemResource {
 
-    // --- 🏗️ Building & Natural Blocks ---
+    // --- ⚔️ Combat & Tools ---
 
-    /** A decorative block of purple crystals. */
-    AMETHYST_BLOCK,
-    /** Used for repairing and renaming items. */
-    ANVIL,
-    /** An invisible, unbreakable block. */
-    BARRIER,
-    /** The unbreakable bottom layer of the world. */
-    BEDROCK,
-    /** Standard red construction bricks. */
-    BRICKS,
-    /** A wooden storage container. */
-    CHEST,
-    /** Slows down entities; can be harvested for string. */
-    COBWEB,
-    /** A metallic block that oxidizes over time. */
-    COPPER_BLOCK,
-    /** A light-colored igneous rock. */
-    DIORITE,
-    /** A block of pure emerald, often used for storage or trade. */
-    EMERALD_BLOCK,
-    /** Transparent decorative block. */
-    GLASS,
-    /** Frozen water block; slippery to walk on. */
-    ICE,
-    /** Plays music discs. */
-    JUKEBOX,
-    /** Allows for vertical climbing. */
-    LADDER,
-    /** Hazardous fluid block. */
-    LAVA,
-    /** Hard, dark volcanic glass used for portals. */
-    OBSIDIAN,
-    /** A block providing constant redstone power. */
-    REDSTONE_BLOCK,
-    /** A highly blast-resistant deepslate variant. */
-    REINFORCED_DEEPSLATE,
-    /** Colored transparent block. */
-    STAINED_GLASS,
-    /** Used for saving and loading structures in-game. */
-    STRUCTURE_BLOCK,
-    /** An explosive block triggered by fire or redstone. */
-    TNT,
-    /** Essential liquid block. */
-    WATER,
-
-    // --- ⚔️ Tools, Armor & Combat ---
-
-    /** Standard projectile for bows. */
+    /** Standard projectile used by bows and dispensers. */
     ARROW,
-    /** Ranged weapon using arrows. */
+    /** Primary ranged weapon requiring arrows to fire. */
     BOW,
-    /** High-damage ranged weapon with a loading phase. */
+    /** High-velocity ranged weapon that can be pre-loaded. */
     CROSSBOW,
-    /** Used for catching fish and other items. */
+    /** Tool used for fishing and pulling entities. */
     FISHING_ROD,
-    /** Woodcutting tool and heavy weapon. */
-    IRON_AXE,
-    /** Standard melee weapon. */
-    IRON_SWORD,
-    /** High-tier farming and tilling tool. */
-    NETHERITE_HOE,
-    /** Defensive equipment used to block attacks. */
+    /** Portable defensive equipment used to negate damage. */
     SHIELD,
-    /** Highlights hit targets with an outline. */
+    /** Specialized arrow that outlines entities with a glow effect. */
     SPECTRAL_ARROW,
-    /** Used for magnifying distant views. */
+    /** Handheld device used to zoom in on distant objects. */
     SPYGLASS,
-    /** Throwable weapon found in underwater ruins. */
+    /** Rare throwable weapon found in ocean ruins. */
     TRIDENT,
-    /** Projectile that creates a burst of wind upon impact. */
+    /** Throwable projectile that creates a burst of kinetic energy. */
     WIND_CHARGE,
 
-    // --- 🛡️ Armor Sets ---
+    // --- 🛡️ Armor & Equipment ---
 
-    /** Iron protection for the head. */
-    IRON_HELMET,
-    /** Iron protection for the torso. */
-    IRON_CHESTPLATE,
-    /** Iron protection for the legs. */
-    IRON_LEGGINGS,
-    /** Iron protection for the feet. */
-    IRON_BOOTS,
-    /** Heavy protection for tamed horses. */
-    DIAMOND_HORSE_ARMOR,
-    /** Basic protection for tamed horses. */
-    LEATHER_HORSE_ARMOR,
     /** Specialized protection for tamed wolves. */
     WOLF_ARMOR,
 
-    // --- 🍎 Food & Consumables ---
+    // --- 🍎 Food & Potions ---
 
-    /** Basic fruit food item. */
+    /** Basic fruit and crafting ingredient. */
     APPLE,
-    /** Baked wheat food item. */
+    /** Common food item crafted from wheat. */
     BREAD,
-    /** Can be thrown or used in baking recipes. */
+    /** Can be thrown or used in baking recipes like Cake. */
     EGG,
-    /** Powerful food item providing absorption and regeneration. */
+    /** Tiered food providing Absorption and Regeneration effects. */
     GOLDEN_APPLE,
-    /** Sliced fruit for quick consumption. */
+    /** Sliced melon for fast consumption. */
     MELON_SLICE,
-    /** Standard status-effect drink. */
+    /** The base container for all status-effect drinks. */
     POTION,
-    /** Throwable status-effect drink. */
+    /** Throwable version of a potion that applies effects in a radius. */
     SPLASH_POTION,
-    /** Food providing a hidden status effect. */
+    /** Food item that grants a random/hidden status effect. */
     SUSPICIOUS_STEW,
-    /** Provides experience points when thrown. */
+    /** Throwable bottle that drops experience orbs upon impact. */
     EXPERIENCE_BOTTLE,
-    /** Removes all active status effects. */
+    /** Clears all active status effects when consumed. */
     MILK_BUCKET,
-    /** Item used to transport lava. */
+    /** Used for transporting lava or as a long-lasting fuel source. */
     LAVA_BUCKET,
 
     // --- 💎 Materials & Crafting ---
 
-    /** Core material for brewing and fire charges. */
+    /** Dropped by Blazes; used for brewing and Eye of Enders. */
     BLAZE_ROD,
     /** Dropped by skeletons; used for bone meal or taming. */
     BONE,
-    /** Used for enchanting tables and bookshelves. */
+    /** Essential for crafting enchanting tables and bookshelves. */
     BOOK,
-    /** Container for stews and soups. */
+    /** Wooden container for stews, soups, and rabbit stew. */
     BOWL,
-    /** Early-game inventory organization tool. */
+    /** Tool for organizing and compressing inventory space. */
     BUNDLE,
-    /** Rare gemstone used for high-tier gear. */
+    /** Highly valuable gemstone for high-tier gear and tools. */
     DIAMOND,
-    /** Used for teleportation. */
+    /** Dropped by Endermen; used for teleportation. */
     ENDER_PEARL,
-    /** Used for flight with Elytra or celebrations. */
+    /** Used for celebrations or flight with Elytra. */
     FIREWORK_ROCKET,
-    /** Container for water, honey, or potions. */
+    /** Empty container for water, honey, or brewing. */
     GLASS_BOTTLE,
-    /** Material for crafting lights and enhancing potions. */
+    /** Dust from the Nether used to enhance potion potency. */
     GLOWSTONE_DUST,
-    /** Precious metal used for trade and tools. */
+    /** Refined gold used for bartering and golden food. */
     GOLD_INGOT,
-    /** The primary ingredient in explosives. */
+    /** Fundamental ingredient for TNT and firework stars. */
     GUNPOWDER,
-    /** The most common material for mid-tier gear. */
+    /** The primary metal for mid-tier armor and machinery. */
     IRON_INGOT,
-    /** Mineral used for blue dye and enchanting. */
+    /** Blue mineral used for enchanting and dyes. */
     LAPIS_LAZULI,
-    /** Fungus required for almost all brewing. */
+    /** Essential fungus for starting almost all brewing recipes. */
     NETHER_WART,
-    /** Material used to forge Netherite Ingots. */
+    /** Raw material required to craft Netherite Ingots. */
     NETHERITE_SCRAP,
-    /** Required to upgrade diamond gear at a smithing table. */
+    /** Required to upgrade Diamond gear to Netherite tier. */
     NETHERITE_UPGRADE_SMITHING_TEMPLATE,
-    /** Fundamental logic and power component. */
+    /** The core component of Minecraft's electrical logic. */
     REDSTONE,
-    /** Required to ride certain animals. */
+    /** Required to ride and control horses, pigs, and striders. */
     SADDLE,
-    /** Basic crafting component for tools. */
+    /** Common crafting component for tools and torches. */
     STICK,
-    /** A book containing player-written text. */
+    /** A book containing user-written or system-generated text. */
     WRITTEN_BOOK,
 
-    // --- 🎼 Miscellaneous & Rare ---
+    // --- 🎼 Rare & Collectibles ---
 
-    /** An instrument dropped by goats. */
+    /** Musical instrument obtained from goats. */
     GOAT_HORN,
-    /** A specific music disc track. */
+    /** One of the many collectible music tracks. */
     MUSIC_DISC_STAL,
-    /** A trophy or decorative head of a player. */
-    PLAYER_HEAD,
-    /** A rare decorative head found on End Ships. */
-    DRAGON_HEAD,
 
-    // --- 🥚 Spawn Eggs ---
+    // --- 🥚 Creative & Technical ---
 
-    /** Creative item to spawn a horse. */
+    /** Spawns a horse entity when used. */
     HORSE_SPAWN_EGG,
-    /** Creative item to spawn a wolf. */
+    /** Spawns a wolf entity when used. */
     WOLF_SPAWN_EGG,
 
-    // --- 🌌 Technical & Environment ---
+    /** Represents the absence of an item in an inventory slot. */
+    AIR;
 
-    /** Represents the absence of an item. */
-    AIR,
-    /** Air found specifically within cave biomes. */
-    CAVE_AIR,
-    /** Air found within the void or technical areas. */
-    VOID_AIR,
+    // --- ⚙️ State & Fields ---
 
-    // --- 🧩 Custom Blocks/Modded ---
-
-    /** Placeholder for custom or mod-added blocks. */
-    CUSTOM_BLOCK;
-
-    // --- ⚙️ State & Internal Fields ---
-
-    /** The namespace of the resource (e.g., "minecraft"). */
+    /** The namespace part of the resource location (e.g., "minecraft"). */
     private final String namespace;
 
-    /** The unique path of the resource (e.g., "iron_sword"). */
+    /** The path part of the resource location (e.g., "iron_sword"). */
     private final String path;
 
     // --- 🏗️ Constructors ---
 
     /**
-     * Default constructor for standard Minecraft items.
-     * <p>Automatically pulls the default namespace from {@link DatapackConfig#MINECRAFT_NAMESPACE}.</p>
+     * 🟢 **Standard Item Constructor**
+     * <p>Automatically uses the default namespace and converts the enum name
+     * to a lowercase path.</p>
      */
     ItemId() {
-        this(DatapackConfig.MINECRAFT_NAMESPACE);
+        this.namespace = DatapackConfig.MINECRAFT_NAMESPACE;
+        this.path = this.name().toLowerCase();
     }
 
     /**
-     * Constructor for items requiring a custom namespace.
-     * <p><b>Error Catching:</b> Validates that the namespace is not null and triggers
-     * a validation check to ensure the resulting resource location is syntactically valid.</p>
-     * * @param namespace The resource namespace to use.
-     * @throws NullPointerException if the provided namespace is null.
+     * 🟡 **Custom Namespace Constructor**
+     * <p>Allows for custom namespaces (e.g., for mods) while auto-pathing the name.</p>
+     * * @param namespace The resource namespace to assign.
+     * @throws NullPointerException if the namespace is null.
      */
     ItemId(String namespace) {
         this.namespace = Objects.requireNonNull(namespace, "Namespace cannot be null");
         this.path = this.name().toLowerCase();
-
-        // Ensure the derived ID follows Minecraft's naming rules immediately upon creation.
         this.validate();
     }
 
-    // --- 🔍 Accessors ---
-
-    /** * @return The resource namespace (e.g., "minecraft").
+    /**
+     * 🟠 **Full Custom Constructor**
+     * <p>Allows for a fully unique path and namespace combination.</p>
+     * * @param path      The specific item path.
+     * @param namespace The resource namespace.
+     * @throws NullPointerException if path or namespace is null.
      */
-    public String getNamespace() {
-        return namespace;
+    ItemId(String path, String namespace) {
+        this.namespace = Objects.requireNonNull(namespace, "Namespace cannot be null");
+        this.path = Objects.requireNonNull(path, "Path cannot be null").toLowerCase();
+        this.validate();
     }
 
-    /** * @return The resource path derived from the enum name (e.g., "apple").
-     */
-    public String getPath() {
-        return path;
-    }
+    // --- 🛰️ Contract Implementation ---
 
-    /** * Combines namespace and path into a full Minecraft resource location string.
-     * @return The formatted location string (e.g., "minecraft:iron_sword").
+    /**
+     * Constructs the fully qualified Minecraft resource location.
+     * * @return The formatted string (e.g., "minecraft:diamond").
      */
     @Override
     public String getResourceLocation() {
         return namespace + ":" + path;
     }
 
-    // --- 🛠️ Static Utility Methods ---
+    // --- 🔍 Accessors ---
+
+    /** @return The namespace string (e.g., "minecraft"). */
+    public String getNamespace() { return namespace; }
+
+    /** @return The item path string (e.g., "apple"). */
+    public String getPath() { return path; }
+
+    // --- 🛡️ Validation & Utility ---
 
     /**
-     * Dynamically generates a resource location for armor pieces.
-     * <p><b>Error Catching:</b> Validates that both parameters are non-null to prevent
-     * generating malformed strings like "minecraft:null_null".</p>
-     * * @param material The armor material (e.g., DIAMOND, IRON).
-     * @param piece The armor slot (e.g., HELMET, BOOTS).
-     * @return A full resource location string.
-     * @throws NullPointerException if material or piece is null.
+     * Ensures the resource location follows Minecraft's naming conventions.
+     * * @throws IllegalStateException if the location is syntactically invalid.
      */
-    public static String getArmorResourceLocation(ArmorMaterial material, ArmorPiece piece) {
-        Objects.requireNonNull(material, "Armor material cannot be null");
-        Objects.requireNonNull(piece, "Armor piece cannot be null");
-        return DatapackConfig.MINECRAFT_NAMESPACE + ":"
-                + material.name().toLowerCase() + "_"
-                + piece.name().toLowerCase();
+    @Override
+    public void validate() throws IllegalStateException {
+        ItemResource.super.validate();
     }
 
     /**
-     * Dynamically generates a resource location for tool types.
-     * <p><b>Error Catching:</b> Validates that both parameters are non-null.</p>
-     * * @param material The tool material (e.g., WOOD, DIAMOND).
-     * @param piece The tool type (e.g., SWORD, AXE).
-     * @return A full resource location string.
-     * @throws NullPointerException if material or piece is null.
-     */
-    public static String getToolResourceLocation(ToolMaterial material, ToolPiece piece) {
-        Objects.requireNonNull(material, "Tool material cannot be null");
-        Objects.requireNonNull(piece, "Tool piece cannot be null");
-        return DatapackConfig.MINECRAFT_NAMESPACE + ":"
-                + material.name().toLowerCase() + "_"
-                + piece.name().toLowerCase();
-    }
-
-    /**
-     * @return The result of {@link #getResourceLocation()}.
+     * Returns the resource location for use in command strings.
+     * * @return The result of {@link #getResourceLocation()}.
      */
     @Override
     public String toString() {

@@ -3,7 +3,7 @@ package uhc.data.nbt.blockentity;
 import uhc.data.nbt.item.data.SingleItemStack;
 import uhc.data.nbt.tags.CompoundTag;
 import uhc.data.nbt.tags.LongTag;
-import uhc.resource.block.StaticBlockId;
+import uhc.resource.block.BlockId;
 
 import java.util.Objects;
 
@@ -38,7 +38,7 @@ public class JukeboxNBT extends BlockEntityNBT<JukeboxNBT> {
      */
     public static JukeboxNBT create() {
         return new JukeboxNBT(CompoundTag.create())
-                .id(StaticBlockId.JUKEBOX);
+                .id(BlockId.JUKEBOX);
     }
 
     /**
