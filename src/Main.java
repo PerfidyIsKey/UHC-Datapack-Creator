@@ -1138,7 +1138,7 @@ public class Main {
                     SummonCommand.create(EntityId.ITEM)
                             .pos(Vec3.relative(0, 0, 0))
                             .nbt(ItemEntityNBT.create()
-                                    .item(ItemNBT.create(ItemId.PLAYER_HEAD)
+                                    .item(ItemNBT.create(BlockId.PLAYER_HEAD)
                                             .count(1)
                                             .add(ProfileComponent.create(p.getPlayerName()))))
                             .generate());

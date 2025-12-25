@@ -6,6 +6,7 @@ import uhc.data.nbt.tags.CompoundTag;
 import uhc.data.nbt.tags.IntTag;
 import uhc.data.nbt.tags.StringTag;
 import uhc.resource.item.ItemId;
+import uhc.resource.item.ItemResource;
 
 import java.util.Objects;
 
@@ -50,7 +51,7 @@ public class ItemNBT implements BuildableNBT {
      * @throws NullPointerException if the id is null.
      * @throws IllegalArgumentException if the id represents an air block.
      */
-    public static ItemNBT create(ItemId id) {
+    public static ItemNBT create(ItemResource id) {
         Objects.requireNonNull(id, "Item ID cannot be null.");
 
         if (id.equals(ItemId.AIR)) {
