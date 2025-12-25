@@ -1235,22 +1235,22 @@ public class Main {
         fileCommands.add(Item.create(ItemCommand.ItemAction.REPLACE_WITH,
                         targets)
                 .slot(ItemSlot.CHEST)
-                .replaceWith(ItemStack.create(ItemId.getArmorResourceLocation(ArmorMaterial.IRON, ArmorPiece.CHESTPLATE)))
+                .replaceWith(ItemStack.create(DynamicItem.armor(ArmorMaterial.IRON, ArmorPiece.CHESTPLATE)))
                 .build());
         fileCommands.add(Item.create(ItemCommand.ItemAction.REPLACE_WITH,
                         targets)
                 .slot(ItemSlot.FEET)
-                .replaceWith(ItemStack.create(ItemId.getArmorResourceLocation(ArmorMaterial.IRON, ArmorPiece.BOOTS)))
+                .replaceWith(ItemStack.create(DynamicItem.armor(ArmorMaterial.IRON, ArmorPiece.BOOTS)))
                 .build());
         fileCommands.add(Item.create(ItemCommand.ItemAction.REPLACE_WITH,
                         targets)
                 .slot(ItemSlot.HEAD)
-                .replaceWith(ItemStack.create(ItemId.getArmorResourceLocation(ArmorMaterial.IRON, ArmorPiece.HELMET)))
+                .replaceWith(ItemStack.create(DynamicItem.armor(ArmorMaterial.IRON, ArmorPiece.HELMET)))
                 .build());
         fileCommands.add(Item.create(ItemCommand.ItemAction.REPLACE_WITH,
                         targets)
                 .slot(ItemSlot.LEGS)
-                .replaceWith(ItemStack.create(ItemId.getArmorResourceLocation(ArmorMaterial.IRON, ArmorPiece.LEGGINGS)))
+                .replaceWith(ItemStack.create(DynamicItem.armor(ArmorMaterial.IRON, ArmorPiece.LEGGINGS)))
                 .build());
         fileCommands.add(Item.create(ItemCommand.ItemAction.REPLACE_WITH,
                         targets)
@@ -1260,12 +1260,12 @@ public class Main {
         fileCommands.add(Item.create(ItemCommand.ItemAction.REPLACE_WITH,
                         targets)
                 .slot(ItemSlot.MAINHAND)
-                .replaceWith(ItemStack.create(ItemId.getToolResourceLocation(ToolMaterial.IRON, ToolPiece.AXE)))
+                .replaceWith(ItemStack.create(DynamicItem.tool(ToolMaterial.IRON, ToolPiece.AXE)))
                 .build());
         fileCommands.add(Item.create(ItemCommand.ItemAction.REPLACE_WITH,
                         targets)
                 .slot(ItemSlot.INVENTORY.withSlotNumber(0))
-                .replaceWith(ItemStack.create(ItemId.getToolResourceLocation(ToolMaterial.IRON, ToolPiece.SWORD)))
+                .replaceWith(ItemStack.create(DynamicItem.tool(ToolMaterial.IRON, ToolPiece.SWORD)))
                 .build());
 
         fileCommands.add(Effect.create(EffectCommand.EffectAction.GIVE)
