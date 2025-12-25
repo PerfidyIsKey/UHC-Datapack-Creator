@@ -4,7 +4,7 @@ import uhc.data.nbt.NBTTag;
 import uhc.data.nbt.tags.ByteTag;
 import uhc.data.nbt.tags.CompoundTag;
 import uhc.data.nbt.tags.IntTag;
-import uhc.resource.EnchantmentId;
+import uhc.resource.enchantment.EnchantmentId;
 import uhc.resource.item.components.ComponentId;
 
 import java.util.HashMap;

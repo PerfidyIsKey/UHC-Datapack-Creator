@@ -61,6 +61,7 @@ import uhc.resource.block.structure_block.StructureBlockMode;
 import uhc.resource.block.structure_block.StructureMirror;
 import uhc.resource.block.structure_block.StructureRotation;
 import uhc.resource.effect.EffectId;
+import uhc.resource.enchantment.EnchantmentId;
 import uhc.resource.entity.EntityId;
 import uhc.resource.item.*;
 import uhc.attribute.AttributeId;
@@ -3104,20 +3105,10 @@ public class Main {
         target = ItemTargetEntity.create(Entity.ofSelector(
                 TargetSelector.NEAREST_PLAYER,
                 SelectorArgumentsBuilder.create()
-                        .nbt(ItemNBT.create()
-                                .put(ItemNBT.create(ItemNbtKey.SELECTED_ITEM.toString())
-                                        .put(new StringTag(
-                                                SelectedItemKey.ID.toString(),
-                                                ItemId.SPLASH_POTION.getResourceLocation()))
-                                        .put(new IntTag(
-                                                SelectedItemKey.COUNT.toString(),
-                                                1))
-                                        .put(ItemNBT.create(SelectedItemKey.COMPONENTS.toString())
-                                                .put(ItemNBT.create(ComponentsKey.POTION_CONTENTS.toString())
-                                                        .put(new StringTag(
-                                                                PotionContentsKey.POTION.toString(),
-                                                                EffectId.STRENGTH.getPotionTag(true, false)))))))));
-        targetOld = "@p[nbt={SelectedItem:{id:\"" + ItemId.SPLASH_POTION + "\",count:1,components:{\"minecraft:potion_contents\":{potion:\"" + EffectId.STRENGTH.getPotionTag(true, false) + "\"}}}}]";
+                        .nbt(PlayerNBT.create()
+                                .selectedItem(SingleItemStack.create(ItemId.SPLASH_POTION)
+                                        .addComponent(PotionContentsComponent.create(PotionId.strong(EffectId.STRENGTH)))))));
+        targetOld = "@p[nbt={SelectedItem:{id:\"" + ItemId.SPLASH_POTION + "\",count:1,components:{\"minecraft:potion_contents\":{potion:\"" + PotionId.strong(EffectId.STRENGTH) + "\"}}}}]";
 
         fileCommands.add(Execute.If(targetOld) +
                 new TellRaw(targetOld, warning).sendRaw());
@@ -3134,20 +3125,10 @@ public class Main {
         target = ItemTargetEntity.create(Entity.ofSelector(
                 TargetSelector.NEAREST_PLAYER,
                 SelectorArgumentsBuilder.create()
-                        .nbt(ItemNBT.create()
-                                .put(ItemNBT.create(ItemNbtKey.SELECTED_ITEM.toString())
-                                        .put(new StringTag(
-                                                SelectedItemKey.ID.toString(),
-                                                ItemId.POTION.getResourceLocation()))
-                                        .put(new IntTag(
-                                                SelectedItemKey.COUNT.toString(),
-                                                1))
-                                        .put(ItemNBT.create(SelectedItemKey.COMPONENTS.toString())
-                                                .put(ItemNBT.create(ComponentsKey.POTION_CONTENTS.toString())
-                                                        .put(new StringTag(
-                                                                PotionContentsKey.POTION.toString(),
-                                                                EffectId.STRENGTH.getPotionTag(true, false)))))))));
-        targetOld = "@p[nbt={SelectedItem:{id:\"" + ItemId.POTION + "\",count:1,components:{\"minecraft:potion_contents\":{potion:\"" + EffectId.STRENGTH.getPotionTag(true, false) + "\"}}}}]";
+                        .nbt(PlayerNBT.create()
+                                .selectedItem(SingleItemStack.create(ItemId.POTION)
+                                        .addComponent(PotionContentsComponent.create(PotionId.strong(EffectId.STRENGTH)))))));
+        targetOld = "@p[nbt={SelectedItem:{id:\"" + ItemId.POTION + "\",count:1,components:{\"minecraft:potion_contents\":{potion:\"" + PotionId.strong(EffectId.STRENGTH) + "\"}}}}]";
 
         fileCommands.add(Execute.If(targetOld) +
                 new TellRaw(targetOld, warning).sendRaw());
@@ -3164,19 +3145,10 @@ public class Main {
             target = ItemTargetEntity.create(Entity.ofSelector(
                     TargetSelector.NEAREST_PLAYER,
                     SelectorArgumentsBuilder.create()
-                            .nbt(ItemNBT.create()
-                                    .put(ItemNBT.create(ItemNbtKey.SELECTED_ITEM.toString())
-                                            .put(new StringTag(
-                                                    SelectedItemKey.ID.toString(),
-                                                    ItemId.CROSSBOW.getResourceLocation()))
-                                            .put(new IntTag(
-                                                    SelectedItemKey.COUNT.toString(),
-                                                    1))
-                                            .put(ItemNBT.create(SelectedItemKey.COMPONENTS.toString())
-                                                    .put(ItemNBT.create(ComponentsKey.ENCHANTMENTS.toString())
-                                                            .put(new IntTag(
-                                                                    EnchantmentType.PIERCING.toString(),
-                                                                    ii + 1))))))));
+                            .nbt(PlayerNBT.create()
+                                    .selectedItem(SingleItemStack.create(ItemId.CROSSBOW)
+                                            .addComponent(EnchantmentsComponent.create()
+                                                    .add(EnchantmentId.PIERCING, ii + 1))))));
             targetOld = "@p[nbt={SelectedItem:{id:\"" + ItemId.CROSSBOW + "\",count:1,components:{\"minecraft:enchantments\":{\"" + EnchantmentType.PIERCING + "\":" + (ii + 1) + "}}}}]";
             fileCommands.add(Execute.If(targetOld) +
                     new TellRaw(targetOld, warning).sendRaw());
@@ -3192,19 +3164,10 @@ public class Main {
             target = ItemTargetEntity.create(Entity.ofSelector(
                     TargetSelector.NEAREST_PLAYER,
                     SelectorArgumentsBuilder.create()
-                            .nbt(ItemNBT.create()
-                                    .put(ItemNBT.create(ItemNbtKey.SELECTED_ITEM.toString())
-                                            .put(new StringTag(
-                                                    SelectedItemKey.ID.toString(),
-                                                    ItemId.BOW.getResourceLocation()))
-                                            .put(new IntTag(
-                                                    SelectedItemKey.COUNT.toString(),
-                                                    1))
-                                            .put(ItemNBT.create(SelectedItemKey.COMPONENTS.toString())
-                                                    .put(ItemNBT.create(ComponentsKey.ENCHANTMENTS.toString())
-                                                            .put(new IntTag(
-                                                                    EnchantmentType.POWER.toString(),
-                                                                    ii + 1))))))));
+                            .nbt(PlayerNBT.create()
+                                    .selectedItem(SingleItemStack.create(ItemId.BOW)
+                                            .addComponent(EnchantmentsComponent.create()
+                                                    .add(EnchantmentId.POWER, ii + 1))))));
             targetOld = "@p[nbt={SelectedItem:{id:\"" + ItemId.BOW + "\",count:1,components:{\"minecraft:enchantments\":{\"" + EnchantmentType.POWER + "\":" + (ii + 1) + "}}}}]";
             fileCommands.add(Execute.If(targetOld) +
                     new TellRaw(targetOld, warning).sendRaw());
@@ -3220,14 +3183,8 @@ public class Main {
         target = ItemTargetEntity.create(Entity.ofSelector(
                 TargetSelector.NEAREST_PLAYER,
                 SelectorArgumentsBuilder.create()
-                        .nbt(ItemNBT.create()
-                                .put(ItemNBT.create(ItemNbtKey.SELECTED_ITEM.toString())
-                                        .put(new StringTag(
-                                                SelectedItemKey.ID.toString(),
-                                                ItemId.WOLF_ARMOR.getResourceLocation()))
-                                        .put(new IntTag(
-                                                SelectedItemKey.COUNT.toString(),
-                                                1))))));
+                        .nbt(PlayerNBT.create()
+                                .selectedItem(SingleItemStack.create(ItemId.WOLF_ARMOR)))));
         targetOld = "@p[nbt={SelectedItem:{id:\"" + ItemId.WOLF_ARMOR + "\",count:1}}]";
         fileCommands.add(Execute.If(targetOld) +
                 new TellRaw(targetOld, warning).sendRaw());
@@ -3243,14 +3200,8 @@ public class Main {
         target = ItemTargetEntity.create(Entity.ofSelector(
                 TargetSelector.NEAREST_PLAYER,
                 SelectorArgumentsBuilder.create()
-                        .nbt(ItemNBT.create()
-                                .put(ItemNBT.create(ItemNbtKey.SELECTED_ITEM.toString())
-                                        .put(new StringTag(
-                                                SelectedItemKey.ID.toString(),
-                                                ItemId.SUSPICIOUS_STEW.getResourceLocation()))
-                                        .put(new IntTag(
-                                                SelectedItemKey.COUNT.toString(),
-                                                1))))));
+                        .nbt(PlayerNBT.create()
+                                .selectedItem(SingleItemStack.create(ItemId.SUSPICIOUS_STEW)))));
         targetOld = "@p[nbt={SelectedItem:{id:\"" + ItemId.SUSPICIOUS_STEW + "\",count:1}}]";
         fileCommands.add(Execute.If(targetOld) +
                 new TellRaw(targetOld, warning).sendRaw());

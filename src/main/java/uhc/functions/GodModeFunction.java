@@ -13,7 +13,7 @@ import uhc.core.Namespace;
 import uhc.arguments.slot.ItemSlot;
 import uhc.data.nbt.item.components.*;
 import uhc.resource.effect.EffectId;
-import uhc.resource.EnchantmentId;
+import uhc.resource.enchantment.EnchantmentId;
 import uhc.resource.item.ItemId;
 import uhc.resource.attribute.AttributeDisplayType;
 import uhc.resource.attribute.AttributeModifierId;
