@@ -62,10 +62,12 @@ import uhc.resource.block.*;
 import uhc.resource.block.structure_block.StructureBlockMode;
 import uhc.resource.block.structure_block.StructureMirror;
 import uhc.resource.block.structure_block.StructureRotation;
+import uhc.resource.effect.EffectId;
 import uhc.resource.entity.EntityId;
 import uhc.resource.item.*;
 import uhc.attribute.AttributeId;
 import uhc.resource.loot_table.LootTableId;
+import uhc.resource.potion.PotionId;
 import uhc.resource.sound.InstrumentId;
 import uhc.resource.sound.SoundId;
 import uhc.score.ComparatorType;
@@ -3014,8 +3016,8 @@ public class Main {
                 SelectorArgumentsBuilder.create()
                         .nbt(PlayerNBT.create()
                                 .selectedItem(SingleItemStack.create(ItemId.SPLASH_POTION)
-                                        .addComponent(PotionContentsComponent.create(EffectId.REGENERATION))))));
-        String targetOld = "@p[nbt={SelectedItem:{id:\"" + ItemId.SPLASH_POTION + "\",count:1,components:{\"minecraft:potion_contents\":{potion:\"" + EffectId.REGENERATION.getPotionTag() + "\"}}}}]";
+                                        .addComponent(PotionContentsComponent.create(PotionId.normal(EffectId.REGENERATION)))))));
+        String targetOld = "@p[nbt={SelectedItem:{id:\"" + ItemId.SPLASH_POTION + "\",count:1,components:{\"minecraft:potion_contents\":{potion:\"" + PotionId.normal(EffectId.REGENERATION) + "\"}}}}]";
         ItemStack replacement = SimpleItemStack.create(ItemId.GLASS_BOTTLE);
         fileCommands.add(Execute.If(targetOld) +
                 new TellRaw(targetOld, warning).sendRaw());
@@ -3028,20 +3030,10 @@ public class Main {
         target = ItemTargetEntity.create(Entity.ofSelector(
                 TargetSelector.NEAREST_PLAYER,
                 SelectorArgumentsBuilder.create()
-                        .nbt(ItemNBT.create()
-                                .put(ItemNBT.create(ItemNbtKey.SELECTED_ITEM.toString())
-                                        .put(new StringTag(
-                                                SelectedItemKey.ID.toString(),
-                                                ItemId.SPLASH_POTION.getResourceLocation()))
-                                        .put(new IntTag(
-                                                SelectedItemKey.COUNT.toString(),
-                                                1))
-                                        .put(ItemNBT.create(SelectedItemKey.COMPONENTS.toString())
-                                                .put(ItemNBT.create(ComponentsKey.POTION_CONTENTS.toString())
-                                                        .put(new StringTag(
-                                                                PotionContentsKey.POTION.toString(),
-                                                                EffectId.REGENERATION.getPotionTag(true, false)))))))));
-        targetOld = "@p[nbt={SelectedItem:{id:\"" + ItemId.SPLASH_POTION + "\",count:1,components:{\"minecraft:potion_contents\":{potion:\"" + EffectId.REGENERATION.getPotionTag(true, false) + "\"}}}}]";
+                        .nbt(PlayerNBT.create()
+                                .selectedItem(SingleItemStack.create(ItemId.SPLASH_POTION)
+                                        .addComponent(PotionContentsComponent.create(PotionId.longDuration(EffectId.REGENERATION)))))));
+        targetOld = "@p[nbt={SelectedItem:{id:\"" + ItemId.SPLASH_POTION + "\",count:1,components:{\"minecraft:potion_contents\":{potion:\"" + PotionId.longDuration(EffectId.REGENERATION) + "\"}}}}]";
         fileCommands.add(Execute.If(targetOld) +
                 new TellRaw(targetOld, warning).sendRaw());
         fileCommands.add(Item.create(
@@ -3053,20 +3045,10 @@ public class Main {
         target = ItemTargetEntity.create(Entity.ofSelector(
                 TargetSelector.NEAREST_PLAYER,
                 SelectorArgumentsBuilder.create()
-                        .nbt(ItemNBT.create()
-                                .put(ItemNBT.create(ItemNbtKey.SELECTED_ITEM.toString())
-                                        .put(new StringTag(
-                                                SelectedItemKey.ID.toString(),
-                                                ItemId.SPLASH_POTION.getResourceLocation()))
-                                        .put(new IntTag(
-                                                SelectedItemKey.COUNT.toString(),
-                                                1))
-                                        .put(ItemNBT.create(SelectedItemKey.COMPONENTS.toString())
-                                                .put(ItemNBT.create(ComponentsKey.POTION_CONTENTS.toString())
-                                                        .put(new StringTag(
-                                                                PotionContentsKey.POTION.toString(),
-                                                                EffectId.REGENERATION.getPotionTag(false, true)))))))));
-        targetOld = "@p[nbt={SelectedItem:{id:\"" + ItemId.SPLASH_POTION + "\",count:1,components:{\"minecraft:potion_contents\":{potion:\"" + EffectId.REGENERATION.getPotionTag(false, true) + "\"}}}}]";
+                        .nbt(PlayerNBT.create()
+                                .selectedItem(SingleItemStack.create(ItemId.SPLASH_POTION)
+                                        .addComponent(PotionContentsComponent.create(PotionId.strong(EffectId.REGENERATION)))))));
+        targetOld = "@p[nbt={SelectedItem:{id:\"" + ItemId.SPLASH_POTION + "\",count:1,components:{\"minecraft:potion_contents\":{potion:\"" + PotionId.strong(EffectId.REGENERATION) + "\"}}}}]";
         fileCommands.add(Execute.If(targetOld) +
                 new TellRaw(targetOld, warning).sendRaw());
         fileCommands.add(Item.create(
@@ -3079,20 +3061,10 @@ public class Main {
         target = ItemTargetEntity.create(Entity.ofSelector(
                 TargetSelector.NEAREST_PLAYER,
                 SelectorArgumentsBuilder.create()
-                        .nbt(ItemNBT.create()
-                                .put(ItemNBT.create(ItemNbtKey.SELECTED_ITEM.toString())
-                                        .put(new StringTag(
-                                                SelectedItemKey.ID.toString(),
-                                                ItemId.POTION.getResourceLocation()))
-                                        .put(new IntTag(
-                                                SelectedItemKey.COUNT.toString(),
-                                                1))
-                                        .put(ItemNBT.create(SelectedItemKey.COMPONENTS.toString())
-                                                .put(ItemNBT.create(ComponentsKey.POTION_CONTENTS.toString())
-                                                        .put(new StringTag(
-                                                                PotionContentsKey.POTION.toString(),
-                                                                EffectId.REGENERATION.getPotionTag()))))))));
-        targetOld = "@p[nbt={SelectedItem:{id:\"" + ItemId.POTION + "\",count:1,components:{\"minecraft:potion_contents\":{potion:\"" + EffectId.REGENERATION.getPotionTag() + "\"}}}}]";
+                        .nbt(PlayerNBT.create()
+                                .selectedItem(SingleItemStack.create(ItemId.POTION)
+                                        .addComponent(PotionContentsComponent.create(PotionId.normal(EffectId.REGENERATION)))))));
+        targetOld = "@p[nbt={SelectedItem:{id:\"" + ItemId.POTION + "\",count:1,components:{\"minecraft:potion_contents\":{potion:\"" + PotionId.normal(EffectId.REGENERATION) + "\"}}}}]";
         fileCommands.add(Execute.If(targetOld) +
                 new TellRaw(targetOld, warning).sendRaw());
         fileCommands.add(Item.create(
@@ -3104,20 +3076,10 @@ public class Main {
         target = ItemTargetEntity.create(Entity.ofSelector(
                 TargetSelector.NEAREST_PLAYER,
                 SelectorArgumentsBuilder.create()
-                        .nbt(ItemNBT.create()
-                                .put(ItemNBT.create(ItemNbtKey.SELECTED_ITEM.toString())
-                                        .put(new StringTag(
-                                                SelectedItemKey.ID.toString(),
-                                                ItemId.POTION.getResourceLocation()))
-                                        .put(new IntTag(
-                                                SelectedItemKey.COUNT.toString(),
-                                                1))
-                                        .put(ItemNBT.create(SelectedItemKey.COMPONENTS.toString())
-                                                .put(ItemNBT.create(ComponentsKey.POTION_CONTENTS.toString())
-                                                        .put(new StringTag(
-                                                                PotionContentsKey.POTION.toString(),
-                                                                EffectId.REGENERATION.getPotionTag(true, false)))))))));
-        targetOld = "@p[nbt={SelectedItem:{id:\"" + ItemId.POTION + "\",count:1,components:{\"minecraft:potion_contents\":{potion:\"" + EffectId.REGENERATION.getPotionTag(true, false) + "\"}}}}]";
+                        .nbt(PlayerNBT.create()
+                                .selectedItem(SingleItemStack.create(ItemId.POTION)
+                                        .addComponent(PotionContentsComponent.create(PotionId.longDuration(EffectId.REGENERATION)))))));
+        targetOld = "@p[nbt={SelectedItem:{id:\"" + ItemId.POTION + "\",count:1,components:{\"minecraft:potion_contents\":{potion:\"" + PotionId.longDuration(EffectId.REGENERATION) + "\"}}}}]";
         fileCommands.add(Execute.If(targetOld) +
                 new TellRaw(targetOld, warning).sendRaw());
         fileCommands.add(Item.create(
@@ -3129,20 +3091,10 @@ public class Main {
         target = ItemTargetEntity.create(Entity.ofSelector(
                 TargetSelector.NEAREST_PLAYER,
                 SelectorArgumentsBuilder.create()
-                        .nbt(ItemNBT.create()
-                                .put(ItemNBT.create(ItemNbtKey.SELECTED_ITEM.toString())
-                                        .put(new StringTag(
-                                                SelectedItemKey.ID.toString(),
-                                                ItemId.POTION.getResourceLocation()))
-                                        .put(new IntTag(
-                                                SelectedItemKey.COUNT.toString(),
-                                                1))
-                                        .put(ItemNBT.create(SelectedItemKey.COMPONENTS.toString())
-                                                .put(ItemNBT.create(ComponentsKey.POTION_CONTENTS.toString())
-                                                        .put(new StringTag(
-                                                                PotionContentsKey.POTION.toString(),
-                                                                EffectId.REGENERATION.getPotionTag(false, true)))))))));
-        targetOld = "@p[nbt={SelectedItem:{id:\"" + ItemId.POTION + "\",count:1,components:{\"minecraft:potion_contents\":{potion:\"" + EffectId.REGENERATION.getPotionTag(false, true) + "\"}}}}]";
+                        .nbt(PlayerNBT.create()
+                                .selectedItem(SingleItemStack.create(ItemId.POTION)
+                                        .addComponent(PotionContentsComponent.create(PotionId.strong(EffectId.REGENERATION)))))));
+        targetOld = "@p[nbt={SelectedItem:{id:\"" + ItemId.POTION + "\",count:1,components:{\"minecraft:potion_contents\":{potion:\"" + PotionId.strong(EffectId.REGENERATION) + "\"}}}}]";
         fileCommands.add(Execute.If(targetOld) +
                 new TellRaw(targetOld, warning).sendRaw());
         fileCommands.add(Item.create(

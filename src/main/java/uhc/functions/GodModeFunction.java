@@ -13,7 +13,7 @@ import uhc.core.Datapack;
 import uhc.core.Namespace;
 import uhc.arguments.slot.ItemSlot;
 import uhc.data.nbt.item.components.*;
-import uhc.resource.EffectId;
+import uhc.resource.effect.EffectId;
 import uhc.resource.EnchantmentId;
 import uhc.resource.item.ItemId;
 import uhc.resource.attribute.AttributeDisplayType;
@@ -23,8 +23,6 @@ import uhc.resource.item.EquipmentSlot;
 import uhc.text.HexColor;
 import uhc.text.TextColor;
 import uhc.text.TextComponent;
-
-import java.util.List;
 
 /**
  * 🛡️ **God Mode Module**
