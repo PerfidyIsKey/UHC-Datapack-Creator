@@ -2,6 +2,7 @@ package uhc.arguments.block;
 
 import uhc.data.nbt.blockentity.state.BlockState;
 import uhc.data.nbt.blockentity.BlockEntityNBT;
+import uhc.data.nbt.util.TagConverter;
 import uhc.resource.block.BlockIdentifier;
 
 import java.util.ArrayList;
@@ -23,13 +24,19 @@ public class Block {
 
     // --- ⚙️ Private Fields ---
 
-    /** The unique identifier for the block (e.g., "minecraft:chest"). Must not be a tag. */
+    /** * The unique identifier for the block (e.g., {@code "minecraft:chest"}).
+     * This represents the base block type and must not be a tag (starting with #).
+     */
     private final BlockIdentifier id;
 
-    /** A list of block properties, such as 'facing=north' or 'lit=true'. */
+    /** * A list of block properties, such as {@code 'facing=north'} or {@code 'lit=true'}.
+     * These define the specific variant or orientation of the block.
+     */
     private final List<BlockState> states = new ArrayList<>();
 
-    /** Optional NBT data for block entities (e.g., inventory contents, sign text). */
+    /** * Optional NBT data for block entities (e.g., inventory contents, structure block settings).
+     * This is applied as the data component of the block placement.
+     */
     private BlockEntityNBT<?> data;
 
     // --- 🏗️ Constructors & Factories ---
@@ -44,7 +51,7 @@ public class Block {
 
     /**
      * Entry point for creating a new Block representation.
-     * @param id A specific {@link BlockIdentifier} (e.g., BlockId.CHEST).
+     * @param id A specific {@link BlockIdentifier} (e.g., {@code BlockId.CHEST}).
      * @return A new Block builder instance.
      * @throws NullPointerException if the id is null.
      */
@@ -56,10 +63,10 @@ public class Block {
 
     /**
      * Adds a specific state/property to the block.
-     * <p><b>Error Catching:</b> Silently ignores null states to prevent
-     * serialization crashes during stream processing.</p>
-     * @param state The {@link BlockState} to apply.
-     * @return This Block instance for chaining.
+     * <p><b>Error Catching:</b> Proactively filters null states to prevent
+     * null pointer exceptions during the serialization stream.</p>
+     * @param state The {@link BlockState} property to apply.
+     * @return This Block instance for fluent chaining.
      */
     public Block withState(BlockState state) {
         if (state != null) {
@@ -69,9 +76,9 @@ public class Block {
     }
 
     /**
-     * Attaches NBT data (Block Entity data) to this block.
-     * @param data The {@link BlockEntityNBT} object containing the data structure.
-     * @return This Block instance for chaining.
+     * Attaches Block Entity (NBT) data to this block.
+     * @param data The {@link BlockEntityNBT} structure containing the data.
+     * @return This Block instance for fluent chaining.
      */
     public Block withData(BlockEntityNBT<?> data) {
         this.data = data;
@@ -82,47 +89,51 @@ public class Block {
 
     /**
      * Serializes the complete block state into a Minecraft-ready command string.
-     * <p><b>Process:</b>
-     * 1. Appends the resource location.<br>
-     * 2. Formats block states into bracketed {@code [key=value]} syntax.<br>
-     * 3. Appends Stringified NBT (SNBT) if data is present and non-empty.
+     * <p><b>Logic:</b>
+     * 1. Validates the {@link BlockIdentifier}.<br>
+     * 2. Processes {@link BlockState}s into the {@code [key=value]} bracket format.<br>
+     * 3. Utilizes {@link TagConverter} to transform the NBT object into SNBT (Stringified NBT).
      * </p>
-     * @return A formatted Minecraft block string (e.g., {@code minecraft:chest[facing=north]{Items:[...]}}).
-     * @throws IllegalStateException if the underlying ID validation fails.
+     * <p><b>Error Catching:</b> Handles potential serialization failures from the
+     * NBT builder or state streams, throwing informative exceptions if data is malformed.</p>
+     * @return A formatted Minecraft block string (e.g., {@code minecraft:stone[lit=true]{...}}).
+     * @throws IllegalStateException if ID validation fails or NBT serialization crashes.
      */
     public String getAsCommandString() {
-        // Ensure the ID is still valid before building
-        id.validate();
+        // 1. Ensure the ID is valid (no nulls or illegal characters)
+        try {
+            id.validate();
+        } catch (Exception e) {
+            throw new IllegalStateException("Block ID validation failed for identifier: " + id, e);
+        }
 
         StringBuilder builder = new StringBuilder(id.getResourceLocation());
 
-        // 1. Process Block States: [key=value,key=value]
+        // 2. Process Block States: [key=value,key=value]
         if (!states.isEmpty()) {
-            try {
-                String stateString = states.stream()
-                        .filter(Objects::nonNull) // Defensive check
-                        .map(s -> s.getKey() + "=" + s.getValue())
-                        .collect(Collectors.joining(","));
+            String stateString = states.stream()
+                    .filter(Objects::nonNull)
+                    .map(s -> s.getKey() + "=" + s.getValue())
+                    .collect(Collectors.joining(","));
 
-                if (!stateString.isEmpty()) {
-                    builder.append("[").append(stateString).append("]");
-                }
-            } catch (Exception e) {
-                throw new IllegalStateException("Failed to serialize block states for: " + id, e);
+            if (!stateString.isEmpty()) {
+                builder.append("[").append(stateString).append("]");
             }
         }
 
-        // 2. Process NBT Data: {key:value}
+        // 3. Process NBT Data: {key:value}
         if (data != null) {
             try {
-                // build() returns the CompoundTag; we use its SNBT (Stringified NBT) form
-                String nbtString = data.build().toString();
-                // Avoid adding empty brackets which can cause command syntax errors in some versions
+                // CATCHING ERROR: data.build().toString() would return a memory reference.
+                // We MUST use TagConverter.toJson to get actual SNBT for the command.
+                String nbtString = TagConverter.toJson(data.build());
+
+                // Guard against adding empty braces which can cause syntax errors in certain commands
                 if (nbtString != null && !nbtString.equals("{}") && !nbtString.isEmpty()) {
                     builder.append(nbtString);
                 }
             } catch (Exception e) {
-                throw new IllegalStateException("Failed to serialize NBT data for: " + id, e);
+                throw new IllegalStateException("Critical failure serializing NBT data for block: " + id.getResourceLocation(), e);
             }
         }
 
@@ -130,7 +141,7 @@ public class Block {
     }
 
     /**
-     * Alias for {@link #getAsCommandString()} to support standard Java string behavior.
+     * Alias for {@link #getAsCommandString()} to support standard Java string concatenation.
      * @return The serialized block string.
      */
     @Override
