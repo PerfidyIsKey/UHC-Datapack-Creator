@@ -1293,20 +1293,20 @@ public class Main {
                 .slot(ItemSlot.MAINHAND)
                 .replaceWith(
                         ItemStack.create(ItemId.TRIDENT)
-                                .addComponent(CustomNameComponent.create(
+                                .with(CustomNameComponent.create(
                                         TextComponent.text("aA").color(TextColor.WHITE).obfuscated(true)
                                                 .append(TextComponent.text("The").color(HexColor.create("#8C3CC1")).bold(true))
                                                 .append(TextComponent.text(" Impaler ").color(HexColor.create("#E280FF")).bold(true))
                                                 .append(TextComponent.text("Aa").color(TextColor.WHITE).obfuscated(true))))
-                                .addComponent(LoreComponent.create(TextComponent.text("This holy weapon impales anything it touches")))
-                                .addComponent(DamageComponent.create(0))
-                                .addComponent(EnchantmentsComponent.create()
+                                .with(LoreComponent.create(TextComponent.text("This holy weapon impales anything it touches")))
+                                .with(DamageComponent.create(0))
+                                .with(EnchantmentsComponent.create()
                                         .add(EnchantmentId.FIRE_ASPECT, 255)
                                         .add(EnchantmentId.SHARPNESS, 255)
                                         .add(EnchantmentId.IMPALING, 255)
                                         .add(EnchantmentId.LOYALTY, 255)
                                         .add(EnchantmentId.EFFICIENCY, 255))
-                                .addComponent(AttributeModifiersComponent.create()
+                                .with(AttributeModifiersComponent.create()
                                         .add(AttributeModifiersComponent.Entry.create(
                                                         AttributeType.ARMOR,
                                                         AttributeModifierId.BASE_ARMOR,
@@ -1334,7 +1334,7 @@ public class Main {
                             ItemTargetEntity.create(Entity.ofSelector(TargetSelector.SENDER)))
                     .slot(ItemSlot.HOTBAR.withSlotNumber(0))
                     .replaceWith(ItemStack.create(ItemId.SPLASH_POTION)
-                            .addComponent(PotionContentsComponent.create()
+                            .with(PotionContentsComponent.create()
                                     .customColor("808080")
                                     .addEffect(PotionContentsComponent.CustomEffect.create(
                                         EffectId.SPEED,
@@ -1343,15 +1343,15 @@ public class Main {
                                             .particles(false)
                                             .icon(false)
                                             .ambient(false)))
-                            .addComponent(LoreComponent.create(TextComponent.text("Set operational mode to Developer Mode.")))
-                            .addComponent(CustomNameComponent.create(TextComponent.text("Developer Mode"))))
+                            .with(LoreComponent.create(TextComponent.text("Set operational mode to Developer Mode.")))
+                            .with(CustomNameComponent.create(TextComponent.text("Developer Mode"))))
                             .build());
             fileCommands.add(Item.create(
                             ItemCommand.ItemAction.REPLACE_WITH,
                             ItemTargetEntity.create(Entity.ofSelector(TargetSelector.SENDER)))
                     .slot(ItemSlot.HOTBAR.withSlotNumber(1))
                     .replaceWith(ItemStack.create(ItemId.SPLASH_POTION)
-                            .addComponent(PotionContentsComponent.create()
+                            .with(PotionContentsComponent.create()
                                     .customColor("FF9933")
                                     .addEffect(PotionContentsComponent.CustomEffect.create(
                                                     EffectId.WEAKNESS,
@@ -1360,15 +1360,15 @@ public class Main {
                                             .particles(false)
                                             .icon(false)
                                             .ambient(false)))
-                            .addComponent(LoreComponent.create(TextComponent.text("Assign players to teams.")))
-                            .addComponent(CustomNameComponent.create(TextComponent.text("Assign Teams"))))
+                            .with(LoreComponent.create(TextComponent.text("Assign players to teams.")))
+                            .with(CustomNameComponent.create(TextComponent.text("Assign Teams"))))
                     .build());
             fileCommands.add(Item.create(
                             ItemCommand.ItemAction.REPLACE_WITH,
                             ItemTargetEntity.create(Entity.ofSelector(TargetSelector.SENDER)))
                     .slot(ItemSlot.HOTBAR.withSlotNumber(2))
                     .replaceWith(ItemStack.create(ItemId.SPLASH_POTION)
-                            .addComponent(PotionContentsComponent.create()
+                            .with(PotionContentsComponent.create()
                                     .customColor("6633CC")
                                     .addEffect(PotionContentsComponent.CustomEffect.create(
                                                     EffectId.SLOW_FALLING,
@@ -1377,15 +1377,15 @@ public class Main {
                                             .particles(false)
                                             .icon(false)
                                             .ambient(false)))
-                            .addComponent(LoreComponent.create(TextComponent.text("Who will win this season?.")))
-                            .addComponent(CustomNameComponent.create(TextComponent.text("Predictions"))))
+                            .with(LoreComponent.create(TextComponent.text("Who will win this season?.")))
+                            .with(CustomNameComponent.create(TextComponent.text("Predictions"))))
                     .build());
             fileCommands.add(Item.create(
                             ItemCommand.ItemAction.REPLACE_WITH,
                             ItemTargetEntity.create(Entity.ofSelector(TargetSelector.SENDER)))
                     .slot(ItemSlot.HOTBAR.withSlotNumber(3))
                     .replaceWith(ItemStack.create(ItemId.SPLASH_POTION)
-                            .addComponent(PotionContentsComponent.create()
+                            .with(PotionContentsComponent.create()
                                     .customColor("3399FF")
                                     .addEffect(PotionContentsComponent.CustomEffect.create(
                                                     EffectId.INVISIBILITY,
@@ -1394,15 +1394,15 @@ public class Main {
                                             .particles(false)
                                             .icon(false)
                                             .ambient(false)))
-                            .addComponent(LoreComponent.create(TextComponent.text("Allow players to gather in their Discord channel.")))
-                            .addComponent(CustomNameComponent.create(TextComponent.text("Into Calls"))))
+                            .with(LoreComponent.create(TextComponent.text("Allow players to gather in their Discord channel.")))
+                            .with(CustomNameComponent.create(TextComponent.text("Into Calls"))))
                     .build());
             fileCommands.add(Item.create(
                             ItemCommand.ItemAction.REPLACE_WITH,
                             ItemTargetEntity.create(Entity.ofSelector(TargetSelector.SENDER)))
                     .slot(ItemSlot.HOTBAR.withSlotNumber(4))
                     .replaceWith(ItemStack.create(ItemId.SPLASH_POTION)
-                            .addComponent(PotionContentsComponent.create()
+                            .with(PotionContentsComponent.create()
                                     .customColor("00CC66")
                                     .addEffect(PotionContentsComponent.CustomEffect.create(
                                                     EffectId.POISON,
@@ -1411,15 +1411,15 @@ public class Main {
                                             .particles(false)
                                             .icon(false)
                                             .ambient(false)))
-                            .addComponent(LoreComponent.create(TextComponent.text("Spread players across the map.")))
-                            .addComponent(CustomNameComponent.create(TextComponent.text("Spread players"))))
+                            .with(LoreComponent.create(TextComponent.text("Spread players across the map.")))
+                            .with(CustomNameComponent.create(TextComponent.text("Spread players"))))
                     .build());
             fileCommands.add(Item.create(
                             ItemCommand.ItemAction.REPLACE_WITH,
                             ItemTargetEntity.create(Entity.ofSelector(TargetSelector.SENDER)))
                     .slot(ItemSlot.HOTBAR.withSlotNumber(5))
                     .replaceWith(ItemStack.create(ItemId.SPLASH_POTION)
-                            .addComponent(PotionContentsComponent.create()
+                            .with(PotionContentsComponent.create()
                                     .customColor("CC3333")
                                     .addEffect(PotionContentsComponent.CustomEffect.create(
                                                     EffectId.STRENGTH,
@@ -1428,15 +1428,15 @@ public class Main {
                                             .particles(false)
                                             .icon(false)
                                             .ambient(false)))
-                            .addComponent(LoreComponent.create(TextComponent.text("Set operational mode to Ready to Play.")))
-                            .addComponent(CustomNameComponent.create(TextComponent.text("Survival Mode"))))
+                            .with(LoreComponent.create(TextComponent.text("Set operational mode to Ready to Play.")))
+                            .with(CustomNameComponent.create(TextComponent.text("Survival Mode"))))
                     .build());
             fileCommands.add(Item.create(
                             ItemCommand.ItemAction.REPLACE_WITH,
                             ItemTargetEntity.create(Entity.ofSelector(TargetSelector.SENDER)))
                     .slot(ItemSlot.HOTBAR.withSlotNumber(6))
                     .replaceWith(ItemStack.create(ItemId.SPLASH_POTION)
-                            .addComponent(PotionContentsComponent.create()
+                            .with(PotionContentsComponent.create()
                                     .customColor("00FF7F")
                                     .addEffect(PotionContentsComponent.CustomEffect.create(
                                                     EffectId.SLOWNESS,
@@ -1445,8 +1445,8 @@ public class Main {
                                             .particles(false)
                                             .icon(false)
                                             .ambient(false)))
-                            .addComponent(LoreComponent.create(TextComponent.text("Start the game. Good luck!")))
-                            .addComponent(CustomNameComponent.create(TextComponent.text("Start Game"))))
+                            .with(LoreComponent.create(TextComponent.text("Start the game. Good luck!")))
+                            .with(CustomNameComponent.create(TextComponent.text("Start Game"))))
                     .build());
         } else {
             fileCommands.add(Item.create(
@@ -1454,7 +1454,7 @@ public class Main {
                             ItemTargetEntity.create(Entity.ofSelector(TargetSelector.SENDER)))
                     .slot(ItemSlot.HOTBAR.withSlotNumber(0))
                     .replaceWith(ItemStack.create(ItemId.SPLASH_POTION)
-                            .addComponent(PotionContentsComponent.create()
+                            .with(PotionContentsComponent.create()
                                     .customColor("808080")
                                     .addEffect(PotionContentsComponent.CustomEffect.create(
                                                     EffectId.SPEED,
@@ -1463,15 +1463,15 @@ public class Main {
                                             .particles(false)
                                             .icon(false)
                                             .ambient(false)))
-                            .addComponent(LoreComponent.create(TextComponent.text("Set operational mode to Developer Mode.")))
-                            .addComponent(CustomNameComponent.create(TextComponent.text("Developer Mode"))))
+                            .with(LoreComponent.create(TextComponent.text("Set operational mode to Developer Mode.")))
+                            .with(CustomNameComponent.create(TextComponent.text("Developer Mode"))))
                     .build());
             fileCommands.add(Item.create(
                             ItemCommand.ItemAction.REPLACE_WITH,
                             ItemTargetEntity.create(Entity.ofSelector(TargetSelector.SENDER)))
                     .slot(ItemSlot.HOTBAR.withSlotNumber(1))
                     .replaceWith(ItemStack.create(ItemId.SPLASH_POTION)
-                            .addComponent(PotionContentsComponent.create()
+                            .with(PotionContentsComponent.create()
                                     .customColor("6633CC")
                                     .addEffect(PotionContentsComponent.CustomEffect.create(
                                                     EffectId.SLOW_FALLING,
@@ -1480,15 +1480,15 @@ public class Main {
                                             .particles(false)
                                             .icon(false)
                                             .ambient(false)))
-                            .addComponent(LoreComponent.create(TextComponent.text("Who will win this season?.")))
-                            .addComponent(CustomNameComponent.create(TextComponent.text("Predictions"))))
+                            .with(LoreComponent.create(TextComponent.text("Who will win this season?.")))
+                            .with(CustomNameComponent.create(TextComponent.text("Predictions"))))
                     .build());
             fileCommands.add(Item.create(
                             ItemCommand.ItemAction.REPLACE_WITH,
                             ItemTargetEntity.create(Entity.ofSelector(TargetSelector.SENDER)))
                     .slot(ItemSlot.HOTBAR.withSlotNumber(2))
                     .replaceWith(ItemStack.create(ItemId.SPLASH_POTION)
-                            .addComponent(PotionContentsComponent.create()
+                            .with(PotionContentsComponent.create()
                                     .customColor("3399FF")
                                     .addEffect(PotionContentsComponent.CustomEffect.create(
                                                     EffectId.INVISIBILITY,
@@ -1497,15 +1497,15 @@ public class Main {
                                             .particles(false)
                                             .icon(false)
                                             .ambient(false)))
-                            .addComponent(LoreComponent.create(TextComponent.text("Allow players to gather in their Discord channel.")))
-                            .addComponent(CustomNameComponent.create(TextComponent.text("Into Calls"))))
+                            .with(LoreComponent.create(TextComponent.text("Allow players to gather in their Discord channel.")))
+                            .with(CustomNameComponent.create(TextComponent.text("Into Calls"))))
                     .build());
             fileCommands.add(Item.create(
                             ItemCommand.ItemAction.REPLACE_WITH,
                             ItemTargetEntity.create(Entity.ofSelector(TargetSelector.SENDER)))
                     .slot(ItemSlot.HOTBAR.withSlotNumber(3))
                     .replaceWith(ItemStack.create(ItemId.SPLASH_POTION)
-                            .addComponent(PotionContentsComponent.create()
+                            .with(PotionContentsComponent.create()
                                     .customColor("00CC66")
                                     .addEffect(PotionContentsComponent.CustomEffect.create(
                                                     EffectId.POISON,
@@ -1514,15 +1514,15 @@ public class Main {
                                             .particles(false)
                                             .icon(false)
                                             .ambient(false)))
-                            .addComponent(LoreComponent.create(TextComponent.text("Spread players across the map.")))
-                            .addComponent(CustomNameComponent.create(TextComponent.text("Spread players"))))
+                            .with(LoreComponent.create(TextComponent.text("Spread players across the map.")))
+                            .with(CustomNameComponent.create(TextComponent.text("Spread players"))))
                     .build());
             fileCommands.add(Item.create(
                             ItemCommand.ItemAction.REPLACE_WITH,
                             ItemTargetEntity.create(Entity.ofSelector(TargetSelector.SENDER)))
                     .slot(ItemSlot.HOTBAR.withSlotNumber(4))
                     .replaceWith(ItemStack.create(ItemId.SPLASH_POTION)
-                            .addComponent(PotionContentsComponent.create()
+                            .with(PotionContentsComponent.create()
                                     .customColor("CC3333")
                                     .addEffect(PotionContentsComponent.CustomEffect.create(
                                                     EffectId.STRENGTH,
@@ -1531,15 +1531,15 @@ public class Main {
                                             .particles(false)
                                             .icon(false)
                                             .ambient(false)))
-                            .addComponent(LoreComponent.create(TextComponent.text("Set operational mode to Ready to Play.")))
-                            .addComponent(CustomNameComponent.create(TextComponent.text("Survival Mode"))))
+                            .with(LoreComponent.create(TextComponent.text("Set operational mode to Ready to Play.")))
+                            .with(CustomNameComponent.create(TextComponent.text("Survival Mode"))))
                     .build());
             fileCommands.add(Item.create(
                             ItemCommand.ItemAction.REPLACE_WITH,
                             ItemTargetEntity.create(Entity.ofSelector(TargetSelector.SENDER)))
                     .slot(ItemSlot.HOTBAR.withSlotNumber(5))
                     .replaceWith(ItemStack.create(ItemId.SPLASH_POTION)
-                            .addComponent(PotionContentsComponent.create()
+                            .with(PotionContentsComponent.create()
                                     .customColor("00FF7F")
                                     .addEffect(PotionContentsComponent.CustomEffect.create(
                                                     EffectId.SLOWNESS,
@@ -1548,8 +1548,8 @@ public class Main {
                                             .particles(false)
                                             .icon(false)
                                             .ambient(false)))
-                            .addComponent(LoreComponent.create(TextComponent.text("Start the game. Good luck!")))
-                            .addComponent(CustomNameComponent.create(TextComponent.text("Start Game"))))
+                            .with(LoreComponent.create(TextComponent.text("Start the game. Good luck!")))
+                            .with(CustomNameComponent.create(TextComponent.text("Start Game"))))
                     .build());
         }
 
