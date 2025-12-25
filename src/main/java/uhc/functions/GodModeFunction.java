@@ -105,11 +105,10 @@ public class GodModeFunction implements DatapackFunction {
                 .replaceWith(
                         ComponentItemStack.create(ItemId.TRIDENT)
                                 .addComponent(CustomNameComponent.create(
-                                        TextComponent.array(List.of(
-                                                TextComponent.text("aA").color(TextColor.WHITE).obfuscated(true),
-                                                TextComponent.text("The").color(HexColor.create("#8C3CC1")).bold(true),
-                                                TextComponent.text(" Impaler ").color(HexColor.create("#E280FF")).bold(true),
-                                                TextComponent.text("Aa").color(TextColor.WHITE).obfuscated(true)))))
+                                        TextComponent.text("aA").color(TextColor.WHITE).obfuscated(true)
+                                                .append(TextComponent.text("The").color(HexColor.create("#8C3CC1")).bold(true))
+                                                .append(TextComponent.text(" Impaler ").color(HexColor.create("#E280FF")).bold(true))
+                                                .append(TextComponent.text("Aa").color(TextColor.WHITE).obfuscated(true))))
                                 .addComponent(LoreComponent.create(TextComponent.text("This holy weapon impales anything it touches")))
                                 .addComponent(DamageComponent.create(0))
                                 .addComponent(EnchantmentsComponent.create()
