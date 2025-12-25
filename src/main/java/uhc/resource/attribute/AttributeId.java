@@ -86,7 +86,7 @@ public enum AttributeId implements ResourceLocation {
     // --- 🛰️ Custom Project Attributes ---
 
     /** Custom attribute defining the range for waypoint data transmission. */
-    WAYPOINT_TRANSMIT_RANGE(DatapackConfig.CUSTOM_NAMESPACE);
+    WAYPOINT_TRANSMIT_RANGE;
 
     // --- ⚙️ State & Fields ---
 
