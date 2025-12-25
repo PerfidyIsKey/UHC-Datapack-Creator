@@ -1,10 +1,8 @@
 package uhc.command.commands;
 
 import uhc.arguments.entity.Entity;
-import uhc.arguments.itempredicate.ItemPredicate;
+import uhc.arguments.item.ItemPredicate;
 import uhc.command.MinecraftCommand;
-
-import java.util.Objects;
 
 /**
  * 🧹 **Clear Command Builder**

@@ -11,8 +11,8 @@ import uhc.arguments.block.ColumnPos;
 import uhc.arguments.entity.Entity;
 import uhc.arguments.block.*;
 import uhc.arguments.coordinate.Vec3;
+import uhc.arguments.item.ItemPredicate;
 import uhc.arguments.item.ItemStack;
-import uhc.arguments.itempredicate.SimpleItemPredicate;
 import uhc.arguments.particle.ParticleArgument;
 import uhc.arguments.particle.ParticleArgumentBuilder;
 import uhc.arguments.entity.SelectorArgumentsBuilder;
@@ -50,8 +50,6 @@ import uhc.arguments.slot.ItemSlot;
 import uhc.data.resource.*;
 import uhc.game.*;
 import uhc.data.nbt.tags.ByteTag;
-import uhc.data.nbt.tags.IntTag;
-import uhc.data.nbt.tags.StringTag;
 import uhc.resource.*;
 import uhc.resource.attribute.AttributeDisplayType;
 import uhc.resource.attribute.AttributeModifierId;
@@ -3396,12 +3394,12 @@ public class Main {
         }
 
         // Remove player heads
-        fileCommands.add(Execute.As("@a[nbt={Inventory:[{id:\"" + ItemId.PLAYER_HEAD + "\"}]}]") +
+        fileCommands.add(Execute.As("@a[nbt={Inventory:[{id:\"" + BlockId.PLAYER_HEAD + "\"}]}]") +
                 ClearCommand.create()
                         .targets(Entity.ofSelector(TargetSelector.SENDER))
-                        .item(SimpleItemPredicate.create(ItemId.PLAYER_HEAD))
+                        .item(ItemPredicate.create(BlockId.PLAYER_HEAD))
                         .generate());  // Remove from inventory
-        fileCommands.add(Execute.As("@e[type=" + EntityId.ITEM + ",nbt={Item:{id:\"" + ItemId.PLAYER_HEAD + "\"}}]") +
+        fileCommands.add(Execute.As("@e[type=" + EntityId.ITEM + ",nbt={Item:{id:\"" + BlockId.PLAYER_HEAD + "\"}}]") +
                 KillCommand.create().targets(Entity.ofSelector(TargetSelector.SENDER)).generate());   // Remove item
 
         // Teammate tracker
@@ -3789,7 +3787,7 @@ public class Main {
                                 SelectorArgumentsBuilder.create()
                                         .limit(2)
                                         .gamemode(GameModeId.SPECTATOR, true)))
-                        .item(SimpleItemPredicate.create(ItemId.GOAT_HORN))
+                        .item(ItemPredicate.create(ItemId.GOAT_HORN))
                         .generate());
 
 
