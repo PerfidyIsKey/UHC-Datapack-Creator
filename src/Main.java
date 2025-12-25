@@ -3998,10 +3998,10 @@ public class Main {
                     Schedule.callFunction(functions[i]));
 
             fileCommands.add(Execute.If("@a[nbt={active_effects:[{id:\"" + effects[i] + "\"}]}]") +
-                    Effect.create(EffectCommand.EffectAction.CLEAR)
+                    EffectCommand.create(EffectCommand.EffectAction.CLEAR)
                             .targets(Entity.ofSelector(TargetSelector.ALL_ENTITIES))
                             .effect(effects[i])
-                            .build());
+                            .generate());
         }
 
         return new FileData(FileName.developer_potion_control, fileCommands);
