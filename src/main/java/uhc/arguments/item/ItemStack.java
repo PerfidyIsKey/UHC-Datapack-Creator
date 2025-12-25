@@ -1,6 +1,7 @@
 package uhc.arguments.item;
 
 import uhc.data.nbt.item.components.ItemComponent;
+import uhc.data.nbt.util.TagConverter;
 import uhc.resource.item.ItemResource;
 import uhc.resource.item.components.ComponentId;
 
@@ -22,12 +23,13 @@ public class ItemStack {
 
     // --- ⚙️ State & Fields ---
 
-    /** * The base item type (e.g., minecraft:diamond_sword).
+    /** * The base item type (e.g., {@code minecraft:diamond_sword}).
      * This field is immutable to ensure the identity of the stack remains constant.
      */
     private final ItemResource itemResource;
 
     /** * Internal list of components to be added or modified on the stack.
+     * Maps to the {@code id=value} syntax inside the component brackets.
      */
     private final List<ItemComponent> components = new ArrayList<>();
 
@@ -51,13 +53,13 @@ public class ItemStack {
      * <p><b>Error Catching:</b> Validates that the provided resource is not null
      * and calls its {@code validate()} method to ensure legal Minecraft syntax.</p>
      * @param itemResource The base item type (supports {@code ItemId} or {@code DynamicItem}).
-     * @return A new ItemStack instance ready for modification.
+     * @return A new {@link ItemStack} instance ready for modification.
      * @throws NullPointerException if itemResource is null.
      * @throws IllegalStateException if itemResource has an invalid syntax.
      */
     public static ItemStack create(ItemResource itemResource) {
         Objects.requireNonNull(itemResource, "Item resource cannot be null.");
-        // Ensure the resource is valid before starting the build process
+        // Ensure the resource is valid (e.g. check for illegal characters) before starting
         itemResource.validate();
         return new ItemStack(itemResource);
     }
@@ -67,7 +69,7 @@ public class ItemStack {
     /**
      * Adds a data component to the item stack.
      * <p><b>Format:</b> {@code component_id=value}</p>
-     * @param component The component implementation (e.g., Damage, CustomName).
+     * @param component The component implementation (e.g., Enchantments, CustomData).
      * @return This instance for method chaining.
      * @throws NullPointerException if component is null.
      */
@@ -94,11 +96,14 @@ public class ItemStack {
 
     /**
      * Builds the final SNBT string ready for use in Minecraft commands.
-     * <p><b>Logic:</b> Aggregates all removals and additions into a comma-separated list
-     * enclosed in square brackets.</p>
-     * <p>Example Output: {@code minecraft:iron_sword[damage=5,!enchantments]}</p>
+     * <p>
+     * <b>Logic:</b> Aggregates all removals and additions. Specifically utilizes
+     * {@link TagConverter#toJson(uhc.data.nbt.NBTTag)} to prevent Java memory
+     * addresses from appearing in the command string.
+     * </p>
+     * <p>Example Output: {@code minecraft:bundle[custom_data={test:1b},!repair_cost]}</p>
      * @return A formatted string representing the full item stack.
-     * @throws IllegalStateException if the item resource location is missing.
+     * @throws IllegalStateException if the item resource location is missing or blank.
      */
     public String build() {
         String baseId = itemResource.getResourceLocation();
@@ -116,8 +121,13 @@ public class ItemStack {
 
         // 2. Process additions and modifications (id=value)
         for (ItemComponent component : components) {
-            // Note: toNbt().toString() must return valid SNBT for the command line
-            entries.add(component.getId().getResourceLocation() + "=" + component.toNbt().toString());
+            // FIX: Use TagConverter.toJson to get valid SNBT instead of .toString()
+            String snbtValue = TagConverter.toJson(component.toNbt());
+
+            // Check for potential null/empty returns from converter
+            if (snbtValue != null && !snbtValue.isEmpty()) {
+                entries.add(component.getId().getResourceLocation() + "=" + snbtValue);
+            }
         }
 
         // 3. Append component block if entries exist
@@ -132,7 +142,7 @@ public class ItemStack {
 
     /**
      * Returns the formatted item stack string. Equivalent to calling {@link #build()}.
-     * @return The built string.
+     * @return The built command-ready string.
      */
     @Override
     public String toString() {
