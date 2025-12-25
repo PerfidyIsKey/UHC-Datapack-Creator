@@ -1172,7 +1172,7 @@ public class Main {
                     Execute.InNext(currentCP.getCoordinate().getDimension(), true) +
                     SetBlockCommand.create(
                                     BlockPos.absolute(currentCP.getCoordinate().getX(), currentCP.getCoordinate().getY() + 1, currentCP.getCoordinate().getZ()),
-                                    DynamicBlock.create(ColorableBlockId.STAINED_GLASS.withColor(team.getDyeColor())))
+                                    Block.create(ColorableBlockId.STAINED_GLASS.withColor(team.getDyeColor())))
                             .mode(SetBlockCommand.SetMode.REPLACE)
                             .generate());
         }
@@ -2903,7 +2903,7 @@ public class Main {
             fileCommands.add(Execute.In(c.getDimension()) +
                     SetBlockCommand.create(
                                     BlockPos.absolute(c.getX(), c.getY() + 11, c.getZ()),
-                                    DynamicBlock.create(
+                                    Block.create(
                                             StaticBlockId.STRUCTURE_BLOCK,
                                             BlockState.create()
                                                     .mode(StructureBlockMode.LOAD),
