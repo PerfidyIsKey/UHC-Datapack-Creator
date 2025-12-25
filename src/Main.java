@@ -2737,10 +2737,8 @@ public class Main {
                                         TargetSelector.ALL_ENTITIES,
                                         SelectorArgumentsBuilder.create()
                                                 .type(EntityId.FALLING_BLOCK)
-                                                .nbt(FallingBlockNbtBuilder.create(
-                                                                FallingBlockData.create(
-                                                                        new StaticEntityTag[]{StaticEntityTag.CARE_PACKAGE}))
-                                                        .buildNbt())))
+                                                .nbt(FallingBlockNBT.create()
+                                                        .tags(List.of("CarePackage")))))
                         .generate());
 
         // Give admin tag for disabling self-rescheduling
@@ -2952,12 +2950,9 @@ public class Main {
                         TargetSelector.ALL_ENTITIES,
                         SelectorArgumentsBuilder.create()
                                 .type(EntityId.ITEM)
-                                .nbt(ItemNbtBuilder.create(
-                                                        ItemData.create(
-                                                                ItemId.MUSIC_DISC_STAL,
-                                                                1))
-                                                .buildNbt())))
-                .generate());
+                                .nbt(ItemNBT.create(ItemId.MUSIC_DISC_STAL)
+                                                .count(1))))
+                        .generate());
 
         return new FileData(FileName.spawn_control_points, fileCommands);
     }

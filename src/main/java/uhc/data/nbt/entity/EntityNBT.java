@@ -1,5 +1,6 @@
 package uhc.data.nbt.entity;
 
+import uhc.data.nbt.BuildableNBT;
 import uhc.data.nbt.tags.*;
 import uhc.text.TextComponent;
 
@@ -10,52 +11,71 @@ import java.util.List;
 /**
  * 🧬 **Generic Entity NBT Builder**
  * <p>
- * A fluent builder for generic Minecraft entity data.
+ * A fluent builder for generic Minecraft entity data (1.20.5+).
  * This class serves as the base for all entity-specific builders (mobs, items, projectiles).
  * </p>
- * <p>
- * <b>Technical Note:</b> Uses recursive generics {@code <T extends EntityNBT<T>>} to ensure
- * that methods called from the base class return the specific subclass type, preserving
- * the fluent chaining API.
- * </p>
- * @param <T> The specific type of the builder (Self-reference)
+ *
+ * @param <T> The specific type of the builder (Self-reference for fluent inheritance).
  */
+public abstract class EntityNBT<T extends EntityNBT<T>> implements BuildableNBT {
 
-public abstract class EntityNBT<T extends EntityNBT<T>> {
+    // --- Private Fields ---
+
+    /** * The root NBT compound where all entity attributes are stored.
+     */
     private final CompoundTag root;
+
+    // --- Constructor ---
 
     /**
      * Protected constructor for subclasses.
-     * @param root The root CompoundTag where data will be stored.
+     * @param root The root {@link CompoundTag} where data will be stored.
+     * @throws NullPointerException if root is null.
      */
     protected EntityNBT(CompoundTag root) {
         this.root = Objects.requireNonNull(root, "Root CompoundTag cannot be null.");
     }
 
-    // --- 🆔 Identity and Generic Data ---
+    // --- Internal Helpers ---
 
-    /** * Sets the namespaced ID of the entity.
-     * <p><b>Requirement:</b> This is mandatory for entities inside the {@code Passengers} list.</p>
-     * @param entityId Namespaced ID (e.g., "minecraft:zombie").
-     * @return {@code (T)} The specific builder instance.
+    /**
+     * Casts 'this' to the generic type T without using SuppressWarnings.
+     * @return This instance cast to the subclass type.
      */
-    public T id(String entityId) {
-        root.put(new StringTag("id", Objects.requireNonNull(entityId, "Entity ID cannot be null.")));
+    protected T self() {
         return (T) this;
     }
 
-    /** * Sets the 'data' compound.
-     * In 1.20.5+, this is frequently used for custom technical data or Marker entity storage.
+    // --- 🆔 Identity and Generic Data ---
+
+    /** * Sets the namespaced ID of the entity.
+     * <p><b>Requirement:</b> Mandatory for entities inside the {@code Passengers} list.</p>
+     * @param entityId Namespaced ID (e.g., "minecraft:zombie").
+     * @return The specific builder instance.
+     * @throws NullPointerException if entityId is null.
+     */
+    public T id(String entityId) {
+        Objects.requireNonNull(entityId, "Entity ID cannot be null.");
+        root.put(new StringTag("id", entityId));
+        return self();
+    }
+
+    /** * Sets the 'data' compound for custom technical data.
+     * @param customData The compound to store.
+     * @return The specific builder instance.
+     * @throws NullPointerException if customData is null.
      */
     public T data(CompoundTag customData) {
         Objects.requireNonNull(customData, "Custom data compound cannot be null.");
         customData.setName("data");
         root.put(customData);
-        return (T) this;
+        return self();
     }
 
-    /** * Sets the entity's UUID using the modern Int-Array format.
-     * <p>Logic: Splits the 128-bit UUID into four 32-bit signed integers.</p>
+    /** * Sets the entity's UUID using the Int-Array format.
+     * @param id The {@link UUID} to assign.
+     * @return The specific builder instance.
+     * @throws NullPointerException if id is null.
      */
     public T uuid(UUID id) {
         Objects.requireNonNull(id, "UUID cannot be null.");
@@ -66,13 +86,16 @@ public abstract class EntityNBT<T extends EntityNBT<T>> {
                 (int) (least >> 32), (int) least
         };
         root.put(new IntArrayTag("UUID", uuidArray));
-        return (T) this;
+        return self();
     }
 
     // --- 🏃 Movement and Physics ---
 
     /** * Sets absolute spawn coordinates.
-     * <b>Note:</b> Minecraft uses Doubles for high-precision positioning.
+     * @param x X-coordinate.
+     * @param y Y-coordinate.
+     * @param z Z-coordinate.
+     * @return The specific builder instance.
      */
     public T pos(double x, double y, double z) {
         ListTag posList = new ListTag("Pos");
@@ -80,11 +103,14 @@ public abstract class EntityNBT<T extends EntityNBT<T>> {
         posList.add(new DoubleTag("", y));
         posList.add(new DoubleTag("", z));
         root.put(posList);
-        return (T) this;
+        return self();
     }
 
     /** * Sets velocity vector (meters per tick).
-     * <b>Catch:</b> If Motion is set to 0,0,0, the entity will spawn stationary.
+     * @param dx Velocity X.
+     * @param dy Velocity Y.
+     * @param dz Velocity Z.
+     * @return The specific builder instance.
      */
     public T motion(double dx, double dy, double dz) {
         ListTag motionList = new ListTag("Motion");
@@ -92,113 +118,146 @@ public abstract class EntityNBT<T extends EntityNBT<T>> {
         motionList.add(new DoubleTag("", dy));
         motionList.add(new DoubleTag("", dz));
         root.put(motionList);
-        return (T) this;
+        return self();
     }
 
-    /** Sets Yaw (horizontal) and Pitch (vertical) rotation in degrees. */
+    /** * Sets horizontal (Yaw) and vertical (Pitch) rotation in degrees.
+     * @param yaw Horizontal rotation.
+     * @param pitch Vertical rotation.
+     * @return The specific builder instance.
+     */
     public T rotation(float yaw, float pitch) {
         ListTag rotList = new ListTag("Rotation");
         rotList.add(new FloatTag("", yaw));
         rotList.add(new FloatTag("", pitch));
         root.put(rotList);
-        return (T) this;
+        return self();
     }
 
-    /** Toggles gravity. If true, the entity floats or maintains its Y-velocity. */
+    /** * Toggles gravity for the entity.
+     * @param noGravity If true, gravity is disabled.
+     * @return The specific builder instance.
+     */
     public T noGravity(boolean noGravity) {
         root.put(new ByteTag("NoGravity", (byte) (noGravity ? 1 : 0)));
-        return (T) this;
+        return self();
     }
 
-    /** Sets whether the entity is touching the ground. */
+    /** * Sets whether the entity is touching the ground.
+     * @param onGround True if touching ground.
+     * @return The specific builder instance.
+     */
     public T onGround(boolean onGround) {
         root.put(new ByteTag("OnGround", (byte) (onGround ? 1 : 0)));
-        return (T) this;
+        return self();
     }
 
-    /** * Sets current fall distance.
-     * <b>Logic:</b> Clamped to 0 to avoid immediate fall-damage calculation errors on spawn.
+    /** * Sets current fall distance. Clamped to a minimum of 0.
+     * @param distance Fall distance in blocks.
+     * @return The specific builder instance.
      */
     public T fallDistance(double distance) {
         root.put(new DoubleTag("fall_distance", Math.max(0, distance)));
-        return (T) this;
+        return self();
     }
 
     // --- ✨ Status and Visuals ---
 
-    /** Toggles the glowing outline effect (spectral). */
+    /** * Toggles the glowing outline effect.
+     * @param glowing True if entity should glow.
+     * @return The specific builder instance.
+     */
     public T glowing(boolean glowing) {
         root.put(new ByteTag("Glowing", (byte) (glowing ? 1 : 0)));
-        return (T) this;
+        return self();
     }
 
-    /** If true, the entity cannot take damage from any source. */
+    /** * Sets whether the entity can take damage.
+     * @param invulnerable True for invulnerability.
+     * @return The specific builder instance.
+     */
     public T invulnerable(boolean invulnerable) {
         root.put(new ByteTag("Invulnerable", (byte) (invulnerable ? 1 : 0)));
-        return (T) this;
+        return self();
     }
 
-    /** If true, the entity produces no sounds (ambient, hurt, or death). */
+    /** * Toggles entity sounds.
+     * @param silent True if entity should be silent.
+     * @return The specific builder instance.
+     */
     public T silent(boolean silent) {
         root.put(new ByteTag("Silent", (byte) (silent ? 1 : 0)));
-        return (T) this;
+        return self();
     }
 
     // --- 🕰️ Environmental Timers ---
 
-    /** Sets air supply ticks (300 is full/15 seconds). */
+    /** * Sets air supply (300 is full). Clamped at 0.
+     * @param ticks Remaining air in ticks.
+     * @return The specific builder instance.
+     */
     public T air(short ticks) {
         root.put(new ShortTag("Air", (short) Math.max(0, ticks)));
-        return (T) this;
+        return self();
     }
 
-    /** Sets remaining fire ticks. Use {@code -20} for a non-burning state. */
+    /** * Sets remaining fire ticks (-20 for none).
+     * @param ticks Fire ticks.
+     * @return The specific builder instance.
+     */
     public T fire(short ticks) {
         root.put(new ShortTag("Fire", ticks));
-        return (T) this;
+        return self();
     }
 
-    // --- 📝 Strings and Logic Tags ---
+    // --- 📝 Strings and Custom Names ---
 
-    /** Sets the name shown above the entity. Stored as a JSON-formatted string. */
+    /** * Sets the custom name shown above the entity.
+     * @param component The {@link TextComponent} name.
+     * @return The specific builder instance.
+     * @throws NullPointerException if component is null.
+     */
     public T customName(TextComponent component) {
         Objects.requireNonNull(component, "TextComponent cannot be null.");
         root.put(new StringTag("CustomName", component.toString()));
-        return (T) this;
+        return self();
     }
 
-    /** Toggles the permanent visibility of the custom name. */
+    /** * Toggles permanent visibility of the custom name.
+     * @param visible True to always show name.
+     * @return The specific builder instance.
+     */
     public T customNameVisible(boolean visible) {
         root.put(new ByteTag("CustomNameVisible", (byte) (visible ? 1 : 0)));
-        return (T) this;
+        return self();
     }
 
-    /** * Adds scoreboard/technical tags.
-     * <b>Catch:</b> Clears existing tags if the provided list is null.
+    /** * Sets scoreboard tags. Passing null removes existing tags.
+     * @param scoreboardTags List of tag strings.
+     * @return The specific builder instance.
      */
     public T tags(List<String> scoreboardTags) {
         if (scoreboardTags == null) {
             root.remove("Tags");
-            return (T) this;
+            return self();
         }
         ListTag tagsList = new ListTag("Tags");
         for (String tag : scoreboardTags) {
             if (tag != null) tagsList.add(new StringTag("", tag));
         }
         root.put(tagsList);
-        return (T) this;
+        return self();
     }
 
     /**
-     * Adds one or more entities as passengers riding this entity.
-     * <p><b>Catch:</b> Each passenger MUST have its ID set via {@code .id()} to spawn correctly.</p>
+     * Adds passengers riding this entity.
      * @param passengers Builders for the riding entities.
-     * @return (T) Current builder.
+     * @return The specific builder instance.
      */
     public T passengers(EntityNBT<?>... passengers) {
         if (passengers == null || passengers.length == 0) {
             root.remove("Passengers");
-            return (T) this;
+            return self();
         }
 
         ListTag passengersList = (ListTag) root.get("Passengers");
@@ -208,28 +267,34 @@ public abstract class EntityNBT<T extends EntityNBT<T>> {
 
         for (EntityNBT<?> passenger : passengers) {
             if (passenger != null) {
-                // We build the passenger's NBT and add it to the stack
                 passengersList.add(passenger.build());
             }
         }
 
         root.put(passengersList);
-        return (T) this;
+        return self();
     }
 
-    // --- 🚀 Finalization ---
+    // --- 🚀 Terminal Methods ---
 
+    /** * Accessor for the internal root compound.
+     * @return The root {@link CompoundTag}.
+     */
     protected CompoundTag root() {
         return root;
     }
 
-    /** * Builds the final CompoundTag.
-     * @return The complete NBT root for the entity.
+    /** * Finalizes construction and returns the NBT root.
+     * @return The complete {@link CompoundTag}.
      */
+    @Override
     public CompoundTag build() {
         return root;
     }
 
+    /**
+     * @return The SNBT string of this entity.
+     */
     @Override
     public String toString() {
         return root.toString();
