@@ -32,6 +32,7 @@ import uhc.data.nbt.blockentity.state.WaterloggedState;
 import uhc.data.nbt.entity.dynamic_tiles.FallingBlockNBT;
 import uhc.data.nbt.entity.items.ItemEntityNBT;
 import uhc.data.nbt.entity.mobs.ArmorStandNBT;
+import uhc.data.nbt.entity.mobs.PlayerNBT;
 import uhc.data.nbt.entity.other.MarkerNBT;
 import uhc.data.nbt.entity.projectiles.FireworkRocketNBT;
 import uhc.data.nbt.item.ItemNBT;
@@ -3011,19 +3012,9 @@ public class Main {
         ItemTargetEntity target = ItemTargetEntity.create(Entity.ofSelector(
                 TargetSelector.NEAREST_PLAYER,
                 SelectorArgumentsBuilder.create()
-                        .nbt(ItemNBT.create()
-                                .put(ItemNBT.create(ItemNbtKey.SELECTED_ITEM.toString())
-                                        .put(new StringTag(
-                                                SelectedItemKey.ID.toString(),
-                                                ItemId.SPLASH_POTION.getResourceLocation()))
-                                        .put(new IntTag(
-                                                SelectedItemKey.COUNT.toString(),
-                                                1))
-                                        .put(ItemNBT.create(SelectedItemKey.COMPONENTS.toString())
-                                                .put(ItemNBT.create(ComponentsKey.POTION_CONTENTS.toString())
-                                                        .put(new StringTag(
-                                                                PotionContentsKey.POTION.toString(),
-                                                                EffectId.REGENERATION.getPotionTag()))))))));
+                        .nbt(PlayerNBT.create()
+                                .selectedItem(SingleItemStack.create(ItemId.SPLASH_POTION)
+                                        .addComponent(PotionContentsComponent.create(EffectId.REGENERATION))))));
         String targetOld = "@p[nbt={SelectedItem:{id:\"" + ItemId.SPLASH_POTION + "\",count:1,components:{\"minecraft:potion_contents\":{potion:\"" + EffectId.REGENERATION.getPotionTag() + "\"}}}}]";
         ItemStack replacement = SimpleItemStack.create(ItemId.GLASS_BOTTLE);
         fileCommands.add(Execute.If(targetOld) +

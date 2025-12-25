@@ -1,5 +1,6 @@
 package uhc.arguments.entity;
 
+import uhc.data.nbt.entity.EntityNBT;
 import uhc.data.nbt.tags.CompoundTag;
 import uhc.data.nbt.util.TagConverter;
 import uhc.resource.EntityTag;
@@ -13,15 +14,24 @@ import java.util.Map;
 import java.util.Objects;
 
 /**
- * Fluent builder for creating type-safe target selector arguments (e.g., [limit=1, type=!cow]).
- * This class handles the formatting of arguments into the required comma-separated string
- * enclosed in square brackets.
+ * 🎯 **Target Selector Argument Builder**
+ * <p>
+ * Fluent builder for creating type-safe Minecraft target selector arguments
+ * (e.g., {@code [limit=1, type=!cow, distance=..10]}).
+ * </p>
  */
 public class SelectorArgumentsBuilder {
+
+    /** Internal list of formatted "key=value" strings. */
     private final List<String> arguments = new ArrayList<>();
 
+    /** Private constructor to enforce factory method usage. */
     private SelectorArgumentsBuilder() {}
 
+    /**
+     * Initializes a new SelectorArgumentsBuilder.
+     * @return A fresh builder instance.
+     */
     public static SelectorArgumentsBuilder create() {
         return new SelectorArgumentsBuilder();
     }
@@ -30,7 +40,8 @@ public class SelectorArgumentsBuilder {
 
     /**
      * Sets the maximum number of entities to target.
-     * @param limit The number of entities to target (e.g., 1). Must be positive.
+     * @param limit The number of entities. Must be 1 or greater.
+     * @return This builder for chaining.
      */
     public SelectorArgumentsBuilder limit(int limit) {
         if (limit < 1) {
@@ -41,11 +52,12 @@ public class SelectorArgumentsBuilder {
     }
 
     /**
-     * Sets the distance range for the selector.
-     * @param range A valid Minecraft range string (e.g., "5..10", "..5", "10..").
+     * Sets the distance range (e.g., "5..10").
+     * @param range Raw range string.
+     * @return This builder for chaining.
      */
     public SelectorArgumentsBuilder distance(String range) {
-        if (range == null || range.trim().isEmpty()) {
+        if (range == null || range.isBlank()) {
             throw new IllegalArgumentException("Distance range cannot be null or empty.");
         }
         this.arguments.add("distance=" + range.trim());
@@ -53,79 +65,54 @@ public class SelectorArgumentsBuilder {
     }
 
     /**
-     * Sets the maximum distance for the selector, equivalent to "distance=..[range]".
-     * @param range The maximum distance (e.g., 10 results in "..10").
+     * Sets the maximum distance, formatting it as "..range".
+     * @param range Maximum distance. Must be non-negative.
+     * @return This builder for chaining.
      */
     public SelectorArgumentsBuilder distance(int range) {
         if (range < 0) {
             throw new IllegalArgumentException("Distance range must be non-negative.");
         }
-        // Defaults to a maximum distance range: "..10"
         this.arguments.add("distance=.." + range);
         return this;
     }
 
     // --- Coordinate & Volume Arguments ---
 
-    /**
-     * Sets the required X-coordinate for the selection origin.
-     * Often used in conjunction with {@code dy} and {@code dz}.
-     * @param x The absolute or relative X coordinate.
-     */
+    /** Sets the selection origin X coordinate. */
     public SelectorArgumentsBuilder x(String x) {
-        if (x == null || x.trim().isEmpty()) {
-            throw new IllegalArgumentException("X coordinate cannot be null or empty.");
-        }
+        if (x == null || x.isBlank()) throw new IllegalArgumentException("X cannot be blank.");
         this.arguments.add("x=" + x.trim());
         return this;
     }
 
-    /**
-     * Sets the required Y-coordinate for the selection origin.
-     * @param y The absolute or relative Y coordinate.
-     */
+    /** Sets the selection origin Y coordinate. */
     public SelectorArgumentsBuilder y(String y) {
-        if (y == null || y.trim().isEmpty()) {
-            throw new IllegalArgumentException("Y coordinate cannot be null or empty.");
-        }
+        if (y == null || y.isBlank()) throw new IllegalArgumentException("Y cannot be blank.");
         this.arguments.add("y=" + y.trim());
         return this;
     }
 
-    /**
-     * Sets the required Z-coordinate for the selection origin.
-     * @param z The absolute or relative Z coordinate.
-     */
+    /** Sets the selection origin Z coordinate. */
     public SelectorArgumentsBuilder z(String z) {
-        if (z == null || z.trim().isEmpty()) {
-            throw new IllegalArgumentException("Z coordinate cannot be null or empty.");
-        }
+        if (z == null || z.isBlank()) throw new IllegalArgumentException("Z cannot be blank.");
         this.arguments.add("z=" + z.trim());
         return this;
     }
 
-    /**
-     * Sets the required dimension of the selection box in the X-axis (delta X).
-     * @param dx The width of the selection box in the X-axis.
-     */
+    /** Sets the width of the selection volume (delta X). */
     public SelectorArgumentsBuilder dx(double dx) {
         this.arguments.add("dx=" + dx);
         return this;
     }
 
-    /**
-     * Sets the required dimension of the selection box in the Y-axis (delta Y).
-     * @param dy The height of the selection box in the Y-axis.
-     */
+    /** Sets the height of the selection volume (delta Y). */
     public SelectorArgumentsBuilder dy(double dy) {
         this.arguments.add("dy=" + dy);
         return this;
     }
 
-    /**
-     * Sets the required dimension of the selection box in the Z-axis (delta Z).
-     * @param dz The depth of the selection box in the Z-axis.
-     */
+    /** Sets the depth of the selection volume (delta Z). */
     public SelectorArgumentsBuilder dz(double dz) {
         this.arguments.add("dz=" + dz);
         return this;
@@ -133,185 +120,120 @@ public class SelectorArgumentsBuilder {
 
     // --- Rotation Arguments ---
 
-    /**
-     * Filters entities by their horizontal rotation (yaw).
-     * @param range A valid Minecraft range string (e.g., "-90..90").
-     */
+    /** Filters entities by horizontal rotation (yaw) range. */
     public SelectorArgumentsBuilder xRotation(String range) {
-        if (range == null || range.trim().isEmpty()) {
-            throw new IllegalArgumentException("X rotation range cannot be null or empty.");
-        }
+        if (range == null || range.isBlank()) throw new IllegalArgumentException("X rotation range cannot be blank.");
         this.arguments.add("x_rotation=" + range.trim());
         return this;
     }
 
-    /**
-     * Filters entities by their vertical rotation (pitch).
-     * @param range A valid Minecraft range string (e.g., "-90..90").
-     */
+    /** Filters entities by vertical rotation (pitch) range. */
     public SelectorArgumentsBuilder yRotation(String range) {
-        if (range == null || range.trim().isEmpty()) {
-            throw new IllegalArgumentException("Y rotation range cannot be null or empty.");
-        }
+        if (range == null || range.isBlank()) throw new IllegalArgumentException("Y rotation range cannot be blank.");
         this.arguments.add("y_rotation=" + range.trim());
         return this;
     }
 
-
     // --- Level/Experience Argument ---
 
-    /**
-     * Filters players by their experience level range.
-     * @param range A valid Minecraft range string (e.g., "10..20", "..5").
-     */
+    /** Filters players by their experience level range. */
     public SelectorArgumentsBuilder level(String range) {
-        if (range == null || range.trim().isEmpty()) {
-            throw new IllegalArgumentException("Level range cannot be null or empty.");
-        }
+        if (range == null || range.isBlank()) throw new IllegalArgumentException("Level range cannot be blank.");
         this.arguments.add("level=" + range.trim());
         return this;
     }
 
-
     // --- Type Arguments ---
 
-    /**
-     * Includes a specific entity type in the selection.
-     * @param type The required EntityType.
-     */
+    /** Filters by entity type. */
     public SelectorArgumentsBuilder type(EntityId type) {
         return type(type, false);
     }
 
-    /**
-     * Includes or excludes a specific entity type in the selection.
-     * @param type The required EntityType.
-     * @param not If true, excludes the type (e.g., {@code type=!cow}).
-     */
+    /** Filters or excludes by entity type. */
     public SelectorArgumentsBuilder type(EntityId type, Boolean not) {
         Objects.requireNonNull(type, "EntityType cannot be null.");
-        String prefix = not ? "!" : "";
+        String prefix = (not != null && not) ? "!" : "";
         this.arguments.add("type=" + prefix + type.getResourceLocation());
         return this;
     }
 
-
     // --- Tag Arguments ---
 
-    /**
-     * Includes entities that have a specific tag.
-     * @param tag The tag name (as an EntityTag object).
-     */
+    /** Filters by entity scoreboard tag. */
     public SelectorArgumentsBuilder tag(EntityTag tag) {
         return tag(tag, false);
     }
 
-    /**
-     * Includes or excludes entities based on a specific tag.
-     * @param tag The tag name (as an EntityTag object).
-     * @param not If true, excludes entities with this tag (e.g., {@code tag=!test_tag}).
-     */
+    /** Filters or excludes by entity scoreboard tag. */
     public SelectorArgumentsBuilder tag(EntityTag tag, Boolean not) {
         Objects.requireNonNull(tag, "EntityTag cannot be null.");
-        String prefix = not ? "!" : "";
-        // Assuming tag.toString() provides the raw tag string (e.g., "test_tag")
+        String prefix = (not != null && not) ? "!" : "";
         this.arguments.add("tag=" + prefix + tag.toString());
         return this;
     }
 
-
     // --- Scores Argument ---
 
     /**
-     * Filters players based on their scores in specified objectives.
-     * @param scores A map where keys are score objectives and values are range strings or fixed values.
+     * Filters entities by scoreboard values.
+     * @param scores Map of Objective to Value/Range.
+     * @return This builder for chaining.
      */
     public SelectorArgumentsBuilder scores(Map<ScoreObjective, Object> scores) {
         if (scores == null || scores.isEmpty()) {
             throw new IllegalArgumentException("Scores map cannot be null or empty.");
         }
-
         StringBuilder sb = new StringBuilder("scores={");
-
         boolean first = true;
         for (var entry : scores.entrySet()) {
             if (!first) sb.append(",");
-            // Key is ScoreObjective (which should override toString() to the objective name)
-            // Value is the score value/range (int, string, or range)
             sb.append(entry.getKey()).append("=").append(entry.getValue());
             first = false;
         }
-
         sb.append("}");
         arguments.add(sb.toString());
-
         return this;
     }
 
     // --- Gamemode Arguments ---
 
-    /**
-     * Filters players by a specific game mode.
-     * @param gamemode The required GameMode.
-     */
+    /** Filters players by game mode. */
     public SelectorArgumentsBuilder gamemode(GameModeId gamemode) {
         return gamemode(gamemode, false);
     }
 
-    /**
-     * Filters or excludes players by a specific game mode.
-     * @param gamemode The required GameMode.
-     * @param not If true, excludes players in this game mode (e.g., {@code gamemode=!creative}).
-     */
+    /** Filters or excludes players by game mode. */
     public SelectorArgumentsBuilder gamemode(GameModeId gamemode, boolean not) {
         Objects.requireNonNull(gamemode, "Gamemode cannot be null.");
-
         String prefix = not ? "!" : "";
-        // Assuming GameMode.toString() returns the lowercase mode name (e.g., "survival")
         arguments.add("gamemode=" + prefix + gamemode);
         return this;
     }
 
-
     // --- Team Arguments ---
 
-    /**
-     * Filters for entities that are **not** currently on a team.
-     * Equivalent to {@code team=!}.
-     */
+    /** Selects entities NOT on any team. */
     public SelectorArgumentsBuilder team() {
         arguments.add("team=!");
         return this;
     }
 
-    /**
-     * Filters for entities based on their team membership.
-     * @param not If true, selects entities not on **any** team ({@code team=!}).
-     * If false, selects entities on **any** team ({@code team=}).
-     */
+    /** Selects entities based on team presence. */
     public SelectorArgumentsBuilder team(Boolean not) {
-        String value = not ? "!" : ""; // team=! vs team=
+        String value = (not != null && not) ? "!" : "";
         arguments.add("team=" + value);
         return this;
     }
 
-    /**
-     * Filters for entities on a specific team.
-     * @param team The name of the required team.
-     */
+    /** Filters for entities on a specific team. */
     public SelectorArgumentsBuilder team(String team) {
         return team(team, false);
     }
 
-    /**
-     * Filters for or excludes entities from a specific team.
-     * @param team The name of the required team.
-     * @param not If true, excludes entities on this team (e.g., {@code team=!red}).
-     */
+    /** Filters or excludes entities from a specific team. */
     public SelectorArgumentsBuilder team(String team, boolean not) {
-        if (team == null || team.trim().isEmpty()) {
-            throw new IllegalArgumentException("Team name cannot be null or empty.");
-        }
+        if (team == null || team.isBlank()) throw new IllegalArgumentException("Team name cannot be blank.");
         String prefix = not ? "!" : "";
         arguments.add("team=" + prefix + team.trim());
         return this;
@@ -320,38 +242,31 @@ public class SelectorArgumentsBuilder {
     // --- NBT Argument ---
 
     /**
-     * Filters selection by requiring the entity to match the provided NBT structure.
-     * @param nbt The root NBT compound tag for the entity.
-     * @param not If true, excludes entities that match the NBT structure.
+     * Filters selection by NBT structure match.
+     * <b>Note:</b> Performance intensive. Use with other filters.
+     * @param nbt Entity NBT builder.
+     * @param not If true, excludes matching entities.
+     * @return This builder for chaining.
      */
-    public SelectorArgumentsBuilder nbt(CompoundTag nbt, boolean not) {
-        Objects.requireNonNull(nbt, "NBT tag cannot be null.");
+    public SelectorArgumentsBuilder nbt(EntityNBT<?> nbt, boolean not) {
+        Objects.requireNonNull(nbt, "EntityNBT builder cannot be null.");
+        CompoundTag tag = nbt.build();
         String prefix = not ? "!" : "";
-        // Assuming TagConverter.toJson outputs the required Minecraft string format {key:value, ...}
-        this.arguments.add("nbt=" + prefix + TagConverter.toJson(nbt));
+        this.arguments.add("nbt=" + prefix + TagConverter.toJson(tag));
         return this;
     }
 
-    /**
-     * Filters selection by requiring the entity to match the provided NBT structure.
-     * @param nbt The root NBT compound tag for the entity.
-     */
-    public SelectorArgumentsBuilder nbt(CompoundTag nbt) {
+    /** Filters selection by NBT structure match. */
+    public SelectorArgumentsBuilder nbt(EntityNBT<?> nbt) {
         return nbt(nbt, false);
     }
 
-
     /**
-     * Finalizes the builder and returns the formatted selector arguments string,
-     * including the enclosing square brackets, e.g., "[limit=1,tag=!test_tag]".
-     * Returns an empty string if no arguments were added.
+     * Finalizes the builder into a square-bracketed string.
+     * @return Formatted arguments, e.g., "[limit=1]" or empty string if no args.
      */
     public String build() {
-        if (arguments.isEmpty()) {
-            return "";
-        }
-        // Format: [arg1=val1,arg2=val2]
-        String content = String.join(",", arguments);
-        return "[" + content + "]";
+        if (arguments.isEmpty()) return "";
+        return "[" + String.join(",", arguments) + "]";
     }
 }
