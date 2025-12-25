@@ -7,124 +7,156 @@ import java.util.Objects;
 /**
  * 🧱 **Block Identifier Registry**
  * <p>
- * This registry contains fixed Minecraft block identifiers. It implements both
- * {@link BlockResource} and {@link ItemResource} because these blocks typically
- * have a corresponding item form in the inventory.
+ * This registry contains a fixed list of unique Minecraft block identifiers.
+ * It implements {@link BlockIdentifier} to signify it represents specific,
+ * placeable blocks, and {@link ItemResource} because most blocks possess
+ * a corresponding item form in player inventories.
  * </p>
  */
-public enum BlockId implements BlockResource, ItemResource {
+public enum BlockId implements BlockIdentifier, ItemResource {
 
     // --- 🏗️ Building & Natural Blocks ---
 
     /** A decorative block of purple crystals. */
     AMETHYST_BLOCK,
-    /** Used for repairing and renaming items. */
+    /** Used for repairing and renaming items via an interface. */
     ANVIL,
-    /** An invisible, unbreakable block. */
+    /** An invisible, unbreakable block used for world boundaries. */
     BARRIER,
-    /** Standard beacon block for status effects. */
+    /** High-tier block used for status effects and light beams. */
     BEACON,
     /** The unbreakable bottom layer of the world. */
     BEDROCK,
-    /** Standard red construction bricks. */
+    /** Standard red construction bricks crafted from clay. */
     BRICKS,
-    /** A wooden storage container. */
+    /** A wooden storage container for items. */
     CHEST,
-    /** Slows down entities; can be harvested for string. */
+    /** Sticky web that slows entities; harvestable for string. */
     COBWEB,
-    /** Gravity-affected block used for making concrete. */
+    /** Gravity-affected block that hardens into concrete when touched by water. */
     CONCRETE_POWDER,
-    /** A metallic block that oxidizes over time. */
+    /** A metallic block that changes color as it oxidizes. */
     COPPER_BLOCK,
-    /** A light-colored igneous rock. */
+    /** A light-colored, speckled igneous rock. */
     DIORITE,
-    /** A block of pure emerald, often used for storage or trade. */
+    /** A block of pure emerald, primarily used for storage or high-value trade. */
     EMERALD_BLOCK,
-    /** Transparent decorative block. */
+    /** Transparent decorative block that allows light to pass. */
     GLASS,
-    /** Frozen water block; slippery to walk on. */
+    /** Frozen water block; provides a low-friction surface. */
     ICE,
-    /** Plays music discs. */
+    /** Redstone-interactive block used to play music discs. */
     JUKEBOX,
-    /** Allows for vertical climbing. */
+    /** Vertical wooden structure used for climbing. */
     LADDER,
-    /** Hazardous fluid block. */
+    /** Hazardous fluid block that causes fire damage and slow movement. */
     LAVA,
-    /** Hard, dark volcanic glass used for portals. */
+    /** Extremely hard, dark volcanic glass required for Nether portals. */
     OBSIDIAN,
-    /** A block providing constant redstone power. */
+    /** A block providing a constant, maximum-strength redstone signal. */
     REDSTONE_BLOCK,
-    /** A highly blast-resistant deepslate variant. */
+    /** A deepslate variant with extreme blast resistance. */
     REINFORCED_DEEPSLATE,
-    /** Used for saving and loading structures in-game. */
+    /** Technical block used for saving/loading NBT-based structures. */
     STRUCTURE_BLOCK,
-    /** An explosive block triggered by fire or redstone. */
+    /** Highly explosive block triggered by redstone, fire, or explosions. */
     TNT,
-    /** Essential liquid block. */
+    /** Essential liquid block supporting life and farming. */
     WATER,
 
-    // --- 🎼 Heads & Decorative ---
+    // --- 🎼 Decorative & Heads ---
 
-    /** A trophy or decorative head of a player. */
+    /** A decorative head block representing a player. */
     PLAYER_HEAD,
-    /** A rare decorative head found on End Ships. */
+    /** A rare trophy block found on the prow of End Ships. */
     DRAGON_HEAD,
 
     // --- 🌌 Technical & Environment ---
 
-    /** Represents the absence of an item/block. */
+    /** Represents the total absence of a block or item. */
     AIR,
-    /** Air found specifically within cave biomes. */
+    /** Specialized air found within subterranean cave biomes. */
     CAVE_AIR,
-    /** Air found within the void or technical areas. */
+    /** Technical air found in the void or outside world boundaries. */
     VOID_AIR,
 
-    // --- 🧩 Custom / Modded Blocks ---
+    // --- 🧩 Custom & Modded Blocks ---
 
-    /** Placeholder for custom or mod-added blocks. */
+    /** General placeholder for dynamic or mod-injected blocks. */
     CUSTOM_BLOCK,
-    /** Example of a block in a custom namespace. */
+    /** Example of a block utilizing a custom namespace for UHC features. */
     LUCKY_BLOCK("lucky_block", "uhc");
 
     // --- ⚙️ Internal State ---
 
+    /** The resource namespace (e.g., "minecraft" or "uhc"). */
     private final String namespace;
+
+    /** The resource path derived from the enum name (e.g., "obsidian"). */
     private final String path;
 
     // --- 🏗️ Constructors ---
 
     /**
-     * 🟢 **Default Constructor**
-     * <p>Assigns the lowercase enum name as the path and uses the default
-     * Minecraft namespace.</p>
+     * 🟢 **Default Minecraft Constructor**
+     * <p>Assigns the lowercase enum name as the path and applies the standard
+     * Minecraft namespace from the project configuration.</p>
      */
     BlockId() {
         this.namespace = DatapackConfig.MINECRAFT_NAMESPACE;
         this.path = this.name().toLowerCase();
+        // Validation is handled via implementation of BlockIdentifier
     }
 
     /**
      * 🟡 **Custom Path Constructor**
+     * <p>Uses the default namespace but allows for a specific path string
+     * that may differ from the enum constant name.</p>
+     * @param path The specific block path to use.
+     * @throws NullPointerException if the path is null.
      */
     BlockId(String path) {
         this.namespace = DatapackConfig.MINECRAFT_NAMESPACE;
         this.path = Objects.requireNonNull(path, "Path cannot be null").toLowerCase();
+        this.validate();
     }
 
     /**
      * 🟠 **Full Custom Constructor**
+     * <p>Allows for a fully unique namespace and path combination,
+     * useful for cross-mod compatibility or specific datapack IDs.</p>
+     * @param path      The block path component.
+     * @param namespace The custom namespace component.
+     * @throws NullPointerException if path or namespace is null.
      */
     BlockId(String path, String namespace) {
         this.namespace = Objects.requireNonNull(namespace, "Namespace cannot be null").toLowerCase();
         this.path = Objects.requireNonNull(path, "Path cannot be null").toLowerCase();
+        this.validate();
     }
 
-    // --- 🛰️ Resource Contract Methods ---
+    // --- 🛰️ Resource Contract Implementation ---
 
-    public String getNamespace() { return namespace; }
+    /**
+     * Retrieves the namespace associated with this block.
+     * @return The namespace string.
+     */
+    public String getNamespace() {
+        return namespace;
+    }
 
-    public String getPath() { return path; }
+    /**
+     * Retrieves the path associated with this block.
+     * @return The path string.
+     */
+    public String getPath() {
+        return path;
+    }
 
+    /**
+     * Combines the namespace and path into a valid Minecraft identifier.
+     * @return The full identifier string (e.g., "minecraft:tnt").
+     */
     @Override
     public String getResourceLocation() {
         return namespace + ":" + path;
@@ -132,11 +164,22 @@ public enum BlockId implements BlockResource, ItemResource {
 
     // --- 🛡️ Overrides & Validation ---
 
+    /**
+     * Performs a syntax and type check on the resource location.
+     * <p><b>Error Catching:</b> Utilizes the logic in {@link BlockIdentifier}
+     * to ensure this resource is not prefixed with a '#' (tag indicator).</p>
+     * @throws IllegalStateException if naming conventions are violated.
+     */
     @Override
     public void validate() throws IllegalStateException {
-        BlockResource.super.validate();
+        // Triggers BlockIdentifier.super.validate() which checks for '#' tags
+        BlockIdentifier.super.validate();
     }
 
+    /**
+     * Returns the identifier as a string for use in command builders.
+     * @return The result of {@link #getResourceLocation()}.
+     */
     @Override
     public String toString() {
         return getResourceLocation();

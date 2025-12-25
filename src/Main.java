@@ -1011,7 +1011,7 @@ public class Main {
         fileCommands.add(Execute.In(Dimension.overworld) +
                 SetBlockCommand.create(
                         BlockPos.absolute(0, 222, -5),
-                        Block.create(WoodBlock.WALL_SIGN.withWoodType(WoodType.CHERRY))
+                        Block.create(DynamicBlock.wood(WoodType.CHERRY, WoodBlock.WALL_SIGN))
                                 .withState(FacingBlockState.SOUTH)
                                 .withState(WaterloggedState.of(false))
                                 .withData(SignNBT.create()
@@ -1175,7 +1175,7 @@ public class Main {
                     Execute.InNext(currentCP.getCoordinate().getDimension(), true) +
                     SetBlockCommand.create(
                                     BlockPos.absolute(currentCP.getCoordinate().getX(), currentCP.getCoordinate().getY() + 1, currentCP.getCoordinate().getZ()),
-                                    Block.create(ColorableBlock.STAINED_GLASS.withColor(team.getDyeColor())))
+                                    Block.create(DynamicBlock.color(team.getDyeColor(), ColorableBlock.STAINED_GLASS)))
                             .mode(SetBlockCommand.SetMode.REPLACE)
                             .generate());
         }

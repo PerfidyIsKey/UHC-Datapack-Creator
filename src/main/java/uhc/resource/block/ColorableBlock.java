@@ -5,53 +5,64 @@ import uhc.text.DyeColor;
 import java.util.Objects;
 
 /**
- * 🎨 **Colorable Block Registry**
+ * 🎨 **Colorable Block Template Registry**
  * <p>
- * Defines block types that require a {@link DyeColor} prefix to form a complete
- * Minecraft resource location. This enum acts as a template for generating
- * dynamic block identifiers.
+ * This enumeration defines templates for Minecraft blocks that require a
+ * {@link DyeColor} prefix to resolve into a specific {@link BlockIdentifier}.
  * </p>
  * <p>
- * <b>Example:</b> {@code STAINED_GLASS.withColor(DyeColor.RED)} produces {@code "minecraft:red_stained_glass"}.
+ * <b>Example:</b> {@code WOOL.withColor(DyeColor.LIME)} results in a
+ * {@code BlockIdentifier} for {@code "minecraft:lime_wool"}.
  * </p>
  */
 public enum ColorableBlock {
 
-    /** Represents transparent decorative blocks like 'white_stained_glass'. */
+    // --- 🏳️ Block Templates ---
+
+    /** Transparent decorative blocks (e.g., 'white_stained_glass'). */
     STAINED_GLASS,
 
-    /** Represents gravity-affected blocks like 'red_concrete_powder'. */
+    /** Gravity-affected powder blocks (e.g., 'red_concrete_powder'). */
     CONCRETE_POWDER,
 
-    /** Represents solid blocks like 'blue_wool'. */
+    /** Traditional soft building blocks (e.g., 'blue_wool'). */
     WOOL,
 
-    /** Represents solid blocks like 'green_concrete'. */
+    /** Smooth, solid construction blocks (e.g., 'green_concrete'). */
     CONCRETE,
 
-    /** Represents blocks like 'orange_terracotta'. */
+    /** Fired clay blocks (e.g., 'orange_terracotta'). */
     TERRACOTTA,
 
-    /** Represents transparent panes like 'cyan_stained_glass_pane'. */
-    STAINED_GLASS_PANE;
+    /** Thin transparent panes (e.g., 'cyan_stained_glass_pane'). */
+    STAINED_GLASS_PANE,
+
+    /** Soft floor coverings (e.g., 'light_gray_carpet'). */
+    CARPET,
+
+    /** Glowing light sources (e.g., 'yellow_shulker_box'). */
+    SHULKER_BOX;
 
     // --- ⚙️ State & Fields ---
 
-    /** The namespace for the block identifier (e.g., "minecraft"). */
+    /** The namespace designated for this block category (e.g., "minecraft"). */
     private final String namespace;
 
     // --- 🏗️ Constructors ---
 
     /**
-     * Default constructor using the standard Minecraft namespace defined in {@link DatapackConfig}.
+     * 🟢 **Default Constructor**
+     * <p>Initializes the template using the global default Minecraft namespace.</p>
      */
     ColorableBlock() {
         this.namespace = DatapackConfig.MINECRAFT_NAMESPACE;
     }
 
     /**
-     * Constructor for blocks requiring a custom namespace (e.g., modded colored blocks).
-     * @param namespace The custom namespace component.
+     * 🟡 **Custom Namespace Constructor**
+     * <p>Initializes the template with a specific namespace, such as for modded content.</p>
+     * @param namespace The target namespace component.
+     * @throws NullPointerException if the namespace argument is null.
      */
     ColorableBlock(String namespace) {
         this.namespace = Objects.requireNonNull(namespace, "Namespace cannot be null").toLowerCase();
@@ -60,30 +71,31 @@ public enum ColorableBlock {
     // --- 🛠️ Logic Methods ---
 
     /**
-     * Constructs a complete, immutable {@link BlockResource} by applying a color to this template.
-     * <p><b>Error Catching:</b> Validates that the color is not null and ensures the
-     * resulting path is lowercased and trimmed to prevent command syntax errors.</p>
-     * * @param color The {@link DyeColor} to apply (e.g., RED, BLUE).
-     * @return A fully qualified and validated {@link BlockResource}.
+     * Constructs a complete, immutable {@link BlockIdentifier} by applying a color to this template.
+     * <p><b>Error Catching:</b> Strictly validates that the {@code color} is not null.
+     * It internally utilizes {@link DynamicBlock#custom} which performs secondary syntax
+     * and type-filter validation to ensure a tag is not created.</p>
+     * * @param color The {@link DyeColor} to apply (e.g., RED).
+     * @return A fully qualified, specific {@link BlockIdentifier}.
      * @throws NullPointerException if the provided {@code color} is null.
      */
-    public BlockResource withColor(DyeColor color) {
-        Objects.requireNonNull(color, "DyeColor cannot be null for a ColorableBlockId.");
+    public BlockIdentifier withColor(DyeColor color) {
+        Objects.requireNonNull(color, "DyeColor cannot be null for a ColorableBlock.");
 
-        // Convert enum name (e.g., STAINED_GLASS) to path component (stained_glass)
+        // Convert enum constant name to lowercase path component
         String blockNameComponent = this.name().toLowerCase();
 
-        // Build the combined path: e.g., "red_stained_glass"
+        // Build the final path: {color}_{base_name}
         String fullPath = color.toString() + "_" + blockNameComponent;
 
-        // Return a DynamicBlock (or a lambda BlockResource) to keep this Enum stateless
+        // Return via DynamicBlock to ensure it implements BlockIdentifier
         return DynamicBlock.custom(namespace, fullPath);
     }
 
     // --- 🛰️ Metadata Accessors ---
 
     /**
-     * Retrieves the namespace associated with this colorable template.
+     * Retrieves the namespace defined for this template.
      * @return The namespace string.
      */
     public String getNamespace() {
@@ -91,11 +103,21 @@ public enum ColorableBlock {
     }
 
     /**
-     * Provides a display-friendly name of the block category.
-     * @return The formatted name (e.g., "Stained Glass").
+     * Returns a human-readable name for the block category.
+     * <p>Example: {@code STAINED_GLASS_PANE} -> "Stained Glass Pane"</p>
+     * @return The formatted display name.
      */
     public String getCategoryName() {
         String name = this.name().replace("_", " ").toLowerCase();
-        return name.substring(0, 1).toUpperCase() + name.substring(1);
+        if (name.isEmpty()) return "";
+
+        // Capitalize words for clean UI display
+        String[] words = name.split(" ");
+        StringBuilder result = new StringBuilder();
+        for (String word : words) {
+            if (result.length() > 0) result.append(" ");
+            result.append(Character.toUpperCase(word.charAt(0))).append(word.substring(1));
+        }
+        return result.toString();
     }
 }

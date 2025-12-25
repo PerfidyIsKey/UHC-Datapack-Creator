@@ -6,11 +6,12 @@ import java.util.Objects;
 /**
  * 🌳 **Wood-Based Block Template Registry**
  * <p>
- * Defines block types that require a {@link WoodType} prefix to construct a valid
- * Minecraft resource location. This enum acts as a factory template.
+ * This enumeration serves as a factory template for blocks that require a {@link WoodType}
+ * prefix to form a complete and valid Minecraft resource location.
  * </p>
  * <p>
- * <b>Example:</b> {@code PLANKS.withWoodType(WoodType.CHERRY)} produces {@code "minecraft:cherry_planks"}.
+ * <b>Example:</b> {@code PLANKS.withWoodType(WoodType.CHERRY)} produces a
+ * {@link BlockIdentifier} for {@code "minecraft:cherry_planks"}.
  * </p>
  */
 public enum WoodBlock {
@@ -64,22 +65,25 @@ public enum WoodBlock {
 
     // --- ⚙️ State & Fields ---
 
-    /** The namespace for the block identifier (defaulting to "minecraft"). */
+    /** The namespace utilized for the generated block ID (e.g., "minecraft"). */
     private final String namespace;
 
     // --- 🏗️ Constructors ---
 
     /**
-     * Default constructor utilizing the standard Minecraft namespace from {@link DatapackConfig}.
+     * 🟢 **Default Constructor**
+     * <p>Initializes the template with the standard Minecraft namespace
+     * defined in the {@link DatapackConfig}.</p>
      */
     WoodBlock() {
         this.namespace = DatapackConfig.MINECRAFT_NAMESPACE;
     }
 
     /**
-     * Constructor for wood blocks requiring a custom namespace (e.g., modded wood variants).
-     * @param namespace The custom namespace component.
-     * @throws NullPointerException if the namespace is null.
+     * 🟡 **Custom Namespace Constructor**
+     * <p>Initializes the template for custom or modded wood variants.</p>
+     * @param namespace The custom namespace component (e.g., "biomesoplenty").
+     * @throws NullPointerException if the provided namespace is null.
      */
     WoodBlock(String namespace) {
         this.namespace = Objects.requireNonNull(namespace, "Namespace cannot be null").toLowerCase();
@@ -88,23 +92,24 @@ public enum WoodBlock {
     // --- 🛠️ Logic Methods ---
 
     /**
-     * Constructs a complete, immutable {@link BlockResource} by applying a wood type to this template.
-     * <p><b>Error Catching:</b> Strictly validates that the wood type is not null. It automatically
-     * formats the resulting path to lowercase to ensure registry compatibility.</p>
-     * * @param type The {@link WoodType} to apply (e.g., OAK, CHERRY).
-     * @return A fully qualified and validated {@link BlockResource}.
+     * Constructs a specific, immutable {@link BlockIdentifier} by applying a wood type to this template.
+     * <p><b>Error Catching:</b> Strictly validates that the wood type is not null. It relies on
+     * {@link DynamicBlock#custom} which performs secondary syntax validation and ensures the
+     * result is not a tag.</p>
+     * * @param type The {@link WoodType} to apply (e.g., OAK, CHERRY, WARPED).
+     * @return A fully qualified and validated {@link BlockIdentifier}.
      * @throws NullPointerException if the provided {@code type} is null.
      */
-    public BlockResource withWoodType(WoodType type) {
-        Objects.requireNonNull(type, "WoodType cannot be null for a WoodBlockId.");
+    public BlockIdentifier withWoodType(WoodType type) {
+        Objects.requireNonNull(type, "WoodType cannot be null for a WoodBlock template.");
 
-        // Convert enum constant (e.g., STRIPPED_LOG) to lowercase path part (stripped_log)
+        // Convert enum constant name (e.g., STRIPPED_LOG) to path part (stripped_log)
         String blockNameComponent = this.name().toLowerCase();
 
-        // Build the combined path: e.g., "cherry_planks"
+        // Build path: {woodType}_{blockName} -> e.g., "cherry_planks"
         String fullPath = type.toString() + "_" + blockNameComponent;
 
-        // Return a validated DynamicBlock instance
+        // Delegate creation to DynamicBlock to ensure it meets BlockIdentifier constraints
         return DynamicBlock.custom(namespace, fullPath);
     }
 
@@ -119,12 +124,20 @@ public enum WoodBlock {
     }
 
     /**
-     * Returns a human-readable name for the block category.
-     * @return The formatted name (e.g., "Stripped Log").
+     * Returns a formatted, human-readable name for the block category.
+     * <p>Example: {@code STRIPPED_WOOD} -> "Stripped Wood"</p>
+     * * @return The capitalized display name.
      */
     public String getCategoryName() {
-        String name = this.name().replace("_", " ").toLowerCase();
-        if (name.isEmpty()) return "";
-        return name.substring(0, 1).toUpperCase() + name.substring(1);
+        String rawName = this.name().replace("_", " ").toLowerCase();
+        if (rawName.isEmpty()) return "";
+
+        String[] words = rawName.split(" ");
+        StringBuilder formatted = new StringBuilder();
+        for (String word : words) {
+            if (formatted.length() > 0) formatted.append(" ");
+            formatted.append(Character.toUpperCase(word.charAt(0))).append(word.substring(1));
+        }
+        return formatted.toString();
     }
 }
