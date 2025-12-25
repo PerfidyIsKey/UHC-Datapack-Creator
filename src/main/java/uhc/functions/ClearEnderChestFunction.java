@@ -2,6 +2,7 @@ package uhc.functions;
 
 import uhc.arguments.entity.Entity;
 import uhc.arguments.entity.TargetSelector;
+import uhc.arguments.item.ItemStack;
 import uhc.command.commands.ItemCommand;
 import uhc.arguments.item.ItemTargetEntity;
 import uhc.components.functions.Function;
@@ -75,7 +76,7 @@ public class ClearEnderChestFunction implements DatapackFunction { // Refactored
                     // Slot is set to "enderchest.i"
                     .slot(ItemSlot.ENDERCHEST.withSlotNumber(i))
                     // Item is replaced with 1 count of minecraft:air
-                    .replaceWith(SimpleItemStack.create(ItemId.AIR), 1));
+                    .replaceWith(ItemStack.create(ItemId.AIR), 1));
         }
 
         currentFunction.addLine(Comment.create("--- Ender Chest clearing complete ---"));

@@ -2,6 +2,7 @@ package uhc.functions;
 
 import uhc.arguments.entity.Entity;
 import uhc.arguments.entity.TargetSelector;
+import uhc.arguments.item.ItemStack;
 import uhc.command.commands.EffectCommand;
 import uhc.command.commands.ItemCommand;
 import uhc.command.commands.Comment; // <-- NEW: Import the Comment command class
@@ -95,26 +96,25 @@ public class GodModeFunction implements DatapackFunction {
         // SECTION 2: Equip Custom Weapon
         currentFunction.addLine(Comment.create("SECTION 2: Equip Custom Weapon (The Impaler Trident)"));
         currentFunction.addLine(Comment.create("Replaces the item in the main hand with a custom, unbreakable Trident."));
-        currentFunction.addLine(ItemCommand.create(
-                        ItemCommand.ItemAction.REPLACE_WITH,
+        currentFunction.addLine(ItemCommand.create(ItemCommand.ItemAction.REPLACE_WITH,
                         ItemTargetEntity.create(Entity.ofSelector(TargetSelector.SENDER)))
                 .slot(ItemSlot.MAINHAND)
                 .replaceWith(
-                        ComponentItemStack.create(ItemId.TRIDENT)
-                                .addComponent(CustomNameComponent.create(
+                        ItemStack.create(ItemId.TRIDENT)
+                                .with(CustomNameComponent.create(
                                         TextComponent.text("aA").color(TextColor.WHITE).obfuscated(true)
                                                 .append(TextComponent.text("The").color(HexColor.create("#8C3CC1")).bold(true))
                                                 .append(TextComponent.text(" Impaler ").color(HexColor.create("#E280FF")).bold(true))
                                                 .append(TextComponent.text("Aa").color(TextColor.WHITE).obfuscated(true))))
-                                .addComponent(LoreComponent.create(TextComponent.text("This holy weapon impales anything it touches")))
-                                .addComponent(DamageComponent.create(0))
-                                .addComponent(EnchantmentsComponent.create()
+                                .with(LoreComponent.create(TextComponent.text("This holy weapon impales anything it touches")))
+                                .with(DamageComponent.create(0))
+                                .with(EnchantmentsComponent.create()
                                         .add(EnchantmentId.FIRE_ASPECT, 255)
                                         .add(EnchantmentId.SHARPNESS, 255)
                                         .add(EnchantmentId.IMPALING, 255)
                                         .add(EnchantmentId.LOYALTY, 255)
                                         .add(EnchantmentId.EFFICIENCY, 255))
-                                .addComponent(AttributeModifiersComponent.create()
+                                .with(AttributeModifiersComponent.create()
                                         .add(AttributeModifiersComponent.Entry.create(
                                                         AttributeType.ARMOR,
                                                         AttributeModifierId.BASE_ARMOR,
