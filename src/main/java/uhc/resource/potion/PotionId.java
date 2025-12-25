@@ -2,18 +2,15 @@ package uhc.resource.potion;
 
 import uhc.core.DatapackConfig;
 import uhc.resource.effect.EffectId;
+import java.util.EnumSet;
 import java.util.Objects;
 
 /**
  * 🧪 **Namespace-Aware Potion Identifier**
  * <p>
  * This class handles the construction of valid Minecraft Potion Registry IDs.
- * It combines a base {@link EffectId} with a modifier (Strong or Long) to
- * produce strings compatible with the {@code potion_contents} component.
- * </p>
- * <p>
- * It features a "fail-fast" validation system that prevents the creation of
- * invalid vanilla potion combinations while allowing full flexibility for custom namespaces.
+ * It combines a base {@link EffectId} with a {@link PotionModifier} (Strong or Long)
+ * to produce strings compatible with the {@code potion_contents} NBT component.
  * </p>
  */
 public class PotionId {
@@ -29,34 +26,49 @@ public class PotionId {
         /** Increased amplifier/level, prefixed with "strong_" (e.g., "strong_regeneration"). */
         STRONG("strong_");
 
+        /** The NBT string prefix associated with this modifier. */
         private final String prefix;
 
         PotionModifier(String prefix) {
             this.prefix = prefix;
         }
 
-        /** @return The NBT-compatible prefix string for this modifier. */
+        /** @return The NBT-compatible prefix string (e.g., "long_"). */
         public String getPrefix() {
             return prefix;
         }
     }
 
+    // --- Private Static Constants ---
+
+    /** * A high-performance set of effects that do not exist as base potions in the Vanilla registry.
+     * Attempting to use these in a PotionId will trigger a fail-fast exception.
+     */
+    private static final EnumSet<EffectId> UNOBTAINABLE_POTIONS = EnumSet.of(
+            EffectId.HASTE, EffectId.MINING_FATIGUE, EffectId.JUMP_BOOST, EffectId.RESISTANCE,
+            EffectId.HEALTH_BOOST, EffectId.ABSORPTION, EffectId.SATURATION, EffectId.DOLPHINS_GRACE,
+            EffectId.CONDUIT_POWER, EffectId.GLOWING, EffectId.NAUSEA, EffectId.BLINDNESS,
+            EffectId.HUNGER, EffectId.WITHER, EffectId.LEVITATION, EffectId.DARKNESS,
+            EffectId.BAD_LUCK, EffectId.BREATH_OF_THE_NAUTILUS, EffectId.BAD_OMEN,
+            EffectId.TRIAL_OMEN, EffectId.RAID_OMEN, EffectId.HERO_OF_THE_VILLAGE
+    );
+
     // --- Private Fields ---
 
-    /** The base effect mapped to this potion (e.g., REGENERATION). */
+    /** The underlying status effect associated with this potion. */
     private final EffectId effect;
 
-    /** The potency or duration modifier (Normal, Long, or Strong). */
+    /** The potency or duration variant applied to the base effect. */
     private final PotionModifier modifier;
 
     // --- Constructor ---
 
     /**
-     * Private constructor to enforce the use of static factory methods.
-     * <p><b>Error Catching:</b> Validates that the effect is not null and
-     * cross-references vanilla brewing rules if using the {@code minecraft} namespace.</p>
-     * * @param effect   The base effect registry entry.
-     * @param modifier The modifier variant. Defaults to {@link PotionModifier#NORMAL} if null.
+     * Private constructor to enforce factory method usage.
+     * <p><b>Error Catching:</b> Validates non-nullity and cross-references
+     * vanilla registry availability and modifier compatibility.</p>
+     * @param effect   The base effect.
+     * @param modifier The modifier variant (defaults to NORMAL if null).
      * @throws NullPointerException if effect is null.
      * @throws IllegalArgumentException if the combination is invalid in vanilla Minecraft.
      */
@@ -64,104 +76,101 @@ public class PotionId {
         this.effect = Objects.requireNonNull(effect, "Base effect for PotionId cannot be null.");
         this.modifier = modifier != null ? modifier : PotionModifier.NORMAL;
 
-        // Validation: Only enforce strict rules if the namespace is 'minecraft'
+        // Validation only applies to the 'minecraft' namespace to allow custom datapack flexibility
         if (DatapackConfig.MINECRAFT_NAMESPACE.equals(effect.getNamespace())) {
-            validateVanillaCombination();
+            validateVanillaAvailability();
+            validateVanillaModifiers();
         }
     }
 
     // --- Static Factory Methods ---
 
-    /**
-     * Creates a standard potion ID with no modifiers.
-     * @param effect The base effect.
-     * @return A new PotionId instance.
-     */
+    /** @return A PotionId with default duration and potency. */
     public static PotionId normal(EffectId effect) {
         return new PotionId(effect, PotionModifier.NORMAL);
     }
 
-    /**
-     * Creates an extended duration potion ID.
-     * @param effect The base effect.
-     * @return A new PotionId instance with the "long_" prefix.
-     */
+    /** @return A PotionId with extended duration (long_). */
     public static PotionId longDuration(EffectId effect) {
         return new PotionId(effect, PotionModifier.LONG);
     }
 
-    /**
-     * Creates an enhanced level/potency potion ID.
-     * @param effect The base effect.
-     * @return A new PotionId instance with the "strong_" prefix.
-     */
+    /** @return A PotionId with enhanced potency (strong_). */
     public static PotionId strong(EffectId effect) {
         return new PotionId(effect, PotionModifier.STRONG);
     }
 
-    // --- Internal Logic ---
+    // --- Internal Validation Logic ---
 
     /**
-     * Enforces the vanilla brewing table.
-     * <p>This ensures impossible items like "strong_night_vision" cannot be created.</p>
-     * @throws IllegalArgumentException if the combination is not supported by vanilla logic.
+     * Checks if the effect exists in the Minecraft Potion Registry.
+     * @throws IllegalArgumentException if the effect is status-only.
      */
-    private void validateVanillaCombination() {
+    private void validateVanillaAvailability() {
+        if (UNOBTAINABLE_POTIONS.contains(effect)) {
+            throw new IllegalArgumentException(String.format(
+                    "The effect '%s' exists as a status but cannot be used as a Potion Registry ID. " +
+                            "Add this as a Custom Effect instead.", effect.name()
+            ));
+        }
+    }
+
+    /**
+     * Ensures the modifier (Strong/Long) is valid for the specific vanilla effect.
+     * @throws IllegalArgumentException if the modifier is unsupported.
+     */
+    private void validateVanillaModifiers() {
         if (modifier == PotionModifier.NORMAL) return;
 
         boolean isValid = switch (effect) {
-            // Potions supporting both Strong and Long
+            // Supports both variants
             case LEAPING, SPEED, SLOWNESS, POISON, REGENERATION, STRENGTH, TURTLE_MASTER -> true;
 
-            // Potions supporting ONLY Long (Extended)
+            // Supports ONLY Long
             case NIGHT_VISION, INVISIBILITY, FIRE_RESISTANCE, WATER_BREATHING, WEAKNESS, SLOW_FALLING ->
                     modifier == PotionModifier.LONG;
 
-            // Potions supporting ONLY Strong (Level II)
+            // Supports ONLY Strong
             case INSTANT_HEALTH, INSTANT_DAMAGE ->
                     modifier == PotionModifier.STRONG;
 
-            // All others (Water, Awkward, Thick, Luck, 1.21 effects) only support Normal
             default -> false;
         };
 
         if (!isValid) {
             throw new IllegalArgumentException(String.format(
-                    "Invalid vanilla combination: %s does not support the '%s' modifier.",
+                    "Invalid vanilla combination: '%s' does not support the '%s' modifier.",
                     effect.name(), modifier.name()
             ));
         }
     }
 
-    // --- Public API ---
+    // --- Public API & Serialization ---
 
     /**
-     * Generates the full, namespaced resource location string.
-     * <p><b>Error Catching:</b> Ensures that null or malformed paths do not result in broken NBT.</p>
-     * * @return Formatted string, e.g., "minecraft:strong_regeneration" or "custom:long_ultra_speed".
+     * Builds the full resource location string for NBT storage.
+     * @return Formatted string (e.g., "minecraft:long_fire_resistance").
+     * @throws IllegalStateException if the effect path is corrupted.
      */
     public String getResourceLocation() {
         String path = effect.getPath();
         if (path == null || path.isEmpty()) {
-            throw new IllegalStateException("Effect path for " + effect.name() + " is null or empty.");
+            throw new IllegalStateException("Effect path for " + effect.name() + " is missing.");
         }
 
         return effect.getNamespace() + ":" + modifier.getPrefix() + path;
     }
 
-    /** @return The underlying {@link EffectId}. */
+    /** @return The base {@link EffectId}. */
     public EffectId getEffect() {
         return effect;
     }
 
-    /** @return The {@link PotionModifier} applied to this ID. */
+    /** @return The applied {@link PotionModifier}. */
     public PotionModifier getModifier() {
         return modifier;
     }
 
-    /**
-     * Returns the same result as {@link #getResourceLocation()}.
-     */
     @Override
     public String toString() {
         return getResourceLocation();

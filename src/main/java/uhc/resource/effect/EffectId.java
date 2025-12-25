@@ -13,96 +13,153 @@ import java.util.Objects;
  */
 public enum EffectId {
 
-    // --- Standard Minecraft Potions ---
-    /** Standard fire resistance effect. */
+    // --- Standard Obtainable Potions ---
+
+    /** Prevents the entity from taking damage from fire, lava, and magma. */
     FIRE_RESISTANCE,
-    /** Standard invisibility effect. */
+    /** Makes the entity invisible; armor and held items remain visible. */
     INVISIBILITY,
-    /** Luck effect (typically found in RPG elements or custom loot). */
+    /** Increases the quality of loot from fishing and certain chests. */
     LUCK,
-    /** Poison status effect. */
+    /** Deals damage over time; cannot reduce health below 1.5 hearts. */
     POISON,
-    /** Health regeneration effect. */
+    /** Slowly restores health over time. */
     REGENERATION,
-    /** Movement speed reduction effect. */
+    /** Reduces movement speed and field of view. */
     SLOWNESS,
-    /** Attack damage increase effect. */
+    /** Increases melee damage dealt by the entity. */
     STRENGTH,
-    /** Attack damage reduction effect. */
+    /** Decreases melee damage dealt by the entity. */
     WEAKNESS,
-    /** Vision enhancement in dark areas. */
+    /** Allows the player to see in total darkness and underwater. */
     NIGHT_VISION,
-    /** Jump boost and fall damage reduction. */
+    /** Increases jump height and reduces fall damage. */
     LEAPING,
-    /** Ability to breathe underwater. */
+    /** Prevents the oxygen bar from depleting underwater. */
     WATER_BREATHING,
-    /** Slows falling speed and prevents fall damage. */
+    /** Reduces falling speed and negates all fall damage. */
     SLOW_FALLING,
 
     // --- Potion Name Overrides ---
-    // These constants use overrides because the Potion ID differs from the Effect ID.
 
-    /** The 'Speed' effect, which is registered as 'swiftness' in the potion registry. */
+    /** The 'Speed' effect, registered as 'swiftness' in the potion registry. */
     SPEED("swiftness"),
     /** The 'Instant Health' effect, registered as 'healing' for potions. */
     INSTANT_HEALTH("healing"),
     /** The 'Instant Damage' effect, registered as 'harming' for potions. */
     INSTANT_DAMAGE("harming"),
-    /** Resistance and Slowness combined. */
+    /** Provides Resistance IV and Slowness IV (Master of the Turtle). */
     TURTLE_MASTER,
 
+    // --- Combat & Utility (Unobtainable via standard potions) ---
+
+    /** Increases mining speed and attack speed. */
+    HASTE,
+    /** Decreases mining speed and attack speed. */
+    MINING_FATIGUE,
+    /** Standard jump height increase (Effect ID variant). */
+    JUMP_BOOST,
+    /** Reduces all incoming damage by 20% per level. */
+    RESISTANCE,
+    /** Increases the maximum health pool of the entity. */
+    HEALTH_BOOST,
+    /** Grants temporary "yellow" hearts that cannot be regenerated. */
+    ABSORPTION,
+    /** Instantly restores hunger and saturation points. */
+    SATURATION,
+    /** Significantly increases swimming speed. */
+    DOLPHINS_GRACE,
+    /** Underwater night vision, mining speed, and infinite oxygen. */
+    CONDUIT_POWER,
+    /** Outlines the entity with a glowing border visible through blocks. */
+    GLOWING,
+
+    // --- Negative & Environmental (Unobtainable via standard potions) ---
+
+    /** Distorts the player's vision and wobbles the screen. */
+    NAUSEA,
+    /** Heavily restricts vision with black fog; prevents sprinting. */
+    BLINDNESS,
+    /** Depletes the hunger bar rapidly. */
+    HUNGER,
+    /** Deals lethal damage over time; can kill the entity. */
+    WITHER,
+    /** Forces the entity to float upwards at a constant rate. */
+    LEVITATION,
+    /** Periodically pulses the screen to black; limits visibility. */
+    DARKNESS,
+    /** Decreases the quality of loot from fishing and chests. */
+    BAD_LUCK("unluck"),
+    /** Freezes an entity's oxygen bar. */
+    BREATH_OF_THE_NAUTILUS,
+
+    // --- Ominous & World Events ---
+
+    /** Triggers a Raid upon entering a village (Pre-1.21). */
+    BAD_OMEN,
+    /** Converts standard Trial Spawners into Ominous Trial Spawners. */
+    TRIAL_OMEN,
+    /** Triggers a Raid specifically at the player's location. */
+    RAID_OMEN,
+    /** Grants massive trade discounts from villagers. */
+    HERO_OF_THE_VILLAGE,
+
     // --- 1.21 Trial Chamber Effects ---
-    /** Chance to spawn Silverfish upon death. */
+
+    /** 10% chance to spawn 1-3 Silverfish when the entity takes damage. */
     INFESTED,
-    /** Spawns Slimes upon death. */
+    /** Spawns 2 Slimes upon the entity's death. */
     OOZING,
-    /** Spawns Cobwebs upon death. */
+    /** Decreases movement in cobwebs; spreads cobwebs upon death. */
     WEAVING,
-    /** Triggers a wind burst upon death. */
+    /** Emits a wind burst (knockback) upon the entity's death. */
     WIND_CHARGED,
 
     // --- Technical & Base Potions ---
-    /** Base water bottle. */
+
+    /** Standard Water Bottle. */
     WATER,
-    /** Base potion with no effects. */
+    /** No-effect base potion (Redstone/Glowstone failure). */
     MUNDANE,
-    /** Base potion with no effects. */
+    /** No-effect base potion (Glowstone base). */
     THICK,
-    /** The standard base for all effect-bearing potions. */
+    /** The mandatory base for almost all primary potions. */
     AWKWARD,
-    /** Used for the Uncraftable Potion. */
+    /** Represents an empty or invalid potion state. */
     EMPTY;
 
-    // --- Internal Fields ---
+    // --- Private Fields ---
 
-    /** The specific path of the resource (e.g., "regeneration" or "swiftness"). */
+    /** The unique registry path for this effect (e.g., "swiftness"). */
     private final String path;
 
-    /** The namespace owning the resource (e.g., "minecraft" or a custom datapack ID). */
+    /** The registry namespace (usually {@code DatapackConfig.MINECRAFT_NAMESPACE}). */
     private final String namespace;
 
     // --- Constructors ---
 
-    /** * Default constructor for standard Minecraft effects.
-     * Uses the enum name converted to lowercase as the path.
+    /**
+     * Default constructor for standard Minecraft effects.
+     * Uses the lowercase version of the Enum constant name as the path.
      */
     EffectId() {
         this(DatapackConfig.MINECRAFT_NAMESPACE, null);
     }
 
-    /** * Constructor for Minecraft effects with a specific path override.
-     * @param pathOverride The literal string used in the registry (e.g., "swiftness").
+    /**
+     * Constructor for effects where the registry path differs from the enum name.
+     * @param pathOverride The literal string path (e.g., "unluck").
      */
     EffectId(String pathOverride) {
         this(DatapackConfig.MINECRAFT_NAMESPACE, pathOverride);
     }
 
-    /** * Comprehensive constructor for fully custom namespaces and paths.
-     * <p><b>Error Catching:</b> Validates that the namespace is not null or empty.</p>
-     * * @param namespace The resource namespace (e.g., "uhc_core").
+    /**
+     * Comprehensive constructor for full registry identification.
+     * * @param namespace The resource namespace (e.g., "minecraft").
      * @param path      The resource path. If null, defaults to lowercase enum name.
      * @throws NullPointerException if namespace is null.
-     * @throws IllegalArgumentException if namespace is empty.
+     * @throws IllegalArgumentException if namespace is blank.
      */
     EffectId(String namespace, String path) {
         this.namespace = Objects.requireNonNull(namespace, "Namespace for EffectId cannot be null.");
@@ -111,34 +168,39 @@ public enum EffectId {
             throw new IllegalArgumentException("Namespace for EffectId cannot be empty.");
         }
 
-        this.path = (path == null || path.trim().isEmpty()) ? name().toLowerCase() : path;
+        // Error Catching: Ensure the path is valid. Replace potential spaces with underscores.
+        String resolvedPath = (path == null || path.trim().isEmpty()) ? name().toLowerCase() : path.toLowerCase();
+        this.path = resolvedPath.replace(" ", "_");
     }
 
-    // --- Public Logic Methods ---
+    // --- Public API ---
 
-    /** * Returns the resource path.
-     * @return The path string (e.g., "strong_regeneration").
+    /**
+     * Retrieves the specific path used in the registry.
+     * @return The path string (e.g., "swiftness").
      */
     public String getPath() {
         return path;
     }
 
-    /** * Returns the namespace.
-     * @return The namespace string (usually {@link DatapackConfig#MINECRAFT_NAMESPACE}).
+    /**
+     * Retrieves the owning namespace.
+     * @return The namespace string (usually "minecraft").
      */
     public String getNamespace() {
         return namespace;
     }
 
-    /** * Combines the namespace and path into a full Resource Location.
-     * @return A string formatted as "namespace:path".
+    /**
+     * Combines the namespace and path into a Resource Location string.
+     * @return The full identifier (e.g., "minecraft:regeneration").
      */
     public String getResourceLocation() {
         return namespace + ":" + path;
     }
 
     /**
-     * Returns the full resource location as the string representation.
+     * Returns the full resource location for logging and debugging.
      */
     @Override
     public String toString() {
