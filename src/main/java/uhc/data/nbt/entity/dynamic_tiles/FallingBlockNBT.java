@@ -4,6 +4,7 @@ import uhc.data.nbt.blockentity.state.BlockState;
 import uhc.data.nbt.blockentity.BlockEntityNBT;
 import uhc.data.nbt.entity.EntityNBT;
 import uhc.data.nbt.tags.*;
+import uhc.resource.block.BlockIdentifier;
 
 import java.util.Objects;
 
@@ -46,7 +47,7 @@ public class FallingBlockNBT extends EntityNBT<FallingBlockNBT> {
      * @param states  Optional property descriptors (e.g., facing, lit, powered).
      * @return This builder instance.
      */
-    public FallingBlockNBT blockState(BlockId blockId, BlockState... states) {
+    public FallingBlockNBT blockState(BlockIdentifier blockId, BlockState... states) {
         Objects.requireNonNull(blockId, "Block ID cannot be null.");
 
         CompoundTag blockStateTag = CompoundTag.create("BlockState");
