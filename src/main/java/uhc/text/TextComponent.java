@@ -124,9 +124,31 @@ public class TextComponent {
 
     // --- Styling Methods ---
 
-    /** Sets the color of the text using a type-safe {@link TextColor}. */
-    public TextComponent color(TextColor color) {
-        this.color = color != null ? color.toString() : null;
+    /**
+     * Sets the color of the text using a type-safe {@link ColorType}.
+     * <p>
+     * This supports both standard Minecraft named colors (via {@code TextColor})
+     * and custom RGB hexadecimal colors (via {@code HexColor}).
+     * </p>
+     * * @param color The color implementation to apply. If null, the color is removed.
+     * @return This TextComponent instance for fluent chaining.
+     * @throws NullPointerException (Optional) if you want to enforce color presence,
+     * though null is usually used here to reset/inherit.
+     */
+    public TextComponent color(ColorType color) {
+        if (color == null) {
+            this.color = null;
+            return this;
+        }
+
+        String colorValue = color.getColor();
+
+        // Error Catching: Ensure the implementation didn't return a broken string
+        if (colorValue == null || colorValue.isBlank()) {
+            throw new IllegalArgumentException("The provided ColorType returned a null or blank color string.");
+        }
+
+        this.color = colorValue;
         return this;
     }
 
