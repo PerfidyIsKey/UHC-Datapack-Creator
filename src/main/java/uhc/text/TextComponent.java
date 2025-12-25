@@ -22,65 +22,72 @@ import java.util.Objects;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class TextComponent {
 
-    /** Centralized Jackson Mapper configured for modern Java features. */
+    /** Centralized Jackson Mapper configured to handle Java 18 record parameter names. */
     private static final ObjectMapper MAPPER = new ObjectMapper()
             .registerModule(new ParameterNamesModule());
 
+    /** The type of component (e.g., "translatable"). Usually inferred by fields present. */
     @JsonProperty("type")
     private String type;
 
+    /** Raw literal text content. Used for standard messages. */
     @JsonProperty("text")
     private String text;
 
+    /** Target selector string (e.g., "@a", "@p"). Displays the names of targeted entities. */
     @JsonProperty("selector")
     private String selector;
 
+    /** A keybind identifier (e.g., "key.jump"). Displays the player's bound key. */
     @JsonProperty("keybind")
     private String keybind;
 
+    /** The translation key identifier (e.g., "item.minecraft.diamond_sword"). */
     @JsonProperty("translate")
     private String translate;
 
+    /** Text to display if the translation key is missing on the client side. */
     @JsonProperty("fallback")
     private String fallback;
 
+    /** Arguments used to fill placeholders (%s) in a translatable component. */
     @JsonProperty("with")
     private List<TextComponent> with;
 
-    // --- Styling Fields ---
-
+    /** The color of the text. Can be a named color or a hex code (#RRGGBB). */
     @JsonProperty("color")
     private String color;
 
+    /** Whether the text should be rendered in **bold**. */
     @JsonProperty("bold")
     private Boolean bold;
 
+    /** Whether the text should be rendered in *italics*. */
     @JsonProperty("italic")
     private Boolean italic;
 
-    /** * When true, the text will be "obfuscated" (scrambled/magic text).
-     * This corresponds to the §k formatting code.
-     */
+    /** Whether the text should be obfuscated (magic scrambled characters). */
     @JsonProperty("obfuscated")
     private Boolean obfuscated;
 
-    // --- Interactivity Fields ---
-
+    /** Text inserted into the player's chat bar when they shift-click this component. */
     @JsonProperty("insertion")
     private String insertion;
 
+    /** Defines an action (like running a command) when the component is clicked. */
     @JsonProperty("click_event")
     private ClickEvent clickEvent;
 
+    /** Defines a tooltip or information to show when the component is hovered over. */
     @JsonProperty("hover_event")
     private HoverEvent hoverEvent;
 
-    /** Nested components that inherit the styles of this parent. */
+    /** A list of child components that follow this one and inherit its formatting. */
     @JsonProperty("extra")
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private List<TextComponent> extra;
 
-    /** Private constructor to enforce factory method usage. */
+    /** Private constructor to enforce the use of static factory methods. */
     private TextComponent() {}
 
     // --- Static Factory Methods ---
@@ -92,7 +99,7 @@ public class TextComponent {
      */
     public static TextComponent text(String text) {
         TextComponent tc = new TextComponent();
-        tc.text = text; // Minecraft allows null text in some NBT contexts, but build() handles literal optimization
+        tc.text = text;
         return tc;
     }
 
@@ -100,7 +107,7 @@ public class TextComponent {
      * Creates a translatable component based on a language key.
      * @param key The translation identifier (e.g., "chat.type.text").
      * @param fallback Optional text to show if the key is missing on the client.
-     * @param with Optional components to fill the %s slots in the translation.
+     * @param with Optional components to fill the placeholders in the translation.
      * @return A new translatable TextComponent.
      * @throws NullPointerException if the key is null.
      */
@@ -116,8 +123,8 @@ public class TextComponent {
     }
 
     /**
-     * Creates a component that displays an entity's name (or players in a selector).
-     * @param target The {@link Entity} selector or reference.
+     * Creates a component that displays an entity's name based on a selector.
+     * @param target The {@link Entity} selector object.
      * @return A new selector TextComponent.
      * @throws NullPointerException if target is null.
      */
@@ -132,60 +139,47 @@ public class TextComponent {
 
     /**
      * Sets the color of the text using a type-safe {@link ColorType}.
-     * <p>
-     * This supports both standard Minecraft named colors (via {@code TextColor})
-     * and custom RGB hexadecimal colors (via {@code HexColor}).
-     * </p>
-     * * @param color The color implementation to apply. If null, the color is removed.
-     * @return This TextComponent instance for fluent chaining.
-     * @throws NullPointerException (Optional) if you want to enforce color presence,
-     * though null is usually used here to reset/inherit.
+     * Supports named colors (TextColor) and hex codes (HexColor).
+     * @param color The color implementation. If null, formatting is removed.
+     * @return This TextComponent for chaining.
+     * @throws IllegalArgumentException if the provided ColorType returns a blank string.
      */
     public TextComponent color(ColorType color) {
         if (color == null) {
             this.color = null;
             return this;
         }
-
         String colorValue = color.getColor();
-
-        // Error Catching: Ensure the implementation didn't return a broken string
         if (colorValue == null || colorValue.isBlank()) {
-            throw new IllegalArgumentException("The provided ColorType returned a null or blank color string.");
+            throw new IllegalArgumentException("The provided ColorType returned an invalid color string.");
         }
-
         this.color = colorValue;
         return this;
     }
 
-    /** Toggles the bold formatting. */
+    /** Toggles bold formatting. */
     public TextComponent bold(Boolean bold) {
         this.bold = bold;
         return this;
     }
 
-    /** Toggles the italic formatting. */
+    /** Toggles italic formatting. */
     public TextComponent italic(Boolean italic) {
         this.italic = italic;
         return this;
     }
 
-    /**
-     * Toggles the obfuscated (magic/scrambled) formatting.
-     * @param obfuscated If true, the text continuously changes characters.
-     * @return This TextComponent instance for fluent chaining.
-     */
+    /** Toggles obfuscated (magic) formatting. */
     public TextComponent obfuscated(Boolean obfuscated) {
         this.obfuscated = obfuscated;
         return this;
     }
 
     /**
-     * Appends a child component to this component.
-     * * @param other The component to be added to the 'extra' list.
-     * @param keepFormat If true, the child inherits the styles (color, bold, etc.) of this parent.
-     * If false (default), the child's styles are cleared to ensure it starts plain.
-     * @return This parent component for fluent chaining.
+     * Appends a child component to this component's 'extra' list.
+     * @param other The component to be added.
+     * @param keepFormat If true, the child inherits parent styles. If false, styles are reset.
+     * @return This parent component for chaining.
      */
     public TextComponent append(TextComponent other, boolean keepFormat) {
         if (other != null) {
@@ -199,21 +193,20 @@ public class TextComponent {
     }
 
     /**
-     * Overloaded append method that defaults keepFormat to false.
+     * Appends a child component, defaulting keepFormat to false (starts plain).
+     * @param other The component to be added.
+     * @return This parent component for chaining.
      */
     public TextComponent append(TextComponent other) {
         return append(other, false);
     }
 
-    /**
-     * Internal helper to clear all styling and interactivity to ensure the component
-     * starts "plain" when appended without formatting.
-     */
+    /** Clears all formatting and interactivity to ensure a "plain" start for child components. */
     private void resetFormatting() {
         this.color = null;
         this.bold = null;
         this.italic = null;
-        this.obfuscated = null; // Assuming you added this per the previous step
+        this.obfuscated = null;
         this.insertion = null;
         this.clickEvent = null;
         this.hoverEvent = null;
@@ -221,28 +214,19 @@ public class TextComponent {
 
     // --- Interactivity Methods ---
 
-    /**
-     * Sets text to be pasted into the chat bar when shift-clicked.
-     * @param text The insertion text.
-     */
+    /** Sets the text to be pasted into the chat bar when shift-clicked. */
     public TextComponent insertion(String text) {
         this.insertion = text;
         return this;
     }
 
-    /**
-     * Assigns a type-safe {@link ClickEvent}.
-     * @param event The click event configuration.
-     */
+    /** Assigns a type-safe {@link ClickEvent} to the component. */
     public TextComponent click(ClickEvent event) {
         this.clickEvent = event;
         return this;
     }
 
-    /**
-     * Assigns a type-safe {@link HoverEvent}.
-     * @param event The hover event configuration.
-     */
+    /** Assigns a type-safe {@link HoverEvent} to the component. */
     public TextComponent hover(HoverEvent event) {
         this.hoverEvent = event;
         return this;
@@ -252,17 +236,13 @@ public class TextComponent {
 
     /**
      * Serializes this component into a Minecraft-compatible JSON string.
-     * <p>
-     * Optimizes "plain" components into raw strings (e.g., "Hello" vs {"text":"Hello"})
-     * to save packet space.
-     * </p>
-     * @return Valid JSON string for use in commands or packets.
-     * @throws RuntimeException if serialization fails.
+     * Optimizes simple text into a raw string to reduce JSON overhead.
+     * @return Valid JSON string.
+     * @throws RuntimeException if Jackson fails to serialize.
      */
     public String build() {
         try {
             if (isPlainLiteral()) {
-                // Returns "text" (with quotes) for simple literals
                 return MAPPER.writeValueAsString(text != null ? text : "");
             }
             return MAPPER.writeValueAsString(this);
@@ -271,16 +251,12 @@ public class TextComponent {
         }
     }
 
-    /**
-     * Checks if this component is a literal string without any metadata.
-     * Updated to include the 'obfuscated' check.
-     */
+    /** Checks if the component is a literal string with no styles or extra metadata. */
     private boolean isPlainLiteral() {
         return text != null && type == null && translate == null && selector == null &&
                 keybind == null && color == null && bold == null && italic == null &&
-                obfuscated == null && // Added check
-                insertion == null && clickEvent == null && hoverEvent == null &&
-                (extra == null || extra.isEmpty());
+                obfuscated == null && insertion == null && clickEvent == null &&
+                hoverEvent == null && (extra == null || extra.isEmpty());
     }
 
     @Override
