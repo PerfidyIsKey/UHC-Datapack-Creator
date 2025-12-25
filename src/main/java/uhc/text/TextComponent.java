@@ -58,6 +58,12 @@ public class TextComponent {
     @JsonProperty("italic")
     private Boolean italic;
 
+    /** * When true, the text will be "obfuscated" (scrambled/magic text).
+     * This corresponds to the §k formatting code.
+     */
+    @JsonProperty("obfuscated")
+    private Boolean obfuscated;
+
     // --- Interactivity Fields ---
 
     @JsonProperty("insertion")
@@ -165,6 +171,16 @@ public class TextComponent {
     }
 
     /**
+     * Toggles the obfuscated (magic/scrambled) formatting.
+     * @param obfuscated If true, the text continuously changes characters.
+     * @return This TextComponent instance for fluent chaining.
+     */
+    public TextComponent obfuscated(Boolean obfuscated) {
+        this.obfuscated = obfuscated;
+        return this;
+    }
+
+    /**
      * Appends a child component to this component.
      * * @param other The component to be added to the 'extra' list.
      * @param keepFormat If true, the child inherits the styles (color, bold, etc.) of this parent.
@@ -257,11 +273,12 @@ public class TextComponent {
 
     /**
      * Checks if this component is a literal string without any metadata.
-     * Includes checks for interactivity to prevent mis-serialization.
+     * Updated to include the 'obfuscated' check.
      */
     private boolean isPlainLiteral() {
         return text != null && type == null && translate == null && selector == null &&
                 keybind == null && color == null && bold == null && italic == null &&
+                obfuscated == null && // Added check
                 insertion == null && clickEvent == null && hoverEvent == null &&
                 (extra == null || extra.isEmpty());
     }
