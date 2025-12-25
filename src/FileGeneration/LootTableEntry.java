@@ -1,29 +1,29 @@
 package FileGeneration;
 
 import ItemModifiers.ItemModifier;
-import uhc.resource.item.ItemId;
+import uhc.resource.item.ItemResource;
 
 import java.util.ArrayList;
 
 public class LootTableEntry {
 
     private int weight;
-    private ItemId item;
+    private ItemResource item;
 
     private ArrayList<ItemModifier> functions;
 
-    public LootTableEntry(int weight, ItemId item) {
+    public LootTableEntry(int weight, ItemResource item) {
         this.weight = weight;
         this.item = item;
     }
 
-    public LootTableEntry(int weight, ItemId item, ArrayList<ItemModifier> functions) {
+    public LootTableEntry(int weight, ItemResource item, ArrayList<ItemModifier> functions) {
         this.weight = weight;
         this.item = item;
         this.functions = functions;
     }
 
-    public LootTableEntry(int weight, ItemId item, ItemModifier function) {
+    public LootTableEntry(int weight, ItemResource item, ItemModifier function) {
         ArrayList<ItemModifier> functions = new ArrayList<>();
         functions.add(function);
 
@@ -75,7 +75,7 @@ public class LootTableEntry {
         this.weight = weight;
     }
 
-    public ItemId getItem() {
+    public ItemResource getItem() {
         return item;
     }
 }

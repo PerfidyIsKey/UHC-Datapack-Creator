@@ -465,16 +465,16 @@ public class Main {
         entries.add(new LootTableEntry(17, ItemId.EGG));
 
         // Entry #2
-        entries.add(new LootTableEntry(17, ItemId.LADDER, new SetCount(10)));
+        entries.add(new LootTableEntry(17, BlockId.LADDER, new SetCount(10)));
 
         // Entry #3
         entries.add(new LootTableEntry(15, ItemId.STICK, new SetCount(8)));
 
         // Entry #4
-        entries.add(new LootTableEntry(15, ItemId.DIORITE, new SetCount(16)));
+        entries.add(new LootTableEntry(15, BlockId.DIORITE, new SetCount(16)));
 
         // Entry #5
-        entries.add(new LootTableEntry(15, ItemId.AMETHYST_BLOCK, new SetCount(16)));
+        entries.add(new LootTableEntry(15, BlockId.AMETHYST_BLOCK, new SetCount(16)));
 
         // Entry #6
         entries.add(new LootTableEntry(15, ItemId.IRON_INGOT, new SetCount(8)));
@@ -486,29 +486,29 @@ public class Main {
         entries.add(new LootTableEntry(11, ItemId.BONE, new SetCount(3, new RandomChance(0.4))));
 
         // Entry #9
-        entries.add(new LootTableEntry(10, ItemId.COPPER_BLOCK, new SetCount(16)));
+        entries.add(new LootTableEntry(10, BlockId.COPPER_BLOCK, new SetCount(16)));
 
         // Entry #10
         entries.add(new LootTableEntry(10, ItemId.BREAD, new SetCount(5)));
 
         // Entry #11
-        entries.add(new LootTableEntry(10, ItemId.COBWEB, new SetCount(2, new RandomChance(0.4))));
+        entries.add(new LootTableEntry(10, BlockId.COBWEB, new SetCount(2, new RandomChance(0.4))));
 
         // Entry #12
         Enchantments enchantment = new Enchantments(EnchantmentType.LURE, 3);
         entries.add(new LootTableEntry(8, ItemId.FISHING_ROD, new SetComponents(enchantment)));
 
         // Entry #13
-        entries.add(new LootTableEntry(8, ItemId.OBSIDIAN, new SetCount(4)));
+        entries.add(new LootTableEntry(8, BlockId.OBSIDIAN, new SetCount(4)));
 
         // Entry #14
-        entries.add(new LootTableEntry(7, ItemId.GLASS, new SetCount(3)));
+        entries.add(new LootTableEntry(7, BlockId.GLASS, new SetCount(3)));
 
         // Entry #15
         entries.add(new LootTableEntry(7, ItemId.MELON_SLICE, new SetCount(3, new RandomChance(0.4))));
 
         // Entry #16
-        entries.add(new LootTableEntry(5, ItemId.TNT, new SetCount(4)));
+        entries.add(new LootTableEntry(5, BlockId.TNT, new SetCount(4)));
 
         // Entry #17
         entries.add(new LootTableEntry(5, ItemId.EXPERIENCE_BOTTLE, new SetCount(3, new RandomChance(0.2))));
@@ -574,7 +574,7 @@ public class Main {
         entries.add(new LootTableEntry(2, ItemId.GOLDEN_APPLE));
 
         // Entry #34
-        entries.add(new LootTableEntry(2, ItemId.ANVIL));
+        entries.add(new LootTableEntry(2, BlockId.ANVIL));
 
         // Entry #35
         entries.add(new LootTableEntry(4, ItemId.SPYGLASS));
@@ -583,10 +583,10 @@ public class Main {
         entries.add(new LootTableEntry(2, ItemId.WOLF_SPAWN_EGG, new SetCount(2, new RandomChance(0.01))));
 
         // Entry #37
-        entries.add(new LootTableEntry(1, ItemId.DIAMOND_HORSE_ARMOR));
+        entries.add(new LootTableEntry(1, DynamicItem.armor(ArmorMaterial.DIAMOND, ArmorPiece.HORSE_ARMOR)));
 
         // Entry #38
-        entries.add(new LootTableEntry(1, ItemId.NETHERITE_HOE));
+        entries.add(new LootTableEntry(1, DynamicItem.tool(ToolMaterial.NETHERITE, ToolPiece.HOE)));
 
         // Entry #39
         enchantment = new Enchantments(EnchantmentType.LOYALTY, 3);
