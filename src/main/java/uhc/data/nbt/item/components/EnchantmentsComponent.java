@@ -103,37 +103,31 @@ public class EnchantmentsComponent implements ItemComponent {
     }
 
     /**
-     * Converts the component into a format compatible with Minecraft's SNBT.
-     * <p><b>Error Catching:</b> Returns an empty root tag to ensure the
-     * {@code ItemStack} builder handles the key-value pairing correctly without nesting.</p>
-     * <p><b>Structure:</b>
-     * <pre>
-     * {
-     * "levels": {
-     * "minecraft:sharpness": 5
-     * },
-     * "show_in_tooltip": 1b
-     * }
-     * </pre>
+     * Converts the component into modern NBT.
+     * <p>
+     * <b>Logic:</b> To achieve the inline syntax {@code enchantments={"id":lvl}},
+     * we return a CompoundTag that contains the levels directly as its top-level
+     * entries rather than nesting them under a "levels" key.
      * </p>
-     * @return An anonymous {@link NBTTag} containing the enchantment data.
+     * <p><b>Error Catching:</b> Strictly uses lowercase registry keys to satisfy
+     * the 1.21 ResourceLocation parser.</p>
      */
     @Override
     public NBTTag toNbt() {
-        // Create an anonymous root to prevent double-keying in ItemStack.build()
+        // We create an anonymous root CompoundTag.
+        // When ItemStack.build() processes this, TagConverter.toJson() will
+        // turn this into {"key":value, "key2":value2}
         CompoundTag root = CompoundTag.create("");
 
-        CompoundTag levels = CompoundTag.create("levels");
         for (Map.Entry<String, Integer> entry : enchantments.entrySet()) {
-            // Error Catching: Ensure we don't put null keys or values into the NBT
-            if (entry.getKey() != null && entry.getValue() != null) {
-                levels.put(new IntTag(entry.getKey(), entry.getValue()));
+            // Ensure the enchantment ID is not null and formatted correctly
+            if (entry.getKey() != null) {
+                String enchantmentKey = entry.getKey().toLowerCase();
+                root.put(new IntTag(enchantmentKey, entry.getValue()));
             }
         }
 
-        root.put(levels);
-        root.put(new ByteTag("show_in_tooltip", (byte) (showInTooltip ? 1 : 0)));
-
+        // Note: show_in_tooltip is omitted here to force the simple inline syntax
         return root;
     }
 
