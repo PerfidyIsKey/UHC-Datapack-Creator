@@ -2,7 +2,7 @@ package uhc.arguments.itemstack;
 
 import uhc.data.nbt.tags.CompoundTag;
 import uhc.data.nbt.util.TagConverter;
-import uhc.resource.ItemId;
+import uhc.resource.item.ItemId;
 
 import java.util.Objects;
 

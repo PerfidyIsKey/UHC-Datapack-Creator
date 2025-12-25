@@ -4,7 +4,7 @@ import uhc.data.nbt.item.components.ComponentMap; // Assuming you have a contain
 import uhc.data.nbt.tags.ItemNBT;
 import uhc.data.nbt.tags.IntTag;
 import uhc.data.nbt.tags.StringTag;
-import uhc.resource.ItemId;
+import uhc.resource.item.ItemId;
 
 import java.util.Objects;
 

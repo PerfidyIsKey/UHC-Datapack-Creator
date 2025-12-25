@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
 import uhc.arguments.entity.Entity;
 
 import java.util.ArrayList;
@@ -11,12 +12,19 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * 💬 **Minecraft Text Component Builder (Jackson Powered)**
+ * 💬 **Universal Minecraft Text Component Builder**
+ * <p>
+ * This class provides a fluent API for creating complex Minecraft JSON text components.
+ * It leverages Jackson for high-performance, safe serialization, supporting all modern
+ * Minecraft features including translations, selectors, and interactive events.
+ * </p>
  */
-@JsonInclude(JsonInclude.Include.NON_NULL) // Automatically omits null fields
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class TextComponent {
 
-    private static final ObjectMapper MAPPER = new ObjectMapper();
+    /** Centralized Jackson Mapper configured for modern Java features. */
+    private static final ObjectMapper MAPPER = new ObjectMapper()
+            .registerModule(new ParameterNamesModule());
 
     @JsonProperty("type")
     private String type;
@@ -30,7 +38,6 @@ public class TextComponent {
     @JsonProperty("keybind")
     private String keybind;
 
-    // Translation fields are handled flat in the root object per Minecraft spec
     @JsonProperty("translate")
     private String translate;
 
@@ -39,6 +46,8 @@ public class TextComponent {
 
     @JsonProperty("with")
     private List<TextComponent> with;
+
+    // --- Styling Fields ---
 
     @JsonProperty("color")
     private String color;
@@ -49,24 +58,50 @@ public class TextComponent {
     @JsonProperty("italic")
     private Boolean italic;
 
+    // --- Interactivity Fields ---
+
+    @JsonProperty("insertion")
+    private String insertion;
+
+    @JsonProperty("click_event")
+    private ClickEvent clickEvent;
+
+    @JsonProperty("hover_event")
+    private HoverEvent hoverEvent;
+
+    /** Nested components that inherit the styles of this parent. */
     @JsonProperty("extra")
-    @JsonInclude(JsonInclude.Include.NON_EMPTY) // Omit if list is empty
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private List<TextComponent> extra;
 
+    /** Private constructor to enforce factory method usage. */
     private TextComponent() {}
 
     // --- Static Factory Methods ---
 
+    /**
+     * Creates a literal text component.
+     * @param text The raw text to display.
+     * @return A new TextComponent instance.
+     */
     public static TextComponent text(String text) {
         TextComponent tc = new TextComponent();
-        tc.text = text;
+        tc.text = text; // Minecraft allows null text in some NBT contexts, but build() handles literal optimization
         return tc;
     }
 
+    /**
+     * Creates a translatable component based on a language key.
+     * @param key The translation identifier (e.g., "chat.type.text").
+     * @param fallback Optional text to show if the key is missing on the client.
+     * @param with Optional components to fill the %s slots in the translation.
+     * @return A new translatable TextComponent.
+     * @throws NullPointerException if the key is null.
+     */
     public static TextComponent translatable(String key, String fallback, TextComponent... with) {
         TextComponent tc = new TextComponent();
         tc.type = "translatable";
-        tc.translate = Objects.requireNonNull(key);
+        tc.translate = Objects.requireNonNull(key, "Translation key cannot be null.");
         tc.fallback = fallback;
         if (with != null && with.length > 0) {
             tc.with = List.of(with);
@@ -74,7 +109,14 @@ public class TextComponent {
         return tc;
     }
 
+    /**
+     * Creates a component that displays an entity's name (or players in a selector).
+     * @param target The {@link Entity} selector or reference.
+     * @return A new selector TextComponent.
+     * @throws NullPointerException if target is null.
+     */
     public static TextComponent selector(Entity target) {
+        Objects.requireNonNull(target, "Selector target cannot be null.");
         TextComponent tc = new TextComponent();
         tc.selector = target.toString();
         return tc;
@@ -82,42 +124,98 @@ public class TextComponent {
 
     // --- Styling Methods ---
 
+    /** Sets the color of the text using a type-safe {@link TextColor}. */
     public TextComponent color(TextColor color) {
         this.color = color != null ? color.toString() : null;
         return this;
     }
 
+    /** Toggles the bold formatting. */
     public TextComponent bold(Boolean bold) {
         this.bold = bold;
         return this;
     }
 
+    /** Toggles the italic formatting. */
+    public TextComponent italic(Boolean italic) {
+        this.italic = italic;
+        return this;
+    }
+
+    /**
+     * Appends a child component. Children inherit parent styles unless overridden.
+     * @param other The component to append.
+     * @return The parent component for chaining.
+     */
     public TextComponent append(TextComponent other) {
-        if (this.extra == null) this.extra = new ArrayList<>();
-        this.extra.add(other);
+        if (other != null) {
+            if (this.extra == null) this.extra = new ArrayList<>();
+            this.extra.add(other);
+        }
+        return this;
+    }
+
+    // --- Interactivity Methods ---
+
+    /**
+     * Sets text to be pasted into the chat bar when shift-clicked.
+     * @param text The insertion text.
+     */
+    public TextComponent insertion(String text) {
+        this.insertion = text;
+        return this;
+    }
+
+    /**
+     * Assigns a type-safe {@link ClickEvent}.
+     * @param event The click event configuration.
+     */
+    public TextComponent click(ClickEvent event) {
+        this.clickEvent = event;
+        return this;
+    }
+
+    /**
+     * Assigns a type-safe {@link HoverEvent}.
+     * @param event The hover event configuration.
+     */
+    public TextComponent hover(HoverEvent event) {
+        this.hoverEvent = event;
         return this;
     }
 
     // --- Build Logic ---
 
     /**
-     * Converts the component to a valid JSON string using Jackson.
+     * Serializes this component into a Minecraft-compatible JSON string.
+     * <p>
+     * Optimizes "plain" components into raw strings (e.g., "Hello" vs {"text":"Hello"})
+     * to save packet space.
+     * </p>
+     * @return Valid JSON string for use in commands or packets.
+     * @throws RuntimeException if serialization fails.
      */
     public String build() {
         try {
-            // Optimization: If it's just plain text with no styles, return raw string
             if (isPlainLiteral()) {
-                return MAPPER.writeValueAsString(text);
+                // Returns "text" (with quotes) for simple literals
+                return MAPPER.writeValueAsString(text != null ? text : "");
             }
             return MAPPER.writeValueAsString(this);
         } catch (JsonProcessingException e) {
-            throw new RuntimeException("Failed to serialize TextComponent", e);
+            throw new RuntimeException("Critical failure during TextComponent serialization", e);
         }
     }
 
+    /**
+     * Checks if this component is a literal string without any metadata.
+     * Includes checks for interactivity to prevent mis-serialization.
+     */
     private boolean isPlainLiteral() {
         return text != null && type == null && translate == null && selector == null &&
-                color == null && bold == null && italic == null && (extra == null || extra.isEmpty());
+                keybind == null && color == null && bold == null && italic == null &&
+                insertion == null && clickEvent == null && hoverEvent == null &&
+                (extra == null || extra.isEmpty());
     }
 
     @Override

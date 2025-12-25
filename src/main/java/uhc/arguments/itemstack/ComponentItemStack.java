@@ -4,7 +4,7 @@ import uhc.data.nbt.item.components.DamageComponent;
 import uhc.data.nbt.item.components.ItemComponent;
 import uhc.data.nbt.item.components.UnbreakableComponent;
 import uhc.data.nbt.util.TagConverter;
-import uhc.resource.ItemId;
+import uhc.resource.item.ItemId;
 
 import java.util.LinkedHashMap;
 import java.util.Map;

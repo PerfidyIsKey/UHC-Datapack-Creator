@@ -1,6 +1,6 @@
 package uhc.arguments.itemstack;
 
-import uhc.resource.ItemId;
+import uhc.resource.item.ItemId;
 
 /**
  * 📦 **Simple Item Stack Implementation**

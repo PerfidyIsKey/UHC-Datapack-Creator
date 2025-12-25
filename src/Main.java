@@ -68,10 +68,7 @@ import uhc.resource.sound.SoundId;
 import uhc.score.ComparatorType;
 import uhc.score.OperationType;
 import uhc.score.ScoreObjective;
-import uhc.text.DyeColor;
-import uhc.text.TextColor;
-import uhc.text.TextComponent;
-import uhc.text.HexColor;
+import uhc.text.*;
 
 import java.io.IOException;
 import java.nio.file.*;
@@ -1021,16 +1018,14 @@ public class Main {
                                                         TextComponent.text("angered"),
                                                         TextComponent.text("the Gods!")))
                                         .frontText(SignNBT.SignSideNBT.create()
-                                                .messages(TextComponent.withClickCommand(
-                                                                "In remembrance",
-                                                                "run_command",
-                                                                SummonCommand.create(EntityId.FIREWORK_ROCKET)
+                                                .messages(TextComponent.text("In Rememberance")
+                                                                .click(ClickEvent.runCommand(SummonCommand.create(EntityId.FIREWORK_ROCKET)
                                                                         .pos(Vec3.relative(0, 0, 0))
                                                                         .nbt(FireworkRocketNBT.create()
                                                                                 .glowing(true)
                                                                                 .fireworksItem(FireworksComponent.create()
                                                                                         .addExplosion(FireworksComponent.Explosion.create()
-                                                                                                .shape(FireworksComponent.FireworkShape.STAR))))),
+                                                                                                .shape(FireworksComponent.FireworkShape.STAR)))))),
                                                         TextComponent.text("of our"),
                                                         TextComponent.text("Command Center"),
                                                         TextComponent.text("2014-2025"))))));

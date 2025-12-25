@@ -2,7 +2,7 @@ package uhc.data.nbt.item.data;
 
 import uhc.data.nbt.item.components.ItemComponent;
 import uhc.data.nbt.tags.*;
-import uhc.resource.ItemId;
+import uhc.resource.item.ItemId;
 
 import java.util.ArrayList;
 import java.util.List;

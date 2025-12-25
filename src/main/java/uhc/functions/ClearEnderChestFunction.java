@@ -10,7 +10,7 @@ import uhc.components.functions.FunctionPath;
 import uhc.core.Datapack;
 import uhc.core.Namespace;
 import uhc.arguments.slot.ItemSlot;
-import uhc.resource.ItemId;
+import uhc.resource.item.ItemId;
 import uhc.core.MinecraftConstants;
 import uhc.command.commands.Comment;
 

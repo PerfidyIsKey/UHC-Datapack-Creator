@@ -1,7 +1,7 @@
 package FileGeneration;
 
 import ItemModifiers.ItemModifier;
-import uhc.resource.ItemId;
+import uhc.resource.item.ItemId;
 
 import java.util.ArrayList;
 

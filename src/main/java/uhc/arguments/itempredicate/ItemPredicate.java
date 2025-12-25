@@ -1,6 +1,6 @@
 package uhc.arguments.itempredicate;
 
-import uhc.resource.ItemId;
+import uhc.resource.item.ItemId;
 
 /**
  * Defines the structure for a Minecraft Item Predicate used in commands:

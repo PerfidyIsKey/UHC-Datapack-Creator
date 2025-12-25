@@ -1,9 +1,4 @@
-package uhc.resource;
-
-import uhc.resource.item.ArmorMaterial;
-import uhc.resource.item.ArmorPiece;
-import uhc.resource.item.ToolMaterial;
-import uhc.resource.item.ToolPiece;
+package uhc.resource.item;
 
 /**
  * Defines item IDs (resource locations) used in NBT data,

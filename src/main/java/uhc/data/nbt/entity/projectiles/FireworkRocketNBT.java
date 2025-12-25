@@ -2,7 +2,7 @@ package uhc.data.nbt.entity.projectiles;
 
 import uhc.data.nbt.item.components.ItemComponent;
 import uhc.data.nbt.tags.*;
-import uhc.resource.ItemId;
+import uhc.resource.item.ItemId;
 
 import java.util.Objects;
 

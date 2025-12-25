@@ -2,7 +2,7 @@ package uhc.data.nbt.entity.data;
 
 import uhc.resource.StaticEntityTag;
 import uhc.resource.loot_table.LootTableId;
-import uhc.resource.ItemId;
+import uhc.resource.item.ItemId;
 
 /**
  * Data Transfer Object for the Falling Block entity NBT structure.

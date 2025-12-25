@@ -3,7 +3,7 @@ package uhc.arguments.itemstack;
 import uhc.data.nbt.item.components.ItemComponent;
 import uhc.data.nbt.util.TagConverter;
 import uhc.text.DyeColor;
-import uhc.resource.ItemId;
+import uhc.resource.item.ItemId;
 
 import java.util.Arrays;
 import java.util.List;

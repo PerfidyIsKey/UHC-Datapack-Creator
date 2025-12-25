@@ -1,6 +1,6 @@
 package uhc.arguments.itempredicate;
 
-import uhc.resource.ItemId;
+import uhc.resource.item.ItemId;
 
 import java.util.List;
 import java.util.StringJoiner;
