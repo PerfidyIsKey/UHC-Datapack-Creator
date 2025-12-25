@@ -1930,7 +1930,7 @@ public class Main {
             fileCommands.add(TagCommand.action(Entity.ofSelector(
                     TargetSelector.RANDOM_PLAYER,
                     SelectorArgumentsBuilder.create()
-                            .team()
+                            .team(true)
                             .scores(Map.of(ScoreObjective.DEATHS, 0))),
                     TagCommand.TagAction.ADD)
                             .name(StaticEntityTag.PREDICTION_CANDIDATE)
@@ -2508,7 +2508,7 @@ public class Main {
                                         TargetSelector.ALL_PLAYERS,
                                         SelectorArgumentsBuilder.create()
                                                 .gamemode(GameModeId.SPECTATOR, true)
-                                                .team()))
+                                                .team(true)))
                         .generate());
 
         if (OperationMode.teamCreationInGame) {
@@ -2523,7 +2523,7 @@ public class Main {
                                             TargetSelector.ALL_PLAYERS,
                                             SelectorArgumentsBuilder.create()
                                                     .gamemode(GameModeId.SPECTATOR, true)
-                                                    .team()))
+                                                    .team(true)))
                             .generate());
         }
 
@@ -2795,7 +2795,7 @@ public class Main {
                 TargetSelector.ALL_PLAYERS,
                 SelectorArgumentsBuilder.create()
                         .tag(StaticEntityTag.TRAITOR)
-                        .team()),
+                        .team(true)),
                 TagCommand.TagAction.ADD)
                         .name(StaticEntityTag.DONT_MAKE_TRAITOR)
                         .generate());
@@ -3436,7 +3436,7 @@ public class Main {
                                     Entity.ofSelector(
                                             TargetSelector.SENDER,
                                             SelectorArgumentsBuilder.create()
-                                                    .team()))
+                                                    .team(true)))
                             .generate());
 
             // Team caller
@@ -3444,7 +3444,7 @@ public class Main {
                     GiveCommand.create(Entity.ofSelector(
                                             TargetSelector.SENDER,
                                             SelectorArgumentsBuilder.create()
-                                                    .team()),
+                                                    .team(true)),
                                     GoatHornItemStack.create(
                                             InstrumentComponent.create()
                                                     .registryId(InstrumentId.PONDER_GOAT_HORN),
@@ -3581,7 +3581,7 @@ public class Main {
             fileCommands.add(TagCommand.action(Entity.ofSelector(
                     TargetSelector.RANDOM_PLAYER,
                     SelectorArgumentsBuilder.create()
-                            .team()
+                            .team(true)
                             .gamemode(GameModeId.SPECTATOR, true)),
                     TagCommand.TagAction.ADD)
                             .name(StaticEntityTag.AM_I_WINNING)
@@ -3752,7 +3752,7 @@ public class Main {
             fileCommands.add(TagCommand.action(Entity.ofSelector(
                     TargetSelector.ALL_PLAYERS,
                     SelectorArgumentsBuilder.create()
-                            .team()),
+                            .team(true)),
                     TagCommand.TagAction.ADD)
                             .name(StaticEntityTag.COLLAR_CHECK)
                             .generate());
@@ -3767,7 +3767,7 @@ public class Main {
             fileCommands.add(TagCommand.action(Entity.ofSelector(
                                     TargetSelector.ALL_PLAYERS,
                                     SelectorArgumentsBuilder.create()
-                                            .team()),
+                                            .team(true)),
                             TagCommand.TagAction.REMOVE)
                     .name(StaticEntityTag.COLLAR_CHECK)
                     .generate());
@@ -3881,7 +3881,7 @@ public class Main {
         Entity checkingPlayer = Entity.ofSelector(
                 TargetSelector.NEAREST_PLAYER,
                 SelectorArgumentsBuilder.create()
-                        .team()
+                        .team(true)
                         .scores(Map.of(ScoreObjective.TIMES_CALLED, "1..")));
         OperationType comparator;
 
