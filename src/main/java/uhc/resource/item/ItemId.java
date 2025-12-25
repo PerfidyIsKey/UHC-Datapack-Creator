@@ -6,11 +6,16 @@ import java.util.Objects;
 /**
  * 📦 **Item Identifier Registry**
  * <p>
- * This enum acts as a central registry for Minecraft item identifiers (Resource Locations).
- * It dynamically maps enum constants to their lowercase Minecraft equivalent names.
+ * This enum acts as a central registry for Minecraft item identifiers. It implements
+ * {@link ItemResource}, allowing it to be used in any method requiring a type-safe
+ * item reference.
+ * </p>
+ * <p>
+ * Constant names are automatically converted to lowercase paths (e.g., {@code IRON_AXE}
+ * becomes {@code "iron_axe"}).
  * </p>
  */
-public enum ItemId {
+public enum ItemId implements ItemResource {
 
     // --- 🏗️ Building & Natural Blocks ---
 
@@ -87,6 +92,7 @@ public enum ItemId {
     WIND_CHARGE,
 
     // --- 🛡️ Armor Sets ---
+
     /** Iron protection for the head. */
     IRON_HELMET,
     /** Iron protection for the torso. */
@@ -131,7 +137,7 @@ public enum ItemId {
 
     /** Core material for brewing and fire charges. */
     BLAZE_ROD,
-    /** Dropped by skeletons; used for meal or taming. */
+    /** Dropped by skeletons; used for bone meal or taming. */
     BONE,
     /** Used for enchanting tables and bookshelves. */
     BOOK,
@@ -206,13 +212,10 @@ public enum ItemId {
 
     // --- ⚙️ State & Internal Fields ---
 
-    /** * The namespace of the resource (e.g., "minecraft").
-     */
+    /** The namespace of the resource (e.g., "minecraft"). */
     private final String namespace;
 
-    /** * The unique path of the resource (e.g., "iron_sword").
-     * Derived automatically from the enum constant name.
-     */
+    /** The unique path of the resource (e.g., "iron_sword"). */
     private final String path;
 
     // --- 🏗️ Constructors ---
@@ -227,33 +230,37 @@ public enum ItemId {
 
     /**
      * Constructor for items requiring a custom namespace.
-     * @param namespace The resource namespace to use.
+     * <p><b>Error Catching:</b> Validates that the namespace is not null and triggers
+     * a validation check to ensure the resulting resource location is syntactically valid.</p>
+     * * @param namespace The resource namespace to use.
      * @throws NullPointerException if the provided namespace is null.
      */
     ItemId(String namespace) {
         this.namespace = Objects.requireNonNull(namespace, "Namespace cannot be null");
         this.path = this.name().toLowerCase();
+
+        // Ensure the derived ID follows Minecraft's naming rules immediately upon creation.
+        this.validate();
     }
 
     // --- 🔍 Accessors ---
 
-    /** * Gets the namespace part of the identifier.
-     * @return The resource namespace.
+    /** * @return The resource namespace (e.g., "minecraft").
      */
     public String getNamespace() {
         return namespace;
     }
 
-    /** * Gets the path part of the identifier.
-     * @return The resource path.
+    /** * @return The resource path derived from the enum name (e.g., "apple").
      */
     public String getPath() {
         return path;
     }
 
-    /** * Combines namespace and path into a full Minecraft resource location.
+    /** * Combines namespace and path into a full Minecraft resource location string.
      * @return The formatted location string (e.g., "minecraft:iron_sword").
      */
+    @Override
     public String getResourceLocation() {
         return namespace + ":" + path;
     }
@@ -262,8 +269,8 @@ public enum ItemId {
 
     /**
      * Dynamically generates a resource location for armor pieces.
-     * <p>Example: {@code getArmorResourceLocation(ArmorMaterial.DIAMOND, ArmorPiece.HELMET)}
-     * returns {@code "minecraft:diamond_helmet"}.</p>
+     * <p><b>Error Catching:</b> Validates that both parameters are non-null to prevent
+     * generating malformed strings like "minecraft:null_null".</p>
      * * @param material The armor material (e.g., DIAMOND, IRON).
      * @param piece The armor slot (e.g., HELMET, BOOTS).
      * @return A full resource location string.
@@ -279,8 +286,7 @@ public enum ItemId {
 
     /**
      * Dynamically generates a resource location for tool types.
-     * <p>Example: {@code getToolResourceLocation(ToolMaterial.GOLD, ToolPiece.PICKAXE)}
-     * returns {@code "minecraft:gold_pickaxe"}.</p>
+     * <p><b>Error Catching:</b> Validates that both parameters are non-null.</p>
      * * @param material The tool material (e.g., WOOD, DIAMOND).
      * @param piece The tool type (e.g., SWORD, AXE).
      * @return A full resource location string.
@@ -295,7 +301,6 @@ public enum ItemId {
     }
 
     /**
-     * Returns the full resource location as the string representation of the enum.
      * @return The result of {@link #getResourceLocation()}.
      */
     @Override
