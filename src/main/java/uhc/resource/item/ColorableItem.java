@@ -1,7 +1,7 @@
 package uhc.resource.item;
 
 import uhc.core.DatapackConfig;
-import uhc.text.DyeColor;
+import uhc.resource.color.DyeColor;
 import java.util.Objects;
 
 /**

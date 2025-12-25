@@ -1,7 +1,7 @@
 package uhc.command.commands;
 
 import uhc.command.MinecraftCommand;
-import uhc.game.GameRuleId;
+import uhc.resource.gameplay.GameRuleId;
 
 import java.util.Objects;
 

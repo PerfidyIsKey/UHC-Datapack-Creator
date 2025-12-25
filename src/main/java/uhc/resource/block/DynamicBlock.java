@@ -1,7 +1,7 @@
 package uhc.resource.block;
 
 import uhc.resource.item.ItemResource;
-import uhc.text.DyeColor;
+import uhc.resource.color.DyeColor;
 import java.util.Objects;
 
 /**
@@ -14,22 +14,27 @@ import java.util.Objects;
  */
 public final class DynamicBlock implements BlockIdentifier, ItemResource {
 
-    /** * The full namespaced identifier (e.g., "minecraft:cherry_planks").
-     * This field is final and immutable to ensure thread safety across the UHC engine.
-     */
-    private final String location;
+    // --- ⚙️ State & Fields ---
+
+    /** * The namespace part of the resource location (e.g., "minecraft"). */
+    private final String namespace;
+
+    /** * The path part of the resource location (e.g., "cherry_planks"). */
+    private final String path;
 
     // --- 🏗️ Constructor ---
 
     /**
      * Internal constructor used by static factory methods.
      * <p><b>Error Catching:</b> Immediately triggers {@link #validate()} to ensure
-     * the constructed string is a syntactically valid Minecraft resource location.</p>
-     * * @param location The pre-formatted full resource location string.
-     * @throws IllegalStateException if the location violates Minecraft naming rules or is a tag.
+     * the constructed components form a syntactically valid Minecraft resource location.</p>
+     * * @param namespace The resource namespace.
+     * @param path      The resource path.
+     * @throws IllegalStateException if the location violates Minecraft naming rules.
      */
-    private DynamicBlock(String location) {
-        this.location = location;
+    private DynamicBlock(String namespace, String path) {
+        this.namespace = Objects.requireNonNull(namespace, "Namespace cannot be null").toLowerCase().trim();
+        this.path = Objects.requireNonNull(path, "Path cannot be null").toLowerCase().trim();
         this.validate();
     }
 
@@ -79,23 +84,36 @@ public final class DynamicBlock implements BlockIdentifier, ItemResource {
      * @throws NullPointerException if namespace or path is null.
      */
     public static BlockIdentifier custom(String namespace, String path) {
-        Objects.requireNonNull(namespace, "Namespace cannot be null.");
-        Objects.requireNonNull(path, "Path cannot be null.");
-
-        return new DynamicBlock(
-                namespace.toLowerCase().trim() + ":" + path.toLowerCase().trim()
-        );
+        return new DynamicBlock(namespace, path);
     }
 
-    // --- 🛰️ Contract Implementation ---
+    // --- 🛰️ ResourceLocation Implementation ---
+
+    /**
+     * Retrieves the namespace component of the block.
+     * @return The namespace string (e.g., "minecraft").
+     */
+    @Override
+    public String getNamespace() {
+        return namespace;
+    }
+
+    /**
+     * Retrieves the path component of the block.
+     * @return The path string (e.g., "oak_log").
+     */
+    @Override
+    public String getPath() {
+        return path;
+    }
 
     /**
      * Retrieves the stored namespaced identifier.
-     * @return The immutable resource location string.
+     * @return The immutable resource location string in {@code namespace:path} format.
      */
     @Override
     public String getResourceLocation() {
-        return location;
+        return namespace + ":" + path;
     }
 
     /**
@@ -107,6 +125,8 @@ public final class DynamicBlock implements BlockIdentifier, ItemResource {
     public void validate() throws IllegalStateException {
         BlockIdentifier.super.validate();
     }
+
+    // --- 📝 Overrides ---
 
     /**
      * Returns the identifier as a string for direct command insertion.

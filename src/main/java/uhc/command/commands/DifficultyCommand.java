@@ -1,7 +1,7 @@
 package uhc.command.commands;
 
 import uhc.command.MinecraftCommand;
-import uhc.game.DifficultyId;
+import uhc.resource.gameplay.DifficultyId;
 
 import java.util.Objects;
 

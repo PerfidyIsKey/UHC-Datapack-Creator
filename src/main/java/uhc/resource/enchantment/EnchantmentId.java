@@ -16,78 +16,100 @@ public enum EnchantmentId implements ResourceLocation {
 
     // --- ⚔️ Combat Enchantments ---
 
-    /** Increases melee damage. */
+    /** Increases melee damage. Maps to {@code minecraft:sharpness}. */
     SHARPNESS,
 
-    /** Sets targets on fire. */
+    /** Sets targets on fire. Maps to {@code minecraft:fire_aspect}. */
     FIRE_ASPECT,
 
-    /** Increases damage against aquatic mobs. */
+    /** Increases damage against aquatic mobs. Maps to {@code minecraft:impaling}. */
     IMPALING,
 
     // --- 🏹 Ranged Enchantments ---
 
-    /** Allows arrows/tridents to pass through entities. */
+    /** Allows arrows/tridents to pass through entities. Maps to {@code minecraft:piercing}. */
     PIERCING,
 
-    /** Causes tridents to return to the thrower. */
+    /** Causes tridents to return to the thrower. Maps to {@code minecraft:loyalty}. */
     LOYALTY,
 
-    /** Increases bow damage. */
+    /** Increases bow damage. Maps to {@code minecraft:power}. */
     POWER,
 
     // --- 🛠️ Tool Enchantments ---
 
-    /** Increases mining and breaking speed. */
+    /** Increases mining and breaking speed. Maps to {@code minecraft:efficiency}. */
     EFFICIENCY,
 
     // --- 💀 Curses ---
 
-    /** Causes the item to disappear on player death. */
+    /** Causes the item to disappear on player death. Maps to {@code minecraft:vanishing_curse}. */
     VANISHING_CURSE;
 
     // --- ⚙️ State & Fields ---
 
-    /** * The finalized namespaced identifier (e.g., "minecraft:sharpness").
-     */
-    private final String location;
+    /** * The namespace part of the resource location (e.g., "minecraft"). */
+    private final String namespace;
+
+    /** * The path part of the resource location (e.g., "sharpness"). */
+    private final String path;
 
     // --- 🏗️ Constructors ---
 
     /**
-     * 🟢 **No-Argument Constructor**
-     * <p>Generates a location using the default Minecraft namespace and the
-     * lowercase enum name.</p>
+     * 🟢 **Standard Item Constructor**
+     * <p>Automatically uses the vanilla namespace and converts the enum name
+     * to a lowercase path.</p>
      */
     EnchantmentId() {
-        this.location = DatapackConfig.MINECRAFT_NAMESPACE + ":" + this.name().toLowerCase();
+        this.namespace = DatapackConfig.MINECRAFT_NAMESPACE;
+        this.path = this.name().toLowerCase();
     }
 
     /**
      * 🟡 **Path-only Constructor**
-     * <p>Used for specific Minecraft IDs that differ from the enum constant name.</p>
+     * <p>Used for specific Minecraft IDs that might differ from the enum constant name.</p>
      * @param path The enchantment path component.
      * @throws NullPointerException if path is null.
      */
     EnchantmentId(String path) {
-        Objects.requireNonNull(path, "Enchantment path cannot be null.");
-        this.location = DatapackConfig.MINECRAFT_NAMESPACE + ":" + path.toLowerCase().trim();
+        this.namespace = DatapackConfig.MINECRAFT_NAMESPACE;
+        this.path = Objects.requireNonNull(path, "Enchantment path cannot be null.").toLowerCase().trim();
+        this.validate();
     }
 
     /**
-     * 🔴 **Custom Namespace Constructor**
-     * <p>Supports identifiers from external or modded namespaces.</p>
-     * @param namespace The custom namespace.
-     * @param path The enchantment path.
-     * @throws NullPointerException if any parameter is null.
+     * 🔴 **Full Custom Constructor**
+     * <p>Allows for a fully unique path and namespace combination (e.g., for mods).</p>
+     * @param namespace The resource namespace.
+     * @param path      The specific enchantment path.
+     * @throws NullPointerException if path or namespace is null.
      */
     EnchantmentId(String namespace, String path) {
-        Objects.requireNonNull(namespace, "Namespace cannot be null.");
-        Objects.requireNonNull(path, "Path cannot be null.");
-        this.location = namespace.toLowerCase().trim() + ":" + path.toLowerCase().trim();
+        this.namespace = Objects.requireNonNull(namespace, "Namespace cannot be null").toLowerCase().trim();
+        this.path = Objects.requireNonNull(path, "Path cannot be null").toLowerCase().trim();
+        this.validate();
     }
 
     // --- 🛰️ ResourceLocation Implementation ---
+
+    /**
+     * Retrieves the namespace part of the identifier.
+     * @return The assigned namespace string.
+     */
+    @Override
+    public String getNamespace() {
+        return namespace;
+    }
+
+    /**
+     * Retrieves the path part of the identifier.
+     * @return The lowercase path string.
+     */
+    @Override
+    public String getPath() {
+        return path;
+    }
 
     /**
      * Retrieves the full formatted resource location.
@@ -95,18 +117,7 @@ public enum EnchantmentId implements ResourceLocation {
      */
     @Override
     public String getResourceLocation() {
-        return location;
-    }
-
-    /**
-     * Validates the internal location string against Minecraft naming standards.
-     * <p><b>Error Catching:</b> Inherits default validation from the interface
-     * to ensure the string contains only allowed characters and exactly one colon.</p>
-     * @throws IllegalStateException if the location is syntactically invalid.
-     */
-    @Override
-    public void validate() throws IllegalStateException {
-        ResourceLocation.super.validate();
+        return namespace + ":" + path;
     }
 
     // --- 📝 Overrides ---

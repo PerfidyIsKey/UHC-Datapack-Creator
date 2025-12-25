@@ -19,18 +19,36 @@ public interface ItemResource extends ResourceLocation {
     // --- 🛠️ Static Factory / Utility ---
 
     /**
-     * Wraps a raw string into a type-safe {@code ItemResource} anonymous implementation.
+     * Wraps a raw string into a type-safe {@code ItemResource} instance.
      * <p><b>Error Catching:</b> This method validates that the provided string is not
-     * null or blank and checks it against Minecraft's naming conventions via {@link #validate()}.</p>
+     * null or blank and checks it against Minecraft's naming conventions.</p>
      * * @param rawLocation The raw resource location (e.g., "minecraft:iron_sword").
      * @return A validated ItemResource instance.
      * @throws NullPointerException if the input is null.
-     * @throws IllegalStateException if the input fails naming validation.
+     * @throws IllegalStateException if the input fails naming validation or is missing a colon.
      */
     static ItemResource of(String rawLocation) {
         Objects.requireNonNull(rawLocation, "Raw item location cannot be null.");
+        String cleaned = rawLocation.toLowerCase().trim();
 
-        ItemResource resource = () -> rawLocation.toLowerCase().trim();
+        if (!cleaned.contains(":")) {
+            throw new IllegalStateException("Item Resource must contain a namespace separator ':'. Received: " + cleaned);
+        }
+
+        String[] parts = cleaned.split(":", 2);
+        String namespace = parts[0];
+        String path = parts[1];
+
+        ItemResource resource = new ItemResource() {
+            @Override
+            public String getNamespace() { return namespace; }
+
+            @Override
+            public String getPath() { return path; }
+
+            @Override
+            public String getResourceLocation() { return cleaned; }
+        };
 
         // Ensure the manual input follows [a-z0-9._-]
         resource.validate();
@@ -38,15 +56,25 @@ public interface ItemResource extends ResourceLocation {
         return resource;
     }
 
-    // --- 🛰️ Core Contract ---
+    // --- 🛰️ Core Contract Overrides ---
 
     /**
      * Inherited from {@link ResourceLocation}.
-     * <p>
-     * Implementation should return the full identifier (e.g., "minecraft:apple").
-     * For items, this is typically used in give commands and NBT data.
-     * </p>
-     * * @return The namespaced identifier for the item.
+     * @return The namespace component (e.g., "minecraft").
+     */
+    @Override
+    String getNamespace();
+
+    /**
+     * Inherited from {@link ResourceLocation}.
+     * @return The path component (e.g., "apple").
+     */
+    @Override
+    String getPath();
+
+    /**
+     * Inherited from {@link ResourceLocation}.
+     * @return The namespaced identifier (e.g., "minecraft:apple").
      */
     @Override
     String getResourceLocation();
@@ -64,9 +92,13 @@ public interface ItemResource extends ResourceLocation {
         // Call the base ResourceLocation validation (regex check)
         ResourceLocation.super.validate();
 
-        String path = getResourceLocation();
-        if (path.contains(" ")) {
-            throw new IllegalStateException("Item Resource cannot contain spaces: " + path);
+        String full = getResourceLocation();
+        if (full.contains(" ")) {
+            throw new IllegalStateException("Item Resource cannot contain spaces: " + full);
+        }
+
+        if (getNamespace().isEmpty() || getPath().isEmpty()) {
+            throw new IllegalStateException("Item Resource namespace or path cannot be empty.");
         }
     }
 }

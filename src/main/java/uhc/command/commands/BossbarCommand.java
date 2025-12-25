@@ -4,7 +4,7 @@ import uhc.arguments.entity.Entity;
 import uhc.command.MinecraftCommand;
 import uhc.resource.bossbar.BossbarId;
 import uhc.resource.bossbar.BossbarStyle;
-import uhc.text.BossbarColor;
+import uhc.resource.color.BossbarColor;
 import uhc.text.TextComponent;
 
 /**

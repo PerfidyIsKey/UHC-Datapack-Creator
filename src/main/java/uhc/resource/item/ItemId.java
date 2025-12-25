@@ -1,6 +1,7 @@
 package uhc.resource.item;
 
 import uhc.core.DatapackConfig;
+import uhc.resource.ResourceLocation;
 import java.util.Objects;
 
 /**
@@ -131,10 +132,10 @@ public enum ItemId implements ItemResource {
 
     // --- ⚙️ State & Fields ---
 
-    /** The namespace part of the resource location (e.g., "minecraft"). */
+    /** * The namespace part of the resource location (e.g., "minecraft"). */
     private final String namespace;
 
-    /** The path part of the resource location (e.g., "iron_sword"). */
+    /** * The path part of the resource location (e.g., "iron_sword"). */
     private final String path;
 
     // --- 🏗️ Constructors ---
@@ -174,7 +175,25 @@ public enum ItemId implements ItemResource {
         this.validate();
     }
 
-    // --- 🛰️ Contract Implementation ---
+    // --- 🛰️ ResourceLocation Implementation ---
+
+    /**
+     * Retrieves the namespace component of the item.
+     * @return The assigned namespace string (e.g., "minecraft").
+     */
+    @Override
+    public String getNamespace() {
+        return namespace;
+    }
+
+    /**
+     * Retrieves the path component of the item.
+     * @return The lowercase path string (e.g., "apple").
+     */
+    @Override
+    public String getPath() {
+        return path;
+    }
 
     /**
      * Constructs the fully qualified Minecraft resource location.
@@ -185,22 +204,20 @@ public enum ItemId implements ItemResource {
         return namespace + ":" + path;
     }
 
-    // --- 🔍 Accessors ---
-
-    /** @return The namespace string (e.g., "minecraft"). */
-    public String getNamespace() { return namespace; }
-
-    /** @return The item path string (e.g., "apple"). */
-    public String getPath() { return path; }
+    // --- 🛡️ Validation & Utility ---
 
     // --- 🛡️ Validation & Utility ---
 
     /**
      * Ensures the resource location follows Minecraft's naming conventions.
-     * * @throws IllegalStateException if the location is syntactically invalid.
+     * <p><b>Error Catching:</b> Invokes the validation logic defined in the
+     * {@link ResourceLocation} contract to ensure character compliance.</p>
+     * @throws IllegalStateException if the location is syntactically invalid.
      */
     @Override
     public void validate() throws IllegalStateException {
+        // Correct way to call a default method from an implemented interface in an Enum:
+        // Since ItemResource extends ResourceLocation, we call the most specific one.
         ItemResource.super.validate();
     }
 

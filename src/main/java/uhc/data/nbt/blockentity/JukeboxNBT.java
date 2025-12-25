@@ -1,6 +1,6 @@
 package uhc.data.nbt.blockentity;
 
-import uhc.data.nbt.item.data.SingleItemStack;
+import uhc.arguments.item.SingleItemStack;
 import uhc.data.nbt.tags.CompoundTag;
 import uhc.data.nbt.tags.LongTag;
 import uhc.resource.block.BlockId;

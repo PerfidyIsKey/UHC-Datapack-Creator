@@ -6,22 +6,22 @@ import uhc.arguments.item.ItemStack;
 import uhc.command.commands.EffectCommand;
 import uhc.command.commands.ItemCommand;
 import uhc.command.commands.Comment; // <-- NEW: Import the Comment command class
-import uhc.arguments.item.ItemTargetEntity;
+import uhc.command.commands.item.ItemTargetEntity;
 import uhc.components.functions.Function;
 import uhc.components.functions.FunctionPath;
 import uhc.core.Datapack;
 import uhc.core.Namespace;
-import uhc.arguments.slot.ItemSlot;
+import uhc.arguments.item.slot.ItemSlot;
 import uhc.data.nbt.item.components.*;
 import uhc.resource.effect.EffectId;
 import uhc.resource.enchantment.EnchantmentId;
 import uhc.resource.item.ItemId;
 import uhc.resource.attribute.AttributeDisplayType;
 import uhc.resource.attribute.AttributeModifierId;
-import uhc.resource.attribute.AttributeType;
+import uhc.resource.attribute.AttributeId;
 import uhc.resource.item.EquipmentSlot;
-import uhc.text.HexColor;
-import uhc.text.TextColor;
+import uhc.resource.color.HexColor;
+import uhc.resource.color.TextColor;
 import uhc.text.TextComponent;
 
 /**
@@ -116,7 +116,7 @@ public class GodModeFunction implements DatapackFunction {
                                         .add(EnchantmentId.EFFICIENCY, 255))
                                 .with(AttributeModifiersComponent.create()
                                         .add(AttributeModifiersComponent.Entry.create(
-                                                        AttributeType.ARMOR,
+                                                        AttributeId.ARMOR,
                                                         AttributeModifierId.BASE_ARMOR,
                                                         1000.0,
                                                         uhc.resource.attribute.AttributeOperation.ADD_VALUE)

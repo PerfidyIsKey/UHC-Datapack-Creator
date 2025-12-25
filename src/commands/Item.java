@@ -2,9 +2,9 @@ package commands;
 
 import uhc.arguments.item.ItemStack;
 import uhc.command.commands.ItemCommand;
-import uhc.arguments.slot.ItemSlot;
-import uhc.arguments.slot.SpecificItemSlot;
-import uhc.arguments.item.ItemTarget;
+import uhc.arguments.item.slot.ItemSlot;
+import uhc.arguments.item.slot.SpecificItemSlot;
+import uhc.command.commands.item.ItemTarget;
 
 /**
  * Fluent builder for the Minecraft /item command.

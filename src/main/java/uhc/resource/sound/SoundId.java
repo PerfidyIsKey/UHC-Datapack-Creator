@@ -1,12 +1,13 @@
 package uhc.resource.sound;
 
+import uhc.arguments.sound.SoundEvent;
 import uhc.core.DatapackConfig;
 
 /**
  * 🔊 **Sound Registry ID Mapper**
  * <p>
  * Maps common Minecraft Sound Events to their resource locations.
- * Used by {@link uhc.data.nbt.item.data.SoundEvent} and {@link uhc.data.nbt.item.components.InstrumentComponent}.
+ * Used by {@link SoundEvent} and {@link uhc.data.nbt.item.components.InstrumentComponent}.
  * </p>
  */
 public enum SoundId {

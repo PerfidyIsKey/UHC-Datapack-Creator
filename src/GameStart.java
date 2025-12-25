@@ -2,7 +2,7 @@ import Enums.FileName;
 
 import FileGeneration.FileData;
 import uhc.command.commands.TagCommand;
-import uhc.resource.StaticEntityTag;
+import uhc.resource.tag.StaticEntityTag;
 
 import java.util.ArrayList;
 

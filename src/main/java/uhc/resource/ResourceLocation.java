@@ -23,12 +23,22 @@ public interface ResourceLocation {
     // --- 🛰️ Core Methods ---
 
     /**
+     * Retrieves the namespace part of the identifier (e.g., "minecraft").
+     * @return The resource namespace.
+     */
+    String getNamespace();
+
+    /**
+     * Retrieves the path part of the identifier (e.g., "diamond_sword").
+     * @return The resource path.
+     */
+    String getPath();
+
+    /**
      * Retrieves the full, formatted namespaced identifier.
      * <p>
      * Implementation Requirement:
      * The returned string must strictly follow the {@code namespace:path} format.
-     * If no namespace is explicitly provided by the source, it should default
-     * to the value defined in {@code DatapackConfig.MINECRAFT_NAMESPACE}.
      * </p>
      * * @return The full resource location string (e.g., "minecraft:stone").
      */

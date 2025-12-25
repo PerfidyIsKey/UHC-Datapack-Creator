@@ -141,6 +141,7 @@ public enum BlockId implements BlockIdentifier, ItemResource {
      * Retrieves the namespace associated with this block.
      * @return The namespace string.
      */
+    @Override
     public String getNamespace() {
         return namespace;
     }
@@ -149,6 +150,7 @@ public enum BlockId implements BlockIdentifier, ItemResource {
      * Retrieves the path associated with this block.
      * @return The path string.
      */
+    @Override
     public String getPath() {
         return path;
     }

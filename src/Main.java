@@ -22,6 +22,8 @@ import commands.*;
 import uhc.command.commands.RandomCommand;
 import uhc.arguments.data.DataPath;
 import uhc.command.commands.SetWorldSpawnCommand;
+import uhc.command.commands.data.DataTargetEntity;
+import uhc.command.commands.data.ModificationSetValue;
 import uhc.data.nbt.blockentity.ChestNBT;
 import uhc.data.nbt.blockentity.JukeboxNBT;
 import uhc.data.nbt.blockentity.SignNBT;
@@ -37,36 +39,41 @@ import uhc.data.nbt.entity.mobs.PlayerNBT;
 import uhc.data.nbt.entity.other.MarkerNBT;
 import uhc.data.nbt.entity.projectiles.FireworkRocketNBT;
 import uhc.data.nbt.item.ItemNBT;
-import uhc.data.nbt.item.data.SingleItemStack;
-import uhc.data.target.DataTargetEntity;
+import uhc.arguments.item.SingleItemStack;
 import uhc.arguments.data.DataValue;
-import uhc.data.nbt.ModificationSetValue;
 import uhc.data.nbt.item.components.*;
-import uhc.arguments.item.ItemTargetEntity;
+import uhc.command.commands.item.ItemTargetEntity;
 import controlpoints.ControlPoint;
 import controlpoints.ControlPointTag;
 import uhc.command.commands.*;
-import uhc.arguments.slot.ItemSlot;
-import uhc.data.resource.*;
-import uhc.game.*;
+import uhc.arguments.item.slot.ItemSlot;
 import uhc.data.nbt.tags.ByteTag;
-import uhc.resource.*;
 import uhc.resource.attribute.AttributeDisplayType;
 import uhc.resource.attribute.AttributeModifierId;
-import uhc.resource.attribute.AttributeType;
+import uhc.resource.attribute.AttributeId;
 import uhc.resource.block.*;
 import uhc.resource.block.structure_block.StructureBlockMode;
 import uhc.resource.block.structure_block.StructureMirror;
 import uhc.resource.block.structure_block.StructureRotation;
+import uhc.resource.color.DyeColor;
+import uhc.resource.color.HexColor;
+import uhc.resource.color.TextColor;
+import uhc.resource.data.DataPathId;
 import uhc.resource.effect.EffectId;
 import uhc.resource.enchantment.EnchantmentId;
 import uhc.resource.entity.EntityId;
+import uhc.resource.gameplay.DifficultyId;
+import uhc.resource.gameplay.GameModeId;
+import uhc.resource.gameplay.GameRuleId;
 import uhc.resource.item.*;
-import uhc.attribute.AttributeId;
 import uhc.resource.loot_table.LootTableId;
+import uhc.resource.particle.ParticleId;
 import uhc.resource.potion.PotionId;
+import uhc.resource.recipe.RecipeId;
 import uhc.resource.sound.InstrumentId;
 import uhc.resource.sound.SoundId;
+import uhc.resource.sound.SoundSource;
+import uhc.resource.tag.StaticEntityTag;
 import uhc.score.ComparatorType;
 import uhc.score.OperationType;
 import uhc.score.ScoreObjective;
@@ -1307,7 +1314,7 @@ public class Main {
                                         .add(EnchantmentId.EFFICIENCY, 255))
                                 .with(AttributeModifiersComponent.create()
                                         .add(AttributeModifiersComponent.Entry.create(
-                                                        AttributeType.ARMOR,
+                                                        AttributeId.ARMOR,
                                                         AttributeModifierId.BASE_ARMOR,
                                                         1000.0,
                                                         uhc.resource.attribute.AttributeOperation.ADD_VALUE)
@@ -2118,13 +2125,13 @@ public class Main {
                         ExperienceCommand.ExperienceAction.SET,
                         Entity.ofSelector(TargetSelector.ALL_PLAYERS))
                 .amount(0)
-                .type(ExperienceType.LEVELS)
+                .type(ExperienceCommand.ExperienceType.LEVELS)
                 .generate());
         fileCommands.add(ExperienceCommand.create(
                         ExperienceCommand.ExperienceAction.SET,
                         Entity.ofSelector(TargetSelector.ALL_PLAYERS))
                 .amount(0)
-                .type(ExperienceType.POINTS)
+                .type(ExperienceCommand.ExperienceType.POINTS)
                 .generate());
 
         // Give players teammate tools
@@ -3647,7 +3654,7 @@ public class Main {
                                 .delta(Vec3.absolute(0, 0, 0))
                                 .speed(0.0f)
                                 .count(1)
-                                .display(DisplayType.NORMAL)
+                                .display(ParticleCommand.DisplayType.NORMAL)
                                 .viewers(Entity.ofSelector(TargetSelector.SENDER))
                                 .generate());
             }

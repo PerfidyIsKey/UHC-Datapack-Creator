@@ -7,12 +7,7 @@ import java.util.Objects;
  * 🏷️ **Entity Resource Marker**
  * <p>
  * Specifically identifies a {@link ResourceLocation} that represents an entity type
- * valid for summoning, killing, or targeting (e.g., {@code /summon}, {@code /kill},
- * or {@code @e[type=...]}).
- * </p>
- * <p>
- * This interface prevents logic errors by ensuring that methods designed for
- * mob/entity manipulation cannot accidentally receive items or blocks.
+ * valid for summoning, killing, or targeting.
  * </p>
  */
 public interface EntityResource extends ResourceLocation {
@@ -21,35 +16,50 @@ public interface EntityResource extends ResourceLocation {
 
     /**
      * Creates a type-safe {@code EntityResource} from a raw namespaced string.
-     * <p><b>Error Catching:</b> Validates that the input is not null and immediately
-     * executes {@link #validate()} to verify the string adheres to Minecraft's
-     * internal entity registry standards.</p>
-     * * @param rawLocation The namespaced ID (e.g., "minecraft:zombie", "uhc:custom_boss").
+     * <p><b>Error Catching:</b> Decomposes the string into namespace and path to
+     * satisfy the base contract and executes validation.</p>
+     * @param rawLocation The namespaced ID (e.g., "minecraft:zombie").
      * @return A validated EntityResource instance.
-     * @throws NullPointerException if {@code rawLocation} is null.
-     * @throws IllegalStateException if the location is malformed.
+     * @throws IllegalStateException if the location is malformed or missing a colon.
      */
     static EntityResource of(String rawLocation) {
         Objects.requireNonNull(rawLocation, "Entity resource location cannot be null.");
+        String cleaned = rawLocation.toLowerCase().trim();
 
-        EntityResource resource = () -> rawLocation.toLowerCase().trim();
+        if (!cleaned.contains(":")) {
+            throw new IllegalStateException("Entity Resource must contain a namespace separator ':'. Received: " + cleaned);
+        }
 
-        // Fail-fast validation before the object is used in command builders
+        String[] parts = cleaned.split(":", 2);
+        String namespace = parts[0];
+        String path = parts[1];
+
+        EntityResource resource = new EntityResource() {
+            @Override
+            public String getNamespace() { return namespace; }
+
+            @Override
+            public String getPath() { return path; }
+
+            @Override
+            public String getResourceLocation() { return cleaned; }
+        };
+
         resource.validate();
-
         return resource;
     }
 
-    // --- 🛰️ Core Contract ---
+    // --- 🛰️ Core Contract Overrides ---
 
-    /**
-     * Inherited from {@link ResourceLocation}.
-     * <p>
-     * Must return the unique identifier for the entity type (e.g., "minecraft:creeper").
-     * This is the string used in the {@code type} argument of selectors.
-     * </p>
-     * * @return The namespaced identifier for the entity.
-     */
+    /** @return The namespace component. */
+    @Override
+    String getNamespace();
+
+    /** @return The path component. */
+    @Override
+    String getPath();
+
+    /** @return The full identifier. */
     @Override
     String getResourceLocation();
 
@@ -57,10 +67,8 @@ public interface EntityResource extends ResourceLocation {
 
     /**
      * Performs entity-specific validation on the identifier.
-     * <p><b>Error Catching:</b> In addition to standard regex validation, this
-     * check ensures no entity NBT data (curly braces) is included in the base
-     * resource identifier, which would break certain selector syntaxes.</p>
-     * * @throws IllegalStateException if the entity identifier is syntactically invalid.
+     * <p><b>Error Catching:</b> Ensures no NBT data or selector syntax is present.</p>
+     * @throws IllegalStateException if the entity identifier is syntactically invalid.
      */
     @Override
     default void validate() throws IllegalStateException {
@@ -69,13 +77,11 @@ public interface EntityResource extends ResourceLocation {
 
         String location = getResourceLocation();
 
-        // Specific check: ResourceLocation represents the TYPE, not the specific data.
+        // Ensure purely registry type identifier
         if (location.contains("{") || location.contains("}")) {
-            throw new IllegalStateException("EntityResource must represent the Entity Type only, " +
-                    "not its NBT data. Found: " + location);
+            throw new IllegalStateException("EntityResource must represent the Entity Type only, not NBT. Found: " + location);
         }
 
-        // Check for selector-specific characters that shouldn't be in a Registry ID
         if (location.contains("@") || location.contains("[") || location.contains("]")) {
             throw new IllegalStateException("EntityResource cannot contain selector syntax (@, [, ]): " + location);
         }

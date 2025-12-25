@@ -3,9 +3,9 @@ package uhc.arguments.entity;
 import uhc.data.nbt.BuildableNBT;
 import uhc.data.nbt.tags.CompoundTag;
 import uhc.data.nbt.util.TagConverter;
-import uhc.resource.EntityTag;
+import uhc.resource.tag.EntityTag;
 import uhc.resource.entity.EntityId;
-import uhc.game.GameModeId;
+import uhc.resource.gameplay.GameModeId;
 import uhc.score.ScoreObjective;
 
 import java.util.ArrayList;

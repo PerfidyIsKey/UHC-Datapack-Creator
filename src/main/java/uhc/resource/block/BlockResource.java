@@ -7,7 +7,7 @@ import java.util.Objects;
  * 🏷️ **Block Resource Marker**
  * <p>
  * Specifically identifies a {@link ResourceLocation} that is valid for world placement,
- * block predicates, and block-related commands (e.g., {@code /setblock}, {@code /fill}).
+ * block predicates, and block-related commands.
  * </p>
  */
 public interface BlockResource extends ResourceLocation {
@@ -16,51 +16,64 @@ public interface BlockResource extends ResourceLocation {
 
     /**
      * Returns a standard block identifier.
-     * <p><b>Use case:</b> Direct block IDs like {@code minecraft:stone}.</p>
-     * @param rawLocation The namespaced ID.
+     * @param rawLocation The namespaced ID (e.g., "minecraft:stone").
      * @return A validated BlockResource instance.
      */
     static BlockResource of(String rawLocation) {
         Objects.requireNonNull(rawLocation, "Block resource location cannot be null.");
-        BlockResource resource = () -> rawLocation.toLowerCase().trim();
+        String cleaned = rawLocation.toLowerCase().trim();
+
+        if (!cleaned.contains(":")) {
+            throw new IllegalStateException("Block Resource must contain a namespace separator ':'.");
+        }
+
+        String[] parts = cleaned.split(":", 2);
+        String ns = parts[0];
+        String p = parts[1];
+
+        BlockResource resource = new BlockResource() {
+            @Override public String getNamespace() { return ns; }
+            @Override public String getPath() { return p; }
+            @Override public String getResourceLocation() { return cleaned; }
+        };
+
         resource.validate();
         return resource;
     }
 
     /**
-     * Returns a block tag identifier.
-     * <p><b>Use case:</b> Referencing groups of blocks in predicates, e.g., {@code #minecraft:logs}.</p>
-     * <p><b>Error Catching:</b> Automatically ensures the tag is prefixed with {@code #}.</p>
-     * @param rawTag The namespaced tag (with or without the # prefix).
+     * Returns a block tag identifier prefixed with '#'.
+     * @param rawTag The namespaced tag (e.g., "minecraft:logs").
      * @return A validated BlockResource instance representing a tag.
      */
     static BlockResource tag(String rawTag) {
         Objects.requireNonNull(rawTag, "Block tag cannot be null.");
-        String formatted = rawTag.trim().startsWith("#") ? rawTag.trim() : "#" + rawTag.trim();
-        BlockResource resource = () -> formatted.toLowerCase();
+        String trimmed = rawTag.trim().toLowerCase();
+        String pathOnly = trimmed.startsWith("#") ? trimmed.substring(1) : trimmed;
+
+        if (!pathOnly.contains(":")) {
+            throw new IllegalStateException("Block Tag must contain a namespace separator ':'.");
+        }
+
+        String[] parts = pathOnly.split(":", 2);
+        String ns = parts[0];
+        String p = parts[1];
+
+        BlockResource resource = new BlockResource() {
+            @Override public String getNamespace() { return ns; }
+            @Override public String getPath() { return p; }
+            @Override public String getResourceLocation() { return "#" + ns + ":" + p; }
+        };
+
         resource.validate();
         return resource;
     }
 
-    /**
-     * Creates a dynamic block identifier, useful for specialized or modded blocks.
-     * @param namespace The namespace (e.g., "minecraft").
-     * @param path The block path (e.g., "deepslate_diamond_ore").
-     * @return A validated BlockResource.
-     */
-    static BlockResource dynamic(String namespace, String path) {
-        Objects.requireNonNull(namespace, "Namespace cannot be null");
-        Objects.requireNonNull(path, "Path cannot be null");
-        return of(namespace.toLowerCase() + ":" + path.toLowerCase());
-    }
+    // --- 🛰️ Core Contract Overrides ---
 
-    // --- 🛰️ Core Contract ---
-
-    /**
-     * @return The formatted identifier (e.g., "minecraft:stone" or "#minecraft:wool").
-     */
-    @Override
-    String getResourceLocation();
+    @Override String getNamespace();
+    @Override String getPath();
+    @Override String getResourceLocation();
 
     /**
      * Helper to check if this resource represents a tag.
@@ -72,24 +85,16 @@ public interface BlockResource extends ResourceLocation {
 
     // --- 🛡️ Validation ---
 
-    /**
-     * Performs block-specific validation.
-     * <p><b>Error Catching:</b> Validates standard naming rules while allowing
-     * the '#' prefix specifically for tags.</p>
-     */
     @Override
     default void validate() throws IllegalStateException {
-        String location = getResourceLocation();
-
-        // Temporarily strip '#' for regex validation if it's a tag
-        String toValidate = isTag() ? location.substring(1) : location;
-
-        if (toValidate.isEmpty() || !VALID_PATTERN.matcher(toValidate).matches()) {
-            throw new IllegalStateException("Malformed BlockResource: '" + location + "'.");
+        // Run standard ResourceLocation regex validation on the parts
+        String raw = getNamespace() + ":" + getPath();
+        if (!VALID_PATTERN.matcher(raw).matches()) {
+            throw new IllegalStateException("Malformed BlockResource: '" + getResourceLocation() + "'.");
         }
 
-        if (location.contains("[") || location.contains("{")) {
-            throw new IllegalStateException("BlockResource cannot contain state/NBT: " + location);
+        if (getResourceLocation().contains("[") || getResourceLocation().contains("{")) {
+            throw new IllegalStateException("BlockResource cannot contain state/NBT: " + getResourceLocation());
         }
     }
 }

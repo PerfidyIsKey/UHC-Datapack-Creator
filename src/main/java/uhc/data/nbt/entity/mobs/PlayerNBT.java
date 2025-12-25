@@ -1,8 +1,8 @@
 package uhc.data.nbt.entity.mobs;
 
-import uhc.data.nbt.item.data.SingleItemStack;
+import uhc.arguments.item.SingleItemStack;
 import uhc.data.nbt.tags.*;
-import uhc.game.GameModeId;
+import uhc.resource.gameplay.GameModeId;
 import uhc.resource.dimension.DimensionId;
 import uhc.text.TextComponent;
 

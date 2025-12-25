@@ -4,7 +4,7 @@ import uhc.data.nbt.NBTTag;
 import uhc.data.nbt.tags.*;
 import uhc.resource.attribute.AttributeDisplayType;
 import uhc.resource.attribute.AttributeOperation;
-import uhc.resource.attribute.AttributeType;
+import uhc.resource.attribute.AttributeId;
 import uhc.resource.item.EquipmentSlot;
 import uhc.resource.item.components.ComponentId;
 import uhc.resource.attribute.AttributeModifierId;
@@ -82,7 +82,7 @@ public class AttributeModifiersComponent implements ItemComponent {
      * Represents a single Attribute Modifier entry within the list.
      */
     public static class Entry {
-        private final AttributeType type;
+        private final AttributeId type;
         private final AttributeModifierId id;
         private final double amount;
         private final AttributeOperation operation;
@@ -98,14 +98,14 @@ public class AttributeModifiersComponent implements ItemComponent {
          * @param amount The value of the modifier.
          * @param operation The math type: "add_value", "add_multiplied_base", "add_multiplied_total".
          */
-        private Entry(AttributeType type, AttributeModifierId id, double amount, AttributeOperation operation) {
+        private Entry(AttributeId type, AttributeModifierId id, double amount, AttributeOperation operation) {
             this.type = Objects.requireNonNull(type);
             this.id = Objects.requireNonNull(id);
             this.amount = amount;
             this.operation = Objects.requireNonNull(operation);
         }
 
-        public static Entry create(AttributeType type, AttributeModifierId id, double amount, AttributeOperation operation) {
+        public static Entry create(AttributeId type, AttributeModifierId id, double amount, AttributeOperation operation) {
             return new Entry(type, id, amount, operation);
         }
 
@@ -128,7 +128,7 @@ public class AttributeModifiersComponent implements ItemComponent {
         protected CompoundTag toNbt() {
             CompoundTag tag = CompoundTag.create(""); // Unnamed compound for List entry
             tag.put(new StringTag("type", type.getResourceLocation()));
-            tag.put(new StringTag("id", id.getId()));
+            tag.put(new StringTag("id", id.getPath()));
             tag.put(new DoubleTag("amount", amount));
             tag.put(new StringTag("operation", operation.getNbtName()));
             tag.put(new StringTag("slot", slot.getNbtName()));

@@ -1,6 +1,6 @@
 package HelperClasses;
 
-import uhc.text.TextColor;
+import uhc.resource.color.TextColor;
 import Enums.Objective;
 
 public class Score extends TextItem {

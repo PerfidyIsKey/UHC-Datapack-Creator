@@ -1,6 +1,6 @@
 package HelperClasses;
 
-import uhc.text.TextColor;
+import uhc.resource.color.TextColor;
 
 public class TextItem {
 

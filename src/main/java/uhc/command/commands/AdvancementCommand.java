@@ -2,7 +2,7 @@ package uhc.command.commands;
 
 import uhc.arguments.entity.Entity;
 import uhc.command.MinecraftCommand;
-import uhc.resource.advancement.AdvancementResourceLocation;
+import uhc.resource.advancement.AdvancementId;
 import uhc.arguments.entity.TargetSelector;
 
 import java.util.Objects;
@@ -24,7 +24,7 @@ public class AdvancementCommand implements MinecraftCommand {
     private boolean requiresAdvancementId;
 
     // Arguments required by specific modes.
-    private AdvancementResourceLocation advancement;
+    private AdvancementId advancement;
     private String criterion;
 
     private AdvancementCommand(AdvancementAction action, Entity targets) {
@@ -51,7 +51,7 @@ public class AdvancementCommand implements MinecraftCommand {
      */
     public static String grantShinyGearToSelf() {
         Entity self = Entity.ofSelector(TargetSelector.SENDER);
-        AdvancementResourceLocation shinyGear = AdvancementResourceLocation.story("shiny_gear");
+        AdvancementId shinyGear = AdvancementId.story("shiny_gear");
 
         return AdvancementCommand.create(AdvancementAction.GRANT, self)
                 .only(shinyGear)
@@ -76,7 +76,7 @@ public class AdvancementCommand implements MinecraftCommand {
      */
     public static String revokeShinyGearFromSelf() {
         Entity self = Entity.ofSelector(TargetSelector.SENDER);
-        AdvancementResourceLocation shinyGear = AdvancementResourceLocation.story("shiny_gear");
+        AdvancementId shinyGear = AdvancementId.story("shiny_gear");
 
         return AdvancementCommand.create(AdvancementAction.REVOKE, self)
                 .only(shinyGear)
@@ -110,7 +110,7 @@ public class AdvancementCommand implements MinecraftCommand {
      * Targets a single advancement.
      * <p>Syntax: {@code ... only <advancement> [<criterion>]}</p>
      */
-    public AdvancementCommand only(AdvancementResourceLocation advancement) {
+    public AdvancementCommand only(AdvancementId advancement) {
         setMode(AdvancementMode.ONLY, true);
         this.advancement = Objects.requireNonNull(advancement, "Advancement ID cannot be null for 'only' mode.");
         return this;
@@ -120,7 +120,7 @@ public class AdvancementCommand implements MinecraftCommand {
      * Targets an advancement and all its children.
      * <p>Syntax: {@code ... from <advancement>}</p>
      */
-    public AdvancementCommand from(AdvancementResourceLocation advancement) {
+    public AdvancementCommand from(AdvancementId advancement) {
         setMode(AdvancementMode.FROM, true);
         this.advancement = Objects.requireNonNull(advancement, "Advancement ID cannot be null for 'from' mode.");
         return this;
@@ -130,7 +130,7 @@ public class AdvancementCommand implements MinecraftCommand {
      * Targets an advancement, its children, and its parents (the whole branch).
      * <p>Syntax: {@code ... through <advancement>}</p>
      */
-    public AdvancementCommand through(AdvancementResourceLocation advancement) {
+    public AdvancementCommand through(AdvancementId advancement) {
         setMode(AdvancementMode.THROUGH, true);
         this.advancement = Objects.requireNonNull(advancement, "Advancement ID cannot be null for 'through' mode.");
         return this;
@@ -140,7 +140,7 @@ public class AdvancementCommand implements MinecraftCommand {
      * Targets an advancement and all its parents.
      * <p>Syntax: {@code ... until <advancement>}</p>
      */
-    public AdvancementCommand until(AdvancementResourceLocation advancement) {
+    public AdvancementCommand until(AdvancementId advancement) {
         setMode(AdvancementMode.UNTIL, true);
         this.advancement = Objects.requireNonNull(advancement, "Advancement ID cannot be null for 'until' mode.");
         return this;

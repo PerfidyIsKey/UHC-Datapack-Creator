@@ -1,7 +1,7 @@
 package uhc.data.nbt.item.components;
 
 import uhc.data.nbt.NBTTag;
-import uhc.data.nbt.item.data.SoundEvent;
+import uhc.arguments.sound.SoundEvent;
 import uhc.data.nbt.tags.*;
 import uhc.resource.item.components.ComponentId;
 import uhc.resource.sound.InstrumentId;

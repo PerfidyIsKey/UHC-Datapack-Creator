@@ -1,7 +1,7 @@
 package uhc.command.commands;
 
 import uhc.arguments.block.BlockPos;
-import uhc.arguments.number.Angle;
+import uhc.arguments.coordinate.Angle;
 import uhc.command.MinecraftCommand;
 
 /**

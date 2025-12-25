@@ -3,7 +3,7 @@ package uhc.data.nbt.blockentity;
 import uhc.data.nbt.blockentity.traits.LockableNBT;
 import uhc.data.nbt.blockentity.traits.LootableNBT;
 import uhc.data.nbt.blockentity.traits.RenamableNBT;
-import uhc.data.nbt.item.data.StoredItem;
+import uhc.arguments.item.StoredItem;
 import uhc.data.nbt.tags.CompoundTag;
 import uhc.data.nbt.tags.ListTag;
 import uhc.resource.loot_table.LootTableId;
