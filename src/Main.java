@@ -1291,11 +1291,10 @@ public class Main {
                 .replaceWith(
                         ComponentItemStack.create(ItemId.TRIDENT)
                                 .addComponent(CustomNameComponent.create(
-                                        TextComponent.array(List.of(
-                                                TextComponent.text("aA").color(TextColor.WHITE).obfuscated(true),
-                                                TextComponent.text("The").color(HexColor.create("#8C3CC1")).bold(true),
-                                                TextComponent.text(" Impaler ").color(HexColor.create("#E280FF")).bold(true),
-                                                TextComponent.text("Aa").color(TextColor.WHITE).obfuscated(true)))))
+                                        TextComponent.text("aA").color(TextColor.WHITE).obfuscated(true)
+                                                .append(TextComponent.text("The").color(HexColor.create("#8C3CC1")).bold(true))
+                                                .append(TextComponent.text(" Impaler ").color(HexColor.create("#E280FF")).bold(true))
+                                                .append(TextComponent.text("Aa").color(TextColor.WHITE).obfuscated(true))))
                                 .addComponent(LoreComponent.create(TextComponent.text("This holy weapon impales anything it touches")))
                                 .addComponent(DamageComponent.create(0))
                                 .addComponent(EnchantmentsComponent.create()
@@ -2433,9 +2432,8 @@ public class Main {
                 .subtitle(TextComponent.text("Absolute chad.").color(TextColor.LIGHT_PURPLE).bold(true).italic(true))
                 .generate());
         fileCommands.add(TitleCommand.create(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
-                .title(TextComponent.array(List.of(
-                        TextComponent.selector(Entity.ofSelector(TargetSelector.SENDER)).color(TextColor.WHITE).italic(true),
-                        TextComponent.text(" victorious").color(TextColor.GOLD).bold(true))))
+                .title(TextComponent.selector(Entity.ofSelector(TargetSelector.SENDER)).color(TextColor.WHITE).italic(true)
+                        .append(TextComponent.text(" victorious").color(TextColor.GOLD).bold(true)))
                 .generate());
 
         // Proceed to victory mode
@@ -2877,14 +2875,13 @@ public class Main {
         // Show all traitors in actionbar
         fileCommands.add(Execute.As("@a[tag=" + TagTemp.Traitor + "]") +
                 TitleCommand.create(Entity.ofSelector(TargetSelector.SENDER))
-                        .actionbar(TextComponent.array(List.of(
-                                TextComponent.text(">>> ").color(TextColor.GOLD),
-                                TextComponent.text("Traitor Faction: ").color(TextColor.LIGHT_PURPLE),
-                                TextComponent.selector(Entity.ofSelector(
+                        .actionbar(TextComponent.text(">>> ").color(TextColor.GOLD)
+                                .append(TextComponent.text("Traitor Faction: ").color(TextColor.LIGHT_PURPLE))
+                                .append(TextComponent.selector(Entity.ofSelector(
                                         TargetSelector.ALL_PLAYERS,
                                         SelectorArgumentsBuilder.create()
-                                                .tag(StaticEntityTag.TRAITOR))),
-                                TextComponent.text(" <<<").color(TextColor.GOLD))))
+                                                .tag(StaticEntityTag.TRAITOR))))
+                                .append(TextComponent.text(" <<<").color(TextColor.GOLD)))
                         .generate());
 
         return new FileData(FileName.traitor_actionbar, fileCommands);

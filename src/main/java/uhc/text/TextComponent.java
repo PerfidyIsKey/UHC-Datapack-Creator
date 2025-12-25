@@ -143,16 +143,42 @@ public class TextComponent {
     }
 
     /**
-     * Appends a child component. Children inherit parent styles unless overridden.
-     * @param other The component to append.
-     * @return The parent component for chaining.
+     * Appends a child component to this component.
+     * * @param other The component to be added to the 'extra' list.
+     * @param keepFormat If true, the child inherits the styles (color, bold, etc.) of this parent.
+     * If false (default), the child's styles are cleared to ensure it starts plain.
+     * @return This parent component for fluent chaining.
      */
-    public TextComponent append(TextComponent other) {
+    public TextComponent append(TextComponent other, boolean keepFormat) {
         if (other != null) {
+            if (!keepFormat) {
+                other.resetFormatting();
+            }
             if (this.extra == null) this.extra = new ArrayList<>();
             this.extra.add(other);
         }
         return this;
+    }
+
+    /**
+     * Overloaded append method that defaults keepFormat to false.
+     */
+    public TextComponent append(TextComponent other) {
+        return append(other, false);
+    }
+
+    /**
+     * Internal helper to clear all styling and interactivity to ensure the component
+     * starts "plain" when appended without formatting.
+     */
+    private void resetFormatting() {
+        this.color = null;
+        this.bold = null;
+        this.italic = null;
+        this.obfuscated = null; // Assuming you added this per the previous step
+        this.insertion = null;
+        this.clickEvent = null;
+        this.hoverEvent = null;
     }
 
     // --- Interactivity Methods ---
