@@ -26,6 +26,7 @@ import uhc.data.nbt.blockentity.JukeboxNBT;
 import uhc.data.nbt.blockentity.SignNBT;
 import uhc.data.nbt.blockentity.state.FacingBlockState;
 import uhc.data.nbt.blockentity.state.HasRecordState;
+import uhc.data.nbt.blockentity.state.ModeState;
 import uhc.data.nbt.blockentity.state.WaterloggedState;
 import uhc.data.nbt.entity.dynamic_tiles.FallingBlockNBT;
 import uhc.data.nbt.entity.items.ItemEntityNBT;
@@ -2900,10 +2901,8 @@ public class Main {
             fileCommands.add(Execute.In(c.getDimension()) +
                     SetBlockCommand.create(
                                     BlockPos.absolute(c.getX(), c.getY() + 11, c.getZ()),
-                                    Block.create(
-                                            StaticBlockId.STRUCTURE_BLOCK,
-                                            BlockState.create()
-                                                    .mode(StructureBlockMode.LOAD),
+                                    Block.create(StaticBlockId.STRUCTURE_BLOCK)
+                                                    .withState(ModeState.LOAD)
                                             StructureBlockEntity.create()
                                                     .setString(StructureBlockEntity.StructureDataKey.METADATA, "")
                                                     .setMirror(StructureMirror.NONE)
