@@ -3795,16 +3795,15 @@ public class Main {
             fileCommands.add(Execute.At(lookingPlayer, false) +
                     Execute.IfNext("@p[tag=LookingForTeamMate,team=" + team.getName() + "]", true) +
                     GiveCommand.create(Entity.ofSelector(
-                                            TargetSelector.NEAREST_PLAYER,
-                                            SelectorArgumentsBuilder.create()
-                                                    .limit(2)
-                                                    .gamemode(GameModeId.SPECTATOR, true)),
-                                    BundleItemStack.create(
-                                            team.getDyeColor(),
-                                            EnchantmentsComponent.create()
-                                                            .add(EnchantmentId.VANISHING_CURSE, 1),
-                                            CustomDataComponent.create()
-                                                            .put(new ByteTag("locateTeammate", (byte) 1)))));
+                                    TargetSelector.NEAREST_PLAYER,
+                                    SelectorArgumentsBuilder.create()
+                                            .limit(2)
+                                            .gamemode(GameModeId.SPECTATOR, true)),
+                            ItemStack.create(DynamicItem.color(team.getDyeColor(), ColorableItem.BUNDLE))
+                                    .with(EnchantmentsComponent.create()
+                                            .add(EnchantmentId.VANISHING_CURSE, 1))
+                                    .with(CustomDataComponent.create()
+                                            .put(new ByteTag("locateTeammate", (byte) 1)))));
         }
 
         return new FileData(FileName.join_team, fileCommands);
