@@ -2932,7 +2932,7 @@ public class Main {
                                     BlockPos.absolute(c.getX(), c.getY() + 12, c.getZ()),
                                     BlockPos.absolute(c.getX(), Constant.worldHeight - 1, c.getZ()),
                                     Block.create(BlockId.GLASS))
-                            .filter(SimpleBlockPredicate.create(BlockTagId.BLOCK_BEACON_LIGHT))
+                            .filter(BlockPredicate.create(BlockTagId.BLOCK_BEACON_LIGHT))
                             .generate());
 
             fileCommands.add(Execute.In(c.getDimension()) +
@@ -2973,7 +2973,7 @@ public class Main {
                                 BlockPos.relative(-2, -2, -2),
                                 BlockPos.relative(2, 0, 2),
                                 Block.create(BlockId.ICE))
-                        .filter(SimpleBlockPredicate.create(BlockId.WATER))
+                        .filter(BlockPredicate.create(BlockId.WATER))
                         .generate());
 
         return new FileData(FileName.horse_frost_walker, fileCommands);
@@ -4131,7 +4131,7 @@ public class Main {
                         Block.create(BlockId.GLASS))
                 // 4. Set the filter/predicate: replace only blocks that obstruct light (e.g., stone, wood, dirt).
                 //    This is assumed to map to the Minecraft tag #minecraft:impermeable_blocks or similar tag.
-                .filter(SimpleBlockPredicate.create(BlockTagId.BLOCK_BEACON_LIGHT))
+                .filter(BlockPredicate.create(BlockTagId.BLOCK_BEACON_LIGHT))
                 .generate());
 
         // Create the FileData object with a unique file name based on the index.
