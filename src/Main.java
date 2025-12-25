@@ -24,6 +24,7 @@ import uhc.command.commands.SetWorldSpawnCommand;
 import uhc.data.nbt.blockentity.ChestNBT;
 import uhc.data.nbt.blockentity.JukeboxNBT;
 import uhc.data.nbt.blockentity.SignNBT;
+import uhc.data.nbt.blockentity.StructureBlockNBT;
 import uhc.data.nbt.blockentity.state.FacingBlockState;
 import uhc.data.nbt.blockentity.state.HasRecordState;
 import uhc.data.nbt.blockentity.state.ModeState;
@@ -2902,25 +2903,21 @@ public class Main {
                     SetBlockCommand.create(
                                     BlockPos.absolute(c.getX(), c.getY() + 11, c.getZ()),
                                     Block.create(StaticBlockId.STRUCTURE_BLOCK)
-                                                    .withState(ModeState.LOAD)
-                                            StructureBlockEntity.create()
-                                                    .setString(StructureBlockEntity.StructureDataKey.METADATA, "")
-                                                    .setMirror(StructureMirror.NONE)
-                                                    .setByte(StructureDataKey.IGNORE_ENTITIES, (byte) 1)
-                                                    .setByte(StructureDataKey.POWERED, (byte) 0)
-                                                    .setLong(StructureDataKey.SEED, 0L)
-                                                    .setString(StructureDataKey.AUTHOR, "?")
-                                                    .setRotation(StructureRotation.NONE)
-                                                    .setInt(StructureDataKey.POS_X, -6)
-                                                    .setMode(StructureBlockMode.LOAD)
-                                                    .setInt(StructureDataKey.POS_Y, -13)
-                                                    .setInt(StructureDataKey.SIZE_X, 13)
-                                                    .setInt(StructureDataKey.POS_Z, -6)
-                                                    .setFloat(StructureDataKey.INTEGRITY, 1.0f)
-                                                    .setString(StructureDataKey.NAME, cp.getStructureName())
-                                                    .setInt(StructureDataKey.SIZE_Y, 14)
-                                                    .setInt(StructureDataKey.SIZE_Z, 13)
-                                                    .setByte(StructureDataKey.SHOW_BOUNDING_BOX, (byte) 1)))
+                                            .withState(ModeState.LOAD)
+                                            .withData(StructureBlockNBT.create()
+                                                    .metadata("")
+                                                    .mirror(StructureMirror.NONE)
+                                                    .ignoreEntities(true)
+                                                    .powered(false)
+                                                    .seed(0L)
+                                                    .author("?")
+                                                    .rotation(StructureRotation.NONE)
+                                                    .pos(-6, -13, -6)
+                                                    .mode(StructureBlockMode.LOAD)
+                                                    .size(13, 14, 13)
+                                                    .showBoundingBox(true)
+                                                    .integrity(1.0f)
+                                                    .name(cp.getStructureName())))
                             .generate());
 
             // Activate structure block
