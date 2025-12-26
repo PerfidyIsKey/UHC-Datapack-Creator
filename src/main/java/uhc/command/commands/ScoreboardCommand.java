@@ -304,7 +304,7 @@ public class ScoreboardCommand implements MinecraftCommand {
             sb.append("list");
         } else if (criteria != null) {
             if (objective == null) throw new IllegalStateException("Objective is required for 'add'.");
-            sb.append("add ").append(objective).append(" ").append(criteria.toString().toLowerCase());
+            sb.append("add ").append(objective).append(" ").append(criteria.getCriteriaName());
             if (displayName != null) sb.append(" \"").append(displayName).append("\"");
         } else if (slot != null) {
             sb.append("setdisplay ").append(slot.getSlotName());
