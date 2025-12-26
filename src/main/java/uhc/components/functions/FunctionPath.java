@@ -23,6 +23,7 @@ public enum FunctionPath implements FunctionName {
     // =================================================================================
     LOAD("init"),
     INITIALIZE("init"),
+    INITIALIZATION("init"),
 
     // =================================================================================
     // 3. GAME STARTUP PROCEDURE ('startup' folder)

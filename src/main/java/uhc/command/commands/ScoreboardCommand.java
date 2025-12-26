@@ -3,415 +3,221 @@ package uhc.command.commands;
 import uhc.arguments.entity.Entity;
 import uhc.command.MinecraftCommand;
 import uhc.score.*;
-import uhc.text.TextComponent;
-import uhc.text.TextStyle;
-
 import java.util.Objects;
 
 /**
  * 📊 **Scoreboard Command Builder**
  * <p>
- * Implements a fluent API for constructing Minecraft {@code /scoreboard} commands.
- * This builder covers both the {@code objectives} and {@code players} sub-commands,
- * supporting modern features like number formatting, custom display names, and
- * score manipulation.
+ * A specialized abstract builder for constructing Minecraft {@code /scoreboard} commands.
+ * This class uses method-based branching to separate <b>Objectives</b> and <b>Players</b> logic,
+ * ensuring type safety and valid syntax at compile time.
  * </p>
  */
-public class ScoreboardCommand implements MinecraftCommand {
+public abstract class ScoreboardCommand implements MinecraftCommand {
 
-    // --- ⚙️ Core Configuration Fields ---
-
-    /** The primary action of the command: either 'objectives' or 'players'. */
-    private final ScoreboardAction action;
-
-    /** The specific scoreboard objective to act upon. */
-    private ScoreboardObjective objective;
-
-    /** The criteria used when creating a new objective (e.g., 'dummy', 'health'). */
-    private ScoreboardCriteria criteria;
-
-    /** The plain-text display name used during objective creation (OBJECTIVES ADD). */
-    private String displayName;
-
-    /** The target entity or selector for player-based actions. */
-    private Entity target;
-
-    // --- 🎨 Display & Formatting Fields ---
-
-    /** The display slot for the objective (e.g., 'sidebar', 'list', 'below_name'). */
-    private DisplaySlot slot;
-
-    /** A rich JSON text component used for objective titles or custom player names. */
-    private TextComponent component;
-
-    /** A text component specifically used for 'fixed' number formats. */
-    private TextComponent fixedNumberFormatComponent;
-
-    /** The visual style (color, bold, etc.) used for 'styled' number formats. */
-    private TextStyle style;
-
-    /** Defines how lists of scores are rendered (e.g., 'hearts' or 'integer'). */
-    private ListRenderType renderType;
-
-    // --- 🔢 Value & Logic Fields ---
-
-    /** The numerical score value to set, add, or remove. */
-    private Integer score;
-
-    /** The mathematical operation to perform between two scores (e.g., +=, -=). */
-    private OperationType operation;
-
-    /** The source entity used for score operations. */
-    private Entity source;
-
-    /** The source objective used for score operations. */
-    private ScoreboardObjective sourceObjective;
-
-    /** Determines if an objective title updates automatically. */
-    private Boolean autoUpdateValue;
-
-    /** Used for the 'PLAYERS ENABLE' sub-command. */
-    private Boolean enable;
-
-    /** Flag to trigger the 'PLAYERS DISPLAY NUMBERFORMAT' sub-command. */
-    private Boolean displayNumberFormat;
-
-    // --- 🚦 Internal Sub-Action States ---
-
-    private ScoreValueSubAction scoreActionType = ScoreValueSubAction.SET;
-    private NumberFormatSubAction numberFormatType = NumberFormatSubAction.DEFAULT;
-    private PlayerDisplayNameSubAction playerDisplayNameAction = PlayerDisplayNameSubAction.DEFAULT;
-    private PlayerSubActionType playerSubActionType = PlayerSubActionType.NONE;
-
-    // --- 🏗️ Constructors & Factories ---
+    // --- 🏗️ Entry Points ---
 
     /**
-     * Private constructor to enforce use of the static factory method.
-     * @param action The required {@link ScoreboardAction}.
+     * Initiates a command sequence targeting scoreboard objective definitions.
+     * @return A specialized {@link ObjectiveBuilder} for objective management.
      */
-    private ScoreboardCommand(ScoreboardAction action) {
-        this.action = Objects.requireNonNull(action, "ScoreboardAction cannot be null.");
-        this.displayNumberFormat = false;
+    public static ObjectiveBuilder objectives() {
+        return new ObjectiveBuilder();
     }
 
     /**
-     * Creates a new fluent builder for a scoreboard command.
-     * @param action The root action (OBJECTIVES or PLAYERS).
-     * @return A new builder instance.
+     * Initiates a command sequence targeting player score values.
+     * @return A specialized {@link PlayerBuilder} for score manipulation.
      */
-    public static ScoreboardCommand create(ScoreboardAction action) {
-        return new ScoreboardCommand(action);
-    }
-
-    // --- 🛠️ Primary Builder Methods ---
-
-    /**
-     * Sets the primary target entity for the command.
-     * @param target The entity or selector.
-     * @return This builder instance.
-     */
-    public ScoreboardCommand target(Entity target) {
-        this.target = target;
-        return this;
+    public static PlayerBuilder players() {
+        return new PlayerBuilder();
     }
 
     /**
-     * Sets the objective to be modified or referenced.
-     * @param objective The objective object.
-     * @return This builder instance.
-     */
-    public ScoreboardCommand objective(ScoreboardObjective objective) {
-        this.objective = objective;
-        return this;
-    }
-
-    /**
-     * Sets the criteria for objective creation.
-     * @param criteria The scoreboard criteria.
-     * @return This builder instance.
-     */
-    public ScoreboardCommand criteria(ScoreboardCriteria criteria) {
-        this.criteria = criteria;
-        return this;
-    }
-
-    /**
-     * Sets the display name for a new objective (used in OBJECTIVES ADD).
-     * @param name The display name string.
-     * @return This builder instance.
-     */
-    public ScoreboardCommand displayName(String name) {
-        this.displayName = name;
-        return this;
-    }
-
-    /**
-     * Sets the display slot (e.g. sidebar) for an objective.
-     * @param slot The type-safe display slot.
-     * @return This builder instance.
-     */
-    public ScoreboardCommand slot(DisplaySlot slot) {
-        this.slot = slot;
-        return this;
-    }
-
-    /**
-     * Sets the JSON TextComponent for names or titles.
-     * @param component The rich text component.
-     * @return This builder instance.
-     */
-    public ScoreboardCommand component(TextComponent component) {
-        this.component = component;
-        return this;
-    }
-
-    // --- ⚔️ Player Score Manipulation ---
-
-    /** Sets the sub-action to ADD a score value. */
-    public ScoreboardCommand add() {
-        this.scoreActionType = ScoreValueSubAction.ADD;
-        return this;
-    }
-
-    /** Sets the sub-action to REMOVE a score value. */
-    public ScoreboardCommand remove() {
-        this.scoreActionType = ScoreValueSubAction.REMOVE;
-        return this;
-    }
-
-    /** Sets the sub-action to GET a player's score. */
-    public ScoreboardCommand getScore() {
-        this.playerSubActionType = PlayerSubActionType.GET;
-        return this;
-    }
-
-    /** Sets the sub-action to RESET a player's score. */
-    public ScoreboardCommand reset() {
-        this.playerSubActionType = PlayerSubActionType.RESET;
-        return this;
-    }
-
-    /** Sets the sub-action to ENABLE a trigger objective for a player. */
-    public ScoreboardCommand enable() {
-        this.enable = true;
-        return this;
-    }
-
-    /** Sets the numerical score for modification. */
-    public ScoreboardCommand score(int score) {
-        this.score = score;
-        return this;
-    }
-
-    /** Performs a math operation between two objectives. */
-    public ScoreboardCommand operation(OperationType operation, Entity source, ScoreboardObjective sourceObjective) {
-        this.operation = operation;
-        this.source = source;
-        this.sourceObjective = sourceObjective;
-        return this;
-    }
-
-    // --- ⚙️ Objectives Modification ---
-
-    /** Sets whether objective scores update automatically. */
-    public ScoreboardCommand displayAutoUpdate(boolean value) {
-        this.autoUpdateValue = value;
-        return this;
-    }
-
-    /** Sets the render type (HEARTS vs INTEGER) for the player list. */
-    public ScoreboardCommand renderType(ListRenderType renderType) {
-        this.renderType = renderType;
-        return this;
-    }
-
-    // --- 🔢 Number Formatting ---
-
-    /** Resets the number format to the vanilla default. */
-    public ScoreboardCommand numberFormatDefault() {
-        this.numberFormatType = NumberFormatSubAction.DEFAULT;
-        this.displayNumberFormat = true;
-        return this;
-    }
-
-    /** Hides the numbers on the scoreboard. */
-    public ScoreboardCommand numberFormatBlank() {
-        this.numberFormatType = NumberFormatSubAction.BLANK;
-        this.displayNumberFormat = true;
-        return this;
-    }
-
-    /** Sets the numbers to a fixed custom text. */
-    public ScoreboardCommand numberFormatFixed(TextComponent component) {
-        this.numberFormatType = NumberFormatSubAction.FIXED;
-        this.fixedNumberFormatComponent = component;
-        this.displayNumberFormat = true;
-        return this;
-    }
-
-    /** Applies a specific style to the scoreboard numbers. */
-    public ScoreboardCommand numberFormatStyled(TextStyle style) {
-        this.numberFormatType = NumberFormatSubAction.STYLED;
-        this.style = style;
-        this.displayNumberFormat = true;
-        return this;
-    }
-
-    // --- 👤 Player Display Customization ---
-
-    /** Resets the player's displayed name to default. */
-    public ScoreboardCommand playerDisplayNameDefault() {
-        this.playerDisplayNameAction = PlayerDisplayNameSubAction.DEFAULT;
-        return this;
-    }
-
-    /** Sets a custom display name for a specific scoreholder. */
-    public ScoreboardCommand playerDisplayName(TextComponent customText) {
-        this.playerDisplayNameAction = PlayerDisplayNameSubAction.CUSTOM_TEXT;
-        this.component = customText;
-        return this;
-    }
-
-    // --- 🛰️ Command Generation Logic ---
-
-    /**
-     * Generates the final Minecraft command string.
-     * <p><b>Error Catching:</b> Validates that all required fields for specific
-     * sub-commands are present to prevent invalid command execution.</p>
-     * @return The formatted command string.
-     * @throws IllegalStateException if the command structure is invalid or missing data.
+     * Returns the final command string generated by the specific builder branch.
+     * @return The raw Minecraft command.
      */
     @Override
-    public String generate() {
-        StringBuilder sb = new StringBuilder("scoreboard ");
-        sb.append(action).append(" ");
-
-        switch (action) {
-            case OBJECTIVES -> handleObjectivesAction(sb);
-            case PLAYERS -> handlePlayersAction(sb);
-        }
-
-        String command = sb.toString().trim();
-        validateFinalCommand(command);
-        return command;
-    }
+    public abstract String generate();
 
     /**
-     * Internal logic for /scoreboard objectives.
+     * Standard override to allow the builder to be used directly in string concatenation.
+     * @return The result of {@link #generate()}.
      */
-    private void handleObjectivesAction(StringBuilder sb) {
-        if (objective == null && slot == null) {
-            sb.append("list");
-        } else if (criteria != null) {
-            if (objective == null) throw new IllegalStateException("Objective is required for 'add'.");
-            sb.append("add ").append(objective).append(" ").append(criteria.getCriteriaName());
-            if (displayName != null) sb.append(" \"").append(displayName).append("\"");
-        } else if (slot != null) {
-            sb.append("setdisplay ").append(slot.getSlotName());
-            if (objective != null) sb.append(" ").append(objective);
-        } else {
-            if (objective == null) throw new IllegalStateException("Objective name is required for modify/remove.");
-
-            // Handle OBJECTIVES MODIFY
-            if (isObjectivesModify()) {
-                sb.append("modify ").append(objective);
-                if (autoUpdateValue != null) sb.append(" displayautoupdate ").append(autoUpdateValue);
-                else if (component != null) sb.append(" displayname ").append(component);
-                else if (renderType != null) sb.append(" rendertype ").append(renderType.toString().toLowerCase());
-                else handleNumberFormat(sb);
-            } else {
-                sb.append("remove ").append(objective);
-            }
-        }
-    }
-
-    /**
-     * Internal logic for /scoreboard players.
-     */
-    private void handlePlayersAction(StringBuilder sb) {
-        if (operation != null) {
-            validatePlayerParams(true);
-            if (source == null || sourceObjective == null) throw new IllegalStateException("Operation source/objective missing.");
-            sb.append("operation ").append(target).append(" ").append(objective).append(" ").append(operation)
-                    .append(" ").append(source).append(" ").append(sourceObjective);
-        } else if (enable != null) {
-            validatePlayerParams(true);
-            sb.append("enable ").append(target).append(" ").append(objective);
-        } else if (playerDisplayNameAction != PlayerDisplayNameSubAction.DEFAULT || displayNumberFormat) {
-            validatePlayerParams(true);
-            handlePlayerDisplay(sb);
-        } else if (playerSubActionType == PlayerSubActionType.GET) {
-            validatePlayerParams(true);
-            sb.append("get ").append(target).append(" ").append(objective);
-        } else if (score != null) {
-            validatePlayerParams(true);
-            sb.append(scoreActionType.toString().toLowerCase()).append(" ").append(target).append(" ").append(objective).append(" ").append(score);
-        } else if (playerSubActionType == PlayerSubActionType.RESET) {
-            validatePlayerParams(false);
-            sb.append("reset ").append(target);
-            if (objective != null) sb.append(" ").append(objective);
-        } else {
-            sb.append("list");
-            if (target != null) sb.append(" ").append(target);
-        }
-    }
-
-    // --- 🔧 Helper Validation & Formatting ---
-
-    private boolean isObjectivesModify() {
-        return autoUpdateValue != null || component != null || renderType != null || displayNumberFormat;
-    }
-
-    private void handleNumberFormat(StringBuilder sb) {
-        sb.append(" numberformat");
-        switch (numberFormatType) {
-            case BLANK -> sb.append(" blank");
-            case FIXED -> {
-                if (fixedNumberFormatComponent == null) throw new IllegalStateException("Fixed component missing.");
-                sb.append(" fixed ").append(fixedNumberFormatComponent);
-            }
-            case STYLED -> {
-                if (style == null) throw new IllegalStateException("Style missing for styled format.");
-                sb.append(" styled ").append(style.generate());
-            }
-            case DEFAULT -> {}
-        }
-    }
-
-    private void handlePlayerDisplay(StringBuilder sb) {
-        if (playerDisplayNameAction != PlayerDisplayNameSubAction.DEFAULT) {
-            sb.append("display name ").append(target).append(" ").append(objective);
-            if (playerDisplayNameAction == PlayerDisplayNameSubAction.CUSTOM_TEXT) {
-                if (component == null) throw new IllegalStateException("Custom name text missing.");
-                sb.append(" ").append(component);
-            }
-        } else {
-            sb.append("display numberformat ").append(target).append(" ").append(objective);
-            handleNumberFormat(sb);
-        }
-    }
-
-    private void validatePlayerParams(boolean requireObjective) {
-        if (target == null) throw new IllegalStateException("Target is required for this player action.");
-        if (requireObjective && objective == null) throw new IllegalStateException("Objective is required for this player action.");
-    }
-
-    private void validateFinalCommand(String command) {
-        if (command.matches(".* (display|numberformat|name|operation|list|add|remove|set|reset|enable|get)$")) {
-            throw new IllegalStateException("Incomplete command sequence generated: " + command);
-        }
-    }
-
     @Override
     public String toString() {
         return generate();
     }
 
-    // --- 🗂️ Internal Enums ---
+    // --- 🎯 Objective Management Branch ---
 
-    public enum ScoreboardAction { OBJECTIVES, PLAYERS; @Override public String toString() { return name().toLowerCase(); } }
-    private enum ScoreValueSubAction { SET, ADD, REMOVE }
-    private enum PlayerSubActionType { NONE, GET, RESET }
-    private enum NumberFormatSubAction { DEFAULT, BLANK, FIXED, STYLED }
-    private enum PlayerDisplayNameSubAction { DEFAULT, CUSTOM_TEXT }
+    /**
+     * 🎯 **Objective Builder**
+     * <p>Handles sub-commands under {@code /scoreboard objectives}, such as
+     * adding, removing, or setting display slots for objectives.</p>
+     */
+    public static class ObjectiveBuilder extends ScoreboardCommand {
+
+        /** The partial command string containing sub-action logic. */
+        private String command;
+
+        /**
+         * Configures the command to register a new scoreboard objective.
+         * <p><b>Syntax:</b> {@code objectives add <name> <criteria> [displayName]}</p>
+         * @param obj The {@link ScoreboardObjective} data model containing the ID, criteria, and display name.
+         * @return This builder instance for method chaining.
+         * @throws NullPointerException if the provided objective object is null.
+         * @throws IllegalStateException if the objective data fails internal validation.
+         */
+        public ObjectiveBuilder add(ScoreboardObjective obj) {
+            Objects.requireNonNull(obj, "Objective data model cannot be null.");
+
+            // Validate the internal components of the objective before building
+            obj.getId().validate();
+
+            StringBuilder sb = new StringBuilder("add ")
+                    .append(obj.getId().getObjectiveName())
+                    .append(" ")
+                    .append(obj.getCriteria().getCriteriaName());
+
+            // Handle the optional JSON display name component
+            if (obj.getDisplayName() != null) {
+                sb.append(" ").append(obj.getDisplayName().build());
+            }
+
+            this.command = sb.toString();
+            return this;
+        }
+
+        /**
+         * Configures the command to delete an existing objective.
+         * <p><b>Syntax:</b> {@code objectives remove <name>}</p>
+         * @param id The unique {@link ScoreboardObjectiveId} to remove.
+         * @return This builder instance for method chaining.
+         * @throws NullPointerException if the ID is null.
+         */
+        public ObjectiveBuilder remove(ScoreboardObjectiveId id) {
+            Objects.requireNonNull(id, "Objective ID to remove cannot be null.");
+            this.command = "remove " + id.getObjectiveName();
+            return this;
+        }
+
+        /**
+         * Configures where an objective should be displayed on the screen.
+         * <p><b>Syntax:</b> {@code objectives setdisplay <slot> [name]}</p>
+         * @param slot The {@link DisplaySlot} (e.g., sidebar).
+         * @param id The {@link ScoreboardObjectiveId} to show in the slot (can be null to clear the slot).
+         * @return This builder instance for method chaining.
+         * @throws NullPointerException if the slot is null.
+         */
+        public ObjectiveBuilder setDisplay(DisplaySlot slot, ScoreboardObjectiveId id) {
+            Objects.requireNonNull(slot, "Display slot cannot be null.");
+            this.command = "setdisplay " + slot.getSlotName() + (id != null ? " " + id.getObjectiveName() : "");
+            return this;
+        }
+
+        /**
+         * Finalizes the {@code /scoreboard objectives} command.
+         * @return The formatted command string.
+         * @throws IllegalStateException if no action (add/remove/setDisplay) was called.
+         */
+        @Override
+        public String generate() {
+            if (command == null) {
+                throw new IllegalStateException("An objective action (add, remove, or setdisplay) must be defined.");
+            }
+            return "scoreboard objectives " + command;
+        }
+    }
+
+    // --- ⚔️ Player Management Branch ---
+
+    /**
+     * ⚔️ **Player Builder**
+     * <p>Handles sub-commands under {@code /scoreboard players}, focusing on
+     * modifying and querying scores for specific entities.</p>
+     */
+    public static class PlayerBuilder extends ScoreboardCommand {
+
+        /** The entity or selector targeted by this command. */
+        private Entity target;
+
+        /** The partial command string containing the operation and value logic. */
+        private String subCommand;
+
+        /**
+         * Defines the entity whose scores will be modified.
+         * @param target The {@link Entity} selector (e.g., @a or a player name).
+         * @return This builder instance for method chaining.
+         * @throws NullPointerException if the target is null.
+         */
+        public PlayerBuilder target(Entity target) {
+            this.target = Objects.requireNonNull(target, "Player target entity cannot be null.");
+            return this;
+        }
+
+        /**
+         * Sets a player's score to a specific value.
+         * <p><b>Syntax:</b> {@code players set <target> <objective> <score>}</p>
+         * @param id The objective to modify.
+         * @param score The numerical value to set.
+         * @return This builder instance.
+         * @throws NullPointerException if the objective ID is null.
+         */
+        public PlayerBuilder set(ScoreboardObjectiveId id, int score) {
+            Objects.requireNonNull(id, "Objective ID for 'set' action cannot be null.");
+            this.subCommand = "set " + id.getObjectiveName() + " " + score;
+            return this;
+        }
+
+        /**
+         * Increments a player's score by a specific amount.
+         * <p><b>Syntax:</b> {@code players add <target> <objective> <score>}</p>
+         * @param id The objective to modify.
+         * @param score The amount to add.
+         * @return This builder instance.
+         * @throws NullPointerException if the objective ID is null.
+         */
+        public PlayerBuilder add(ScoreboardObjectiveId id, int score) {
+            Objects.requireNonNull(id, "Objective ID for 'add' action cannot be null.");
+            this.subCommand = "add " + id.getObjectiveName() + " " + score;
+            return this;
+        }
+
+        /**
+         * Completely removes a player's score from an objective (or all objectives).
+         * <p><b>Syntax:</b> {@code players reset <target> [objective]}</p>
+         * @param id The objective to reset, or null to reset all scores for the player.
+         * @return This builder instance.
+         */
+        public PlayerBuilder reset(ScoreboardObjectiveId id) {
+            this.subCommand = "reset" + (id != null ? " " + id.getObjectiveName() : "");
+            return this;
+        }
+
+        /**
+         * Finalizes the {@code /scoreboard players} command.
+         * <p><b>Error Catching:</b> Ensures both a target and an action were provided
+         * before attempting to assemble the string.</p>
+         * @return The formatted command string.
+         * @throws IllegalStateException if the target or sub-action is missing.
+         */
+        @Override
+        public String generate() {
+            if (target == null) {
+                throw new IllegalStateException("Scoreboard player command requires a target entity.");
+            }
+            if (subCommand == null) {
+                throw new IllegalStateException("A player action (set, add, or reset) must be defined.");
+            }
+
+            // Assembler logic: injects the target into the subCommand string
+            // "set Kills 1" becomes "set @s Kills 1"
+            try {
+                return "scoreboard players " + subCommand.replaceFirst(" ", " " + target + " ");
+            } catch (Exception e) {
+                throw new IllegalStateException("Failed to generate player command string: " + e.getMessage());
+            }
+        }
+    }
 }

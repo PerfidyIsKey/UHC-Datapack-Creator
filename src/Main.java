@@ -56,6 +56,7 @@ import uhc.resource.block.structure_block.StructureMirror;
 import uhc.resource.block.structure_block.StructureRotation;
 import uhc.resource.color.DyeColor;
 import uhc.resource.tag.EntityTag;
+import uhc.score.ScoreboardObjectiveId;
 import uhc.text.color.HexColor;
 import uhc.resource.color.TextColor;
 import uhc.resource.data.DataPathId;
@@ -75,7 +76,6 @@ import uhc.resource.sound.SoundId;
 import uhc.resource.sound.SoundSource;
 import uhc.score.ComparatorType;
 import uhc.score.OperationType;
-import uhc.score.ScoreObjective;
 import uhc.text.*;
 
 import java.io.IOException;
@@ -1070,7 +1070,7 @@ public class Main {
                 .target(Entity.ofSelector(
                                 TargetSelector.ALL_PLAYERS,
                                 SelectorArgumentsBuilder.create()
-                                        .scores(Map.of(ScoreObjective.DEATHS, 1))
+                                        .scores(Map.of(ScoreboardObjectiveId.DEATHS, 1))
                                         .gamemode(GameModeId.SPECTATOR, true)))
                 .generate());
 
@@ -1082,7 +1082,7 @@ public class Main {
                 TagCommand.target(Entity.ofSelector(
                                 TargetSelector.NEAREST_PLAYER,
                                 SelectorArgumentsBuilder.create()
-                                        .scores(Map.of(ScoreObjective.DEATHS, 1))))
+                                        .scores(Map.of(ScoreboardObjectiveId.DEATHS, 1))))
                         .add(EntityTag.RESPAWN)
                         .generate());
 
@@ -1931,7 +1931,7 @@ public class Main {
                     TargetSelector.RANDOM_PLAYER,
                     SelectorArgumentsBuilder.create()
                             .team(true)
-                            .scores(Map.of(ScoreObjective.DEATHS, 0))))
+                            .scores(Map.of(ScoreboardObjectiveId.DEATHS, 0))))
                             .add(EntityTag.PREDICTION_CANDIDATE)
                             .generate());
 
@@ -2769,7 +2769,7 @@ public class Main {
                 SelectorArgumentsBuilder.create()
                         .limit(1)
                         .tag(EntityTag.DONT_MAKE_TRAITOR, true)
-                        .scores(Map.of(ScoreObjective.RANK, minTraitorRank + ".."))
+                        .scores(Map.of(ScoreboardObjectiveId.RANK, minTraitorRank + ".."))
                         .gamemode(GameModeId.SPECTATOR, true)))
                         .add(EntityTag.TRAITOR)
                         .generate());
@@ -2800,7 +2800,7 @@ public class Main {
                 SelectorArgumentsBuilder.create()
                         .limit(1)
                         .tag(EntityTag.DONT_MAKE_TRAITOR, true)
-                        .scores(Map.of(ScoreObjective.RANK, minTraitorRank + ".."))
+                        .scores(Map.of(ScoreboardObjectiveId.RANK, minTraitorRank + ".."))
                         .gamemode(GameModeId.SPECTATOR, true)))
                         .add(EntityTag.TRAITOR)
                         .generate());
@@ -3809,7 +3809,7 @@ public class Main {
                 TargetSelector.NEAREST_PLAYER,
                 SelectorArgumentsBuilder.create()
                         .team(true)
-                        .scores(Map.of(ScoreObjective.TIMES_CALLED, "1..")));
+                        .scores(Map.of(ScoreboardObjectiveId.TIMES_CALLED, "1..")));
         OperationType comparator;
 
         // Give player playing the horn a tag
@@ -3893,7 +3893,7 @@ public class Main {
         fileCommands.add(TagCommand.target(Entity.ofSelector(
                                 TargetSelector.NEAREST_PLAYER,
                                 SelectorArgumentsBuilder.create()
-                                        .scores(Map.of(ScoreObjective.TIMES_CALLED, "1.."))))
+                                        .scores(Map.of(ScoreboardObjectiveId.TIMES_CALLED, "1.."))))
                 .remove(EntityTag.LOOKING_FOR_TEAM_MATE)
                 .generate());
         fileCommands.add(scoreboard.Reset("@p[scores={TimesCalled=1..}]", getObjectiveByName(Objective.TimesCalled)));
@@ -3908,7 +3908,7 @@ public class Main {
         fileCommands.add(TagCommand.target(Entity.ofSelector(
                                 TargetSelector.RANDOM_PLAYER,
                                 SelectorArgumentsBuilder.create()
-                                        .scores(Map.of(ScoreObjective.DAMAGE_TAKEN, ".." + minDamage))))
+                                        .scores(Map.of(ScoreboardObjectiveId.DAMAGE_TAKEN, ".." + minDamage))))
                 .add(EntityTag.IRON_MAN_CANDIDATE)
                 .generate());
 

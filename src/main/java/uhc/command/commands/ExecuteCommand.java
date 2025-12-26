@@ -19,7 +19,7 @@ import uhc.resource.entity.RelationId;
 import uhc.resource.predicate.PredicateId;
 import uhc.score.ComparatorType;
 import uhc.score.Range;
-import uhc.score.ScoreboardObjective;
+import uhc.score.ScoreboardObjectiveId;
 
 import java.util.Objects;
 
@@ -151,7 +151,7 @@ public class ExecuteCommand implements MinecraftCommand {
     }
 
     /** Stores the result of the command into a scoreboard objective. */
-    public ExecuteCommand storeResultScore(Entity targets, ScoreboardObjective objective) {
+    public ExecuteCommand storeResultScore(Entity targets, ScoreboardObjectiveId objective) {
         Objects.requireNonNull(targets);
         Objects.requireNonNull(objective);
         command.append(" store result score ").append(targets).append(" ").append(objective);
@@ -179,7 +179,7 @@ public class ExecuteCommand implements MinecraftCommand {
     }
 
     /** Proceeds only if the score matches a certain range. */
-    public ExecuteCommand ifScoreMatches(Entity target, ScoreboardObjective objective, Range range) {
+    public ExecuteCommand ifScoreMatches(Entity target, ScoreboardObjectiveId objective, Range range) {
         Objects.requireNonNull(target);
         Objects.requireNonNull(objective);
         Objects.requireNonNull(range);
@@ -188,7 +188,7 @@ public class ExecuteCommand implements MinecraftCommand {
     }
 
     /** Compares two scores using a mathematical operator. */
-    public ExecuteCommand ifScoreCompare(Entity target, ScoreboardObjective targetObj, ComparatorType operator, Entity source, ScoreboardObjective sourceObj) {
+    public ExecuteCommand ifScoreCompare(Entity target, ScoreboardObjectiveId targetObj, ComparatorType operator, Entity source, ScoreboardObjectiveId sourceObj) {
         Objects.requireNonNull(target);
         Objects.requireNonNull(targetObj);
         Objects.requireNonNull(operator);
@@ -233,10 +233,10 @@ public class ExecuteCommand implements MinecraftCommand {
      * @param command The {@link MinecraftCommand} to run.
      * @return The final command string.
      */
-    public String run(MinecraftCommand command) {
+    public ExecuteCommand run(MinecraftCommand command) {
         Objects.requireNonNull(command, "The command to run cannot be null.");
         this.command.append(" run ").append(command.generate());
-        return this.generate();
+        return this;
     }
 
     @Override

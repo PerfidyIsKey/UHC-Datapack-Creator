@@ -63,6 +63,10 @@ public enum BlockId implements BlockIdentifier, ItemResource {
     TNT,
     /** Essential liquid block supporting life and farming. */
     WATER,
+    STONE,
+    ANDESITE,
+    GRANITE,
+    DEEPSLATE,
 
     // --- 🎼 Decorative & Heads ---
 

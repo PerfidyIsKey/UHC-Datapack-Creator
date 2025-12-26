@@ -6,7 +6,7 @@ import uhc.data.nbt.util.TagConverter;
 import uhc.resource.tag.EntityTag;
 import uhc.resource.entity.EntityId;
 import uhc.resource.gameplay.GameModeId;
-import uhc.score.ScoreObjective;
+import uhc.score.ScoreboardObjectiveId;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -260,7 +260,7 @@ public class SelectorArgumentsBuilder {
      * @return This builder instance for chaining.
      * @throws IllegalArgumentException if scores map is null or empty.
      */
-    public SelectorArgumentsBuilder scores(Map<ScoreObjective, Object> scores) {
+    public SelectorArgumentsBuilder scores(Map<ScoreboardObjectiveId, Object> scores) {
         if (scores == null || scores.isEmpty()) {
             throw new IllegalArgumentException("Scores map cannot be null or empty.");
         }
