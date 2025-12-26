@@ -4,6 +4,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import uhc.resource.color.*;
+import uhc.text.color.ColorType;
+import uhc.text.color.HexColor;
 
 import java.util.Objects;
 

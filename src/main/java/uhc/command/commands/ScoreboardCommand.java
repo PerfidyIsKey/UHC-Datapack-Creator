@@ -6,81 +6,139 @@ import uhc.score.*;
 import uhc.text.TextComponent;
 import uhc.text.TextStyle;
 
+import java.util.Objects;
+
 /**
  * 📊 **Scoreboard Command Builder**
  * <p>
- * Implements the fluent API for constructing the Minecraft {@code /scoreboard} command,
- * covering both {@code objectives} and {@code players} sub-commands with their various options.
+ * Implements a fluent API for constructing Minecraft {@code /scoreboard} commands.
+ * This builder covers both the {@code objectives} and {@code players} sub-commands,
+ * supporting modern features like number formatting, custom display names, and
+ * score manipulation.
  * </p>
  */
 public class ScoreboardCommand implements MinecraftCommand {
+
+    // --- ⚙️ Core Configuration Fields ---
+
+    /** The primary action of the command: either 'objectives' or 'players'. */
     private final ScoreboardAction action;
+
+    /** The specific scoreboard objective to act upon. */
     private ScoreboardObjective objective;
+
+    /** The criteria used when creating a new objective (e.g., 'dummy', 'health'). */
     private ScoreboardCriteria criteria;
 
-    // --- Core Fields ---
-    private String displayName; // Used for OBJECTIVES ADD <objective> <criteria> [<displayName>]
+    /** The plain-text display name used during objective creation (OBJECTIVES ADD). */
+    private String displayName;
+
+    /** The target entity or selector for player-based actions. */
+    private Entity target;
+
+    // --- 🎨 Display & Formatting Fields ---
+
+    /** The display slot for the objective (e.g., 'sidebar', 'list', 'below_name'). */
+    private DisplaySlot slot;
+
+    /** A rich JSON text component used for objective titles or custom player names. */
+    private TextComponent component;
+
+    /** A text component specifically used for 'fixed' number formats. */
     private TextComponent fixedNumberFormatComponent;
-    private ScoreValueSubAction scoreActionType;
-    private NumberFormatSubAction numberFormatType;
-    private PlayerDisplayNameSubAction playerDisplayNameAction;
-    private PlayerSubActionType playerSubActionType;
+
+    /** The visual style (color, bold, etc.) used for 'styled' number formats. */
+    private TextStyle style;
+
+    /** Defines how lists of scores are rendered (e.g., 'hearts' or 'integer'). */
+    private ListRenderType renderType;
+
+    // --- 🔢 Value & Logic Fields ---
+
+    /** The numerical score value to set, add, or remove. */
+    private Integer score;
+
+    /** The mathematical operation to perform between two scores (e.g., +=, -=). */
+    private OperationType operation;
+
+    /** The source entity used for score operations. */
+    private Entity source;
+
+    /** The source objective used for score operations. */
+    private ScoreboardObjective sourceObjective;
+
+    /** Determines if an objective title updates automatically. */
     private Boolean autoUpdateValue;
+
+    /** Used for the 'PLAYERS ENABLE' sub-command. */
     private Boolean enable;
 
-    // NEW FIELD to trigger the default numberformat display command
+    /** Flag to trigger the 'PLAYERS DISPLAY NUMBERFORMAT' sub-command. */
     private Boolean displayNumberFormat;
 
-    // --- Existing Fields ---
-    private DisplaySlot slot;
-    private TextComponent component; // Used for OBJECTIVES MODIFY displayname and PLAYERS DISPLAY NAME <text>
-    private TextStyle style;
-    private ListRenderType renderType;
-    private Entity target;
-    private Integer score;
-    private OperationType operation;
-    private Entity source;
-    private ScoreboardObjective sourceObjective;
+    // --- 🚦 Internal Sub-Action States ---
+
+    private ScoreValueSubAction scoreActionType = ScoreValueSubAction.SET;
+    private NumberFormatSubAction numberFormatType = NumberFormatSubAction.DEFAULT;
+    private PlayerDisplayNameSubAction playerDisplayNameAction = PlayerDisplayNameSubAction.DEFAULT;
+    private PlayerSubActionType playerSubActionType = PlayerSubActionType.NONE;
+
+    // --- 🏗️ Constructors & Factories ---
 
     /**
      * Private constructor to enforce use of the static factory method.
-     * @param action The required {@code ScoreboardAction} (OBJECTIVES or PLAYERS).
+     * @param action The required {@link ScoreboardAction}.
      */
     private ScoreboardCommand(ScoreboardAction action) {
-        this.action = action;
-        this.scoreActionType = ScoreValueSubAction.SET;
-        this.numberFormatType = NumberFormatSubAction.DEFAULT;
-        this.playerDisplayNameAction = PlayerDisplayNameSubAction.DEFAULT;
-        this.playerSubActionType = PlayerSubActionType.NONE;
-        this.displayNumberFormat = false; // Initialize the new flag
+        this.action = Objects.requireNonNull(action, "ScoreboardAction cannot be null.");
+        this.displayNumberFormat = false;
     }
 
-    // --- Factory and Basic Setters ---
-
+    /**
+     * Creates a new fluent builder for a scoreboard command.
+     * @param action The root action (OBJECTIVES or PLAYERS).
+     * @return A new builder instance.
+     */
     public static ScoreboardCommand create(ScoreboardAction action) {
         return new ScoreboardCommand(action);
     }
 
+    // --- 🛠️ Primary Builder Methods ---
+
+    /**
+     * Sets the primary target entity for the command.
+     * @param target The entity or selector.
+     * @return This builder instance.
+     */
     public ScoreboardCommand target(Entity target) {
         this.target = target;
         return this;
     }
 
+    /**
+     * Sets the objective to be modified or referenced.
+     * @param objective The objective object.
+     * @return This builder instance.
+     */
     public ScoreboardCommand objective(ScoreboardObjective objective) {
         this.objective = objective;
         return this;
     }
 
+    /**
+     * Sets the criteria for objective creation.
+     * @param criteria The scoreboard criteria.
+     * @return This builder instance.
+     */
     public ScoreboardCommand criteria(ScoreboardCriteria criteria) {
         this.criteria = criteria;
         return this;
     }
 
-    // --- Custom Setters for New Functionality ---
-
     /**
-     * Sets the display name for a new objective (OBJECTIVES ADD).
-     * The input String is internally wrapped by the command logic if needed.
+     * Sets the display name for a new objective (used in OBJECTIVES ADD).
+     * @param name The display name string.
+     * @return This builder instance.
      */
     public ScoreboardCommand displayName(String name) {
         this.displayName = name;
@@ -88,7 +146,9 @@ public class ScoreboardCommand implements MinecraftCommand {
     }
 
     /**
-     * Sets the display slot for the objective (e.g., {@code sidebar}, {@code list}).
+     * Sets the display slot (e.g. sidebar) for an objective.
+     * @param slot The type-safe display slot.
+     * @return This builder instance.
      */
     public ScoreboardCommand slot(DisplaySlot slot) {
         this.slot = slot;
@@ -96,64 +156,54 @@ public class ScoreboardCommand implements MinecraftCommand {
     }
 
     /**
-     * Sets the rich JSON text component for the objective title (used with {@code OBJECTIVES MODIFY displayname}).
+     * Sets the JSON TextComponent for names or titles.
+     * @param component The rich text component.
+     * @return This builder instance.
      */
     public ScoreboardCommand component(TextComponent component) {
         this.component = component;
         return this;
     }
 
-    /**
-     * Sets the score action type to ADD. Requires {@code score(int)} to be called next.
-     */
+    // --- ⚔️ Player Score Manipulation ---
+
+    /** Sets the sub-action to ADD a score value. */
     public ScoreboardCommand add() {
         this.scoreActionType = ScoreValueSubAction.ADD;
         return this;
     }
 
-    /**
-     * Sets the score action type to REMOVE. Requires {@code score(int)} to be called next.
-     */
+    /** Sets the sub-action to REMOVE a score value. */
     public ScoreboardCommand remove() {
         this.scoreActionType = ScoreValueSubAction.REMOVE;
         return this;
     }
 
-    /**
-     * Explicitly sets the intended player sub-action to GET.
-     */
+    /** Sets the sub-action to GET a player's score. */
     public ScoreboardCommand getScore() {
         this.playerSubActionType = PlayerSubActionType.GET;
         return this;
     }
 
-    /**
-     * Explicitly sets the intended player sub-action to RESET.
-     */
+    /** Sets the sub-action to RESET a player's score. */
     public ScoreboardCommand reset() {
         this.playerSubActionType = PlayerSubActionType.RESET;
         return this;
     }
 
-    /**
-     * Enables a player's ability to trigger an objective (used with {@code PLAYERS ENABLE}).
-     */
+    /** Sets the sub-action to ENABLE a trigger objective for a player. */
     public ScoreboardCommand enable() {
         this.enable = true;
         return this;
     }
 
-    /**
-     * Sets the specific score value (used with {@code PLAYERS SET/ADD/REMOVE}).
-     */
+    /** Sets the numerical score for modification. */
     public ScoreboardCommand score(int score) {
         this.score = score;
         return this;
     }
 
-    /**
-     * Sets the operation type and sources (used with {@code PLAYERS OPERATION}).
-     */
+    /** Performs a math operation between two objectives. */
     public ScoreboardCommand operation(OperationType operation, Entity source, ScoreboardObjective sourceObjective) {
         this.operation = operation;
         this.source = source;
@@ -161,56 +211,37 @@ public class ScoreboardCommand implements MinecraftCommand {
         return this;
     }
 
-    // --- OBJECTIVES MODIFY Sub-commands ---
+    // --- ⚙️ Objectives Modification ---
 
-    /**
-     * Sets the value for {@code OBJECTIVES MODIFY displayautoupdate <value>}.
-     */
+    /** Sets whether objective scores update automatically. */
     public ScoreboardCommand displayAutoUpdate(boolean value) {
         this.autoUpdateValue = value;
         return this;
     }
 
-    /**
-     * Sets the list render type (e.g., {@code hearts}, {@code integer}).
-     */
+    /** Sets the render type (HEARTS vs INTEGER) for the player list. */
     public ScoreboardCommand renderType(ListRenderType renderType) {
         this.renderType = renderType;
         return this;
     }
 
-    // --- Number Format Sub-commands ---
+    // --- 🔢 Number Formatting ---
 
-    /**
-     * Triggers the default/reset display number format command for players:
-     * {@code scoreboard players display numberformat <targets> <objective>} (no modifiers).
-     */
-    public ScoreboardCommand displayNumberFormat() {
-        this.displayNumberFormat = true;
-        this.numberFormatType = NumberFormatSubAction.DEFAULT; // Ensure this is default if called alone
-        return this;
-    }
-
-    /**
-     * Sets the number format to default/reset (used with {@code OBJECTIVES MODIFY}).
-     */
+    /** Resets the number format to the vanilla default. */
     public ScoreboardCommand numberFormatDefault() {
         this.numberFormatType = NumberFormatSubAction.DEFAULT;
+        this.displayNumberFormat = true;
         return this;
     }
 
-    /**
-     * Sets the number format to blank (used with {@code OBJECTIVES MODIFY} or {@code PLAYERS DISPLAY}).
-     */
+    /** Hides the numbers on the scoreboard. */
     public ScoreboardCommand numberFormatBlank() {
         this.numberFormatType = NumberFormatSubAction.BLANK;
         this.displayNumberFormat = true;
         return this;
     }
 
-    /**
-     * Sets the number format to fixed, using a custom component (used with {@code OBJECTIVES MODIFY} or {@code PLAYERS DISPLAY}).
-     */
+    /** Sets the numbers to a fixed custom text. */
     public ScoreboardCommand numberFormatFixed(TextComponent component) {
         this.numberFormatType = NumberFormatSubAction.FIXED;
         this.fixedNumberFormatComponent = component;
@@ -218,9 +249,7 @@ public class ScoreboardCommand implements MinecraftCommand {
         return this;
     }
 
-    /**
-     * Sets the number format to styled, using a custom style (used with {@code OBJECTIVES MODIFY} or {@code PLAYERS DISPLAY}).
-     */
+    /** Applies a specific style to the scoreboard numbers. */
     public ScoreboardCommand numberFormatStyled(TextStyle style) {
         this.numberFormatType = NumberFormatSubAction.STYLED;
         this.style = style;
@@ -228,256 +257,161 @@ public class ScoreboardCommand implements MinecraftCommand {
         return this;
     }
 
-    // --- Player Display Name Sub-commands ---
+    // --- 👤 Player Display Customization ---
 
-    /**
-     * Sets the scoreholder's name format to the default player name (used with {@code PLAYERS DISPLAY NAME}).
-     */
+    /** Resets the player's displayed name to default. */
     public ScoreboardCommand playerDisplayNameDefault() {
         this.playerDisplayNameAction = PlayerDisplayNameSubAction.DEFAULT;
         return this;
     }
 
-    /**
-     * Sets the scoreholder's name format to a custom component (used with {@code PLAYERS DISPLAY NAME <text>}).
-     */
+    /** Sets a custom display name for a specific scoreholder. */
     public ScoreboardCommand playerDisplayName(TextComponent customText) {
         this.playerDisplayNameAction = PlayerDisplayNameSubAction.CUSTOM_TEXT;
-        this.component = customText; // Reuse 'component' field for the custom text
+        this.component = customText;
         return this;
     }
 
-
-    // --- Command Generation ---
+    // --- 🛰️ Command Generation Logic ---
 
     /**
-     * Generates the final Minecraft command string based on the set parameters.
-     * @return A valid Minecraft command string.
-     * @throws IllegalStateException If mandatory parameters are missing or incorrect combinations are used.
+     * Generates the final Minecraft command string.
+     * <p><b>Error Catching:</b> Validates that all required fields for specific
+     * sub-commands are present to prevent invalid command execution.</p>
+     * @return The formatted command string.
+     * @throws IllegalStateException if the command structure is invalid or missing data.
      */
     @Override
     public String generate() {
         StringBuilder sb = new StringBuilder("scoreboard ");
-
-        // Convert enum to lowercase command word (objectives or players)
         sb.append(action).append(" ");
 
         switch (action) {
-            case OBJECTIVES:
-                if (objective == null && slot == null) {
-                    // 1. scoreboard objectives list
-                    sb.append("list");
-                } else if (criteria != null) {
-                    // 2. scoreboard objectives add <objective> <criteria> [<displayName>]
-                    if (objective == null) throw new IllegalStateException("Objective must be set for 'OBJECTIVES ADD'.");
-
-                    sb.append("add ").append(objective).append(" ").append(criteria.toString().toLowerCase());
-
-                    if (displayName != null) {
-                        // Wrapping String in quotes for command syntax
-                        sb.append(" \"").append(displayName).append("\"");
-                    }
-                } else if (slot != null) {
-                    // 4. scoreboard objectives setdisplay <slot> [<objective>]
-                    sb.append("setdisplay ").append(slot.toString().toLowerCase());
-                    if (objective != null) {
-                        sb.append(" ").append(objective); // Objective name
-                    }
-                } else {
-                    // Sub-actions: REMOVE or MODIFY
-
-                    if (objective == null) {
-                        throw new IllegalStateException("'OBJECTIVES' command requires a sub-action (list, add, remove, modify, setdisplay).");
-                    }
-
-                    // Check for MODIFY sub-actions
-                    if (autoUpdateValue != null || component != null || renderType != null || numberFormatType != NumberFormatSubAction.DEFAULT) {
-                        // OBJECTIVES MODIFY <name> <property> <value>
-                        sb.append("modify ").append(objective);
-
-                        // Only append ONE modification property
-                        if (autoUpdateValue != null) {
-                            // 5. modify <objective> displayautoupdate <value>
-                            sb.append(" displayautoupdate ").append(autoUpdateValue);
-                        } else if (component != null) {
-                            // 6. modify <objective> displayname <displayName>
-                            sb.append(" displayname ").append(component); // TextComponent.toString() is expected to return quoted JSON
-                        } else if (renderType != null) {
-                            // 11. modify <objective> rendertype (hearts|integer)
-                            sb.append(" rendertype ").append(renderType.toString().toLowerCase());
-                        } else if (numberFormatType != NumberFormatSubAction.DEFAULT) {
-                            // 7, 8, 9, 10. modify <objective> numberformat...
-                            sb.append(" numberformat");
-
-                            switch (numberFormatType) {
-                                case BLANK: // 8. numberformat blank
-                                    sb.append(" blank");
-                                    break;
-                                case FIXED: // 9. numberformat fixed <component>
-                                    if (fixedNumberFormatComponent == null) throw new IllegalStateException("Component must be set for 'numberformat fixed'.");
-                                    sb.append(" fixed ").append(fixedNumberFormatComponent);
-                                    break;
-                                case STYLED: // 10. numberformat styled <style>
-                                    if (style == null) throw new IllegalStateException("Style must be set for 'numberformat styled'.");
-                                    sb.append(" styled ").append(style.generate());
-                                    break;
-                                case DEFAULT: // 7. numberformat (default, no args)
-                                    // No arguments are added for the default modification
-                                    break;
-                            }
-                        }
-                    } else {
-                        // 3. scoreboard objectives remove <objective>
-                        sb.append("remove ").append(objective);
-                    }
-                }
-                break;
-
-            case PLAYERS:
-                // Precedence: OPERATION > ENABLE > DISPLAY > GET/RESET > SCORE MANIPULATION > LIST
-
-                if (operation != null) {
-                    // scoreboard players operation <targets> <targetObjective> <operation> <source> <sourceObjective>
-                    if (target == null || objective == null || source == null || sourceObjective == null) {
-                        throw new IllegalStateException("All target, objective, source, and sourceObjective must be set for 'PLAYERS OPERATION'.");
-                    }
-                    sb.append("operation ").append(target).append(" ").append(objective)
-                            .append(" ").append(operation)
-                            .append(" ").append(source).append(" ").append(sourceObjective);
-                } else if (enable != null) {
-                    // scoreboard players enable <targets> <objective>
-                    if (target == null || objective == null) {
-                        throw new IllegalStateException("Target and objective must be set for 'PLAYERS ENABLE'.");
-                    }
-                    sb.append("enable ").append(target).append(" ").append(objective);
-                } else if (playerDisplayNameAction != PlayerDisplayNameSubAction.DEFAULT || displayNumberFormat) {
-                    // PLAYER DISPLAY sub-commands (name/numberformat)
-
-                    if (target == null || objective == null) {
-                        throw new IllegalStateException("Target and objective must be set for 'PLAYERS DISPLAY' commands.");
-                    }
-
-                    if (playerDisplayNameAction != PlayerDisplayNameSubAction.DEFAULT) {
-                        // scoreboard players display name <targets> <objective> [<text>]
-                        sb.append("display name ").append(target).append(" ").append(objective);
-
-                        if (playerDisplayNameAction == PlayerDisplayNameSubAction.CUSTOM_TEXT) {
-                            // scoreboard players display name <targets> <objective> <text>
-                            if (component == null) throw new IllegalStateException("TextComponent must be set for custom player display name.");
-                            sb.append(" ").append(component);
-                        }
-                    } else {
-                        // scoreboard players display numberformat...
-                        sb.append("display numberformat ").append(target).append(" ").append(objective);
-
-                        switch (numberFormatType) {
-                            case BLANK: // numberformat blank
-                                sb.append(" blank");
-                                break;
-                            case FIXED: // numberformat fixed <contents>
-                                if (fixedNumberFormatComponent == null) throw new IllegalStateException("Component must be set for 'numberformat fixed'.");
-                                sb.append(" fixed ").append(fixedNumberFormatComponent);
-                                break;
-                            case STYLED: // numberformat styled <style>
-                                if (style == null) throw new IllegalStateException("Style must be set for 'numberformat styled'.");
-                                sb.append(" styled ").append(style.generate());
-                                break;
-                            case DEFAULT:
-                                // scoreboard players display numberformat <targets> <objective> (Base command, no extra args)
-                                break;
-                        }
-                    }
-
-                } else if (playerSubActionType == PlayerSubActionType.GET) {
-                    // scoreboard players get <target> <objective>
-                    if (target == null || objective == null) {
-                        throw new IllegalStateException("Target and objective must be set for 'PLAYERS GET'.");
-                    }
-                    sb.append("get ").append(target).append(" ").append(objective);
-
-                } else if (score != null) {
-                    // scoreboard players set/add/remove <targets> <objective> <score>
-                    if (target == null || objective == null) {
-                        throw new IllegalStateException("Target and objective must be set for 'PLAYERS SET/ADD/REMOVE'.");
-                    }
-                    sb.append(scoreActionType.toString().toLowerCase()).append(" ").append(target).append(" ").append(objective).append(" ").append(score);
-
-                } else if (playerSubActionType == PlayerSubActionType.RESET) {
-                    // scoreboard players reset <targets> [<objective>]
-                    if (target == null) {
-                        throw new IllegalStateException("Target must be set for 'PLAYERS RESET'.");
-                    }
-                    sb.append("reset ").append(target);
-                    if (objective != null) {
-                        sb.append(" ").append(objective);
-                    }
-
-                } else if (target != null) {
-                    // scoreboard players list [<target>] (list specific scores for one target)
-                    sb.append("list ").append(target);
-                } else {
-                    // scoreboard players list (list all players)
-                    sb.append("list");
-                }
-                break;
+            case OBJECTIVES -> handleObjectivesAction(sb);
+            case PLAYERS -> handlePlayersAction(sb);
         }
 
-        // Final safety check for missing parameters leading to incomplete commands
         String command = sb.toString().trim();
-        if (command.endsWith("scoreboard") || command.endsWith("objectives") || command.endsWith("players") || command.matches(".* (display|numberformat|name|operation|list|add|remove|set|reset|enable|get)")) {
-            throw new IllegalStateException("Incomplete Scoreboard command structure. Command generated: " + command);
-        }
-
+        validateFinalCommand(command);
         return command;
     }
 
     /**
-     * Generates and returns the final Minecraft command string.
+     * Internal logic for /scoreboard objectives.
      */
+    private void handleObjectivesAction(StringBuilder sb) {
+        if (objective == null && slot == null) {
+            sb.append("list");
+        } else if (criteria != null) {
+            if (objective == null) throw new IllegalStateException("Objective is required for 'add'.");
+            sb.append("add ").append(objective).append(" ").append(criteria.getCriteriaName());
+            if (displayName != null) sb.append(" \"").append(displayName).append("\"");
+        } else if (slot != null) {
+            sb.append("setdisplay ").append(slot.getSlotName());
+            if (objective != null) sb.append(" ").append(objective);
+        } else {
+            if (objective == null) throw new IllegalStateException("Objective name is required for modify/remove.");
+
+            // Handle OBJECTIVES MODIFY
+            if (isObjectivesModify()) {
+                sb.append("modify ").append(objective);
+                if (autoUpdateValue != null) sb.append(" displayautoupdate ").append(autoUpdateValue);
+                else if (component != null) sb.append(" displayname ").append(component);
+                else if (renderType != null) sb.append(" rendertype ").append(renderType.toString().toLowerCase());
+                else handleNumberFormat(sb);
+            } else {
+                sb.append("remove ").append(objective);
+            }
+        }
+    }
+
+    /**
+     * Internal logic for /scoreboard players.
+     */
+    private void handlePlayersAction(StringBuilder sb) {
+        if (operation != null) {
+            validatePlayerParams(true);
+            if (source == null || sourceObjective == null) throw new IllegalStateException("Operation source/objective missing.");
+            sb.append("operation ").append(target).append(" ").append(objective).append(" ").append(operation)
+                    .append(" ").append(source).append(" ").append(sourceObjective);
+        } else if (enable != null) {
+            validatePlayerParams(true);
+            sb.append("enable ").append(target).append(" ").append(objective);
+        } else if (playerDisplayNameAction != PlayerDisplayNameSubAction.DEFAULT || displayNumberFormat) {
+            validatePlayerParams(true);
+            handlePlayerDisplay(sb);
+        } else if (playerSubActionType == PlayerSubActionType.GET) {
+            validatePlayerParams(true);
+            sb.append("get ").append(target).append(" ").append(objective);
+        } else if (score != null) {
+            validatePlayerParams(true);
+            sb.append(scoreActionType.toString().toLowerCase()).append(" ").append(target).append(" ").append(objective).append(" ").append(score);
+        } else if (playerSubActionType == PlayerSubActionType.RESET) {
+            validatePlayerParams(false);
+            sb.append("reset ").append(target);
+            if (objective != null) sb.append(" ").append(objective);
+        } else {
+            sb.append("list");
+            if (target != null) sb.append(" ").append(target);
+        }
+    }
+
+    // --- 🔧 Helper Validation & Formatting ---
+
+    private boolean isObjectivesModify() {
+        return autoUpdateValue != null || component != null || renderType != null || displayNumberFormat;
+    }
+
+    private void handleNumberFormat(StringBuilder sb) {
+        sb.append(" numberformat");
+        switch (numberFormatType) {
+            case BLANK -> sb.append(" blank");
+            case FIXED -> {
+                if (fixedNumberFormatComponent == null) throw new IllegalStateException("Fixed component missing.");
+                sb.append(" fixed ").append(fixedNumberFormatComponent);
+            }
+            case STYLED -> {
+                if (style == null) throw new IllegalStateException("Style missing for styled format.");
+                sb.append(" styled ").append(style.generate());
+            }
+            case DEFAULT -> {}
+        }
+    }
+
+    private void handlePlayerDisplay(StringBuilder sb) {
+        if (playerDisplayNameAction != PlayerDisplayNameSubAction.DEFAULT) {
+            sb.append("display name ").append(target).append(" ").append(objective);
+            if (playerDisplayNameAction == PlayerDisplayNameSubAction.CUSTOM_TEXT) {
+                if (component == null) throw new IllegalStateException("Custom name text missing.");
+                sb.append(" ").append(component);
+            }
+        } else {
+            sb.append("display numberformat ").append(target).append(" ").append(objective);
+            handleNumberFormat(sb);
+        }
+    }
+
+    private void validatePlayerParams(boolean requireObjective) {
+        if (target == null) throw new IllegalStateException("Target is required for this player action.");
+        if (requireObjective && objective == null) throw new IllegalStateException("Objective is required for this player action.");
+    }
+
+    private void validateFinalCommand(String command) {
+        if (command.matches(".* (display|numberformat|name|operation|list|add|remove|set|reset|enable|get)$")) {
+            throw new IllegalStateException("Incomplete command sequence generated: " + command);
+        }
+    }
+
     @Override
     public String toString() {
         return generate();
     }
 
+    // --- 🗂️ Internal Enums ---
 
-    /**
-     * Defines the primary actions for the {@code /scoreboard} command.
-     */
-    public enum ScoreboardAction {
-        OBJECTIVES,
-        PLAYERS;
-
-        @Override
-        public String toString() {
-            return this.name().toLowerCase();
-        }
-    }
-
-    /**
-     * Internal enum to distinguish between score manipulation actions (SET, ADD, REMOVE).
-     */
-    private enum ScoreValueSubAction {
-        SET, ADD, REMOVE
-    }
-
-    /**
-     * Internal enum to distinguish between explicit player sub-actions (GET, RESET).
-     */
-    private enum PlayerSubActionType {
-        NONE, GET, RESET
-    }
-
-    /**
-     * Internal enum to distinguish between number format options.
-     */
-    private enum NumberFormatSubAction {
-        DEFAULT, BLANK, FIXED, STYLED
-    }
-
-    /**
-     * Internal enum to distinguish between player display name options.
-     */
-    private enum PlayerDisplayNameSubAction {
-        DEFAULT, CUSTOM_TEXT
-    }
+    public enum ScoreboardAction { OBJECTIVES, PLAYERS; @Override public String toString() { return name().toLowerCase(); } }
+    private enum ScoreValueSubAction { SET, ADD, REMOVE }
+    private enum PlayerSubActionType { NONE, GET, RESET }
+    private enum NumberFormatSubAction { DEFAULT, BLANK, FIXED, STYLED }
+    private enum PlayerDisplayNameSubAction { DEFAULT, CUSTOM_TEXT }
 }

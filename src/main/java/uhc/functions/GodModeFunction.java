@@ -20,7 +20,7 @@ import uhc.resource.attribute.AttributeDisplayType;
 import uhc.resource.attribute.AttributeModifierId;
 import uhc.resource.attribute.AttributeId;
 import uhc.resource.item.EquipmentSlot;
-import uhc.resource.color.HexColor;
+import uhc.text.color.HexColor;
 import uhc.resource.color.TextColor;
 import uhc.text.TextComponent;
 

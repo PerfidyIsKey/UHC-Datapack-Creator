@@ -1,127 +1,168 @@
 package uhc.score;
 
+import uhc.core.DatapackConfig;
+import uhc.resource.block.BlockIdentifier;
+import uhc.resource.item.ItemResource;
 import java.util.Objects;
 
 /**
- * 📊 **Scoreboard Criteria Registry**
+ * 📊 **Scoreboard Criteria Identifier**
  * <p>
- * Defines the underlying logic that dictates how an objective's score is updated.
- * Criteria range from manually managed "dummy" values to automatic game-tracked
- * statistics like health or kill counts.
+ * Defines the contract for scoreboard objective criteria in Minecraft. This interface
+ * provides a type-safe way to define how scores are updated, ranging from manual
+ * "dummy" values to automatic game statistics like mining, item usage, or health tracking.
  * </p>
  */
-public enum ScoreboardCriteria {
+public interface ScoreboardCriteria {
 
-    // --- 🛠️ Manual & State Criteria ---
-
-    /**
-     * **Manual Value (Dummy)**
-     * <p>Scores are only changed by commands or external logic. Most common for UHC
-     * timers, coin systems, and custom event tracking.</p>
-     */
-    DUMMY,
+    // --- 📋 Fixed Vanilla Constants ---
 
     /**
-     * **Custom Statistics**
-     * <p>Used for specialized Minecraft statistics (e.g., {@code custom:jump} or
-     * {@code custom:time_since_death}).</p>
+     * **Manual Score Management**
+     * <p>The most common criteria for UHC; scores are only changed via commands or code.
+     * Use this for custom game stats like "Coins" or "UHC Kills".</p>
      */
-    CUSTOM,
-
-    // --- ❤️ Life & Death Criteria ---
+    ScoreboardCriteria DUMMY = new CriteriaImpl.Simple("dummy");
 
     /**
-     * **Health Tracker**
-     * <p>Automatically tracks the player's health. Value ranges from 0 to 20
-     * (for 10 hearts). Changes instantly as the player takes damage or heals.</p>
+     * **Automatic Health Tracking**
+     * <p>Tracks player health points (0-20). Changes instantly as the player heals or takes damage.</p>
      */
-    HEALTH,
+    ScoreboardCriteria HEALTH = new CriteriaImpl.Simple("health");
 
     /**
-     * **Death Tracker**
-     * <p>Automatically increments by 1 every time a player dies.</p>
+     * **Automatic Death Tracker**
+     * <p>Increments by 1 every time the player dies.</p>
      */
-    DEATH_COUNT,
+    ScoreboardCriteria DEATH_COUNT = new CriteriaImpl.Simple("deathCount");
 
     /**
-     * **Kill Tracker (Players)**
-     * <p>Automatically increments by 1 when the player kills another player.</p>
+     * **Automatic Player Kill Tracker**
+     * <p>Increments by 1 when the player kills another player.</p>
      */
-    PLAYER_KILL_COUNT,
+    ScoreboardCriteria PLAYER_KILL_COUNT = new CriteriaImpl.Simple("playerKillCount");
 
-    // --- ⛏️ Interaction Criteria ---
+    // --- 🛰️ Logic & Contract ---
 
     /**
-     * **Block/Item Usage**
-     * <p>Tracks how many times a specific item or block has been used.</p>
-     * <p><b>Format:</b> Usually requires a suffix (e.g., {@code used:diamond_sword}).</p>
+     * Retrieves the fully qualified Minecraft criteria identifier.
+     * <p><b>Examples:</b> {@code "dummy"}, {@code "minecraft.mined:minecraft.stone"}.</p>
+     * @return The raw string representation used in Minecraft commands and NBT.
      */
-    USED,
+    String getCriteriaName();
 
     /**
-     * **Mining Tracker**
-     * <p>Tracks how many times a specific block has been mined.</p>
-     * <p><b>Format:</b> Usually requires a suffix (e.g., {@code mined:diamond_ore}).</p>
+     * Validates the integrity of the criteria identifier.
+     * <p><b>Error Catching:</b> Ensures the identifier is not null or whitespace,
+     * which would cause command execution failure in-game.</p>
+     * @throws IllegalStateException if the generated criteria name is malformed.
      */
-    MINED;
-
-    // --- 🛰️ Logic & Accessors ---
-
-    /**
-     * Retrieves the lowercase identifier used by Minecraft for this criteria.
-     * <p><b>Note:</b> For {@code DEATH_COUNT} and {@code PLAYER_KILL_COUNT},
-     * this returns the snake_case name used by the game engine.</p>
-     * @return The criteria string (e.g., "dummy", "deathCount").
-     */
-    public String getCriteriaName() {
-        if (this == DEATH_COUNT) return "deathCount";
-        if (this == PLAYER_KILL_COUNT) return "playerKillCount";
-        return this.name().toLowerCase();
-    }
-
-    // --- 🔍 Registry Lookups ---
-
-    /**
-     * Safely retrieves a ScoreboardCriteria from a raw string.
-     * <p><b>Error Catching:</b> Handles case-insensitive matches and checks for
-     * namespaced criteria (e.g., "minecraft.used" or "stat.mined"). If the input
-     * is null or invalid, it defaults to {@link #DUMMY} to prevent objective
-     * creation failure.</p>
-     * @param input The raw criteria string (e.g., "health", "used:stone").
-     * @return The matching {@link ScoreboardCriteria}, or {@link #DUMMY} as a fallback.
-     */
-    public static ScoreboardCriteria fromString(String input) {
-        if (input == null || input.isBlank()) {
-            return DUMMY;
-        }
-
-        String target = input.toLowerCase().trim();
-
-        // Handle namespaced variants often found in NBT or older versions
-        if (target.contains("used")) return USED;
-        if (target.contains("mined")) return MINED;
-        if (target.contains("custom")) return CUSTOM;
-
-        try {
-            // Check for specific camelCase overrides
-            if (target.equals("deathcount")) return DEATH_COUNT;
-            if (target.equals("playerkillcount")) return PLAYER_KILL_COUNT;
-
-            return ScoreboardCriteria.valueOf(target.toUpperCase());
-        } catch (IllegalArgumentException e) {
-            // Logically catch any mistyped or complex stat strings
-            return DUMMY;
+    default void validate() throws IllegalStateException {
+        String name = getCriteriaName();
+        if (name == null || name.isBlank()) {
+            throw new IllegalStateException("Generated Scoreboard criteria name cannot be null or empty.");
         }
     }
 
-    // --- 📝 Overrides ---
+    // --- 🛠️ Static Factory Methods ---
 
     /**
-     * Returns the criteria name for direct use in {@code /scoreboard objectives add}.
-     * @return The result of {@link #getCriteriaName()}.
+     * Creates a type-safe criteria for mining a specific block.
+     * <p><b>Error Catching:</b> Validates that the {@code block} is a specific block
+     * and not a tag (e.g., #logs), as tags are invalid in scoreboard criteria.</p>
+     * @param block The specific {@link BlockIdentifier} to track.
+     * @return A criteria formatted as {@code <namespace>.mined:<block_location>}.
+     * @throws NullPointerException if the block is null.
      */
-    @Override
-    public String toString() {
-        return getCriteriaName();
+    static ScoreboardCriteria mined(BlockIdentifier block) {
+        Objects.requireNonNull(block, "Cannot create 'mined' criteria from a null BlockIdentifier.");
+        block.validate(); // Catches logic errors like using tags (#)
+        return new CriteriaImpl.Namespaced("mined", block.getResourceLocation());
+    }
+
+    /**
+     * Creates a type-safe criteria for using a specific item.
+     * <p><b>Error Catching:</b> Performs resource-level validation on the {@code item}
+     * to ensure it follows Minecraft's naming conventions.</p>
+     * @param item The specific {@link ItemResource} to track.
+     * @return A criteria formatted as {@code <namespace>.used:<item_location>}.
+     * @throws NullPointerException if the item is null.
+     */
+    static ScoreboardCriteria used(ItemResource item) {
+        Objects.requireNonNull(item, "Cannot create 'used' criteria from a null ItemResource.");
+        item.validate();
+        return new CriteriaImpl.Namespaced("used", item.getResourceLocation());
+    }
+
+    /**
+     * Creates a criteria for a built-in or custom namespaced statistic.
+     * <p><b>Type Safety:</b> Uses the {@link CustomStatistics} enum/registry to ensure
+     * the path exists and is correctly namespaced.</p>
+     * @param stat The {@link CustomStatistics} entry.
+     * @return A criteria formatted as {@code <namespace>.custom:<stat_location>}.
+     * @throws NullPointerException if the stat is null.
+     */
+    static ScoreboardCriteria custom(CustomStatistics stat) {
+        Objects.requireNonNull(stat, "Cannot create 'custom' criteria from a null CustomStatistics entry.");
+        return new CriteriaImpl.Namespaced("custom", stat.getResourceLocation());
+    }
+}
+
+/**
+ * 📦 **Internal Scoreboard Implementations**
+ * <p>
+ * This class and its records are package-private to enforce the use of
+ * {@link ScoreboardCriteria}'s factory methods. This prevents external
+ * code from bypassing validation checks.
+ * </p>
+ */
+final class CriteriaImpl {
+
+    /**
+     * Private constructor to prevent instantiation of this utility container.
+     */
+    private CriteriaImpl() {
+        throw new UnsupportedOperationException("This is a container class and cannot be instantiated.");
+    }
+
+    /**
+     * Represents standard, fixed Minecraft criteria (e.g., dummy).
+     * @param name The raw criteria name.
+     */
+    record Simple(String name) implements ScoreboardCriteria {
+        @Override
+        public String getCriteriaName() {
+            return name;
+        }
+
+        @Override
+        public String toString() {
+            return getCriteriaName();
+        }
+    }
+
+    /**
+     * Represents dynamic, namespaced statistics (mined, used, custom).
+     * @param type The category of the stat (e.g., "mined").
+     * @param resourceLocation The resource being tracked (e.g., "minecraft:stone").
+     */
+    record Namespaced(String type, String resourceLocation) implements ScoreboardCriteria {
+        /**
+         * Computes the full criteria string using the global DatapackConfig.
+         * @return A string like "minecraft.mined:minecraft.stone".
+         */
+        @Override
+        public String getCriteriaName() {
+            // Error Catching: Ensure the global namespace is available
+            String namespace = DatapackConfig.MINECRAFT_NAMESPACE;
+            if (namespace == null) throw new IllegalStateException("DatapackConfig.MINECRAFT_NAMESPACE is not initialized.");
+
+            return namespace + "." + type + ":" + resourceLocation;
+        }
+
+        @Override
+        public String toString() {
+            return getCriteriaName();
+        }
     }
 }
