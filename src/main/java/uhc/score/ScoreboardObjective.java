@@ -1,151 +1,202 @@
 package uhc.score;
 
+import java.util.Arrays;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * 🏆 **Scoreboard Objective Registry**
  * <p>
- * Defines the unique internal identifiers for all scoreboard objectives
- * used to track game state, player statistics, and technical variables
- * within the UHC environment.
+ * This interface acts as the central authority for all scoreboard objective identifiers.
+ * It ensures that all objective names follow a strict <b>PascalCase</b> format
+ * (e.g., {@code TIME_DUM} becomes {@code TimeDum}).
+ * </p>
+ * <p>
+ * It supports both static singleton objectives and dynamic indexed versions
+ * (e.g., {@code ControlPoint1}) through a type-safe implementation.
  * </p>
  */
-public enum ScoreboardObjective {
+public interface ScoreboardObjective {
 
     // --- 🕒 Time & Match Tracking ---
 
-    /** Technical dummy score used for internal time calculations. */
-    TIME_DUM,
-    /** The primary match timer displayed to players. */
-    TIME,
-    /** Secondary timer used for specific event durations (e.g., grace period). */
-    TIME2,
+    /** Technical dummy score for internal timer calculations. */
+    ScoreboardObjective TIME_DUM = Internal.TIME_DUM;
+    /** Primary match timer displayed to players. */
+    ScoreboardObjective TIME = Internal.TIME;
+    /** Secondary event timer (e.g., grace periods). */
+    ScoreboardObjective TIME2 = Internal.TIME2;
 
     // --- 📊 UI & Display Management ---
 
-    /** Technical objective used to manage sidebar display logic. */
-    SIDE_DUM,
-    /** Tracks player health; often rendered as heart icons in the tab list. */
-    HEARTS,
-    /** Tracks the number of golden apples consumed or crafted. */
-    APPLES,
+    /** Technical objective for sidebar logic. */
+    ScoreboardObjective SIDE_DUM = Internal.SIDE_DUM;
+    /** Health tracking (rendered as hearts in tab). */
+    ScoreboardObjective HEARTS = Internal.HEARTS;
+    /** Tracks golden apple consumption/crafting. */
+    ScoreboardObjective APPLES = Internal.APPLES;
 
     // --- ⛏️ Mining & Resource Tracking ---
 
-    /** Total count of stone blocks mined. */
-    STONE,
-    /** Total count of diorite blocks mined. */
-    DIORITE,
-    /** Total count of andesite blocks mined. */
-    ANDESITE,
-    /** Total count of granite blocks mined. */
-    GRANITE,
-    /** Total count of deepslate blocks mined. */
-    DEEPSLATE,
-    /** General mining progress or "Mining Mania" event score. */
-    MINING,
+    /** Total stone blocks mined. */
+    ScoreboardObjective STONE = Internal.STONE;
+    /** Total diorite mined. */
+    ScoreboardObjective DIORITE = Internal.DIORITE;
+    /** Total andesite mined. */
+    ScoreboardObjective ANDESITE = Internal.ANDESITE;
+    /** Total granite mined. */
+    ScoreboardObjective GRANITE = Internal.GRANITE;
+    /** Total deepslate mined. */
+    ScoreboardObjective DEEPSLATE = Internal.DEEPSLATE;
+    /** General mining event progress. */
+    ScoreboardObjective MINING = Internal.MINING;
 
     // --- ⚔️ Combat & Statistics ---
 
-    /** Total deaths per player during the session. */
-    DEATHS,
+    /** Total player deaths. */
+    ScoreboardObjective DEATHS = Internal.DEATHS;
     /** Total player-on-player kills. */
-    KILLS,
-    /** Temporary kill counter for specific match phases. */
-    TEMP_KILLS,
-    /** Flag (0 or 1) indicating if the player was the last killer in a sequence. */
-    IS_KILLER,
-    /** Competitive rank or leaderboard position. */
-    RANK,
-    /** Tracks the lowest health reached by a player (for specific awards). */
-    MIN_HEALTH,
-    /** Tracks total damage received by the player. */
-    DAMAGE_TAKEN,
+    ScoreboardObjective KILLS = Internal.KILLS;
+    /** Temporary phase-specific kill counter. */
+    ScoreboardObjective TEMP_KILLS = Internal.TEMP_KILLS;
+    /** Flag (0/1) for identifying the last killer. */
+    ScoreboardObjective IS_KILLER = Internal.IS_KILLER;
+    /** Competitive rank position. */
+    ScoreboardObjective RANK = Internal.RANK;
+    /** Lowest health recorded for a player. */
+    ScoreboardObjective MIN_HEALTH = Internal.MIN_HEALTH;
+    /** Total damage received by the player. */
+    ScoreboardObjective DAMAGE_TAKEN = Internal.DAMAGE_TAKEN;
 
     // --- 🚩 Control Point (CP) Logic ---
 
-    /** The current score or capture progress for a control point. */
-    CP_SCORE,
-    /** The all-time high score for control point retention. */
-    CP_HIGHSCORE,
-    /** General identifier for control point status. */
-    CONTROL_POINT,
-    /** Flag (0 or 1) indicating if a player is currently standing on a CP. */
-    ON_CP,
-    /** Stores the ID of the previous control point occupied. */
-    PREV_CP,
-    /** Technical objective used for rendering CP info on the HUD. */
-    DISPLAY_CP,
-    /** Technical objective used to manage CP-specific team colors. */
-    COLOR_CP,
+    /** Current capture progress score. */
+    ScoreboardObjective CP_SCORE = Internal.CP_SCORE;
+    /** Highscore for control point retention. */
+    ScoreboardObjective CP_HIGHSCORE = Internal.CP_HIGHSCORE;
+    /** General control point identifier. */
+    ScoreboardObjective CONTROL_POINT = Internal.CONTROL_POINT;
+    /** Flag (0/1) if player is on a capture zone. */
+    ScoreboardObjective ON_CP = Internal.ON_CP;
+    /** ID of the previous control point. */
+    ScoreboardObjective PREV_CP = Internal.PREV_CP;
+    /** Technical objective for CP HUD rendering. */
+    ScoreboardObjective DISPLAY_CP = Internal.DISPLAY_CP;
+    /** Technical objective for CP team coloring. */
+    ScoreboardObjective COLOR_CP = Internal.COLOR_CP;
 
     // --- 🛠️ Technical & Mechanic Helpers ---
 
-    /** Tracks the age of a wolf for specific taming or growth mechanics. */
-    WOLF_AGE,
-    /** Technical check used for wolf collar color logic. */
-    COLLAR_CHECK,
-    /** Tracks how many times a specific event or ability was called. */
-    TIMES_CALLED,
-    /** Used to select and cycle through random flavor text in the UI. */
-    RANDOM_QUOTES,
-    /** Counter for how many victory points or wins a player has. */
-    VICTORY,
-    /** Tracks if a player has received their match perk. */
-    RECEIVED_PERK,
-    /** Flag indicating if a player has successfully found/formed a team. */
-    FOUND_TEAM,
-    /** General distance tracker (e.g., distance to center or border). */
-    DISTANCE,
-    /** Coordinate-based technical objective (usually for relative Y-level). */
-    POS,
-    /** Mathematical helper for calculating squared distances without square roots. */
-    SQUARE;
+    /** Age of tamed wolves. */
+    ScoreboardObjective WOLF_AGE = Internal.WOLF_AGE;
+    /** Check for wolf collar color updates. */
+    ScoreboardObjective COLLAR_CHECK = Internal.COLLAR_CHECK;
+    /** Counter for ability/event calls. */
+    ScoreboardObjective TIMES_CALLED = Internal.TIMES_CALLED;
+    /** Selector for cycling UI flavor text. */
+    ScoreboardObjective RANDOM_QUOTES = Internal.RANDOM_QUOTES;
+    /** Counter for victory points or total wins. */
+    ScoreboardObjective VICTORY = Internal.VICTORY;
+    /** Flag for match perk distribution. */
+    ScoreboardObjective RECEIVED_PERK = Internal.RECEIVED_PERK;
+    /** Flag for team formation status. */
+    ScoreboardObjective FOUND_TEAM = Internal.FOUND_TEAM;
+    /** Distance to center or world border. */
+    ScoreboardObjective DISTANCE = Internal.DISTANCE;
+    /** Relative Y-level or coordinate marker. */
+    ScoreboardObjective POS = Internal.POS;
+    /** Mathematical helper for distance calculations. */
+    ScoreboardObjective SQUARE = Internal.SQUARE;
 
-    // --- 🛰️ Logic & Accessors ---
+    // --- 🛰️ Core Contract ---
 
     /**
-     * Retrieves the lowercase name used in the Minecraft objective registry.
-     * <p><b>Example:</b> {@code ScoreboardObjective.TIME_DUM.getObjectiveName()} returns {@code "time_dum"}.</p>
-     * @return The lowercase identifier.
+     * Retrieves the formatted PascalCase identifier.
+     * <p><b>Example:</b> {@code TIME_DUM} -> {@code "TimeDum"}.</p>
+     * @return The objective string for the Minecraft registry.
      */
-    public String getObjectiveName() {
-        return this.name().toLowerCase();
+    String getObjectiveName();
+
+    /**
+     * Ensures the objective name is valid for game commands.
+     * @throws IllegalStateException if the name is empty or exceeds the 16-character limit.
+     */
+    default void validate() throws IllegalStateException {
+        String name = getObjectiveName();
+        if (name == null || name.isBlank()) {
+            throw new IllegalStateException("Scoreboard objective name cannot be null or empty.");
+        }
+        // Legacy 16-char limit is enforced for packet compatibility.
+        if (name.length() > 16) {
+            throw new IllegalStateException("Objective name '" + name + "' is too long (" + name.length() + " chars). Max is 16.");
+        }
     }
 
-    // --- 🔍 Registry Lookups ---
+    // --- 🛠️ Static Factory Methods ---
 
     /**
-     * Safely retrieves a ScoreboardObjective from its string name.
-     * <p><b>Error Catching:</b> Handles case-insensitive matches. If the input is
-     * null, blank, or not found in the registry, it returns {@code null} to
-     * allow the caller to handle custom or dynamically created objectives.</p>
-     * @param input The raw objective name (e.g., "Kills", "time_dum").
-     * @return The matching {@link ScoreboardObjective}, or {@code null} if invalid.
+     * Creates a numbered version of a base objective.
+     * <p>Used for multiple instances like {@code ControlPoint1}, {@code ControlPoint2}.</p>
+     * @param base The base {@link ScoreboardObjective} to copy the name from.
+     * @param index The index to append.
+     * @return A new type-safe objective instance.
+     * @throws NullPointerException if base is null.
+     * @throws IllegalArgumentException if index is negative.
      */
-    public static ScoreboardObjective fromString(String input) {
-        if (input == null || input.isBlank()) {
-            return null;
+    static ScoreboardObjective indexed(ScoreboardObjective base, int index) {
+        Objects.requireNonNull(base, "Cannot index a null objective.");
+        if (index < 0) {
+            throw new IllegalArgumentException("Objective index cannot be negative: " + index);
         }
+        return new IndexedObjective(base.getObjectiveName(), index);
+    }
 
-        String target = input.toUpperCase().trim();
+    /**
+     * Formats a raw SNAKE_CASE string into PascalCase.
+     * @param input The raw enum name.
+     * @return The formatted string, or an empty string if input is null.
+     */
+    private static String formatPascal(String input) {
+        if (input == null || input.isEmpty()) return "";
         try {
-            return ScoreboardObjective.valueOf(target);
-        } catch (IllegalArgumentException e) {
-            // Logically catch any mistyped objectives from external data
-            return null;
+            return Arrays.stream(input.split("_"))
+                    .filter(s -> !s.isEmpty())
+                    .map(s -> Character.toUpperCase(s.charAt(0)) + s.substring(1).toLowerCase())
+                    .collect(Collectors.joining());
+        } catch (Exception e) {
+            // Fail-safe: return the original input if complex parsing fails
+            return input;
         }
     }
 
-    // --- 📝 Overrides ---
+    // --- 📦 Internal Implementations ---
 
     /**
-     * Returns the objective name for direct use in scoreboard command strings.
-     * <p><b>Implementation:</b> Delegates to {@link #getObjectiveName()}.</p>
-     * @return The lowercase identifier.
+     * Singleton registry for fixed objectives.
      */
-    @Override
-    public String toString() {
-        return getObjectiveName();
+    enum Internal implements ScoreboardObjective {
+        TIME_DUM, TIME, TIME2, SIDE_DUM, HEARTS, APPLES,
+        STONE, DIORITE, ANDESITE, GRANITE, DEEPSLATE, MINING,
+        DEATHS, KILLS, TEMP_KILLS, IS_KILLER, RANK, MIN_HEALTH, DAMAGE_TAKEN,
+        CP_SCORE, CP_HIGHSCORE, CONTROL_POINT, ON_CP, PREV_CP, DISPLAY_CP, COLOR_CP,
+        WOLF_AGE, COLLAR_CHECK, TIMES_CALLED, RANDOM_QUOTES, VICTORY,
+        RECEIVED_PERK, FOUND_TEAM, DISTANCE, POS, SQUARE;
+
+        private final String pascalName;
+
+        Internal() {
+            this.pascalName = ScoreboardObjective.formatPascal(this.name());
+        }
+
+        @Override public String getObjectiveName() { return pascalName; }
+        @Override public String toString() { return getObjectiveName(); }
+    }
+
+    /**
+     * Record representing a versioned objective.
+     */
+    record IndexedObjective(String basePascalName, int index) implements ScoreboardObjective {
+        @Override public String getObjectiveName() { return basePascalName + index; }
+        @Override public String toString() { return getObjectiveName(); }
     }
 }
