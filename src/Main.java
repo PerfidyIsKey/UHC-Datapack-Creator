@@ -56,7 +56,7 @@ import uhc.resource.block.structure_block.StructureBlockMode;
 import uhc.resource.block.structure_block.StructureMirror;
 import uhc.resource.block.structure_block.StructureRotation;
 import uhc.resource.color.DyeColor;
-import uhc.resource.color.HexColor;
+import uhc.text.color.HexColor;
 import uhc.resource.color.TextColor;
 import uhc.resource.data.DataPathId;
 import uhc.resource.effect.EffectId;

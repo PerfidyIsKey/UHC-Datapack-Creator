@@ -1,84 +1,88 @@
 package uhc.score;
 
+import uhc.resource.color.TextColor;
+import java.util.Objects;
+
 /**
- * 📊 **Scoreboard Display Slot Registry**
+ * 📊 **Scoreboard Display Slot Identifier**
  * <p>
- * Defines the valid locations where a scoreboard objective can be displayed
- * on the Minecraft client. Each slot serves a specific UI purpose in UHC,
- * such as tracking health in the tab list or game stats on the sidebar.
+ * Defines the contract for all scoreboard display locations. This interface
+ * allows for type-safe handling of both static vanilla slots and dynamic
+ * team-specific sidebar slots.
  * </p>
  */
-public enum DisplaySlot {
+public interface DisplaySlot {
 
-    // --- 📋 Slot Definitions ---
+    // --- 📋 Static Constants (Standard Slots) ---
 
-    /**
-     * **The Player List (Tab)**
-     * <p>Displays the score next to player names in the multiplayer tab menu.</p>
-     * <p><b>Common Use:</b> Current health or ping.</p>
-     */
-    LIST,
+    /** The Player List (Tab menu). */
+    DisplaySlot LIST = new StandardDisplaySlot("list");
 
-    /**
-     * **The Sidebar**
-     * <p>Displays the objective on the right-hand side of the screen.</p>
-     * <p><b>Common Use:</b> Match timer, player kills, or border distance.</p>
-     */
-    SIDEBAR,
+    /** The global Sidebar. */
+    DisplaySlot SIDEBAR = new StandardDisplaySlot("sidebar");
 
-    /**
-     * **Below Name**
-     * <p>Displays the score directly under a player's nameplate in the 3D world.</p>
-     * <p><b>Common Use:</b> Visual health indicators (e.g., "20 HP").</p>
-     */
-    BELOW_NAME;
+    /** The area directly under player nameplates. */
+    DisplaySlot BELOW_NAME = new StandardDisplaySlot("below_name");
 
     // --- 🛰️ Logic & Accessors ---
 
     /**
      * Retrieves the lowercase NBT-compatible name for the display slot.
-     * <p><b>Example:</b> {@code DisplaySlot.BELOW_NAME.getSlotName()} returns {@code "below_name"}.</p>
-     * @return The lowercase identifier string used by Minecraft commands and packets.
+     * @return The identifier string (e.g., "sidebar.team.red").
      */
-    public String getSlotName() {
-        return this.name().toLowerCase();
-    }
-
-    // --- 🔍 Registry Lookups ---
+    String getSlotName();
 
     /**
-     * Safely retrieves a DisplaySlot from a raw string identifier.
-     * <p><b>Error Catching:</b> Performs a case-insensitive lookup and handles
-     * common formatting issues. If the input is null or unrecognized, it
-     * defaults to {@link #SIDEBAR} to ensure the UI remains visible.</p>
-     * @param input The raw slot name (e.g., "list", "belowName", "SIDEBAR").
-     * @return The matching {@link DisplaySlot}, or {@link #SIDEBAR} as a fail-safe.
+     * Validates the slot identifier against Minecraft's naming conventions.
+     * @throws IllegalStateException if the slot name is malformed.
      */
-    public static DisplaySlot fromString(String input) {
-        if (input == null || input.isBlank()) {
-            return SIDEBAR;
-        }
-
-        // Clean the input and handle camelCase or snake_case conversion if necessary
-        String target = input.toUpperCase().trim().replace("-", "_");
-
-        try {
-            return DisplaySlot.valueOf(target);
-        } catch (IllegalArgumentException e) {
-            // Logically catch any mistyped slots and fallback to Sidebar
-            return SIDEBAR;
+    default void validate() throws IllegalStateException {
+        if (getSlotName() == null || getSlotName().isBlank()) {
+            throw new IllegalStateException("DisplaySlot identifier cannot be null or blank.");
         }
     }
 
-    // --- 📝 Overrides ---
+    // --- 🛠️ Static Factory Methods ---
 
     /**
-     * Returns the lowercase slot name for direct use in command strings.
-     * <p><b>Implementation:</b> Delegates to {@link #getSlotName()}.</p>
-     * @return The lowercase identifier (e.g., "list").
+     * Creates a type-safe Team Sidebar slot.
+     * <p><b>Logic:</b> Wraps a {@link TextColor} into a unique DisplaySlot instance.</p>
+     * @param color The target team color.
+     * @return A DisplaySlot representing {@code sidebar.team.<color>}.
      */
-    @Override
-    public String toString() {
-        return getSlotName();
+    static DisplaySlot teamSidebar(TextColor color) {
+        return new TeamSidebarSlot(Objects.requireNonNull(color, "TextColor is required for team sidebars."));
+    }
+
+    // --- 📦 Private Implementations ---
+
+    /**
+     * Implementation for standard, fixed Minecraft display slots.
+     */
+    record StandardDisplaySlot(String name) implements DisplaySlot {
+        @Override
+        public String getSlotName() {
+            return name;
+        }
+
+        @Override
+        public String toString() {
+            return getSlotName();
+        }
+    }
+
+    /**
+     * Implementation for dynamic team-colored sidebar slots.
+     */
+    record TeamSidebarSlot(TextColor color) implements DisplaySlot {
+        @Override
+        public String getSlotName() {
+            return "sidebar.team." + color.getColor();
+        }
+
+        @Override
+        public String toString() {
+            return getSlotName();
+        }
     }
 }

@@ -1,5 +1,7 @@
 package uhc.resource.color;
 
+import uhc.text.color.ColorType;
+
 /**
  * 🎨 **Bossbar Color Registry**
  * <p>

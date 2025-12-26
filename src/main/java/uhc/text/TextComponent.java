@@ -6,7 +6,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
 import uhc.arguments.entity.Entity;
-import uhc.resource.color.ColorType;
+import uhc.text.color.ColorType;
 
 import java.util.ArrayList;
 import java.util.List;

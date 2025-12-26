@@ -1,4 +1,4 @@
-package uhc.resource.color;
+package uhc.text.color;
 
 import java.util.regex.Pattern;
 
