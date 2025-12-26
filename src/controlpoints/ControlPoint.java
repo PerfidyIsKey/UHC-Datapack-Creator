@@ -2,10 +2,11 @@ package controlpoints;
 
 import Enums.Biome;
 import HelperClasses.Coordinate;
+import uhc.resource.tag.EntityTag;
 
 public class ControlPoint {
 
-    private ControlPointTag name;
+    private EntityTag name;
 
     private int maxVal;
     private int addRate;
@@ -13,7 +14,7 @@ public class ControlPoint {
     private Coordinate coordinate;
     private Enums.Biome biome;
 
-    public ControlPoint(ControlPointTag name, int maxVal, int addRate, Coordinate coordinate) {
+    public ControlPoint(EntityTag name, int maxVal, int addRate, Coordinate coordinate) {
         this.name = name;
         this.maxVal = maxVal;
         this.addRate = addRate;
@@ -21,7 +22,7 @@ public class ControlPoint {
         this.biome = Biome.plains;
     }
 
-    public ControlPoint(ControlPointTag name, int maxVal, int addRate, Coordinate coordinate, Enums.Biome biome) {
+    public ControlPoint(EntityTag name, int maxVal, int addRate, Coordinate coordinate, Enums.Biome biome) {
         this.name = name;
         this.maxVal = maxVal;
         this.addRate = addRate;
@@ -29,11 +30,11 @@ public class ControlPoint {
         this.biome = biome;
     }
 
-    public ControlPointTag getName() {
+    public EntityTag getName() {
         return name;
     }
 
-    public void setName(ControlPointTag name) {
+    public void setName(EntityTag name) {
         this.name = name;
     }
 

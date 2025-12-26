@@ -2,7 +2,7 @@ import Enums.FileName;
 
 import FileGeneration.FileData;
 import uhc.command.commands.TagCommand;
-import uhc.resource.tag.StaticEntityTag;
+import uhc.resource.tag.EntityTag;
 
 import java.util.ArrayList;
 
@@ -30,9 +30,9 @@ public class GameStart {
         // Disable automatic player respawn after 20 minutes
         fileCommands.add(Schedule.callFunction(FileName.disable_respawn, 20 * Constant.secPerMinute));
 
-        fileCommands.add(TagCommand.action(Constant.admin, TagCommand.TagAction.ADD)
-                        .name(StaticEntityTag.GAME_STARTED)
-                                .generate());
+        fileCommands.add(TagCommand.target(Constant.admin)
+                .add(EntityTag.GAME_STARTED)
+                .generate());
 
         return new FileData(FileName.game_starter, fileCommands);
     }
