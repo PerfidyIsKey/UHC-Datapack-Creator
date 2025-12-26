@@ -92,7 +92,7 @@ public class InitializeFunction implements DatapackFunction {
                 .pos(BlockPos.absolute(0, 221, 0)));
 
         // Create scoreboard objectives
-        currentFunction.addLine();
+        currentFunction.addAll(ScoreboardCommand.batch().registerAll());
         currentFunction.addLine();
         currentFunction.addLine();
         currentFunction.addLine();
