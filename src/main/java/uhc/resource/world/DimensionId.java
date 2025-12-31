@@ -33,18 +33,22 @@ public enum DimensionId implements ResourceLocation {
 
     // --- ⚙️ Internal State ---
 
-    /** * The specific identifier for the dimension (e.g., "the_nether"). */
+    /** * The specific path identifier for the dimension (e.g., "the_nether").
+     * Validated against Minecraft's resource location requirements.
+     */
     private final String path;
 
-    /** * The registry namespace (e.g., "minecraft"). */
+    /** * The registry namespace (e.g., "minecraft").
+     * Defaults to the value provided in {@link DatapackConfig}.
+     */
     private final String namespace;
 
     // --- 🏗️ Constructors ---
 
     /**
      * 🟢 **Standard Minecraft Constructor**
-     * <p>Uses the default Minecraft namespace defined in {@link DatapackConfig}.</p>
-     * @param path The dimension path (e.g., "overworld").
+     * <p>Initializes the dimension using the default {@code minecraft} namespace.</p>
+     * * @param path The dimension path (e.g., "overworld").
      */
     DimensionId(String path) {
         this(path, DatapackConfig.MINECRAFT_NAMESPACE);
@@ -52,26 +56,56 @@ public enum DimensionId implements ResourceLocation {
 
     /**
      * 🟠 **Full Custom Constructor**
-     * <p>Allows for custom namespaces, useful for multi-world plugins or data packs.</p>
-     * <p><b>Error Catching:</b> Trims and lowercases inputs to resolve formatting
-     * inconsistencies and triggers {@link #validate()} to ensure character compliance.</p>
-     * @param path      The dimension path component.
+     * <p>Allows for custom namespaces, useful for multi-world configurations.</p>
+     * * @param path      The dimension path component.
      * @param namespace The resource namespace component.
      * @throws NullPointerException if path or namespace is null.
      */
     DimensionId(String path, String namespace) {
-        this.path = Objects.requireNonNull(path, "Dimension path cannot be null.").toLowerCase().trim();
-        this.namespace = Objects.requireNonNull(namespace, "Namespace cannot be null.").toLowerCase().trim();
+        // Initialization with trimming and case-correction for stability
+        this.path = Objects.requireNonNull(path, "Dimension path cannot be null.")
+                .toLowerCase().trim();
+        this.namespace = Objects.requireNonNull(namespace, "Namespace cannot be null.")
+                .toLowerCase().trim();
 
-        // Ensure the identifier adheres to Minecraft's naming rules.
+        // Immediate validation ensures the object is never in an illegal state.
         this.validate();
+    }
+
+    // --- 📝 String & Display Formatting ---
+
+    /**
+     * 🏷️ **Title Case Dimension Name**
+     * <p>Returns the enum name converted to Title Case (e.g., "Overworld", "Nether").
+     * This is useful for chat messages, UI labels, or scoreboard displays.</p>
+     *
+     * @return The Title Case string derived from {@link #name()}.
+     */
+    public String title() {
+        try {
+            // Converts "OVERWORLD" -> "Overworld"
+            String constantName = this.name().toLowerCase();
+            return constantName.substring(0, 1).toUpperCase() + constantName.substring(1);
+        } catch (Exception e) {
+            // Error Catching: Fallback to avoid logic breaks during string manipulation
+            return "Unknown";
+        }
+    }
+
+    /**
+     * 🏷️ **Get Dimension (Alias)**
+     * <p>Provides an alias for {@link #title()} to match naming conventions in other registries.</p>
+     * * @return The Title Case string.
+     */
+    public String getDimension() {
+        return title();
     }
 
     // --- 🛰️ ResourceLocation Implementation ---
 
     /**
      * Retrieves the namespace associated with this dimension.
-     * @return The namespace string (e.g., "minecraft").
+     * * @return The namespace string.
      */
     @Override
     public String getNamespace() {
@@ -80,7 +114,7 @@ public enum DimensionId implements ResourceLocation {
 
     /**
      * Retrieves the path associated with this dimension.
-     * @return The path string (e.g., "the_nether").
+     * * @return The path string.
      */
     @Override
     public String getPath() {
@@ -89,7 +123,7 @@ public enum DimensionId implements ResourceLocation {
 
     /**
      * Combines the namespace and path into a valid namespaced key.
-     * @return The full identifier (e.g., "minecraft:overworld").
+     * * @return The full identifier (e.g., "minecraft:overworld").
      */
     @Override
     public String getResourceLocation() {
@@ -98,14 +132,16 @@ public enum DimensionId implements ResourceLocation {
 
     /**
      * Performs a syntax check on the identifier components.
-     * <p><b>Error Catching:</b> Uses the regex from {@link ResourceLocation}
-     * to ensure no illegal characters exist in the registry key.</p>
-     * @throws IllegalStateException if the identifier is malformed.
+     * * @throws IllegalStateException if the identifier is malformed according to {@link ResourceLocation}.
      */
     @Override
     public void validate() throws IllegalStateException {
-        if (!VALID_PATTERN.matcher(getResourceLocation()).matches()) {
-            throw new IllegalStateException("Malformed DimensionId: " + getResourceLocation());
+        try {
+            if (!VALID_PATTERN.matcher(getResourceLocation()).matches()) {
+                throw new IllegalStateException("Malformed DimensionId: " + getResourceLocation());
+            }
+        } catch (Exception e) {
+            throw new IllegalStateException("Critical failure during DimensionId validation.");
         }
     }
 
@@ -113,10 +149,7 @@ public enum DimensionId implements ResourceLocation {
 
     /**
      * Safely retrieves a DimensionId from a path string.
-     * <p><b>Error Catching:</b> Performs a case-insensitive search. If the path
-     * is null or unrecognized, it defaults to {@link #OVERWORLD} to prevent
-     * teleportation errors or crashes.</p>
-     * @param path The path to look for (e.g., "the_nether").
+     * * @param path The path to look for (e.g., "the_nether").
      * @return The matching {@link DimensionId}, or {@link #OVERWORLD} as a fallback.
      */
     public static DimensionId fromPath(String path) {
@@ -124,12 +157,17 @@ public enum DimensionId implements ResourceLocation {
             return OVERWORLD;
         }
 
-        String target = path.trim();
-        for (DimensionId id : values()) {
-            if (id.path.equalsIgnoreCase(target)) {
-                return id;
+        try {
+            String target = path.trim();
+            for (DimensionId id : values()) {
+                if (id.path.equalsIgnoreCase(target)) {
+                    return id;
+                }
             }
+        } catch (Exception e) {
+            // Silent catch to return default value on iteration error
         }
+
         return OVERWORLD;
     }
 
@@ -137,7 +175,7 @@ public enum DimensionId implements ResourceLocation {
 
     /**
      * Returns the full resource location for direct use in commands.
-     * @return The result of {@link #getResourceLocation()}.
+     * * @return The result of {@link #getResourceLocation()}.
      */
     @Override
     public String toString() {

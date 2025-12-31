@@ -5,25 +5,42 @@ import uhc.arguments.coordinate.Coordinate;
 import uhc.arguments.coordinate.LocalCoordinate;
 import uhc.arguments.coordinate.RelativeCoordinate;
 
+import java.util.Objects;
+
 /**
- * Represents a block position argument used in Minecraft commands (e.g., /setblock).
- * This class ensures **type safety** by accepting explicit {@code Coordinate} objects (Absolute, Relative, Local) for X, Y, and Z.
+ * 📍 **Block Position**
  * <p>
- * It uses the Builder Pattern to allow mixing and matching coordinate types (e.g., Absolute X, Relative Y, Local Z).
- * The final output format is always the space-separated string: "X Y Z".
+ * Represents a 3D coordinate argument used in Minecraft commands (e.g., {@code /setblock}).
+ * This class ensures **type safety** by using explicit {@link Coordinate} objects,
+ * allowing for the mixing of Absolute, Relative, and Local coordinates.
+ * </p>
  */
 public class BlockPos {
 
+    // --- 📄 Fields ---
+
+    /** * The X-axis coordinate component.
+     * Holds the specific {@link Coordinate} type (Absolute, Relative, or Local).
+     */
     private Coordinate x;
+
+    /** * The Y-axis coordinate component.
+     * Holds the specific {@link Coordinate} type (Absolute, Relative, or Local).
+     */
     private Coordinate y;
+
+    /** * The Z-axis coordinate component.
+     * Holds the specific {@link Coordinate} type (Absolute, Relative, or Local).
+     */
     private Coordinate z;
+
+    // --- 🏗️ Constructors ---
 
     /**
      * Private constructor initializes the BlockPos with default absolute zero coordinates.
      * This ensures the object is always in a valid, absolute state upon creation.
      */
     private BlockPos() {
-        // Initialize to safe defaults (Absolute 0 0 0)
         this.x = AbsoluteCoordinate.create(0);
         this.y = AbsoluteCoordinate.create(0);
         this.z = AbsoluteCoordinate.create(0);
@@ -31,63 +48,55 @@ public class BlockPos {
 
     /**
      * Creates a new BlockPos builder instance, defaulted to absolute coordinates 0 0 0.
-     *
-     * @return A new BlockPos instance, ready for method chaining.
+     * * @return A new BlockPos instance, ready for method chaining.
      */
     public static BlockPos create() {
         return new BlockPos();
     }
 
-    // --- Type-Safe Builder Methods ---
+    // --- 🛠️ Builder Methods ---
 
     /**
-     * Sets the X coordinate using a type-safe {@code Coordinate} object (Absolute, Relative, or Local).
-     *
-     * @param x The object representing the X coordinate type and value.
-     * @return The current builder instance for chaining.
-     * @throws IllegalArgumentException if the provided coordinate is {@code null}.
+     * Sets the X coordinate component using a type-safe Coordinate object.
+     * * @param x The coordinate type and value.
+     * @return The current instance for chaining.
+     * @throws NullPointerException if the provided coordinate is null.
      */
     public BlockPos x(Coordinate x) {
-        if (x == null) throw new IllegalArgumentException("X coordinate cannot be null.");
-        this.x = x;
+        this.x = Objects.requireNonNull(x, "X coordinate cannot be null.");
         return this;
     }
 
     /**
-     * Sets the Y coordinate using a type-safe {@code Coordinate} object (Absolute, Relative, or Local).
-     *
-     * @param y The object representing the Y coordinate type and value.
-     * @return The current builder instance for chaining.
-     * @throws IllegalArgumentException if the provided coordinate is {@code null}.
+     * Sets the Y coordinate component using a type-safe Coordinate object.
+     * * @param y The coordinate type and value.
+     * @return The current instance for chaining.
+     * @throws NullPointerException if the provided coordinate is null.
      */
     public BlockPos y(Coordinate y) {
-        if (y == null) throw new IllegalArgumentException("Y coordinate cannot be null.");
-        this.y = y;
+        this.y = Objects.requireNonNull(y, "Y coordinate cannot be null.");
         return this;
     }
 
     /**
-     * Sets the Z coordinate using a type-safe {@code Coordinate} object (Absolute, Relative, or Local).
-     *
-     * @param z The object representing the Z coordinate type and value.
-     * @return The current builder instance for chaining.
-     * @throws IllegalArgumentException if the provided coordinate is {@code null}.
+     * Sets the Z coordinate component using a type-safe Coordinate object.
+     * * @param z The coordinate type and value.
+     * @return The current instance for chaining.
+     * @throws NullPointerException if the provided coordinate is null.
      */
     public BlockPos z(Coordinate z) {
-        if (z == null) throw new IllegalArgumentException("Z coordinate cannot be null.");
-        this.z = z;
+        this.z = Objects.requireNonNull(z, "Z coordinate cannot be null.");
         return this;
     }
 
-    // --- Convenience Static Builders (for simple, single-type positions) ---
+    // --- 🚀 Static Factory Methods ---
 
     /**
-     * Creates a BlockPos where all coordinates are **absolute** integers (e.g., "100 64 200").
-     *
-     * @param x The absolute X-coordinate.
-     * @param y The absolute Y-coordinate.
-     * @param z The absolute Z-coordinate.
-     * @return A new BlockPos instance.
+     * Creates a BlockPos where all coordinates are absolute integers.
+     * * @param x The absolute X coordinate.
+     * @param y The absolute Y coordinate.
+     * @param z The absolute Z coordinate.
+     * @return A new BlockPos instance (e.g., "100 64 200").
      */
     public static BlockPos absolute(int x, int y, int z)  {
         return BlockPos.create()
@@ -97,31 +106,26 @@ public class BlockPos {
     }
 
     /**
-     * Creates a BlockPos using **absolute** integer coordinates from an array.
-     *
-     * @param pos An array containing exactly 3 integer coordinates [X, Y, Z].
-     * @return A new BlockPos instance.
-     * @throws IllegalArgumentException if the array is {@code null} or does not contain exactly 3 elements.
+     * Creates a BlockPos from an integer array.
+     * * @param pos An array containing exactly 3 integers [X, Y, Z].
+     * @return A new absolute BlockPos instance.
+     * @throws NullPointerException if the array is null.
+     * @throws IllegalArgumentException if the array length is not exactly 3.
      */
     public static BlockPos absolute(int[] pos) {
-        if (pos == null || pos.length != 3) {
-            throw new IllegalArgumentException("Absolute position array must be non-null and contain exactly 3 integers (X, Y, Z).");
+        Objects.requireNonNull(pos, "Position array cannot be null.");
+        if (pos.length != 3) {
+            throw new IllegalArgumentException("Absolute position array must contain exactly 3 integers.");
         }
-        return BlockPos.create()
-                .x(AbsoluteCoordinate.create(pos[0]))
-                .y(AbsoluteCoordinate.create(pos[1]))
-                .z(AbsoluteCoordinate.create(pos[2]));
+        return absolute(pos[0], pos[1], pos[2]);
     }
 
     /**
-     * Creates a BlockPos where all coordinates are **relative** offsets.
-     * <p>
-     * Output examples: {@code ~5 ~0 ~-2}. A zero offset renders as {@code ~} alone.
-     *
-     * @param x The relative X offset.
+     * Creates a BlockPos where all coordinates are relative offsets.
+     * * @param x The relative X offset.
      * @param y The relative Y offset.
      * @param z The relative Z offset.
-     * @return A new BlockPos instance.
+     * @return A new relative BlockPos instance (e.g., "~5 ~ ~-2").
      */
     public static BlockPos relative(int x, int y, int z)  {
         return BlockPos.create()
@@ -131,14 +135,11 @@ public class BlockPos {
     }
 
     /**
-     * Creates a BlockPos where all coordinates are **local** offsets.
-     * <p>
-     * Output examples: {@code ^5 ^1 ^0}. Local coordinates always explicitly include the offset, even if zero.
-     *
-     * @param x The local forward/backward offset.
+     * Creates a BlockPos where all coordinates are local (caret) offsets.
+     * * @param x The local forward/backward offset.
      * @param y The local up/down offset.
      * @param z The local left/right offset.
-     * @return A new BlockPos instance.
+     * @return A new local BlockPos instance (e.g., "^5 ^1 ^0").
      */
     public static BlockPos local(int x, int y, int z)  {
         return BlockPos.create()
@@ -147,15 +148,46 @@ public class BlockPos {
                 .z(LocalCoordinate.create(z));
     }
 
+    // --- ⚙️ Logic & Formatting ---
 
     /**
-     * Returns the position arguments formatted for the Minecraft command,
-     * separated by spaces (e.g., "100 64 200" or "~5 64 ^1").
+     * 📝 **Coordinate Display String**
+     * <p>Returns the coordinates in a comma-separated format, typically used
+     * for UI display, titles, or internal logging.</p>
      *
-     * @return The final space-separated coordinate string.
+     * @return A string formatted as {@code "x, y, z"}.
+     */
+    public String getCoordinate() {
+        try {
+            return String.format("%s, %s, %s", x.format(), y.format(), z.format());
+        } catch (Exception e) {
+            // Error Catching: Default fallback to prevent formatting crashes
+            return "0, 0, 0";
+        }
+    }
+
+    /**
+     * 📝 **Title Formatting**
+     * <p>An alias for {@link #getCoordinate()} used for standardized display naming.</p>
+     * * @return A comma-separated coordinate string.
+     */
+    public String title() {
+        return getCoordinate();
+    }
+
+    /**
+     * 🎮 **Minecraft Command Format**
+     * <p>Returns the space-separated coordinates required for Minecraft command arguments.</p>
+     *
+     * @return A string formatted as {@code "X Y Z"} (e.g., "~5 64 ^1").
      */
     @Override
     public String toString() {
-        return x.format() + " " + y.format() + " " + z.format();
+        try {
+            return String.format("%s %s %s", x.format(), y.format(), z.format());
+        } catch (Exception e) {
+            // Error Catching: Safe default for command execution
+            return "0 0 0";
+        }
     }
 }
