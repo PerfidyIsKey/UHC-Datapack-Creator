@@ -1,6 +1,7 @@
 package uhc.game.bossbar;
 
 import uhc.game.control_points.ControlPointData;
+import uhc.resource.bossbar.BossbarId;
 import uhc.resource.bossbar.BossbarStyle;
 import uhc.text.TextComponent;
 
@@ -19,19 +20,23 @@ public final class BossbarData {
 
     // --- 📄 Fields ---
 
-    /** * The unique internal identifier used by the Minecraft bossbar registry. */
-    private final String id;
+    /** * The unique namespaced identifier for the Minecraft bossbar.
+     * This field is final and mandatory for identifying the bar in the client registry.
+     */
+    private final BossbarId id;
 
-    /** * The display name of the bossbar, stored as a rich {@link TextComponent}. */
+    /** * The display name of the bossbar, stored as a rich {@link TextComponent}.
+     * This is the text visible to players above the progress bar.
+     */
     private final TextComponent name;
 
     /** * The maximum progress value of the bossbar.
-     * If present, this defines the 100% threshold for the bar's fill level.
+     * Represents the logical "100%" state of the bar (e.g., 100 points, 20 seconds).
      */
     private final Integer max;
 
     /** * The visual segmentation style of the bossbar.
-     * Sourced from {@link BossbarStyle} (e.g., Progress, Notched 6, 10, 12, or 20).
+     * Defines how many "notches" appear on the bar (e.g., Progress, 6 notches, etc.).
      */
     private final BossbarStyle style;
 
@@ -39,14 +44,14 @@ public final class BossbarData {
 
     /**
      * Internal constructor used exclusively by the static Builder and Factory methods.
-     * Ensures all fields are assigned safely without exposing the constructor publicly.
+     * Ensures all fields are immutable and prevents external instantiation without validation.
      *
-     * @param id    Unique identifier string.
-     * @param name  Formatted name component.
-     * @param max   Maximum value (nullable internally).
-     * @param style Visual style (nullable internally).
+     * @param id    The validated {@link BossbarId}.
+     * @param name  The formatted {@link TextComponent} display name.
+     * @param max   Maximum value (internal nullable, exposed as Optional).
+     * @param style Visual style (internal nullable, exposed as Optional).
      */
-    private BossbarData(String id, TextComponent name, Integer max, BossbarStyle style) {
+    private BossbarData(BossbarId id, TextComponent name, Integer max, BossbarStyle style) {
         this.id = id;
         this.name = name;
         this.max = max;
@@ -59,19 +64,19 @@ public final class BossbarData {
      * 🏗️ **Initialization Builder**
      * <p>Begins the construction of a new boss bar by requiring mandatory identity fields.</p>
      *
-     * @param id   The unique ID string (e.g., "capture_point_1").
-     * @param name The {@link TextComponent} to be displayed above the bar.
-     * @return A {@link Builder} instance to configure optional progress and style settings.
-     * @throws NullPointerException if id or name are null.
+     * @param id   The unique {@link BossbarId} for the bar.
+     * @param name The {@link TextComponent} display name.
+     * @return A {@link Builder} instance to configure optional settings.
+     * @throws NullPointerException if the provided id or name is null.
      */
-    public static Builder builder(String id, TextComponent name) {
+    public static Builder builder(BossbarId id, TextComponent name) {
         return new Builder(id, name);
     }
 
     /**
      * 🔄 **From Control Point**
      * <p>Automatically transforms a {@link ControlPointData} objective into a visible boss bar.
-     * It maps the control point's name, position, and dimension into a formatted title.</p>
+     * Maps the control point's unique name to a {@link BossbarId} and generates a title.</p>
      *
      * @param cp The source control point to be visualized.
      * @return A fully initialized and configured BossbarData instance.
@@ -81,19 +86,22 @@ public final class BossbarData {
         try {
             Objects.requireNonNull(cp, "Source ControlPointData cannot be null.");
 
-            // Constructing a detailed title using the CP's metadata
+            // Generate the unique namespaced ID from the Control Point's name
+            BossbarId barId = BossbarId.of(cp.name());
+
+            // Build a descriptive title: "Name: x, y, z (Dimension)"
             String rawTitle = String.format("%s: %s (%s)",
                     cp.name(),
                     cp.getPos().title(),
                     cp.getDimension().title());
 
-            return new Builder(cp.name(), TextComponent.text(rawTitle))
+            return new Builder(barId, TextComponent.text(rawTitle))
                     .max(cp.getMax())
                     .style(BossbarStyle.PROGRESS)
                     .build();
         } catch (Exception e) {
-            // Error Catching: Provides a safe fallback to prevent UI-driven crashes
-            return new Builder("error", TextComponent.text("Control Point Error"))
+            // Error Catching: Provides a safe fallback to prevent logic-chain failure
+            return new Builder(BossbarId.of("internal_error"), TextComponent.text("Data Error"))
                     .max(100)
                     .style(BossbarStyle.PROGRESS)
                     .build();
@@ -102,22 +110,30 @@ public final class BossbarData {
 
     // --- 🔍 Accessors ---
 
-    /** * @return The unique string identifier. */
-    public String getId() {
+    /** * Retrieves the unique identifier for the bossbar.
+     * @return The {@link BossbarId}.
+     */
+    public BossbarId getId() {
         return id;
     }
 
-    /** * @return The display name {@link TextComponent}. */
+    /** * Retrieves the display name component.
+     * @return The {@link TextComponent}.
+     */
     public TextComponent getName() {
         return name;
     }
 
-    /** * @return An {@link Optional} containing the max value if configured. */
+    /** * Retrieves the maximum value if defined.
+     * @return An {@link Optional} containing the max integer, or empty if not set.
+     */
     public Optional<Integer> getMax() {
         return Optional.ofNullable(max);
     }
 
-    /** * @return An {@link Optional} containing the {@link BossbarStyle} if configured. */
+    /** * Retrieves the visual style if defined.
+     * @return An {@link Optional} containing the {@link BossbarStyle}, or empty if not set.
+     */
     public Optional<BossbarStyle> getStyle() {
         return Optional.ofNullable(style);
     }
@@ -126,28 +142,29 @@ public final class BossbarData {
 
     /**
      * 🛠️ **Bossbar Builder**
-     * <p>Facilitates the creation of BossbarData instances while ensuring
-     * mandatory fields are present and optional fields are handled without nulls.</p>
+     * <p>Facilitates the creation of BossbarData instances using the {@link BossbarId} type.
+     * Enforces mandatory fields while allowing fluent optional configuration.</p>
      */
     public static class Builder {
-        private final String id;
+        private final BossbarId id;
         private final TextComponent name;
         private Integer max;
         private BossbarStyle style;
 
         /**
-         * Standard builder constructor for mandatory fields.
-         * @param id   Unique ID.
-         * @param name Display component.
+         * Initializes the builder with mandatory identity fields.
+         * @param id   The unique {@link BossbarId}.
+         * @param name The display {@link TextComponent}.
+         * @throws NullPointerException if id or name is null.
          */
-        public Builder(String id, TextComponent name) {
+        public Builder(BossbarId id, TextComponent name) {
             this.id = Objects.requireNonNull(id, "Bossbar ID is required.");
             this.name = Objects.requireNonNull(name, "Bossbar name is required.");
         }
 
         /**
-         * Configures the maximum progress value.
-         * @param max The integer limit for the bar.
+         * Sets the maximum progress value for the bar.
+         * @param max The integer limit.
          * @return The current builder instance.
          */
         public Builder max(int max) {
@@ -156,10 +173,10 @@ public final class BossbarData {
         }
 
         /**
-         * Configures the visual style/segmentation.
+         * Sets the visual segmentation style.
          * @param style The desired {@link BossbarStyle}.
          * @return The current builder instance.
-         * @throws NullPointerException if style is null.
+         * @throws NullPointerException if the style provided is null.
          */
         public Builder style(BossbarStyle style) {
             this.style = Objects.requireNonNull(style, "Bossbar style cannot be null.");
@@ -167,14 +184,16 @@ public final class BossbarData {
         }
 
         /**
-         * Finalizes the construction process.
+         * Assembles the final {@link BossbarData} object.
+         * <p>Contains an internal safety catch to ensure that construction
+         * errors return a stable, default-initialized object.</p>
          * @return A new {@link BossbarData} instance.
          */
         public BossbarData build() {
             try {
                 return new BossbarData(id, name, max, style);
             } catch (Exception e) {
-                // Final safety check during assembly
+                // Return a safe Progress-style bar if construction fails
                 return new BossbarData(id, name, 100, BossbarStyle.PROGRESS);
             }
         }
