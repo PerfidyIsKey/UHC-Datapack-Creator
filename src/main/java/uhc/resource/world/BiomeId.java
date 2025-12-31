@@ -6,152 +6,163 @@ import java.util.Objects;
 /**
  * 🌳 **Biome Identifier**
  * <p>
- * Represents all valid Minecraft biomes. This enum serves as a bridge between
- * Java constants and Minecraft resource locations (namespace:key).
- * </p>
- * <p>
- * Base-game biomes utilize an empty constructor to automatically derive their properties
- * from the enum constant name, while custom entries allow for manual specification.
+ * Represents all valid Minecraft biomes and their associated environmental data.
+ * This enum maps Java constants to Minecraft resource locations and provides a
+ * direct link to their native {@link DimensionId}.
  * </p>
  */
 public enum BiomeId {
 
     // --- 🌍 Overworld Biomes ---
 
-    THE_VOID,
-    PLAINS,
-    SUNFLOWER_PLAINS,
-    SNOWY_PLAINS,
-    ICE_SPIKES,
-    DESERT,
-    SWAMP,
-    MANGROVE_SWAMP,
-    FOREST,
-    FLOWER_FOREST,
-    BIRCH_FOREST,
-    DARK_FOREST,
-    PALE_GARDEN,
-    OLD_GROWTH_BIRCH_FOREST,
-    OLD_GROWTH_PINE_TAIGA,
-    OLD_GROWTH_SPRUCE_TAIGA,
-    TAIGA,
-    SNOWY_TAIGA,
-    SAVANNA,
-    SAVANNA_PLATEAU,
-    WINDSWEPT_HILLS,
-    WINDSWEPT_GRAVELLY_HILLS,
-    WINDSWEPT_FOREST,
-    WINDSWEPT_SAVANNA,
-    JUNGLE,
-    SPARSE_JUNGLE,
-    BAMBOO_JUNGLE,
-    BADLANDS,
-    ERODED_BADLANDS,
-    WOODED_BADLANDS,
-    MEADOW,
-    CHERRY_GROVE,
-    GROVE,
-    SNOWY_SLOPES,
-    FROZEN_PEAKS,
-    JAGGED_PEAKS,
-    STONY_PEAKS,
-    RIVER,
-    FROZEN_RIVER,
-    BEACH,
-    SNOWY_BEACH,
-    STONY_SHORE,
-    WARM_OCEAN,
-    LUKEWARM_OCEAN,
-    DEEP_LUKEWARM_OCEAN,
-    OCEAN,
-    DEEP_OCEAN,
-    COLD_OCEAN,
-    DEEP_COLD_OCEAN,
-    FROZEN_OCEAN,
-    DEEP_FROZEN_OCEAN,
-    MUSHROOM_FIELDS,
+    THE_VOID(DimensionId.OVERWORLD),
+    PLAINS(DimensionId.OVERWORLD),
+    SUNFLOWER_PLAINS(DimensionId.OVERWORLD),
+    SNOWY_PLAINS(DimensionId.OVERWORLD),
+    ICE_SPIKES(DimensionId.OVERWORLD),
+    DESERT(DimensionId.OVERWORLD),
+    SWAMP(DimensionId.OVERWORLD),
+    MANGROVE_SWAMP(DimensionId.OVERWORLD),
+    FOREST(DimensionId.OVERWORLD),
+    FLOWER_FOREST(DimensionId.OVERWORLD),
+    BIRCH_FOREST(DimensionId.OVERWORLD),
+    DARK_FOREST(DimensionId.OVERWORLD),
+    PALE_GARDEN(DimensionId.OVERWORLD),
+    OLD_GROWTH_BIRCH_FOREST(DimensionId.OVERWORLD),
+    OLD_GROWTH_PINE_TAIGA(DimensionId.OVERWORLD),
+    OLD_GROWTH_SPRUCE_TAIGA(DimensionId.OVERWORLD),
+    TAIGA(DimensionId.OVERWORLD),
+    SNOWY_TAIGA(DimensionId.OVERWORLD),
+    SAVANNA(DimensionId.OVERWORLD),
+    SAVANNA_PLATEAU(DimensionId.OVERWORLD),
+    WINDSWEPT_HILLS(DimensionId.OVERWORLD),
+    WINDSWEPT_GRAVELLY_HILLS(DimensionId.OVERWORLD),
+    WINDSWEPT_FOREST(DimensionId.OVERWORLD),
+    WINDSWEPT_SAVANNA(DimensionId.OVERWORLD),
+    JUNGLE(DimensionId.OVERWORLD),
+    SPARSE_JUNGLE(DimensionId.OVERWORLD),
+    BAMBOO_JUNGLE(DimensionId.OVERWORLD),
+    BADLANDS(DimensionId.OVERWORLD),
+    ERODED_BADLANDS(DimensionId.OVERWORLD),
+    WOODED_BADLANDS(DimensionId.OVERWORLD),
+    MEADOW(DimensionId.OVERWORLD),
+    CHERRY_GROVE(DimensionId.OVERWORLD),
+    GROVE(DimensionId.OVERWORLD),
+    SNOWY_SLOPES(DimensionId.OVERWORLD),
+    FROZEN_PEAKS(DimensionId.OVERWORLD),
+    JAGGED_PEAKS(DimensionId.OVERWORLD),
+    STONY_PEAKS(DimensionId.OVERWORLD),
+    RIVER(DimensionId.OVERWORLD),
+    FROZEN_RIVER(DimensionId.OVERWORLD),
+    BEACH(DimensionId.OVERWORLD),
+    SNOWY_BEACH(DimensionId.OVERWORLD),
+    STONY_SHORE(DimensionId.OVERWORLD),
+    WARM_OCEAN(DimensionId.OVERWORLD),
+    LUKEWARM_OCEAN(DimensionId.OVERWORLD),
+    DEEP_LUKEWARM_OCEAN(DimensionId.OVERWORLD),
+    OCEAN(DimensionId.OVERWORLD),
+    DEEP_OCEAN(DimensionId.OVERWORLD),
+    COLD_OCEAN(DimensionId.OVERWORLD),
+    DEEP_COLD_OCEAN(DimensionId.OVERWORLD),
+    FROZEN_OCEAN(DimensionId.OVERWORLD),
+    DEEP_FROZEN_OCEAN(DimensionId.OVERWORLD),
+    MUSHROOM_FIELDS(DimensionId.OVERWORLD),
 
     // --- 🕳️ Cave & Underground ---
 
-    DRIPSTONE_CAVES,
-    LUSH_CAVES,
-    DEEP_DARK,
+    DRIPSTONE_CAVES(DimensionId.OVERWORLD),
+    LUSH_CAVES(DimensionId.OVERWORLD),
+    DEEP_DARK(DimensionId.OVERWORLD),
 
     // --- 👺 Nether Biomes ---
 
-    NETHER_WASTES,
-    WARPED_FOREST,
-    CRIMSON_FOREST,
-    SOUL_SAND_VALLEY,
-    BASALT_DELTAS,
+    NETHER_WASTES(DimensionId.NETHER),
+    WARPED_FOREST(DimensionId.NETHER),
+    CRIMSON_FOREST(DimensionId.NETHER),
+    SOUL_SAND_VALLEY(DimensionId.NETHER),
+    BASALT_DELTAS(DimensionId.NETHER),
 
     // --- 🌌 End Biomes ---
 
-    THE_END,
-    END_HIGHLANDS,
-    END_MIDLANDS,
-    SMALL_END_ISLANDS,
-    END_BARRENS;
+    THE_END(DimensionId.END),
+    END_HIGHLANDS(DimensionId.END),
+    END_MIDLANDS(DimensionId.END),
+    SMALL_END_ISLANDS(DimensionId.END),
+    END_BARRENS(DimensionId.END);
 
     // --- 📄 Fields ---
 
-    /** * The resource namespace (e.g., "minecraft").
-     * Primarily sourced from {@link DatapackConfig#MINECRAFT_NAMESPACE}.
-     */
+    /** * The resource namespace (e.g., "minecraft"). */
     private final String namespace;
 
-    /** * The snake_case resource key identifier (e.g., "sunflower_plains").
-     * Derived from the SCREAMING_SNAKE_CASE enum constant name.
-     */
+    /** * The snake_case resource key identifier (e.g., "crimson_forest"). */
     private final String key;
+
+    /** * The native {@link DimensionId} where this biome naturally generates. */
+    private final DimensionId dimension;
 
     // --- 🏗️ Constructors ---
 
     /**
-     * 🛠️ **Empty Default Constructor**
+     * 🛠️ **Default Biome Constructor**
      * <p>Used for standard Minecraft biomes. Automatically assigns the default
-     * namespace and transforms the constant name to lower-case.</p>
+     * namespace and converts the constant name to a lower-case resource key.</p>
+     * * @param dimension The native {@link DimensionId} for this biome.
      */
-    BiomeId() {
+    BiomeId(DimensionId dimension) {
         this.namespace = DatapackConfig.MINECRAFT_NAMESPACE;
         this.key = this.name().toLowerCase();
+        this.dimension = Objects.requireNonNull(dimension, "Biome must be associated with a dimension.");
     }
 
     /**
      * 🏗️ **Custom Biome Constructor**
-     * <p>Allows for the definition of biomes with custom namespaces and keys,
-     * useful for external datapacks or self-made biomes.</p>
-     * * @param namespace The resource namespace (e.g., "uhc_core").
-     * @param key       The resource key (e.g., "volcano_peaks").
-     * @throws NullPointerException if namespace or key is null.
+     * <p>Allows for custom namespaces and keys, typically used for external datapacks.</p>
+     * * @param namespace The resource namespace.
+     * @param key       The resource key.
+     * @param dimension The native {@link DimensionId}.
      */
-    BiomeId(String namespace, String key) {
-        this.namespace = Objects.requireNonNull(namespace, "Biome namespace cannot be null.");
-        this.key = Objects.requireNonNull(key, "Biome key cannot be null.");
+    BiomeId(String namespace, String key, DimensionId dimension) {
+        this.namespace = Objects.requireNonNull(namespace, "Namespace cannot be null.");
+        this.key = Objects.requireNonNull(key, "Key cannot be null.");
+        this.dimension = Objects.requireNonNull(dimension, "Dimension cannot be null.");
     }
 
-    // --- 🛠️ Methods ---
+    // --- 🔍 Accessors ---
 
     /**
-     * Returns the full resource location string.
-     * @return Formatted as {@code "namespace:key"}.
+     * @return The {@link DimensionId} linked to this biome.
      */
-    @Override
-    public String toString() {
-        return namespace + ":" + key;
+    public DimensionId getDimension() {
+        return dimension;
     }
 
-    /** * Retrieves the namespace part of the biome's resource location.
-     * @return The string namespace.
+    /**
+     * @return The resource namespace part.
      */
     public String getNamespace() {
         return namespace;
     }
 
-    /** * Retrieves the key part of the biome's resource location.
-     * @return The snake_case key.
+    /**
+     * @return The snake_case resource key.
      */
     public String getKey() {
         return key;
+    }
+
+    // --- 🛠️ Utility Methods ---
+
+    /**
+     * Generates the full Minecraft identifier.
+     * @return Formatted string {@code "namespace:key"}.
+     */
+    @Override
+    public String toString() {
+        try {
+            return namespace + ":" + key;
+        } catch (Exception e) {
+            return "minecraft:plains"; // Safe fallback
+        }
     }
 }
