@@ -1,4 +1,4 @@
-package uhc.resource.dimension;
+package uhc.resource.world;
 
 import uhc.core.DatapackConfig;
 import uhc.resource.ResourceLocation;

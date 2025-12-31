@@ -23,7 +23,7 @@ import uhc.resource.block.BlockId;
 import uhc.resource.block.DynamicBlock;
 import uhc.resource.block.WoodBlock;
 import uhc.resource.block.WoodType;
-import uhc.resource.dimension.DimensionId;
+import uhc.resource.world.DimensionId;
 import uhc.resource.entity.EntityId;
 import uhc.resource.gameplay.DifficultyId;
 import uhc.resource.gameplay.GameModeId;

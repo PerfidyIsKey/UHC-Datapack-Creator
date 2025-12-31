@@ -13,7 +13,7 @@ import uhc.resource.data.StoragePath;
 import uhc.resource.bossbar.BossbarId;
 import uhc.resource.coordinate.HeightMap;
 import uhc.resource.data.DataType;
-import uhc.resource.dimension.DimensionId;
+import uhc.resource.world.DimensionId;
 import uhc.resource.entity.EntityId;
 import uhc.resource.entity.RelationId;
 import uhc.resource.predicate.PredicateId;

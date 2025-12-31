@@ -3,7 +3,7 @@ package uhc.data.nbt.entity.mobs;
 import uhc.arguments.item.SingleItemStack;
 import uhc.data.nbt.tags.*;
 import uhc.resource.gameplay.GameModeId;
-import uhc.resource.dimension.DimensionId;
+import uhc.resource.world.DimensionId;
 import uhc.text.TextComponent;
 
 import java.util.Objects;
