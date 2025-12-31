@@ -18,69 +18,75 @@ import java.util.Objects;
  */
 public abstract class TeamCommand implements MinecraftCommand {
 
-    // --- 🏗️ Entry Points ---
+    // --- 🏗️ Macro / Entry Points ---
 
     /**
-     * Lists all existing teams or specific members if a team is provided.
-     * @return A new {@link ListBuilder}.
+     * 🚀 **The Macro Approach**
+     * <p>Creates a sequence of commands to fully register a team and
+     * immediately apply its primary color from {@link TeamData}.</p>
+     * * @param team The {@link TeamData} containing the team's identity and color.
+     * @return An array containing the {@code add} and {@code modify color} command objects.
+     */
+    public static MinecraftCommand[] initialize(TeamData team) {
+        try {
+            Objects.requireNonNull(team, "Cannot initialize a null team.");
+            return new MinecraftCommand[] {
+                    add(team),
+                    modify(team).color(team.getTextColor())
+            };
+        } catch (Exception e) {
+            // Returns an empty array to prevent crashing, allowing logs to catch the error
+            return new MinecraftCommand[0];
+        }
+    }
+
+    /** * @return A {@link ListBuilder} to generate {@code /team list} commands.
      */
     public static ListBuilder list() { return new ListBuilder(); }
 
-    /**
-     * Creates a new team based on the provided team data.
-     * @param team The {@link TeamData} defining the team identity.
-     * @return A new {@link ActionBuilder} configured for 'add'.
+    /** * @param team The team to create.
+     * @return An {@link ActionBuilder} for {@code /team add}.
      */
     public static ActionBuilder add(TeamData team) { return new ActionBuilder("add", team); }
 
-    /**
-     * Deletes the specified team.
-     * @param team The {@link TeamData} of the team to delete.
-     * @return A new {@link ActionBuilder} configured for 'remove'.
+    /** * @param team The team to remove.
+     * @return An {@link ActionBuilder} for {@code /team remove}.
      */
     public static ActionBuilder remove(TeamData team) { return new ActionBuilder("remove", team); }
 
-    /**
-     * Removes all members from the specified team.
-     * @param team The {@link TeamData} of the team to empty.
-     * @return A new {@link ActionBuilder} configured for 'empty'.
+    /** * @param team The team to clear of players.
+     * @return An {@link ActionBuilder} for {@code /team empty}.
      */
     public static ActionBuilder empty(TeamData team) { return new ActionBuilder("empty", team); }
 
-    /**
-     * Adds entities to a specific team.
-     * @param team The {@link TeamData} to join.
-     * @return A new {@link JoinBuilder}.
+    /** * @param team The team to be joined.
+     * @return A {@link JoinBuilder} for {@code /team join}.
      */
     public static JoinBuilder join(TeamData team) { return new JoinBuilder(team); }
 
-    /**
-     * Removes specified entities from their current team.
-     * @param members The {@link Entity} selector of players to remove.
-     * @return A new {@link LeaveBuilder}.
+    /** * @param members The {@link Entity} selector representing players who should leave their team.
+     * @return A {@link LeaveBuilder} for {@code /team leave}.
      */
     public static LeaveBuilder leave(Entity members) { return new LeaveBuilder(members); }
 
-    /**
-     * Modifies attributes (color, rules, etc.) of a specific team.
-     * @param team The {@link TeamData} to modify.
-     * @return A new {@link ModifyBuilder}.
+    /** * @param team The team whose attributes should be changed.
+     * @return A {@link ModifyBuilder} for {@code /team modify}.
      */
     public static ModifyBuilder modify(TeamData team) { return new ModifyBuilder(team); }
 
     // --- ⚙️ Core Contract ---
 
     /**
-     * Generates the final Minecraft command string.
-     * @return The formatted command (e.g., "team join Team0 @a").
-     * @throws IllegalStateException if the builder state is invalid.
+     * Generates the raw Minecraft command string.
+     * @return A string ready for execution in-game or in a datapack.
+     * @throws IllegalStateException if the builder is missing required parameters.
      */
     @Override
     public abstract String generate();
 
     /**
-     * Returns the command string or an error comment if generation fails.
-     * @return The raw command.
+     * Safely attempts to generate the command string for logging or debugging.
+     * @return The command string, or an error comment if generation fails.
      */
     @Override
     public String toString() {
@@ -93,24 +99,20 @@ public abstract class TeamCommand implements MinecraftCommand {
 
     // --- 📂 Internal Enums ---
 
-    /**
-     * ⚖️ **Team Rule**
-     * <p>Unified enum for handling Visibility and Collision rules.</p>
+    /** * ⚖️ **Team Rule Options**
+     * <p>Defines how nametags, death messages, and collisions are handled for a team.</p>
      */
     public enum TeamRule {
-        /** Rule is always active for everyone. */
+        /** Default behavior. */
         ALWAYS,
-        /** Rule is never active. */
+        /** Disabled for everyone. */
         NEVER,
-        /** Rule only applies to members of the same team. */
+        /** Only visible/active for fellow teammates. */
         OWN_TEAM,
-        /** Rule only applies to members of different teams. */
+        /** Only visible/active for enemies. */
         OTHER_TEAMS;
 
-        /**
-         * Formats the enum value for Visibility options.
-         * @return Minecraft-compliant string (e.g., "hideForOwnTeam").
-         */
+        /** @return The camelCase string used for visibility options. */
         public String toVisibility() {
             return switch (this) {
                 case ALWAYS -> "always";
@@ -120,10 +122,7 @@ public abstract class TeamCommand implements MinecraftCommand {
             };
         }
 
-        /**
-         * Formats the enum value for Collision options.
-         * @return Minecraft-compliant string (e.g., "pushOtherTeams").
-         */
+        /** @return The camelCase string used for collision options. */
         public String toCollision() {
             return switch (this) {
                 case ALWAYS -> "always";
@@ -136,13 +135,17 @@ public abstract class TeamCommand implements MinecraftCommand {
 
     // --- 📦 Implementation Branches ---
 
-    /** Handles: {@code team modify <team> <option> <value>} */
+    /** * 🛠️ **Modify Builder**
+     * <p>Handles specific attribute changes for a team.</p>
+     */
     public static class ModifyBuilder extends TeamCommand {
+        /** The team being modified. */
         private final TeamData team;
+        /** The specific Minecraft modification option (e.g., "color"). */
         private String option;
+        /** The value to set for the chosen option. */
         private String value;
 
-        /** @param team The team target. */
         public ModifyBuilder(TeamData team) {
             this.team = Objects.requireNonNull(team, "Target team for modify cannot be null.");
         }
@@ -171,11 +174,13 @@ public abstract class TeamCommand implements MinecraftCommand {
         }
     }
 
-    /** Handles: {@code team list [<team>]} */
+    /** * 📋 **List Builder**
+     * <p>Handles the {@code /team list} command.</p>
+     */
     public static class ListBuilder extends TeamCommand {
+        /** Optional team filter. */
         private TeamData team;
 
-        /** @param team Optional team to list members from. */
         public ListBuilder team(TeamData team) { this.team = team; return this; }
 
         @Override public String generate() {
@@ -183,9 +188,13 @@ public abstract class TeamCommand implements MinecraftCommand {
         }
     }
 
-    /** Handles: {@code team add/remove/empty <team> [<displayName>]} */
+    /** * ⚡ **Action Builder**
+     * <p>Handles basic operations like adding, removing, or emptying teams.</p>
+     */
     public static class ActionBuilder extends TeamCommand {
+        /** The action keyword (add/remove/empty). */
         private final String action;
+        /** The target team. */
         private final TeamData team;
 
         public ActionBuilder(String action, TeamData team) {
@@ -195,24 +204,27 @@ public abstract class TeamCommand implements MinecraftCommand {
 
         @Override public String generate() {
             StringBuilder sb = new StringBuilder("team ").append(action).append(" ").append(team.name());
-            if (action.equals("add") && team.getDisplayName() != null) {
-                // Specified classes are NOT turned into strings here, we use the build() method.
+            if (action.equals("add")) {
+                // Specified class TextComponent is not turned into a string here, but built.
                 sb.append(" ").append(team.getDisplayName().build());
             }
             return sb.toString();
         }
     }
 
-    /** Handles: {@code team join <team> [<members>]} */
+    /** * 🤝 **Join Builder**
+     * <p>Handles adding players to a team.</p>
+     */
     public static class JoinBuilder extends TeamCommand {
+        /** The team to be joined. */
         private final TeamData team;
+        /** The players/entities joining. */
         private Entity members;
 
         public JoinBuilder(TeamData team) {
             this.team = Objects.requireNonNull(team, "Join target team cannot be null.");
         }
 
-        /** @param members The entities to join the team. */
         public JoinBuilder members(Entity members) { this.members = members; return this; }
 
         @Override public String generate() {
@@ -220,17 +232,17 @@ public abstract class TeamCommand implements MinecraftCommand {
         }
     }
 
-    /** Handles: {@code team leave <members>} */
+    /** * 👋 **Leave Builder**
+     * <p>Handles removing players from their current teams.</p>
+     */
     public static class LeaveBuilder extends TeamCommand {
+        /** The entities who should leave their current team. */
         private final Entity members;
 
-        /** @param members The entities to remove from their teams. */
         public LeaveBuilder(Entity members) {
             this.members = Objects.requireNonNull(members, "Leave target entities cannot be null.");
         }
 
-        @Override public String generate() {
-            return "team leave " + members;
-        }
+        @Override public String generate() { return "team leave " + members; }
     }
 }
