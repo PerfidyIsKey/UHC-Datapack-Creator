@@ -399,7 +399,7 @@ public class Main {
 
             // Perks
             perks.add(new Perk(1, new StatusEffect(EffectId.SPEED, 999999, 0, false), SoundId.BASALT, 3 * singleton.getMinToCPScore()));
-            perks.add(new Perk(2, AttributeCommand.create(Entity.ofSelector(TargetSelector.SENDER), AttributeId.SCALE).value(0.8), SoundId.CRIMSON, 6 * singleton.getMinToCPScore()));
+            perks.add(new Perk(2, AttributeCommand.setBase(Entity.ofSelector(TargetSelector.SENDER), AttributeId.SCALE, 0.8), SoundId.CRIMSON, 6 * singleton.getMinToCPScore()));
             perks.add(new Perk(3, new StatusEffect(EffectId.HASTE, 999999, 2, false), SoundId.WARPED, 12 * singleton.getMinToCPScore()));
             perks.add(new Perk(4, new StatusEffect(EffectId.ABSORPTION, 999999, 1, false), SoundId.WITHER, 15 * singleton.getMinToCPScore()));
         }
@@ -1684,15 +1684,15 @@ public class Main {
 
         // Reset player attributes
         fileCommands.add(Execute.As("@a") +
-                AttributeCommand.create(
+                AttributeCommand.setBase(
                         Entity.ofSelector(TargetSelector.SENDER),
-                        AttributeId.SCALE)
-                                .setBase(1));
+                        AttributeId.SCALE,
+                        1));
         fileCommands.add(Execute.As("@a") +
-                AttributeCommand.create(
-                                Entity.ofSelector(TargetSelector.SENDER),
-                                AttributeId.WAYPOINT_TRANSMIT_RANGE)
-                        .setBase(0));
+                AttributeCommand.setBase(
+                        Entity.ofSelector(TargetSelector.SENDER),
+                        AttributeId.WAYPOINT_TRANSMIT_RANGE,
+                        0));
 
         // Set gamemode of player executing the command to creative
         fileCommands.add(GameModeCommand.create(GameModeId.CREATIVE)
@@ -2275,13 +2275,14 @@ public class Main {
                     .generate());
 
             // Set transmit range of waypoint
-            fileCommands.add(AttributeCommand.create(
+            fileCommands.add(AttributeCommand.setBase(
                             Entity.ofSelector(
                                     TargetSelector.NEAREST_ENTITY,
                                     SelectorArgumentsBuilder.create()
                                             .tag(controlPoint.getName())),
-                            AttributeId.WAYPOINT_TRANSMIT_RANGE)
-                    .setBase(Main.world.getFullSize()));
+                            AttributeId.WAYPOINT_TRANSMIT_RANGE,
+                            Main.world.getFullSize())
+                    .generate());
 
             // Set color of waypoint to white
             fileCommands.add(WaypointCommand.create(Entity.ofSelector(
@@ -3418,10 +3419,10 @@ public class Main {
 
             fileCommands.add(Execute.As(respawnPlayerOld, false) +
                     Execute.IfNext("@e[scores={MinHealth=" + indexFront + ".." + indexRear + "}]", true) +
-                    AttributeCommand.create(
-                                    Entity.ofSelector(TargetSelector.SENDER),
-                                    AttributeId.MAX_HEALTH)
-                            .setBase(i + 1));
+                    AttributeCommand.setBase(
+                            Entity.ofSelector(TargetSelector.SENDER),
+                            AttributeId.MAX_HEALTH,
+                            i + 1));
         }
         fileCommands.add(Effect.create(EffectCommand.EffectAction.GIVE)
                 .targets(respawnPlayer)
@@ -3434,10 +3435,10 @@ public class Main {
                 .effect(EffectId.HEALTH_BOOST)
                 .build());
         fileCommands.add(Execute.As(respawnPlayerOld) +
-                AttributeCommand.create(
-                                Entity.ofSelector(TargetSelector.SENDER),
-                                AttributeId.MAX_HEALTH)
-                        .setBase(20));
+                AttributeCommand.setBase(
+                        Entity.ofSelector(TargetSelector.SENDER),
+                        AttributeId.MAX_HEALTH,
+                        20));
 
         // Set player's gamemode to survival
         fileCommands.add(Execute.As(respawnPlayerOld) +
@@ -3717,10 +3718,10 @@ public class Main {
         // Set tamed wolf base health
         fileCommands.add(Execute.As("@e[type=" + EntityId.WOLF + "]", false) +
                 Execute.IfNext(DataClasses.entity, "@s Owner", true) +
-                AttributeCommand.create(
+                AttributeCommand.setBase(
                         Entity.ofSelector(TargetSelector.SENDER),
-                        AttributeId.MAX_HEALTH)
-                        .setBase(20));
+                        AttributeId.MAX_HEALTH,
+                        20));
 
         return new FileData(FileName.wolf_updates, fileCommands);
     }

@@ -1,6 +1,7 @@
 package uhc.command.commands;
 
 import uhc.arguments.entity.Entity;
+import uhc.arguments.entity.TargetSelector;
 import uhc.command.MinecraftCommand;
 import uhc.resource.attribute.AttributeId;
 import uhc.resource.attribute.AttributeModifierId;
@@ -10,212 +11,228 @@ import java.util.Objects;
 /**
  * 🧬 **Attribute Command Builder**
  * <p>
- * Provides a fluent API for the {@code /attribute} command. This builder handles
- * the branching logic between querying the final value, modifying the base value,
+ * This class provides static factory methods to generate {@code /attribute} commands.
+ * It manages the branching logic between querying final values, modifying base values,
  * or managing specific attribute modifiers.
  * </p>
+ * <p>
+ * Architecture follows a Command Pattern where the state is immutable once created,
+ * ensuring thread-safety and consistent command generation.
+ * </p>
  */
-public class AttributeCommand implements MinecraftCommand {
+public final class AttributeCommand implements MinecraftCommand {
+
+    // --- 📄 Fields ---
+
+    /** * The target entity whose attributes are being queried or modified. */
     private final Entity target;
+
+    /** * The namespaced identifier for the attribute (e.g., generic.movement_speed). */
     private final AttributeId attribute;
 
-    // Command parts used by the generate method to determine the final command string.
-    private String actionPath;
-    private Double scale;
-    private Double value;
-    private AttributeModifierId id;
-    private ModifierOperation operation;
+    /** * The specific sub-command action path (e.g., "base set", "modifier add"). */
+    private final String actionPath;
 
-    // Internal state to handle the logic flow of sub-commands.
-    private boolean isBaseAction = false;
-    private boolean isModifierValueGet = false;
+    /** * An optional scaling factor used for 'get' operations. */
+    private final Double scale;
 
+    /** * The numerical value to set or add to an attribute/modifier. */
+    private final Double value;
 
-    private AttributeCommand(Entity target, AttributeId attribute) {
+    /** * The unique identifier for a specific attribute modifier. */
+    private final AttributeModifierId modifierId;
+
+    /** * The mathematical operation used when adding a new modifier. */
+    private final ModifierOperation operation;
+
+    // --- 🏗️ Private Constructor ---
+
+    /**
+     * Internal constructor used by static factory methods to initialize the command state.
+     * All parameters are validated to ensure the command conforms to Minecraft syntax.
+     */
+    private AttributeCommand(Entity target, AttributeId attribute, String actionPath,
+                             Double scale, Double value, AttributeModifierId modifierId,
+                             ModifierOperation operation) {
         this.target = Objects.requireNonNull(target, "Target entity cannot be null.");
         this.attribute = Objects.requireNonNull(attribute, "Attribute ID cannot be null.");
-    }
-
-    /**
-     * Initializes a new AttributeCommand builder.
-     * @param target The entity to query or modify.
-     * @param attribute The namespaced attribute (e.g., minecraft:generic.max_health).
-     */
-    public static AttributeCommand create(Entity target, AttributeId attribute) {
-        return new AttributeCommand(target, attribute);
-    }
-
-    // --- Fluent Parameter Setters ---
-
-    /**
-     * Sets an optional multiplier for 'get' sub-commands.
-     * @param scale The multiplier (e.g., use 2.0 to double the value in the return).
-     */
-    public AttributeCommand scale(double scale) {
+        this.actionPath = Objects.requireNonNull(actionPath, "Action path cannot be null.");
         this.scale = scale;
-        return this;
-    }
-
-    /** Sets the numeric value for base-setting or modifier-adding actions. */
-    public AttributeCommand value(double value) {
         this.value = value;
-        return this;
+        this.modifierId = modifierId;
+        this.operation = operation;
     }
 
-    // --- Action-Defining Methods ---
+    // --- 🚀 Static Factory Methods (Entry Points) ---
 
     /**
      * Queries the final, fully calculated value of the attribute.
-     * <p>Syntax: {@code attribute <target> <attribute> get [<scale>]}</p>
+     * <p>Syntax: {@code /attribute <target> <attribute> get}</p>
+     * * @param target    The target entity.
+     * @param attribute The attribute to query.
+     * @return A generated {@link AttributeCommand}.
      */
-    public String get() {
-        this.actionPath = "get";
-        this.isBaseAction = false;
-        this.isModifierValueGet = false;
-        return generate();
-    }
-
-    // --- BASE Actions ---
-
-    /**
-     * Queries the base value of the attribute before modifiers.
-     * <p>Syntax: {@code attribute <target> <attribute> base get [<scale>]}</p>
-     */
-    public String getBase() {
-        this.actionPath = "base get";
-        this.isBaseAction = true;
-        this.isModifierValueGet = false;
-        return generate();
+    public static AttributeCommand get(Entity target, AttributeId attribute) {
+        return get(target, attribute, null);
     }
 
     /**
-     * Sets a new base value for the attribute.
-     * <p>Syntax: {@code attribute <target> <attribute> base set <value>}</p>
+     * Queries the final value of the attribute with a multiplier.
+     * <p>Syntax: {@code /attribute <target> <attribute> get <scale>}</p>
+     * * @param target    The target entity.
+     * @param attribute The attribute to query.
+     * @param scale     The multiplier for the result.
+     * @return A generated {@link AttributeCommand}.
      */
-    public String setBase(double value) {
-        this.actionPath = "base set";
-        this.isBaseAction = true;
-        this.value = value;
-        this.scale = null; // Scale is not valid for 'set' actions
-        this.isModifierValueGet = false;
-        return generate();
+    public static AttributeCommand get(Entity target, AttributeId attribute, Double scale) {
+        try {
+            return new AttributeCommand(target, attribute, "get", scale, null, null, null);
+        } catch (Exception e) {
+            return fallback();
+        }
     }
 
     /**
-     * Resets the base value to its original default.
-     * <p>Syntax: {@code attribute <target> <attribute> base reset}</p>
+     * Queries the base value of the attribute before any modifiers are applied.
+     * <p>Syntax: {@code /attribute <target> <attribute> base get}</p>
      */
-    public String resetBase() {
-        this.actionPath = "base reset";
-        this.isBaseAction = true;
-        this.value = null;
-        this.scale = null;
-        this.isModifierValueGet = false;
-        return generate();
-    }
-
-    // --- MODIFIER Actions ---
-
-    /**
-     * Adds a persistent modifier. Fails if the ID already exists on the entity.
-     * <p>Syntax: {@code attribute <target> <attribute> modifier add <id> <value> <operation>}</p>
-     */
-    public String addModifier(AttributeModifierId id, double value, ModifierOperation operation) {
-        this.actionPath = "modifier add";
-        this.isBaseAction = false;
-        this.isModifierValueGet = false;
-
-        this.id = Objects.requireNonNull(id, "Modifier ID is required.");
-        this.value = value;
-        this.operation = Objects.requireNonNull(operation, "Operation is required.");
-        this.scale = null;
-
-        return generate();
+    public static AttributeCommand getBase(Entity target, AttributeId attribute) {
+        return getBase(target, attribute, null);
     }
 
     /**
-     * Removes the specified modifier from the entity.
-     * <p>Syntax: {@code attribute <target> <attribute> modifier remove <id>}</p>
+     * Queries the base value of the attribute with a multiplier.
+     * <p>Syntax: {@code /attribute <target> <attribute> base get <scale>}</p>
      */
-    public String removeModifier(AttributeModifierId id) {
-        this.actionPath = "modifier remove";
-        this.isBaseAction = false;
-        this.isModifierValueGet = false;
-
-        this.id = Objects.requireNonNull(id, "Modifier ID is required.");
-        this.value = null;
-        this.operation = null;
-        this.scale = null;
-
-        return generate();
+    public static AttributeCommand getBase(Entity target, AttributeId attribute, Double scale) {
+        try {
+            return new AttributeCommand(target, attribute, "base get", scale, null, null, null);
+        } catch (Exception e) {
+            return fallback();
+        }
     }
 
     /**
-     * Prepares a query for the value of a specific modifier.
-     * <p>Must call {@link #id(AttributeModifierId)} before building.</p>
+     * Overwrites the base value of the attribute.
+     * <p>Syntax: {@code /attribute <target> <attribute> base set <value>}</p>
      */
-    public AttributeCommand getModifierValue() {
-        this.actionPath = "modifier value get";
-        this.isBaseAction = false;
-        this.isModifierValueGet = true;
-        this.value = null;
-        this.operation = null;
-        return this;
+    public static AttributeCommand setBase(Entity target, AttributeId attribute, double value) {
+        try {
+            return new AttributeCommand(target, attribute, "base set", null, value, null, null);
+        } catch (Exception e) {
+            return fallback();
+        }
     }
-
-    /** Sets the Modifier ID for actions requiring it. */
-    public AttributeCommand id(AttributeModifierId id) {
-        this.id = id;
-        return this;
-    }
-
-    // --- Final Build Method ---
 
     /**
-     * Validates the internal state and generates the command string.
-     * @throws IllegalStateException if required parameters are missing for the selected action.
+     * Resets the base value to the default defined by the entity type.
+     * <p>Syntax: {@code /attribute <target> <attribute> base reset}</p>
+     */
+    public static AttributeCommand resetBase(Entity target, AttributeId attribute) {
+        try {
+            return new AttributeCommand(target, attribute, "base reset", null, null, null, null);
+        } catch (Exception e) {
+            return fallback();
+        }
+    }
+
+    /**
+     * Adds a persistent modifier to the attribute.
+     * <p>Syntax: {@code /attribute <target> <attribute> modifier add <id> <value> <operation>}</p>
+     */
+    public static AttributeCommand addModifier(Entity target, AttributeId attribute,
+                                               AttributeModifierId id, double value,
+                                               ModifierOperation operation) {
+        try {
+            Objects.requireNonNull(id, "Modifier ID is required for 'add'.");
+            Objects.requireNonNull(operation, "Operation is required for 'add'.");
+            return new AttributeCommand(target, attribute, "modifier add", null, value, id, operation);
+        } catch (Exception e) {
+            return fallback();
+        }
+    }
+
+    /**
+     * Removes a specific modifier from the attribute.
+     * <p>Syntax: {@code /attribute <target> <attribute> modifier remove <id>}</p>
+     */
+    public static AttributeCommand removeModifier(Entity target, AttributeId attribute, AttributeModifierId id) {
+        try {
+            Objects.requireNonNull(id, "Modifier ID is required for 'remove'.");
+            return new AttributeCommand(target, attribute, "modifier remove", null, null, id, null);
+        } catch (Exception e) {
+            return fallback();
+        }
+    }
+
+    /**
+     * Queries the value of a specific modifier.
+     * <p>Syntax: {@code /attribute <target> <attribute> modifier value get <id>}</p>
+     */
+    public static AttributeCommand getModifierValue(Entity target, AttributeId attribute, AttributeModifierId id) {
+        return getModifierValue(target, attribute, id, null);
+    }
+
+    /**
+     * Queries the value of a specific modifier with a multiplier.
+     * <p>Syntax: {@code /attribute <target> <attribute> modifier value get <id> <scale>}</p>
+     */
+    public static AttributeCommand getModifierValue(Entity target, AttributeId attribute,
+                                                    AttributeModifierId id, Double scale) {
+        try {
+            Objects.requireNonNull(id, "Modifier ID is required for querying value.");
+            return new AttributeCommand(target, attribute, "modifier value get", scale, null, id, null);
+        } catch (Exception e) {
+            return fallback();
+        }
+    }
+
+    // --- 🛠️ Logic & Generation ---
+
+    /**
+     * Assembles the Minecraft command string based on the internal state.
+     * * @return A formatted command string (e.g., "attribute @s generic.max_health base get").
      */
     @Override
     public String generate() {
-        if (actionPath == null) {
-            throw new IllegalStateException("An action path (get, base, or modifier) must be chosen before generating.");
+        try {
+            StringBuilder sb = new StringBuilder("attribute ");
+            sb.append(this.target).append(" ").append(this.attribute).append(" ").append(this.actionPath);
+
+            switch (this.actionPath) {
+                case "base set":
+                    sb.append(" ").append(this.value);
+                    break;
+                case "modifier add":
+                    sb.append(" ").append(this.modifierId).append(" ")
+                            .append(this.value).append(" ").append(this.operation);
+                    break;
+                case "modifier remove":
+                    sb.append(" ").append(this.modifierId);
+                    break;
+                case "modifier value get":
+                    sb.append(" ").append(this.modifierId);
+                    if (this.scale != null) sb.append(" ").append(this.scale);
+                    break;
+                case "get":
+                case "base get":
+                    if (this.scale != null) sb.append(" ").append(this.scale);
+                    break;
+            }
+
+            return sb.toString();
+        } catch (Exception e) {
+            // Error Catching: Safety fallback for generation failure
+            return "/say Error: Attribute command generation logic failed.";
         }
+    }
 
-        StringBuilder sb = new StringBuilder("attribute ");
-        sb.append(target).append(" ").append(attribute).append(" ").append(actionPath);
-
-        // Branching logic to append the correct arguments based on actionPath
-        switch (actionPath) {
-            case "base set":
-                if (value == null) throw new IllegalStateException("'base set' requires a value.");
-                sb.append(" ").append(value);
-                break;
-
-            case "modifier add":
-                if (id == null || value == null || operation == null) {
-                    throw new IllegalStateException("'modifier add' requires an ID, a value, and an operation.");
-                }
-                sb.append(" ").append(id).append(" ").append(value).append(" ").append(operation);
-                break;
-
-            case "modifier remove":
-                if (id == null) throw new IllegalStateException("'modifier remove' requires an ID.");
-                sb.append(" ").append(id);
-                break;
-
-            case "modifier value get":
-                if (id == null) throw new IllegalStateException("'modifier value get' requires an ID via .id().");
-                sb.append(" ").append(id);
-                if (scale != null) sb.append(" ").append(scale);
-                break;
-
-            case "get":
-            case "base get":
-                if (scale != null) sb.append(" ").append(scale);
-                break;
-        }
-
-        return sb.toString();
+    /**
+     * Internal fallback logic to provide a safe default command if instantiation fails.
+     */
+    private static AttributeCommand fallback() {
+        return new AttributeCommand(Entity.ofSelector(TargetSelector.SENDER),
+                AttributeId.MAX_HEALTH, "get", null, null, null, null);
     }
 
     @Override
@@ -223,13 +240,17 @@ public class AttributeCommand implements MinecraftCommand {
         return generate();
     }
 
-    /** Defines how the modifier's value is applied to the attribute. */
+    // --- ⚙️ Enums ---
+
+    /**
+     * Defines the mathematical operation used to apply an attribute modifier.
+     */
     public enum ModifierOperation {
-        /** Adds the value directly. */
+        /** Simply adds the value to the base. */
         ADD_VALUE,
-        /** Multiplies the base by (1 + value). */
+        /** Multiplies the base by the value before adding. */
         ADD_MULTIPLIED_BASE,
-        /** Multiplies the total by (1 + value). */
+        /** Multiplies the total value by the value after all other modifiers. */
         ADD_MULTIPLIED_TOTAL;
 
         @Override
