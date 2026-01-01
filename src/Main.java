@@ -2108,11 +2108,10 @@ public class Main {
         );
 
         // Revoke all advancements
-        fileCommands.add(AdvancementCommand.create(
-                AdvancementCommand.AdvancementAction.REVOKE,
+        fileCommands.add(AdvancementCommand.everything(
+                        AdvancementCommand.AdvancementAction.REVOKE,
                         Entity.ofSelector(TargetSelector.ALL_PLAYERS))
-                        .everything()
-                        .generate());
+                .generate());
 
         // Experience
         fileCommands.add(ExperienceCommand.create(

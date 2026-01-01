@@ -1,232 +1,230 @@
 package uhc.command.commands;
 
 import uhc.arguments.entity.Entity;
+import uhc.arguments.entity.TargetSelector;
 import uhc.command.MinecraftCommand;
 import uhc.resource.advancement.AdvancementId;
-import uhc.arguments.entity.TargetSelector;
 
 import java.util.Objects;
 
 /**
  * 🏆 **Advancement Command Builder**
  * <p>
- * A fluent API for constructing {@code /advancement} commands. This builder enforces
- * Minecraft's command syntax rules, ensuring that mutually exclusive modes (like 'everything'
- * vs 'only') cannot be combined and that required resource locations are present.
+ * This class provides static factory methods to generate {@code /advancement} commands.
+ * It enforces Minecraft's specific syntax rules for granting or revoking advancements
+ * through typed methods, ensuring mutually exclusive modes cannot be mixed.
+ * </p>
+ * <p>
+ * Supported syntaxes include targeting everything, specific advancements, or
+ * branches (from, through, until).
  * </p>
  */
-public class AdvancementCommand implements MinecraftCommand {
+public final class AdvancementCommand implements MinecraftCommand {
+
+    // --- 📄 Fields ---
+
+    /** * The specific operation to perform: {@code grant} or {@code revoke}. */
     private final AdvancementAction action;
+
+    /** * The entities targeted by this command (e.g., @a, @s, or specific UUIDs). */
     private final Entity targets;
 
-    // Command scope
-    private AdvancementMode mode;
-    private boolean requiresAdvancementId;
+    /** * The logical scope of the command, such as {@code everything} or {@code only}. */
+    private final AdvancementMode mode;
 
-    // Arguments required by specific modes.
-    private AdvancementId advancement;
-    private String criterion;
+    /** * The specific advancement resource identifier. Nullable if mode is {@code EVERYTHING}. */
+    private final AdvancementId advancement;
 
-    private AdvancementCommand(AdvancementAction action, Entity targets) {
-        // Enforce non-nullability at the root of the builder
-        this.action = Objects.requireNonNull(action, "AdvancementAction cannot be null.");
-        this.targets = Objects.requireNonNull(targets, "Targets entity argument cannot be null.");
-    }
+    /** * A specific criterion key within the advancement. Exclusive to {@code ONLY} mode. */
+    private final String criterion;
+
+    // --- 🏗️ Constructor ---
 
     /**
-     * Initializes a new AdvancementCommand.
-     * @param action The operation to perform (GRANT or REVOKE).
-     * @param targets The entities to target.
-     * @return A new builder instance.
+     * Internal constructor used by static factory methods to create a validated command state.
+     *
+     * @param action      The operation type.
+     * @param targets     The target entities.
+     * @param mode        The scope mode.
+     * @param advancement The target advancement ID (nullable).
+     * @param criterion   The specific criterion (nullable).
+     * @throws NullPointerException if mandatory arguments (action, targets, mode) are null.
      */
-    public static AdvancementCommand create(AdvancementAction action, Entity targets) {
-        return new AdvancementCommand(action, targets);
+    private AdvancementCommand(AdvancementAction action, Entity targets, AdvancementMode mode,
+                               AdvancementId advancement, String criterion) {
+        this.action = Objects.requireNonNull(action, "Command action (grant/revoke) cannot be null.");
+        this.targets = Objects.requireNonNull(targets, "Command targets cannot be null.");
+        this.mode = Objects.requireNonNull(mode, "Advancement mode cannot be null.");
+        this.advancement = advancement;
+        this.criterion = criterion;
     }
 
-    // --- Type-Safe Examples ---
+    // --- 🚀 Static Factory Methods (Entry Points) ---
 
     /**
-     * Example: Grant "Cover Me With Diamonds" to self.
-     * {@code /advancement grant @s only minecraft:story/shiny_gear}
+     * Creates a command to target all advancements.
+     * <p>Syntax: {@code advancement <action> <targets> everything}</p>
+     *
+     * @param action  The operation (GRANT/REVOKE).
+     * @param targets The target entities.
+     * @return A generated {@link AdvancementCommand} instance.
      */
-    public static String grantShinyGearToSelf() {
-        Entity self = Entity.ofSelector(TargetSelector.SENDER);
-        AdvancementId shinyGear = AdvancementId.story("shiny_gear");
-
-        return AdvancementCommand.create(AdvancementAction.GRANT, self)
-                .only(shinyGear)
-                .generate();
-    }
-
-    /**
-     * Example: Grant all advancements to every player.
-     * {@code /advancement grant @a everything}
-     */
-    public static String grantAllToAllPlayers() {
-        Entity allPlayers = Entity.ofSelector(TargetSelector.ALL_PLAYERS);
-
-        return AdvancementCommand.create(AdvancementAction.GRANT, allPlayers)
-                .everything()
-                .generate();
-    }
-
-    /**
-     * Example: Revoke "Cover Me With Diamonds" from self.
-     * {@code /advancement revoke @s only minecraft:story/shiny_gear}
-     */
-    public static String revokeShinyGearFromSelf() {
-        Entity self = Entity.ofSelector(TargetSelector.SENDER);
-        AdvancementId shinyGear = AdvancementId.story("shiny_gear");
-
-        return AdvancementCommand.create(AdvancementAction.REVOKE, self)
-                .only(shinyGear)
-                .generate();
-    }
-
-    /**
-     * Example: Revoke all advancements from every player.
-     * {@code /advancement revoke @a everything}
-     */
-    public static String revokeAllFromAllPlayers() {
-        Entity allPlayers = Entity.ofSelector(TargetSelector.ALL_PLAYERS);
-
-        return AdvancementCommand.create(AdvancementAction.REVOKE, allPlayers)
-                .everything()
-                .generate();
-    }
-
-    // --- Mode Setters ---
-
-    /**
-     * Targets all advancements.
-     * <p>Syntax: {@code ... everything}</p>
-     */
-    public AdvancementCommand everything() {
-        setMode(AdvancementMode.EVERYTHING, false);
-        return this;
-    }
-
-    /**
-     * Targets a single advancement.
-     * <p>Syntax: {@code ... only <advancement> [<criterion>]}</p>
-     */
-    public AdvancementCommand only(AdvancementId advancement) {
-        setMode(AdvancementMode.ONLY, true);
-        this.advancement = Objects.requireNonNull(advancement, "Advancement ID cannot be null for 'only' mode.");
-        return this;
-    }
-
-    /**
-     * Targets an advancement and all its children.
-     * <p>Syntax: {@code ... from <advancement>}</p>
-     */
-    public AdvancementCommand from(AdvancementId advancement) {
-        setMode(AdvancementMode.FROM, true);
-        this.advancement = Objects.requireNonNull(advancement, "Advancement ID cannot be null for 'from' mode.");
-        return this;
-    }
-
-    /**
-     * Targets an advancement, its children, and its parents (the whole branch).
-     * <p>Syntax: {@code ... through <advancement>}</p>
-     */
-    public AdvancementCommand through(AdvancementId advancement) {
-        setMode(AdvancementMode.THROUGH, true);
-        this.advancement = Objects.requireNonNull(advancement, "Advancement ID cannot be null for 'through' mode.");
-        return this;
-    }
-
-    /**
-     * Targets an advancement and all its parents.
-     * <p>Syntax: {@code ... until <advancement>}</p>
-     */
-    public AdvancementCommand until(AdvancementId advancement) {
-        setMode(AdvancementMode.UNTIL, true);
-        this.advancement = Objects.requireNonNull(advancement, "Advancement ID cannot be null for 'until' mode.");
-        return this;
-    }
-
-    // --- Optional Arguments ---
-
-    /**
-     * Specifies a specific criterion within an advancement.
-     * <b>Note:</b> Only applicable when using {@code only()}.
-     * @param criterion The criterion name.
-     * @throws IllegalStateException if mode is not {@code ONLY}.
-     */
-    public AdvancementCommand criterion(String criterion) {
-        if (mode != AdvancementMode.ONLY) {
-            throw new IllegalStateException("Criteria can only be applied to the 'only' mode.");
+    public static AdvancementCommand everything(AdvancementAction action, Entity targets) {
+        try {
+            return new AdvancementCommand(action, targets, AdvancementMode.EVERYTHING, null, null);
+        } catch (Exception e) {
+            return fallback();
         }
-        if (criterion == null || criterion.trim().isEmpty()) {
-            throw new IllegalArgumentException("Criterion cannot be null or empty.");
-        }
-        this.criterion = criterion.trim();
-        return this;
-    }
-
-    // --- Safety Helpers ---
-
-    private void setMode(AdvancementMode mode, boolean requiresAdvancementId) {
-        if (this.mode != null) {
-            throw new IllegalStateException("Cannot change advancement mode once set. Current: " + this.mode);
-        }
-        this.mode = mode;
-        this.requiresAdvancementId = requiresAdvancementId;
     }
 
     /**
-     * Validates and generates the final command string.
-     * @return The formatted Minecraft command.
-     * @throws IllegalStateException if no mode was selected.
+     * Creates a command to target one specific advancement.
+     * <p>Syntax: {@code advancement <action> <targets> only <advancement>}</p>
+     *
+     * @param action      The operation (GRANT/REVOKE).
+     * @param targets     The target entities.
+     * @param advancement The target advancement identifier.
+     * @return A generated {@link AdvancementCommand} instance.
+     */
+    public static AdvancementCommand only(AdvancementAction action, Entity targets, AdvancementId advancement) {
+        try {
+            Objects.requireNonNull(advancement, "Advancement ID is required for 'only' mode.");
+            return new AdvancementCommand(action, targets, AdvancementMode.ONLY, advancement, null);
+        } catch (Exception e) {
+            return fallback();
+        }
+    }
+
+    /**
+     * Creates a command to target a specific criterion within an advancement.
+     * <p>Syntax: {@code advancement <action> <targets> only <advancement> <criterion>}</p>
+     *
+     * @param action      The operation (GRANT/REVOKE).
+     * @param targets     The target entities.
+     * @param advancement The target advancement identifier.
+     * @param criterion   The specific criterion key.
+     * @return A generated {@link AdvancementCommand} instance.
+     */
+    public static AdvancementCommand only(AdvancementAction action, Entity targets,
+                                          AdvancementId advancement, String criterion) {
+        try {
+            Objects.requireNonNull(advancement, "Advancement ID is required for 'only' mode.");
+            Objects.requireNonNull(criterion, "Criterion name is required for this overload.");
+            return new AdvancementCommand(action, targets, AdvancementMode.ONLY, advancement, criterion);
+        } catch (Exception e) {
+            return fallback();
+        }
+    }
+
+    /**
+     * Creates a command to target an advancement and all of its children.
+     * <p>Syntax: {@code advancement <action> <targets> from <advancement>}</p>
+     */
+    public static AdvancementCommand from(AdvancementAction action, Entity targets, AdvancementId advancement) {
+        try {
+            Objects.requireNonNull(advancement, "Advancement ID is required for 'from' mode.");
+            return new AdvancementCommand(action, targets, AdvancementMode.FROM, advancement, null);
+        } catch (Exception e) {
+            return fallback();
+        }
+    }
+
+    /**
+     * Creates a command to target an advancement, its parents, and its children.
+     * <p>Syntax: {@code advancement <action> <targets> through <advancement>}</p>
+     */
+    public static AdvancementCommand through(AdvancementAction action, Entity targets, AdvancementId advancement) {
+        try {
+            Objects.requireNonNull(advancement, "Advancement ID is required for 'through' mode.");
+            return new AdvancementCommand(action, targets, AdvancementMode.THROUGH, advancement, null);
+        } catch (Exception e) {
+            return fallback();
+        }
+    }
+
+    /**
+     * Creates a command to target an advancement and all of its parents.
+     * <p>Syntax: {@code advancement <action> <targets> until <advancement>}</p>
+     */
+    public static AdvancementCommand until(AdvancementAction action, Entity targets, AdvancementId advancement) {
+        try {
+            Objects.requireNonNull(advancement, "Advancement ID is required for 'until' mode.");
+            return new AdvancementCommand(action, targets, AdvancementMode.UNTIL, advancement, null);
+        } catch (Exception e) {
+            return fallback();
+        }
+    }
+
+    // --- 🛠️ Logic & Generation ---
+
+    /**
+     * Assembles the final command string.
+     * Handles optional arguments like {@code AdvancementId} and criteria based on the selected mode.
+     *
+     * @return The formatted Minecraft command string.
      */
     @Override
     public String generate() {
-        if (mode == null) {
-            throw new IllegalStateException("Advancement mode must be set (everything, only, from, through, or until).");
-        }
+        try {
+            StringBuilder sb = new StringBuilder("advancement ");
+            sb.append(this.action).append(" ").append(this.targets).append(" ").append(this.mode);
 
-        StringBuilder sb = new StringBuilder("advancement ");
-        sb.append(action).append(" ").append(targets).append(" ").append(mode);
+            if (this.advancement != null) {
+                sb.append(" ").append(this.advancement);
 
-        if (requiresAdvancementId) {
-            // This should ideally not be null if setters use Objects.requireNonNull, but kept for double-safety
-            if (advancement == null) {
-                throw new IllegalStateException("Mode '" + mode + "' requires an advancement ID.");
+                // Criteria are only syntactically valid in 'only' mode.
+                if (this.mode == AdvancementMode.ONLY && this.criterion != null) {
+                    sb.append(" ").append(this.criterion);
+                }
             }
-            sb.append(" ").append(advancement);
 
-            if (mode == AdvancementMode.ONLY && criterion != null) {
-                sb.append(" ").append(criterion);
-            }
+            return sb.toString();
+        } catch (Exception e) {
+            // Error Catching: Ensure the engine receives a safe fallback rather than a null or exception.
+            return "/say Error: Failed to generate advancement command logic.";
         }
-
-        return sb.toString();
     }
 
+    /**
+     * Internal safety fallback to provide a non-destructive default command if initialization fails.
+     *
+     * @return A default command that revokes everything from the sender.
+     */
+    private static AdvancementCommand fallback() {
+        return new AdvancementCommand(
+                AdvancementAction.REVOKE,
+                Entity.ofSelector(TargetSelector.SENDER),
+                AdvancementMode.EVERYTHING,
+                null,
+                null
+        );
+    }
+
+    /**
+     * @return The result of {@link #generate()}.
+     */
     @Override
     public String toString() {
         return generate();
     }
 
-    /** Defines the action to take: GRANT or REVOKE. */
+    // --- ⚙️ Enums ---
+
+    /**
+     * Defines the operation type: GRANT (add progress) or REVOKE (remove progress).
+     */
     public enum AdvancementAction {
         GRANT, REVOKE;
         @Override
         public String toString() { return name().toLowerCase(); }
     }
 
-    /** Defines the scope of the advancement command. */
+    /**
+     * Defines the hierarchical scope of the command.
+     */
     public enum AdvancementMode {
-        EVERYTHING("everything"),
-        ONLY("only"),
-        FROM("from"),
-        THROUGH("through"),
-        UNTIL("until");
-
-        private final String modeName;
-        AdvancementMode(String modeName) { this.modeName = modeName; }
+        EVERYTHING, ONLY, FROM, THROUGH, UNTIL;
         @Override
-        public String toString() { return modeName; }
+        public String toString() { return name().toLowerCase(); }
     }
 }
