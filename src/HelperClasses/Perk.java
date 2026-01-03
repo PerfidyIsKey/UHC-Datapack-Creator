@@ -32,7 +32,7 @@ public class Perk {
         if (effect != null) {
             reward = effect.giveEffect(receiver);
         } else if (attribute != null) {
-            reward = execute.As(receiver) +  attribute.setBase(0.8);
+            reward = execute.As(receiver) +  attribute.generate();
         }
         else {
             reward = "say @a whoopsie Bassie did an oopsie hihi";

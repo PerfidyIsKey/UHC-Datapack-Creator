@@ -25,8 +25,8 @@ import uhc.resource.gameplay.GameModeId;
 import uhc.resource.gameplay.GameRuleId;
 import uhc.score.DisplaySlot;
 import uhc.score.ScoreboardObjectiveId;
-import uhc.team.TeamData;
-import uhc.team.TeamRegistry;
+import uhc.game.team.TeamData;
+import uhc.game.team.TeamRegistry;
 import uhc.text.ClickEvent;
 import uhc.text.TextComponent;
 

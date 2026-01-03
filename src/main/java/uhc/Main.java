@@ -3,107 +3,198 @@ package uhc;
 import uhc.core.Datapack;
 import uhc.core.DatapackConfig;
 import uhc.core.Generator;
-import uhc.functions.ClearEnderChestFunction;
-import uhc.functions.DatapackFunction;
-import uhc.functions.GodModeFunction;
-import uhc.functions.InitializationFunction;
+import uhc.core.Namespace;
+import uhc.functions.*;
 import uhc.logging.CustomConsoleFormatter;
 
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.logging.ConsoleHandler;
+import java.util.logging.Handler;
 
 /**
  * 🚀 **Main Application Entry Point**
- * * This class orchestrates the entire datapack generation process.
- * It is responsible for initializing the custom logging system, defining the
- * feature modules, building the {@code Datapack} structure, and calling the
- * {@code Generator} to write the files to the disk.
+ * <p>
+ * This class orchestrates the entire UHC datapack generation lifecycle.
+ * It manages the transition from high-level Java module definitions to
+ * physical {@code .mcfunction} files on disk.
+ * </p>
+ * <p>
+ * <b>Execution Pipeline:</b>
+ * <ol>
+ * <li><b>Logging Environment:</b> Bootstraps the custom console formatter.</li>
+ * <li><b>Structure Assembly:</b> Instantiates the Datapack and resolves the core Namespace.</li>
+ * <li><b>Module Registration:</b> Sequentially executes the logic for every {@link DatapackFunction}.</li>
+ * <li><b>IO Generation:</b> Flushes the in-memory components to the filesystem.</li>
+ * </ol>
+ * </p>
  */
-public class Main {
+public final class Main {
 
+    // --- 📄 Static Fields ---
+
+    /** * The primary {@link Logger} instance for the application entry point.
+     * Configured during the {@link #setupLoggingEnvironment()} phase.
+     */
     private static final Logger LOGGER = Logger.getLogger(Main.class.getName());
 
+    // --- 🏗️ Entry Point ---
+
+    /**
+     * The main execution loop of the application.
+     * <p>
+     * Utilizes a top-level try-catch block to ensure that any critical failure
+     * during the generation process results in a non-zero exit code and a
+     * detailed error report.
+     * </p>
+     *
+     * @param args Command line arguments (reserved for future use).
+     */
     public static void main(String[] args) {
+        setupLoggingEnvironment();
 
-        // --- Logging Initialization ---
-
-        // 1. Get the Root Logger
-        Logger rootLogger = Logger.getLogger("");
-
-        // CRITICAL: Prevent Java's default, messy console output by removing all default handlers
-        // from the root logger before adding our custom one.
-        for (java.util.logging.Handler handler : rootLogger.getHandlers()) {
-            rootLogger.removeHandler(handler);
-        }
-
-        // 2. Setup Custom Handler
         try {
-            ConsoleHandler customHandler = new ConsoleHandler();
+            // Step 1: Build the virtual representation of the Datapack
+            Datapack datapack = buildDatapackStructure();
 
-            // Set the handler level to ALL so it passes all messages (CONFIG, INFO, WARNING, etc.)
+            // Step 2: Write the virtual structure to physical files
+            executeGeneration(datapack);
+
+            LOGGER.info("Datapack generation sequence finalized successfully.");
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "CRITICAL FAILURE: Datapack generation was aborted.", e);
+            System.exit(1);
+        }
+    }
+
+    // --- ⚙️ Internal Logic Segments ---
+
+    /**
+     * Configures the global Java Logging API for clean console output.
+     * <p>
+     * This method removes default {@link Handler} instances to prevent
+     * duplicate logs and injects the {@link CustomConsoleFormatter}.
+     * </p>
+     *
+     * @throws RuntimeException if the logging system cannot be configured.
+     */
+    private static void setupLoggingEnvironment() {
+        try {
+            Logger rootLogger = Logger.getLogger("");
+
+            // Purge default handlers to ensure our custom formatter takes precedence
+            Handler[] handlers = rootLogger.getHandlers();
+            for (Handler handler : handlers) {
+                rootLogger.removeHandler(handler);
+            }
+
+            ConsoleHandler customHandler = new ConsoleHandler();
             customHandler.setLevel(Level.ALL);
             customHandler.setFormatter(new CustomConsoleFormatter());
 
-            // Add the custom handler to the Root Logger. All messages flow through this formatter.
             rootLogger.addHandler(customHandler);
 
-            // 3. Set Specific Logger Levels
-            // The Main logger uses INFO for general start/complete messages (Green).
+            // Configure verbosity thresholds
             LOGGER.setLevel(Level.INFO);
-
-            // The Generator logger uses CONFIG for file status messages (Yellow).
             Logger.getLogger(Generator.class.getName()).setLevel(Level.CONFIG);
 
         } catch (Exception e) {
-            // Error Catching Improvement: If custom logging setup fails, print an error
-            // and exit gracefully to prevent unpredictable console behavior.
-            System.err.println("FATAL LOGGING ERROR: Failed to configure custom console formatter.");
+            // System.err is used as a final fallback if the logger is compromised
+            System.err.println("FATAL: The logging environment failed to initialize. Aborting.");
             e.printStackTrace();
-            // Exit immediately, as the logging system is compromised.
             System.exit(1);
         }
-        // -------------------------------------------------------------
+    }
 
-        // --- Datapack Orchestration ---
-
-        // 1. Setup Datapack Core: Creates the empty structure based on DatapackConfig metadata.
+    /**
+     * Orchestrates the creation of the {@link Datapack} and the registration
+     * of all functional modules.
+     * <p>
+     * This method resolves the {@link Namespace} object to fix previous
+     * type-mismatch errors where a String was passed instead of a
+     * Namespace instance.
+     * </p>
+     *
+     * @return A fully populated and validated {@link Datapack} instance.
+     * @throws IllegalStateException if the target namespace cannot be resolved.
+     * @throws NullPointerException if any module registration logic fails.
+     */
+    private static Datapack buildDatapackStructure() {
         Datapack datapack = new Datapack();
 
-        // 2. Define Modules: List all feature sets to be included in the final datapack.
-        List<DatapackFunction> modules = List.of(
-                new InitializationFunction(),
-                new ClearEnderChestFunction(),
-                new GodModeFunction()
-        );
+        // Retrieve the Namespace object using the configured name (String -> Namespace conversion)
+        final String namespaceName = DatapackConfig.CUSTOM_NAMESPACE;
+        Namespace targetNamespace = datapack.getOrCreateNamespace(namespaceName);
 
-        // 3. Register Modules: Instruct each module to build its components (functions, tags, etc.)
-        // and register them within the Datapack object structure.
-        for (DatapackFunction module : modules) {
-            module.register(datapack, DatapackConfig.CUSTOM_NAMESPACE);
+        if (targetNamespace == null) {
+            throw new IllegalStateException("Namespace Error: The required namespace '" +
+                    namespaceName + "' could not be initialized.");
         }
 
-        // 4. Generate Files: Call the Generator to translate the object structure into files on disk.
+        // Define the registry of modules to be included in this build
+        List<DatapackFunction> modules = List.of(
+                new InitializeFunction(),
+                new ClearEnderChestFunction(),
+                new GodModeFunction(),
+                new DropHeadsFunction(),
+                new InitializationFunction(),
+                new PlayerDeathFunction(),
+                new ControlPointVisuals()
+        );
+
+        // Execute registration for every module in the list
+        for (DatapackFunction module : modules) {
+            Objects.requireNonNull(module, "Registration Error: Attempted to register a null module.");
+
+            try {
+                module.register(datapack, targetNamespace);
+            } catch (Exception e) {
+                throw new RuntimeException("Module Error: Failure during registration of " +
+                        module.getClass().getSimpleName() + ". " + e.getMessage(), e);
+            }
+        }
+
+        return datapack;
+    }
+
+    /**
+     * Translates the virtual {@link Datapack} object tree into files.
+     * <p>
+     * This method performs path normalization and ensures that the
+     * root output directory exists and is accessible.
+     * </p>
+     *
+     * @param datapack The populated {@link Datapack} structure to generate.
+     * @throws IOException if an I/O exception occurs during file creation.
+     * @throws IllegalStateException if the output path configuration is invalid.
+     */
+    private static void executeGeneration(Datapack datapack) throws IOException {
+        Objects.requireNonNull(datapack, "Generation Error: Target Datapack is null.");
+
         Generator generator = new Generator();
+        String rootDir = DatapackConfig.OUTPUT_DIR_ROOT;
 
-        // Determine the final, absolute output path using the configurable root directory.
-        Path absolutePath = Paths.get(DatapackConfig.OUTPUT_DIR_ROOT).toAbsolutePath();
+        if (rootDir == null || rootDir.isBlank()) {
+            throw new IllegalStateException("Config Error: 'OUTPUT_DIR_ROOT' must be defined in DatapackConfig.");
+        }
 
-        // Log the final target path before starting I/O operations.
-        LOGGER.info("Starting Datapack generation process in: " + absolutePath.resolve(DatapackConfig.DATAPACK_FOLDER_NAME));
+        // Normalize the path using NIO.2
+        Path absolutePath = Paths.get(rootDir).toAbsolutePath();
+        Path finalLocation = absolutePath.resolve(DatapackConfig.DATAPACK_FOLDER_NAME);
+
+        LOGGER.info("Initiating file synchronization at: " + finalLocation);
 
         try {
             generator.generate(datapack, absolutePath.toString());
-            LOGGER.info("Generation and synchronization complete.");
+            LOGGER.info("IO Sync Successful: Files written to the target directory.");
         } catch (IOException e) {
-            // Catch and log fatal I/O errors during file writing (e.g., permission issues).
-            LOGGER.log(Level.SEVERE, "FATAL ERROR: Failed to write datapack files. Check file permissions or path.", e);
-            // Optional: Exit with a non-zero code to indicate failure to external scripts/tools.
-            // System.exit(1);
+            throw new IOException("FileSystem Error: Failed to write datapack files. " +
+                    "Check folder permissions at: " + absolutePath, e);
         }
     }
 }
