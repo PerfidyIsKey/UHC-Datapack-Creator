@@ -9,39 +9,53 @@ import java.util.stream.Collectors;
 /**
  * 📇 **Player Registry**
  * <p>
- * This class serves as the central data authority for the UHC session. It manages
+ * This class acts as the central data authority for the UHC session. It manages
  * the lifecycle and accessibility of all {@link PlayerData} instances.
  * </p>
  * <p>
- * <b>Strict Data Policy:</b> This registry does not allow for partial data or
- * default "dummy" players. If the internal hardcoded roster contains an error
- * (e.g., a null name or ID), the constructor will throw a critical exception
- * to prevent the game from starting with corrupted state.
+ * <b>Static Access:</b> This class implements the Singleton pattern, allowing
+ * global access to the player roster via {@link #getInstance()}.
  * </p>
  */
 public final class PlayerRegistry {
 
-    // --- 📂 Internal Data Storage ---
+    // --- 🏛️ Static Singleton Logic ---
 
-    /** * The master collection of all registered players.
-     * This list is immutable once the constructor completes to ensure thread-safety
-     * and data integrity during the match.
-     */
-    private final List<PlayerData> players;
-
-    // --- 🏗️ Constructor & Initialization ---
+    /** * The single, globally accessible instance of the registry. */
+    private static PlayerRegistry instance;
 
     /**
-     * Constructs the registry and populates it with the hardcoded player roster.
-     * <p>
-     * <b>Validation:</b> Every entry is validated against the {@link PlayerData}
-     * constraints. The entire list is wrapped in {@link Collections#unmodifiableList}
-     * after population.
-     * </p>
-     * @throws RuntimeException if any entry in the roster fails validation or
-     * if the population process is interrupted.
+     * Retrieves the global instance of the PlayerRegistry.
+     * @return The active {@link PlayerRegistry}.
+     * @throws IllegalStateException if the registry has not been initialized.
      */
-    public PlayerRegistry() {
+    public static PlayerRegistry getInstance() {
+        if (instance == null) {
+            instance = new PlayerRegistry();
+        }
+        return instance;
+    }
+
+    /**
+     * Provides static access to participating players.
+     * @return A {@link List} of active {@link PlayerData}.
+     */
+    public static List<PlayerData> getParticipating() {
+        return getInstance().getParticipatingPlayers();
+    }
+
+    // --- 📂 Internal Data Storage ---
+
+    /** * The master collection of all registered players. */
+    private final List<PlayerData> players;
+
+    // --- 🏗️ Constructor ---
+
+    /**
+     * Private constructor to enforce Singleton pattern.
+     * @throws RuntimeException if the roster data set is malformed.
+     */
+    private PlayerRegistry() {
         List<PlayerData> roster = new ArrayList<>();
 
         try {
@@ -119,26 +133,15 @@ public final class PlayerRegistry {
 
             this.players = Collections.unmodifiableList(roster);
         } catch (Exception e) {
-            // Error Catching: Wrap the underlying cause (likely a null in PlayerData)
-            throw new RuntimeException("CRITICAL REGISTRY FAILURE: The player data set contains malformed entries. " + e.getMessage(), e);
+            throw new RuntimeException("CRITICAL REGISTRY FAILURE: Static roster population failed. " + e.getMessage(), e);
         }
     }
 
-    // --- 🔍 Retrieval & Query Logic ---
-
-    /**
-     * Retrieves the complete, unmodifiable list of every player known to the system.
-     * @return An immutable {@link List} of {@link PlayerData}.
-     * @throws NullPointerException if the internal storage has been compromised.
-     */
-    public List<PlayerData> getAllPlayers() {
-        return Objects.requireNonNull(players, "Registry Access Failure: Master player list is null.");
-    }
+    // --- 🔍 Query Logic ---
 
     /**
      * Filters the registry to return only players currently marked for active participation.
-     * @return A {@link List} containing only active {@link PlayerData} entries.
-     * @throws IllegalStateException if the stream filtering process encounters a data error.
+     * @return A {@link List} of active {@link PlayerData}.
      */
     public List<PlayerData> getParticipatingPlayers() {
         try {
@@ -146,27 +149,20 @@ public final class PlayerRegistry {
                     .filter(PlayerData::isParticipating)
                     .collect(Collectors.toList());
         } catch (Exception e) {
-            throw new IllegalStateException("Registry Query Failure: Encountered an error while filtering active participants.", e);
+            throw new IllegalStateException("Registry Query Failure: Static filter encountered an error.", e);
         }
     }
 
     /**
      * Searches for a single player by their unique numerical ID.
-     * <p>
-     * <b>Strict Logic:</b> If the ID is not found, an exception is thrown.
-     * No fallback/null objects are returned.
-     * </p>
-     * @param id The {@link Integer} ID to search for (non-null).
-     * @return The matching {@link PlayerData} instance.
-     * @throws NullPointerException if the provided ID is null.
-     * @throws IllegalArgumentException if no player in the registry matches the provided ID.
+     * @param id The ID to search for (non-null).
+     * @return The found {@link PlayerData}.
      */
     public PlayerData getPlayerById(Integer id) {
-        Objects.requireNonNull(id, "Search Failure: Cannot search for a player using a null ID.");
-
+        Objects.requireNonNull(id, "Search Failure: Cannot search for a null ID.");
         return players.stream()
                 .filter(p -> p.getId().equals(id))
                 .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("Registry Search Error: No player exists with ID [" + id + "]."));
+                .orElseThrow(() -> new IllegalArgumentException("Registry Search Error: No player found with ID [" + id + "]."));
     }
 }
