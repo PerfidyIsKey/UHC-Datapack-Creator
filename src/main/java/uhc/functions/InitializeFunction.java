@@ -81,7 +81,7 @@ public class InitializeFunction implements DatapackFunction {
             for (DimensionId dimension : DimensionId.values()) {
                 Objects.requireNonNull(dimension, "Environment setup failed: Found null DimensionId in registry.");
                 currentFunction.addLine(ExecuteCommand.create()
-                        .in(dimension)
+                .in(dimension)
                         .run(GameRuleCommand.create(GameRuleId.NATURAL_REGENERATION)
                                 .booleanValue(false)));
             }
@@ -115,15 +115,18 @@ public class InitializeFunction implements DatapackFunction {
             currentFunction.addLine(Comment.create("=== Staging Area Construction ==="));
 
             // Generate the physical lobby structure
-            currentFunction.addLine(ExecuteCommand.create().in(DimensionId.OVERWORLD)
+            currentFunction.addLine(ExecuteCommand.create()
+                .in(DimensionId.OVERWORLD)
                     .run(FillCommand.create(BlockPos.absolute(-6, 220, -6), BlockPos.absolute(6, 226, 6), Block.create(BlockId.BARRIER))));
 
-            currentFunction.addLine(ExecuteCommand.create().in(DimensionId.OVERWORLD)
+            currentFunction.addLine(ExecuteCommand.create()
+                .in(DimensionId.OVERWORLD)
                     .run(FillCommand.create(BlockPos.absolute(-5, 221, -5), BlockPos.absolute(5, 226, 5), Block.create(BlockId.AIR))));
 
             // Construct the memorial sign with click events
             currentFunction.addLine(Comment.create("Memorial Sign Logic"));
-            currentFunction.addLine(ExecuteCommand.create().in(DimensionId.OVERWORLD)
+            currentFunction.addLine(ExecuteCommand.create()
+                .in(DimensionId.OVERWORLD)
                     .run(SetBlockCommand.create(
                             BlockPos.absolute(0, 222, -5),
                             Block.create(DynamicBlock.wood(WoodType.CHERRY, WoodBlock.WALL_SIGN))

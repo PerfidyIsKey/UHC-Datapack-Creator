@@ -19,174 +19,260 @@ import java.util.Objects;
 /**
  * 🛠️ **Execute Command Builder**
  * <p>
- * This class facilitates the construction of complex Minecraft {@code /execute} commands.
- * It employs a static factory entry-point pattern to initiate a fluent builder chain.
+ * This class provides a fluent API for constructing Minecraft {@code /execute} commands.
+ * Commands are initiated via the static {@link #create()} method and finalized using
+ * the {@link #run(MinecraftCommand)} method.
  * </p>
  * <p>
- * Every modifier method validates its inputs strictly; if a required argument is null,
- * a {@link NullPointerException} is thrown with a descriptive message to prevent
- * the generation of invalid datapack functions.
+ * Constraints:
+ * <ul>
+ * <li>All modifiers are instance-based to avoid static-access warnings.</li>
+ * <li>Strict null-checking is enforced; no default or fallback values are provided.</li>
+ * <li>Validation occurs both during the build process and at the final generation.</li>
+ * </ul>
  * </p>
  */
 public class ExecuteCommand implements MinecraftCommand {
 
-    /** * The internal buffer holding the evolving command string.
+    /** * The internal buffer that accumulates the command string.
+     * Initialized with the base "execute" keyword.
      */
     private final StringBuilder command;
 
     /**
-     * Private constructor used by static factory methods to begin the command chain.
-     * Initializes the buffer with the base "execute" keyword.
+     * Private constructor to enforce the use of the static factory method {@link #create()}.
      */
     private ExecuteCommand() {
         this.command = new StringBuilder("execute");
     }
 
-    // --- 🚀 Static Entry Points ---
-    // These methods allow starting a command with: ExecuteCommand.as(player)...
-
-    /** @return A new builder starting with 'align'. */
-    public static ExecuteCommand align(Swizzle axes) { return new ExecuteCommand().alignModifier(axes); }
-
-    /** @return A new builder starting with 'anchored'. */
-    public static ExecuteCommand anchored(EntityAnchor anchor) { return new ExecuteCommand().anchoredModifier(anchor); }
-
-    /** @return A new builder starting with 'as'. */
-    public static ExecuteCommand as(Entity targets) { return new ExecuteCommand().asModifier(targets); }
-
-    /** @return A new builder starting with 'at'. */
-    public static ExecuteCommand at(Entity targets) { return new ExecuteCommand().atModifier(targets); }
-
-    /** @return A new builder starting with 'facing'. */
-    public static ExecuteCommand facing(Vec3 pos) { return new ExecuteCommand().facingModifier(pos); }
-
-    /** @return A new builder starting with 'in'. */
-    public static ExecuteCommand in(DimensionId dimension) { return new ExecuteCommand().inModifier(dimension); }
-
-    /** @return A new builder starting with 'on'. */
-    public static ExecuteCommand on(RelationId relation) { return new ExecuteCommand().onModifier(relation); }
-
-    /** @return A new builder starting with 'positioned'. */
-    public static ExecuteCommand positioned(Vec3 pos) { return new ExecuteCommand().positionedModifier(pos); }
-
-    /** @return A new builder starting with 'positioned as'. */
-    public static ExecuteCommand positionedAs(Entity targets) { return new ExecuteCommand().positionedAsModifier(targets); }
-
-    /** @return A new builder starting with 'positioned over'. */
-    public static ExecuteCommand positionedOver(HeightMap heightmap) { return new ExecuteCommand().positionedOverModifier(heightmap); }
-
-    /** @return A new builder starting with 'rotated'. */
-    public static ExecuteCommand rotated(Rotation rot) { return new ExecuteCommand().rotatedModifier(rot); }
-
-    /** @return A new builder starting with 'rotated as'. */
-    public static ExecuteCommand rotatedAs(Entity targets) { return new ExecuteCommand().rotatedAsModifier(targets); }
-
-    /** @return A new builder starting with 'summon'. */
-    public static ExecuteCommand summon(EntityId entity) { return new ExecuteCommand().summonModifier(entity); }
-
-    // --- 🚩 Conditional Entry Points ---
-
-    /** Begins a builder with 'unless score <target> <obj> matches <range>'. */
-    public static ExecuteCommand unlessScore(Entity target, ScoreboardObjectiveId objective, Range range) {
-        return new ExecuteCommand().unlessScoreMatches(target, objective, range);
-    }
-
-    /** Begins a builder with 'unless score <target> <obj> <op> <source> <obj>'. */
-    public static ExecuteCommand unlessScore(Entity target, ScoreboardObjectiveId targetObj, ComparatorType operator, Entity source, ScoreboardObjectiveId sourceObj) {
-        return new ExecuteCommand().unlessScoreCompare(target, targetObj, operator, source, sourceObj);
-    }
-
-    /** Begins a builder with 'if entity'. */
-    public static ExecuteCommand ifEntity(Entity entities) { return new ExecuteCommand().ifEntityModifier(entities); }
-
-    /** Begins a builder with 'unless entity'. */
-    public static ExecuteCommand unlessEntity(Entity entities) { return new ExecuteCommand().unlessEntityModifier(entities); }
-
-    /** Begins a builder with 'if score ... matches'. */
-    public static ExecuteCommand ifScoreMatches(Entity target, ScoreboardObjectiveId objective, Range range) { return new ExecuteCommand().ifScoreMatchesModifier(target, objective, range); }
-
-    // --- 🔗 Instance Modifiers (Chaining) ---
-
-    public ExecuteCommand alignModifier(Swizzle axes) { return appendModifier("align", axes); }
-    public ExecuteCommand anchoredModifier(EntityAnchor anchor) { return appendModifier("anchored", anchor); }
-    public ExecuteCommand asModifier(Entity targets) { return appendModifier("as", targets); }
-    public ExecuteCommand atModifier(Entity targets) { return appendModifier("at", targets); }
-    public ExecuteCommand facingModifier(Vec3 pos) { return appendModifier("facing", pos); }
-    public ExecuteCommand inModifier(DimensionId dimension) { return appendModifier("in", dimension); }
-    public ExecuteCommand onModifier(RelationId relation) { return appendModifier("on", relation); }
-    public ExecuteCommand positionedModifier(Vec3 pos) { return appendModifier("positioned", pos); }
-    public ExecuteCommand positionedAsModifier(Entity targets) { return appendModifier("positioned as", targets); }
-    public ExecuteCommand positionedOverModifier(HeightMap heightmap) { return appendModifier("positioned over", heightmap); }
-    public ExecuteCommand rotatedModifier(Rotation rot) { return appendModifier("rotated", rot); }
-    public ExecuteCommand rotatedAsModifier(Entity targets) { return appendModifier("rotated as", targets); }
-    public ExecuteCommand summonModifier(EntityId entity) { return appendModifier("summon", entity); }
-
-    // --- 📊 Score Logic ---
+    // --- 🚀 Static Factory ---
 
     /**
-     * Appends an 'unless score ... matches' check.
-     * @throws NullPointerException if any argument is null.
+     * Initiates a new Minecraft execute command chain.
+     * * @return A new instance of {@code ExecuteCommand}.
      */
-    public ExecuteCommand unlessScoreMatches(Entity target, ScoreboardObjectiveId objective, Range range) {
-        Objects.requireNonNull(target, "UnlessScore logic failed: Target entity cannot be null.");
-        Objects.requireNonNull(objective, "UnlessScore logic failed: Scoreboard objective cannot be null.");
-        Objects.requireNonNull(range, "UnlessScore logic failed: Comparison range cannot be null.");
+    public static ExecuteCommand create() {
+        return new ExecuteCommand();
+    }
+
+    // --- 🔗 Contextual Modifiers ---
+
+    /**
+     * Aligns the execution position to the specified axes by rounding down coordinates.
+     * @param axes The {@link Swizzle} axes (e.g., xyz).
+     * @return This builder for chaining.
+     * @throws NullPointerException if axes is null.
+     */
+    public ExecuteCommand align(Swizzle axes) {
+        return appendModifier("align", axes);
+    }
+
+    /**
+     * Sets the anchor point for relative coordinates to eyes or feet.
+     * @param anchor The {@link EntityAnchor} type.
+     * @return This builder for chaining.
+     */
+    public ExecuteCommand anchored(EntityAnchor anchor) {
+        return appendModifier("anchored", anchor);
+    }
+
+    /**
+     * Changes the executing entity (sets the context for '@s').
+     * @param targets The {@link Entity} selector or reference.
+     * @return This builder for chaining.
+     */
+    public ExecuteCommand as(Entity targets) {
+        return appendModifier("as", targets);
+    }
+
+    /**
+     * Updates the execution position and rotation to match the target entity.
+     * @param targets The target {@link Entity}.
+     * @return This builder for chaining.
+     */
+    public ExecuteCommand at(Entity targets) {
+        return appendModifier("at", targets);
+    }
+
+    /**
+     * Rotates the execution context to face a specific coordinate.
+     * @param pos The {@link Vec3} destination.
+     * @return This builder for chaining.
+     */
+    public ExecuteCommand facing(Vec3 pos) {
+        return appendModifier("facing", pos);
+    }
+
+    /**
+     * Transfers execution to a specific dimension.
+     * @param dimension The {@link DimensionId} target.
+     * @return This builder for chaining.
+     */
+    public ExecuteCommand in(DimensionId dimension) {
+        return appendModifier("in", dimension);
+    }
+
+    /**
+     * Executes the command based on an entity related to the current executor.
+     * @param relation The {@link RelationId} (e.g., vehicle, attacker).
+     * @return This builder for chaining.
+     */
+    public ExecuteCommand on(RelationId relation) {
+        return appendModifier("on", relation);
+    }
+
+    /**
+     * Shifts the execution position to specific coordinates.
+     * @param pos The {@link Vec3} location.
+     * @return This builder for chaining.
+     */
+    public ExecuteCommand positioned(Vec3 pos) {
+        return appendModifier("positioned", pos);
+    }
+
+    /**
+     * Shifts the execution position to match the location of a target entity.
+     * @param targets The target {@link Entity}.
+     * @return This builder for chaining.
+     */
+    public ExecuteCommand positionedAs(Entity targets) {
+        return appendModifier("positioned as", targets);
+    }
+
+    /**
+     * Shifts the execution position to the top of a specific heightmap.
+     * @param heightmap The {@link HeightMap} type to use.
+     * @return This builder for chaining.
+     */
+    public ExecuteCommand positionedOver(HeightMap heightmap) {
+        return appendModifier("positioned over", heightmap);
+    }
+
+    /**
+     * Sets the exact execution rotation.
+     * @param rot The {@link Rotation} value.
+     * @return This builder for chaining.
+     */
+    public ExecuteCommand rotated(Rotation rot) {
+        return appendModifier("rotated", rot);
+    }
+
+    /**
+     * Matches the execution rotation to the rotation of the target entity.
+     * @param targets The target {@link Entity}.
+     * @return This builder for chaining.
+     */
+    public ExecuteCommand rotatedAs(Entity targets) {
+        return appendModifier("rotated as", targets);
+    }
+
+    /**
+     * Contextually summons an entity for the command execution duration.
+     * @param entity The {@link EntityId} to summon.
+     * @return This builder for chaining.
+     */
+    public ExecuteCommand summon(EntityId entity) {
+        return appendModifier("summon", entity);
+    }
+
+    // --- 🚩 Conditional Modifiers ---
+
+    /**
+     * Continues execution if the target entity exists.
+     * @param entities The {@link Entity} to check.
+     * @return This builder for chaining.
+     */
+    public ExecuteCommand ifEntity(Entity entities) {
+        return appendModifier("if entity", entities);
+    }
+
+    /**
+     * Continues execution if the target entity does not exist.
+     * @param entities The {@link Entity} to check.
+     * @return This builder for chaining.
+     */
+    public ExecuteCommand unlessEntity(Entity entities) {
+        return appendModifier("unless entity", entities);
+    }
+
+    /**
+     * Continues execution if a specific scoreboard value falls within a range.
+     * @param target The entity owning the score.
+     * @param objective The {@link ScoreboardObjectiveId} to check.
+     * @param range The {@link Range} of acceptable values.
+     * @return This builder for chaining.
+     */
+    public ExecuteCommand ifScore(Entity target, ScoreboardObjectiveId objective, Range range) {
+        Objects.requireNonNull(target, "Execute 'if score' failed: Target entity cannot be null.");
+        Objects.requireNonNull(objective, "Execute 'if score' failed: Objective cannot be null.");
+        Objects.requireNonNull(range, "Execute 'if score' failed: Range cannot be null.");
+        command.append(" if score ").append(target).append(" ").append(objective).append(" matches ").append(range);
+        return this;
+    }
+
+    /**
+     * Continues execution if a specific scoreboard value is OUTSIDE the range.
+     * @param target The entity owning the score.
+     * @param objective The {@link ScoreboardObjectiveId} to check.
+     * @param range The {@link Range} to avoid.
+     * @return This builder for chaining.
+     */
+    public ExecuteCommand unlessScore(Entity target, ScoreboardObjectiveId objective, Range range) {
+        Objects.requireNonNull(target, "Execute 'unless score' failed: Target entity cannot be null.");
+        Objects.requireNonNull(objective, "Execute 'unless score' failed: Objective cannot be null.");
+        Objects.requireNonNull(range, "Execute 'unless score' failed: Range cannot be null.");
         command.append(" unless score ").append(target).append(" ").append(objective).append(" matches ").append(range);
         return this;
     }
 
     /**
-     * Appends an 'unless score' comparison between two entities.
-     * @throws NullPointerException if any argument is null.
+     * Compares two scoreboard values; continues if the comparison is false.
+     * @param target The target entity.
+     * @param targetObj The target's objective.
+     * @param operator The {@link ComparatorType} (e.g., =, >, <).
+     * @param source The source entity.
+     * @param sourceObj The source's objective.
+     * @return This builder for chaining.
      */
-    public ExecuteCommand unlessScoreCompare(Entity target, ScoreboardObjectiveId targetObj, ComparatorType operator, Entity source, ScoreboardObjectiveId sourceObj) {
-        Objects.requireNonNull(target, "UnlessScore comparison failed: Target entity cannot be null.");
-        Objects.requireNonNull(targetObj, "UnlessScore comparison failed: Target objective cannot be null.");
-        Objects.requireNonNull(operator, "UnlessScore comparison failed: Comparator operator cannot be null.");
-        Objects.requireNonNull(source, "UnlessScore comparison failed: Source entity cannot be null.");
-        Objects.requireNonNull(sourceObj, "UnlessScore comparison failed: Source objective cannot be null.");
+    public ExecuteCommand unlessScore(Entity target, ScoreboardObjectiveId targetObj, ComparatorType operator, Entity source, ScoreboardObjectiveId sourceObj) {
+        Objects.requireNonNull(target, "Execute 'unless score' comparison failed: Target entity is null.");
+        Objects.requireNonNull(targetObj, "Execute 'unless score' comparison failed: Target objective is null.");
+        Objects.requireNonNull(operator, "Execute 'unless score' comparison failed: Operator is null.");
+        Objects.requireNonNull(source, "Execute 'unless score' comparison failed: Source entity is null.");
+        Objects.requireNonNull(sourceObj, "Execute 'unless score' comparison failed: Source objective is null.");
         command.append(" unless score ").append(target).append(" ").append(targetObj)
                 .append(" ").append(operator).append(" ")
                 .append(source).append(" ").append(sourceObj);
         return this;
     }
 
+    // --- 📊 Storage Modifiers ---
+
     /**
-     * Appends an 'if score ... matches' check.
-     */
-    public ExecuteCommand ifScoreMatchesModifier(Entity target, ScoreboardObjectiveId objective, Range range) {
-        Objects.requireNonNull(target, "IfScore logic failed: Target entity cannot be null.");
-        Objects.requireNonNull(objective, "IfScore logic failed: Objective cannot be null.");
-        Objects.requireNonNull(range, "IfScore logic failed: Range cannot be null.");
-        command.append(" if score ").append(target).append(" ").append(objective).append(" matches ").append(range);
-        return this;
-    }
-
-    public ExecuteCommand ifEntityModifier(Entity entities) { return appendModifier("if entity", entities); }
-    public ExecuteCommand unlessEntityModifier(Entity entities) { return appendModifier("unless entity", entities); }
-
-    // --- 🛠️ Store Modifiers ---
-
-    /** * Stores the command result into a scoreboard.
+     * Stores the result of the executed command into a scoreboard objective.
+     * @param targets The target entity to receive the value.
+     * @param objective The {@link ScoreboardObjectiveId} to update.
+     * @return This builder for chaining.
      */
     public ExecuteCommand storeResultScore(Entity targets, ScoreboardObjectiveId objective) {
-        Objects.requireNonNull(targets, "Store Result failed: Target entity cannot be null.");
-        Objects.requireNonNull(objective, "Store Result failed: Objective cannot be null.");
+        Objects.requireNonNull(targets, "Execute 'store result score' failed: Target entity is null.");
+        Objects.requireNonNull(objective, "Execute 'store result score' failed: Objective is null.");
         command.append(" store result score ").append(targets).append(" ").append(objective);
         return this;
     }
 
-    // --- ⚙️ Internal Helper ---
+    // --- ⚙️ Internal Helpers ---
 
     /**
-     * Internal utility to safely append modifiers to the command string.
-     * @param sub The execute subcommand (e.g., "as").
-     * @param argument The argument for the subcommand.
-     * @return This builder instance.
+     * Appends a sub-command modifier to the command string.
+     * @param sub The sub-command name.
+     * @param argument The argument to append.
+     * @return This builder.
      * @throws NullPointerException if the argument is null.
      */
     private ExecuteCommand appendModifier(String sub, Object argument) {
-        Objects.requireNonNull(argument, "Execution modifier '" + sub + "' failed: Argument cannot be null.");
+        Objects.requireNonNull(argument, "Command construction failed: Modifier '" + sub + "' requires a non-null argument.");
         command.append(" ").append(sub).append(" ").append(argument);
         return this;
     }
@@ -194,33 +280,31 @@ public class ExecuteCommand implements MinecraftCommand {
     // --- 🏁 Terminal Action ---
 
     /**
-     * Finalizes the execute chain by attaching the command to run.
+     * Finalizes the execute chain by defining the command to be run.
      * @param runCommand The {@link MinecraftCommand} to execute under the built context.
-     * @return This ExecuteCommand instance.
-     * @throws RuntimeException if the runCommand is null or internal generation fails.
+     * @return The finalized ExecuteCommand instance.
+     * @throws RuntimeException if an error occurs during string generation.
      */
     public ExecuteCommand run(MinecraftCommand runCommand) {
         try {
-            Objects.requireNonNull(runCommand, "Run action failed: The command to execute cannot be null.");
+            Objects.requireNonNull(runCommand, "Execute 'run' failed: The command to execute cannot be null.");
             this.command.append(" run ").append(runCommand.generate());
             return this;
-        } catch (NullPointerException e) {
-            throw e;
         } catch (Exception e) {
-            throw new RuntimeException("Unexpected failure in ExecuteCommand.run(): " + e.getMessage(), e);
+            throw new RuntimeException("CRITICAL: Failed to finalize ExecuteCommand: " + e.getMessage(), e);
         }
     }
 
     /**
-     * Generates the final string representation of the command.
-     * @return The complete /execute string.
-     * @throws IllegalStateException if no modifiers or run action were added.
+     * Generates the final Minecraft command string.
+     * @return A valid /execute command string.
+     * @throws IllegalStateException if the command has no modifiers or run action.
      */
     @Override
     public String generate() {
         String result = command.toString().trim();
         if (result.equals("execute")) {
-            throw new IllegalStateException("Command generation failed: ExecuteCommand must contain at least one modifier or a 'run' action.");
+            throw new IllegalStateException("Generation Error: An 'execute' command must have at least one modifier or a 'run' action.");
         }
         return result;
     }
@@ -228,18 +312,5 @@ public class ExecuteCommand implements MinecraftCommand {
     @Override
     public String toString() {
         return generate();
-    }
-
-    /**
-     * Defines the targeted property of a bossbar for 'store' operations.
-     */
-    public enum BossbarStoreProperty {
-        VALUE,
-        MAX;
-
-        @Override
-        public String toString() {
-            return name().toLowerCase();
-        }
     }
 }
