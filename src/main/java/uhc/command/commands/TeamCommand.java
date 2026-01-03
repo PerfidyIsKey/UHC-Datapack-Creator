@@ -3,7 +3,7 @@ package uhc.command.commands;
 import uhc.arguments.entity.Entity;
 import uhc.command.MinecraftCommand;
 import uhc.resource.color.TextColor;
-import uhc.team.TeamData;
+import uhc.game.team.TeamData;
 import uhc.text.TextComponent;
 
 import java.util.Objects;

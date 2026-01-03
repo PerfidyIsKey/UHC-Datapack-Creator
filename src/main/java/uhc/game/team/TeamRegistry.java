@@ -1,4 +1,4 @@
-package uhc.team;
+package uhc.game.team;
 
 import uhc.resource.color.BossbarColor;
 import uhc.resource.color.TextColor;
