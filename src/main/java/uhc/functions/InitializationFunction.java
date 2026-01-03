@@ -10,86 +10,118 @@ import uhc.components.functions.Function;
 import uhc.components.tags.FunctionTag;
 import uhc.core.DatapackConfig;
 
+import java.util.Objects;
+
 /**
  * ⚙️ **Initialization Function (World Load Hook)**
  * <p>
- * Defines and registers the components necessary for world initialization, specifically
- * the load sequence that runs once when the world is first loaded or the pack is reloaded
- * (via {@code /reload}).
+ * This module is responsible for the "bootstrap" sequence of the UHC Datapack.
+ * It ensures that essential setup commands run automatically whenever the world
+ * is loaded or the {@code /reload} command is executed.
  * </p>
- * This function creates the executable function in the custom namespace and links it to the
- * automatic {@code minecraft:load} function tag, ensuring guaranteed execution on pack load.
+ * <p>
+ * <b>Architectural Role:</b>
+ * <ol>
+ * <li>Generates the physical {@code load.mcfunction} within the custom namespace.</li>
+ * <li>Overwrites/Appends to the {@code minecraft:load} function tag to trigger
+ * the aforementioned function.</li>
+ * </ol>
+ * </p>
  */
 public class InitializationFunction implements DatapackFunction {
 
+    // --- 🏗️ Registration Lifecycle ---
+
     /**
-     * Registers the {@code load} function and its corresponding tag to the appropriate namespaces.
+     * Executes the registration of the load-sequence logic and the engine-level wiring.
      * <p>
-     * The method performs the essential wiring, following the structure:
-     * 1. **Executable Function**: Creates the primary executable content (the `.mcfunction` file) in the **custom namespace**.
-     * 2. **Auto-Trigger Tag**: Creates the {@code minecraft:load} **function tag** in the **{@code minecraft} namespace**.
-     * 3. **Wiring**: References the custom executable function from the load tag, setting up the auto-trigger for the Minecraft engine.
+     * <b>Validation Policy:</b>
+     * This method enforces a strict "No-Fallback" policy. If the {@code minecraft}
+     * namespace cannot be acquired or if the {@link FunctionPath} registry is
+     * incomplete, a {@link RuntimeException} is thrown to prevent a "silent
+     * failure" where the pack loads but the logic never triggers.
      * </p>
-     * @param datapack The main {@code Datapack} object used to retrieve or create namespaces.
-     * @param customNamespaceName The name of the custom namespace (e.g., "uhc_core_pack") where custom functions are stored.
-     * @throws IllegalArgumentException If {@code datapack} is null or {@code customNamespaceName} is invalid.
-     * @throws IllegalStateException If a required {@code Namespace} cannot be obtained from the {@code Datapack} container.
+     *
+     * @param datapack  The master {@link Datapack} instance (non-null).
+     * @param namespace The primary custom {@link Namespace} for feature storage (non-null).
+     * @throws NullPointerException  if {@code datapack} or {@code namespace} is null.
+     * @throws IllegalStateException if the system 'minecraft' namespace is missing.
+     * @throws RuntimeException      if logic assembly or tag wiring fails.
      */
     @Override
-    public void register(Datapack datapack, String customNamespaceName) {
+    public void register(Datapack datapack, Namespace namespace) {
 
-        // --- 1. Parameter Validation ---
-        if (datapack == null) {
-            throw new IllegalArgumentException("The Datapack object cannot be null during function registration.");
-        }
-        if (customNamespaceName == null || customNamespaceName.isBlank()) {
-            throw new IllegalArgumentException("The custom namespace name cannot be null or blank.");
-        }
+        // --- 1. Environment Validation ---
+        Objects.requireNonNull(datapack, "Initialization Error: Datapack container cannot be null.");
+        Objects.requireNonNull(namespace, "Initialization Error: Custom Namespace cannot be null.");
 
-        // --- 2. Get both required namespaces for the wiring hook-up ---
-        Namespace customNamespace = datapack.getOrCreateNamespace(customNamespaceName);
-        Namespace minecraftNamespace = datapack.getOrCreateNamespace(DatapackConfig.MINECRAFT_NAMESPACE);
+        // Resolve the system namespace required for the 'minecraft:load' hook.
+        final Namespace minecraftNamespace = datapack.getOrCreateNamespace(DatapackConfig.MINECRAFT_NAMESPACE);
 
-        // Safety Check: Verify successful creation/retrieval of required namespaces
-        if (customNamespace == null || minecraftNamespace == null) {
-            // Error message is robust, using the constant name for the system namespace.
-            throw new IllegalStateException("Failed to obtain the necessary namespaces ('" + customNamespaceName + "' and '" + DatapackConfig.MINECRAFT_NAMESPACE + "'). Cannot register load components.");
+        if (minecraftNamespace == null) {
+            throw new IllegalStateException("CRITICAL: Failed to acquire the mandatory 'minecraft' system namespace.");
         }
 
+        // --- 2. Executable Logic Assembly ---
+        this.assembleLoadFunction(namespace);
 
-        // --- 3. Create the Function in the CUSTOM namespace (The executable content) ---
-        // Resource ID example: uhc_core_pack:init/load
-        // File path: data/{customNamespaceName}/function/init/load.mcfunction
-        FunctionPath functionPath = FunctionPath.LOAD;
-        Function loadFunction = new Function(functionPath);
+        // --- 3. Engine Wiring (Function Tag) ---
+        this.wireLoadTag(minecraftNamespace);
+    }
 
-        // Add comments and commands to the function in sequence
-        loadFunction.addLine(Comment.create("--- Datapack Load Function (Triggered by minecraft:load tag) ---"));
-        loadFunction.addLine(Comment.create(""));
+    // --- 🛠️ Internal Assembly Methods ---
 
-        // Command 1: Announce pack activation and version.
-        loadFunction.addLine(SayCommand.create("[UHC] Datapack initializing! Version: " + DatapackConfig.PACK_FORMAT + ".0"));
+    /**
+     * Builds the {@code .mcfunction} file containing the actual initialization commands.
+     * * @param namespace The target custom namespace for the function.
+     * @throws RuntimeException if command generation or path resolution fails.
+     */
+    private void assembleLoadFunction(Namespace namespace) {
+        final FunctionPath path = Objects.requireNonNull(FunctionPath.LOAD,
+                "Registry Error: FunctionPath.LOAD constant is not defined.");
 
-        // Command 2: Placeholder for essential setup.
-        loadFunction.addLine(Comment.create("Add other world setup commands here (e.g., setting gamerules, scoreboard setup, etc.)"));
-        loadFunction.addLine(Comment.create(""));
+        final Function loadFunction = new Function(path);
 
-        // Register the function component with the custom namespace
-        customNamespace.addComponent(loadFunction);
+        try {
+            // Header generation inherited from DatapackFunction interface
+            this.appendStandardHeader(loadFunction, "Initialization: World Load Sequence");
 
+            loadFunction.addLine(Comment.create("Note: This is the entry point for all setup logic."));
 
-        // --- 4. Create the Tag in the MINECRAFT namespace (The automatic trigger) ---
-        // Resource ID: minecraft:load
-        // File path: data/minecraft/tags/function/load.json
-        // This tag is automatically executed by the game engine upon world load or /reload.
+            // Generate the announcement command
+            loadFunction.addLine(SayCommand.create("[UHC] Datapack initializing! Version: "
+                    + DatapackConfig.PACK_FORMAT + ".0"));
 
-        // Instantiates the FunctionTag component using the type-safe enum.
-        FunctionTag loadTag = new FunctionTag(FunctionTagPath.LOAD);
+            loadFunction.addLine(Comment.create(" "));
+            loadFunction.addLine(Comment.create("Scoreboard and Gamerule setup should be appended here."));
 
-        // WIRING: Add the custom function's resource ID (uhc_core_pack:init/load) to the load tag's content list.
-        loadTag.addFunction(functionPath);
+            // Register the function component to the custom namespace
+            namespace.addComponent(loadFunction);
 
-        // Register the tag component with the target namespace (minecraft)
-        minecraftNamespace.addComponent(loadTag);
+        } catch (Exception e) {
+            throw new RuntimeException("CRITICAL: Failed to assemble 'load.mcfunction' logic. " + e.getMessage(), e);
+        }
+    }
+
+    /**
+     * Wires the custom load function to the Minecraft engine via a Function Tag.
+     * * @param minecraftNamespace The system namespace where the tag must reside.
+     * @throws RuntimeException if the tag cannot be created or the path cannot be added.
+     */
+    private void wireLoadTag(Namespace minecraftNamespace) {
+        try {
+            // FunctionTagPath.LOAD references 'minecraft:load'
+            final FunctionTag loadTag = new FunctionTag(FunctionTagPath.LOAD);
+
+            // Directly reference the FunctionPath object to maintain type integrity.
+            // This ensures the tag points to 'your_namespace:init/load'.
+            loadTag.addFunction(Objects.requireNonNull(FunctionPath.LOAD, "Wiring Error: Missing LOAD path."));
+
+            // Register the tag into the 'minecraft' namespace to trigger the hook.
+            minecraftNamespace.addComponent(loadTag);
+
+        } catch (Exception e) {
+            throw new RuntimeException("CRITICAL: Failed to wire custom logic to #minecraft:load. " + e.getMessage(), e);
+        }
     }
 }

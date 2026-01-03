@@ -11,8 +11,6 @@ import uhc.core.Namespace;
 import uhc.data.nbt.blockentity.SignNBT;
 import uhc.data.nbt.blockentity.state.FacingBlockState;
 import uhc.data.nbt.blockentity.state.WaterloggedState;
-import uhc.data.nbt.entity.projectiles.FireworkRocketNBT;
-import uhc.data.nbt.item.components.FireworksComponent;
 import uhc.game.control_points.ControlPointConfig;
 import uhc.game.control_points.ControlPointData;
 import uhc.game.control_points.ControlPointRegistry;
@@ -37,141 +35,160 @@ import java.util.Objects;
 /**
  * 🛠️ **Initialize Function Component**
  * <p>
- * This class handles the generation of the core initialization logic for the UHC match.
- * It configures game rules, scoreboard objectives, teams, and world structures.
+ * This class orchestrates the comprehensive setup of a UHC match environment.
+ * It is responsible for generating the {@code initialization.mcfunction} file which
+ * handles gamerules, difficulty, scoreboard registration, team creation, and the
+ * physical construction of the lobby/staging area.
  * </p>
  */
 public class InitializeFunction implements DatapackFunction {
 
+    // --- 🏗️ Registration Lifecycle ---
+
     /**
-     * Registers the initialization function within the provided datapack namespace.
+     * Executes the multi-phase registration of the UHC initialization logic.
      * <p>
-     * The method executes the following logical phases:
-     * <ol>
-     * <li>Validation: Ensures the Datapack and Namespace are valid.</li>
-     * <li>Environment: Configures gamerules, difficulty, and spawn points.</li>
-     * <li>Infrastructure: Sets up scoreboards and team data.</li>
-     * <li>Construction: Generates the physical barrier lobby and memorial sign.</li>
-     * <li>Objectives: Configures active Control Point bossbars.</li>
-     * </ol>
+     * <b>Strict Error Policy:</b> This method validates the state of {@link TeamRegistry}
+     * and {@link ControlPointRegistry} before assembly. If critical data is missing,
+     * it throws a {@link RuntimeException} to prevent a broken game state.
      * </p>
      *
-     * @param datapack            The {@link Datapack} receiving the function.
-     * @param customNamespaceName The name of the target namespace.
-     * @throws RuntimeException if any phase of the registration fails.
+     * @param datapack  The master {@link Datapack} instance (non-null).
+     * @param namespace The target {@link Namespace} for the initialization logic (non-null).
+     * @throws NullPointerException if parameters are null.
+     * @throws RuntimeException     if any phase (Environment, Infrastructure, Construction) fails.
      */
     @Override
-    public void register(Datapack datapack, String customNamespaceName) {
+    public void register(Datapack datapack, Namespace namespace) {
+        // 1. Parameter Validation
+        Objects.requireNonNull(datapack, "Initialize Error: Datapack container cannot be null.");
+        Objects.requireNonNull(namespace, "Initialize Error: Target Namespace cannot be null.");
+
+        // Ensure the function path is registered in the enum constants
+        final FunctionPath functionPath = Objects.requireNonNull(FunctionPath.INITIALIZATION,
+                "Registry Error: FunctionPath.INITIALIZATION is not defined in the system.");
+
+        final Function currentFunction = new Function(functionPath);
+
         try {
-            // --- 1. Parameter Validation ---
-            Objects.requireNonNull(datapack, "Datapack registry failed: Input datapack is null.");
-            Objects.requireNonNull(customNamespaceName, "Datapack registry failed: Namespace name is null or empty.");
+            // Header generation via inherited interface method
+            this.appendStandardHeader(currentFunction, "UHC Match Initialization: Global Setup");
 
-            Namespace customNamespace = datapack.getOrCreateNamespace(customNamespaceName);
-            if (customNamespace == null) {
-                throw new IllegalStateException("Failed to resolve namespace: " + customNamespaceName);
-            }
+            // --- ⚙️ Phase 1: Environment & Game Rules ---
+            this.assembleEnvironmentLogic(currentFunction);
 
-            FunctionPath functionPath = FunctionPath.INITIALIZATION;
-            Function currentFunction = new Function(functionPath);
+            // --- 📊 Phase 2: Infrastructure (Scoreboards & Teams) ---
+            this.assembleInfrastructureLogic(currentFunction);
 
-            // --- ⚙️ Phase 1: Game Rules & Global Environment ---
-            currentFunction.addLine(Comment.create("=== World Settings & Gamerules ==="));
+            // --- 🏗️ Phase 3: World Construction (Lobby & Memorial) ---
+            this.assembleConstructionLogic(currentFunction);
 
-            for (DimensionId dimension : DimensionId.values()) {
-                Objects.requireNonNull(dimension, "Environment setup failed: Found null DimensionId in registry.");
-                currentFunction.addLine(ExecuteCommand.create()
-                .in(dimension)
-                        .run(GameRuleCommand.create(GameRuleId.NATURAL_REGENERATION)
-                                .booleanValue(false)));
-            }
-
-            currentFunction.addLine(GameRuleCommand.create(GameRuleId.DO_IMMEDIATE_RESPAWN).booleanValue(true));
-            currentFunction.addLine(GameRuleCommand.create(GameRuleId.DO_PATROL_SPAWNING).booleanValue(false));
-            currentFunction.addLine(GameRuleCommand.create(GameRuleId.DO_MOB_SPAWNING).booleanValue(false));
-            currentFunction.addLine(GameRuleCommand.create(GameRuleId.DO_WEATHER_CYCLE).booleanValue(false));
-            currentFunction.addLine(GameRuleCommand.create(GameRuleId.SPAWN_RADIUS).intValue(0));
-
-            currentFunction.addLine(DifficultyCommand.create().difficulty(DifficultyId.HARD));
-            currentFunction.addLine(GameModeCommand.create(GameModeId.ADVENTURE).setDefault());
-            currentFunction.addLine(SetWorldSpawnCommand.create().pos(BlockPos.absolute(0, 221, 0)));
-
-            // --- 📊 Phase 2: Scoreboard & Teams ---
-            currentFunction.addLine(Comment.create("=== Scoreboard Initialization ==="));
-            currentFunction.addAll(ScoreboardCommand.batch().registerAll());
-            currentFunction.addLine(ScoreboardCommand.objectives().setDisplay(DisplaySlot.BELOW_NAME, ScoreboardObjectiveId.HEARTS));
-            currentFunction.addLine(ScoreboardCommand.objectives().setDisplay(DisplaySlot.LIST, ScoreboardObjectiveId.HEARTS));
-
-            currentFunction.addLine(Comment.create("=== Team Setup ==="));
-            if (TeamRegistry.ALL.isEmpty()) {
-                throw new IllegalStateException("Team setup failed: TeamRegistry is empty.");
-            }
-            for (TeamData team : TeamRegistry.ALL) {
-                Objects.requireNonNull(team, "Team setup failed: Found null TeamData in TeamRegistry.");
-                currentFunction.addAll(TeamCommand.initialize(team));
-            }
-
-            // --- 🏗️ Phase 3: Lobby & Staging ---
-            currentFunction.addLine(Comment.create("=== Staging Area Construction ==="));
-
-            // Generate the physical lobby structure
-            currentFunction.addLine(ExecuteCommand.create()
-                .in(DimensionId.OVERWORLD)
-                    .run(FillCommand.create(BlockPos.absolute(-6, 220, -6), BlockPos.absolute(6, 226, 6), Block.create(BlockId.BARRIER))));
-
-            currentFunction.addLine(ExecuteCommand.create()
-                .in(DimensionId.OVERWORLD)
-                    .run(FillCommand.create(BlockPos.absolute(-5, 221, -5), BlockPos.absolute(5, 226, 5), Block.create(BlockId.AIR))));
-
-            // Construct the memorial sign with click events
-            currentFunction.addLine(Comment.create("Memorial Sign Logic"));
-            currentFunction.addLine(ExecuteCommand.create()
-                .in(DimensionId.OVERWORLD)
-                    .run(SetBlockCommand.create(
-                            BlockPos.absolute(0, 222, -5),
-                            Block.create(DynamicBlock.wood(WoodType.CHERRY, WoodBlock.WALL_SIGN))
-                                    .withState(FacingBlockState.SOUTH)
-                                    .withState(WaterloggedState.of(false))
-                                    .withData(SignNBT.create()
-                                            .waxed(false)
-                                            .backText(SignNBT.SignSideNBT.create()
-                                                    .messages(TextComponent.text("You have"),
-                                                            TextComponent.text("angered"),
-                                                            TextComponent.text("the Gods!")))
-                                            .frontText(SignNBT.SignSideNBT.create()
-                                                    .messages(TextComponent.text("In Rememberance")
-                                                                    .click(ClickEvent.runCommand(SummonCommand.create(EntityId.FIREWORK_ROCKET)
-                                                                            .pos(Vec3.relative(0, 0, 0))
-                                                                            .nbt(FireworkRocketNBT.create()
-                                                                                    .glowing(true)
-                                                                                    .fireworksItem(FireworksComponent.create()
-                                                                                            .addExplosion(FireworksComponent.Explosion.create()
-                                                                                                    .shape(FireworksComponent.FireworkShape.STAR)))))),
-                                                            TextComponent.text("of our"),
-                                                            TextComponent.text("Command Center"),
-                                                            TextComponent.text("2014-2025")))))));
-
-            // --- 🚩 Phase 4: Control Point Objectives ---
+            // --- 🚩 Phase 4: Objectives (Control Points) ---
             if (ControlPointConfig.ENABLED) {
-                currentFunction.addLine(Comment.create("=== Control Point Objectives ==="));
-                if (ControlPointRegistry.getActivePoints().isEmpty()) {
-                    throw new IllegalStateException("Control Point setup failed: ENABLED is true but no active points are registered.");
-                }
-                for (ControlPointData cp : ControlPointRegistry.getActivePoints()) {
-                    Objects.requireNonNull(cp, "Control Point setup failed: Found null ControlPointData in Registry.");
-                    currentFunction.addLine(Comment.create("Initializing " + cp.name()));
-                    currentFunction.addAll(BossbarCommand.initialize(cp.getBossbar()));
-                }
+                this.assembleControlPointLogic(currentFunction);
             }
 
-            // Finalize registration
-            customNamespace.addComponent(currentFunction);
+            // Register finalized component into the namespace
+            namespace.addComponent(currentFunction);
 
-        } catch (NullPointerException | IllegalStateException e) {
-            // Throwing a clear error instead of providing a fallback
-            throw new RuntimeException("InitializeFunction registration failed: " + e.getMessage(), e);
         } catch (Exception e) {
-            throw new RuntimeException("An unexpected error occurred during initialization registration: " + e.getMessage(), e);
+            // Contextual wrap for build-time errors
+            throw new RuntimeException("CRITICAL: Initialization assembly failed at path ["
+                    + functionPath + "]. Details: " + e.getMessage(), e);
+        }
+    }
+
+    // --- 🛠️ Internal Assembly Phases ---
+
+    /**
+     * Configures dimensions, gamerules, difficulty, and spawn parameters.
+     * * @param function The function component being assembled.
+     * @throws RuntimeException if command generation fails.
+     */
+    private void assembleEnvironmentLogic(Function function) {
+        function.addLine(Comment.create("--- Phase 1: Environment Setup ---"));
+
+        // Disable health regen across all dimensions for UHC mechanics
+        for (DimensionId dimension : DimensionId.values()) {
+            function.addLine(ExecuteCommand.create().in(dimension)
+                    .run(GameRuleCommand.create(GameRuleId.NATURAL_REGENERATION).booleanValue(false)));
+        }
+
+        function.addLine(DifficultyCommand.create().difficulty(DifficultyId.HARD));
+        function.addLine(GameModeCommand.create(GameModeId.ADVENTURE).setDefault());
+        function.addLine(SetWorldSpawnCommand.create().pos(BlockPos.absolute(0, 221, 0)));
+        function.addLine(Comment.create(" "));
+    }
+
+    /**
+     * Registers all scoreboard objectives and team data.
+     * * @param function The function component being assembled.
+     * @throws IllegalStateException if TeamRegistry is empty.
+     */
+    private void assembleInfrastructureLogic(Function function) {
+        function.addLine(Comment.create("--- Phase 2: Scoreboard & Team Registry ---"));
+        function.addAll(ScoreboardCommand.batch().registerAll());
+        function.addLine(ScoreboardCommand.objectives().setDisplay(DisplaySlot.BELOW_NAME, ScoreboardObjectiveId.HEARTS));
+
+        // Strict Check: Cannot start a UHC without teams
+        if (TeamRegistry.ALL.isEmpty()) {
+            throw new IllegalStateException("Infrastructure Error: TeamRegistry is empty. Define teams before initializing.");
+        }
+
+        for (TeamData team : TeamRegistry.ALL) {
+            function.addAll(TeamCommand.initialize(Objects.requireNonNull(team, "Found null team in TeamRegistry")));
+        }
+        function.addLine(Comment.create(" "));
+    }
+
+    /**
+     * Generates physical barrier structures and the interactive memorial sign.
+     * * @param function The function component being assembled.
+     */
+    private void assembleConstructionLogic(Function function) {
+        function.addLine(Comment.create("--- Phase 3: Structural Construction ---"));
+
+        // Build Barrier Box (Shell and Air Clearing)
+        function.addLine(ExecuteCommand.create().in(DimensionId.OVERWORLD)
+                .run(FillCommand.create(BlockPos.absolute(-6, 220, -6), BlockPos.absolute(6, 226, 6), Block.create(BlockId.BARRIER))));
+        function.addLine(ExecuteCommand.create().in(DimensionId.OVERWORLD)
+                .run(FillCommand.create(BlockPos.absolute(-5, 221, -5), BlockPos.absolute(5, 226, 5), Block.create(BlockId.AIR))));
+
+        // Memorial Sign with interactive ClickEvents
+        function.addLine(ExecuteCommand.create().in(DimensionId.OVERWORLD)
+                .run(SetBlockCommand.create(BlockPos.absolute(0, 222, -5),
+                        Block.create(DynamicBlock.wood(WoodType.CHERRY, WoodBlock.WALL_SIGN))
+                                .withState(FacingBlockState.SOUTH)
+                                .withState(WaterloggedState.of(false))
+                                .withData(SignNBT.create()
+                                        .backText(SignNBT.SignSideNBT.create().messages(
+                                                TextComponent.text("You have"),
+                                                TextComponent.text("angered"),
+                                                TextComponent.text("the Gods!")))
+                                        .frontText(SignNBT.SignSideNBT.create().messages(
+                                                TextComponent.text("In Remembrance").click(ClickEvent.runCommand(
+                                                        SummonCommand.create(EntityId.FIREWORK_ROCKET).pos(Vec3.relative(0, 0, 0)))),
+                                                TextComponent.text("of our"),
+                                                TextComponent.text("Command Center"),
+                                                TextComponent.text("2014-2025")))))));
+        function.addLine(Comment.create(" "));
+    }
+
+    /**
+     * Initializes bossbars for active control points if enabled in config.
+     * * @param function The function component being assembled.
+     * @throws IllegalStateException if config is enabled but registry is empty.
+     */
+    private void assembleControlPointLogic(Function function) {
+        function.addLine(Comment.create("--- Phase 4: Control Point Objectives ---"));
+
+        var points = ControlPointRegistry.getActivePoints();
+        if (points.isEmpty()) {
+            throw new IllegalStateException("Control Point Error: Config is ENABLED but no points are registered in ControlPointRegistry.");
+        }
+
+        for (ControlPointData cp : points) {
+            function.addAll(BossbarCommand.initialize(Objects.requireNonNull(cp, "Found null ControlPointData").getBossbar()));
         }
     }
 }
