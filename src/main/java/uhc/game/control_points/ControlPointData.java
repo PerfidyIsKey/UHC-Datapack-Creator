@@ -6,7 +6,6 @@ import uhc.resource.world.BiomeId;
 import uhc.resource.world.DimensionId;
 
 import java.util.Objects;
-import java.util.Optional;
 
 /**
  * 🚩 **Control Point Data**
@@ -16,40 +15,45 @@ import java.util.Optional;
  * context required for game-loop processing.
  * </p>
  * <p>
- * While the core identity and spatial fields are final, it supports an optional
- * {@link BossbarData} component that can be attached after instantiation.
+ * While core identity and spatial fields are final, it supports a {@link BossbarData}
+ * component that is expected to be assigned during session initialization.
  * </p>
  */
 public final class ControlPointData {
 
     // --- 🔑 Identity & Scoring Properties ---
 
-    /** * The unique numerical identifier for this specific objective instance. */
+    /** * The unique numerical identifier for this specific objective instance.
+     */
     private final int id;
 
-    /** * The maximum progress score required to successfully achieve a 100% capture. */
+    /** * The maximum progress score required to successfully achieve a 100% capture.
+     */
     private final int max;
 
-    /** * The numerical increment added to the progress score per occupancy interval. */
+    /** * The numerical increment added to the progress score per occupancy interval.
+     */
     private final int rate;
 
     // --- 📍 Spatial & Environmental Context ---
 
-    /** * The physical center coordinates of the control point in the Minecraft world. */
+    /** * The physical center coordinates of the control point in the Minecraft world.
+     */
     private final BlockPos pos;
 
-    /** * The biome identifier at the point's location, used for specialized logic or effects. */
+    /** * The biome identifier at the point's location, used for environmental context.
+     */
     private final BiomeId biome;
 
     /** * The dimension (Overworld, Nether, or End) where this objective is located.
-     * <p>This is resolved automatically from the provided {@link BiomeId}.</p>
+     * <p>Resolved automatically from the {@link BiomeId} during construction.</p>
      */
     private final DimensionId dimension;
 
-    // --- 📊 Optional Visuals ---
+    // --- 📊 Visuals ---
 
-    /** * The optional boss bar configuration used to display capture progress to players.
-     * <p>This field is non-final to allow for late-binding initialization.</p>
+    /** * The boss bar configuration used to display capture progress to players.
+     * <p>This field is assigned after construction via {@link #bossbar(BossbarData)}.</p>
      */
     private BossbarData bossbar;
 
@@ -57,14 +61,12 @@ public final class ControlPointData {
 
     /**
      * Constructs a new validated instance of {@code ControlPointData}.
-     * <p>Derives the dimension from the biome and ensures all mandatory spatial data is present.</p>
-     *
-     * @param id    The unique objective ID.
+     * * @param id    The unique objective ID.
      * @param max   The progress threshold for capture.
      * @param rate  The progress speed.
      * @param pos   The non-null {@link BlockPos} location.
      * @param biome The non-null {@link BiomeId} environment.
-     * @throws IllegalArgumentException if null arguments are passed or dimension resolution fails.
+     * @throws IllegalArgumentException if validation fails or dimension resolution is impossible.
      */
     public ControlPointData(int id, int max, int rate, BlockPos pos, BiomeId biome) {
         try {
@@ -72,58 +74,56 @@ public final class ControlPointData {
             this.max = max;
             this.rate = rate;
 
-            this.pos = Objects.requireNonNull(pos, "Spatial position (BlockPos) cannot be null.");
-            this.biome = Objects.requireNonNull(biome, "Environmental context (BiomeId) cannot be null.");
+            // Strict Validation: No fallbacks allowed
+            this.pos = Objects.requireNonNull(pos, "ControlPointData creation failed: BlockPos must not be null.");
+            this.biome = Objects.requireNonNull(biome, "ControlPointData creation failed: BiomeId must not be null.");
 
-            // Derive dimension context from the biome
+            // Resolve dimension context
             this.dimension = biome.getDimension();
 
             if (this.dimension == null) {
-                throw new IllegalStateException("DimensionId could not be resolved from BiomeId: " + biome);
+                throw new IllegalStateException("ControlPointData creation failed: DimensionId could not be resolved from biome: " + biome.getDimension());
             }
+        } catch (NullPointerException | IllegalStateException e) {
+            throw new IllegalArgumentException(e.getMessage());
         } catch (Exception e) {
-            // Error Catching: Wrap potential NPEs or StateExceptions for cleaner engine logs
-            throw new IllegalArgumentException("ControlPointData initialization failed: " + e.getMessage());
+            throw new RuntimeException("Unexpected error during ControlPointData construction: " + e.getMessage(), e);
         }
     }
 
     // --- 📝 Identity Logic ---
 
     /**
-     * Generates the internal technical name used for command identifiers and tags.
-     * @return The string "cp" followed by the numerical ID (e.g., "cp1").
+     * Generates the internal technical name used for command identifiers.
+     * * @return The string "cp" followed by the numerical ID.
+     * @throws IllegalStateException if the ID is negative (unexpected state).
      */
     public String name() {
-        try {
-            return "cp" + id;
-        } catch (Exception e) {
-            return "cp_unknown";
+        if (this.id < 0) {
+            throw new IllegalStateException("Cannot generate name: Control Point ID is negative (" + this.id + ")");
         }
+        return "cp" + this.id;
     }
 
     // --- 🔍 Accessors & Mutators ---
 
     /** * Associates a {@link BossbarData} configuration with this control point.
-     * @param bossbar The configuration for the visual progress bar.
+     * * @param bossbar The configuration for the visual progress bar.
+     * @throws NullPointerException if the provided bossbar is null.
      */
     public void bossbar(BossbarData bossbar) {
-        try {
-            // Ensuring we don't accidentally set a null reference that would break getters
-            this.bossbar = Objects.requireNonNull(bossbar, "BossbarData cannot be null.");
-        } catch (Exception e) {
-            // Error Catching: Maintains stability if a null bar is passed
-        }
+        this.bossbar = Objects.requireNonNull(bossbar, "Assignment failed: BossbarData for " + name() + " cannot be null.");
     }
 
-    /** * Retrieves the optional boss bar configuration.
-     * @return An {@link Optional} containing the boss bar data if set, otherwise empty.
+    /** * Retrieves the assigned boss bar configuration.
+     * * @return The assigned {@link BossbarData}.
+     * @throws IllegalStateException if accessed before the bossbar has been initialized.
      */
-    public Optional<BossbarData> getBossbar() {
-        try {
-            return Optional.ofNullable(bossbar);
-        } catch (Exception e) {
-            return Optional.empty();
+    public BossbarData getBossbar() {
+        if (this.bossbar == null) {
+            throw new IllegalStateException("Access failed: Bossbar has not been initialized for Control Point: " + name());
         }
+        return this.bossbar;
     }
 
     /** @return The unique instance ID. */
@@ -147,17 +147,17 @@ public final class ControlPointData {
     // --- ⚙️ Utility Overrides ---
 
     /**
-     * Provides a formatted string representation of the data model.
-     * @return A string containing ID, Name, Dimension, and Bossbar status.
+     * Provides a detailed string representation of the data model for debugging.
+     * * @return A formatted string of the object's current state.
+     * @throws RuntimeException if serialization fails.
      */
     @Override
     public String toString() {
         try {
-            return String.format("ControlPointData[id=%d, name=%s, dimension=%s, hasBossbar=%b]",
+            return String.format("ControlPointData[id=%d, name=%s, dimension=%s, assignedBossbar=%b]",
                     id, name(), dimension, (bossbar != null));
         } catch (Exception e) {
-            // Error Catching: Ensures logging never triggers a crash
-            return "ControlPointData{Error during serialization}";
+            throw new RuntimeException("ControlPointData serialization failed: " + e.getMessage());
         }
     }
 }
