@@ -2,229 +2,223 @@ package uhc.core;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.nio.charset.StandardCharsets;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.stream.Stream; // Required for Files.walk() stream management
+import java.util.stream.Stream;
 
 /**
  * 🗃️ **Datapack File Generator and Synchronizer**
- * * This class orchestrates the physical creation, updating, and cleanup of the
- * datapack files on the disk. It performs a comparison (diff) between the
- * current {@code Datapack} object structure and the existing file system to
- * ensure the output directory {@code uhc_datapack} is an exact mirror of the code structure.
+ * <p>
+ * This class handles the physical serialization of the {@link Datapack} object model
+ * to the filesystem. It performs a state-synchronization (diff) to ensure the
+ * target directory is an exact mirror of the virtual structure, handling creation,
+ * updates, and deletion of obsolete files.
+ * </p>
  */
 public class Generator {
 
+    // --- 📄 Static Fields ---
+
+    /** * The internal logger instance used for tracking synchronization status
+     * and reporting filesystem mutations (CREATE, UPDATE, DELETE).
+     */
     private static final Logger LOGGER = Logger.getLogger(Generator.class.getName());
 
+    // --- 🏗️ Public Entry Point ---
+
     /**
-     * Executes the file generation and synchronization process.
-     * * The process involves:
-     * 1. Collecting all intended file paths and content from the Datapack object.
-     * 2. Checking for and deleting obsolete files in the output directory.
-     * 3. Creating or updating all intended files.
-     * * @param datapack The complete object representation of the datapack, containing all namespaces and components.
-     * @param outputDirectory The physical root path (e.g., 'Server/world/datapacks') where the pack folder should be created.
-     * @throws IOException If a critical file system operation (like directory creation or file writing) fails.
+     * Executes the comprehensive file generation and synchronization pipeline.
+     * <p>
+     * This method orchestrates the virtual-to-physical mapping, directory setup,
+     * obsolete file purging, and content verification.
+     * </p>
+     * * @param datapack        The {@link Datapack} model to synchronize; must not be null.
+     * @param outputDirectory The base string path where the datapack folder will be generated.
+     * @throws IOException           if any critical I/O operation fails (permissions, disk space, etc.).
+     * @throws NullPointerException  if the provided {@code datapack} is null.
+     * @throws IllegalStateException if the root directory cannot be created or accessed.
      */
     public void generate(Datapack datapack, String outputDirectory) throws IOException {
+        Objects.requireNonNull(datapack, "Generation Failure: Source Datapack cannot be null.");
+        Objects.requireNonNull(outputDirectory, "Generation Failure: Output directory path cannot be null.");
 
-        // Construct the full, absolute path to the datapack folder (e.g., .../datapacks/uhc_datapack)
+        // Resolve absolute paths
         Path rootPath = Paths.get(outputDirectory, DatapackConfig.DATAPACK_FOLDER_NAME);
         File rootDir = rootPath.toFile();
 
-        // 1. Collect all files intended for writing (Maps the final file path to its string content)
+        // Step 1: Map virtual components to physical paths
         Map<Path, String> intendedFiles = collectIntendedFiles(datapack, rootPath);
 
-        // 2. Add the mandatory pack.mcmeta file content to the intended map
+        // Step 2: Integrate mandatory metadata (pack.mcmeta)
         writePackMcmetaContent(datapack, rootPath, intendedFiles);
 
-        // --- Directory Setup ---
-        // Ensure the root datapack folder exists before proceeding.
+        // Step 3: Ensure root directory integrity
         if (!rootDir.exists() && !rootDir.mkdirs()) {
-            throw new IOException("Failed to create root directory: " + rootPath);
+            throw new IOException("FileSystem Error: Failed to create or access root directory at: " + rootPath);
         }
 
-        // --- Comparison and Synchronization ---
-        // The path to the 'data' directory where all Minecraft-specific content resides.
         Path dataPath = rootPath.resolve("data");
 
-        // 3. Delete obsolete files
-        // Only proceed with deletion if the data folder exists from a previous run.
+        // Step 4: Synchronize Deletions (Sync Down)
         if (Files.exists(dataPath)) {
             deleteObsoleteFiles(dataPath, intendedFiles);
         }
 
-        // 4. Create or Update intended files
+        // Step 5: Synchronize Content (Sync Up)
         for (Map.Entry<Path, String> entry : intendedFiles.entrySet()) {
             Path fullPath = entry.getKey();
             String content = entry.getValue();
+            Path relativeLogPath = rootPath.relativize(fullPath);
 
-            // Calculate the readable, relative path for logging: [namespace]/category/...
-            // This path is used in log messages (e.g., "uhc_core_pack\function\load.mcfunction")
-            // CRITICAL NOTE: Pack.mcmeta is handled specially, using rootPath.relativize(fullPath) might be better
-            // but we'll stick to dataPath.relativize(fullPath) for datapack items and log pack.mcmeta with full path
-            Path relativeLogPath = fullPath.startsWith(dataPath)
-                    ? dataPath.relativize(fullPath)
-                    : rootPath.relativize(fullPath);
+            try {
+                if (Files.exists(fullPath)) {
+                    String existingContent = Files.readString(fullPath, StandardCharsets.UTF_8);
 
-
-            // Check if file exists and content is the same to avoid unnecessary file writes
-            if (Files.exists(fullPath)) {
-
-                // Read the existing content with the correct UTF-8 encoding
-                String existingContent = Files.readString(fullPath, StandardCharsets.UTF_8);
-
-                if (!existingContent.equals(content)) {
-                    // Content has changed -> UPDATE
-                    writeFile(fullPath, content);
-                    LOGGER.config("UPDATE: " + relativeLogPath);
+                    if (!existingContent.equals(content)) {
+                        writeFile(fullPath, content);
+                        LOGGER.info("UPDATE: " + relativeLogPath);
+                    } else {
+                        LOGGER.info("UNCHANGED: " + relativeLogPath);
+                    }
                 } else {
-                    // Content is identical -> LOG STATUS
-                    LOGGER.config("UNCHANGED: " + relativeLogPath);
+                    writeFile(fullPath, content);
+                    LOGGER.info("CREATE: " + relativeLogPath);
                 }
-            } else {
-                // File does not exist -> CREATE
-                writeFile(fullPath, content);
-                LOGGER.config("CREATE: " + relativeLogPath);
+            } catch (IOException e) {
+                throw new IOException("Sync Failure: Could not process file " + relativeLogPath + ". " + e.getMessage(), e);
             }
         }
     }
 
+    // --- ⚙️ Internal Logic Segments ---
+
     /**
-     * Helper method to recursively collect all intended file paths and their content
-     * from the {@code Datapack} object structure before any writing occurs.
-     * * @param datapack The source Datapack object.
-     * @param rootPath The root path of the final datapack folder.
-     * @return A map of full {@code Path} objects to their intended String content.
+     * Traverses the virtual {@link Datapack} structure to build a flat map of intended files.
+     * * @param datapack The source model.
+     * @param rootPath The target root path.
+     * @return A {@link Map} where keys are absolute filesystem {@link Path}s and values are file contents.
+     * @throws RuntimeException if content generation for a component fails.
      */
     private Map<Path, String> collectIntendedFiles(Datapack datapack, Path rootPath) {
         Map<Path, String> fileMap = new HashMap<>();
         Path dataPath = rootPath.resolve("data");
 
-        // Loop through all registered namespaces (e.g., "minecraft", "uhc_core_pack")
-        for (Map.Entry<String, Namespace> entry : datapack.getNamespaces().entrySet()) {
-            Namespace namespace = entry.getValue();
-            Path namespacePath = dataPath.resolve(namespace.getName());
+        try {
+            datapack.getNamespaces().forEach((name, namespace) -> {
+                Path namespacePath = dataPath.resolve(namespace.getName());
 
-            // Loop through all component categories (e.g., "function", "tags/function")
-            for (Map.Entry<String, List<DatapackComponent>> categoryEntry : namespace.getComponentsByCategory().entrySet()) {
-                Path categoryPath = namespacePath.resolve(categoryEntry.getKey());
+                namespace.getComponentsByCategory().forEach((category, components) -> {
+                    Path categoryPath = namespacePath.resolve(category);
 
-                List<DatapackComponent> components = categoryEntry.getValue();
-
-                // Loop through all individual components (files)
-                for (DatapackComponent component : components) {
-                    // Construct the full path using the component's internal path (e.g., "init/load.mcfunction")
-                    Path fullPath = categoryPath.resolve(component.getPath());
-                    fileMap.put(fullPath, component.generateContent());
-                }
-            }
+                    for (DatapackComponent component : components) {
+                        Path fullPath = categoryPath.resolve(component.getPath());
+                        fileMap.put(fullPath, component.generateContent());
+                    }
+                });
+            });
+        } catch (Exception e) {
+            throw new RuntimeException("Model Error: Failed to traverse Datapack structure for file collection. " + e.getMessage(), e);
         }
+
         return fileMap;
     }
 
     /**
-     * Generates the content for {@code pack.mcmeta} and adds it to the map of intended files.
-     * * @param datapack The source of metadata (description, format).
-     * @param rootPath The root directory of the datapack.
-     * @param intendedFiles The map to which the file path and content are added.
+     * Formats the {@code pack.mcmeta} JSON structure and injects it into the synchronization map.
+     * * @param datapack      The source for metadata (Description/Format).
+     * @param rootPath      The root directory of the pack.
+     * @param intendedFiles The map where the generated path/content will be stored.
      */
     private void writePackMcmetaContent(Datapack datapack, Path rootPath, Map<Path, String> intendedFiles) {
-
-        // Uses text block feature (Java 15+) for cleaner multiline string
-        String jsonContent = String.format("""
-                        {
-                          "pack": {
-                            "description": "%s",
-                            "min_format": %d,
-                            "max_format": %d
-                          }
-                        }
-                        """,
-                datapack.getDescription(),
-                datapack.getPackFormat(),
-                datapack.getPackFormat()
-        );
-
-        intendedFiles.put(rootPath.resolve("pack.mcmeta"), jsonContent);
+        try {
+            String jsonContent = String.format("""
+                            {
+                              "pack": {
+                                "description": "%s",
+                                "pack_format": %d
+                              }
+                            }
+                            """,
+                    datapack.getDescription(),
+                    datapack.getPackFormat()
+            );
+            intendedFiles.put(rootPath.resolve("pack.mcmeta"), jsonContent);
+        } catch (Exception e) {
+            throw new RuntimeException("Metadata Error: Failed to generate pack.mcmeta content. " + e.getMessage(), e);
+        }
     }
 
     /**
-     * Compares files on disk within the {@code 'data'} directory against the map of intended files
-     * and deletes any that are obsolete (no longer present in the {@code Datapack} object).
-     * * @param directory The 'data' directory path to start the recursive check from.
-     * @param intendedFiles The map of files that *should* exist.
-     * @throws IOException If the directory walking process fails.
+     * Purges files and directories from the 'data' folder that are not present in the code model.
+     * * @param directory     The 'data' directory path to scan.
+     * @param intendedFiles The map of paths that are permitted to exist.
+     * @throws IOException if directory walking or file deletion fails.
      */
     private void deleteObsoleteFiles(Path directory, Map<Path, String> intendedFiles) throws IOException {
-
-        // Recursively walk through all files and directories starting at 'data'
-        try (Stream<Path> stream = Files.walk(directory)) { // Use explicit Stream type for clarity
+        // Phase 1: File Deletion
+        try (Stream<Path> stream = Files.walk(directory)) {
             stream.filter(Files::isRegularFile)
                     .forEach(existingPath -> {
-                        // Check if the existing file on disk is NOT in our intended map
                         if (!intendedFiles.containsKey(existingPath)) {
                             try {
                                 Files.delete(existingPath);
-                                // Log deletion as a WARNING (yellow color)
-                                LOGGER.warning("DELETE: " + directory.relativize(existingPath));
+                                LOGGER.warning("DELETE: " + directory.getParent().relativize(existingPath));
                             } catch (IOException e) {
-                                // Log failure to delete as SEVERE error
-                                LOGGER.log(Level.SEVERE, "Failed to delete obsolete file: " + existingPath, e);
+                                LOGGER.log(Level.SEVERE, "Cleanup Failure: Could not delete obsolete file: " + existingPath, e);
                             }
                         }
                     });
+        } catch (Exception e) {
+            throw new IOException("Cleanup Error: Failed during obsolete file scanning. " + e.getMessage(), e);
         }
 
-        // Cleanup: Delete empty directories from bottom up (longest paths first)
+        // Phase 2: Empty Directory Cleanup (Bottom-Up)
         try (Stream<Path> stream = Files.walk(directory)) {
             stream.filter(Files::isDirectory)
-                    // Sort by path length descending to delete children before parents
                     .sorted((p1, p2) -> p2.toString().length() - p1.toString().length())
                     .forEach(dir -> {
                         try {
-                            if (dir.equals(directory)) return; // Skip the root 'data' directory itself
-                            // Use Files.list() to check directory emptiness efficiently
-                            if (Files.list(dir).findAny().isEmpty()) {
-                                Files.delete(dir);
-                                LOGGER.fine("CLEANUP: Deleted empty directory " + directory.relativize(dir));
+                            if (dir.equals(directory)) return;
+                            try (Stream<Path> list = Files.list(dir)) {
+                                if (list.findAny().isEmpty()) {
+                                    Files.delete(dir);
+                                }
                             }
-                        } catch (IOException e) {
-                            // Log cleanup failure but do not throw, as it's not critical
-                            LOGGER.log(Level.FINER, "Could not delete empty directory: " + dir);
+                        } catch (IOException ignored) {
+                            // Directory cleanup failures are non-critical and suppressed to prevent halting sync
                         }
                     });
         }
     }
 
     /**
-     * Writes string content to a specified file path, creating parent directories as necessary.
-     * * @param fullPath The complete file path to write to.
-     * @param content The string content to be written (using UTF-8 encoding).
-     * @throws IOException If directory creation or file writing fails.
+     * Low-level helper to write string content to a file using UTF-8 encoding.
+     * * @param fullPath The absolute destination path.
+     * @param content  The raw string content.
+     * @throws IOException if parent directories cannot be created or file writing fails.
      */
     private void writeFile(Path fullPath, String content) throws IOException {
-        File file = fullPath.toFile();
-
-        // Safety improvement: Use Files.createDirectories for atomic and safer directory creation
         Path parentDir = fullPath.getParent();
         if (parentDir != null) {
-            Files.createDirectories(parentDir);
+            try {
+                Files.createDirectories(parentDir);
+            } catch (IOException e) {
+                throw new IOException("FileSystem Error: Could not create directory structure " + parentDir, e);
+            }
         }
 
-        // Use Files.writeString for reliable, explicit UTF-8 encoding, which is required by Minecraft.
-        java.nio.file.Files.writeString(
-                fullPath,
-                content,
-                StandardCharsets.UTF_8
-        );
+        try {
+            Files.writeString(fullPath, content, StandardCharsets.UTF_8);
+        } catch (IOException e) {
+            throw new IOException("FileSystem Error: Failed to write content to " + fullPath, e);
+        }
     }
 }

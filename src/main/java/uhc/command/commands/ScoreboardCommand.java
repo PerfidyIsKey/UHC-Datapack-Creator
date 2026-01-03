@@ -131,13 +131,6 @@ public abstract class ScoreboardCommand implements MinecraftCommand {
         public ObjectiveBuilder add(ScoreboardObjective obj) {
             Objects.requireNonNull(obj, "Objective data model cannot be null.");
 
-            // Fail-fast validation on the identifier
-            try {
-                obj.getId().validate();
-            } catch (Exception e) {
-                throw new IllegalStateException("Objective validation failed: " + e.getMessage());
-            }
-
             StringBuilder sb = new StringBuilder("add ")
                     .append(obj.getId().getObjectiveName())
                     .append(" ")

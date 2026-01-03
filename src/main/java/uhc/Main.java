@@ -5,6 +5,7 @@ import uhc.core.DatapackConfig;
 import uhc.core.Generator;
 import uhc.core.Namespace;
 import uhc.functions.*;
+import uhc.game.control_points.ControlPointRegistry;
 import uhc.logging.CustomConsoleFormatter;
 
 import java.io.IOException;
@@ -29,6 +30,7 @@ import java.util.logging.Handler;
  * <ol>
  * <li><b>Logging Environment:</b> Bootstraps the custom console formatter.</li>
  * <li><b>Structure Assembly:</b> Instantiates the Datapack and resolves the core Namespace.</li>
+ * <li><b>Registry Initialization:</b> Instantiates and populates the {@link ControlPointRegistry}.</li>
  * <li><b>Module Registration:</b> Sequentially executes the logic for every {@link DatapackFunction}.</li>
  * <li><b>IO Generation:</b> Flushes the in-memory components to the filesystem.</li>
  * </ol>
@@ -59,6 +61,8 @@ public final class Main {
         setupLoggingEnvironment();
 
         try {
+            LOGGER.info("Starting Datapack Assembly Pipeline...");
+
             // Step 1: Build the virtual representation of the Datapack
             Datapack datapack = buildDatapackStructure();
 
@@ -67,6 +71,7 @@ public final class Main {
 
             LOGGER.info("Datapack generation sequence finalized successfully.");
         } catch (Exception e) {
+            // Detailed reporting of the specific failure chain
             LOGGER.log(Level.SEVERE, "CRITICAL FAILURE: Datapack generation was aborted.", e);
             System.exit(1);
         }
@@ -101,7 +106,7 @@ public final class Main {
 
             // Configure verbosity thresholds
             LOGGER.setLevel(Level.INFO);
-            Logger.getLogger(Generator.class.getName()).setLevel(Level.CONFIG);
+            Logger.getLogger("uhc").setLevel(Level.INFO);
 
         } catch (Exception e) {
             // System.err is used as a final fallback if the logger is compromised
@@ -115,19 +120,18 @@ public final class Main {
      * Orchestrates the creation of the {@link Datapack} and the registration
      * of all functional modules.
      * <p>
-     * This method resolves the {@link Namespace} object to fix previous
-     * type-mismatch errors where a String was passed instead of a
-     * Namespace instance.
+     * This method initializes the {@link ControlPointRegistry} before any functions
+     * are registered to ensure dependency requirements are met.
      * </p>
      *
      * @return A fully populated and validated {@link Datapack} instance.
-     * @throws IllegalStateException if the target namespace cannot be resolved.
-     * @throws NullPointerException if any module registration logic fails.
+     * @throws IllegalStateException if the target namespace or registry cannot be resolved.
+     * @throws RuntimeException if any module registration logic fails.
      */
     private static Datapack buildDatapackStructure() {
         Datapack datapack = new Datapack();
 
-        // Retrieve the Namespace object using the configured name (String -> Namespace conversion)
+        // 1. Resolve the primary Namespace
         final String namespaceName = DatapackConfig.CUSTOM_NAMESPACE;
         Namespace targetNamespace = datapack.getOrCreateNamespace(namespaceName);
 
@@ -136,7 +140,17 @@ public final class Main {
                     namespaceName + "' could not be initialized.");
         }
 
-        // Define the registry of modules to be included in this build
+        // 2. Initialize Game Session Data
+        try {
+            LOGGER.info("Initializing Game Session Registries...");
+            ControlPointRegistry registry = new ControlPointRegistry();
+            registry.initializeSession();
+        } catch (Exception e) {
+            throw new IllegalStateException("Registry Error: Failed to bootstrap the Control Point session. " +
+                    "Check configurations. Details: " + e.getMessage(), e);
+        }
+
+        // 3. Define the registry of modules to be included in this build
         List<DatapackFunction> modules = List.of(
                 new InitializeFunction(),
                 new ClearEnderChestFunction(),
@@ -147,11 +161,14 @@ public final class Main {
                 new ControlPointVisuals()
         );
 
-        // Execute registration for every module in the list
+        LOGGER.info("Registering " + modules.size() + " functional modules...");
+
+        // 4. Execute registration for every module in the list
         for (DatapackFunction module : modules) {
             Objects.requireNonNull(module, "Registration Error: Attempted to register a null module.");
 
             try {
+                LOGGER.info(" -> Registering: " + module.getClass().getSimpleName());
                 module.register(datapack, targetNamespace);
             } catch (Exception e) {
                 throw new RuntimeException("Module Error: Failure during registration of " +
@@ -163,7 +180,7 @@ public final class Main {
     }
 
     /**
-     * Translates the virtual {@link Datapack} object tree into files.
+     * Translates the virtual {@link Datapack} object tree into physical files.
      * <p>
      * This method performs path normalization and ensures that the
      * root output directory exists and is accessible.
@@ -172,6 +189,7 @@ public final class Main {
      * @param datapack The populated {@link Datapack} structure to generate.
      * @throws IOException if an I/O exception occurs during file creation.
      * @throws IllegalStateException if the output path configuration is invalid.
+     * @throws NullPointerException if the provided datapack is null.
      */
     private static void executeGeneration(Datapack datapack) throws IOException {
         Objects.requireNonNull(datapack, "Generation Error: Target Datapack is null.");
@@ -187,11 +205,10 @@ public final class Main {
         Path absolutePath = Paths.get(rootDir).toAbsolutePath();
         Path finalLocation = absolutePath.resolve(DatapackConfig.DATAPACK_FOLDER_NAME);
 
-        LOGGER.info("Initiating file synchronization at: " + finalLocation);
+        LOGGER.info("Syncing virtual structure to filesystem at: " + finalLocation);
 
         try {
             generator.generate(datapack, absolutePath.toString());
-            LOGGER.info("IO Sync Successful: Files written to the target directory.");
         } catch (IOException e) {
             throw new IOException("FileSystem Error: Failed to write datapack files. " +
                     "Check folder permissions at: " + absolutePath, e);

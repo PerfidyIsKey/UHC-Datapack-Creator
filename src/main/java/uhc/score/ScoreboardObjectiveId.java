@@ -20,169 +20,199 @@ public interface ScoreboardObjectiveId {
 
     // --- 🕒 Time & Match Tracking ---
 
-    /** Tracks total game time in ticks. */
+    /** Tracks total game time in Minecraft ticks. */
     ScoreboardObjectiveId GAME_TIME = Internal.GAME_TIME;
-    /** Tracks elapsed real-world time. */
+
+    /** Tracks elapsed real-world time for match duration monitoring. */
     ScoreboardObjectiveId REAL_TIME = Internal.REAL_TIME;
 
     // --- 📊 UI & Display Management ---
 
-    /** Technical objective used for sidebar timing logic. */
+    /** Technical objective used to drive sidebar timing animations and logic. */
     ScoreboardObjectiveId SIDEBAR_TIME = Internal.SIDEBAR_TIME;
-    /** Standard health tracking for tab-list display. */
+
+    /** Standard health tracking for tab-list and nameplate displays. */
     ScoreboardObjectiveId HEARTS = Internal.HEARTS;
-    /** Tracks consumption of golden apples. */
+
+    /** Statistics tracking for the consumption of golden apples. */
     ScoreboardObjectiveId APPLES = Internal.APPLES;
 
     // --- ⛏️ Mining & Resource Tracking ---
 
-    /** Statistics for stone blocks mined. */
+    /** Total count of stone blocks mined by the player. */
     ScoreboardObjectiveId STONE = Internal.STONE;
-    /** Statistics for diorite blocks mined. */
+
+    /** Total count of diorite blocks mined by the player. */
     ScoreboardObjectiveId DIORITE = Internal.DIORITE;
-    /** Statistics for andesite blocks mined. */
+
+    /** Total count of andesite blocks mined by the player. */
     ScoreboardObjectiveId ANDESITE = Internal.ANDESITE;
-    /** Statistics for granite blocks mined. */
+
+    /** Total count of granite blocks mined by the player. */
     ScoreboardObjectiveId GRANITE = Internal.GRANITE;
-    /** Statistics for deepslate blocks mined. */
+
+    /** Total count of deepslate variants mined by the player. */
     ScoreboardObjectiveId DEEPSLATE = Internal.DEEPSLATE;
-    /** Cumulative score for mining leaderboards. */
+
+    /** Calculated cumulative score used for mining-specific leaderboards. */
     ScoreboardObjectiveId MINING = Internal.MINING;
 
     // --- ⚔️ Combat & Statistics ---
 
-    /** Tracks player death count. */
+    /** The number of times a player has died. */
     ScoreboardObjectiveId DEATHS = Internal.DEATHS;
-    /** Tracks player-on-player kills. */
+
+    /** Total player-on-player kills recorded. */
     ScoreboardObjectiveId KILLS = Internal.KILLS;
-    /** Temporary kill counter for specific game phases. */
+
+    /** Volatile kill counter used for specific game phases or bounties. */
     ScoreboardObjectiveId TEMP_KILLS = Internal.TEMP_KILLS;
-    /** Boolean flag (0/1) identifying a killer in events. */
+
+    /** Binary flag (0 or 1) used to identify a killer entity during death events. */
     ScoreboardObjectiveId IS_KILLER = Internal.IS_KILLER;
-    /** Competitive rank or leaderboard position. */
+
+    /** The player's current competitive rank or leaderboard index. */
     ScoreboardObjectiveId RANK = Internal.RANK;
-    /** Records the lowest health reached by a player. */
+
+    /** Record of the minimum health percentage reached by a player during the match. */
     ScoreboardObjectiveId MIN_HEALTH = Internal.MIN_HEALTH;
-    /** Tracks total damage received by entities. */
+
+    /** Cumulative damage points received from all sources. */
     ScoreboardObjectiveId DAMAGE_TAKEN = Internal.DAMAGE_TAKEN;
 
     // --- 🚩 Control Point (CP) Logic ---
 
-    /** Current capture progress score. */
+    /** The current numerical capture progress for an active objective. */
     ScoreboardObjectiveId CP_SCORE = Internal.CP_SCORE;
-    /** Highest score reached during CP retention. */
+
+    /** The all-time high score reached during a single objective retention. */
     ScoreboardObjectiveId CP_HIGHSCORE = Internal.CP_HIGHSCORE;
-    /** Generic identifier for control points. */
+
+    /** Base identifier for control point logic. */
     ScoreboardObjectiveId CONTROL_POINT = Internal.CONTROL_POINT;
-    /** Flag indicating if a player is within a CP zone. */
+
+    /** State flag indicating if a player is physically within a capture zone. */
     ScoreboardObjectiveId ON_CP = Internal.ON_CP;
-    /** Stores the ID of the previous control point visited. */
+
+    /** Stores the ID of the control point a player was previously interacting with. */
     ScoreboardObjectiveId PREV_CP = Internal.PREV_CP;
-    /** Technical objective for CP HUD rendering. */
+
+    /** Trigger objective used to update the CP status on the player's HUD. */
     ScoreboardObjectiveId DISPLAY_CP = Internal.DISPLAY_CP;
-    /** Objective used for CP team coloring logic. */
+
+    /** Stores color-coding data for team-based control point ownership. */
     ScoreboardObjectiveId COLOR_CP = Internal.COLOR_CP;
 
     // --- 🛠️ Technical & Mechanic Helpers ---
 
-    /** Tracks the age of tamed wolves. */
+    /** Used for managing growth and despawn timers of tamed wolves. */
     ScoreboardObjectiveId WOLF_AGE = Internal.WOLF_AGE;
-    /** Technical check for wolf collar updates. */
+
+    /** Internal ticker to verify and sync wolf collar colors. */
     ScoreboardObjectiveId COLLAR_CHECK = Internal.COLLAR_CHECK;
-    /** General counter for ability or event activations. */
+
+    /** General purpose counter for ability or script executions. */
     ScoreboardObjectiveId TIMES_CALLED = Internal.TIMES_CALLED;
-    /** Index selector for cycling flavor text/quotes. */
+
+    /** Randomized seed index used to select flavor text/quotes for the sidebar. */
     ScoreboardObjectiveId RANDOM_QUOTES = Internal.RANDOM_QUOTES;
-    /** Counter for victory points or match wins. */
+
+    /** Counter for match victories or seasonal win points. */
     ScoreboardObjectiveId VICTORY = Internal.VICTORY;
-    /** Flag indicating a player has received their perk. */
+
+    /** State flag confirming a player has successfully redeemed their starting perk. */
     ScoreboardObjectiveId RECEIVED_PERK = Internal.RECEIVED_PERK;
-    /** Flag indicating a player has successfully joined a team. */
+
+    /** State flag used during the automated team-sorting phase. */
     ScoreboardObjectiveId FOUND_TEAM = Internal.FOUND_TEAM;
-    /** Tracks physical distance to markers or center. */
+
+    /** Calculated distance value to world-border or objective markers. */
     ScoreboardObjectiveId DISTANCE = Internal.DISTANCE;
-    /** Base objective for Cartesian position tracking. */
+
+    /** Base objective component for X/Y/Z coordinate tracking. */
     ScoreboardObjectiveId POS = Internal.POS;
-    /** Base objective for entity velocity tracking. */
+
+    /** Base objective component for vector velocity calculations. */
     ScoreboardObjectiveId VELOCITY = Internal.VELOCITY;
-    /** Helper for distance-squared mathematical operations. */
+
+    /** Helper objective used for squaring values in distance-squared algorithms. */
     ScoreboardObjectiveId SQUARE = Internal.SQUARE;
 
     // --- 🛰️ Core Contract ---
 
     /**
-     * Retrieves the formatted PascalCase identifier.
-     * <p><b>Example:</b> {@code GAME_TIME} returns {@code "GameTime"}.</p>
-     * @return The objective string used in Minecraft commands.
+     * Retrieves the final formatted PascalCase string for use in Minecraft commands.
+     * <p>Example: {@code CP_HIGHSCORE} -> {@code "CpHighscore"}.</p>
+     * @return A non-null string containing the objective name.
      */
     String getObjectiveName();
-
-    /**
-     * Validates that the objective name is compatible with Minecraft's engine.
-     * <p>Checks for nullity, whitespace, and the legacy 16-character limit.</p>
-     * @throws IllegalStateException if the name is invalid or too long.
-     */
-    default void validate() throws IllegalStateException {
-        String name = getObjectiveName();
-        if (name == null || name.isBlank()) {
-            throw new IllegalStateException("Scoreboard objective name cannot be null or empty.");
-        }
-        if (name.length() > 16) {
-            throw new IllegalStateException("Objective name '" + name + "' exceeds 16-character limit (" + name.length() + ").");
-        }
-    }
 
     // --- 🛠️ Static Factory Methods ---
 
     /**
-     * Creates a custom objective identifier from a raw string.
-     * <p>Automatically formats the input to PascalCase and validates the result.</p>
-     * @param rawName The raw name (e.g., "capture_progress").
-     * @return A validated {@link ScoreboardObjectiveId}.
-     * @throws NullPointerException if rawName is null.
+     * Instantiates a custom objective identifier from a raw string input.
+     * <p>The input will be strictly formatted to PascalCase (removing underscores/spaces).</p>
+     * @param rawName The unformatted name string; must not be null or blank.
+     * @return A validated {@link ScoreboardObjectiveId} record.
+     * @throws NullPointerException if the rawName is null.
+     * @throws IllegalArgumentException if the rawName is empty or contains only whitespace.
      */
     static ScoreboardObjectiveId custom(String rawName) {
-        return new CustomObjective(Objects.requireNonNull(rawName, "Custom objective name cannot be null."));
+        Objects.requireNonNull(rawName, "Custom Objective Error: Raw name cannot be null.");
+        if (rawName.isBlank()) {
+            throw new IllegalArgumentException("Custom Objective Error: Name cannot be empty or blank.");
+        }
+        return new CustomObjective(rawName);
     }
 
     /**
-     * Creates a numbered version of a base objective.
-     * <p>Example: {@code indexed(CONTROL_POINT, 1)} becomes {@code "ControlPoint1"}.</p>
-     * @param base The base identifier.
-     * @param index The index (must be non-negative).
-     * @return A new validated {@link ScoreboardObjectiveId}.
-     * @throws NullPointerException if base is null.
-     * @throws IllegalArgumentException if index is negative.
+     * Derives a numbered variant of an existing objective.
+     * <p>Used for multi-objective logic like {@code Pos0}, {@code Pos1}, {@code Pos2}.</p>
+     * @param base  The source identifier; must not be null.
+     * @param index The version number; must be non-negative.
+     * @return A new {@link ScoreboardObjectiveId} with the index appended.
+     * @throws NullPointerException if the base objective is null.
+     * @throws IllegalArgumentException if the index is negative.
      */
     static ScoreboardObjectiveId indexed(ScoreboardObjectiveId base, int index) {
-        Objects.requireNonNull(base, "Cannot index a null objective.");
+        Objects.requireNonNull(base, "Indexing Error: The base objective cannot be null.");
         if (index < 0) {
-            throw new IllegalArgumentException("Objective index cannot be negative: " + index);
+            throw new IllegalArgumentException("Indexing Error: Objective index [" + index + "] cannot be negative.");
         }
         return new IndexedObjective(base.getObjectiveName(), index);
     }
 
     /**
-     * Internal utility to convert Snake_Case or Space Case to PascalCase.
-     * @param input The raw input string.
+     * Internal utility to transform raw strings into the Minecraft-standard PascalCase.
+     * <p>Splits by underscores or spaces and capitalizes the first letter of each word.</p>
+     * @param input The raw string to process.
      * @return The formatted PascalCase string.
+     * @throws IllegalArgumentException if the resulting string is invalid or empty.
      */
     private static String formatPascal(String input) {
-        if (input == null || input.isEmpty()) return "";
+        if (input == null || input.isBlank()) {
+            throw new IllegalArgumentException("Formatting Error: Cannot generate PascalCase from null or blank input.");
+        }
+
         try {
-            return Arrays.stream(input.split("[_ ]"))
+            String result = Arrays.stream(input.split("[_ ]"))
                     .filter(s -> !s.isEmpty())
                     .map(s -> Character.toUpperCase(s.charAt(0)) + s.substring(1).toLowerCase())
                     .collect(Collectors.joining());
+
+            if (result.isEmpty()) {
+                throw new IllegalStateException("Formatting Error: Resulting PascalCase string for '" + input + "' is empty.");
+            }
+            return result;
         } catch (Exception e) {
-            return input; // Fallback to raw input if parsing fails
+            throw new IllegalStateException("Formatting Error: Critical failure while parsing '" + input + "'. Details: " + e.getMessage(), e);
         }
     }
 
     // --- 📦 Internal Implementations ---
 
     /**
-     * Internal enum representing the fixed, static registry of objectives.
+     * Static registry of all core objectives used by the system.
      */
     enum Internal implements ScoreboardObjectiveId {
         GAME_TIME, REAL_TIME, SIDEBAR_TIME, HEARTS, APPLES,
@@ -192,8 +222,12 @@ public interface ScoreboardObjectiveId {
         WOLF_AGE, COLLAR_CHECK, TIMES_CALLED, RANDOM_QUOTES, VICTORY,
         RECEIVED_PERK, FOUND_TEAM, DISTANCE, POS, VELOCITY, SQUARE;
 
+        /** Cached PascalCase name to avoid repeated string processing. */
         private final String pascalName;
 
+        /**
+         * Enum constructor that automatically triggers the PascalCase conversion.
+         */
         Internal() {
             this.pascalName = ScoreboardObjectiveId.formatPascal(this.name());
         }
@@ -203,23 +237,29 @@ public interface ScoreboardObjectiveId {
     }
 
     /**
-     * Represents a custom objective created at runtime.
-     * @param rawName The raw string input to be formatted.
+     * Record representing a custom runtime objective.
+     * @param rawName The raw string to be formatted on access.
      */
     record CustomObjective(String rawName) implements ScoreboardObjectiveId {
         @Override public String getObjectiveName() { return ScoreboardObjectiveId.formatPascal(rawName); }
         @Override public String toString() { return getObjectiveName(); }
-        public CustomObjective { this.validate(); } // Compact constructor for immediate validation
+
+        public CustomObjective {
+            Objects.requireNonNull(rawName, "Custom Record Error: Name cannot be null.");
+        }
     }
 
     /**
-     * Represents a versioned/indexed objective.
+     * Record representing an indexed version of a base objective.
      * @param basePascalName The name of the parent objective.
      * @param index The unique version number.
      */
     record IndexedObjective(String basePascalName, int index) implements ScoreboardObjectiveId {
         @Override public String getObjectiveName() { return basePascalName + index; }
         @Override public String toString() { return getObjectiveName(); }
-        public IndexedObjective { this.validate(); } // Compact constructor for immediate validation
+
+        public IndexedObjective {
+            Objects.requireNonNull(basePascalName, "Indexed Record Error: Base name cannot be null.");
+        }
     }
 }

@@ -17,22 +17,28 @@ import java.util.*;
  * (Bossbars) for the current game session.
  * </p>
  * <p>
- * <b>Strict Policy:</b> No fallback coordinates or dummy objects are provided. If
- * configuration is missing or invalid, the class will fail-fast with a clear error
- * to ensure game integrity.
+ * <b>Strict Policy:</b> This class follows a "fail-fast" mechanism. If configuration is
+ * missing or a session is initialized incorrectly, it throws an exception immediately
+ * to prevent the generation of a broken datapack.
  * </p>
  */
 public final class ControlPointRegistry {
 
     // --- 🏛️ Data Fields ---
 
-    /** * The internal pool of all registered control points, indexed by their unique integer ID. */
+    /** * The internal pool of all registered control points, indexed by their unique integer ID.
+     * This represents the complete set of valid locations defined in the application source.
+     */
     private final Map<Integer, ControlPointData> registry;
 
-    /** * The specific subset of control points selected for the current active game session. */
+    /** * The specific subset of control points selected for the current active game session.
+     * Stored statically to provide a global access point for datapack generators.
+     */
     private static final List<ControlPointData> ACTIVE_CONTROL_POINTS = new ArrayList<>();
 
-    /** * The random number generator used for shuffling the objective selection. */
+    /** * The random number generator used for shuffling the master pool to ensure
+     * objective variety across different game sessions.
+     */
     private final Random random;
 
     // --- 🏗️ Constructor ---
@@ -40,10 +46,10 @@ public final class ControlPointRegistry {
     /**
      * Constructs the registry and populates the master pool with default objectives.
      * <p>
-     * After registration, it automatically attempts to initialize the session based on
-     * global configuration.
+     * <b>Note:</b> This constructor initializes the master pool but does not start a session.
+     * The {@code initializeSession()} method must be called explicitly from the entry point.
      * </p>
-     * @throws IllegalStateException if registration of default points or session initialization fails.
+     * @throws IllegalStateException if registration of default points fails due to logic errors.
      */
     public ControlPointRegistry() {
         this.registry = new HashMap<>();
@@ -58,43 +64,42 @@ public final class ControlPointRegistry {
             register(4, ControlPointConfig.MAX_SCORE, ControlPointConfig.ADD_RATE, BlockPos.absolute(-255, 93, -107), BiomeId.OLD_GROWTH_PINE_TAIGA);
             register(5, ControlPointConfig.MAX_SCORE, ControlPointConfig.ADD_RATE, BlockPos.absolute(-185, 72, 296), BiomeId.OLD_GROWTH_SPRUCE_TAIGA);
 
-            // Auto-trigger session setup
-            initializeSession();
         } catch (Exception e) {
-            throw new IllegalStateException("Registry Critical Failure: Could not finalize default setup. " + e.getMessage(), e);
+            throw new IllegalStateException("Registry Critical Failure: Could not populate the master control point pool. " + e.getMessage(), e);
         }
     }
 
     // --- 🚀 Session Management ---
 
     /**
-     * Selects a randomized subset of points from the pool and initializes their Bossbars.
+     * Selects a randomized subset of points from the pool and initializes their UI components.
      * <p>
-     * <b>Constraints:</b>
-     * <ul>
-     * <li>Cannot be called if a session is already active.</li>
-     * <li>Requires a non-zero amount defined in {@link ControlPointConfig}.</li>
-     * </ul>
+     * This transitions the registry from a dormant state to an "Active Session".
+     * It generates Bossbar metadata for each selected point based on its world coordinates.
      * </p>
-     * @throws IllegalStateException if selection fails or the session is already initialized.
+     * @throws IllegalStateException if a session is already active or if the randomized selection is empty.
+     * @throws RuntimeException if Bossbar assignment fails due to underlying builder errors.
      */
     public void initializeSession() {
-        // Guard: Prevent re-shuffling while a game is active
+        // Guard: Ensure we do not overwrite an active session
         if (!ACTIVE_CONTROL_POINTS.isEmpty()) {
-            throw new IllegalStateException("Session Error: Cannot re-initialize session. Active points already exist.");
+            throw new IllegalStateException("Session Error: Cannot re-initialize session. Active points already exist. " +
+                    "Clear the current session before attempting a re-initialization.");
         }
 
+        // Retrieve selection based on global configuration
         List<ControlPointData> selection = getRandom(ControlPointConfig.AMOUNT);
 
         if (selection.isEmpty()) {
-            throw new IllegalStateException("Session Error: Randomized selection returned zero points. Check pool size or config.");
+            throw new IllegalStateException("Session Error: Randomized selection returned zero points. " +
+                    "Ensure ControlPointConfig.AMOUNT is > 0 and the registry pool is not empty.");
         }
 
         try {
             for (int i = 0; i < selection.size(); i++) {
                 ControlPointData cp = selection.get(i);
 
-                // UI Display Name: "CP1: [X, Y, Z] (Biome)"
+                // UI Labeling: "CP[Number]: [X, Y, Z] ([Biome])"
                 String bossbarName = String.format("CP%d: %s (%s)",
                         (i + 1),
                         cp.getPos().title(),
@@ -113,41 +118,51 @@ public final class ControlPointRegistry {
 
             ACTIVE_CONTROL_POINTS.addAll(selection);
         } catch (Exception e) {
-            throw new RuntimeException("Session Error: Failed to assign Bossbars to selected points: " + e.getMessage(), e);
+            throw new RuntimeException("Session Error: Critical failure during Bossbar metadata generation: " + e.getMessage(), e);
         }
     }
 
     /**
+     * Resets the active session, clearing all selected points and their associated Bossbar data.
+     * <p>
+     * Essential for unit testing or multi-stage generation where a fresh state is required.
+     * </p>
+     */
+    public static void clearSession() {
+        ACTIVE_CONTROL_POINTS.clear();
+    }
+
+    /**
      * Retrieves the unmodifiable list of objectives active for the current session.
-     * @return Immutable {@link List} of {@link ControlPointData}.
-     * @throws IllegalStateException if the session has not been initialized yet.
+     * @return An unmodifiable view of the active {@link ControlPointData} list.
+     * @throws IllegalStateException if the session has not been initialized.
      */
     public static List<ControlPointData> getActivePoints() {
         if (ACTIVE_CONTROL_POINTS.isEmpty()) {
-            throw new IllegalStateException("Access Error: No active control points found. initializeSession() must be called first.");
+            throw new IllegalStateException("Access Error: Request for active points denied. initializeSession() must be executed first.");
         }
-        return List.copyOf(ACTIVE_CONTROL_POINTS);
+        return Collections.unmodifiableList(ACTIVE_CONTROL_POINTS);
     }
 
     // --- 🧪 Pool Registration & Logic ---
 
     /**
-     * Registers a new Control Point into the master pool.
-     * @param id    The unique numerical ID.
-     * @param max   The point cap for capture.
-     * @param rate  How many points are added per tick.
-     * @param pos   The non-null {@link BlockPos} location.
-     * @param biome The non-null {@link BiomeId} context.
-     * @return The newly created {@link ControlPointData}.
-     * @throws NullPointerException if pos or biome is null.
-     * @throws IllegalArgumentException if the ID is already registered.
+     * Registers a new Control Point objective into the master registry pool.
+     * @param id    The unique numerical ID for this point.
+     * @param max   The point cap required to fully capture the objective.
+     * @param rate  The progression increment added per game tick.
+     * @param pos   The physical location in the world (must be non-null).
+     * @param biome The biome identifier for context (must be non-null).
+     * @return The newly instantiated {@link ControlPointData} object.
+     * @throws NullPointerException if {@code pos} or {@code biome} is null.
+     * @throws IllegalArgumentException if the provided ID is already registered in the pool.
      */
     public ControlPointData register(int id, int max, int rate, BlockPos pos, BiomeId biome) {
-        Objects.requireNonNull(pos, "Registration Error [ID " + id + "]: BlockPos cannot be null.");
-        Objects.requireNonNull(biome, "Registration Error [ID " + id + "]: BiomeId cannot be null.");
+        Objects.requireNonNull(pos, "Registration Error [ID " + id + "]: BlockPos is required and cannot be null.");
+        Objects.requireNonNull(biome, "Registration Error [ID " + id + "]: BiomeId is required and cannot be null.");
 
         if (this.registry.containsKey(id)) {
-            throw new IllegalArgumentException("Registration Error: Control Point ID " + id + " is already in use.");
+            throw new IllegalArgumentException("Registration Error: The Control Point ID " + id + " is already present in the registry.");
         }
 
         ControlPointData data = new ControlPointData(id, max, rate, pos, biome);
@@ -156,14 +171,15 @@ public final class ControlPointRegistry {
     }
 
     /**
-     * Returns a random subset of points from the pool.
-     * @param count The number of points to select.
-     * @return A randomized {@link List} of selected objectives.
-     * @throws IllegalArgumentException if count is higher than available registry size.
+     * Shuffles the registry and returns a specific count of objectives.
+     * @param count The number of points to select for the session.
+     * @return A randomized {@link List} containing the selected objectives.
+     * @throws IllegalArgumentException if the requested count exceeds the available registry size.
      */
     public List<ControlPointData> getRandom(int count) {
         if (count > this.registry.size()) {
-            throw new IllegalArgumentException(String.format("Selection Error: Registry only contains %d points, but %d were requested.", this.registry.size(), count));
+            throw new IllegalArgumentException(String.format("Selection Error: Registry size is %d, but %d points were requested. " +
+                    "Check your ControlPointConfig settings.", this.registry.size(), count));
         }
 
         List<ControlPointData> allPoints = new ArrayList<>(this.registry.values());
@@ -175,25 +191,29 @@ public final class ControlPointRegistry {
     // --- 🔍 Accessors ---
 
     /**
-     * Retrieves a point by ID from the registry pool.
+     * Retrieves a specific point from the master pool by its unique ID.
      * @param id The ID to search for.
      * @return The found {@link ControlPointData}.
-     * @throws NoSuchElementException if the ID does not exist.
+     * @throws NoSuchElementException if the ID is not registered in the pool.
      */
     public ControlPointData getById(int id) {
         ControlPointData data = this.registry.get(id);
         if (data == null) {
-            throw new NoSuchElementException("Access Error: No control point registered with ID " + id);
+            throw new NoSuchElementException("Access Error: No control point is registered with the ID " + id);
         }
         return data;
     }
 
-    /** @return An unmodifiable view of every registered objective. */
+    /** * Returns all objectives currently registered in the master pool.
+     * @return An unmodifiable view of all registered points.
+     */
     public List<ControlPointData> getAll() {
         return List.copyOf(this.registry.values());
     }
 
-    /** @return The total number of objectives available in the pool. */
+    /** * Returns the total capacity of the master pool.
+     * @return The number of objectives registered.
+     */
     public int size() {
         return this.registry.size();
     }
