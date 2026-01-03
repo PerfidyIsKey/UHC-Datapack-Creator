@@ -1,10 +1,12 @@
 package uhc.game.control_points;
 
 import uhc.arguments.block.BlockPos;
+import uhc.game.bossbar.BossbarData;
 import uhc.resource.world.BiomeId;
 import uhc.resource.world.DimensionId;
 
 import java.util.Objects;
+import java.util.Optional;
 
 /**
  * 🚩 **Control Point Data**
@@ -14,54 +16,55 @@ import java.util.Objects;
  * context required for game-loop processing.
  * </p>
  * <p>
- * To ensure environmental consistency, this model automatically derives the
- * {@link DimensionId} from the provided {@link BiomeId} during instantiation.
+ * While the core identity and spatial fields are final, it supports an optional
+ * {@link BossbarData} component that can be attached after instantiation.
  * </p>
  */
 public final class ControlPointData {
 
     // --- 🔑 Identity & Scoring Properties ---
 
-    /** * The unique numerical identifier for this specific objective.
-     */
+    /** * The unique numerical identifier for this specific objective instance. */
     private final int id;
 
-    /** * The maximum progress score required to successfully capture this point.
-     */
+    /** * The maximum progress score required to successfully achieve a 100% capture. */
     private final int max;
 
-    /** * The amount of progress score contributed per occupancy interval.
-     */
+    /** * The numerical increment added to the progress score per occupancy interval. */
     private final int rate;
 
     // --- 📍 Spatial & Environmental Context ---
 
-    /** * The physical center location of the control point in the Minecraft world.
-     */
+    /** * The physical center coordinates of the control point in the Minecraft world. */
     private final BlockPos pos;
 
-    /** * The biome associated with the point's location, used for environmental effects.
-     */
+    /** * The biome identifier at the point's location, used for specialized logic or effects. */
     private final BiomeId biome;
 
-    /** * The dimension (Overworld, Nether, etc.) where this point resides.
-     * <p>This is resolved automatically via {@link BiomeId#getDimension()}.</p>
+    /** * The dimension (Overworld, Nether, or End) where this objective is located.
+     * <p>This is resolved automatically from the provided {@link BiomeId}.</p>
      */
     private final DimensionId dimension;
+
+    // --- 📊 Optional Visuals ---
+
+    /** * The optional boss bar configuration used to display capture progress to players.
+     * <p>This field is non-final to allow for late-binding initialization.</p>
+     */
+    private BossbarData bossbar;
 
     // --- 🏗️ Constructor ---
 
     /**
      * Constructs a new validated instance of {@code ControlPointData}.
-     * <p>Validation ensures that spatial and environmental data are non-null and that
-     * the dimension is correctly mapped from the biome.</p>
+     * <p>Derives the dimension from the biome and ensures all mandatory spatial data is present.</p>
      *
-     * @param id    The unique ID of the point.
-     * @param max   The total score required for capture.
-     * @param rate  The score increment granted to occupants per interval.
-     * @param pos   The physical {@link BlockPos}. Cannot be null.
-     * @param biome The {@link BiomeId} which dictates the dimension. Cannot be null.
-     * @throws IllegalArgumentException if validation fails or parameters are null.
+     * @param id    The unique objective ID.
+     * @param max   The progress threshold for capture.
+     * @param rate  The progress speed.
+     * @param pos   The non-null {@link BlockPos} location.
+     * @param biome The non-null {@link BiomeId} environment.
+     * @throws IllegalArgumentException if null arguments are passed or dimension resolution fails.
      */
     public ControlPointData(int id, int max, int rate, BlockPos pos, BiomeId biome) {
         try {
@@ -69,90 +72,92 @@ public final class ControlPointData {
             this.max = max;
             this.rate = rate;
 
-            // Strict validation of mandatory spatial objects.
             this.pos = Objects.requireNonNull(pos, "Spatial position (BlockPos) cannot be null.");
             this.biome = Objects.requireNonNull(biome, "Environmental context (BiomeId) cannot be null.");
 
-            // Automated resolution of dimension through biome association.
+            // Derive dimension context from the biome
             this.dimension = biome.getDimension();
 
             if (this.dimension == null) {
-                throw new IllegalStateException("Dimension could not be resolved from biome: " + biome.name());
+                throw new IllegalStateException("DimensionId could not be resolved from BiomeId: " + biome);
             }
         } catch (Exception e) {
-            // Error Catching: Wrap and rethrow to provide clear feedback during registry population.
-            throw new IllegalArgumentException("Initialization failed for ControlPointData: " + e.getMessage());
+            // Error Catching: Wrap potential NPEs or StateExceptions for cleaner engine logs
+            throw new IllegalArgumentException("ControlPointData initialization failed: " + e.getMessage());
         }
     }
 
     // --- 📝 Identity Logic ---
 
     /**
-     * Provides the standardized internal identifier string for the control point.
-     * * @return The string {@code "cp"} appended with the numerical ID (e.g., "cp5").
+     * Generates the internal technical name used for command identifiers and tags.
+     * @return The string "cp" followed by the numerical ID (e.g., "cp1").
      */
     public String name() {
         try {
             return "cp" + id;
         } catch (Exception e) {
-            // Fallback to prevent string concatenation failures in logs.
             return "cp_unknown";
         }
     }
 
-    // --- 🔍 Accessors ---
+    // --- 🔍 Accessors & Mutators ---
 
-    /** * @return The unique numerical identifier.
+    /** * Associates a {@link BossbarData} configuration with this control point.
+     * @param bossbar The configuration for the visual progress bar.
      */
-    public int getId() {
-        return id;
+    public void bossbar(BossbarData bossbar) {
+        try {
+            // Ensuring we don't accidentally set a null reference that would break getters
+            this.bossbar = Objects.requireNonNull(bossbar, "BossbarData cannot be null.");
+        } catch (Exception e) {
+            // Error Catching: Maintains stability if a null bar is passed
+        }
     }
 
-    /** * @return The capture score ceiling required for a successful objective completion.
+    /** * Retrieves the optional boss bar configuration.
+     * @return An {@link Optional} containing the boss bar data if set, otherwise empty.
      */
-    public int getMax() {
-        return max;
+    public Optional<BossbarData> getBossbar() {
+        try {
+            return Optional.ofNullable(bossbar);
+        } catch (Exception e) {
+            return Optional.empty();
+        }
     }
 
-    /** * @return The progress accumulation rate per occupancy tick/interval.
-     */
-    public int getRate() {
-        return rate;
-    }
+    /** @return The unique instance ID. */
+    public int getId() { return id; }
 
-    /** * @return The physical {@link BlockPos} of the objective.
-     */
-    public BlockPos getPos() {
-        return pos;
-    }
+    /** @return The maximum capture score limit. */
+    public int getMax() { return max; }
 
-    /** * @return The {@link BiomeId} environment assigned to this point.
-     */
-    public BiomeId getBiome() {
-        return biome;
-    }
+    /** @return The capture progress accumulation rate. */
+    public int getRate() { return rate; }
 
-    /** * @return The {@link DimensionId} resolved during construction.
-     */
-    public DimensionId getDimension() {
-        return dimension;
-    }
+    /** @return The physical {@link BlockPos} coordinates. */
+    public BlockPos getPos() { return pos; }
 
-    // --- ⚙️ Utility Methods ---
+    /** @return The {@link BiomeId} environment. */
+    public BiomeId getBiome() { return biome; }
+
+    /** @return The resolved {@link DimensionId}. */
+    public DimensionId getDimension() { return dimension; }
+
+    // --- ⚙️ Utility Overrides ---
 
     /**
-     * Generates a descriptive summary of the control point data.
-     * * @return A formatted string containing identity, dimension, and position.
+     * Provides a formatted string representation of the data model.
+     * @return A string containing ID, Name, Dimension, and Bossbar status.
      */
     @Override
     public String toString() {
         try {
-            // Using internal getters to ensure safe access during string formation.
-            return String.format("ControlPointData[id=%d, name=%s, dimension=%s, pos=%s]",
-                    getId(), name(), getDimension(), getPos());
+            return String.format("ControlPointData[id=%d, name=%s, dimension=%s, hasBossbar=%b]",
+                    id, name(), dimension, (bossbar != null));
         } catch (Exception e) {
-            // Error Catching: Prevent logging from crashing during debug sessions.
-            return "ControlPointData{Error: " + e.getMessage() + "}";
+            // Error Catching: Ensures logging never triggers a crash
+            return "ControlPointData{Error during serialization}";
         }
     }
 }
