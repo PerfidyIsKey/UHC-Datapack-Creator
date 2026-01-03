@@ -87,7 +87,7 @@ public final class BossbarData {
             Objects.requireNonNull(cp, "Source ControlPointData cannot be null.");
 
             // Generate the unique namespaced ID from the Control Point's name
-            BossbarId barId = BossbarId.of(cp.name());
+            BossbarId barId = BossbarId.of(cp.name().getTagName());
 
             // Build a descriptive title: "Name: x, y, z (Dimension)"
             String rawTitle = String.format("%s: %s (%s)",

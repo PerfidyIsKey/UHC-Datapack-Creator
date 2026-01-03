@@ -2,6 +2,7 @@ package uhc.game.control_points;
 
 import uhc.arguments.block.BlockPos;
 import uhc.game.bossbar.BossbarData;
+import uhc.resource.tag.EntityTag;
 import uhc.resource.world.BiomeId;
 import uhc.resource.world.DimensionId;
 
@@ -98,11 +99,11 @@ public final class ControlPointData {
      * * @return The string "cp" followed by the numerical ID.
      * @throws IllegalStateException if the ID is negative (unexpected state).
      */
-    public String name() {
+    public EntityTag name() {
         if (this.id < 0) {
             throw new IllegalStateException("Cannot generate name: Control Point ID is negative (" + this.id + ")");
         }
-        return "cp" + this.id;
+        return EntityTag.indexed(EntityTag.CP, id);
     }
 
     // --- 🔍 Accessors & Mutators ---
