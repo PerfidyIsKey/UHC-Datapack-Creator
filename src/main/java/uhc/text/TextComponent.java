@@ -11,107 +11,135 @@ import uhc.text.color.ColorType;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * 💬 **Universal Minecraft Text Component Builder**
  * <p>
  * This class provides a fluent API for creating complex Minecraft JSON text components.
- * It leverages Jackson for high-performance, safe serialization, supporting all modern
- * Minecraft features including translations, selectors, and interactive events.
+ * It leverages Jackson for serialization and supports deep-cloning of existing components.
  * </p>
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class TextComponent {
 
+    // --- 🔧 Core Serialization ---
+
     /** Centralized Jackson Mapper configured to handle Java 18 record parameter names. */
     private static final ObjectMapper MAPPER = new ObjectMapper()
             .registerModule(new ParameterNamesModule());
 
-    /** The type of component (e.g., "translatable"). Usually inferred by fields present. */
+    // --- 📄 Fields ---
+
     @JsonProperty("type")
     private String type;
 
-    /** Raw literal text content. Used for standard messages. */
     @JsonProperty("text")
     private String text;
 
-    /** Target selector string (e.g., "@a", "@p"). Displays the names of targeted entities. */
     @JsonProperty("selector")
     private String selector;
 
-    /** A keybind identifier (e.g., "key.jump"). Displays the player's bound key. */
     @JsonProperty("keybind")
     private String keybind;
 
-    /** The translation key identifier (e.g., "item.minecraft.diamond_sword"). */
     @JsonProperty("translate")
     private String translate;
 
-    /** Text to display if the translation key is missing on the client side. */
     @JsonProperty("fallback")
     private String fallback;
 
-    /** Arguments used to fill placeholders (%s) in a translatable component. */
     @JsonProperty("with")
     private List<TextComponent> with;
 
-    /** The color of the text. Can be a named color or a hex code (#RRGGBB). */
     @JsonProperty("color")
     private String color;
 
-    /** Whether the text should be rendered in **bold**. */
     @JsonProperty("bold")
     private Boolean bold;
 
-    /** Whether the text should be rendered in *italics*. */
     @JsonProperty("italic")
     private Boolean italic;
 
-    /** Whether the text should be obfuscated (magic scrambled characters). */
     @JsonProperty("obfuscated")
     private Boolean obfuscated;
 
-    /** Text inserted into the player's chat bar when they shift-click this component. */
     @JsonProperty("insertion")
     private String insertion;
 
-    /** Defines an action (like running a command) when the component is clicked. */
     @JsonProperty("click_event")
     private ClickEvent clickEvent;
 
-    /** Defines a tooltip or information to show when the component is hovered over. */
     @JsonProperty("hover_event")
     private HoverEvent hoverEvent;
 
-    /** A list of child components that follow this one and inherit its formatting. */
     @JsonProperty("extra")
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private List<TextComponent> extra;
 
-    /** Private constructor to enforce the use of static factory methods. */
+    // --- 🏗️ Constructors & Factories ---
+
+    /** Private constructor to enforce factory usage. */
     private TextComponent() {}
 
-    // --- Static Factory Methods ---
-
     /**
-     * Creates a literal text component.
-     * @param text The raw text to display.
-     * @return A new TextComponent instance.
+     * Performs a deep copy of an existing TextComponent.
+     * <p>
+     * Every field is copied, and nested lists (extra, with) are recursively cloned
+     * to ensure the new instance has no shared references with the source.
+     * </p>
+     * @param other The component to copy.
+     * @return A new, independent TextComponent instance.
+     * @throws NullPointerException if the input component is null.
      */
+    public static TextComponent load(TextComponent other) {
+        Objects.requireNonNull(other, "TextComponent load failed: Source component cannot be null.");
+
+        TextComponent tc = new TextComponent();
+        try {
+            // Copy basic properties
+            tc.type = other.type;
+            tc.text = other.text;
+            tc.selector = other.selector;
+            tc.keybind = other.keybind;
+            tc.translate = other.translate;
+            tc.fallback = other.fallback;
+            tc.color = other.color;
+            tc.bold = other.bold;
+            tc.italic = other.italic;
+            tc.obfuscated = other.obfuscated;
+            tc.insertion = other.insertion;
+            tc.clickEvent = other.clickEvent;
+            tc.hoverEvent = other.hoverEvent;
+
+            // Deep copy 'with' list (for translatables)
+            if (other.with != null) {
+                tc.with = other.with.stream()
+                        .map(TextComponent::load)
+                        .collect(Collectors.toCollection(ArrayList::new));
+            }
+
+            // Deep copy 'extra' list (child components)
+            if (other.extra != null) {
+                tc.extra = other.extra.stream()
+                        .map(TextComponent::load)
+                        .collect(Collectors.toCollection(ArrayList::new));
+            }
+
+            return tc;
+        } catch (Exception e) {
+            throw new RuntimeException("TextComponent load failed: Deep copy operation encountered an error: " + e.getMessage(), e);
+        }
+    }
+
+    /** Creates a literal text component. */
     public static TextComponent text(String text) {
         TextComponent tc = new TextComponent();
         tc.text = text;
         return tc;
     }
 
-    /**
-     * Creates a translatable component based on a language key.
-     * @param key The translation identifier (e.g., "chat.type.text").
-     * @param fallback Optional text to show if the key is missing on the client.
-     * @param with Optional components to fill the placeholders in the translation.
-     * @return A new translatable TextComponent.
-     * @throws NullPointerException if the key is null.
-     */
+    /** Creates a translatable component. */
     public static TextComponent translatable(String key, String fallback, TextComponent... with) {
         TextComponent tc = new TextComponent();
         tc.type = "translatable";
@@ -123,12 +151,7 @@ public class TextComponent {
         return tc;
     }
 
-    /**
-     * Creates a component that displays an entity's name based on a selector.
-     * @param target The {@link Entity} selector object.
-     * @return A new selector TextComponent.
-     * @throws NullPointerException if target is null.
-     */
+    /** Creates a selector component. */
     public static TextComponent selector(Entity target) {
         Objects.requireNonNull(target, "Selector target cannot be null.");
         TextComponent tc = new TextComponent();
@@ -136,15 +159,8 @@ public class TextComponent {
         return tc;
     }
 
-    // --- Styling Methods ---
+    // --- 🎨 Styling & Interactivity ---
 
-    /**
-     * Sets the color of the text using a type-safe {@link ColorType}.
-     * Supports named colors (TextColor) and hex codes (HexColor).
-     * @param color The color implementation. If null, formatting is removed.
-     * @return This TextComponent for chaining.
-     * @throws IllegalArgumentException if the provided ColorType returns a blank string.
-     */
     public TextComponent color(ColorType color) {
         if (color == null) {
             this.color = null;
@@ -152,57 +168,41 @@ public class TextComponent {
         }
         String colorValue = color.getColor();
         if (colorValue == null || colorValue.isBlank()) {
-            throw new IllegalArgumentException("The provided ColorType returned an invalid color string.");
+            throw new IllegalArgumentException("Styling failed: ColorType returned an invalid color string for " + this.text);
         }
         this.color = colorValue;
         return this;
     }
 
-    /** Toggles bold formatting. */
     public TextComponent bold(Boolean bold) {
         this.bold = bold;
         return this;
     }
 
-    /** Toggles italic formatting. */
     public TextComponent italic(Boolean italic) {
         this.italic = italic;
         return this;
     }
 
-    /** Toggles obfuscated (magic) formatting. */
     public TextComponent obfuscated(Boolean obfuscated) {
         this.obfuscated = obfuscated;
         return this;
     }
 
-    /**
-     * Appends a child component to this component's 'extra' list.
-     * @param other The component to be added.
-     * @param keepFormat If true, the child inherits parent styles. If false, styles are reset.
-     * @return This parent component for chaining.
-     */
     public TextComponent append(TextComponent other, boolean keepFormat) {
-        if (other != null) {
-            if (!keepFormat) {
-                other.resetFormatting();
-            }
-            if (this.extra == null) this.extra = new ArrayList<>();
-            this.extra.add(other);
+        Objects.requireNonNull(other, "Append failed: Cannot append a null TextComponent.");
+        if (!keepFormat) {
+            other.resetFormatting();
         }
+        if (this.extra == null) this.extra = new ArrayList<>();
+        this.extra.add(other);
         return this;
     }
 
-    /**
-     * Appends a child component, defaulting keepFormat to false (starts plain).
-     * @param other The component to be added.
-     * @return This parent component for chaining.
-     */
     public TextComponent append(TextComponent other) {
         return append(other, false);
     }
 
-    /** Clears all formatting and interactivity to ensure a "plain" start for child components. */
     private void resetFormatting() {
         this.color = null;
         this.bold = null;
@@ -213,34 +213,23 @@ public class TextComponent {
         this.hoverEvent = null;
     }
 
-    // --- Interactivity Methods ---
-
-    /** Sets the text to be pasted into the chat bar when shift-clicked. */
     public TextComponent insertion(String text) {
         this.insertion = text;
         return this;
     }
 
-    /** Assigns a type-safe {@link ClickEvent} to the component. */
     public TextComponent click(ClickEvent event) {
         this.clickEvent = event;
         return this;
     }
 
-    /** Assigns a type-safe {@link HoverEvent} to the component. */
     public TextComponent hover(HoverEvent event) {
         this.hoverEvent = event;
         return this;
     }
 
-    // --- Build Logic ---
+    // --- ⚙️ Build Logic ---
 
-    /**
-     * Serializes this component into a Minecraft-compatible JSON string.
-     * Optimizes simple text into a raw string to reduce JSON overhead.
-     * @return Valid JSON string.
-     * @throws RuntimeException if Jackson fails to serialize.
-     */
     public String build() {
         try {
             if (isPlainLiteral()) {
@@ -248,11 +237,10 @@ public class TextComponent {
             }
             return MAPPER.writeValueAsString(this);
         } catch (JsonProcessingException e) {
-            throw new RuntimeException("Critical failure during TextComponent serialization", e);
+            throw new RuntimeException("Critical failure: TextComponent serialization failed for " + this.text, e);
         }
     }
 
-    /** Checks if the component is a literal string with no styles or extra metadata. */
     private boolean isPlainLiteral() {
         return text != null && type == null && translate == null && selector == null &&
                 keybind == null && color == null && bold == null && italic == null &&
