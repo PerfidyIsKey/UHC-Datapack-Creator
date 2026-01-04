@@ -81,12 +81,10 @@ public class GodModeFunction implements DatapackFunction {
 
             // SECTION 1: Status Effects
             currentFunction.addLine(Comment.create("SECTION 1: Permanent Resistance V"));
-            currentFunction.addLine(EffectCommand.create(EffectCommand.EffectAction.GIVE)
-                    .targets(Entity.ofSelector(TargetSelector.SENDER))
-                    .effect(EffectId.RESISTANCE)
-                    .seconds(99999)
-                    .amplifier(4)
-                    .hideParticles(true));
+            currentFunction.addLine(EffectCommand.giveInfinite(Entity.ofSelector(TargetSelector.SENDER),
+                    EffectId.RESISTANCE,
+                    4,
+                    true));
 
             currentFunction.addLine(Comment.create(" "));
 

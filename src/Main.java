@@ -1272,26 +1272,23 @@ public class Main {
                 .replaceWith(ItemStack.create(DynamicItem.tool(ToolMaterial.IRON, ToolPiece.SWORD)))
                 .build());
 
-        fileCommands.add(Effect.create(EffectCommand.EffectAction.GIVE)
-                .targets(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
-                .effect(EffectId.REGENERATION)
-                .seconds(1)
-                .amplifier(255)
-                .hideParticles(true)
-                .build());
+        fileCommands.add(EffectCommand.give(Entity.ofSelector(TargetSelector.ALL_PLAYERS),
+                        EffectId.REGENERATION,
+                        1,
+                        255,
+                        true)
+                        .generate());
 
         return new FileData(FileName.equip_gear, fileCommands);
     }
 
     private FileData GodMode() {
         ArrayList<String> fileCommands = new ArrayList<>();
-        fileCommands.add(Effect.create(EffectCommand.EffectAction.GIVE)
-                .targets(Entity.ofSelector(TargetSelector.SENDER))
-                .effect(EffectId.RESISTANCE)
-                .seconds(99999)
-                .amplifier(4)
-                .hideParticles(true)
-                .build());
+        fileCommands.add(EffectCommand.giveInfinite(Entity.ofSelector(TargetSelector.SENDER),
+                        EffectId.RESISTANCE,
+                        4,
+                        true)
+                .generate());
         fileCommands.add(ItemCommand.create(ItemCommand.ItemAction.REPLACE_WITH,
                         ItemTargetEntity.create(Entity.ofSelector(TargetSelector.SENDER)))
                 .slot(ItemSlot.MAINHAND)
@@ -1704,9 +1701,8 @@ public class Main {
         fileCommands.add(Schedule.callFunction(FileName.clear_schedule));
 
         // Clear all player effects
-        fileCommands.add(Effect.create(EffectCommand.EffectAction.CLEAR)
-                .targets(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
-                .build());
+        fileCommands.add(EffectCommand.clear(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
+                .generate());
 
         // Give admin start potions
         fileCommands.add(Schedule.callFunction(FileName.start_potions));
@@ -1830,15 +1826,13 @@ public class Main {
         ArrayList<String> fileCommands = new ArrayList<>();
 
         // Remove resistance and give regeneration
-        fileCommands.add(Effect.create(EffectCommand.EffectAction.CLEAR)
-                .targets(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
-                .build());
-        fileCommands.add(Effect.create(EffectCommand.EffectAction.GIVE)
-                .targets(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
-                .effect(EffectId.REGENERATION)
-                .seconds(1)
-                .amplifier(255)
-                .build());
+        fileCommands.add(EffectCommand.clear(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
+                .generate());
+        fileCommands.add(EffectCommand.give(Entity.ofSelector(TargetSelector.ALL_PLAYERS),
+                        EffectId.REGENERATION,
+                        1,
+                        255)
+                .generate());
 
         // Make players fall
         fileCommands.add(TagCommand.target(Entity.ofSelector(
@@ -1984,13 +1978,11 @@ public class Main {
         fileCommands.add(scoreboard.Set("@a", getObjectiveByName(Objective.Kills), 0));
 
         // Make players invulnerable
-        fileCommands.add(Effect.create(EffectCommand.EffectAction.GIVE)
-                .targets(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
-                .effect(EffectId.RESISTANCE)
-                .seconds(99999)
-                .amplifier(4)
-                .hideParticles(true)
-                .build());
+        fileCommands.add(EffectCommand.giveInfinite(Entity.ofSelector(TargetSelector.ALL_PLAYERS),
+                        EffectId.RESISTANCE,
+                        4,
+                        true)
+                .generate());
 
         return new FileData(FileName.into_calls, fileCommands);
     }
@@ -2053,10 +2045,9 @@ public class Main {
                 .generate());
 
         // Remove resistance
-        fileCommands.add(Effect.create(EffectCommand.EffectAction.CLEAR)
-                .targets(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
-                .effect(EffectId.RESISTANCE)
-                .build());
+        fileCommands.add(EffectCommand.clear(Entity.ofSelector(TargetSelector.ALL_PLAYERS),
+                        EffectId.RESISTANCE)
+                .generate());
 
         // Set scoreboard values
         fileCommands.add(scoreboard.Set("@a", getObjectiveByName(Objective.Hearts), 20));
@@ -2076,25 +2067,22 @@ public class Main {
                 .generate());
 
         // Give potion effect
-        fileCommands.add(Effect.create(EffectCommand.EffectAction.GIVE)
-                .targets(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
-                .effect(EffectId.REGENERATION)
-                .seconds(1)
-                .amplifier(255)
-                .build());
-        fileCommands.add(Effect.create(EffectCommand.EffectAction.GIVE)
-                .targets(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
-                .effect(EffectId.SATURATION)
-                .seconds(1)
-                .amplifier(255)
-                .build());
-        fileCommands.add(Effect.create(EffectCommand.EffectAction.GIVE)
-                .targets(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
-                .effect(EffectId.RESISTANCE)
-                .seconds(20 * 60)
-                .amplifier(2)
-                .hideParticles(true)
-                .build());
+        fileCommands.add(EffectCommand.give(Entity.ofSelector(TargetSelector.ALL_PLAYERS),
+                        EffectId.REGENERATION,
+                        1,
+                        255)
+                .generate());
+        fileCommands.add(EffectCommand.give(Entity.ofSelector(TargetSelector.ALL_PLAYERS),
+                        EffectId.SATURATION,
+                        1,
+                        255)
+                .generate());
+        fileCommands.add(EffectCommand.give(Entity.ofSelector(TargetSelector.ALL_PLAYERS),
+                        EffectId.RESISTANCE,
+                        20 * 60,
+                        2,
+                        true)
+                .generate());
 
         // Clear player inventories
         fileCommands.add(ClearCommand.create()
@@ -3424,16 +3412,13 @@ public class Main {
                             AttributeId.MAX_HEALTH,
                             i + 1));
         }
-        fileCommands.add(Effect.create(EffectCommand.EffectAction.GIVE)
-                .targets(respawnPlayer)
-                .effect(EffectId.HEALTH_BOOST)
-                .seconds(1)
-                .amplifier(0)
-                .build());
-        fileCommands.add(Effect.create(EffectCommand.EffectAction.CLEAR)
-                .targets(respawnPlayer)
-                .effect(EffectId.HEALTH_BOOST)
-                .build());
+        fileCommands.add(EffectCommand.give(respawnPlayer,
+                        EffectId.HEALTH_BOOST,
+                        1)
+                .generate());
+        fileCommands.add(EffectCommand.clear(respawnPlayer,
+                        EffectId.HEALTH_BOOST)
+                        .generate());
         fileCommands.add(Execute.As(respawnPlayerOld) +
                 AttributeCommand.setBase(
                         Entity.ofSelector(TargetSelector.SENDER),
@@ -3979,9 +3964,8 @@ public class Main {
                     Schedule.callFunction(functions[i]));
 
             fileCommands.add(Execute.If("@a[nbt={active_effects:[{id:\"" + effects[i] + "\"}]}]") +
-                    EffectCommand.create(EffectCommand.EffectAction.CLEAR)
-                            .targets(Entity.ofSelector(TargetSelector.ALL_ENTITIES))
-                            .effect(effects[i])
+                    EffectCommand.clear(Entity.ofSelector(TargetSelector.ALL_ENTITIES),
+                                    effects[i])
                             .generate());
         }
 
