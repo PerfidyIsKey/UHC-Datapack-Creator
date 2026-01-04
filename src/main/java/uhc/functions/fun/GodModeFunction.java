@@ -1,4 +1,4 @@
-package uhc.functions;
+package uhc.functions.fun;
 
 import uhc.arguments.entity.Entity;
 import uhc.arguments.entity.TargetSelector;
@@ -13,6 +13,7 @@ import uhc.core.Datapack;
 import uhc.core.Namespace;
 import uhc.arguments.item.slot.ItemSlot;
 import uhc.data.nbt.item.components.*;
+import uhc.functions.DatapackFunction;
 import uhc.resource.effect.EffectId;
 import uhc.resource.enchantment.EnchantmentId;
 import uhc.resource.item.ItemId;
