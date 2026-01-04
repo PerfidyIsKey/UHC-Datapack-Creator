@@ -5,6 +5,7 @@ import uhc.core.DatapackConfig;
 import uhc.core.Generator;
 import uhc.core.Namespace;
 import uhc.functions.*;
+import uhc.functions.control_point.ControlPointVisuals;
 import uhc.game.control_points.ControlPointRegistry;
 import uhc.logging.CustomConsoleFormatter;
 

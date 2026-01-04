@@ -1,4 +1,4 @@
-package uhc.functions;
+package uhc.functions.control_point;
 
 import uhc.arguments.block.Block;
 import uhc.arguments.entity.Entity;
@@ -9,6 +9,7 @@ import uhc.components.functions.Function;
 import uhc.components.functions.FunctionPath;
 import uhc.core.Datapack;
 import uhc.core.Namespace;
+import uhc.functions.DatapackFunction;
 import uhc.game.control_points.ControlPointRegistry;
 import uhc.game.team.TeamData;
 import uhc.game.team.TeamRegistry;
