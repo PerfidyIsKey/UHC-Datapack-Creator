@@ -1,6 +1,5 @@
 package uhc.functions.init;
 
-import uhc.command.commands.Comment;
 import uhc.command.commands.SayCommand;
 import uhc.components.functions.FunctionPath;
 import uhc.components.tags.FunctionTagPath;

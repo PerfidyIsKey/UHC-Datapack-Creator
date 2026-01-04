@@ -1,7 +1,7 @@
 package uhc.functions;
 
 import uhc.command.MinecraftCommand;
-import uhc.command.commands.Comment;
+import uhc.command.Comment;
 import uhc.components.functions.Function;
 import uhc.core.Datapack;
 import uhc.core.Namespace;

@@ -4,7 +4,6 @@ import uhc.arguments.coordinate.Vec3;
 import uhc.arguments.entity.Entity;
 import uhc.arguments.entity.SelectorArgumentsBuilder;
 import uhc.arguments.entity.TargetSelector;
-import uhc.command.commands.Comment;
 import uhc.command.commands.ExecuteCommand;
 import uhc.command.commands.SummonCommand;
 import uhc.components.functions.Function;

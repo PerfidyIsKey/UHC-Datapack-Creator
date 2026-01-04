@@ -1,6 +1,5 @@
 package uhc.functions.control_point;
 
-import uhc.command.commands.Comment;
 import uhc.command.commands.ExecuteCommand;
 import uhc.command.commands.ScoreboardCommand;
 import uhc.components.functions.Function;

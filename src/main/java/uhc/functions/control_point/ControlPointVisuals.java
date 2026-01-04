@@ -4,6 +4,7 @@ import uhc.arguments.block.Block;
 import uhc.arguments.entity.Entity;
 import uhc.arguments.entity.SelectorArgumentsBuilder;
 import uhc.arguments.entity.TargetSelector;
+import uhc.command.Comment;
 import uhc.command.commands.*;
 import uhc.components.functions.Function;
 import uhc.components.functions.FunctionPath;

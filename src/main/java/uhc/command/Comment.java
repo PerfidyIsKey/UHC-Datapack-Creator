@@ -1,6 +1,5 @@
-package uhc.command.commands;
+package uhc.command;
 
-import uhc.command.MinecraftCommand;
 import java.util.Objects;
 
 /**

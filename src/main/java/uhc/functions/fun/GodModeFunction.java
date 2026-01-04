@@ -5,7 +5,6 @@ import uhc.arguments.entity.TargetSelector;
 import uhc.arguments.item.ItemStack;
 import uhc.command.commands.EffectCommand;
 import uhc.command.commands.ItemCommand;
-import uhc.command.commands.Comment;
 import uhc.components.functions.Function;
 import uhc.components.functions.FunctionPath;
 import uhc.core.Datapack;

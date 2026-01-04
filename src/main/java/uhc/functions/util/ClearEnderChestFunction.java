@@ -12,7 +12,7 @@ import uhc.arguments.item.slot.ItemSlot;
 import uhc.functions.DatapackFunction;
 import uhc.resource.item.ItemId;
 import uhc.core.MinecraftConstants;
-import uhc.command.commands.Comment;
+import uhc.command.Comment;
 
 import java.util.Objects;
 
