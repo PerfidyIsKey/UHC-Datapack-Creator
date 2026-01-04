@@ -13,6 +13,7 @@ import uhc.functions.init.InitializationFunction;
 import uhc.functions.init.InitializeFunction;
 import uhc.functions.player_death.DropHeadsFunction;
 import uhc.functions.player_death.PlayerDeathFunction;
+import uhc.functions.startup.StartPotionsFunction;
 import uhc.functions.util.ClearEnderChestFunction;
 import uhc.game.control_points.ControlPointRegistry;
 import uhc.logging.CustomConsoleFormatter;
@@ -168,6 +169,7 @@ public final class Main {
                 new DropHeadsFunction(),
                 new InitializationFunction(),
                 new PlayerDeathFunction(),
+                new StartPotionsFunction(),
                 new ControlPointVisuals(),
                 new ControlPointRecords()
         );
