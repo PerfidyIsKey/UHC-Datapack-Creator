@@ -68,7 +68,7 @@ public class ControlPointVisuals implements DatapackFunction {
             throw new IllegalStateException("Registry Error: No active Control Points found in registry.");
         }
 
-        final FunctionPath path = Objects.requireNonNull(FunctionPath.CONTROL_POINT_VISUALS_1,
+        final FunctionPath path = Objects.requireNonNull(FunctionPath.CONTROL_POINT_VISUALS,
                 "Registry Error: FunctionPath.CONTROL_POINT_VISUALS_1 is missing.");
 
         final Function visualsFunction = new Function(path);
@@ -177,7 +177,7 @@ public class ControlPointVisuals implements DatapackFunction {
                 .run(SetBlockCommand.create(centerPos, Block.create(BlockId.BEACON))));
 
         // External Beam/NBT Protection
-        function.addLine(FunctionCommand.create(Objects.requireNonNull(FunctionPath.PROTECT_BEACON_1,
+        function.addLine(FunctionCommand.create(Objects.requireNonNull(FunctionPath.PROTECT_BEACON,
                 "Missing Path: PROTECT_BEACON_1")));
     }
 }
