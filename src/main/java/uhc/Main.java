@@ -7,6 +7,7 @@ import uhc.core.Namespace;
 import uhc.functions.*;
 import uhc.functions.control_point.ControlPointRecords;
 import uhc.functions.control_point.ControlPointVisuals;
+import uhc.functions.fun.EquipGearFunction;
 import uhc.functions.fun.GodModeFunction;
 import uhc.game.control_points.ControlPointRegistry;
 import uhc.logging.CustomConsoleFormatter;
@@ -158,6 +159,7 @@ public final class Main {
                 new InitializeFunction(),
                 new ClearEnderChestFunction(),
                 new GodModeFunction(),
+                new EquipGearFunction(),
                 new DropHeadsFunction(),
                 new InitializationFunction(),
                 new PlayerDeathFunction(),
