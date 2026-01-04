@@ -9,6 +9,11 @@ import uhc.functions.control_point.ControlPointRecords;
 import uhc.functions.control_point.ControlPointVisuals;
 import uhc.functions.fun.EquipGearFunction;
 import uhc.functions.fun.GodModeFunction;
+import uhc.functions.init.InitializationFunction;
+import uhc.functions.init.InitializeFunction;
+import uhc.functions.player_death.DropHeadsFunction;
+import uhc.functions.player_death.PlayerDeathFunction;
+import uhc.functions.util.ClearEnderChestFunction;
 import uhc.game.control_points.ControlPointRegistry;
 import uhc.logging.CustomConsoleFormatter;
 

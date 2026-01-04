@@ -156,7 +156,7 @@ public final class TeamData {
      * @return The team entity reference.
      */
     public Entity entity() {
-        return Entity.ofName(name());
+        return Entity.ofName(textColor.pascal());
     }
 
     /**
