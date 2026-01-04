@@ -5,6 +5,7 @@ import uhc.core.DatapackConfig;
 import uhc.core.Generator;
 import uhc.core.Namespace;
 import uhc.functions.*;
+import uhc.functions.control_point.ControlPointRecords;
 import uhc.functions.control_point.ControlPointVisuals;
 import uhc.game.control_points.ControlPointRegistry;
 import uhc.logging.CustomConsoleFormatter;
@@ -159,7 +160,8 @@ public final class Main {
                 new DropHeadsFunction(),
                 new InitializationFunction(),
                 new PlayerDeathFunction(),
-                new ControlPointVisuals()
+                new ControlPointVisuals(),
+                new ControlPointRecords()
         );
 
         LOGGER.info("Registering " + modules.size() + " functional modules...");
