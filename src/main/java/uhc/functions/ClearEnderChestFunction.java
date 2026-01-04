@@ -4,7 +4,6 @@ import uhc.arguments.entity.Entity;
 import uhc.arguments.entity.TargetSelector;
 import uhc.arguments.item.ItemStack;
 import uhc.command.commands.ItemCommand;
-import uhc.command.commands.item.ItemTargetEntity;
 import uhc.components.functions.Function;
 import uhc.components.functions.FunctionPath;
 import uhc.core.Datapack;
@@ -107,11 +106,9 @@ public class ClearEnderChestFunction implements DatapackFunction {
      * @throws RuntimeException if the slot assignment or item creation fails.
      */
     private ItemCommand buildClearSlotCommand(int slotIndex) {
-        return ItemCommand.create(
-                        ItemCommand.ItemAction.REPLACE_WITH,
-                        ItemTargetEntity.create(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
-                )
-                .slot(ItemSlot.ENDERCHEST.withSlotNumber(slotIndex))
-                .replaceWith(ItemStack.create(ItemId.AIR), 1);
+        return ItemCommand.replaceEntityWith(Entity.ofSelector(TargetSelector.ALL_PLAYERS),
+                ItemSlot.ENDERCHEST.withSlotNumber(slotIndex),
+                ItemStack.create(ItemId.AIR),
+                1);
     }
 }

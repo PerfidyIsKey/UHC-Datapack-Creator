@@ -6,7 +6,6 @@ import uhc.arguments.item.ItemStack;
 import uhc.command.commands.EffectCommand;
 import uhc.command.commands.ItemCommand;
 import uhc.command.commands.Comment;
-import uhc.command.commands.item.ItemTargetEntity;
 import uhc.components.functions.Function;
 import uhc.components.functions.FunctionPath;
 import uhc.core.Datapack;
@@ -126,11 +125,9 @@ public class GodModeFunction implements DatapackFunction {
      */
     private ItemCommand buildWeaponCommand() {
         try {
-            return ItemCommand.create(ItemCommand.ItemAction.REPLACE_WITH,
-                            ItemTargetEntity.create(Entity.ofSelector(TargetSelector.SENDER)))
-                    .slot(ItemSlot.MAINHAND)
-                    .replaceWith(
-                            ItemStack.create(ItemId.TRIDENT)
+            return ItemCommand.replaceEntityWith(Entity.ofSelector(TargetSelector.SENDER),
+                    ItemSlot.MAINHAND,
+                    ItemStack.create(ItemId.TRIDENT)
                                     .with(CustomNameComponent.create(
                                             TextComponent.text("aA").color(TextColor.WHITE).obfuscated(true)
                                                     .append(TextComponent.text("The").color(HexColor.create("#8C3CC1")).bold(true))
