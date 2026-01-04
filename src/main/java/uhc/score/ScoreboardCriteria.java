@@ -77,7 +77,7 @@ public interface ScoreboardCriteria {
     static ScoreboardCriteria mined(BlockIdentifier block) {
         Objects.requireNonNull(block, "Cannot create 'mined' criteria from a null BlockIdentifier.");
         block.validate(); // Catches logic errors like using tags (#)
-        return new CriteriaImpl.Namespaced("mined", block.getResourceLocation());
+        return new CriteriaImpl.Namespaced("mined", block.getPath());
     }
 
     /**
@@ -91,7 +91,7 @@ public interface ScoreboardCriteria {
     static ScoreboardCriteria used(ItemResource item) {
         Objects.requireNonNull(item, "Cannot create 'used' criteria from a null ItemResource.");
         item.validate();
-        return new CriteriaImpl.Namespaced("used", item.getResourceLocation());
+        return new CriteriaImpl.Namespaced("used", item.getPath());
     }
 
     /**
@@ -104,7 +104,7 @@ public interface ScoreboardCriteria {
      */
     static ScoreboardCriteria custom(CustomStatistics stat) {
         Objects.requireNonNull(stat, "Cannot create 'custom' criteria from a null CustomStatistics entry.");
-        return new CriteriaImpl.Namespaced("custom", stat.getResourceLocation());
+        return new CriteriaImpl.Namespaced("custom", stat.getPath());
     }
 }
 
