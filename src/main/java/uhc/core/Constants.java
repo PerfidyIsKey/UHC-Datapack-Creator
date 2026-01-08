@@ -1,5 +1,7 @@
 package uhc.core;
 
+import uhc.arguments.block.BlockPos;
+import uhc.arguments.block.ColumnPos;
 import uhc.arguments.entity.Entity;
 import uhc.arguments.entity.SelectorArgumentsBuilder;
 import uhc.arguments.entity.TargetSelector;
@@ -26,6 +28,12 @@ public final class Constants {
      * <p>Targets the nearest {@code minecraft:marker} entity used for technical command execution.</p>
      */
     public static final Entity admin;
+
+    // Coordinates
+    public static final ColumnPos spawnColumn;
+    public static final BlockPos spawnPos;
+
+    public static final int worldBottom = -64;
 
     // --- 🎨 Visual Components ---
 
@@ -55,6 +63,9 @@ public final class Constants {
             admin = Entity.ofSelector(
                     TargetSelector.NEAREST_ENTITY,
                     SelectorArgumentsBuilder.create().type(EntityId.MARKER));
+
+            spawnColumn = ColumnPos.absolute(0, 0);
+            spawnPos = BlockPos.absolute(0, 64, 0);
 
             // Initialize formatting components
             bannerText = TextComponent.text(" | ").color(TextColor.DARK_GRAY).bold(true);
