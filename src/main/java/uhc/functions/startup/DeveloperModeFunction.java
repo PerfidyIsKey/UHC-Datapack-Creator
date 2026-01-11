@@ -111,9 +111,7 @@ public class DeveloperModeFunction implements DatapackFunction {
             currentFunction.addLine(ForceLoadCommand.add(Constants.spawnColumn));
 
             // Create marker entity
-            fileCommands.add(KillCommand.create()
-                    .targets(Constant.admin)
-                    .generate());
+            currentFunction.addLine(KillCommand.targets(Constants.admin));
             fileCommands.add(SummonCommand.create(EntityId.MARKER)
                     .pos(Vec3.absolute(0, Constant.worldBottom, 0))
                     .nbt(MarkerNBT.create()
@@ -320,12 +318,10 @@ public class DeveloperModeFunction implements DatapackFunction {
 
                 // Kill waypoints
                 for (ControlPoint controlPoint : controlPoints) {
-                    fileCommands.add(KillCommand.create()
-                            .targets(Entity.ofSelector(
-                                    TargetSelector.NEAREST_ENTITY,
-                                    SelectorArgumentsBuilder.create()
-                                            .tag(controlPoint.getName())))
-                            .generate());
+                    currentFunction.addLine(KillCommand.targets(Entity.ofSelector(
+                            TargetSelector.NEAREST_ENTITY,
+                            SelectorArgumentsBuilder.create()
+                                    .tag(controlPoint.getName()))));
                 }
             }
 

@@ -1529,8 +1529,7 @@ public class Main {
                 .generate());
 
         // Create marker entity
-        fileCommands.add(KillCommand.create()
-                        .targets(Constant.admin)
+        fileCommands.add(KillCommand.targets(Constant.admin)
                                 .generate());
         fileCommands.add(SummonCommand.create(EntityId.MARKER)
                 .pos(Vec3.absolute(0, Constant.worldBottom, 0))
@@ -1738,8 +1737,7 @@ public class Main {
 
             // Kill waypoints
             for (ControlPoint controlPoint : controlPoints) {
-                fileCommands.add(KillCommand.create()
-                                .targets(Entity.ofSelector(
+                fileCommands.add(KillCommand.targets(Entity.ofSelector(
                                         TargetSelector.NEAREST_ENTITY,
                                         SelectorArgumentsBuilder.create()
                                                 .tag(controlPoint.getName())))
@@ -2129,8 +2127,7 @@ public class Main {
                 .generate());
 
         // Destroy all ground items
-        fileCommands.add(KillCommand.create()
-                        .targets(Entity.ofSelector(
+        fileCommands.add(KillCommand.targets(Entity.ofSelector(
                                 TargetSelector.ALL_ENTITIES,
                                 SelectorArgumentsBuilder.create()
                                         .type(EntityId.ITEM)))
@@ -2877,8 +2874,7 @@ public class Main {
         }
 
         // Remove leftover music discs from legacy Control Point
-        fileCommands.add(KillCommand.create()
-                .targets(Entity.ofSelector(
+        fileCommands.add(KillCommand.targets(Entity.ofSelector(
                         TargetSelector.ALL_ENTITIES,
                         SelectorArgumentsBuilder.create()
                                 .type(EntityId.ITEM)
@@ -3289,7 +3285,7 @@ public class Main {
                         .item(ItemPredicate.create(BlockId.PLAYER_HEAD))
                         .generate());  // Remove from inventory
         fileCommands.add(Execute.As("@e[type=" + EntityId.ITEM + ",nbt={Item:{id:\"" + BlockId.PLAYER_HEAD + "\"}}]") +
-                KillCommand.create().targets(Entity.ofSelector(TargetSelector.SENDER)).generate());   // Remove item
+                KillCommand.targets(Entity.ofSelector(TargetSelector.SENDER)).generate());   // Remove item
 
         // Teammate tracker
         for (Team team : teams) {
@@ -3604,7 +3600,7 @@ public class Main {
         fileCommands.add(Execute.At(babyWolf) +
                 SummonCommand.create(EntityId.DOLPHIN));
         fileCommands.add(Execute.As(babyWolf) +
-                KillCommand.create().targets(Entity.ofSelector(TargetSelector.SENDER)).generate());
+                KillCommand.targets(Entity.ofSelector(TargetSelector.SENDER)).generate());
 
         // Set tamed wolf base health
         fileCommands.add(Execute.As("@e[type=" + EntityId.WOLF + "]", false) +
