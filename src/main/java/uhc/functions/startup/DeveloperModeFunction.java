@@ -107,11 +107,8 @@ public class DeveloperModeFunction implements DatapackFunction {
             // Placeholder for MinecraftCommand objects or further documentation strings.
             // Example: this.addSafeLine(currentFunction, ScoreboardCommand.players().target(...)...);
             // Recreate forceload
-            currentFunction.addLine(ForceLoadCommand.create(ForceLoadCommand.ForceLoadAction.REMOVE)
-                    .from(Constants.spawnColumn));
-            fileCommands.add(ForceLoadCommand.create(ForceLoadCommand.ForceLoadAction.ADD)
-                    .from(Constant.spawnCenterInt)
-                    .generate());
+            currentFunction.addLine(ForceLoadCommand.remove(Constants.spawnColumn));
+            currentFunction.addLine(ForceLoadCommand.add(Constants.spawnColumn));
 
             // Create marker entity
             fileCommands.add(KillCommand.create()

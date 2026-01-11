@@ -1523,11 +1523,9 @@ public class Main {
         ArrayList<String> fileCommands = new ArrayList<>();
 
         // Recreate forceload
-        fileCommands.add(ForceLoadCommand.create(ForceLoadCommand.ForceLoadAction.REMOVE)
-                .from(Constant.spawnCenterInt)
+        fileCommands.add(ForceLoadCommand.remove(Constant.spawnCenterInt)
                 .generate());
-        fileCommands.add(ForceLoadCommand.create(ForceLoadCommand.ForceLoadAction.ADD)
-                .from(Constant.spawnCenterInt)
+        fileCommands.add(ForceLoadCommand.add(Constant.spawnCenterInt)
                 .generate());
 
         // Create marker entity
@@ -2194,8 +2192,7 @@ public class Main {
 
         // Remove CP1 reinforced deepslate block
         fileCommands.add(Execute.In(controlPoints.get(0).getCoordinate().getDimension()) +
-                ForceLoadCommand.create(ForceLoadCommand.ForceLoadAction.ADD)
-                        .from(ColumnPos.absolute(controlPoints.get(0).getCoordinate().getX(), controlPoints.get(0).getCoordinate().getZ()))
+                ForceLoadCommand.add(ColumnPos.absolute(controlPoints.get(0).getCoordinate().getX(), controlPoints.get(0).getCoordinate().getZ()))
                         .generate());
         fileCommands.add(Execute.In(controlPoints.get(0).getCoordinate().getDimension()) +
                 SetBlockCommand.create(
@@ -2203,15 +2200,13 @@ public class Main {
                                 Block.create(BlockId.AIR))
                         .generate());
         fileCommands.add(Execute.In(controlPoints.get(0).getCoordinate().getDimension()) +
-                ForceLoadCommand.create(ForceLoadCommand.ForceLoadAction.REMOVE)
-                        .from(ColumnPos.absolute(controlPoints.get(0).getCoordinate().getX(), controlPoints.get(0).getCoordinate().getZ()))
+                ForceLoadCommand.remove(ColumnPos.absolute(controlPoints.get(0).getCoordinate().getX(), controlPoints.get(0).getCoordinate().getZ()))
                         .generate());
 
         // Summon armor stands for locator bar tracking
         for (ControlPoint controlPoint : controlPoints) {
             // Forceload chunk
-            fileCommands.add(ForceLoadCommand.create(ForceLoadCommand.ForceLoadAction.ADD)
-                    .from(ColumnPos.absolute(controlPoint.getCoordinate().getX(), controlPoint.getCoordinate().getZ()))
+            fileCommands.add(ForceLoadCommand.add(ColumnPos.absolute(controlPoint.getCoordinate().getX(), controlPoint.getCoordinate().getZ()))
                     .generate());
 
             // Summon armor stand to be tracked
@@ -2268,8 +2263,7 @@ public class Main {
 
         // Remove reinforced deepslate from CP2
         fileCommands.add(Execute.In(controlPoints.get(1).getCoordinate().getDimension()) +
-                ForceLoadCommand.create(ForceLoadCommand.ForceLoadAction.ADD)
-                        .from(ColumnPos.absolute(controlPoints.get(1).getCoordinate().getX(), controlPoints.get(1).getCoordinate().getZ()))
+                ForceLoadCommand.add(ColumnPos.absolute(controlPoints.get(1).getCoordinate().getX(), controlPoints.get(1).getCoordinate().getZ()))
                         .generate());
         fileCommands.add(Execute.In(controlPoints.get(1).getCoordinate().getDimension()) +
                 SetBlockCommand.create(
@@ -2277,8 +2271,7 @@ public class Main {
                                 Block.create(BlockId.AIR))
                         .generate());
         fileCommands.add(Execute.In(controlPoints.get(1).getCoordinate().getDimension()) +
-                ForceLoadCommand.create(ForceLoadCommand.ForceLoadAction.REMOVE)
-                        .from(ColumnPos.absolute(controlPoints.get(1).getCoordinate().getX(), controlPoints.get(1).getCoordinate().getZ()))
+                ForceLoadCommand.remove(ColumnPos.absolute(controlPoints.get(1).getCoordinate().getX(), controlPoints.get(1).getCoordinate().getZ()))
                         .generate());
 
         // Change bossbar text
@@ -2837,8 +2830,7 @@ public class Main {
         for (ControlPoint cp : cpList) {
             Coordinate c = cp.getCoordinate();
             fileCommands.add(Execute.In(c.getDimension()) +
-                    ForceLoadCommand.create(ForceLoadCommand.ForceLoadAction.ADD)
-                            .from(ColumnPos.absolute(c.getX(), c.getZ()))
+                    ForceLoadCommand.add(ColumnPos.absolute(c.getX(), c.getZ()))
                             .generate());
 
             fileCommands.add(Execute.In(c.getDimension()) +
@@ -2880,8 +2872,7 @@ public class Main {
                             .generate());
 
             fileCommands.add(Execute.In(c.getDimension()) +
-                    ForceLoadCommand.create(ForceLoadCommand.ForceLoadAction.REMOVE)
-                            .from(ColumnPos.absolute(c.getX(), c.getZ()))
+                    ForceLoadCommand.remove(ColumnPos.absolute(c.getX(), c.getZ()))
                             .generate());
         }
 
