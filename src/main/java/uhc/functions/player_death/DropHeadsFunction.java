@@ -135,9 +135,9 @@ public class DropHeadsFunction implements DatapackFunction {
         try {
             function.addLine(ExecuteCommand.create()
                     .at(targetedPlayer)
-                    .run(SummonCommand.create(EntityId.ITEM)
-                            .pos(Vec3.relative(0, 0, 0))
-                            .nbt(this.buildHeadItemNBT(playerName))));
+                    .run(SummonCommand.entity(EntityId.ITEM,
+                            Vec3.relative(0, 0, 0),
+                            this.buildHeadItemNBT(playerName))));
 
             this.addSafeLine(function, "");
         } catch (Exception e) {

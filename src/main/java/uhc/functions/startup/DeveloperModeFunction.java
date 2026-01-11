@@ -112,11 +112,10 @@ public class DeveloperModeFunction implements DatapackFunction {
 
             // Create marker entity
             currentFunction.addLine(KillCommand.targets(Constants.admin));
-            fileCommands.add(SummonCommand.create(EntityId.MARKER)
-                    .pos(Vec3.absolute(0, Constant.worldBottom, 0))
-                    .nbt(MarkerNBT.create()
-                            .customName(TextComponent.text("Admin")))
-                    .generate());
+            currentFunction.addLine(SummonCommand.entity(EntityId.MARKER,
+                    Vec3.absolute(0, Constant.worldBottom, 0),
+                    MarkerNBT.create()
+                            .customName(TextComponent.text("Admin"))));
 
             // Set time
             fileCommands.add(TimeCommand.create(

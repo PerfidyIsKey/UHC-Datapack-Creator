@@ -183,7 +183,7 @@ public class InitializeFunction implements DatapackFunction {
                                 TextComponent.text("the Gods!")))
                         .frontText(SignNBT.SignSideNBT.create().messages(
                                 TextComponent.text("In Remembrance").click(ClickEvent.runCommand(
-                                        SummonCommand.create(EntityId.FIREWORK_ROCKET).pos(Vec3.relative(0, 0, 0)))),
+                                        SummonCommand.entity(EntityId.FIREWORK_ROCKET, Vec3.relative(0, 0, 0)))),
                                 TextComponent.text("of our"),
                                 TextComponent.text("Command Center"),
                                 TextComponent.text("2014-2025"))));

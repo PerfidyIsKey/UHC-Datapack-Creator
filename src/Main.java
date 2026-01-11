@@ -1025,9 +1025,9 @@ public class Main {
                                                         TextComponent.text("the Gods!")))
                                         .frontText(SignNBT.SignSideNBT.create()
                                                 .messages(TextComponent.text("In Rememberance")
-                                                                .click(ClickEvent.runCommand(SummonCommand.create(EntityId.FIREWORK_ROCKET)
-                                                                        .pos(Vec3.relative(0, 0, 0))
-                                                                        .nbt(FireworkRocketNBT.create()
+                                                                .click(ClickEvent.runCommand(SummonCommand.entity(EntityId.FIREWORK_ROCKET,
+                                                                        Vec3.relative(0, 0, 0),
+                                                                        FireworkRocketNBT.create()
                                                                                 .glowing(true)
                                                                                 .fireworksItem(FireworksComponent.create()
                                                                                         .addExplosion(FireworksComponent.Explosion.create()
@@ -1137,12 +1137,12 @@ public class Main {
         // Summon a player head upon dying
         for (Player p : players) {
             fileCommands.add(Execute.At("@p[name=" + p.getPlayerName() + ",scores={Deaths=1}]") +
-                    SummonCommand.create(EntityId.ITEM)
-                            .pos(Vec3.relative(0, 0, 0))
-                            .nbt(ItemEntityNBT.create()
-                                    .item(ItemNBT.create(BlockId.PLAYER_HEAD)
-                                            .count(1)
-                                            .add(ProfileComponent.create(p.getPlayerName()))))
+                    SummonCommand.entity(EntityId.ITEM,
+                                    Vec3.relative(0, 0, 0),
+                                    ItemEntityNBT.create()
+                                            .item(ItemNBT.create(BlockId.PLAYER_HEAD)
+                                                    .count(1)
+                                                    .add(ProfileComponent.create(p.getPlayerName()))))
                             .generate());
         }
 
@@ -1531,10 +1531,10 @@ public class Main {
         // Create marker entity
         fileCommands.add(KillCommand.targets(Constant.admin)
                                 .generate());
-        fileCommands.add(SummonCommand.create(EntityId.MARKER)
-                .pos(Vec3.absolute(0, Constant.worldBottom, 0))
-                .nbt(MarkerNBT.create()
-                        .customName(TextComponent.text("Admin")))
+        fileCommands.add(SummonCommand.entity(EntityId.MARKER,
+                        Vec3.absolute(0, Constant.worldBottom, 0),
+                        MarkerNBT.create()
+                                .customName(TextComponent.text("Admin")))
                 .generate());
 
         // Set time
@@ -2207,13 +2207,13 @@ public class Main {
                     .generate());
 
             // Summon armor stand to be tracked
-            fileCommands.add(SummonCommand.create(EntityId.ARMOR_STAND)
-                    .pos(Vec3.absolute(controlPoint.getCoordinate().getX(), controlPoint.getCoordinate().getY(), controlPoint.getCoordinate().getZ()))
-                    .nbt(ArmorStandNBT.create()
-                            .invulnerable(true)
-                            .marker(true)
-                            .invisible(true)
-                            .tags(List.of(controlPoint.getName().getTagName())))
+            fileCommands.add(SummonCommand.entity(EntityId.ARMOR_STAND,
+                            Vec3.absolute(controlPoint.getCoordinate().getX(), controlPoint.getCoordinate().getY(), controlPoint.getCoordinate().getZ()),
+                            ArmorStandNBT.create()
+                                    .invulnerable(true)
+                                    .marker(true)
+                                    .invisible(true)
+                                    .tags(List.of(controlPoint.getName().getTagName())))
                     .generate());
 
             // Set transmit range of waypoint
@@ -2651,9 +2651,9 @@ public class Main {
         // Summon Care Package entities
         for (int i = 0; i < carePackageAmount; i++) {
             fileCommands.add(Execute.In(Dimension.overworld) +
-                    SummonCommand.create(EntityId.FALLING_BLOCK)
-                            .pos(Vec3.absolute(0, 300, 0))
-                            .nbt(FallingBlockNBT.create()
+                    SummonCommand.entity(EntityId.FALLING_BLOCK,
+                            Vec3.absolute(0, 300, 0),
+                            FallingBlockNBT.create()
                                     .blockState(BlockId.CHEST)
                                     .tileEntityData(ChestNBT.create()
                                             .lootTable(LootTableId.SUPPLY_DROP)
@@ -3598,7 +3598,7 @@ public class Main {
                                 DataPath.create(DataPathId.AGE))
                         .generate());
         fileCommands.add(Execute.At(babyWolf) +
-                SummonCommand.create(EntityId.DOLPHIN));
+                SummonCommand.entity(EntityId.DOLPHIN));
         fileCommands.add(Execute.As(babyWolf) +
                 KillCommand.targets(Entity.ofSelector(TargetSelector.SENDER)).generate());
 

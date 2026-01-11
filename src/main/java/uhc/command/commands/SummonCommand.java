@@ -11,60 +11,131 @@ import java.util.Objects;
 /**
  * 🥚 **Summon Command Builder**
  * <p>
- * Provides a fluent API for the {@code /summon} command.
- * Accepts any {@link EntityNBT} implementation, providing maximum flexibility
- * for spawning diverse UHC entities.
+ * Provides a semantic API for the {@code /summon} command.
+ * This command spawns a new entity into the world with optional positional
+ * data and complex NBT components.
  * </p>
  */
 public class SummonCommand implements MinecraftCommand {
 
+    // --- 📄 Fields ---
+
+    /** * The type of entity to summon (e.g., minecraft:zombie). */
     private final EntityId entity;
-    private Vec3 pos;
-    private EntityNBT<?> nbt; // Uses wildcard to accept any subclass of EntityNBT
 
-    private SummonCommand(EntityId entity) {
-        this.entity = Objects.requireNonNull(entity, "EntityId cannot be null.");
-    }
+    /** * The optional location where the entity will spawn. */
+    private final Vec3 pos;
 
-    public static SummonCommand create(EntityId entity) {
-        return new SummonCommand(entity);
-    }
+    /** * The optional NBT data (Mob data, Item data, etc.) for the spawned entity. */
+    private final EntityNBT<?> nbt;
 
-    public SummonCommand pos(Vec3 pos) {
-        this.pos = Objects.requireNonNull(pos, "Position argument cannot be null.");
-        return this;
+    // --- 🏗️ Constructors & Static Entry Points ---
+
+    /**
+     * Private constructor used by the static factory methods.
+     * @param entity The non-null entity type.
+     * @param pos    The optional position (may be null).
+     * @param nbt    The optional NBT builder (may be null).
+     */
+    private SummonCommand(EntityId entity, Vec3 pos, EntityNBT<?> nbt) {
+        this.entity = Objects.requireNonNull(entity, "Summon Error: EntityId cannot be null.");
+        this.pos = pos;
+        this.nbt = nbt;
     }
 
     /**
-     * Applies entity NBT data.
-     * @param nbt Any builder extending EntityNBT (ItemEntityNBT, MobNBT, etc.)
-     * @return The current builder instance.
+     * Entry point for a basic summon at the executor's location.
+     * @param entity The entity type to spawn.
+     * @return A SummonCommand instance.
      */
-    public SummonCommand nbt(EntityNBT<?> nbt) {
-        this.nbt = Objects.requireNonNull(nbt, "EntityNBT cannot be null.");
-        return this;
+    public static SummonCommand entity(EntityId entity) {
+        return new SummonCommand(entity, null, null);
     }
 
+    /**
+     * Entry point for summoning an entity at a specific position.
+     * @param entity The entity type to spawn.
+     * @param pos    The coordinate location.
+     * @return A SummonCommand instance.
+     */
+    public static SummonCommand entity(EntityId entity, Vec3 pos) {
+        Objects.requireNonNull(pos, "Summon Error: Position cannot be null when using this overload.");
+        return new SummonCommand(entity, pos, null);
+    }
+
+    /**
+     * Entry point for summoning an entity at a specific position with custom NBT data.
+     * @param entity The entity type to spawn.
+     * @param pos    The coordinate location.
+     * @param nbt    The entity NBT builder.
+     * @return A SummonCommand instance.
+     */
+    public static SummonCommand entity(EntityId entity, Vec3 pos, EntityNBT<?> nbt) {
+        Objects.requireNonNull(pos, "Summon Error: Position cannot be null when defining NBT.");
+        Objects.requireNonNull(nbt, "Summon Error: NBT builder cannot be null when using this overload.");
+        return new SummonCommand(entity, pos, nbt);
+    }
+
+    /**
+     * Entry point for summoning an entity at the executor's location with custom NBT data.
+     * <p>Note: This will automatically handle the coordinate placeholders (~ ~ ~) internally.</p>
+     * @param entity The entity type to spawn.
+     * @param nbt    The entity NBT builder.
+     * @return A SummonCommand instance.
+     */
+    public static SummonCommand entity(EntityId entity, EntityNBT<?> nbt) {
+        Objects.requireNonNull(nbt, "Summon Error: NBT builder cannot be null.");
+        return new SummonCommand(entity, null, nbt);
+    }
+
+    // --- ⚙️ Command Generation ---
+
+    /**
+     * Validates and generates the final Minecraft command string.
+     * <p>
+     * <b>Syntax Logic:</b>
+     * If NBT is present but no position was provided, {@code ~ ~ ~} is injected
+     * because NBT is the third optional argument.
+     * </p>
+     * @return The formatted /summon command.
+     * @throws RuntimeException if the NBT conversion or string assembly fails.
+     */
     @Override
     public String generate() {
-        StringBuilder command = new StringBuilder("summon ");
-        command.append(entity.getResourceLocation());
+        final StringBuilder sb = new StringBuilder("summon ");
 
-        // Coordinate logic: NBT follows coordinates.
-        if (pos != null) {
-            command.append(" ").append(pos);
-        } else if (nbt != null) {
-            command.append(" ~ ~ ~");
+        try {
+            sb.append(this.entity.getResourceLocation());
+
+            // Handle coordinate positioning
+            if (this.pos != null) {
+                sb.append(" ").append(this.pos);
+            } else if (this.nbt != null) {
+                // Minecraft requires coordinates if NBT is to follow.
+                sb.append(" ~ ~ ~");
+            }
+
+            // Handle NBT component
+            if (this.nbt != null) {
+                final String jsonNbt = TagConverter.toJson(this.nbt.build());
+                if (jsonNbt == null || jsonNbt.isBlank()) {
+                    throw new IllegalStateException("NBT conversion resulted in an empty string.");
+                }
+                sb.append(" ").append(jsonNbt);
+            }
+
+            return sb.toString();
+
+        } catch (Exception e) {
+            throw new RuntimeException("CRITICAL: Failed to generate /summon command for ["
+                    + this.entity.getResourceLocation() + "]. Details: " + e.getMessage(), e);
         }
-
-        if (nbt != null) {
-            // Converts the built CompoundTag into a JSON string for the command.
-            command.append(" ").append(TagConverter.toJson(nbt.build()));
-        }
-
-        return command.toString();
     }
 
+    /**
+     * Returns the generated command string.
+     * @return The result of {@link #generate()}.
+     */
     @Override
     public String toString() {
         return generate();
