@@ -118,10 +118,7 @@ public class DeveloperModeFunction implements DatapackFunction {
                             .customName(TextComponent.text("Admin"))));
 
             // Set time
-            fileCommands.add(TimeCommand.create(
-                            TimeCommand.TimeAction.SET,
-                            VariableGameTime.create(0))
-                    .generate());
+            currentFunction.addLine(TimeCommand.set(VariableGameTime.create(0)));
 
             // Set gamerules
             fileCommands.add(GameRuleCommand.create(GameRuleId.COMMAND_BLOCK_OUTPUT)

@@ -1538,9 +1538,7 @@ public class Main {
                 .generate());
 
         // Set time
-        fileCommands.add(TimeCommand.create(
-                        TimeCommand.TimeAction.SET,
-                        VariableGameTime.create(0))
+        fileCommands.add(TimeCommand.set(VariableGameTime.create(0))
                 .generate());
 
         // Set gamerules
@@ -2019,9 +2017,7 @@ public class Main {
         ArrayList<TextItem> texts = new ArrayList<>();
 
         // Set world time
-        fileCommands.add(TimeCommand.create(
-                        TimeCommand.TimeAction.SET,
-                        VariableGameTime.create(0))
+        fileCommands.add(TimeCommand.set(VariableGameTime.create(0))
                 .generate());
 
         // Give potion effect
