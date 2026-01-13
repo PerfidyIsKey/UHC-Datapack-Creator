@@ -65,7 +65,7 @@ public final class Constants {
                     SelectorArgumentsBuilder.create().type(EntityId.MARKER));
 
             spawnColumn = ColumnPos.absolute(0, 0);
-            spawnPos = BlockPos.absolute(0, 64, 0);
+            spawnPos = BlockPos.absolute(0, worldBottom, 0);
 
             // Initialize formatting components
             bannerText = TextComponent.text(" | ").color(TextColor.DARK_GRAY).bold(true);

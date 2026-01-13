@@ -113,7 +113,7 @@ public class DeveloperModeFunction implements DatapackFunction {
             // Create marker entity
             currentFunction.addLine(KillCommand.targets(Constants.admin));
             currentFunction.addLine(SummonCommand.entity(EntityId.MARKER,
-                    Vec3.absolute(0, Constant.worldBottom, 0),
+                    Constants.spawnPos,
                     MarkerNBT.create()
                             .customName(TextComponent.text("Admin"))));
 

@@ -1,5 +1,6 @@
 package uhc.command.commands;
 
+import uhc.arguments.block.BlockPos;
 import uhc.arguments.coordinate.Vec3;
 import uhc.command.MinecraftCommand;
 import uhc.data.nbt.entity.EntityNBT;
@@ -13,7 +14,7 @@ import java.util.Objects;
  * <p>
  * Provides a semantic API for the {@code /summon} command.
  * This command spawns a new entity into the world with optional positional
- * data and complex NBT components.
+ * data (using {@link Vec3} or {@link BlockPos}) and complex NBT components.
  * </p>
  */
 public class SummonCommand implements MinecraftCommand {
@@ -52,28 +53,57 @@ public class SummonCommand implements MinecraftCommand {
         return new SummonCommand(entity, null, null);
     }
 
+    // --- 🚀 Vec3 Overloads ---
+
     /**
-     * Entry point for summoning an entity at a specific position.
+     * Entry point for summoning an entity at a specific vector position.
      * @param entity The entity type to spawn.
-     * @param pos    The coordinate location.
+     * @param pos    The high-precision coordinate location.
      * @return A SummonCommand instance.
      */
     public static SummonCommand entity(EntityId entity, Vec3 pos) {
-        Objects.requireNonNull(pos, "Summon Error: Position cannot be null when using this overload.");
+        Objects.requireNonNull(pos, "Summon Error: Vec3 position cannot be null.");
         return new SummonCommand(entity, pos, null);
     }
 
     /**
-     * Entry point for summoning an entity at a specific position with custom NBT data.
+     * Entry point for summoning an entity at a specific vector position with custom NBT data.
      * @param entity The entity type to spawn.
-     * @param pos    The coordinate location.
+     * @param pos    The high-precision coordinate location.
      * @param nbt    The entity NBT builder.
      * @return A SummonCommand instance.
      */
     public static SummonCommand entity(EntityId entity, Vec3 pos, EntityNBT<?> nbt) {
-        Objects.requireNonNull(pos, "Summon Error: Position cannot be null when defining NBT.");
-        Objects.requireNonNull(nbt, "Summon Error: NBT builder cannot be null when using this overload.");
+        Objects.requireNonNull(pos, "Summon Error: Vec3 position cannot be null when defining NBT.");
+        Objects.requireNonNull(nbt, "Summon Error: NBT builder cannot be null.");
         return new SummonCommand(entity, pos, nbt);
+    }
+
+    // --- 🚀 BlockPos Overloads ---
+
+    /**
+     * Entry point for summoning an entity at a specific block position.
+     * <p>Note: Internally converts the {@link BlockPos} to a {@link Vec3}.</p>
+     * @param entity The entity type to spawn.
+     * @param pos    The discrete block coordinate location.
+     * @return A SummonCommand instance.
+     */
+    public static SummonCommand entity(EntityId entity, BlockPos pos) {
+        Objects.requireNonNull(pos, "Summon Error: BlockPos cannot be null.");
+        return new SummonCommand(entity, pos.toVec3(), null);
+    }
+
+    /**
+     * Entry point for summoning an entity at a specific block position with custom NBT data.
+     * @param entity The entity type to spawn.
+     * @param pos    The discrete block coordinate location.
+     * @param nbt    The entity NBT builder.
+     * @return A SummonCommand instance.
+     */
+    public static SummonCommand entity(EntityId entity, BlockPos pos, EntityNBT<?> nbt) {
+        Objects.requireNonNull(pos, "Summon Error: BlockPos cannot be null when defining NBT.");
+        Objects.requireNonNull(nbt, "Summon Error: NBT builder cannot be null.");
+        return new SummonCommand(entity, pos.toVec3(), nbt);
     }
 
     /**
