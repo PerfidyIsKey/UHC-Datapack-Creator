@@ -91,9 +91,7 @@ public class ControlPointRecords implements DatapackFunction {
                 this.addSafeLine(currentFunction, ExecuteCommand.create()
                         .ifScore(team.entity(), ScoreboardObjectiveId.ON_CP, Range.min(1))
                         .ifScore(team.entity(), ScoreboardObjectiveId.CP_SCORE, ComparatorType.GREATER, admin, ScoreboardObjectiveId.DISPLAY_CP)
-                        .run(ScoreboardCommand.players()
-                                .target(admin)
-                                .set(ScoreboardObjectiveId.COLOR_CP, team.getId())));
+                        .run(ScoreboardCommand.setScore(admin, ScoreboardObjectiveId.COLOR_CP, team.getId())));
 
                 /*
                  * Logic Branch B: Synchronize Numeric High Score
@@ -102,9 +100,7 @@ public class ControlPointRecords implements DatapackFunction {
                 this.addSafeLine(currentFunction, ExecuteCommand.create()
                         .ifScore(team.entity(), ScoreboardObjectiveId.ON_CP, Range.min(1))
                         .ifScore(team.entity(), ScoreboardObjectiveId.CP_SCORE, ComparatorType.GREATER, admin, ScoreboardObjectiveId.DISPLAY_CP)
-                        .run(ScoreboardCommand.players()
-                                .target(admin)
-                                .operation(ScoreboardObjectiveId.DISPLAY_CP, OperationType.ASSIGNMENT, team.entity(), ScoreboardObjectiveId.CP_SCORE)));
+                        .run(ScoreboardCommand.operation(admin, ScoreboardObjectiveId.DISPLAY_CP, OperationType.ASSIGNMENT, team.entity(), ScoreboardObjectiveId.CP_SCORE)));
 
                 // Adding visual whitespace between team blocks for easier debugging in the .mcfunction file
                 this.addSafeLine(currentFunction, "");

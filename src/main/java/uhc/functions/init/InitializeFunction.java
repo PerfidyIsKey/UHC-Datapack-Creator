@@ -131,8 +131,8 @@ public class InitializeFunction implements DatapackFunction {
      */
     private void assembleInfrastructureLogic(Function function) {
         this.addSafeLine(function, "--- Phase 2: Scoreboard & Team Registry ---");
-        function.addAll(ScoreboardCommand.batch().registerAll());
-        function.addLine(ScoreboardCommand.objectives().setDisplay(DisplaySlot.BELOW_NAME, ScoreboardObjectiveId.HEARTS));
+        function.addAll(ScoreboardCommand.Batch.registerAll());
+        function.addLine(ScoreboardCommand.setDisplay(DisplaySlot.BELOW_NAME, ScoreboardObjectiveId.HEARTS));
 
         final Collection<TeamData> allTeams = TeamRegistry.ALL;
         if (allTeams.isEmpty()) {

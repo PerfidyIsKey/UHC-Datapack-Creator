@@ -117,7 +117,7 @@ public class ControlPointVisuals implements DatapackFunction {
                         firstPoint.getBossbar(),
                         ExecuteCommand.BossbarValueType.VALUE
                 )
-                .run(ScoreboardCommand.players().get(admin, ScoreboardObjectiveId.DISPLAY_CP)));
+                .run(ScoreboardCommand.getScore(admin, ScoreboardObjectiveId.DISPLAY_CP)));
     }
 
     /**

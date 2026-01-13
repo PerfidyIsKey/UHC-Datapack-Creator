@@ -187,7 +187,7 @@ public class PlayerDeathFunction implements DatapackFunction {
 
         function.addLine(ExecuteCommand.create()
                 .ifEntity(killer).ifEntity(victim)
-                .run(ScoreboardCommand.players().set(ScoreboardObjectiveId.IS_KILLER, 1).target(killer)));
+                .run(ScoreboardCommand.setScore(killer, ScoreboardObjectiveId.IS_KILLER, 1)));
     }
 
     /**
@@ -203,7 +203,7 @@ public class PlayerDeathFunction implements DatapackFunction {
         final Entity deathTrigger = Entity.ofSelector(TargetSelector.NEAREST_PLAYER,
                 SelectorArgumentsBuilder.create().scores(DEATH_SCORE));
 
-        function.addLine(ScoreboardCommand.players().reset(ScoreboardObjectiveId.TEMP_KILLS).target(killTrigger));
-        function.addLine(ScoreboardCommand.players().reset(ScoreboardObjectiveId.DEATHS).target(deathTrigger));
+        function.addLine(ScoreboardCommand.reset(killTrigger, ScoreboardObjectiveId.TEMP_KILLS));
+        function.addLine(ScoreboardCommand.reset(deathTrigger, ScoreboardObjectiveId.DEATHS));
     }
 }

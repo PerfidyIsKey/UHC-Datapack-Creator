@@ -33,6 +33,7 @@ import uhc.resource.gameplay.GameModeId;
 import uhc.resource.gameplay.GameRuleId;
 import uhc.resource.item.ItemId;
 import uhc.resource.tag.EntityTag;
+import uhc.score.ScoreboardObjectiveId;
 import uhc.text.TextComponent;
 
 import java.util.Objects;
@@ -135,9 +136,9 @@ public class DeveloperModeFunction implements DatapackFunction {
             currentFunction.addLine(GameRuleCommand.set(GameRuleId.DO_INSOMNIA, false));
 
             // Reset scores of all entities
-            currentFunction.addLine(scoreboard.Reset("@e"));
-            currentFunction.addLine(scoreboard.Set(Constant.adminOld, Objective.MinHealth, 20));
-            currentFunction.addLine(scoreboard.Set(Constant.adminOld, Objective.Victory, 1));
+            currentFunction.addLine(ScoreboardCommand.reset(Entity.ofSelector(TargetSelector.ALL_ENTITIES)));
+            currentFunction.addLine(ScoreboardCommand.setScore(Constants.admin, ScoreboardObjectiveId.MIN_HEALTH, 20));
+            currentFunction.addLine(ScoreboardCommand.setScore(Constants.admin, ScoreboardObjectiveId.VICTORY, 1));
 
             // Get all player UUIDs
             for (int i = 0; i < 4; i++) {

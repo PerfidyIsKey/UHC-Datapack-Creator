@@ -9,292 +9,234 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * 📊 **Scoreboard Command Builder**
+ * 📊 **Scoreboard Command Builder (ScoreboardCommand)**
  * <p>
- * A specialized abstract builder for constructing Minecraft {@code /scoreboard} commands.
- * This class uses method-based branching to separate <b>Objectives</b> and <b>Players</b> logic,
- * ensuring type safety and valid syntax at compile time.
+ * A flattened, immutable API for constructing Minecraft {@code /scoreboard} commands.
+ * This class provides direct static access to both <b>Objective</b> management and
+ * <b>Player</b> score manipulation, ensuring type-safe command generation without
+ * intermediate builder objects.
+ * </p>
+ * <p>
+ * <b>Strict Policy:</b> This class does not provide default fallbacks for null or
+ * invalid inputs; instead, it throws explicit exceptions to ensure command integrity.
  * </p>
  */
-public abstract class ScoreboardCommand implements MinecraftCommand {
+public class ScoreboardCommand implements MinecraftCommand {
 
-    // --- 🏗️ Static Entry Points ---
+    // --- 📄 Fields ---
+
+    /** * The internal sub-command string (e.g., "players set @p kills 5").
+     * This string is combined with the "scoreboard" prefix during generation.
+     */
+    private final String command;
+
+    // --- 🏗️ Private Constructor ---
 
     /**
-     * Initiates a command sequence targeting scoreboard objective definitions (meta-data).
-     * @return A specialized {@link ObjectiveBuilder} for adding or removing objectives.
+     * Constructs an immutable ScoreboardCommand instance.
+     * @param command The fully formatted scoreboard sub-action string.
+     * @throws NullPointerException if the command string is null.
      */
-    public static ObjectiveBuilder objectives() {
-        return new ObjectiveBuilder();
+    private ScoreboardCommand(String command) {
+        this.command = Objects.requireNonNull(command, "Scoreboard Error: Internal command component cannot be null.");
+    }
+
+    // --- 🎯 Static Factory Methods: Objectives ---
+
+    /**
+     * Constructs a command to register a new objective in the scoreboard.
+     * <p>Syntax: {@code /scoreboard objectives add <name> <criteria> [<displayName>]}</p>
+     * @param obj The {@link ScoreboardObjective} data model; must not be null.
+     * @return A new instance of ScoreboardCommand.
+     * @throws NullPointerException if the objective model is null.
+     * @throws RuntimeException if component building fails.
+     */
+    public static ScoreboardCommand addObjective(ScoreboardObjective obj) {
+        Objects.requireNonNull(obj, "Objective Error: Data model is required for registration.");
+        try {
+            final StringBuilder builder = new StringBuilder("objectives add ")
+                    .append(obj.getId().getObjectiveName())
+                    .append(" ")
+                    .append(obj.getCriteria().getCriteriaName());
+
+            if (obj.getDisplayName() != null) {
+                builder.append(" ").append(obj.getDisplayName().build());
+            }
+            return new ScoreboardCommand(builder.toString());
+        } catch (Exception e) {
+            throw new RuntimeException("Objective Error: Failed to build 'add' command for: " + obj.getId(), e);
+        }
     }
 
     /**
-     * Initiates a command sequence targeting player score values (data manipulation).
-     * @return A specialized {@link PlayerBuilder} for modifying or querying entity scores.
+     * Constructs a command to delete an existing objective.
+     * <p>Syntax: {@code /scoreboard objectives remove <name>}</p>
+     * @param id The {@link ScoreboardObjectiveId} to remove; must not be null.
+     * @return A new instance of ScoreboardCommand.
+     * @throws NullPointerException if the ID is null.
      */
-    public static PlayerBuilder players() {
-        return new PlayerBuilder();
+    public static ScoreboardCommand removeObjective(ScoreboardObjectiveId id) {
+        Objects.requireNonNull(id, "Objective Error: ID is required for removal.");
+        return new ScoreboardCommand("objectives remove " + id.getObjectiveName());
     }
 
     /**
-     * Begins a batch operation to generate multiple commands at once, typically for initialization.
-     * @return A new {@link BatchBuilder} instance.
+     * Constructs a command to define where an objective appears in the interface.
+     * <p>Syntax: {@code /scoreboard objectives setdisplay <slot> [<objective>]}</p>
+     * @param slot The {@link DisplaySlot} location; must not be null.
+     * @param id   The objective ID to show, or null to clear the specified slot.
+     * @return A new instance of ScoreboardCommand.
+     * @throws NullPointerException if the display slot is null.
      */
-    public static BatchBuilder batch() {
-        return new BatchBuilder();
+    public static ScoreboardCommand setDisplay(DisplaySlot slot, ScoreboardObjectiveId id) {
+        Objects.requireNonNull(slot, "Display Error: Slot must be specified.");
+        final String action = "objectives setdisplay " + slot.getSlotName() +
+                (id != null ? " " + id.getObjectiveName() : "");
+        return new ScoreboardCommand(action);
     }
 
-    // --- ⚙️ Core Contract ---
+    // --- ⚔️ Static Factory Methods: Players ---
 
     /**
-     * Returns the final command string generated by the specific builder branch.
-     * @return The raw Minecraft command (e.g., "scoreboard players set...").
+     * Constructs a command to retrieve a specific score value.
+     * <p>Syntax: {@code /scoreboard players get <target> <objective>}</p>
+     * @param target    The entity to query; must not be null.
+     * @param objective The objective to read; must not be null.
+     * @return A new instance of ScoreboardCommand.
+     * @throws NullPointerException if target or objective is null.
+     */
+    public static ScoreboardCommand getScore(Entity target, ScoreboardObjectiveId objective) {
+        Objects.requireNonNull(target, "Player Error: Target entity is required for queries.");
+        Objects.requireNonNull(objective, "Player Error: Objective ID is required for queries.");
+        return new ScoreboardCommand("players get " + target.toString() + " " + objective.getObjectiveName());
+    }
+
+    /**
+     * Constructs a command to assign a specific integer value to a score.
+     * <p>Syntax: {@code /scoreboard players set <target> <objective> <score>}</p>
+     * @param target The entity to modify; must not be null.
+     * @param id     The objective to update; must not be null.
+     * @param score  The literal integer value to set.
+     * @return A new instance of ScoreboardCommand.
+     */
+    public static ScoreboardCommand setScore(Entity target, ScoreboardObjectiveId id, int score) {
+        Objects.requireNonNull(target, "Player Error: Target entity is required.");
+        Objects.requireNonNull(id, "Player Error: Objective ID is required.");
+        return new ScoreboardCommand("players set " + target.toString() + " " + id.getObjectiveName() + " " + score);
+    }
+
+    /**
+     * Constructs a command to increment a score value.
+     * <p>Syntax: {@code /scoreboard players add <target> <objective> <score>}</p>
+     * @param target The entity to modify; must not be null.
+     * @param id     The objective to update; must not be null.
+     * @param score  The amount to add.
+     * @return A new instance of ScoreboardCommand.
+     */
+    public static ScoreboardCommand addScore(Entity target, ScoreboardObjectiveId id, int score) {
+        Objects.requireNonNull(target, "Player Error: Target entity is required.");
+        Objects.requireNonNull(id, "Player Error: Objective ID is required.");
+        return new ScoreboardCommand("players add " + target.toString() + " " + id.getObjectiveName() + " " + score);
+    }
+
+    /**
+     * Constructs a command to clear ALL objective scores for a target.
+     * <p>Syntax: {@code /scoreboard players reset <target>}</p>
+     * @param target The entity to reset; must not be null.
+     * @return A new instance of ScoreboardCommand.
+     */
+    public static ScoreboardCommand reset(Entity target) {
+        Objects.requireNonNull(target, "Reset Error: Target entity is required.");
+        return new ScoreboardCommand("players reset " + target.toString());
+    }
+
+    /**
+     * Constructs a command to clear a specific objective score for a target.
+     * <p>Syntax: {@code /scoreboard players reset <target> <objective>}</p>
+     * @param target    The entity to reset; must not be null.
+     * @param objective The objective to clear; must not be null.
+     * @return A new instance of ScoreboardCommand.
+     */
+    public static ScoreboardCommand reset(Entity target, ScoreboardObjectiveId objective) {
+        Objects.requireNonNull(target, "Reset Error: Target entity is required.");
+        Objects.requireNonNull(objective, "Reset Error: Objective ID is required.");
+        return new ScoreboardCommand("players reset " + target.toString() + " " + objective.getObjectiveName());
+    }
+
+    /**
+     * Constructs a command to perform a mathematical operation between scores.
+     * <p>Syntax: {@code /scoreboard players operation <target> <targetObj> <op> <source> <sourceObj>}</p>
+     * @param target    The entity to be modified; must not be null.
+     * @param targetObj The objective on the target entity; must not be null.
+     * @param op        The operator (e.g., =, +=, *=); must not be null.
+     * @param source    The source entity to read from; must not be null.
+     * @param sourceObj The objective on the source entity; must not be null.
+     * @return A new instance of ScoreboardCommand.
+     * @throws NullPointerException if any argument is null.
+     */
+    public static ScoreboardCommand operation(Entity target, ScoreboardObjectiveId targetObj, OperationType op, Entity source, ScoreboardObjectiveId sourceObj) {
+        Objects.requireNonNull(target, "Operation Error: Target entity is null.");
+        Objects.requireNonNull(targetObj, "Operation Error: Target objective is null.");
+        Objects.requireNonNull(op, "Operation Error: Operator is null.");
+        Objects.requireNonNull(source, "Operation Error: Source entity is null.");
+        Objects.requireNonNull(sourceObj, "Operation Error: Source objective is null.");
+
+        final String action = String.format("players operation %s %s %s %s %s",
+                target.toString(), targetObj.getObjectiveName(), op.getOperator(),
+                source.toString(), sourceObj.getObjectiveName());
+
+        return new ScoreboardCommand(action);
+    }
+
+    // --- ⚙️ Contract Implementation ---
+
+    /**
+     * Generates the final Minecraft-ready command string.
+     * @return The full command (e.g., "scoreboard players get @p kills").
      */
     @Override
-    public abstract String generate();
+    public String generate() {
+        return "scoreboard " + this.command;
+    }
 
     /**
-     * Standard override to allow the builder to be used directly in string concatenation.
-     * <p><b>Safety:</b> Returns a comment block with error details if generation fails to
-     * prevent silent command breakage in mcfunction files.</p>
+     * Returns the command string for logging or execution.
      * @return The result of {@link #generate()}.
      */
     @Override
     public String toString() {
-        try {
-            return generate();
-        } catch (Exception e) {
-            return "/* Error generating scoreboard command: " + e.getMessage() + " */";
-        }
+        return generate();
     }
 
-    // --- 📦 Batch Management Branch ---
+    // --- 📦 Inner Utility ---
 
     /**
-     * Handles bulk generation of scoreboard commands, primarily used during
-     * datapack initialization to set up the game environment.
+     * Static utility for bulk scoreboard operations.
      */
-    public static class BatchBuilder {
+    public static final class Batch {
 
         /**
-         * Generates a list of commands to register all statically defined objectives and their display slots.
-         * @return A non-null list of initialized ScoreboardCommand objects.
-         * @throws RuntimeException if an error occurs during objective iteration or command construction.
+         * Compiles a list of initialization commands for all objectives in the registry.
+         * <p>This includes both 'add' commands and 'setdisplay' commands for sidebar objectives.</p>
+         * @return A non-null list of ScoreboardCommand instances.
+         * @throws RuntimeException if registration fails during the loop.
          */
-        public List<ScoreboardCommand> registerAll() {
-            List<ScoreboardCommand> commandList = new ArrayList<>();
-
+        public static List<ScoreboardCommand> registerAll() {
+            final List<ScoreboardCommand> commands = new ArrayList<>();
             try {
                 for (uhc.score.ScoreboardObjective obj : uhc.score.ScoreboardObjectives.ALL) {
                     if (obj == null) continue;
 
-                    // 1. Create the objective registration
-                    commandList.add(ScoreboardCommand.objectives().add(obj));
+                    commands.add(ScoreboardCommand.addObjective(obj));
 
-                    // 2. Set the display slot if the objective is flagged for the sidebar
                     if (obj.isDisplaySidebar()) {
-                        commandList.add(ScoreboardCommand.objectives()
-                                .setDisplay(uhc.score.DisplaySlot.SIDEBAR, obj.getId()));
+                        commands.add(ScoreboardCommand.setDisplay(DisplaySlot.SIDEBAR, obj.getId()));
                     }
                 }
             } catch (Exception e) {
-                throw new RuntimeException("CRITICAL: Failed to compile objective registration batch. Reason: " + e.getMessage(), e);
+                throw new RuntimeException("CRITICAL: Failed to compile global objective registration batch.", e);
             }
-            return commandList;
-        }
-    }
-
-    // --- 🎯 Objective Management Branch ---
-
-    /**
-     * 🎯 **Objective Builder**
-     * <p>Handles sub-commands under {@code /scoreboard objectives}, responsible for
-     * the creation and management of score categories.</p>
-     */
-    public static class ObjectiveBuilder extends ScoreboardCommand {
-
-        /** * The internal storage for the formatted sub-action string. */
-        private String command;
-
-        /**
-         * Configures the command to register a new scoreboard objective.
-         * @param obj The {@link ScoreboardObjective} data model; must not be null.
-         * @return This builder instance for chaining.
-         * @throws NullPointerException if {@code obj} is null.
-         */
-        public ObjectiveBuilder add(ScoreboardObjective obj) {
-            Objects.requireNonNull(obj, "Objective Builder Error: Objective data model cannot be null.");
-
-            try {
-                StringBuilder sb = new StringBuilder("add ")
-                        .append(obj.getId().getObjectiveName())
-                        .append(" ")
-                        .append(obj.getCriteria().getCriteriaName());
-
-                if (obj.getDisplayName() != null) {
-                    sb.append(" ").append(obj.getDisplayName().build());
-                }
-
-                this.command = sb.toString();
-                return this;
-            } catch (Exception e) {
-                throw new IllegalStateException("Objective Builder Error: Failed to construct 'add' command for ID: " + obj.getId(), e);
-            }
-        }
-
-        /**
-         * Configures the command to delete an existing objective.
-         * @param id The unique {@link ScoreboardObjectiveId} to remove; must not be null.
-         * @return This builder instance for chaining.
-         * @throws NullPointerException if the ID is null.
-         */
-        public ObjectiveBuilder remove(ScoreboardObjectiveId id) {
-            Objects.requireNonNull(id, "Objective Builder Error: Objective ID to remove cannot be null.");
-            this.command = "remove " + id.getObjectiveName();
-            return this;
-        }
-
-        /**
-         * Sets where an objective should be visually displayed on the player's UI.
-         * @param slot The {@link DisplaySlot} destination (e.g., sidebar); must not be null.
-         * @param id   The objective ID to display, or null to clear the slot.
-         * @return This builder instance for chaining.
-         * @throws NullPointerException if the {@code slot} is null.
-         */
-        public ObjectiveBuilder setDisplay(DisplaySlot slot, ScoreboardObjectiveId id) {
-            Objects.requireNonNull(slot, "Objective Builder Error: Display slot cannot be null.");
-            this.command = "setdisplay " + slot.getSlotName() + (id != null ? " " + id.getObjectiveName() : "");
-            return this;
-        }
-
-        @Override
-        public String generate() {
-            if (command == null) {
-                throw new IllegalStateException("ObjectiveBuilder Error: No action (add, remove, setdisplay) was defined.");
-            }
-            return "scoreboard objectives " + command;
-        }
-    }
-
-    // --- ⚔️ Player Management Branch ---
-
-    /**
-     * ⚔️ **Player Builder**
-     * <p>Handles sub-commands under {@code /scoreboard players}, focusing on
-     * numerical manipulation and querying of score values.</p>
-     */
-    public static class PlayerBuilder extends ScoreboardCommand {
-
-        /** * The entity selector targeted by the command. */
-        private Entity target;
-
-        /** * The action template containing a %s placeholder for the target entity. */
-        private String fullAction;
-
-        /**
-         * Defines the entity whose scores will be processed.
-         * @param target The {@link Entity} selector; must not be null.
-         * @return This builder instance for chaining.
-         * @throws NullPointerException if target is null.
-         */
-        public PlayerBuilder target(Entity target) {
-            this.target = Objects.requireNonNull(target, "Player Builder Error: Target entity cannot be null.");
-            return this;
-        }
-
-        /**
-         * Performs a mathematical operation between two entity scores.
-         * <p><b>Syntax:</b> {@code scoreboard players operation <target> <targetObj> <operator> <source> <sourceObj>}</p>
-         * @param targetObj The objective on the target to modify; must not be null.
-         * @param operator  The {@link OperationType} math operator; must not be null.
-         * @param source    The source entity to read from; must not be null.
-         * @param sourceObj The objective on the source to read; must not be null.
-         * @return This builder instance for chaining.
-         * @throws NullPointerException if any parameter is null.
-         */
-        public PlayerBuilder operation(ScoreboardObjectiveId targetObj, OperationType operator, Entity source, ScoreboardObjectiveId sourceObj) {
-            Objects.requireNonNull(targetObj, "Operation Error: Target objective cannot be null.");
-            Objects.requireNonNull(operator, "Operation Error: Mathematical operator cannot be null.");
-            Objects.requireNonNull(source, "Operation Error: Source entity cannot be null.");
-            Objects.requireNonNull(sourceObj, "Operation Error: Source objective cannot be null.");
-
-            try {
-                // The %s placeholder is populated by the class-wide 'target' in generate()
-                this.fullAction = String.format("operation %%s %s %s %s %s",
-                        targetObj.getObjectiveName(),
-                        operator.getOperator(),
-                        source.toString(),
-                        sourceObj.getObjectiveName());
-                return this;
-            } catch (Exception e) {
-                throw new RuntimeException("Operation Error: Critical failure building math operation: " + e.getMessage(), e);
-            }
-        }
-
-        /**
-         * Queries the score of a player for a specific objective.
-         * @param target    The {@link Entity} to query; must not be null.
-         * @param objective The {@link ScoreboardObjectiveId} to retrieve; must not be null.
-         * @return This builder instance.
-         */
-        public PlayerBuilder get(Entity target, ScoreboardObjectiveId objective) {
-            Objects.requireNonNull(target, "Query Error: Target entity cannot be null.");
-            Objects.requireNonNull(objective, "Query Error: Objective ID cannot be null.");
-
-            this.target = target;
-            this.fullAction = "get %s " + objective.getObjectiveName();
-            return this;
-        }
-
-        /**
-         * Sets the target's score to a specific literal integer value.
-         * @param id    The objective to modify; must not be null.
-         * @param score The integer value to assign.
-         * @return This builder instance.
-         */
-        public PlayerBuilder set(ScoreboardObjectiveId id, int score) {
-            Objects.requireNonNull(id, "Set Action Error: Objective ID cannot be null.");
-            this.fullAction = "set %s " + id.getObjectiveName() + " " + score;
-            return this;
-        }
-
-        /**
-         * Increments the target's score by a specific amount.
-         * @param id    The objective to modify; must not be null.
-         * @param score The amount to add.
-         * @return This builder instance.
-         */
-        public PlayerBuilder add(ScoreboardObjectiveId id, int score) {
-            Objects.requireNonNull(id, "Add Action Error: Objective ID cannot be null.");
-            this.fullAction = "add %s " + id.getObjectiveName() + " " + score;
-            return this;
-        }
-
-        /**
-         * Completely removes score entries for a target.
-         * @param id The specific objective to reset, or null to clear ALL objectives for the target.
-         * @return This builder instance.
-         */
-        public PlayerBuilder reset(ScoreboardObjectiveId id) {
-            this.fullAction = "reset %s" + (id != null ? " " + id.getObjectiveName() : "");
-            return this;
-        }
-
-        @Override
-        public String generate() {
-            if (target == null) {
-                throw new IllegalStateException("PlayerBuilder Error: No target entity provided. Use .target() or .get().");
-            }
-            if (fullAction == null) {
-                throw new IllegalStateException("PlayerBuilder Error: No action (set, add, reset, operation, get) was defined.");
-            }
-
-            try {
-                // Injects the target entity into the action template
-                return "scoreboard players " + String.format(fullAction, target.toString());
-            } catch (Exception e) {
-                throw new IllegalStateException("CRITICAL: Failed to assemble player command for " + target, e);
-            }
+            return commands;
         }
     }
 }
