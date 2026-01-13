@@ -109,12 +109,12 @@ public class InitializeFunction implements DatapackFunction {
         // Hardcore health regen mechanics
         for (DimensionId dimension : DimensionId.values()) {
             function.addLine(ExecuteCommand.create().in(dimension)
-                    .run(GameRuleCommand.create(GameRuleId.NATURAL_REGENERATION).booleanValue(false)));
+                    .run(GameRuleCommand.set(GameRuleId.NATURAL_REGENERATION, false)));
         }
-        function.addLine(GameRuleCommand.create(GameRuleId.DO_IMMEDIATE_RESPAWN).booleanValue(true));
-        function.addLine(GameRuleCommand.create(GameRuleId.DO_PATROL_SPAWNING).booleanValue(false));
-        function.addLine(GameRuleCommand.create(GameRuleId.DO_MOB_SPAWNING).booleanValue(false));
-        function.addLine(GameRuleCommand.create(GameRuleId.DO_WEATHER_CYCLE).booleanValue(false));
+        function.addLine(GameRuleCommand.set(GameRuleId.DO_IMMEDIATE_RESPAWN, true));
+        function.addLine(GameRuleCommand.set(GameRuleId.DO_PATROL_SPAWNING, false));
+        function.addLine(GameRuleCommand.set(GameRuleId.DO_MOB_SPAWNING, false));
+        function.addLine(GameRuleCommand.set(GameRuleId.DO_WEATHER_CYCLE, false));
 
         function.addLine(DifficultyCommand.create().difficulty(DifficultyId.HARD));
         function.addLine(GameModeCommand.create(GameModeId.ADVENTURE).setDefault());

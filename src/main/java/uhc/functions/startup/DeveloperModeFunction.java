@@ -121,51 +121,27 @@ public class DeveloperModeFunction implements DatapackFunction {
             currentFunction.addLine(TimeCommand.set(VariableGameTime.create(0)));
 
             // Set gamerules
-            fileCommands.add(GameRuleCommand.create(GameRuleId.COMMAND_BLOCK_OUTPUT)
-                    .booleanValue(true)
-                    .generate());
-            fileCommands.add(GameRuleCommand.create(GameRuleId.DO_DAYLIGHT_CYCLE)
-                    .booleanValue(false)
-                    .generate());
-            fileCommands.add(GameRuleCommand.create(GameRuleId.KEEP_INVENTORY)
-                    .booleanValue(true)
-                    .generate());
-            fileCommands.add(GameRuleCommand.create(GameRuleId.DO_MOB_SPAWNING)
-                    .booleanValue(false)
-                    .generate());
-            fileCommands.add(GameRuleCommand.create(GameRuleId.DO_TILE_DROPS)
-                    .booleanValue(false)
-                    .generate());
-            fileCommands.add(GameRuleCommand.create(GameRuleId.DROWNING_DAMAGE)
-                    .booleanValue(false)
-                    .generate());
-            fileCommands.add(GameRuleCommand.create(GameRuleId.FALL_DAMAGE)
-                    .booleanValue(false)
-                    .generate());
-            fileCommands.add(GameRuleCommand.create(GameRuleId.FIRE_DAMAGE)
-                    .booleanValue(false)
-                    .generate());
-            fileCommands.add(GameRuleCommand.create(GameRuleId.SEND_COMMAND_FEEDBACK)
-                    .booleanValue(true)
-                    .generate());
-            fileCommands.add(GameRuleCommand.create(GameRuleId.DO_IMMEDIATE_RESPAWN)
-                    .booleanValue(true)
-                    .generate());
-            fileCommands.add(GameRuleCommand.create(GameRuleId.DISABLE_RAIDS)
-                    .booleanValue(true)
-                    .generate());
-            fileCommands.add(GameRuleCommand.create(GameRuleId.DO_INSOMNIA)
-                    .booleanValue(false)
-                    .generate());
+            currentFunction.addLine(GameRuleCommand.set(GameRuleId.COMMAND_BLOCK_OUTPUT, true));
+            currentFunction.addLine(GameRuleCommand.set(GameRuleId.DO_DAYLIGHT_CYCLE, false));
+            currentFunction.addLine(GameRuleCommand.set(GameRuleId.KEEP_INVENTORY, true));
+            currentFunction.addLine(GameRuleCommand.set(GameRuleId.DO_MOB_SPAWNING, false));
+            currentFunction.addLine(GameRuleCommand.set(GameRuleId.DO_TILE_DROPS, false));
+            currentFunction.addLine(GameRuleCommand.set(GameRuleId.DROWNING_DAMAGE, false));
+            currentFunction.addLine(GameRuleCommand.set(GameRuleId.FALL_DAMAGE, false));
+            currentFunction.addLine(GameRuleCommand.set(GameRuleId.FIRE_DAMAGE, false));
+            currentFunction.addLine(GameRuleCommand.set(GameRuleId.SEND_COMMAND_FEEDBACK, true));
+            currentFunction.addLine(GameRuleCommand.set(GameRuleId.DO_IMMEDIATE_RESPAWN, true));
+            currentFunction.addLine(GameRuleCommand.set(GameRuleId.DISABLE_RAIDS, true));
+            currentFunction.addLine(GameRuleCommand.set(GameRuleId.DO_INSOMNIA, false));
 
             // Reset scores of all entities
-            fileCommands.add(scoreboard.Reset("@e"));
-            fileCommands.add(scoreboard.Set(Constant.adminOld, Objective.MinHealth, 20));
-            fileCommands.add(scoreboard.Set(Constant.adminOld, Objective.Victory, 1));
+            currentFunction.addLine(scoreboard.Reset("@e"));
+            currentFunction.addLine(scoreboard.Set(Constant.adminOld, Objective.MinHealth, 20));
+            currentFunction.addLine(scoreboard.Set(Constant.adminOld, Objective.Victory, 1));
 
             // Get all player UUIDs
             for (int i = 0; i < 4; i++) {
-                fileCommands.add(Execute.As("@a", false) +
+                currentFunction.addLine(Execute.As("@a", false) +
                         Execute.StoreNext(ExecuteStore.result, "@s", getObjectiveByName(Objective.CollarCheck.extendName(i)), true) +
                         DataCommand.createGet(
                                         DataTargetEntity.create(Entity.ofSelector(TargetSelector.SENDER)),
@@ -174,7 +150,7 @@ public class DeveloperModeFunction implements DatapackFunction {
             }
 
             // Create jukebox at 0,0
-            fileCommands.add(Execute.In(Dimension.overworld) +
+            currentFunction.addLine(Execute.In(Dimension.overworld) +
                     SetBlockCommand.create(
                             BlockPos.absolute(startCoordinate),
                             Block.create(BlockId.JUKEBOX)
@@ -183,76 +159,68 @@ public class DeveloperModeFunction implements DatapackFunction {
                                             .recordItem(SingleItemStack.create(ItemId.MUSIC_DISC_STAL, 1)))));
 
             // Remove tags
-            fileCommands.add(TagCommand.target(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
-                    .remove(EntityTag.RESPAWN_DISABLED)
-                    .generate());
-            fileCommands.add(TagCommand.target(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
-                    .remove(EntityTag.IRON_MAN_CANDIDATE)
-                    .generate());
-            fileCommands.add(TagCommand.target(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
-                    .remove(EntityTag.IRON_MAN)
-                    .generate());
-            fileCommands.add(TagCommand.target(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
-                    .remove(EntityTag.RESPAWN)
-                    .generate());
-            fileCommands.add(TagCommand.target(Constant.admin)
-                    .remove(EntityTag.GAME_STARTED)
-                    .generate());
+            currentFunction.addLine(TagCommand.target(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
+                    .remove(EntityTag.RESPAWN_DISABLED));
+            currentFunction.addLine(TagCommand.target(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
+                    .remove(EntityTag.IRON_MAN_CANDIDATE));
+            currentFunction.addLine(TagCommand.target(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
+                    .remove(EntityTag.IRON_MAN));
+            currentFunction.addLine(TagCommand.target(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
+                    .remove(EntityTag.RESPAWN));
+            currentFunction.addLine(TagCommand.target(Constant.admin)
+                    .remove(EntityTag.GAME_STARTED));
 
             // Set world border
-            fileCommands.add(WorldBorderCommand.create(WorldBorderCommand.WorldBorderAction.SET)
-                    .distance(2 * world.getSize())
-                    .generate());
+            currentFunction.addLine(WorldBorderCommand.create(WorldBorderCommand.WorldBorderAction.SET)
+                    .distance(2 * world.getSize()));
 
             // Display ranks
-            fileCommands.add(Schedule.callFunction(FileName.display_rank));
+            currentFunction.addLine(Schedule.callFunction(FileName.display_rank));
 
             // Set time dummy scoreboard entries
-            fileCommands.add(scoreboard.Set("NightTime", getObjectiveByName(Objective.Time), 600));
+            currentFunction.addLine(scoreboard.Set("NightTime", getObjectiveByName(Objective.Time), 600));
 
             // Reset teams & solos
             for (Team t : teams) {
-                fileCommands.add(t.emptyTeam());
+                currentFunction.addLine(t.emptyTeam());
             }
 
             // Reset player attributes
-            fileCommands.add(Execute.As("@a") +
+            currentFunction.addLine(Execute.As("@a") +
                     AttributeCommand.setBase(
                             Entity.ofSelector(TargetSelector.SENDER),
                             AttributeId.SCALE,
                             1));
-            fileCommands.add(Execute.As("@a") +
+            currentFunction.addLine(Execute.As("@a") +
                     AttributeCommand.setBase(
                             Entity.ofSelector(TargetSelector.SENDER),
                             AttributeId.WAYPOINT_TRANSMIT_RANGE,
                             0));
 
             // Set gamemode of player executing the command to creative
-            fileCommands.add(GameModeCommand.create(GameModeId.CREATIVE)
+            currentFunction.addLine(GameModeCommand.create(GameModeId.CREATIVE)
                     .target(Entity.ofSelector(TargetSelector.SENDER))
-                    .generate()
             );
 
             // Clear scheduled commands
-            fileCommands.add(Schedule.callFunction(FileName.clear_schedule));
+            currentFunction.addLine(Schedule.callFunction(FileName.clear_schedule));
 
             // Clear all player effects
-            fileCommands.add(EffectCommand.clear(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
-                    .generate());
+            currentFunction.addLine(EffectCommand.clear(Entity.ofSelector(TargetSelector.ALL_PLAYERS)));
 
             // Give admin start potions
-            fileCommands.add(Schedule.callFunction(FileName.start_potions));
+            currentFunction.addLine(Schedule.callFunction(FileName.start_potions));
 
             // Start timers
-            fileCommands.add(Schedule.callFunction(FileName.timer_developer_20));
+            currentFunction.addLine(Schedule.callFunction(FileName.timer_developer_20));
 
             // Care Packages
             if (OperationMode.carePackages) {
                 // Set scoreboard dummies
-                fileCommands.add(scoreboard.Set("CarePackages", getObjectiveByName(Objective.Time), 1200));
+                currentFunction.addLine(scoreboard.Set("CarePackages", getObjectiveByName(Objective.Time), 1200));
 
                 // Remove tags
-                fileCommands.add(TagCommand.target(Constant.admin)
+                currentFunction.addLine(TagCommand.target(Constant.admin)
                         .remove(EntityTag.CARE_PACKAGES_DROPPED)
                         .generate());
             }
@@ -262,55 +230,55 @@ public class DeveloperModeFunction implements DatapackFunction {
                 // Reset scoreboard objectives
                 for (int i = 1; i < controlPoints.size() + 1; i++) {
                     for (Team team : teams) {
-                        fileCommands.add(scoreboard.Set(team.getName(), getObjectiveByName(Objective.OnCP.extendName(i)), 0));
-                        fileCommands.add(scoreboard.Set(team.getName(), getObjectiveByName(Objective.PrevCP.extendName(i)), 0));
-                        fileCommands.add(scoreboard.Reset(team.getPlayerColor(), getObjectiveByName(Objective.ControlPoint.extendName(i))));
+                        currentFunction.addLine(scoreboard.Set(team.getName(), getObjectiveByName(Objective.OnCP.extendName(i)), 0));
+                        currentFunction.addLine(scoreboard.Set(team.getName(), getObjectiveByName(Objective.PrevCP.extendName(i)), 0));
+                        currentFunction.addLine(scoreboard.Reset(team.getPlayerColor(), getObjectiveByName(Objective.ControlPoint.extendName(i))));
                     }
-                    fileCommands.add(scoreboard.Set(Constant.adminOld, Objective.DisplayCP.extendName(i), 0));
-                    fileCommands.add(scoreboard.Set(Constant.adminOld, Objective.ColorCP.extendName(i), -1));
-                    fileCommands.add(scoreboard.Set("@a", Objective.ReceivedPerk, 0));
+                    currentFunction.addLine(scoreboard.Set(Constant.adminOld, Objective.DisplayCP.extendName(i), 0));
+                    currentFunction.addLine(scoreboard.Set(Constant.adminOld, Objective.ColorCP.extendName(i), -1));
+                    currentFunction.addLine(scoreboard.Set("@a", Objective.ReceivedPerk, 0));
                 }
-                fileCommands.add(scoreboard.Reset("Solo", getObjectiveByName(Objective.CPScore)));
+                currentFunction.addLine(scoreboard.Reset("Solo", getObjectiveByName(Objective.CPScore)));
                 for (Team t : teams) {
-                    fileCommands.add(scoreboard.Reset(t.getPlayerColor(), getObjectiveByName(Objective.CPScore)));
-                    fileCommands.add(t.joinTeam(t.getPlayerColor()));
+                    currentFunction.addLine(scoreboard.Reset(t.getPlayerColor(), getObjectiveByName(Objective.CPScore)));
+                    currentFunction.addLine(t.joinTeam(t.getPlayerColor()));
                 }
 
                 // Set scoreboard dummies
-                fileCommands.add(scoreboard.Set("Perk1", getObjectiveByName(Objective.CPScore), 3 * singleton.getMinToCPScore()));
-                fileCommands.add(scoreboard.Set("Perk2", getObjectiveByName(Objective.CPScore), 6 * singleton.getMinToCPScore()));
-                fileCommands.add(scoreboard.Set("Perk3", getObjectiveByName(Objective.CPScore), 12 * singleton.getMinToCPScore()));
-                fileCommands.add(scoreboard.Set("Perk4", getObjectiveByName(Objective.CPScore), 15 * singleton.getMinToCPScore()));
-                fileCommands.add(scoreboard.Set("TimeVictory", getObjectiveByName(Objective.CPScore), 20 * singleton.getMinToCPScore()));
-                fileCommands.add(scoreboard.Set("ControlPoints", getObjectiveByName(Objective.Time), 1800));
+                currentFunction.addLine(scoreboard.Set("Perk1", getObjectiveByName(Objective.CPScore), 3 * singleton.getMinToCPScore()));
+                currentFunction.addLine(scoreboard.Set("Perk2", getObjectiveByName(Objective.CPScore), 6 * singleton.getMinToCPScore()));
+                currentFunction.addLine(scoreboard.Set("Perk3", getObjectiveByName(Objective.CPScore), 12 * singleton.getMinToCPScore()));
+                currentFunction.addLine(scoreboard.Set("Perk4", getObjectiveByName(Objective.CPScore), 15 * singleton.getMinToCPScore()));
+                currentFunction.addLine(scoreboard.Set("TimeVictory", getObjectiveByName(Objective.CPScore), 20 * singleton.getMinToCPScore()));
+                currentFunction.addLine(scoreboard.Set("ControlPoints", getObjectiveByName(Objective.Time), 1800));
 
                 // Remove tags
-                fileCommands.add(TagCommand.target(Constant.admin)
+                currentFunction.addLine(TagCommand.target(Constant.admin)
                         .remove(EntityTag.indexed(EntityTag.CONTROL_POINT_ENABLED, 1))
                         .generate());
-                fileCommands.add(TagCommand.target(Constant.admin)
+                currentFunction.addLine(TagCommand.target(Constant.admin)
                         .remove(EntityTag.indexed(EntityTag.CONTROL_POINT_ENABLED, 2))
                         .generate());
-                fileCommands.add(TagCommand.target(Constant.admin)
+                currentFunction.addLine(TagCommand.target(Constant.admin)
                         .remove(EntityTag.CONTROL_POINT_CAPTURED)
                         .generate());
 
                 // Spawn new Control Points
-                fileCommands.add(Schedule.callFunction(FileName.spawn_control_points));
+                currentFunction.addLine(Schedule.callFunction(FileName.spawn_control_points));
 
                 // Reset bossbars
                 BossBar bossBarCp1 = getBossbarByName("cp1");
                 BossBar bossBarCp2 = getBossbarByName("cp2");
-                fileCommands.add(bossBarCp1.setColor(BossBarColor.white));
-                fileCommands.add(bossBarCp1.setVisible(false));
-                fileCommands.add(bossBarCp1.setPlayers("@a"));
-                fileCommands.add(bossBarCp1.setTitle(controlPoints.get(0).getName() + ": " + controlPoints.get(0).getCoordinate().getX() + ", " + controlPoints.get(0).getCoordinate().getY() + ", " + controlPoints.get(0).getCoordinate().getZ() + " (" + controlPoints.get(0).getCoordinate().getDimensionName() + ")"));
-                fileCommands.add(bossBarCp1.setValue(0));
-                fileCommands.add(bossBarCp2.setColor(BossBarColor.white));
-                fileCommands.add(bossBarCp2.setVisible(false));
-                fileCommands.add(bossBarCp2.setPlayers("@a"));
-                fileCommands.add(bossBarCp2.setTitle(controlPoints.get(1).getName() + " soon: " + controlPoints.get(1).getCoordinate().getX() + ", " + controlPoints.get(1).getCoordinate().getY() + ", " + controlPoints.get(1).getCoordinate().getZ() + " (" + controlPoints.get(1).getCoordinate().getDimensionName() + ")"));
-                fileCommands.add(bossBarCp2.setValue(0));
+                currentFunction.addLine(bossBarCp1.setColor(BossBarColor.white));
+                currentFunction.addLine(bossBarCp1.setVisible(false));
+                currentFunction.addLine(bossBarCp1.setPlayers("@a"));
+                currentFunction.addLine(bossBarCp1.setTitle(controlPoints.get(0).getName() + ": " + controlPoints.get(0).getCoordinate().getX() + ", " + controlPoints.get(0).getCoordinate().getY() + ", " + controlPoints.get(0).getCoordinate().getZ() + " (" + controlPoints.get(0).getCoordinate().getDimensionName() + ")"));
+                currentFunction.addLine(bossBarCp1.setValue(0));
+                currentFunction.addLine(bossBarCp2.setColor(BossBarColor.white));
+                currentFunction.addLine(bossBarCp2.setVisible(false));
+                currentFunction.addLine(bossBarCp2.setPlayers("@a"));
+                currentFunction.addLine(bossBarCp2.setTitle(controlPoints.get(1).getName() + " soon: " + controlPoints.get(1).getCoordinate().getX() + ", " + controlPoints.get(1).getCoordinate().getY() + ", " + controlPoints.get(1).getCoordinate().getZ() + " (" + controlPoints.get(1).getCoordinate().getDimensionName() + ")"));
+                currentFunction.addLine(bossBarCp2.setValue(0));
 
                 // Kill waypoints
                 for (ControlPoint controlPoint : controlPoints) {
@@ -324,16 +292,16 @@ public class DeveloperModeFunction implements DatapackFunction {
             // Traitor Faction
             if (OperationMode.traitorFaction) {
                 // Set scoreboard dummies
-                fileCommands.add(scoreboard.Set("TraitorFaction", getObjectiveByName(Objective.Time), 2400));
+                currentFunction.addLine(scoreboard.Set("TraitorFaction", getObjectiveByName(Objective.Time), 2400));
 
                 // Remove tags
-                fileCommands.add(TagCommand.target(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
+                currentFunction.addLine(TagCommand.target(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
                         .remove(EntityTag.TRAITOR)
                         .generate());
-                fileCommands.add(TagCommand.target(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
+                currentFunction.addLine(TagCommand.target(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
                         .remove(EntityTag.DONT_MAKE_TRAITOR)
                         .generate());
-                fileCommands.add(TagCommand.target(Constant.admin)
+                currentFunction.addLine(TagCommand.target(Constant.admin)
                         .remove(EntityTag.TRAITORS_ASSIGNED)
                         .generate());
             }
@@ -341,7 +309,7 @@ public class DeveloperModeFunction implements DatapackFunction {
             // In-game team creation
             if (OperationMode.teamCreationInGame) {
                 // Reset scoreboard objectives
-                fileCommands.add(scoreboard.Set("@a", Objective.IsKiller, 0));
+                currentFunction.addLine(scoreboard.Set("@a", Objective.IsKiller, 0));
             }
 
             // D. Structural Formatting

@@ -6,95 +6,159 @@ import uhc.resource.gameplay.GameRuleId;
 import java.util.Objects;
 
 /**
- * ⚙️ **GameRule Command Builder**
+ * ⚙️ **GameRule Command Builder (GameRuleCommand)**
  * <p>
- * Provides a structured way to build {@code /gamerule} commands.
- * This builder supports two main modes:
+ * Provides a robust, type-safe API for constructing Minecraft {@code /gamerule} commands.
+ * This class ensures that rules requiring boolean states cannot be assigned integer values
+ * and vice-versa, adhering to Minecraft's strict internal data types.
+ * </p>
+ * <p>
+ * <b>Logic Flow:</b>
  * <ul>
- * <li><b>Query:</b> {@code /gamerule <rule>} - Returns the current value.</li>
- * <li><b>Set:</b> {@code /gamerule <rule> <value>} - Updates the rule.</li>
+ * <li><b>Query:</b> {@code /gamerule <rule>}</li>
+ * <li><b>Set:</b> {@code /gamerule <rule> <value>}</li>
  * </ul>
  * </p>
  */
 public class GameRuleCommand implements MinecraftCommand {
-    private final GameRuleId name;
 
-    // Stored as Object to accommodate Integer or Boolean (Minecraft's two supported types)
-    private Object value;
+    // --- 📄 Fields ---
 
-    private GameRuleCommand(GameRuleId name) {
-        this.name = Objects.requireNonNull(name, "GameRule name cannot be null.");
-    }
+    /** * The specific identifier for the game rule being targeted.
+     * This contains the rule's command name and its associated data type.
+     */
+    private final GameRuleId rule;
+
+    /** * The value to be applied to the game rule.
+     * This is stored as an {@link Object} to accommodate both {@link Boolean}
+     * and {@link Integer} types. If null, the command is treated as a query.
+     */
+    private final Object value;
+
+    // --- 🏗️ Private Constructor ---
 
     /**
-     * Initializes a new GameRule builder for a specific rule.
-     * @param name The namespaced ID of the rule (e.g., randomTickSpeed).
-     * @return A new GameRuleCommand instance.
+     * Constructs a validated GameRuleCommand instance.
+     * <p><b>Strict Validation:</b> Ensures the rule is never null.</p>
+     * * @param rule  The non-null {@link GameRuleId}.
+     * @param value The value to set, or null for a query command.
+     * @throws NullPointerException if rule is null.
      */
-    public static GameRuleCommand create(GameRuleId name) {
-        return new GameRuleCommand(name);
-    }
-
-    // --- Action Methods ---
-
-    /**
-     * Sets the value for boolean rules.
-     * <p>Examples: {@code doDaylightCycle}, {@code keepInventory}, {@code doFireTick}.</p>
-     * @param value The boolean state to set.
-     */
-    public GameRuleCommand booleanValue(boolean value) {
+    private GameRuleCommand(GameRuleId rule, Object value) {
+        this.rule = Objects.requireNonNull(rule, "GameRule Error: Rule ID cannot be null.");
         this.value = value;
-        return this;
     }
 
+    // --- 🚀 Static Entry Points ---
+
     /**
-     * Sets the value for integer rules.
-     * <p>Examples: {@code randomTickSpeed}, {@code spawnRadius}, {@code maxEntityCramming}.</p>
-     * @param value The integer value to set.
+     * Creates a command to query the current value of a game rule.
+     * <p>Example: {@code /gamerule doFireTick}</p>
+     * * @param rule The rule to query.
+     * @return A new GameRuleCommand instance in query mode.
+     * @throws NullPointerException if rule is null.
      */
-    public GameRuleCommand intValue(int value) {
-        this.value = value;
-        return this;
+    public static GameRuleCommand query(GameRuleId rule) {
+        return new GameRuleCommand(rule, null);
     }
 
     /**
-     * Marks the command as a query.
-     * <p>Calling this removes any previously set value, resulting in {@code /gamerule <name>}.</p>
+     * Creates a command to set a boolean-based game rule.
+     * <p><b>Type Guard:</b> Validates that the rule is registered as a Boolean type.</p>
+     * * @param rule  The rule to modify.
+     * @param state The boolean state to apply.
+     * @return A new GameRuleCommand instance in set mode.
+     * @throws IllegalArgumentException if the rule is actually an Integer-type rule.
+     * @throws NullPointerException if rule is null.
      */
-    public GameRuleCommand query() {
-        this.value = null;
-        return this;
+    public static GameRuleCommand set(GameRuleId rule, boolean state) {
+        validateType(rule, GameRuleId.RuleType.BOOLEAN);
+        return new GameRuleCommand(rule, state);
     }
 
-    // --- Build Method ---
+    /**
+     * Creates a command to set an integer-based game rule.
+     * <p><b>Type Guard:</b> Validates that the rule is registered as an Integer type.</p>
+     * * @param rule  The rule to modify.
+     * @param value The integer value to apply.
+     * @return A new GameRuleCommand instance in set mode.
+     * @throws IllegalArgumentException if the rule is actually a Boolean-type rule.
+     * @throws NullPointerException if rule is null.
+     */
+    public static GameRuleCommand set(GameRuleId rule, int value) {
+        validateType(rule, GameRuleId.RuleType.INTEGER);
+        return new GameRuleCommand(rule, value);
+    }
+
+    // --- 🛠️ Validation Logic ---
 
     /**
-     * Generates the command string.
-     * <p>Note: Minecraft game rules are case-sensitive and usually lower-camelCase.</p>
-     * @return The formatted command (e.g., "gamerule doMobSpawning false").
+     * Internal validator to prevent cross-type pollution between Boolean and Integer rules.
+     * <p>
+     * If the provided {@link GameRuleId} does not match the {@link GameRuleId.RuleType}
+     * expected by the setter, a clear error is thrown to prevent illegal commands.
+     * </p>
+     * * @param target   The rule being checked.
+     * @param expected The type required by the specific factory method.
+     * @throws IllegalArgumentException if types do not match.
+     */
+    private static void validateType(GameRuleId target, GameRuleId.RuleType expected) {
+        Objects.requireNonNull(target, "Validation Error: Target rule is null.");
+        if (target.getType() != expected) {
+            throw new IllegalArgumentException(String.format(
+                    "Gamerule Type Mismatch: Rule '%s' requires a %s value, but a %s was provided.",
+                    target.getCommandName(), target.getType(), expected
+            ));
+        }
+    }
+
+    // --- 🔍 Accessors ---
+
+    /** * @return The {@link GameRuleId} associated with this command.
+     */
+    public GameRuleId getRule() {
+        return rule;
+    }
+
+    /** * @return The value being set, or {@code null} if this is a query command.
+     */
+    public Object getValue() {
+        return value;
+    }
+
+    // --- ⚙️ Command Generation ---
+
+    /**
+     * Generates the final Minecraft command string for execution.
+     * <p><b>No-Fallback:</b> If state is corrupted, a RuntimeException is thrown.</p>
+     * * @return The formatted command string (e.g., "gamerule randomTickSpeed 3").
+     * @throws RuntimeException if the internal components fail to append.
      */
     @Override
     public String generate() {
-        StringBuilder sb = new StringBuilder("gamerule ");
+        final StringBuilder commandBuilder = new StringBuilder("gamerule ");
 
-        // Append the rule name (Assumes GameRuleId.toString() returns the correct camelCase name)
-        sb.append(name);
+        try {
+            // Append the lowerCamelCase name of the rule
+            commandBuilder.append(this.rule.getCommandName());
 
-        // If value is null, this remains a query command.
-        if (value != null) {
-            // Validation check to ensure internal state hasn't been corrupted.
-            if (!(value instanceof Boolean || value instanceof Integer)) {
-                throw new IllegalStateException("Invalid value type: " + value.getClass().getSimpleName() +
-                        ". Game rules only support Boolean or Integer.");
+            // If value is present, we are in 'Set' mode. Append the value.
+            if (this.value != null) {
+                commandBuilder.append(" ").append(this.value);
             }
 
-            // Append a space and the value (e.g., " true" or " 3")
-            sb.append(" ").append(value);
+            return commandBuilder.toString();
+        } catch (Exception e) {
+            // Error Catching: We throw a clear error instead of a default string.
+            throw new RuntimeException("CRITICAL: Failed to generate GameRule command for rule: "
+                    + (this.rule != null ? this.rule.name() : "UNKNOWN"), e);
         }
-
-        return sb.toString();
     }
 
+    /**
+     * Standard representation of the command.
+     * @return The result of {@link #generate()}.
+     */
     @Override
     public String toString() {
         return generate();
