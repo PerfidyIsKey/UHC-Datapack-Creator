@@ -7,7 +7,6 @@ import HelperClasses.Team;
 import controlpoints.ControlPoint;
 import uhc.arguments.block.Block;
 import uhc.arguments.block.BlockPos;
-import uhc.arguments.coordinate.Vec3;
 import uhc.arguments.data.DataPath;
 import uhc.arguments.entity.Entity;
 import uhc.arguments.entity.SelectorArgumentsBuilder;
@@ -33,6 +32,7 @@ import uhc.resource.gameplay.GameModeId;
 import uhc.resource.gameplay.GameRuleId;
 import uhc.resource.item.ItemId;
 import uhc.resource.tag.EntityTag;
+import uhc.resource.world.DimensionId;
 import uhc.score.ScoreboardObjectiveId;
 import uhc.text.TextComponent;
 
@@ -114,7 +114,7 @@ public class DeveloperModeFunction implements DatapackFunction {
             // Create marker entity
             currentFunction.addLine(KillCommand.targets(Constants.admin));
             currentFunction.addLine(SummonCommand.entity(EntityId.MARKER,
-                    Constants.spawnPos,
+                    Constants.spawnBottom,
                     MarkerNBT.create()
                             .customName(TextComponent.text("Admin"))));
 
@@ -149,13 +149,13 @@ public class DeveloperModeFunction implements DatapackFunction {
             }
 
             // Create jukebox at 0,0
-            currentFunction.addLine(Execute.In(Dimension.overworld) +
-                    SetBlockCommand.create(
-                            BlockPos.absolute(startCoordinate),
+            currentFunction.addLine(ExecuteCommand.create()
+                    .in(DimensionId.OVERWORLD)
+                    .run(SetBlockCommand.create(Constants.spawnBlock,
                             Block.create(BlockId.JUKEBOX)
                                     .withState(HasRecordState.of(true))
                                     .withData(JukeboxNBT.create()
-                                            .recordItem(SingleItemStack.create(ItemId.MUSIC_DISC_STAL, 1)))));
+                                            .recordItem(SingleItemStack.create(ItemId.MUSIC_DISC_STAL, 1))))));
 
             // Remove tags
             currentFunction.addLine(TagCommand.target(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
