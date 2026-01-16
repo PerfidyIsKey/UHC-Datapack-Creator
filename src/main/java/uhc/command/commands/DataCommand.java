@@ -1,182 +1,227 @@
 package uhc.command.commands;
 
+import uhc.arguments.block.BlockPos;
 import uhc.arguments.data.DataPath;
+import uhc.arguments.entity.Entity;
 import uhc.command.MinecraftCommand;
-import uhc.command.commands.data.DataModification;
-import uhc.command.commands.data.DataTarget;
 
 import java.util.Objects;
 
 /**
- * 💾 **Data Command Builder**
+ * 💾 **Data Command Builder (DataCommand)**
  * <p>
- * This class is the primary orchestrator for generating Minecraft {@code /data} commands.
- * It manages the four main sub-commands: {@code get}, {@code merge}, {@code modify},
- * and {@code remove}.
+ * This class provides a flattened, type-safe API for constructing Minecraft {@code /data} commands.
+ * It manages the manipulation of NBT data for blocks, entities, and command storage.
  * </p>
  * <p>
- * The builder enforces structural integrity by validating that specific operations
- * (like {@code MODIFY}) have their required components (like {@code DataPath} and
- * {@code DataModification}) before the command can be generated.
+ * <b>Strict Policy:</b> This class avoids fallbacks. If a required parameter (like a {@link DataPath}
+ * for a scale operation) is missing, an explicit Exception is thrown to ensure command validity.
  * </p>
  */
 public class DataCommand implements MinecraftCommand {
 
-    // --- ⚙️ State & Fields ---
+    // --- 📄 Fields ---
 
-    /** * The high-level action to perform on the NBT data.
-     * Defines the command branch (get, merge, modify, or remove).
+    /** * The validated sub-command instruction.
+     * This contains the action, target, and arguments (e.g., "get entity @s Pos 1.0").
      */
-    private final DataAction action;
+    private final String instruction;
 
-    /** * The provider for the target identification (entity, block, or storage).
-     * Handles the {@code <type> <identifier>} segment of the command.
-     */
-    private final DataTarget target;
-
-    /** * The NBT path used to pinpoint specific tags within the target's data structure.
-     * Optional for {@code GET}, required for {@code MODIFY} and {@code REMOVE}.
-     */
-    private final DataPath path;
-
-    /** * The modification logic defining what changes to apply to the NBT.
-     * Required for {@code MODIFY} and {@code MERGE} operations.
-     */
-    private final DataModification modification;
-
-    // --- 🏗️ Constructor ---
+    // --- 🏗️ Private Constructor ---
 
     /**
-     * Internal constructor for the DataCommand.
-     * <p><b>Error Catching:</b> Strictly validates that the core components (action and target)
-     * are present and executes {@link #validateState()} to check for branch-specific requirements.</p>
-     * * @param action       The {@link DataAction} to execute.
-     * @param target       The {@link DataTarget} containing the target data.
-     * @param path         The optional {@link DataPath} to access.
-     * @param modification The optional {@link DataModification} logic.
-     * @throws NullPointerException if action or target is null.
+     * Constructs a DataCommand with a pre-validated instruction segment.
+     * <p><b>Error Catching:</b> Ensures the internal instruction is never null.</p>
+     * @param instruction The formatted sub-command.
+     * @throws NullPointerException if instruction is null.
      */
-    private DataCommand(DataAction action, DataTarget target, DataPath path, DataModification modification) {
-        this.action = Objects.requireNonNull(action, "DataAction cannot be null.");
-        this.target = Objects.requireNonNull(target, "DataTarget cannot be null.");
-        this.path = path;
-        this.modification = modification;
+    private DataCommand(String instruction) {
+        this.instruction = Objects.requireNonNull(instruction, "Data Error: Internal instruction string cannot be null.");
+    }
 
-        validateState();
+    // --- 🔍 Static Entry Points: GET ---
+
+    /**
+     * Retrieves all NBT data from a block at the specified position.
+     * @param pos The {@link BlockPos} of the tile entity; must not be null.
+     * @return A new {@link DataCommand} instance.
+     * @throws NullPointerException if {@code pos} is null.
+     */
+    public static DataCommand get(BlockPos pos) {
+        return get(pos, null, null);
     }
 
     /**
-     * Internal validation logic to enforce Minecraft command syntax rules.
-     * <p><b>Catching Errors:</b> This method prevents the construction of commands
-     * that would be rejected by the Minecraft server for missing parameters.</p>
-     * * @throws IllegalArgumentException if required fields for a specific action are null.
+     * Retrieves NBT data from a specific path within a block.
+     * @param pos  The {@link BlockPos} of the tile entity; must not be null.
+     * @param path The {@link DataPath} to query.
+     * @return A new {@link DataCommand} instance.
+     * @throws NullPointerException if {@code pos} is null.
      */
-    private void validateState() {
-        if (action == DataAction.MODIFY) {
-            if (path == null) throw new IllegalArgumentException("Action 'MODIFY' requires a DataPath.");
-            if (modification == null) throw new IllegalArgumentException("Action 'MODIFY' requires a DataModification.");
+    public static DataCommand get(BlockPos pos, DataPath path) {
+        return get(pos, path, null);
+    }
+
+    /**
+     * Retrieves NBT data from a block, optionally scaled by a multiplier.
+     * @param pos   The {@link BlockPos} of the tile entity; must not be null.
+     * @param path  The {@link DataPath} to query; required if scale is provided.
+     * @param scale The numeric multiplier for the retrieved value.
+     * @return A new {@link DataCommand} instance.
+     * @throws NullPointerException if {@code pos} is null.
+     * @throws IllegalArgumentException if {@code scale} is provided without a {@code path}.
+     */
+    public static DataCommand get(BlockPos pos, DataPath path, Double scale) {
+        Objects.requireNonNull(pos, "Data Get Error: Block position cannot be null.");
+        return new DataCommand(formatGet("block " + pos, path, scale));
+    }
+
+    /**
+     * Retrieves all NBT data from the specified entity.
+     * @param target The {@link Entity} selector; must not be null.
+     * @return A new {@link DataCommand} instance.
+     * @throws NullPointerException if {@code target} is null.
+     */
+    public static DataCommand get(Entity target) {
+        return get(target, null, null);
+    }
+
+    /**
+     * Retrieves NBT data from a specific path within an entity.
+     * @param target The {@link Entity} selector; must not be null.
+     * @param path   The {@link DataPath} to query.
+     * @return A new {@link DataCommand} instance.
+     * @throws NullPointerException if {@code target} is null.
+     */
+    public static DataCommand get(Entity target, DataPath path) {
+        return get(target, path, null);
+    }
+
+    /**
+     * Retrieves NBT data from an entity, optionally scaled by a multiplier.
+     * @param target The {@link Entity} selector; must not be null.
+     * @param path   The {@link DataPath} to query; required if scale is provided.
+     * @param scale  The numeric multiplier for the retrieved value.
+     * @return A new {@link DataCommand} instance.
+     * @throws NullPointerException if {@code target} is null.
+     * @throws IllegalArgumentException if {@code scale} is provided without a {@code path}.
+     */
+    public static DataCommand get(Entity target, DataPath path, Double scale) {
+        Objects.requireNonNull(target, "Data Get Error: Entity target cannot be null.");
+        return new DataCommand(formatGet("entity " + target, path, scale));
+    }
+
+    /**
+     * Retrieves NBT data from a named storage container.
+     * @param storage The storage namespace/ID; must not be null.
+     * @param path    The {@link DataPath} to query.
+     * @param scale   The numeric multiplier for the retrieved value.
+     * @return A new {@link DataCommand} instance.
+     * @throws NullPointerException if {@code storage} is null.
+     */
+    public static DataCommand get(String storage, DataPath path, Double scale) {
+        Objects.requireNonNull(storage, "Data Get Error: Storage namespace cannot be null.");
+        return new DataCommand(formatGet("storage " + storage, path, scale));
+    }
+
+    // --- 🛠️ Static Entry Points: MODIFY (SET VALUE) ---
+
+    /**
+     * Modifies a block's NBT by setting a specific path to a new value.
+     * @param pos        The {@link BlockPos} of the tile entity; must not be null.
+     * @param targetPath The {@link DataPath} to overwrite; must not be null.
+     * @param value      The value to insert (e.g., Integer, String, Compound); must not be null.
+     * @return A new {@link DataCommand} instance.
+     */
+    public static DataCommand setBlockValue(BlockPos pos, DataPath targetPath, Object value) {
+        Objects.requireNonNull(pos, "Data Modify Error: Block position cannot be null.");
+        return createModifyValue("block " + pos, targetPath, value);
+    }
+
+    /**
+     * Modifies an entity's NBT by setting a specific path to a new value.
+     * <p>Syntax: {@code /data modify entity <target> <targetPath> set value <value>}</p>
+     * @param target     The {@link Entity} selector; must not be null.
+     * @param targetPath The {@link DataPath} to overwrite; must not be null.
+     * @param value      The value to insert; must not be null.
+     * @return A new {@link DataCommand} instance.
+     */
+    public static DataCommand setEntityValue(Entity target, DataPath targetPath, Object value) {
+        Objects.requireNonNull(target, "Data Modify Error: Entity target cannot be null.");
+        return createModifyValue("entity " + target, targetPath, value);
+    }
+
+    /**
+     * Modifies a storage container's NBT by setting a specific path to a new value.
+     * @param storage    The storage namespace/ID; must not be null.
+     * @param targetPath The {@link DataPath} to overwrite; must not be null.
+     * @param value      The value to insert; must not be null.
+     * @return A new {@link DataCommand} instance.
+     */
+    public static DataCommand setStorageValue(String storage, DataPath targetPath, Object value) {
+        Objects.requireNonNull(storage, "Data Modify Error: Storage namespace cannot be null.");
+        return createModifyValue("storage " + storage, targetPath, value);
+    }
+
+    // --- ⚙️ Internal Logic & Helpers ---
+
+    /**
+     * Core logic for formatting the 'get' sub-command.
+     * @param targetPrefix The target identifier (e.g. "block 0 0 0").
+     * @param path         The optional path.
+     * @param scale        The optional scale.
+     * @return A formatted instruction string.
+     * @throws IllegalArgumentException if scale is used without a path.
+     */
+    private static String formatGet(String targetPrefix, DataPath path, Double scale) {
+        final StringBuilder sb = new StringBuilder("get ").append(targetPrefix);
+
+        if (path != null) {
+            sb.append(" ").append(path);
+            if (scale != null) {
+                sb.append(" ").append(scale);
+            }
+        } else if (scale != null) {
+            throw new IllegalArgumentException("Data Error: A DataPath must be provided when using a scale multiplier.");
         }
-        if (action == DataAction.REMOVE && path == null) {
-            throw new IllegalArgumentException("Action 'REMOVE' must target a specific DataPath.");
-        }
-        if (action == DataAction.MERGE && modification == null) {
-            throw new IllegalArgumentException("Action 'MERGE' requires a source NBT modification.");
-        }
-    }
 
-    // --- 🛠️ Static Factory Methods ---
-
-    /**
-     * Creates a command to retrieve NBT data.
-     * <p>Syntax: {@code /data get <target> [<path>]}</p>
-     * @param target The data holder.
-     * @param path   The optional NBT path.
-     * @return A new DataCommand instance.
-     */
-    public static DataCommand createGet(DataTarget target, DataPath path) {
-        return new DataCommand(DataAction.GET, target, path, null);
-    }
-
-    /**
-     * Creates a command to modify existing NBT data.
-     * <p>Syntax: {@code /data modify <target> <path> <modification>}</p>
-     * @param target       The data holder.
-     * @param path         The specific path to modify.
-     * @param modification The modification logic.
-     * @return A new DataCommand instance.
-     */
-    public static DataCommand createModify(DataTarget target, DataPath path, DataModification modification) {
-        return new DataCommand(DataAction.MODIFY, target, path, modification);
-    }
-
-    /**
-     * Creates a command to remove NBT data at a path.
-     * <p>Syntax: {@code /data remove <target> <path>}</p>
-     * @param target The data holder.
-     * @param path   The path to the tag to be deleted.
-     * @return A new DataCommand instance.
-     */
-    public static DataCommand createRemove(DataTarget target, DataPath path) {
-        return new DataCommand(DataAction.REMOVE, target, Objects.requireNonNull(path, "Path required for REMOVE."), null);
-    }
-
-    /**
-     * Creates a command to merge new NBT into the target's root.
-     * <p>Syntax: {@code /data merge <target> <nbt>}</p>
-     * @param target    The data holder.
-     * @param nbtSource The modification representing the NBT source.
-     * @return A new DataCommand instance.
-     */
-    public static DataCommand createMerge(DataTarget target, DataModification nbtSource) {
-        return new DataCommand(DataAction.MERGE, target, null, Objects.requireNonNull(nbtSource, "NBT source required for MERGE."));
-    }
-
-    // --- 🛰️ Generation Logic ---
-
-    /**
-     * Generates the finalized Minecraft command string.
-     * <p><b>Error Catching:</b> Utilizes the {@code toString()} implementations of
-     * rich objects (Target, Path, Modification) to assemble the command without
-     * manual string casting.</p>
-     * * @return The command (e.g., "data get entity @s Pos").
-     */
-    @Override
-    public String generate() {
-        StringBuilder sb = new StringBuilder("data ");
-        sb.append(action).append(" ").append(target);
-
-        switch (action) {
-            case GET:
-                if (path != null) sb.append(" ").append(path);
-                break;
-            case MODIFY:
-                sb.append(" ").append(path).append(" ").append(modification);
-                break;
-            case REMOVE:
-                sb.append(" ").append(path);
-                break;
-            case MERGE:
-                sb.append(" ").append(modification);
-                break;
-        }
         return sb.toString();
     }
 
+    /**
+     * Core logic for formatting 'modify ... set value' instructions.
+     * @param targetPrefix The target identifier.
+     * @param path         The target NBT path.
+     * @param value        The object value to set.
+     * @return A new {@link DataCommand} instance.
+     */
+    private static DataCommand createModifyValue(String targetPrefix, DataPath path, Object value) {
+        Objects.requireNonNull(path, "Data Modify Error: Target path is required.");
+        Objects.requireNonNull(value, "Data Modify Error: Value cannot be null.");
+
+        // Properly escape strings for NBT syntax
+        final String formattedValue = (value instanceof String) ? "\"" + value + "\"" : value.toString();
+
+        return new DataCommand(String.format("modify %s %s set value %s", targetPrefix, path, formattedValue));
+    }
+
+    // --- 🛰️ Command Generation ---
+
+    /**
+     * Generates the final Minecraft command string.
+     * @return The complete command (e.g., "data get block 10 64 10 Items").
+     */
+    @Override
+    public String generate() {
+        return "data " + this.instruction;
+    }
+
+    /**
+     * Returns the finalized command string.
+     * @return The result of {@link #generate()}.
+     */
     @Override
     public String toString() {
         return generate();
-    }
-
-    // --- 🏷️ Nested Enums ---
-
-    /**
-     * Defines the primary branches of the {@code /data} command.
-     */
-    public enum DataAction {
-        GET, MERGE, MODIFY, REMOVE;
-
-        /** @return The lowercase command keyword (e.g., "merge"). */
-        @Override
-        public String toString() { return this.name().toLowerCase(); }
     }
 }

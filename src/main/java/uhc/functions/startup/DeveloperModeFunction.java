@@ -142,12 +142,10 @@ public class DeveloperModeFunction implements DatapackFunction {
 
             // Get all player UUIDs
             for (int i = 0; i < 4; i++) {
-                currentFunction.addLine(Execute.As("@a", false) +
-                        Execute.StoreNext(ExecuteStore.result, "@s", getObjectiveByName(Objective.CollarCheck.extendName(i)), true) +
-                        DataCommand.createGet(
-                                        DataTargetEntity.create(Entity.ofSelector(TargetSelector.SENDER)),
-                                        DataPath.createWithIndex(DataPathId.UUID, i))
-                                .generate());
+                currentFunction.addLine(ExecuteCommand.create()
+                        .as(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
+                        .storeResultScore(Entity.ofSelector(TargetSelector.SENDER), ScoreboardObjectiveId.indexed(ScoreboardObjectiveId.COLLAR_CHECK, i))
+                        .run(DataCommand.get(Entity.ofSelector(TargetSelector.SENDER), DataPath.createWithIndex(DataPathId.UUID, i))));
             }
 
             // Create jukebox at 0,0

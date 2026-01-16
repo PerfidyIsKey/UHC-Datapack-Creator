@@ -1570,8 +1570,7 @@ public class Main {
         for (int i = 0; i < 4; i++) {
             fileCommands.add(Execute.As("@a", false) +
                     Execute.StoreNext(ExecuteStore.result, "@s", getObjectiveByName(Objective.CollarCheck.extendName(i)), true) +
-                    DataCommand.createGet(
-                                    DataTargetEntity.create(Entity.ofSelector(TargetSelector.SENDER)),
+                    DataCommand.get(Entity.ofSelector(TargetSelector.SENDER),
                                     DataPath.createWithIndex(DataPathId.UUID, i))
                             .generate());
         }
@@ -3513,8 +3512,7 @@ public class Main {
         for (int i = 0; i < 4; i++) {
             fileCommands.add(Execute.As("@e[type=" + EntityId.WOLF + "]", false) +
                     Execute.StoreNext(ExecuteStore.result, "@s", getObjectiveByName(Objective.CollarCheck.extendName(i)), true) +
-                    DataCommand.createGet(
-                                    DataTargetEntity.create(Entity.ofSelector(TargetSelector.SENDER)),
+                    DataCommand.get(Entity.ofSelector(TargetSelector.SENDER),
                                     DataPath.createWithIndex(DataPathId.OWNER, i))
                             .generate());
         }
@@ -3526,10 +3524,9 @@ public class Main {
                     Execute.IfNext("@s", getObjectiveByName(Objective.CollarCheck.extendName(1)), ComparatorType.EQUAL, "@r[team=" + t.getName() + "]", getObjectiveByName(Objective.CollarCheck.extendName(1))) +
                     Execute.IfNext("@s", getObjectiveByName(Objective.CollarCheck.extendName(2)), ComparatorType.EQUAL, "@r[team=" + t.getName() + "]", getObjectiveByName(Objective.CollarCheck.extendName(2))) +
                     Execute.IfNext("@s", getObjectiveByName(Objective.CollarCheck.extendName(3)), ComparatorType.EQUAL, "@r[team=" + t.getName() + "]", getObjectiveByName(Objective.CollarCheck.extendName(3)), true) +
-                    DataCommand.createModify(
-                                    DataTargetEntity.create(Entity.ofSelector(TargetSelector.SENDER)),
+                    DataCommand.setEntityValue(Entity.ofSelector(TargetSelector.SENDER),
                                     DataPath.create(DataPathId.COLLAR_COLOR),
-                                    ModificationSetValue.create(DataValue.createByte((byte) t.getCollarColor())))
+                                    DataValue.createByte((byte) t.getCollarColor()))
                             .generate());
         }
 
@@ -3544,10 +3541,9 @@ public class Main {
             fileCommands.add(Execute.As("@e[type=" + EntityId.WOLF + "]", false) +
                     Execute.IfNext("@s", getObjectiveByName(Objective.CollarCheck.extendName(0)), ComparatorType.EQUAL, "@p[tag=" + TagTemp.CollarCheck + "]", getObjectiveByName(Objective.CollarCheck.extendName(0))) +
                     Execute.IfNext("@s", getObjectiveByName(Objective.CollarCheck.extendName(1)), ComparatorType.EQUAL, "@p[tag=" + TagTemp.CollarCheck + "]", getObjectiveByName(Objective.CollarCheck.extendName(1)), true) +
-                    DataCommand.createModify(
-                                    DataTargetEntity.create(Entity.ofSelector(TargetSelector.SENDER)),
+                    DataCommand.setEntityValue(Entity.ofSelector(TargetSelector.SENDER),
                                     DataPath.create(DataPathId.COLLAR_COLOR),
-                                    ModificationSetValue.create(DataValue.createByte((byte) 0)))
+                                    DataValue.createByte((byte) 0))
                             .generate());
             fileCommands.add(TagCommand.target(Entity.ofSelector(
                                     TargetSelector.ALL_PLAYERS,
@@ -3562,8 +3558,7 @@ public class Main {
 
         fileCommands.add(Execute.As("@e[limit=1,type=" + EntityId.WOLF + ",sort=random]", false) +
                 Execute.StoreNext(ExecuteStore.result, "@s", getObjectiveByName(Objective.WolfAge), true) +
-                DataCommand.createGet(
-                                DataTargetEntity.create(Entity.ofSelector(TargetSelector.SENDER)),
+                DataCommand.get(Entity.ofSelector(TargetSelector.SENDER),
                                 DataPath.create(DataPathId.AGE))
                         .generate());
         fileCommands.add(Execute.At(babyWolf) +
@@ -3677,8 +3672,7 @@ public class Main {
             // Find positions of each player
             fileCommands.add(Execute.As("@a[team=]", false) +
                     Execute.StoreNext(ExecuteStore.result, "@s", getObjectiveByName(Objective.Pos + cartesian[i]), true) +
-                    DataCommand.createGet(
-                                    DataTargetEntity.create(Entity.ofSelector(TargetSelector.SENDER)),
+                    DataCommand.get(Entity.ofSelector(TargetSelector.SENDER),
                                     DataPath.createWithIndex(DataPathId.POS, i))
                             .generate());
 
