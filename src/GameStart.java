@@ -30,8 +30,7 @@ public class GameStart {
         // Disable automatic player respawn after 20 minutes
         fileCommands.add(Schedule.callFunction(FileName.disable_respawn, 20 * Constant.secPerMinute));
 
-        fileCommands.add(TagCommand.target(Constant.admin)
-                .add(EntityTag.GAME_STARTED)
+        fileCommands.add(TagCommand.add(Constant.admin, EntityTag.GAME_STARTED)
                 .generate());
 
         return new FileData(FileName.game_starter, fileCommands);

@@ -158,16 +158,11 @@ public class DeveloperModeFunction implements DatapackFunction {
                                             .recordItem(SingleItemStack.create(ItemId.MUSIC_DISC_STAL, 1))))));
 
             // Remove tags
-            currentFunction.addLine(TagCommand.target(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
-                    .remove(EntityTag.RESPAWN_DISABLED));
-            currentFunction.addLine(TagCommand.target(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
-                    .remove(EntityTag.IRON_MAN_CANDIDATE));
-            currentFunction.addLine(TagCommand.target(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
-                    .remove(EntityTag.IRON_MAN));
-            currentFunction.addLine(TagCommand.target(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
-                    .remove(EntityTag.RESPAWN));
-            currentFunction.addLine(TagCommand.target(Constant.admin)
-                    .remove(EntityTag.GAME_STARTED));
+            currentFunction.addLine(TagCommand.remove(Entity.ofSelector(TargetSelector.ALL_PLAYERS), EntityTag.RESPAWN_DISABLED));
+            currentFunction.addLine(TagCommand.remove(Entity.ofSelector(TargetSelector.ALL_PLAYERS), EntityTag.IRON_MAN_CANDIDATE));
+            currentFunction.addLine(TagCommand.remove(Entity.ofSelector(TargetSelector.ALL_PLAYERS), EntityTag.IRON_MAN));
+            currentFunction.addLine(TagCommand.remove(Entity.ofSelector(TargetSelector.ALL_PLAYERS), EntityTag.RESPAWN));
+            currentFunction.addLine(TagCommand.remove(Constants.admin, EntityTag.GAME_STARTED));
 
             // Set world border
             currentFunction.addLine(WorldBorderCommand.create(WorldBorderCommand.WorldBorderAction.SET)
@@ -219,8 +214,7 @@ public class DeveloperModeFunction implements DatapackFunction {
                 currentFunction.addLine(scoreboard.Set("CarePackages", getObjectiveByName(Objective.Time), 1200));
 
                 // Remove tags
-                currentFunction.addLine(TagCommand.target(Constant.admin)
-                        .remove(EntityTag.CARE_PACKAGES_DROPPED)
+                currentFunction.addLine(TagCommand.remove(Constant.admin, EntityTag.CARE_PACKAGES_DROPPED)
                         .generate());
             }
 
@@ -252,14 +246,11 @@ public class DeveloperModeFunction implements DatapackFunction {
                 currentFunction.addLine(scoreboard.Set("ControlPoints", getObjectiveByName(Objective.Time), 1800));
 
                 // Remove tags
-                currentFunction.addLine(TagCommand.target(Constant.admin)
-                        .remove(EntityTag.indexed(EntityTag.CONTROL_POINT_ENABLED, 1))
+                currentFunction.addLine(TagCommand.remove(Constant.admin, EntityTag.indexed(EntityTag.CONTROL_POINT_ENABLED, 1))
                         .generate());
-                currentFunction.addLine(TagCommand.target(Constant.admin)
-                        .remove(EntityTag.indexed(EntityTag.CONTROL_POINT_ENABLED, 2))
+                currentFunction.addLine(TagCommand.remove(Constant.admin, EntityTag.indexed(EntityTag.CONTROL_POINT_ENABLED, 2))
                         .generate());
-                currentFunction.addLine(TagCommand.target(Constant.admin)
-                        .remove(EntityTag.CONTROL_POINT_CAPTURED)
+                currentFunction.addLine(TagCommand.remove(Constant.admin, EntityTag.CONTROL_POINT_CAPTURED)
                         .generate());
 
                 // Spawn new Control Points
@@ -294,14 +285,11 @@ public class DeveloperModeFunction implements DatapackFunction {
                 currentFunction.addLine(scoreboard.Set("TraitorFaction", getObjectiveByName(Objective.Time), 2400));
 
                 // Remove tags
-                currentFunction.addLine(TagCommand.target(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
-                        .remove(EntityTag.TRAITOR)
+                currentFunction.addLine(TagCommand.remove(Entity.ofSelector(TargetSelector.ALL_PLAYERS), EntityTag.TRAITOR)
                         .generate());
-                currentFunction.addLine(TagCommand.target(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
-                        .remove(EntityTag.DONT_MAKE_TRAITOR)
+                currentFunction.addLine(TagCommand.remove(Entity.ofSelector(TargetSelector.ALL_PLAYERS), EntityTag.DONT_MAKE_TRAITOR)
                         .generate());
-                currentFunction.addLine(TagCommand.target(Constant.admin)
-                        .remove(EntityTag.TRAITORS_ASSIGNED)
+                currentFunction.addLine(TagCommand.remove(Constant.admin, EntityTag.TRAITORS_ASSIGNED)
                         .generate());
             }
 

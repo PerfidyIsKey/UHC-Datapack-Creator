@@ -136,7 +136,7 @@ public class PlayerDeathFunction implements DatapackFunction {
         // 1. Tag for respawn if grace period is active
         function.addLine(ExecuteCommand.create()
                 .unlessEntity(controller)
-                .run(TagCommand.target(Entity.ofSelector(TargetSelector.NEAREST_PLAYER, deceasedCriteria)).add(EntityTag.RESPAWN)));
+                .run(TagCommand.add(Entity.ofSelector(TargetSelector.NEAREST_PLAYER, deceasedCriteria), EntityTag.RESPAWN)));
 
         // 2. Always drop head
         function.addLine(FunctionCommand.create(headPath));
