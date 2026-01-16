@@ -1,206 +1,212 @@
 package uhc.command.commands;
 
 import uhc.arguments.coordinate.Vec2;
+import uhc.arguments.time.VariableGameTime;
 import uhc.command.MinecraftCommand;
+
 import java.util.Objects;
 
 /**
- * 🗺️ **WorldBorder Command Builder**
+ * 🗺️ **WorldBorder Command Builder (WorldBorderCommand)**
  * <p>
- * Provides a fluent API for the {@code /worldborder} command.
- * This command manages the play area boundary, shrink speed, and player
- * safety/damage mechanics.
+ * Provides a flattened, type-safe API for constructing Minecraft {@code /worldborder} commands.
+ * This class manages play area boundaries, expansion/shrinkage rates, and player safety mechanics.
+ * </p>
+ * <p>
+ * <b>Strict Policy:</b> This class does not provide default fallbacks for invalid parameters.
+ * If input exceeds Minecraft engine limits or is null where required, an explicit exception is thrown.
  * </p>
  */
 public class WorldBorderCommand implements MinecraftCommand {
-    private final WorldBorderAction action;
 
-    // ADD/SET: Diameter or size change, transition time in seconds
-    private Double sizeChangeOrDiameter;
-    private Integer time;
+    // --- 📄 Fields ---
 
-    // CENTER: Target coordinates
-    private Vec2 centerPos;
+    /** * The internal formatted sub-command segment.
+     * Contains the action keyword and its respective arguments (e.g., "set 100 60").
+     */
+    private final String instruction;
 
-    // DAMAGE: amount (per block), buffer (safe zone outside border)
-    private Float damagePerBlock;
-    private Float bufferDistance;
+    /** * Minecraft's absolute maximum coordinate for world border size/distance.
+     * The engine typically hard-caps the border diameter at 59,999,968 blocks.
+     */
+    private static final double MAX_SIZE = 59999968.0;
 
-    // WARNING: distance (blocks), time (seconds)
-    private Integer warningDistance;
-    private Integer warningTime;
+    // --- 🏗️ Private Constructor ---
 
-    private WorldBorderCommand(WorldBorderAction action) {
-        this.action = Objects.requireNonNull(action, "WorldBorder action cannot be null.");
+    /**
+     * Constructs a WorldBorderCommand with a pre-validated instruction string.
+     * @param instruction The sub-command and its arguments.
+     * @throws NullPointerException if instruction is null.
+     */
+    private WorldBorderCommand(String instruction) {
+        this.instruction = Objects.requireNonNull(instruction, "WorldBorder Error: Internal instruction string cannot be null.");
+    }
+
+    // --- 🎯 Static Entry Points: Size Management (ADD / SET) ---
+
+    /**
+     * Constructs a command to add a relative distance to the current world border diameter.
+     * <p>Syntax: {@code /worldborder add <distance>}</p>
+     * @param distance Blocks to add (use negative values to shrink).
+     * @return A new {@link WorldBorderCommand} instance.
+     * @throws IllegalArgumentException if distance exceeds engine limits.
+     */
+    public static WorldBorderCommand add(double distance) {
+        return add(distance, null);
     }
 
     /**
-     * Initializes a new WorldBorder builder for a specific sub-command.
+     * Constructs a command to add a relative distance to the current diameter over a period of time.
+     * <p>Syntax: {@code /worldborder add <distance> <time>}</p>
+     * @param distance Blocks to add.
+     * @param time     The {@link VariableGameTime} duration for the transition; can be null for instant.
+     * @return A new {@link WorldBorderCommand} instance.
+     * @throws IllegalArgumentException if distance exceeds engine limits.
      */
-    public static WorldBorderCommand create(WorldBorderAction action) {
-        return new WorldBorderCommand(action);
-    }
-
-    // --- ADD / SET methods ---
-
-    /**
-     * Sets the target diameter or change in blocks.
-     * @param distance Range: -59,999,968 to 59,999,968.
-     */
-    public WorldBorderCommand distance(double distance) {
-        if (action != WorldBorderAction.ADD && action != WorldBorderAction.SET) {
-            throw new IllegalStateException("Distance is only valid for ADD or SET actions.");
-        }
-        final double MAX_SIZE = 59999968.0;
-        if (Math.abs(distance) > MAX_SIZE) {
-            throw new IllegalArgumentException("Distance exceeds Minecraft's size limit of " + MAX_SIZE);
-        }
-        if (action == WorldBorderAction.SET && distance < 0) {
-            throw new IllegalArgumentException("World border diameter must be non-negative for SET.");
-        }
-        this.sizeChangeOrDiameter = distance;
-        return this;
+    public static WorldBorderCommand add(double distance, VariableGameTime time) {
+        validateDistance(distance, false);
+        String cmd = "add " + distance + (time != null ? " " + time : "");
+        return new WorldBorderCommand(cmd);
     }
 
     /**
-     * Sets the duration (in seconds) for the border to transition to its new size.
+     * Constructs a command to set the world border to an absolute diameter.
+     * <p>Syntax: {@code /worldborder set <distance>}</p>
+     * @param distance The target diameter in blocks.
+     * @return A new {@link WorldBorderCommand} instance.
+     * @throws IllegalArgumentException if distance is negative or exceeds limits.
      */
-    public WorldBorderCommand time(int time) {
-        if (action != WorldBorderAction.ADD && action != WorldBorderAction.SET) {
-            throw new IllegalStateException("Time is only valid for ADD or SET actions.");
-        }
-        if (time < 0) {
-            throw new IllegalArgumentException("Transition time cannot be negative.");
-        }
-        this.time = time;
-        return this;
+    public static WorldBorderCommand set(double distance) {
+        return set(distance, null);
     }
 
-    // --- CENTER method ---
-
     /**
-     * Sets the central point of the world border.
+     * Constructs a command to set the world border to an absolute diameter over a period of time.
+     * <p>Syntax: {@code /worldborder set <distance> <time>}</p>
+     * @param distance The target diameter.
+     * @param time     The {@link VariableGameTime} duration for the transition; can be null for instant.
+     * @return A new {@link WorldBorderCommand} instance.
+     * @throws IllegalArgumentException if distance is negative or exceeds limits.
      */
-    public WorldBorderCommand center(Vec2 pos) {
-        if (action != WorldBorderAction.CENTER) {
-            throw new IllegalStateException("Center coordinates are only valid for the CENTER action.");
-        }
-        this.centerPos = Objects.requireNonNull(pos, "Center position cannot be null.");
-        return this;
+    public static WorldBorderCommand set(double distance, VariableGameTime time) {
+        validateDistance(distance, true);
+        String cmd = "set " + distance + (time != null ? " " + time : "");
+        return new WorldBorderCommand(cmd);
     }
 
-    // --- DAMAGE sub-command methods ---
+    // --- 🎯 Static Entry Points: Damage Mechanics ---
 
     /**
-     * Sets damage taken per second for every block a player is outside the buffer.
+     * Sets the amount of damage dealt per second for every block a player is outside the border buffer.
+     * <p>Syntax: {@code /worldborder damage amount <damagePerBlock>}</p>
+     * @param damagePerBlock Damage amount per block (must be non-negative).
+     * @return A new {@link WorldBorderCommand} instance.
+     * @throws IllegalArgumentException if damage is negative.
      */
-    public WorldBorderCommand damageAmount(float damagePerBlock) {
-        if (action != WorldBorderAction.DAMAGE) {
-            throw new IllegalStateException("'damage amount' is only valid for the DAMAGE action.");
-        }
-        if (damagePerBlock < 0.0f) throw new IllegalArgumentException("Damage cannot be negative.");
-        if (this.bufferDistance != null) {
-            throw new IllegalStateException("Cannot set both damage amount and buffer in one command.");
-        }
-        this.damagePerBlock = damagePerBlock;
-        return this;
+    public static WorldBorderCommand damageAmount(float damagePerBlock) {
+        if (damagePerBlock < 0.0f) throw new IllegalArgumentException("WorldBorder Error: Damage amount cannot be negative.");
+        return new WorldBorderCommand("damage amount " + damagePerBlock);
     }
 
     /**
      * Sets the distance players can move outside the border before taking damage.
+     * <p>Syntax: {@code /worldborder damage buffer <distance>}</p>
+     * @param distance Buffer distance in blocks (must be non-negative).
+     * @return A new {@link WorldBorderCommand} instance.
+     * @throws IllegalArgumentException if distance is negative.
      */
-    public WorldBorderCommand damageBuffer(float distance) {
-        if (action != WorldBorderAction.DAMAGE) {
-            throw new IllegalStateException("'damage buffer' is only valid for the DAMAGE action.");
-        }
-        if (distance < 0.0f) throw new IllegalArgumentException("Buffer distance cannot be negative.");
-        if (this.damagePerBlock != null) {
-            throw new IllegalStateException("Cannot set both damage amount and buffer in one command.");
-        }
-        this.bufferDistance = distance;
-        return this;
+    public static WorldBorderCommand damageBuffer(float distance) {
+        if (distance < 0.0f) throw new IllegalArgumentException("WorldBorder Error: Buffer distance cannot be negative.");
+        return new WorldBorderCommand("damage buffer " + distance);
     }
 
-    // --- WARNING sub-command methods ---
+    // --- 🎯 Static Entry Points: Warning Indicators ---
 
     /**
-     * Sets the distance at which the player's screen begins to tint red.
+     * Sets the distance from the border at which a player's screen begins to tint red.
+     * <p>Syntax: {@code /worldborder warning distance <distance>}</p>
+     * @param distance Warning distance in blocks (must be non-negative).
+     * @return A new {@link WorldBorderCommand} instance.
+     * @throws IllegalArgumentException if distance is negative.
      */
-    public WorldBorderCommand warningDistance(int distance) {
-        if (action != WorldBorderAction.WARNING) {
-            throw new IllegalStateException("'warning distance' is only valid for the WARNING action.");
-        }
-        if (distance < 0) throw new IllegalArgumentException("Warning distance cannot be negative.");
-        if (this.warningTime != null) {
-            throw new IllegalStateException("Cannot set both warning distance and time in one command.");
-        }
-        this.warningDistance = distance;
-        return this;
+    public static WorldBorderCommand warningDistance(int distance) {
+        if (distance < 0) throw new IllegalArgumentException("WorldBorder Error: Warning distance cannot be negative.");
+        return new WorldBorderCommand("warning distance " + distance);
     }
 
     /**
-     * Sets how many seconds before a shrinking border reaches a player the tint appears.
+     * Sets the time before a shrinking border reaches a player at which the red tint appears.
+     * <p>Syntax: {@code /worldborder warning time <time>}</p>
+     * @param time The {@link VariableGameTime} duration for the warning; must not be null.
+     * @return A new {@link WorldBorderCommand} instance.
+     * @throws NullPointerException if time is null.
      */
-    public WorldBorderCommand warningTime(int time) {
-        if (action != WorldBorderAction.WARNING) {
-            throw new IllegalStateException("'warning time' is only valid for the WARNING action.");
-        }
-        if (time < 0) throw new IllegalArgumentException("Warning time cannot be negative.");
-        if (this.warningDistance != null) {
-            throw new IllegalStateException("Cannot set both warning distance and time in one command.");
-        }
-        this.warningTime = time;
-        return this;
+    public static WorldBorderCommand warningTime(VariableGameTime time) {
+        Objects.requireNonNull(time, "WorldBorder Error: Warning time object cannot be null.");
+        return new WorldBorderCommand("warning time " + time);
     }
 
+    // --- 🎯 Static Entry Points: Utility ---
+
+    /**
+     * Sets the central point of the world border.
+     * <p>Syntax: {@code /worldborder center <x> <z>}</p>
+     * @param pos The {@link Vec2} absolute coordinates for the center; must not be null.
+     * @return A new {@link WorldBorderCommand} instance.
+     * @throws NullPointerException if pos is null.
+     */
+    public static WorldBorderCommand center(Vec2 pos) {
+        Objects.requireNonNull(pos, "WorldBorder Error: Center position coordinates cannot be null.");
+        return new WorldBorderCommand("center " + pos);
+    }
+
+    /**
+     * Constructs a command to query the current diameter of the world border.
+     * <p>Syntax: {@code /worldborder get}</p>
+     * @return A new {@link WorldBorderCommand} instance for the query.
+     */
+    public static WorldBorderCommand get() {
+        return new WorldBorderCommand("get");
+    }
+
+    // --- ⚙️ Internal Technical Logic ---
+
+    /**
+     * Validates that the distance provided is within the Minecraft world border engine limits.
+     * @param distance The diameter or relative change being requested.
+     * @param absolute If true, validates that the distance is not negative (required for 'set').
+     * @throws IllegalArgumentException if distance values are logically or technically invalid.
+     */
+    private static void validateDistance(double distance, boolean absolute) {
+        if (absolute && distance < 0) {
+            throw new IllegalArgumentException("WorldBorder Error: Diameter cannot be negative when using 'set'.");
+        }
+        if (Math.abs(distance) > MAX_SIZE) {
+            throw new IllegalArgumentException("WorldBorder Error: Distance " + distance + " exceeds Minecraft's max limit: " + MAX_SIZE);
+        }
+    }
+
+    /**
+     * Generates the finalized Minecraft command string.
+     * @return The complete command string (e.g., "worldborder set 500 120").
+     */
     @Override
     public String generate() {
-        StringBuilder sb = new StringBuilder("worldborder ");
-        sb.append(action);
-
-        switch (action) {
-            case ADD:
-            case SET:
-                if (sizeChangeOrDiameter == null) throw new IllegalStateException("Distance/Diameter is required.");
-                sb.append(" ").append(sizeChangeOrDiameter);
-                if (time != null) sb.append(" ").append(time);
-                break;
-
-            case CENTER:
-                if (centerPos == null) throw new IllegalStateException("Center position is required.");
-                sb.append(" ").append(centerPos);
-                break;
-
-            case DAMAGE:
-                if (damagePerBlock != null) sb.append(" amount ").append(damagePerBlock);
-                else if (bufferDistance != null) sb.append(" buffer ").append(bufferDistance);
-                else throw new IllegalStateException("DAMAGE requires either 'amount' or 'buffer'.");
-                break;
-
-            case WARNING:
-                if (warningDistance != null) sb.append(" distance ").append(warningDistance);
-                else if (warningTime != null) sb.append(" time ").append(warningTime);
-                else throw new IllegalStateException("WARNING requires either 'distance' or 'time'.");
-                break;
-
-            case GET:
-                break;
-        }
-
-        return sb.toString();
+        return "worldborder " + this.instruction;
     }
 
+    /**
+     * Returns the generated command string for logging or execution.
+     * <p><b>No-Fallback Policy:</b> If generation fails due to internal state,
+     * a clear error message is returned as the string representation.</p>
+     * @return The result of {@link #generate()}.
+     */
     @Override
     public String toString() {
-        return generate();
-    }
-
-    public enum WorldBorderAction {
-        ADD, CENTER, DAMAGE, GET, SET, WARNING;
-
-        @Override
-        public String toString() {
-            return name().toLowerCase();
+        try {
+            return generate();
+        } catch (Exception e) {
+            return "/* WorldBorder Error: " + e.getMessage() + " */";
         }
     }
 }

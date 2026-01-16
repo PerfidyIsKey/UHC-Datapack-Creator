@@ -1594,8 +1594,7 @@ public class Main {
                 .generate());
 
         // Set world border
-        fileCommands.add(WorldBorderCommand.create(WorldBorderCommand.WorldBorderAction.SET)
-                .distance(2 * world.getSize())
+        fileCommands.add(WorldBorderCommand.set(2 * world.getSize())
                 .generate());
 
         // Display ranks
@@ -2359,14 +2358,11 @@ public class Main {
         ArrayList<String> fileCommands = new ArrayList<>();
 
         // Set start worldborder size
-        fileCommands.add(WorldBorderCommand.create(WorldBorderCommand.WorldBorderAction.SET)
-                .distance(400)
+        fileCommands.add(WorldBorderCommand.set(400)
                 .generate());
 
         // Set destination worldborder size
-        fileCommands.add(WorldBorderCommand.create(WorldBorderCommand.WorldBorderAction.SET)
-                .distance(20)
-                .time(180)
+        fileCommands.add(WorldBorderCommand.set(20, VariableGameTime.second(180))
                 .generate());
 
         // Teleport all living players

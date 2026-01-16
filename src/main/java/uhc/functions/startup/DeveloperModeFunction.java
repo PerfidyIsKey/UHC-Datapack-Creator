@@ -165,8 +165,7 @@ public class DeveloperModeFunction implements DatapackFunction {
             currentFunction.addLine(TagCommand.remove(Constants.admin, EntityTag.GAME_STARTED));
 
             // Set world border
-            currentFunction.addLine(WorldBorderCommand.create(WorldBorderCommand.WorldBorderAction.SET)
-                    .distance(2 * world.getSize()));
+            currentFunction.addLine(WorldBorderCommand.set(2 * world.getSize()));
 
             // Display ranks
             currentFunction.addLine(Schedule.callFunction(FileName.display_rank));
