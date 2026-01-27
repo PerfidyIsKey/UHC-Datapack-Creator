@@ -786,7 +786,7 @@ public class Main {
     }
 
     private void definePlugins() throws IOException {
-        plugins.add(new PaperPlugin("ViaVersion-5.5.1.jar", OperationMode.otherVersions, "ViaBackwards-5.5.1.jar"));
+        plugins.add(new PaperPlugin("ViaVersion-5.7.1.jar", OperationMode.otherVersions, "ViaBackwards-5.7.1.jar"));
         plugins.add(new PaperPlugin("spark-1.10.119-bukkit.jar", OperationMode.debug));
         plugins.add(new PaperPlugin("Chunky-Bukkit-1.4.28.jar", OperationMode.debug));
         plugins.add(new PaperPlugin("openaudiomc-6.10.7.jar", OperationMode.proximity, "OpenAudioMc\\"));
@@ -934,23 +934,23 @@ public class Main {
         // Set gamerules
         for (Dimension dimension : Dimension.values()) {
             fileCommands.add(Execute.In(dimension) +
-                    GameRule.create(GameRuleId.NATURAL_REGENERATION)
+                    GameRule.create(GameRuleId.NATURAL_HEALTH_REGENERATION)
                                     .booleanValue(false)
                                             .build());
         }
-        fileCommands.add(GameRule.create(GameRuleId.DO_IMMEDIATE_RESPAWN)
+        fileCommands.add(GameRule.create(GameRuleId.IMMEDIATE_RESPAWN)
                         .booleanValue(true)
                         .build());
-        fileCommands.add(GameRule.create(GameRuleId.DO_PATROL_SPAWNING)
+        fileCommands.add(GameRule.create(GameRuleId.SPAWN_PATROLS)
                 .booleanValue(false)
                 .build());
-        fileCommands.add(GameRule.create(GameRuleId.DO_MOB_SPAWNING)
+        fileCommands.add(GameRule.create(GameRuleId.SPAWN_MOBS)
                 .booleanValue(false)
                 .build());
-        fileCommands.add(GameRule.create(GameRuleId.DO_WEATHER_CYCLE)
+        fileCommands.add(GameRule.create(GameRuleId.ADVANCE_WEATHER)
                 .booleanValue(false)
                 .build());
-        fileCommands.add(GameRule.create(GameRuleId.SPAWN_RADIUS)
+        fileCommands.add(GameRule.create(GameRuleId.RESPAWN_RADIUS)
                 .intValue(0)
                 .build());
 
@@ -1605,16 +1605,16 @@ public class Main {
         fileCommands.add(GameRule.create(GameRuleId.COMMAND_BLOCK_OUTPUT)
                 .booleanValue(true)
                 .build());
-        fileCommands.add(GameRule.create(GameRuleId.DO_DAYLIGHT_CYCLE)
+        fileCommands.add(GameRule.create(GameRuleId.ADVANCE_TIME)
                 .booleanValue(false)
                 .build());
         fileCommands.add(GameRule.create(GameRuleId.KEEP_INVENTORY)
                 .booleanValue(true)
                 .build());
-        fileCommands.add(GameRule.create(GameRuleId.DO_MOB_SPAWNING)
+        fileCommands.add(GameRule.create(GameRuleId.SPAWN_MOBS)
                 .booleanValue(false)
                 .build());
-        fileCommands.add(GameRule.create(GameRuleId.DO_TILE_DROPS)
+        fileCommands.add(GameRule.create(GameRuleId.BLOCK_DROPS)
                 .booleanValue(false)
                 .build());
         fileCommands.add(GameRule.create(GameRuleId.DROWNING_DAMAGE)
@@ -1629,13 +1629,13 @@ public class Main {
         fileCommands.add(GameRule.create(GameRuleId.SEND_COMMAND_FEEDBACK)
                 .booleanValue(true)
                 .build());
-        fileCommands.add(GameRule.create(GameRuleId.DO_IMMEDIATE_RESPAWN)
+        fileCommands.add(GameRule.create(GameRuleId.IMMEDIATE_RESPAWN)
                 .booleanValue(true)
                 .build());
-        fileCommands.add(GameRule.create(GameRuleId.DISABLE_RAIDS)
-                .booleanValue(true)
+        fileCommands.add(GameRule.create(GameRuleId.RAIDS)
+                .booleanValue(false)
                 .build());
-        fileCommands.add(GameRule.create(GameRuleId.DO_INSOMNIA)
+        fileCommands.add(GameRule.create(GameRuleId.SPAWN_PHANTOMS)
                 .booleanValue(false)
                 .build());
 
@@ -2039,16 +2039,16 @@ public class Main {
         fileCommands.add(GameRule.create(GameRuleId.COMMAND_BLOCK_OUTPUT)
                 .booleanValue(false)
                 .build());
-        fileCommands.add(GameRule.create(GameRuleId.DO_DAYLIGHT_CYCLE)
+        fileCommands.add(GameRule.create(GameRuleId.ADVANCE_TIME)
                 .booleanValue(true)
                 .build());
         fileCommands.add(GameRule.create(GameRuleId.KEEP_INVENTORY)
                 .booleanValue(false)
                 .build());
-        fileCommands.add(GameRule.create(GameRuleId.DO_MOB_SPAWNING)
+        fileCommands.add(GameRule.create(GameRuleId.SPAWN_MOBS)
                 .booleanValue(true)
                 .build());
-        fileCommands.add(GameRule.create(GameRuleId.DO_TILE_DROPS)
+        fileCommands.add(GameRule.create(GameRuleId.BLOCK_DROPS)
                 .booleanValue(true)
                 .build());
         fileCommands.add(GameRule.create(GameRuleId.DROWNING_DAMAGE)
@@ -2060,7 +2060,7 @@ public class Main {
         fileCommands.add(GameRule.create(GameRuleId.FIRE_DAMAGE)
                 .booleanValue(true)
                 .build());
-        fileCommands.add(GameRule.create(GameRuleId.DO_IMMEDIATE_RESPAWN)
+        fileCommands.add(GameRule.create(GameRuleId.IMMEDIATE_RESPAWN)
                 .booleanValue(true)
                 .build());
         fileCommands.add(Schedule.callFunction(FileName.clear_enderchest));
@@ -3897,7 +3897,7 @@ public class Main {
                                 .build());
 
         // Update immediate respawn
-        fileCommands.add(GameRule.create(GameRuleId.DO_IMMEDIATE_RESPAWN)
+        fileCommands.add(GameRule.create(GameRuleId.IMMEDIATE_RESPAWN)
                 .booleanValue(false)
                 .build());
 
@@ -4191,7 +4191,7 @@ public class Main {
         texts.clear();
 
         // Set gamerule
-        fileCommands.add(GameRule.create(GameRuleId.DO_DAYLIGHT_CYCLE)
+        fileCommands.add(GameRule.create(GameRuleId.ADVANCE_TIME)
                 .booleanValue(false)
                 .build());
 
