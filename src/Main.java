@@ -789,7 +789,7 @@ public class Main {
         plugins.add(new PaperPlugin("ViaVersion-5.7.1.jar", OperationMode.otherVersions, "ViaBackwards-5.7.1.jar"));
         plugins.add(new PaperPlugin("spark-1.10.119-bukkit.jar", OperationMode.debug));
         plugins.add(new PaperPlugin("Chunky-Bukkit-1.4.28.jar", OperationMode.debug));
-        plugins.add(new PaperPlugin("openaudiomc-6.10.7.jar", OperationMode.proximity, "OpenAudioMc\\"));
+        plugins.add(new PaperPlugin("voicechat-bukkit-2.6.11.jar", OperationMode.proximity, "voicechat\\"));
 
         fileTools.copyPlugins(plugins);
     }

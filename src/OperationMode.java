@@ -3,7 +3,7 @@ public class OperationMode {
     public static final Boolean otherVersions = true;
     public static final Boolean debug = true;
     public static final Boolean bots = false;
-    public static final Boolean proximity = false;
+    public static final Boolean proximity = true;
 
     // Game events
     public static final Boolean carePackages = true;
