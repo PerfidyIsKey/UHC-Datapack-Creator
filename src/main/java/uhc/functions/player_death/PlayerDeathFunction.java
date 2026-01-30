@@ -139,7 +139,7 @@ public class PlayerDeathFunction implements DatapackFunction {
                 .run(TagCommand.add(Entity.ofSelector(TargetSelector.NEAREST_PLAYER, deceasedCriteria), EntityTag.RESPAWN)));
 
         // 2. Always drop head
-        function.addLine(FunctionCommand.create(headPath));
+        function.addLine(FunctionCommand.of(headPath));
 
         // 3. Schedule respawn function if allowed
         function.addLine(ExecuteCommand.create()

@@ -179,7 +179,7 @@ public class ControlPointVisuals implements DatapackFunction {
                 .run(SetBlockCommand.create(centerPos, Block.create(BlockId.BEACON))));
 
         // External Beam/NBT Protection
-        function.addLine(FunctionCommand.create(Objects.requireNonNull(FunctionPath.PROTECT_BEACON,
+        function.addLine(FunctionCommand.of(Objects.requireNonNull(FunctionPath.PROTECT_BEACON,
                 "Missing Path: PROTECT_BEACON_1")));
     }
 }

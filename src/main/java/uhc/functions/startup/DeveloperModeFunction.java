@@ -167,7 +167,7 @@ public class DeveloperModeFunction implements DatapackFunction {
             currentFunction.addLine(WorldBorderCommand.set(WorldData.getWorldDiameter()));
 
             // Display ranks
-            currentFunction.addLine(Schedule.callFunction(FileName.display_rank));
+            currentFunction.addLine(FunctionCommand.of(FunctionPath.DISPLAY_RANK));
 
             // Set time dummy scoreboard entries
             currentFunction.addLine(scoreboard.Set("NightTime", getObjectiveByName(Objective.Time), 600));
