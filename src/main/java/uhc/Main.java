@@ -1,9 +1,8 @@
 package uhc;
 
-import uhc.core.Datapack;
-import uhc.core.DatapackConfig;
-import uhc.core.Generator;
-import uhc.core.Namespace;
+import uhc.core.*;
+import uhc.game.player.PlayerData;
+import uhc.game.player.PlayerRegistry;
 import uhc.functions.*;
 import uhc.functions.control_point.ControlPointRecords;
 import uhc.functions.control_point.ControlPointVisuals;
@@ -16,6 +15,7 @@ import uhc.functions.player_death.PlayerDeathFunction;
 import uhc.functions.startup.StartPotionsFunction;
 import uhc.functions.util.ClearEnderChestFunction;
 import uhc.game.control_points.ControlPointRegistry;
+import uhc.game.world.WorldData;
 import uhc.logging.CustomConsoleFormatter;
 
 import java.io.IOException;
@@ -36,22 +36,17 @@ import java.util.logging.Handler;
  * physical {@code .mcfunction} files on disk.
  * </p>
  * <p>
- * <b>Execution Pipeline:</b>
- * <ol>
- * <li><b>Logging Environment:</b> Bootstraps the custom console formatter.</li>
- * <li><b>Structure Assembly:</b> Instantiates the Datapack and resolves the core Namespace.</li>
- * <li><b>Registry Initialization:</b> Instantiates and populates the {@link ControlPointRegistry}.</li>
- * <li><b>Module Registration:</b> Sequentially executes the logic for every {@link DatapackFunction}.</li>
- * <li><b>IO Generation:</b> Flushes the in-memory components to the filesystem.</li>
- * </ol>
+ * <b>Strict Error Policy:</b> Any failure in the registration or generation
+ * phase will trigger a {@link System#exit(int)} with a non-zero code to
+ * prevent the deployment of corrupted or incomplete datapacks.
  * </p>
  */
 public final class Main {
 
     // --- 📄 Static Fields ---
 
-    /** * The primary {@link Logger} instance for the application entry point.
-     * Configured during the {@link #setupLoggingEnvironment()} phase.
+    /** * The primary {@link Logger} for the application.
+     * Used to track the progress of the assembly pipeline and report errors.
      */
     private static final Logger LOGGER = Logger.getLogger(Main.class.getName());
 
@@ -60,12 +55,10 @@ public final class Main {
     /**
      * The main execution loop of the application.
      * <p>
-     * Utilizes a top-level try-catch block to ensure that any critical failure
-     * during the generation process results in a non-zero exit code and a
-     * detailed error report.
+     * Orchestrates the setup of the logging environment, the building of the
+     * virtual datapack structure, and the final physical file export.
      * </p>
-     *
-     * @param args Command line arguments (reserved for future use).
+     * @param args Command line arguments (reserved for future configuration).
      */
     public static void main(String[] args) {
         setupLoggingEnvironment();
@@ -73,15 +66,15 @@ public final class Main {
         try {
             LOGGER.info("Starting Datapack Assembly Pipeline...");
 
-            // Step 1: Build the virtual representation of the Datapack
+            // Step 1: Build the virtual representation of the Datapack in memory
             Datapack datapack = buildDatapackStructure();
 
-            // Step 2: Write the virtual structure to physical files
+            // Step 2: Flush the virtual structure to physical files on the disk
             executeGeneration(datapack);
 
             LOGGER.info("Datapack generation sequence finalized successfully.");
         } catch (Exception e) {
-            // Detailed reporting of the specific failure chain
+            // Non-zero exit code ensures build tools (like Gradle/Maven) detect the failure
             LOGGER.log(Level.SEVERE, "CRITICAL FAILURE: Datapack generation was aborted.", e);
             System.exit(1);
         }
@@ -90,20 +83,19 @@ public final class Main {
     // --- ⚙️ Internal Logic Segments ---
 
     /**
-     * Configures the global Java Logging API for clean console output.
+     * Configures the global Java Logging API for clean, formatted console output.
      * <p>
-     * This method removes default {@link Handler} instances to prevent
-     * duplicate logs and injects the {@link CustomConsoleFormatter}.
+     * Purges default handlers to prevent duplicate logging and injects the
+     * {@link CustomConsoleFormatter} for improved readability.
      * </p>
-     *
-     * @throws RuntimeException if the logging system cannot be configured.
+     * @throws RuntimeException if the logging system is inaccessible or fails to initialize.
      */
     private static void setupLoggingEnvironment() {
         try {
             Logger rootLogger = Logger.getLogger("");
-
-            // Purge default handlers to ensure our custom formatter takes precedence
             Handler[] handlers = rootLogger.getHandlers();
+
+            // Remove existing handlers to ensure our custom format is the only output source
             for (Handler handler : handlers) {
                 rootLogger.removeHandler(handler);
             }
@@ -111,16 +103,14 @@ public final class Main {
             ConsoleHandler customHandler = new ConsoleHandler();
             customHandler.setLevel(Level.ALL);
             customHandler.setFormatter(new CustomConsoleFormatter());
-
             rootLogger.addHandler(customHandler);
 
-            // Configure verbosity thresholds
+            // Set verbosity thresholds for the application package
             LOGGER.setLevel(Level.INFO);
             Logger.getLogger("uhc").setLevel(Level.INFO);
-
         } catch (Exception e) {
-            // System.err is used as a final fallback if the logger is compromised
-            System.err.println("FATAL: The logging environment failed to initialize. Aborting.");
+            // System.err is used as the absolute fallback if the logger itself is broken
+            System.err.println("FATAL: The logging environment failed to initialize. Aborting process.");
             e.printStackTrace();
             System.exit(1);
         }
@@ -130,37 +120,53 @@ public final class Main {
      * Orchestrates the creation of the {@link Datapack} and the registration
      * of all functional modules.
      * <p>
-     * This method initializes the {@link ControlPointRegistry} before any functions
-     * are registered to ensure dependency requirements are met.
+     * This method synchronizes player data with world size before initializing
+     * namespaces and game session registries.
      * </p>
-     *
      * @return A fully populated and validated {@link Datapack} instance.
-     * @throws IllegalStateException if the target namespace or registry cannot be resolved.
-     * @throws RuntimeException if any module registration logic fails.
+     * @throws IllegalStateException if any registry, namespace, or player data is invalid.
+     * @throws RuntimeException if any module fails to register correctly.
      */
     private static Datapack buildDatapackStructure() {
         Datapack datapack = new Datapack();
+
+        // 0. Initialize Game Session Parameters via Singleton Registry
+        try {
+            LOGGER.info("Querying PlayerRegistry for active participants...");
+
+            // Retrieve participating players from the singleton roster
+            List<PlayerData> activePlayers = PlayerRegistry.getParticipating();
+            int playerCount = activePlayers.size();
+
+            LOGGER.info(String.format("Found %d participating players in the roster.", playerCount));
+
+            // Calculate and lock the world size scaling based on the headcount
+            WorldData.calculateWorldSize(playerCount);
+            LOGGER.info("World size locked at radius: " + WorldData.getWorldRadius());
+
+        } catch (Exception e) {
+            // No-fallback: We cannot generate a UHC if world size or player data is missing
+            throw new IllegalStateException("Startup Error: Failed to synchronize game session data. Details: " + e.getMessage(), e);
+        }
 
         // 1. Resolve the primary Namespace
         final String namespaceName = DatapackConfig.CUSTOM_NAMESPACE;
         Namespace targetNamespace = datapack.getOrCreateNamespace(namespaceName);
 
         if (targetNamespace == null) {
-            throw new IllegalStateException("Namespace Error: The required namespace '" +
-                    namespaceName + "' could not be initialized.");
+            throw new IllegalStateException("Namespace Error: The required namespace '" + namespaceName + "' could not be created.");
         }
 
-        // 2. Initialize Game Session Data
+        // 2. Initialize Control Point Data
         try {
             LOGGER.info("Initializing Game Session Registries...");
             ControlPointRegistry registry = new ControlPointRegistry();
             registry.initializeSession();
         } catch (Exception e) {
-            throw new IllegalStateException("Registry Error: Failed to bootstrap the Control Point session. " +
-                    "Check configurations. Details: " + e.getMessage(), e);
+            throw new IllegalStateException("Registry Error: Failed to bootstrap the Control Point session registry.", e);
         }
 
-        // 3. Define the registry of modules to be included in this build
+        // 3. Define the functional modules to be compiled into the datapack
         List<DatapackFunction> modules = List.of(
                 new InitializeFunction(),
                 new ClearEnderChestFunction(),
@@ -176,16 +182,17 @@ public final class Main {
 
         LOGGER.info("Registering " + modules.size() + " functional modules...");
 
-        // 4. Execute registration for every module in the list
+        // 4. Registration Loop: Binds functions to the virtual datapack structure
         for (DatapackFunction module : modules) {
-            Objects.requireNonNull(module, "Registration Error: Attempted to register a null module.");
+            // Strict null check for the module list
+            Objects.requireNonNull(module, "Registration Error: Attempted to register a null module entry.");
 
             try {
                 LOGGER.info(" -> Registering: " + module.getClass().getSimpleName());
                 module.register(datapack, targetNamespace);
             } catch (Exception e) {
-                throw new RuntimeException("Module Error: Failure during registration of " +
-                        module.getClass().getSimpleName() + ". " + e.getMessage(), e);
+                // Wrap and rethrow to trigger the main try-catch exit
+                throw new RuntimeException("Module Error: Failure during registration of " + module.getClass().getSimpleName(), e);
             }
         }
 
@@ -193,38 +200,36 @@ public final class Main {
     }
 
     /**
-     * Translates the virtual {@link Datapack} object tree into physical files.
+     * Translates the virtual {@link Datapack} object tree into physical files on the OS.
      * <p>
-     * This method performs path normalization and ensures that the
-     * root output directory exists and is accessible.
+     * Validates the existence of the root directory and converts the
+     * virtual memory structure into the standard Minecraft Datapack directory format.
      * </p>
-     *
-     * @param datapack The populated {@link Datapack} structure to generate.
-     * @throws IOException if an I/O exception occurs during file creation.
-     * @throws IllegalStateException if the output path configuration is invalid.
-     * @throws NullPointerException if the provided datapack is null.
+     * @param datapack The populated {@link Datapack} to export.
+     * @throws IOException if a filesystem permission error or write failure occurs.
+     * @throws IllegalStateException if the output configuration is missing or blank.
+     * @throws NullPointerException if the provided datapack object is null.
      */
     private static void executeGeneration(Datapack datapack) throws IOException {
-        Objects.requireNonNull(datapack, "Generation Error: Target Datapack is null.");
+        Objects.requireNonNull(datapack, "Generation Error: The provided Datapack object is null.");
 
         Generator generator = new Generator();
         String rootDir = DatapackConfig.OUTPUT_DIR_ROOT;
 
+        // Ensure the configuration provides a valid target path
         if (rootDir == null || rootDir.isBlank()) {
-            throw new IllegalStateException("Config Error: 'OUTPUT_DIR_ROOT' must be defined in DatapackConfig.");
+            throw new IllegalStateException("Config Error: 'OUTPUT_DIR_ROOT' is not defined in DatapackConfig.");
         }
 
-        // Normalize the path using NIO.2
+        // Use NIO.2 Paths for cross-platform compatibility and absolute path logging
         Path absolutePath = Paths.get(rootDir).toAbsolutePath();
-        Path finalLocation = absolutePath.resolve(DatapackConfig.DATAPACK_FOLDER_NAME);
-
-        LOGGER.info("Syncing virtual structure to filesystem at: " + finalLocation);
+        LOGGER.info("Syncing virtual structure to filesystem at: " + absolutePath);
 
         try {
+            // The generator handles the recursive creation of folders and .mcfunction files
             generator.generate(datapack, absolutePath.toString());
         } catch (IOException e) {
-            throw new IOException("FileSystem Error: Failed to write datapack files. " +
-                    "Check folder permissions at: " + absolutePath, e);
+            throw new IOException("FileSystem Error: Failed to write datapack files. Ensure the path is writable: " + absolutePath, e);
         }
     }
 }

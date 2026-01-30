@@ -6,7 +6,6 @@ import HelperClasses.Execute;
 import HelperClasses.Team;
 import controlpoints.ControlPoint;
 import uhc.arguments.block.Block;
-import uhc.arguments.block.BlockPos;
 import uhc.arguments.data.DataPath;
 import uhc.arguments.entity.Entity;
 import uhc.arguments.entity.SelectorArgumentsBuilder;
@@ -14,12 +13,12 @@ import uhc.arguments.entity.TargetSelector;
 import uhc.arguments.item.SingleItemStack;
 import uhc.arguments.time.VariableGameTime;
 import uhc.command.commands.*;
-import uhc.command.commands.data.DataTargetEntity;
 import uhc.components.functions.Function;
 import uhc.components.functions.FunctionPath;
 import uhc.core.Constants;
 import uhc.core.Datapack;
 import uhc.core.Namespace;
+import uhc.game.world.WorldData;
 import uhc.data.nbt.blockentity.JukeboxNBT;
 import uhc.data.nbt.blockentity.state.HasRecordState;
 import uhc.data.nbt.entity.other.MarkerNBT;
@@ -108,13 +107,13 @@ public class DeveloperModeFunction implements DatapackFunction {
             // Placeholder for MinecraftCommand objects or further documentation strings.
             // Example: this.addSafeLine(currentFunction, ScoreboardCommand.players().target(...)...);
             // Recreate forceload
-            currentFunction.addLine(ForceLoadCommand.remove(Constants.spawnColumn));
-            currentFunction.addLine(ForceLoadCommand.add(Constants.spawnColumn));
+            currentFunction.addLine(ForceLoadCommand.remove(WorldData.spawnColumn));
+            currentFunction.addLine(ForceLoadCommand.add(WorldData.spawnColumn));
 
             // Create marker entity
             currentFunction.addLine(KillCommand.targets(Constants.admin));
             currentFunction.addLine(SummonCommand.entity(EntityId.MARKER,
-                    Constants.spawnBottom,
+                    WorldData.spawnBottom,
                     MarkerNBT.create()
                             .customName(TextComponent.text("Admin"))));
 
@@ -151,7 +150,7 @@ public class DeveloperModeFunction implements DatapackFunction {
             // Create jukebox at 0,0
             currentFunction.addLine(ExecuteCommand.create()
                     .in(DimensionId.OVERWORLD)
-                    .run(SetBlockCommand.create(Constants.spawnBlock,
+                    .run(SetBlockCommand.create(WorldData.spawnBlock,
                             Block.create(BlockId.JUKEBOX)
                                     .withState(HasRecordState.of(true))
                                     .withData(JukeboxNBT.create()
@@ -165,7 +164,7 @@ public class DeveloperModeFunction implements DatapackFunction {
             currentFunction.addLine(TagCommand.remove(Constants.admin, EntityTag.GAME_STARTED));
 
             // Set world border
-            currentFunction.addLine(WorldBorderCommand.set(2 * world.getSize()));
+            currentFunction.addLine(WorldBorderCommand.set(WorldData.getWorldDiameter()));
 
             // Display ranks
             currentFunction.addLine(Schedule.callFunction(FileName.display_rank));

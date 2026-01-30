@@ -3,16 +3,19 @@ package uhc.game.player;
 import java.util.Objects;
 
 /**
- * 👤 **Player Data Model**
+ * 👤 **Player Data Model (PlayerData)**
  * <p>
  * This class serves as a robust data container for player-specific information
  * within the UHC system. It maintains identity, competitive statistics, and
  * active session states.
  * </p>
  * <p>
- * <b>Strict Validation:</b> This class enforces a no-null policy for all Object-based
- * fields (Integer, String, Boolean). Any attempt to initialize or modify these
- * fields with null values will result in an immediate exception.
+ * <b>Strict Validation Policy:</b>
+ * <ul>
+ * <li>No null values allowed for Object-based fields.</li>
+ * <li>Numerical bounds checking (ID and Rank must be non-negative).</li>
+ * <li>Immediate exception throwing on invalid input (No Fallbacks).</li>
+ * </ul>
  * </p>
  */
 public class PlayerData {
@@ -20,118 +23,129 @@ public class PlayerData {
     // --- 🆔 Identity Fields ---
 
     /** * The unique numerical identifier for the player.
-     * <p>Primary key used for database or registry lookups.</p>
+     * Primary key used for database or registry lookups.
      */
     private Integer id;
 
     /** * The Minecraft username of the player.
-     * <p>Stored as a String to match the Mojang profile name.</p>
+     * Stored as a String to match the Mojang profile name exactly.
      */
     private String name;
 
     // --- 📈 Competitive Fields ---
 
     /** * The numerical rank or Elo rating of the player.
-     * <p>Determines matchmaking or seeding within the UHC tournament.</p>
+     * Determines matchmaking or seeding within the UHC tournament.
      */
     private Integer rank;
 
     /** * The timestamp or probability weighting of the player's last traitor status.
-     * <p>Type: {@code float}. Used by the faction engine to prevent players
-     * from being assigned the traitor role too frequently in consecutive games.</p>
+     * Used by the faction engine to prevent repeat role assignments.
      */
     private float lastTraitor;
 
     // --- 🎮 State Fields ---
 
     /** * A flag indicating if the player is currently an active participant in the match.
-     * <p>If false, the player is considered a spectator or inactive.</p>
+     * If false, the player is considered a spectator or inactive for the current build.
      */
     private Boolean participating;
 
     // --- 🏗️ Constructor ---
 
     /**
-     * Constructs a fully initialized PlayerData instance.
-     * <p>
-     * Validation is performed on all non-primitive parameters to ensure the
-     * object state is valid upon creation.
-     * </p>
-     * * @param id            The unique integer ID (non-null).
-     * @param name          The player's username (non-null).
-     * @param rank          The current competitive rank (non-null).
-     * @param lastTraitor   The traitor probability factor.
-     * @param participating The active participation status (non-null).
-     * @throws NullPointerException if any Object-based argument is null.
+     * Constructs a fully initialized and validated PlayerData instance.
+     * * @param id            The unique integer ID (must be non-null and >= 0).
+     * @param name          The player's username (must be non-null and non-empty).
+     * @param rank          The current competitive rank (must be non-null and >= 0).
+     * @param lastTraitor   The traitor probability factor or timestamp.
+     * @param participating The active participation status (must be non-null).
+     * * @throws NullPointerException if any Object-based argument is null.
+     * @throws IllegalArgumentException if numerical values are out of valid bounds.
      */
     public PlayerData(Integer id, String name, Integer rank, float lastTraitor, Boolean participating) {
-        try {
-            this.id = Objects.requireNonNull(id, "Initialization failed: Player ID cannot be null.");
-            this.name = Objects.requireNonNull(name, "Initialization failed: Player name cannot be null.");
-            this.rank = Objects.requireNonNull(rank, "Initialization failed: Player rank cannot be null.");
-            this.participating = Objects.requireNonNull(participating, "Initialization failed: Participation flag cannot be null.");
-            this.lastTraitor = lastTraitor;
-        } catch (NullPointerException e) {
-            throw new NullPointerException("PlayerData Constructor Error >> " + e.getMessage());
-        }
+        // We use an internal method to ensure consistent validation between constructor and setters
+        this.setId(id);
+        this.setName(name);
+        this.setRank(rank);
+        this.setParticipating(participating);
+        this.lastTraitor = lastTraitor;
     }
 
     // --- 🔑 Identity Accessors ---
 
     /** * Retrieves the player's unique ID.
-     * @return The {@link Integer} ID.
-     * @throws NullPointerException if the field has been corrupted to null.
+     * @return The non-null {@link Integer} ID.
+     * @throws IllegalStateException if the ID has somehow become null.
      */
     public Integer getId() {
-        return Objects.requireNonNull(id, "Data Access Error: ID field is null.");
+        return Objects.requireNonNull(id, "Data Integrity Error: ID field is unexpectedly null.");
     }
 
-    /** * Updates the player's unique ID.
-     * @param id The new non-null {@link Integer} ID.
+    /** * Updates the player's unique ID with validation.
+     * @param id The new non-null {@link Integer} ID (must be >= 0).
+     * @throws NullPointerException if id is null.
+     * @throws IllegalArgumentException if id is negative.
      */
     public void setId(Integer id) {
-        this.id = Objects.requireNonNull(id, "Data Modification Error: Cannot set a null ID.");
+        Objects.requireNonNull(id, "Data Modification Error: Cannot set a null ID.");
+        if (id < 0) {
+            throw new IllegalArgumentException("Data Modification Error: ID cannot be negative (Provided: " + id + ").");
+        }
+        this.id = id;
     }
 
-    /** * Retrieves the player's username.
-     * @return The {@link String} name.
-     * @throws NullPointerException if the field is null.
+    /** * Retrieves the player's Minecraft username.
+     * @return The non-null {@link String} name.
+     * @throws IllegalStateException if the name field is null.
      */
     public String getName() {
-        return Objects.requireNonNull(name, "Data Access Error: Name field is null.");
+        return Objects.requireNonNull(name, "Data Integrity Error: Name field is unexpectedly null.");
     }
 
-    /** * Updates the player's username.
+    /** * Updates the player's username with validation.
      * @param name The new non-null {@link String} name.
+     * @throws NullPointerException if name is null.
+     * @throws IllegalArgumentException if name is empty or blank.
      */
     public void setName(String name) {
-        this.name = Objects.requireNonNull(name, "Data Modification Error: Cannot set a null Name.");
+        Objects.requireNonNull(name, "Data Modification Error: Cannot set a null Name.");
+        if (name.trim().isEmpty()) {
+            throw new IllegalArgumentException("Data Modification Error: Player name cannot be empty or whitespace.");
+        }
+        this.name = name;
     }
 
     // --- 📊 Competitive Accessors ---
 
-    /** * Retrieves the current rank.
-     * @return The {@link Integer} rank value.
+    /** * Retrieves the player's current competitive rank.
+     * @return The non-null {@link Integer} rank.
      */
     public Integer getRank() {
-        return Objects.requireNonNull(rank, "Data Access Error: Rank field is null.");
+        return Objects.requireNonNull(rank, "Data Integrity Error: Rank field is unexpectedly null.");
     }
 
-    /** * Updates the competitive rank.
-     * @param rank The new non-null {@link Integer} rank.
+    /** * Updates the competitive rank with validation.
+     * @param rank The new non-null {@link Integer} rank (must be >= 0).
+     * @throws NullPointerException if rank is null.
+     * @throws IllegalArgumentException if rank is negative.
      */
     public void setRank(Integer rank) {
-        this.rank = Objects.requireNonNull(rank, "Data Modification Error: Cannot set a null Rank.");
+        Objects.requireNonNull(rank, "Data Modification Error: Cannot set a null Rank.");
+        if (rank < 0) {
+            throw new IllegalArgumentException("Data Modification Error: Rank cannot be negative (Provided: " + rank + ").");
+        }
+        this.rank = rank;
     }
 
-    /** * Retrieves the last traitor factor.
+    /** * Retrieves the last traitor weighting factor.
      * @return The raw {@code float} value.
      */
     public float getLastTraitor() {
         return lastTraitor;
     }
 
-    /** * Updates the traitor factor.
+    /** * Updates the traitor probability/history factor.
      * @param lastTraitor The new float value.
      */
     public void setLastTraitor(float lastTraitor) {
@@ -140,33 +154,36 @@ public class PlayerData {
 
     // --- 🏃 State Accessors ---
 
-    /** * Checks the participation status of the player.
-     * @return The {@link Boolean} status.
+    /** * Checks if the player is marked as an active participant.
+     * @return The non-null {@link Boolean} participation status.
      */
     public Boolean isParticipating() {
-        return Objects.requireNonNull(participating, "Data Access Error: Participating field is null.");
+        return Objects.requireNonNull(participating, "Data Integrity Error: Participating field is unexpectedly null.");
     }
 
-    /** * Updates the participation status.
+    /** * Updates the participation status for the current session.
      * @param participating The new non-null {@link Boolean} status.
+     * @throws NullPointerException if participating is null.
      */
     public void setParticipating(Boolean participating) {
-        this.participating = Objects.requireNonNull(participating, "Data Modification Error: Cannot set a null Participation status.");
+        this.participating = Objects.requireNonNull(participating, "Data Modification Error: Participation status must be true or false (null not allowed).");
     }
 
     // --- ⚙️ Standard Overrides ---
 
     /**
-     * Generates a string representation of the player's data for logging.
-     * @return A formatted string containing all current field values.
+     * Generates a string representation of the player's data for logging and debugging.
+     * <p>Uses strict serialization: if fields are missing, it throws an error instead of returning "null".</p>
+     * @return A formatted string containing ID, name, rank, traitor factor, and activity status.
+     * @throws RuntimeException if the object is in an invalid state during serialization.
      */
     @Override
     public String toString() {
         try {
             return String.format("PlayerData[id=%d, name='%s', rank=%d, traitorFactor=%.2f, active=%b]",
-                    id, name, rank, lastTraitor, participating);
+                    getId(), getName(), getRank(), getLastTraitor(), isParticipating());
         } catch (Exception e) {
-            throw new RuntimeException("Critical Error: Failed to serialize PlayerData to String.", e);
+            throw new RuntimeException("Critical Serialization Error: Failed to generate PlayerData string. " + e.getMessage());
         }
     }
 }

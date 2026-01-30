@@ -1,7 +1,5 @@
 package uhc.core;
 
-import uhc.arguments.block.BlockPos;
-import uhc.arguments.block.ColumnPos;
 import uhc.arguments.entity.Entity;
 import uhc.arguments.entity.SelectorArgumentsBuilder;
 import uhc.arguments.entity.TargetSelector;
@@ -18,6 +16,10 @@ import java.util.Objects;
  * and static values used across the UHC engine. It ensures mathematical consistency
  * for time-based logic and scoring calculations.
  * </p>
+ * <p>
+ * <b>Strict Policy:</b> This is a static-only utility class. Instantiation is
+ * prohibited, and all mathematical operations include overflow protection.
+ * </p>
  */
 public final class Constants {
 
@@ -28,13 +30,6 @@ public final class Constants {
      * <p>Targets the nearest {@code minecraft:marker} entity used for technical command execution.</p>
      */
     public static final Entity admin;
-
-    // Coordinates
-    public static final ColumnPos spawnColumn;
-    public static final BlockPos spawnBottom;
-    public static final BlockPos spawnBlock;
-
-    public static final int worldBottom = -64;
 
     // --- 🎨 Visual Components ---
 
@@ -60,32 +55,33 @@ public final class Constants {
 
     static {
         try {
-            // Initialize the admin selector
+            // 1. Initialize the admin selector targeting specific technical markers
             admin = Entity.ofSelector(
                     TargetSelector.NEAREST_ENTITY,
                     SelectorArgumentsBuilder.create().type(EntityId.MARKER));
 
-            spawnColumn = ColumnPos.absolute(0, 0);
-            spawnBottom = BlockPos.absolute(0, worldBottom, 0);
-            spawnBlock = BlockPos.absolute(0, 64, 0);
-
-            // Initialize formatting components
+            // 2. Initialize formatting components for UI consistency
             bannerText = TextComponent.text(" | ").color(TextColor.DARK_GRAY).bold(true);
 
-            // Verify integrity of constants
-            Objects.requireNonNull(admin, "Constants failure: Admin entity selector could not be initialized.");
-            Objects.requireNonNull(bannerText, "Constants failure: bannerText component could not be initialized.");
+            // 3. Strict verification of integrity
+            if (admin == null) {
+                throw new IllegalStateException("Admin entity selector failed to build.");
+            }
+            if (bannerText == null) {
+                throw new IllegalStateException("Banner text component failed to build.");
+            }
 
         } catch (Exception e) {
-            throw new ExceptionInInitializerError("Critical failure during static initialization of Constants: " + e.getMessage());
+            // Re-wrapping in ExceptionInInitializerError to halt the JVM if constants are missing
+            throw new ExceptionInInitializerError("CRITICAL: Failed to initialize global Constants registry. " + e.getMessage());
         }
     }
 
     // --- 🏗️ Constructor ---
 
     /**
-     * Private constructor to prevent the instantiation of this utility class.
-     * @throws UnsupportedOperationException Always thrown with a clear error message.
+     * Private constructor to enforce the static utility nature of the class.
+     * @throws UnsupportedOperationException Always thrown to prevent instantiation.
      */
     private Constants() {
         throw new UnsupportedOperationException("Constants is a static utility class and cannot be instantiated.");
@@ -94,39 +90,64 @@ public final class Constants {
     // --- 🛠️ Mathematical Utilities ---
 
     /**
-     * Converts a duration from minutes to seconds.
+     * Converts a duration from minutes to seconds with overflow protection.
      * <p>Formula: {@code minutes * 60}</p>
-     * * @param minutes The duration in minutes to be converted.
-     * @return The equivalent duration in seconds.
-     * @throws ArithmeticException if the result exceeds the capacity of an integer.
+     *
+     * @param minutes The duration in minutes to be converted.
+     * @return The equivalent duration in seconds as an integer.
+     * @throws ArithmeticException if the resulting value exceeds {@link Integer#MAX_VALUE}.
+     * @throws IllegalArgumentException if the provided minute value is negative.
      */
     public static int minutesToSeconds(int minutes) {
+        if (minutes < 0) {
+            throw new IllegalArgumentException("Time Error: Cannot convert negative minutes (" + minutes + ").");
+        }
         try {
-            // Math.multiplyExact provides built-in overflow detection
+            // Using Math.multiplyExact to prevent silent overflow errors
             return Math.multiplyExact(minutes, MIN_TO_SECOND);
         } catch (ArithmeticException e) {
-            throw new ArithmeticException("Conversion failed: " + minutes + " minutes is too large to represent in seconds.");
-        } catch (Exception e) {
-            throw new RuntimeException("Unexpected error during minutesToSeconds conversion: " + e.getMessage());
+            throw new ArithmeticException("Time Conversion Overflow: " + minutes + " minutes exceeds integer capacity in seconds.");
         }
     }
 
     /**
-     * Converts a duration from minutes to Minecraft game ticks.
+     * Converts a duration from minutes to Minecraft game ticks with overflow protection.
      * <p>Formula: {@code minutes * 60 * 20}</p>
-     * * @param minutes The duration in minutes to be converted.
-     * @return The equivalent duration in ticks.
-     * @throws ArithmeticException if the calculation results in an integer overflow.
+     *
+     * @param minutes The duration in minutes to be converted.
+     * @return The equivalent duration in game ticks (20 ticks = 1 second).
+     * @throws ArithmeticException if the final tick count exceeds {@link Integer#MAX_VALUE}.
+     * @throws IllegalArgumentException if the provided minute value is negative.
      */
     public static int minutesToTicks(int minutes) {
+        if (minutes < 0) {
+            throw new IllegalArgumentException("Time Error: Cannot convert negative minutes (" + minutes + ").");
+        }
         try {
-            // Chained exact multiplication to ensure precision and safety
+            // Step-by-step exact multiplication to ensure precision at every stage
             int seconds = Math.multiplyExact(minutes, MIN_TO_SECOND);
             return Math.multiplyExact(seconds, TICK_TO_SECOND);
         } catch (ArithmeticException e) {
-            throw new ArithmeticException("Conversion failed: " + minutes + " minutes is too large to represent in game ticks.");
-        } catch (Exception e) {
-            throw new RuntimeException("Unexpected error during minutesToTicks conversion: " + e.getMessage());
+            throw new ArithmeticException("Tick Conversion Overflow: " + minutes + " minutes is too large to represent in game ticks.");
+        }
+    }
+
+    /**
+     * Converts a duration from seconds to Minecraft game ticks.
+     * <p>Formula: {@code seconds * 20}</p>
+     *
+     * @param seconds The duration in seconds to be converted.
+     * @return The equivalent duration in ticks.
+     * @throws ArithmeticException if the result overflows.
+     */
+    public static int secondsToTicks(int seconds) {
+        if (seconds < 0) {
+            throw new IllegalArgumentException("Time Error: Cannot convert negative seconds (" + seconds + ").");
+        }
+        try {
+            return Math.multiplyExact(seconds, TICK_TO_SECOND);
+        } catch (ArithmeticException e) {
+            throw new ArithmeticException("Tick Conversion Overflow: " + seconds + " seconds is too large for an integer tick count.");
         }
     }
 }
