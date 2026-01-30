@@ -115,7 +115,7 @@ public class PlayerDeathFunction implements DatapackFunction {
                         .gamemode(GameModeId.SPECTATOR, true));
 
         function.addLine(Comment.create("SECTION 2: Spectator Transition"));
-        function.addLine(GameModeCommand.create(GameModeId.SPECTATOR).target(deceasedNonSpectator));
+        function.addLine(GameModeCommand.of(GameModeId.SPECTATOR, deceasedNonSpectator));
     }
 
     /**

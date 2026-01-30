@@ -18,6 +18,8 @@ import uhc.components.functions.FunctionPath;
 import uhc.core.Constants;
 import uhc.core.Datapack;
 import uhc.core.Namespace;
+import uhc.game.team.TeamData;
+import uhc.game.team.TeamRegistry;
 import uhc.game.world.WorldData;
 import uhc.data.nbt.blockentity.JukeboxNBT;
 import uhc.data.nbt.blockentity.state.HasRecordState;
@@ -170,29 +172,30 @@ public class DeveloperModeFunction implements DatapackFunction {
             currentFunction.addLine(FunctionCommand.of(FunctionPath.DISPLAY_RANK));
 
             // Set time dummy scoreboard entries
-            currentFunction.addLine(scoreboard.Set("NightTime", getObjectiveByName(Objective.Time), 600));
+            currentFunction.addLine(ScoreboardCommand.setScore(Entity.ofName("NightTime"), ScoreboardObjectiveId.REAL_TIME, 600));
 
             // Reset teams & solos
-            for (Team t : teams) {
-                currentFunction.addLine(t.emptyTeam());
+            for (TeamData team : TeamRegistry.ALL) {
+                currentFunction.addLine(TeamCommand.empty(team));
             }
 
             // Reset player attributes
-            currentFunction.addLine(Execute.As("@a") +
-                    AttributeCommand.setBase(
+            currentFunction.addLine(ExecuteCommand.create()
+                    .as(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
+                    .run(AttributeCommand.setBase(
                             Entity.ofSelector(TargetSelector.SENDER),
                             AttributeId.SCALE,
-                            1));
-            currentFunction.addLine(Execute.As("@a") +
-                    AttributeCommand.setBase(
+                            1)));
+            currentFunction.addLine(ExecuteCommand.create()
+                    .as(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
+                    .run(AttributeCommand.setBase(
                             Entity.ofSelector(TargetSelector.SENDER),
                             AttributeId.WAYPOINT_TRANSMIT_RANGE,
-                            0));
+                            0)));
 
             // Set gamemode of player executing the command to creative
-            currentFunction.addLine(GameModeCommand.create(GameModeId.CREATIVE)
-                    .target(Entity.ofSelector(TargetSelector.SENDER))
-            );
+            currentFunction.addLine(GameModeCommand.of(GameModeId.CREATIVE,
+                    Entity.ofSelector(TargetSelector.SENDER)));
 
             // Clear scheduled commands
             currentFunction.addLine(Schedule.callFunction(FileName.clear_schedule));

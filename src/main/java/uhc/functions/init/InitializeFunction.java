@@ -117,7 +117,7 @@ public class InitializeFunction implements DatapackFunction {
         function.addLine(GameRuleCommand.set(GameRuleId.DO_WEATHER_CYCLE, false));
 
         function.addLine(DifficultyCommand.create().difficulty(DifficultyId.HARD));
-        function.addLine(GameModeCommand.create(GameModeId.ADVENTURE).setDefault());
+        function.addLine(GameModeCommand.ofDefault(GameModeId.ADVENTURE));
         function.addLine(SetWorldSpawnCommand.create().pos(SPAWN_POS));
         this.addSafeLine(function, "");
     }

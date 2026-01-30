@@ -966,8 +966,7 @@ public class Main {
                 .generate());
 
         // Set default gamemode
-        fileCommands.add(GameModeCommand.create(GameModeId.ADVENTURE)
-                .setDefault()
+        fileCommands.add(GameModeCommand.ofDefault(GameModeId.ADVENTURE)
                 .generate()
         );
 
@@ -1056,8 +1055,8 @@ public class Main {
                 .generate());
 
         // Set all dead players to spectator mode
-        fileCommands.add(GameModeCommand.create(GameModeId.SPECTATOR)
-                .target(Entity.ofSelector(
+        fileCommands.add(GameModeCommand.of(GameModeId.SPECTATOR,
+                        Entity.ofSelector(
                                 TargetSelector.ALL_PLAYERS,
                                 SelectorArgumentsBuilder.create()
                                         .scores(Map.of(ScoreboardObjectiveId.DEATHS, 1))
@@ -1621,10 +1620,9 @@ public class Main {
                         0));
 
         // Set gamemode of player executing the command to creative
-        fileCommands.add(GameModeCommand.create(GameModeId.CREATIVE)
-                .target(Entity.ofSelector(TargetSelector.SENDER))
-                .generate()
-        );
+        fileCommands.add(GameModeCommand.of(GameModeId.CREATIVE,
+                        Entity.ofSelector(TargetSelector.SENDER))
+                .generate());
 
         // Clear scheduled commands
         fileCommands.add(Schedule.callFunction(FileName.clear_schedule));
@@ -1762,24 +1760,18 @@ public class Main {
                         .gamemode(GameModeId.ADVENTURE, true)), EntityTag.IS_FLYING)
                         .generate());
 
-        fileCommands.add(GameModeCommand.create(GameModeId.ADVENTURE)
-                .target(Entity.ofSelector(
+        fileCommands.add(GameModeCommand.of(GameModeId.ADVENTURE,
+                        Entity.ofSelector(
                                 TargetSelector.ALL_PLAYERS,
                                 SelectorArgumentsBuilder.create()
-                                        .tag(EntityTag.IS_FLYING)
-                        )
-                )
-                .generate()
-        );
-        fileCommands.add(GameModeCommand.create(GameModeId.CREATIVE)
-                .target(Entity.ofSelector(
+                                        .tag(EntityTag.IS_FLYING)))
+                .generate());
+        fileCommands.add(GameModeCommand.of(GameModeId.CREATIVE,
+                        Entity.ofSelector(
                                 TargetSelector.ALL_PLAYERS,
                                 SelectorArgumentsBuilder.create()
-                                        .tag(EntityTag.IS_FLYING)
-                        )
-                )
-                .generate()
-        );
+                                        .tag(EntityTag.IS_FLYING)))
+                .generate());
         fileCommands.add(TagCommand.remove(Entity.ofSelector(
                                 TargetSelector.ALL_PLAYERS,
                                 SelectorArgumentsBuilder.create()
@@ -1994,10 +1986,9 @@ public class Main {
                 .generate());
 
         // Set all players to survival mode
-        fileCommands.add(GameModeCommand.create(GameModeId.SURVIVAL)
-                .target(Entity.ofSelector(TargetSelector.ALL_PLAYERS))
-                .generate()
-        );
+        fileCommands.add(GameModeCommand.of(GameModeId.SURVIVAL,
+                        Entity.ofSelector(TargetSelector.ALL_PLAYERS))
+                .generate());
 
         // Revoke all advancements
         fileCommands.add(AdvancementCommand.everything(
@@ -2090,17 +2081,13 @@ public class Main {
 
         fileCommands.add(Execute.In(Dimension.overworld, false) +
                 Execute.PositionedNext(new Coordinate(0, 151, 0), true) +
-                GameModeCommand.create(GameModeId.SURVIVAL)
-                        .target(
+                GameModeCommand.of(GameModeId.SURVIVAL,
                                 Entity.ofSelector(
                                         TargetSelector.ALL_PLAYERS,
                                         SelectorArgumentsBuilder.create()
                                                 .distance("..20")
-                                                .gamemode(GameModeId.CREATIVE, true)
-                                )
-                        )
-                        .generate()
-        );
+                                                .gamemode(GameModeId.CREATIVE, true)))
+                        .generate());
         fileCommands.add(Execute.In(Dimension.overworld, false) +
                 Execute.PositionedNext(new Coordinate(0, 151, 0), true) +
                 SpreadPlayersCommand.create(
@@ -3259,10 +3246,9 @@ public class Main {
 
         // Set player's gamemode to survival
         fileCommands.add(Execute.As(respawnPlayerOld) +
-                GameModeCommand.create(GameModeId.SURVIVAL)
-                        .target(Entity.ofSelector(TargetSelector.SENDER))
-                        .generate()
-        );
+                GameModeCommand.of(GameModeId.SURVIVAL,
+                                Entity.ofSelector(TargetSelector.SENDER))
+                        .generate());
 
         // Remove respawn tag
         fileCommands.add(TagCommand.remove(respawnPlayer, EntityTag.RESPAWN)
