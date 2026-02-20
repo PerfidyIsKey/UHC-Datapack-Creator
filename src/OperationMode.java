@@ -13,4 +13,5 @@ public class OperationMode {
 
     // Game mechanics
     public static final Boolean teamCreationInGame = false;
+    public static final Boolean respawnBeforeKills = true;
 }

@@ -1087,8 +1087,15 @@ public class Main {
         // Drop player head
         fileCommands.add(Schedule.callFunction(FileName.drop_player_heads));
 
-        // Do automatic respawn in the first 20 minutes
-        fileCommands.add(Execute.Unless("@e[tag=" + TagTemp.RespawnDisabled + "]") +
+        // Check if there have been kills
+        if (OperationMode.respawnBeforeKills) {
+            fileCommands.add(Execute.Unless("@n[tag=" + TagTemp.RespawnDisabled + "]", false) +
+                    Execute.IfNext("@p[scores={Kills=1..}]", true) +
+                    Schedule.callFunction(FileName.disable_respawn));
+        }
+
+        // Do automatic respawn
+        fileCommands.add(Execute.Unless("@n[tag=" + TagTemp.RespawnDisabled + "]") +
                 Schedule.callFunction(FileName.respawn_player, 5, Duration.TICKS));
 
         // Traitor Faction
@@ -3793,7 +3800,9 @@ public class Main {
             fileCommands.add(Schedule.clearFunction(FileName.messages_eternal_day));
         }
         fileCommands.add(Schedule.clearFunction(FileName.messages_pvp));
-        fileCommands.add(Schedule.clearFunction(FileName.disable_respawn));
+        if (!OperationMode.respawnBeforeKills) {
+            fileCommands.add(Schedule.clearFunction(FileName.disable_respawn));
+        }
 
         return new FileData(FileName.clear_schedule, fileCommands);
     }
