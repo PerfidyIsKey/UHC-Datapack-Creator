@@ -1074,12 +1074,13 @@ public class Main {
         // Reset player with lowest health
         fileCommands.add(scoreboard.Set(Constant.adminOld, getObjectiveByName(Objective.MinHealth), 20));
 
-        // Add respawn tag to players who die in the first 20 minutes
+        // Add respawn tag to players who die early
         fileCommands.add(Execute.Unless("@e[tag=" + TagTemp.RespawnDisabled + "]") +
                 Tag.action(Entity.ofSelector(
                                         TargetSelector.NEAREST_PLAYER,
                                         SelectorArgumentsBuilder.create()
-                                                .scores(Map.of(ScoreObjective.DEATHS, 1))),
+                                                .scores(Map.of(ScoreObjective.DEATHS, 1))
+                                                .tag(StaticEntityTag.TRAITOR, true)),
                                 TagAction.ADD)
                         .name(StaticEntityTag.RESPAWN)
                         .build());
@@ -1087,11 +1088,16 @@ public class Main {
         // Drop player head
         fileCommands.add(Schedule.callFunction(FileName.drop_player_heads));
 
-        // Check if there have been kills
         if (OperationMode.respawnBeforeKills) {
+            // Check if there have been kills
             fileCommands.add(Execute.Unless("@n[tag=" + TagTemp.RespawnDisabled + "]", false) +
+                    Execute.IfNext("@n[scores={Time2=24000..}]") +
                     Execute.IfNext("@p[scores={Kills=1..}]", true) +
                     Schedule.callFunction(FileName.disable_respawn));
+
+            // Remove kills
+            fileCommands.add(Execute.Unless("@n[scores={Time2=24000..}]") +
+                    scoreboard.Set("@p[scores={Kills=1..}]", Objective.Kills, 0));
         }
 
         // Do automatic respawn
