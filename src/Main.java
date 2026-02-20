@@ -121,7 +121,7 @@ public class Main {
     private static int carePackageSpread;
     private int minTraitorRank;
     private int traitorWaitTime;
-    private static final int traitorMode = 1;
+    private static final int traitorMode = 3;
     private String communityName;
     public static final Scoreboard scoreboard = new Scoreboard();
 
@@ -2835,7 +2835,7 @@ public class Main {
                         .name(StaticEntityTag.TRAITOR)
                         .build());
 
-        // Add additional traitor
+        // Add additional traitor(s)
         if (traitorMode == 2) {
             fileCommands.add(Tag.action(Entity.ofSelector(TargetSelector.ALL_PLAYERS), TagAction.REMOVE)
                     .name(StaticEntityTag.DONT_MAKE_TRAITOR)
@@ -2865,6 +2865,24 @@ public class Main {
                     TagAction.ADD)
                             .name(StaticEntityTag.TRAITOR)
                             .build());
+        } else if (traitorMode == 3) {
+            fileCommands.add(Tag.action(Entity.ofSelector(TargetSelector.ALL_PLAYERS,
+                            SelectorArgumentsBuilder.create()
+                                    .tag(StaticEntityTag.TRAITOR, true)), TagAction.REMOVE)
+                    .name(StaticEntityTag.DONT_MAKE_TRAITOR)
+                    .build());
+            for (int i = 0; i < 2; i++) {
+                fileCommands.add(Tag.action(Entity.ofSelector(
+                                        TargetSelector.RANDOM_PLAYER,
+                                        SelectorArgumentsBuilder.create()
+                                                .limit(1)
+                                                .tag(StaticEntityTag.DONT_MAKE_TRAITOR, true)
+                                                .gamemode(GameMode.SPECTATOR, true)
+                                                .team(teams.get(i).getName())),
+                                TagAction.ADD)
+                        .name(StaticEntityTag.TRAITOR)
+                        .build());
+            }
         }
 
         // Inform traitors
