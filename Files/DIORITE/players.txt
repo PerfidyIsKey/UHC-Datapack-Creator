@@ -18,7 +18,7 @@
 45,Vermeil_Chan,35,0,false
 46,Jobbo2002,2,0,false
 47,Uncle_Lolly,1,0,false
-48,AurqSnqtcher,61,57,false
+48,AurqSnqtcher,61,57,true
 49,cat_person,10,0,false
 50,GoldBard2474348,5,0,false
 51,CrimsonCid,3,0,false
@@ -33,7 +33,7 @@
 60,Bertje13,35,0,false
 61,blacksnake29,38,0,false
 62,PwodY_,0,0,false
-63,EarthKun1,22,0,true
+63,EarthKun1,22,0,false
 64,BlueBlacky,13,0,false
 65,x_Mylan_x,3,0,false
 66,Leavd,31,0,false

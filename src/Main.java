@@ -243,7 +243,7 @@ public class Main {
         properties.set("difficulty", DifficultyId.HARD);
         properties.set("enable-command-block", true);
         properties.set("gamemode", GameMode.ADVENTURE);
-        properties.set("level-seed", 1126908793L);
+        properties.set("level-seed", -526304471L);
         properties.set("max-players", 50);
         properties.set("motd", communityName + " UHC S" + uhcNumber);
         properties.set("simulation-distance", 5);
