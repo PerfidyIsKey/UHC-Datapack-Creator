@@ -121,7 +121,7 @@ public class Main {
     private static int carePackageSpread;
     private int minTraitorRank;
     private int traitorWaitTime;
-    private static final int traitorMode = 1;
+    private static final int traitorMode = 3;
     private String communityName;
     public static final Scoreboard scoreboard = new Scoreboard();
 
@@ -243,7 +243,7 @@ public class Main {
         properties.set("difficulty", DifficultyId.HARD);
         properties.set("enable-command-block", true);
         properties.set("gamemode", GameMode.ADVENTURE);
-        properties.set("level-seed", 1126908793L);
+        properties.set("level-seed", -526304471L);
         properties.set("max-players", 50);
         properties.set("motd", communityName + " UHC S" + uhcNumber);
         properties.set("simulation-distance", 5);
@@ -527,7 +527,7 @@ public class Main {
         entries.add(new LootTableEntry(2, ItemId.DIAMOND, new SetCount(2, new RandomChance(0.3))));
 
         // Entry #26
-        entries.add(new LootTableEntry(7, ItemId.SADDLE));
+        entries.add(new LootTableEntry(10, ItemId.SADDLE));
 
         // Entry #27
         entries.add(new LootTableEntry(3, ItemId.SPECTRAL_ARROW, new SetCount(10)));
@@ -544,7 +544,7 @@ public class Main {
         functions.add(new SetComponents(horse));
         functions.add(name);
 
-        entries.add(new LootTableEntry(10, ItemId.HORSE_SPAWN_EGG, functions));
+        entries.add(new LootTableEntry(1, ItemId.HORSE_SPAWN_EGG, functions));
         functions = new ArrayList<>();
 
         // Entry #29
@@ -637,7 +637,7 @@ public class Main {
         functions.add(new SetComponents(horse));
         functions.add(name);
 
-        entries.add(new LootTableEntry(4, ItemId.HORSE_SPAWN_EGG, functions));
+        entries.add(new LootTableEntry(12, ItemId.HORSE_SPAWN_EGG, functions));
         functions = new ArrayList<>();
 
         // Entry #47
@@ -789,7 +789,7 @@ public class Main {
         plugins.add(new PaperPlugin("ViaVersion-5.7.1.jar", OperationMode.otherVersions, "ViaBackwards-5.7.1.jar"));
         plugins.add(new PaperPlugin("spark-1.10.119-bukkit.jar", OperationMode.debug));
         plugins.add(new PaperPlugin("Chunky-Bukkit-1.4.28.jar", OperationMode.debug));
-        plugins.add(new PaperPlugin("openaudiomc-6.10.7.jar", OperationMode.proximity, "OpenAudioMc\\"));
+        plugins.add(new PaperPlugin("voicechat-bukkit-2.6.11.jar", OperationMode.proximity, "voicechat\\"));
 
         fileTools.copyPlugins(plugins);
     }
@@ -1074,12 +1074,13 @@ public class Main {
         // Reset player with lowest health
         fileCommands.add(scoreboard.Set(Constant.adminOld, getObjectiveByName(Objective.MinHealth), 20));
 
-        // Add respawn tag to players who die in the first 20 minutes
+        // Add respawn tag to players who die early
         fileCommands.add(Execute.Unless("@e[tag=" + TagTemp.RespawnDisabled + "]") +
                 Tag.action(Entity.ofSelector(
                                         TargetSelector.NEAREST_PLAYER,
                                         SelectorArgumentsBuilder.create()
-                                                .scores(Map.of(ScoreObjective.DEATHS, 1))),
+                                                .scores(Map.of(ScoreObjective.DEATHS, 1))
+                                                .tag(StaticEntityTag.TRAITOR, true)),
                                 TagAction.ADD)
                         .name(StaticEntityTag.RESPAWN)
                         .build());
@@ -1087,8 +1088,20 @@ public class Main {
         // Drop player head
         fileCommands.add(Schedule.callFunction(FileName.drop_player_heads));
 
-        // Do automatic respawn in the first 20 minutes
-        fileCommands.add(Execute.Unless("@e[tag=" + TagTemp.RespawnDisabled + "]") +
+        if (OperationMode.respawnBeforeKills) {
+            // Check if there have been kills
+            fileCommands.add(Execute.Unless("@n[tag=" + TagTemp.RespawnDisabled + "]", false) +
+                    Execute.IfNext("@n[scores={Time2=24000..}]") +
+                    Execute.IfNext("@p[scores={Kills=1..}]", true) +
+                    Schedule.callFunction(FileName.disable_respawn));
+
+            // Remove kills
+            fileCommands.add(Execute.Unless("@n[scores={Time2=24000..}]") +
+                    scoreboard.Set("@p[scores={Kills=1..}]", Objective.Kills, 0));
+        }
+
+        // Do automatic respawn
+        fileCommands.add(Execute.Unless("@n[tag=" + TagTemp.RespawnDisabled + "]") +
                 Schedule.callFunction(FileName.respawn_player, 5, Duration.TICKS));
 
         // Traitor Faction
@@ -2835,7 +2848,7 @@ public class Main {
                         .name(StaticEntityTag.TRAITOR)
                         .build());
 
-        // Add additional traitor
+        // Add additional traitor(s)
         if (traitorMode == 2) {
             fileCommands.add(Tag.action(Entity.ofSelector(TargetSelector.ALL_PLAYERS), TagAction.REMOVE)
                     .name(StaticEntityTag.DONT_MAKE_TRAITOR)
@@ -2865,6 +2878,24 @@ public class Main {
                     TagAction.ADD)
                             .name(StaticEntityTag.TRAITOR)
                             .build());
+        } else if (traitorMode == 3) {
+            fileCommands.add(Tag.action(Entity.ofSelector(TargetSelector.ALL_PLAYERS,
+                            SelectorArgumentsBuilder.create()
+                                    .tag(StaticEntityTag.TRAITOR, true)), TagAction.REMOVE)
+                    .name(StaticEntityTag.DONT_MAKE_TRAITOR)
+                    .build());
+            for (int i = 0; i < 2; i++) {
+                fileCommands.add(Tag.action(Entity.ofSelector(
+                                        TargetSelector.RANDOM_PLAYER,
+                                        SelectorArgumentsBuilder.create()
+                                                .limit(1)
+                                                .tag(StaticEntityTag.DONT_MAKE_TRAITOR, true)
+                                                .gamemode(GameMode.SPECTATOR, true)
+                                                .team(teams.get(i).getName())),
+                                TagAction.ADD)
+                        .name(StaticEntityTag.TRAITOR)
+                        .build());
+            }
         }
 
         // Inform traitors
@@ -3775,7 +3806,9 @@ public class Main {
             fileCommands.add(Schedule.clearFunction(FileName.messages_eternal_day));
         }
         fileCommands.add(Schedule.clearFunction(FileName.messages_pvp));
-        fileCommands.add(Schedule.clearFunction(FileName.disable_respawn));
+        if (!OperationMode.respawnBeforeKills) {
+            fileCommands.add(Schedule.clearFunction(FileName.disable_respawn));
+        }
 
         return new FileData(FileName.clear_schedule, fileCommands);
     }

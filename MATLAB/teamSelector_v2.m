@@ -10,7 +10,7 @@ filePreAssigned  = "preAssignedTeams.txt";
 
 % Load data
 Players = struct;
-load("DataS61.mat")
+load("DataS62.mat")
 
 %% Input
 % Import players
