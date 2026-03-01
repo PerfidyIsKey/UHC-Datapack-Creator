@@ -28,8 +28,10 @@ public class GameStart {
         // Disable developer timers
         fileCommands.add(Schedule.clearFunction(FileName.timer_developer_20));
 
-        // Disable automatic player respawn after 20 minutes
-        fileCommands.add(Schedule.callFunction(FileName.disable_respawn, 20 * Constant.secPerMinute));
+        if (!OperationMode.respawnBeforeKills) {
+            // Disable automatic player respawn after 20 minutes
+            fileCommands.add(Schedule.callFunction(FileName.disable_respawn, 20 * Constant.secPerMinute));
+        }
 
         fileCommands.add(Tag.action(Constant.admin, TagAction.ADD)
                         .name(StaticEntityTag.GAME_STARTED)

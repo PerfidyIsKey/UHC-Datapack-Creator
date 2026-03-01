@@ -7,7 +7,7 @@ close all
 
 %% Load data
 addpath('Data','Functions','Documents')
-load('DataS61.mat')
+load('DataS62.mat')
 
 %% Boxplot statistics
 NoP = size(Players,2);
