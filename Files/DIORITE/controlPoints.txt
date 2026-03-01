@@ -1,6 +1,5 @@
-207,64,-191,swamp
--70,92,-408,windswept_gravelly_hills
--190,72,-134,taiga
-344,63,280,river
--255,93,-107,old_growth_pine_taiga
--185,72,296,old_growth_spruce_taiga
+-42,70,328,jungle
+-218,63,-340,river
+328,85,11,plains
+176,114,-174,plains
+319,68,-288,wooded_badlands

@@ -2,7 +2,7 @@ clear
 close all
 
 addpath('Data','Functions','Documents')
-load('DataS61.mat')
+load('DataS62.mat')
 
 text = RedditText(Players,Seasons);
 

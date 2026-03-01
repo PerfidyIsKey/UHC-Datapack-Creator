@@ -16,7 +16,7 @@ close all
 
 %% Information
 addpath('Data','Functions','Figures')
-load('DataS61.mat')
+load('DataS62.mat')
 
 %% Visualization
 NoP = size(Players,2);
